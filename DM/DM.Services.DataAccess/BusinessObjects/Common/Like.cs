@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Common
 {
@@ -13,6 +14,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
 
         public Guid EntityId { get; set; }
         public Guid UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; }
 
         [ForeignKey(nameof(EntityId))]
         public Comment Comment { get; set; }
