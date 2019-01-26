@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 using DM.Services.DataAccess.BusinessObjects.Users;

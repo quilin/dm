@@ -2,6 +2,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 using DM.Services.DataAccess.BusinessObjects.Games.Rating;
