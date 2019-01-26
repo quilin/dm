@@ -8,7 +8,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         string Login { get; }
         UserRole Role { get; }
 
-        string ProfilePictureUrl { get; }
         DateTime? LastVisitDate { get; }
 
         bool RatingDisabled { get; }

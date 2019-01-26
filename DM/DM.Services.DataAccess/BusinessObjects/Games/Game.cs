@@ -74,5 +74,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
 
         [InverseProperty(nameof(Comment.Game))]
         public ICollection<Comment> Comments { get; set; }
+        
+        [InverseProperty(nameof(Upload.GamePicture))]
+        public ICollection<Upload> Pictures { get; set; }
     }
 }

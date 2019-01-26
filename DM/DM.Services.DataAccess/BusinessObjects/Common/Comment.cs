@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.DataAccess.BusinessObjects.Administration;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.BusinessObjects.Games;
@@ -22,6 +23,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
 
         public string Text { get; set; }
 
+        public bool IsRemoved { get; set; }
+
         [ForeignKey(nameof(EntityId))]
         public ForumTopic Topic { get; set; }
 
@@ -34,6 +37,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         [InverseProperty(nameof(Like.Comment))]
         public ICollection<Like> Likes { get; set; }
 
-        public bool IsRemoved { get; set; }
+        [InverseProperty(nameof(Warning.Comment))]
+        public ICollection<Warning> Warnings { get; set; }
     }
 }

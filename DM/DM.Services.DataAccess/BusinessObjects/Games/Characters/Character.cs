@@ -18,7 +18,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
 
         public Guid GameId { get; set; }
         public Guid UserId { get; set; }
-        public Guid PictureUploadId { get; set; }
 
         public CharacterStatus Status { get; set; }
         public DateTime CreateDate { get; set; }
@@ -46,8 +45,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
 
-        [ForeignKey(nameof(PictureUploadId))]
-        public Upload Picture { get; set; }
+        [InverseProperty(nameof(Upload.CharacterPicture))]
+        public ICollection<Upload> Pictures { get; set; }
 
         [InverseProperty(nameof(CharacterAttribute.Character))]
         public ICollection<CharacterAttribute> Attributes { get; set; }

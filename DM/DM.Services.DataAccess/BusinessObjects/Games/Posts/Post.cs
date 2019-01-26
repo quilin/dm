@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -35,8 +36,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 
         [ForeignKey(nameof(UserId))]
         public User Author { get; set; }
-        
+
         [InverseProperty(nameof(Vote.Post))]
         public ICollection<Vote> Votes { get; set; }
+
+        [InverseProperty(nameof(Upload.PostAttachment))]
+        public ICollection<Upload> Attachments { get; set; }
     }
 }
