@@ -44,7 +44,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public bool IsRemoved { get; set; }
 
         #region Profile navigations
-        
+
         [ForeignKey(nameof(ProfileId))]
         public UserProfile Profile { get; set; }
 
@@ -114,6 +114,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         #endregion
 
         #region Administration navigations
+
+        [InverseProperty(nameof(UserNanny.Nanny))]
+        public ICollection<UserNanny> Children { get; set; }
 
         [InverseProperty(nameof(Report.Author))]
         public ICollection<Report> ReportsGiven { get; set; }
