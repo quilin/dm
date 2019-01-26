@@ -34,5 +34,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 
         [InverseProperty(nameof(Post.Room))]
         public ICollection<Post> Posts { get; set; }
+
+        [InverseProperty(nameof(PostAnticipation.Room))]
+        public ICollection<PostAnticipation> PostsAwaited { get; set; }
     }
 }

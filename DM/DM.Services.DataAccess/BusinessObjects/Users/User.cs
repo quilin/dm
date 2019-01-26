@@ -18,6 +18,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
     {
         [Key]
         public Guid UserId { get; set; }
+
         public Guid ProfileId { get; set; }
 
         public string Login { get; set; }
@@ -110,6 +111,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         [InverseProperty(nameof(Vote.TargetUser))]
         public ICollection<Vote> VotesFor { get; set; }
+
+        [InverseProperty(nameof(PostAnticipation.User))]
+        public ICollection<PostAnticipation> WaitsForPosts { get; set; }
+
+        [InverseProperty(nameof(PostAnticipation.Target))]
+        public ICollection<PostAnticipation> PostsAwaited { get; set; }
 
         #endregion
 
