@@ -18,6 +18,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
     {
         [Key]
         public Guid UserId { get; set; }
+        public Guid ProfileId { get; set; }
 
         public string Login { get; set; }
         public string Email { get; set; }
@@ -43,12 +44,15 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public bool IsRemoved { get; set; }
 
         #region Profile navigations
-
-        [InverseProperty(nameof(Upload.User))]
-        public ICollection<Upload> Uploads { get; set; }
+        
+        [ForeignKey(nameof(ProfileId))]
+        public UserProfile Profile { get; set; }
 
         [InverseProperty(nameof(Upload.UserPicture))]
         public ICollection<Upload> ProfilePictures { get; set; }
+
+        [InverseProperty(nameof(Token.User))]
+        public ICollection<Token> Tokens { get; set; }
 
         #endregion
 
@@ -59,6 +63,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         [InverseProperty(nameof(Like.User))]
         public ICollection<Like> Likes { get; set; }
+
+        [InverseProperty(nameof(Review.Author))]
+        public ICollection<Review> Reviews { get; set; }
+
+        [InverseProperty(nameof(Upload.User))]
+        public ICollection<Upload> Uploads { get; set; }
 
         #endregion
 
