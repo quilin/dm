@@ -40,21 +40,21 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(GameId))]
-        public Game Game { get; set; }
+        public virtual Game Game { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
-        [InverseProperty(nameof(Upload.CharacterPicture))]
-        public ICollection<Upload> Pictures { get; set; }
+        [InverseProperty(nameof(Upload.Character))]
+        public virtual ICollection<Upload> Pictures { get; set; }
 
         [InverseProperty(nameof(CharacterAttribute.Character))]
-        public ICollection<CharacterAttribute> Attributes { get; set; }
+        public virtual ICollection<CharacterAttribute> Attributes { get; set; }
 
         [InverseProperty(nameof(CharacterRoomLink.Character))]
-        public ICollection<CharacterRoomLink> RoomLinks { get; set; }
+        public virtual ICollection<CharacterRoomLink> RoomLinks { get; set; }
 
         [InverseProperty(nameof(Post.Character))]
-        public ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }

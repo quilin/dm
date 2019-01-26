@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
+using DM.Services.DataAccess.BusinessObjects.Games.Rating;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
@@ -29,18 +30,18 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(RoomId))]
-        public Room Room { get; set; }
+        public virtual Room Room { get; set; }
 
         [ForeignKey(nameof(CharacterId))]
-        public Character Character { get; set; }
+        public virtual Character Character { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [InverseProperty(nameof(Vote.Post))]
-        public ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
 
-        [InverseProperty(nameof(Upload.PostAttachment))]
-        public ICollection<Upload> Attachments { get; set; }
+        [InverseProperty(nameof(Upload.Post))]
+        public virtual ICollection<Upload> Attachments { get; set; }
     }
 }

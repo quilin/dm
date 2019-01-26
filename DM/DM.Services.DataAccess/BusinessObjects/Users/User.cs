@@ -10,6 +10,8 @@ using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
+using DM.Services.DataAccess.BusinessObjects.Games.Rating;
+using DM.Services.DataAccess.BusinessObjects.Messaging;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users
 {
@@ -47,104 +49,114 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         #region Profile navigations
 
         [ForeignKey(nameof(ProfileId))]
-        public UserProfile Profile { get; set; }
+        public virtual UserProfile Profile { get; set; }
 
-        [InverseProperty(nameof(Upload.UserPicture))]
-        public ICollection<Upload> ProfilePictures { get; set; }
+        [InverseProperty(nameof(Upload.UserProfile))]
+        public virtual ICollection<Upload> ProfilePictures { get; set; }
 
         [InverseProperty(nameof(Token.User))]
-        public ICollection<Token> Tokens { get; set; }
+        public virtual ICollection<Token> Tokens { get; set; }
 
         #endregion
 
         #region Common navigations
 
         [InverseProperty(nameof(Comment.Author))]
-        public ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
         [InverseProperty(nameof(Like.User))]
-        public ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
 
         [InverseProperty(nameof(Review.Author))]
-        public ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
 
         [InverseProperty(nameof(Upload.User))]
-        public ICollection<Upload> Uploads { get; set; }
+        public virtual ICollection<Upload> Uploads { get; set; }
 
         #endregion
 
         #region Forum navigations
 
         [InverseProperty(nameof(ForumTopic.Author))]
-        public ICollection<ForumTopic> Topics { get; set; }
+        public virtual ICollection<ForumTopic> Topics { get; set; }
 
         [InverseProperty(nameof(ForumModerator.User))]
-        public ICollection<ForumModerator> ForumModerators { get; set; }
+        public virtual ICollection<ForumModerator> ForumModerators { get; set; }
 
         #endregion
 
         #region Game navigations
 
         [InverseProperty(nameof(Game.Master))]
-        public ICollection<Game> GamesAsMaster { get; set; }
+        public virtual ICollection<Game> GamesAsMaster { get; set; }
 
         [InverseProperty(nameof(Game.Assistant))]
-        public ICollection<Game> GamesAsAssistant { get; set; }
+        public virtual ICollection<Game> GamesAsAssistant { get; set; }
 
         [InverseProperty(nameof(Game.Nanny))]
-        public ICollection<Game> GamesAsNanny { get; set; }
+        public virtual ICollection<Game> GamesAsNanny { get; set; }
 
         [InverseProperty(nameof(BlackListLink.User))]
-        public ICollection<BlackListLink> GamesBlacklisted { get; set; }
+        public virtual ICollection<BlackListLink> GamesBlacklisted { get; set; }
 
         [InverseProperty(nameof(Reader.User))]
-        public ICollection<Reader> GamesObserved { get; set; }
+        public virtual ICollection<Reader> GamesObserved { get; set; }
 
         [InverseProperty(nameof(Character.User))]
-        public ICollection<Character> Characters { get; set; }
+        public virtual ICollection<Character> Characters { get; set; }
 
         [InverseProperty(nameof(Post.Author))]
-        public ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
 
         [InverseProperty(nameof(Vote.VotedUser))]
-        public ICollection<Vote> VotesFrom { get; set; }
+        public virtual ICollection<Vote> VotesGiven { get; set; }
 
         [InverseProperty(nameof(Vote.TargetUser))]
-        public ICollection<Vote> VotesFor { get; set; }
+        public virtual ICollection<Vote> VotesReceived { get; set; }
 
         [InverseProperty(nameof(PostAnticipation.User))]
-        public ICollection<PostAnticipation> WaitsForPosts { get; set; }
+        public virtual ICollection<PostAnticipation> WaitsForPosts { get; set; }
 
         [InverseProperty(nameof(PostAnticipation.Target))]
-        public ICollection<PostAnticipation> PostsAwaited { get; set; }
+        public virtual ICollection<PostAnticipation> PostsAwaited { get; set; }
+
+        #endregion
+
+        #region Messaging navigations
+
+        [InverseProperty(nameof(UserConversationLink.User))]
+        public virtual ICollection<UserConversationLink> ConversationLinks { get; set; }
+
+        [InverseProperty(nameof(Message.Author))]
+        public virtual ICollection<Message> Messages { get; set; }
 
         #endregion
 
         #region Administration navigations
 
         [InverseProperty(nameof(UserNanny.Nanny))]
-        public ICollection<UserNanny> Children { get; set; }
+        public virtual ICollection<UserNanny> Children { get; set; }
 
         [InverseProperty(nameof(Report.Author))]
-        public ICollection<Report> ReportsGiven { get; set; }
+        public virtual ICollection<Report> ReportsGiven { get; set; }
 
         [InverseProperty(nameof(Report.Target))]
-        public ICollection<Report> ReportsTaken { get; set; }
+        public virtual ICollection<Report> ReportsTaken { get; set; }
 
         [InverseProperty(nameof(Report.AnswerAuthor))]
-        public ICollection<Report> ReportsAnswered { get; set; }
+        public virtual ICollection<Report> ReportsAnswered { get; set; }
 
         [InverseProperty(nameof(Warning.User))]
-        public ICollection<Warning> WarningsReceived { get; set; }
+        public virtual ICollection<Warning> WarningsReceived { get; set; }
 
         [InverseProperty(nameof(Warning.Moderator))]
-        public ICollection<Warning> WarningsGiven { get; set; }
+        public virtual ICollection<Warning> WarningsGiven { get; set; }
 
         [InverseProperty(nameof(Ban.User))]
-        public ICollection<Ban> BansReceived { get; set; }
+        public virtual ICollection<Ban> BansReceived { get; set; }
 
         [InverseProperty(nameof(Ban.Moderator))]
-        public ICollection<Ban> BansGiven { get; set; }
+        public virtual ICollection<Ban> BansGiven { get; set; }
 
         #endregion
     }

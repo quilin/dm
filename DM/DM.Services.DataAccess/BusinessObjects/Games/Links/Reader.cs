@@ -15,9 +15,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(GameId))]
-        public Game Game { get; set; }
+        public virtual Game Game { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

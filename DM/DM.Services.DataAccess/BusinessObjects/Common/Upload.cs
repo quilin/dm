@@ -25,18 +25,18 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public User UserPicture { get; set; }
+        public virtual User UserProfile { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public Game GamePicture { get; set; }
+        public virtual Game Game { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public Character CharacterPicture { get; set; }
+        public virtual Character Character { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public Post PostAttachment { get; set; }
+        public virtual Post Post { get; set; }
     }
 }

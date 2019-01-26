@@ -17,9 +17,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public string Title { get; set; }
 
         [ForeignKey(nameof(TagGroupId))]
-        public TagGroup TagGroup { get; set; }
+        public virtual TagGroup TagGroup { get; set; }
 
         [InverseProperty(nameof(GameTag.Tag))]
-        public ICollection<GameTag> GameTags { get; set; }
+        public virtual ICollection<GameTag> GameTags { get; set; }
     }
 }

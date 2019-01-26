@@ -7,6 +7,7 @@ using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
+using DM.Services.DataAccess.BusinessObjects.Games.Rating;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games
@@ -55,27 +56,27 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         public User Nanny { get; set; }
 
         [InverseProperty(nameof(BlackListLink.Game))]
-        public ICollection<BlackListLink> BlackList { get; set; }
+        public virtual ICollection<BlackListLink> BlackList { get; set; }
 
         [InverseProperty(nameof(GameTag.Game))]
-        public ICollection<GameTag> GameTags { get; set; }
+        public virtual ICollection<GameTag> GameTags { get; set; }
 
         [InverseProperty(nameof(Reader.Game))]
-        public ICollection<Reader> Readers { get; set; }
+        public virtual ICollection<Reader> Readers { get; set; }
 
         [InverseProperty(nameof(Character.Game))]
-        public ICollection<Character> Characters { get; set; }
+        public virtual ICollection<Character> Characters { get; set; }
 
         [InverseProperty(nameof(Room.Game))]
-        public ICollection<Room> Rooms { get; set; }
+        public virtual ICollection<Room> Rooms { get; set; }
 
         [InverseProperty(nameof(Vote.Game))]
-        public ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; }
 
         [InverseProperty(nameof(Comment.Game))]
-        public ICollection<Comment> Comments { get; set; }
-        
-        [InverseProperty(nameof(Upload.GamePicture))]
-        public ICollection<Upload> Pictures { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        [InverseProperty(nameof(Upload.Game))]
+        public virtual ICollection<Upload> Pictures { get; set; }
     }
 }

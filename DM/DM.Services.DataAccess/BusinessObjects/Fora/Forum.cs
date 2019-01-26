@@ -20,9 +20,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public ForumAccessPolicy CreateTopicPolicy { get; set; }
 
         [InverseProperty(nameof(ForumModerator.Forum))]
-        public ICollection<ForumModerator> Moderators { get; set; }
+        public virtual ICollection<ForumModerator> Moderators { get; set; }
 
         [InverseProperty(nameof(ForumTopic.Forum))]
-        public ICollection<ForumTopic> Topics { get; set; }
+        public virtual ICollection<ForumTopic> Topics { get; set; }
     }
 }

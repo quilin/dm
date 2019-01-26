@@ -15,6 +15,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
         public string Value { get; set; }
 
         [ForeignKey(nameof(CharacterId))]
-        public Character Character { get; set; }
+        public virtual Character Character { get; set; }
     }
 }

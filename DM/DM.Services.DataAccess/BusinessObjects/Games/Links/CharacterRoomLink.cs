@@ -16,9 +16,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         public Guid RoomId { get; set; }
 
         [ForeignKey(nameof(CharacterId))]
-        public Character Character { get; set; }
+        public virtual Character Character { get; set; }
 
         [ForeignKey(nameof(RoomId))]
-        public Room Room { get; set; }
+        public virtual Room Room { get; set; }
     }
 }

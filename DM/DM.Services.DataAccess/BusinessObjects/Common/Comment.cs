@@ -26,18 +26,18 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public ForumTopic Topic { get; set; }
+        public virtual ForumTopic Topic { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public Game Game { get; set; }
+        public virtual Game Game { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [InverseProperty(nameof(Like.Comment))]
-        public ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
 
         [InverseProperty(nameof(Warning.Comment))]
-        public ICollection<Warning> Warnings { get; set; }
+        public virtual ICollection<Warning> Warnings { get; set; }
     }
 }

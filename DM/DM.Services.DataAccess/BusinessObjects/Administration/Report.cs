@@ -22,12 +22,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         public string Answer { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [ForeignKey(nameof(TargetId))]
-        public User Target { get; set; }
+        public virtual User Target { get; set; }
 
         [ForeignKey(nameof(AnswerAuthorId))]
-        public User AnswerAuthor { get; set; }
+        public virtual User AnswerAuthor { get; set; }
     }
 }

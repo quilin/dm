@@ -24,15 +24,15 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public bool Closed { get; set; }
 
         [ForeignKey(nameof(ForumId))]
-        public Forum Forum { get; set; }
+        public virtual Forum Forum { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [InverseProperty(nameof(Comment.Topic))]
-        public ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
 
         [InverseProperty(nameof(Like.Topic))]
-        public ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }

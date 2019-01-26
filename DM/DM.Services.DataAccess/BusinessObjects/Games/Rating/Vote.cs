@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DM.Services.DataAccess.BusinessObjects.Games.Rating;
+using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
+namespace DM.Services.DataAccess.BusinessObjects.Games.Rating
 {
     [Table("Votes")]
     public class Vote

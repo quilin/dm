@@ -15,9 +15,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         public Guid NannyId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey(nameof(NannyId))]
-        public User Nanny { get; set; }
+        public virtual User Nanny { get; set; }
     }
 }

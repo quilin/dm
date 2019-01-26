@@ -16,12 +16,15 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public Comment Comment { get; set; }
+        public virtual Comment Comment { get; set; }
 
         [ForeignKey(nameof(EntityId))]
-        public ForumTopic Topic { get; set; }
+        public virtual ForumTopic Topic { get; set; }
+
+        [ForeignKey(nameof(EntityId))]
+        public virtual Review Review { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public string Title { get; set; }
 
         [InverseProperty(nameof(Tag.TagGroup))]
-        public ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

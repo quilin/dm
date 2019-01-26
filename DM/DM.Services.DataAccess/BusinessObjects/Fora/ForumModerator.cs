@@ -14,9 +14,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(ForumId))]
-        public Forum Forum { get; set; }
+        public virtual Forum Forum { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

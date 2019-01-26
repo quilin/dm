@@ -24,6 +24,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

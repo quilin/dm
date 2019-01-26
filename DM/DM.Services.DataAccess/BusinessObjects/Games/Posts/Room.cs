@@ -27,15 +27,15 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(GameId))]
-        public Game Game { get; set; }
+        public virtual Game Game { get; set; }
 
         [InverseProperty(nameof(CharacterRoomLink.Room))]
-        public ICollection<CharacterRoomLink> CharacterLinks { get; set; }
+        public virtual ICollection<CharacterRoomLink> CharacterLinks { get; set; }
 
         [InverseProperty(nameof(Post.Room))]
-        public ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Post> Posts { get; set; }
 
         [InverseProperty(nameof(PostAnticipation.Room))]
-        public ICollection<PostAnticipation> PostsAwaited { get; set; }
+        public virtual ICollection<PostAnticipation> PostsAwaited { get; set; }
     }
 }
