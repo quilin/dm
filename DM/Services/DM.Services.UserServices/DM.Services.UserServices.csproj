@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+      <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Dto" />
+      <Folder Include="Implementation" />
+    </ItemGroup>
+
+</Project>

@@ -16,7 +16,7 @@ using DM.Services.DataAccess.BusinessObjects.Messaging;
 namespace DM.Services.DataAccess.BusinessObjects.Users
 {
     [Table("Users")]
-    public class User : IPublicUser, IRemovable
+    public class User : IUser, IRemovable
     {
         [Key]
         public Guid UserId { get; set; }
@@ -159,5 +159,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public virtual ICollection<Ban> BansGiven { get; set; }
 
         #endregion
+        
+        public static User Guest => new User
+        {
+            Role = UserRole.Guest
+        };
     }
 }

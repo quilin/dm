@@ -17,7 +17,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         public Guid PostId { get; set; }
 
         public Guid RoomId { get; set; }
-        public Guid CharacterId { get; set; }
+        public Guid? CharacterId { get; set; }
         public Guid UserId { get; set; }
 
         public DateTime CreateDate { get; set; }

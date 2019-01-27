@@ -2,11 +2,12 @@ using System;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users
 {
-    public interface IPublicUser
+    public interface IUser
     {
         Guid UserId { get; }
         string Login { get; }
         UserRole Role { get; }
+        AccessPolicy AccessPolicy { get; }
 
         DateTime? LastVisitDate { get; }
 
