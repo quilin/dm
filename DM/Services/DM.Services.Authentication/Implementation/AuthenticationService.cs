@@ -6,6 +6,7 @@ using DM.Services.Authentication.Factories;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Implementation;
+using DM.Services.DataAccess.BusinessObjects.Users;
 using Newtonsoft.Json;
 
 namespace DM.Services.Authentication.Implementation
@@ -48,9 +49,10 @@ namespace DM.Services.Authentication.Implementation
                     return AuthenticationResult.Fail(AuthenticationError.Inactive);
                 case true when user.IsRemoved:
                     return AuthenticationResult.Fail(AuthenticationError.Removed);
+                case true when user.AccessPolicy.HasFlag(AccessPolicy.FullBan):
+                    return AuthenticationResult.Fail(AuthenticationError.Banned);
                 case true when !securityManager.ComparePasswords(password, user.Salt, user.PasswordHash):
                     return AuthenticationResult.Fail(AuthenticationError.WrongPassword);
-                // todo: banned user?
 
                 default:
                     var session = sessionFactory.Create(persistent);
@@ -60,46 +62,49 @@ namespace DM.Services.Authentication.Implementation
                         [UserIdKey] = user.UserId,
                         [SessionIdKey] = session.Id
                     };
-                    var encryptedString = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
-                    return AuthenticationResult.Success(user, session, encryptedString);
+                    var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
+                    return AuthenticationResult.Success(user, session, token);
             }
         }
 
         public async Task<AuthenticationResult> Authenticate(string authToken)
         {
+            Guid userId;
+            Guid sessionId;
+            
             try
             {
                 var decryptedString = await cryptoService.Decrypt(authToken, Key, Iv);
                 var authData = JsonConvert.DeserializeObject<Dictionary<string, Guid>>(decryptedString);
-                var userId = authData[UserIdKey];
-                var sessionId = authData[SessionIdKey];
-
-                var fetchUser = repository.FindUser(userId);
-                var fetchSession = repository.FindUserSession(sessionId);
-                await Task.WhenAll(fetchUser, fetchSession);
-
-                var user = await fetchUser;
-                var session = await fetchSession;
-                if (!session.IsPersistent &&
-                    session.ExpirationDate < dateTimeProvider.Now)
-                {
-                    await repository.RemoveSession(userId, sessionId);
-                    return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
-                }
-
-                var sessionRefreshDelta = TimeSpan.FromMinutes(20);
-                if (!session.IsPersistent &&
-                    session.ExpirationDate - sessionRefreshDelta < dateTimeProvider.Now)
-                {
-                    await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
-                }
-
-                return AuthenticationResult.Success(user, session, authToken);
+                userId = authData[UserIdKey];
+                sessionId = authData[SessionIdKey];
             }
             catch
             {
                 return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
             }
+
+            var fetchUser = repository.FindUser(userId);
+            var fetchSession = repository.FindUserSession(sessionId);
+            await Task.WhenAll(fetchUser, fetchSession);
+
+            var user = await fetchUser;
+            var session = await fetchSession;
+            if (!session.IsPersistent &&
+                session.ExpirationDate < dateTimeProvider.Now)
+            {
+                await repository.RemoveSession(userId, sessionId);
+                return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
+            }
+
+            var sessionRefreshDelta = TimeSpan.FromMinutes(20);
+            if (!session.IsPersistent &&
+                session.ExpirationDate - sessionRefreshDelta < dateTimeProvider.Now)
+            {
+                await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
+            }
+
+            return AuthenticationResult.Success(user, session, authToken);
         }
     }
 }

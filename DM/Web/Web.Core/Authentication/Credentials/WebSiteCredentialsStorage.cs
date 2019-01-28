@@ -1,10 +1,12 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Authentication.Credentials
 {
-    public class WebSiteCredentialsExtractor : ICredentialsExtractor
+    public class WebSiteCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthorizationCookie = "__AUTH_cookie";
         private const string LoginKey = "login";
@@ -32,6 +34,21 @@ namespace DM.Web.Core.Authentication.Credentials
             }
 
             return default;
+        }
+
+        public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)
+        {
+            httpContext.Response.Cookies.Append(HttpAuthorizationCookie, authenticationResult.Token,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = false,
+                    Expires = authenticationResult.Session.IsPersistent
+                        ? authenticationResult.Session.ExpirationDate
+                        : (DateTimeOffset?) null
+                });
+            return Task.CompletedTask;
         }
     }
 }

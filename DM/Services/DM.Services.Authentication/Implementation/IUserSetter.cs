@@ -5,7 +5,7 @@ namespace DM.Services.Authentication.Implementation
 {
     public interface IUserSetter
     {
-        IntendingUser Current { set; }
+        AuthenticatedUser Current { set; }
         Session CurrentSession { set; }
     }
 }

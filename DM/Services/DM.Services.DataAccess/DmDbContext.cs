@@ -1,3 +1,4 @@
+using DM.Services.DataAccess.BusinessObjects.Administration;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.BusinessObjects.Games;
@@ -68,6 +69,14 @@ namespace DM.Services.DataAccess
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversationLink> UserConversationLinks { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        #endregion
+
+        #region Administration
+
+        public DbSet<Report> Reports { get; set; }
+        public DbSet<Warning> Warnings { get; set; }
+        public DbSet<Ban> Bans { get; set; }
 
         #endregion
     }

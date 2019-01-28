@@ -21,7 +21,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         [Key]
         public Guid UserId { get; set; }
 
-        public Guid ProfileId { get; set; }
+//        public Guid ProfileId { get; set; }
 
         public string Login { get; set; }
         public string Email { get; set; }
@@ -48,8 +48,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         #region Profile navigations
 
-        [ForeignKey(nameof(ProfileId))]
-        public virtual UserProfile Profile { get; set; }
+//        [ForeignKey(nameof(ProfileId))]
+//        public virtual UserProfile Profile { get; set; }
 
         [InverseProperty(nameof(Upload.UserProfile))]
         public virtual ICollection<Upload> ProfilePictures { get; set; }
@@ -134,9 +134,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         #region Administration navigations
 
-        [InverseProperty(nameof(UserNanny.Nanny))]
-        public virtual ICollection<UserNanny> Children { get; set; }
-
         [InverseProperty(nameof(Report.Author))]
         public virtual ICollection<Report> ReportsGiven { get; set; }
 
@@ -159,10 +156,5 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public virtual ICollection<Ban> BansGiven { get; set; }
 
         #endregion
-        
-        public static User Guest => new User
-        {
-            Role = UserRole.Guest
-        };
     }
 }

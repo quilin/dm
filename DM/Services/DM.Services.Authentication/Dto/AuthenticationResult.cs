@@ -6,7 +6,7 @@ namespace DM.Services.Authentication.Dto
     {
         private AuthenticationResult() {}
 
-        public AuthenticatingUser User { get; private set; }
+        public AuthenticatedUser User { get; private set; }
         public Session Session { get; private set; }
         public AuthenticationError Error { get; private set; }
         public string Token { get; private set; }
@@ -14,12 +14,12 @@ namespace DM.Services.Authentication.Dto
         public static AuthenticationResult Fail(AuthenticationError error) => new AuthenticationResult
         {
             Error = error,
-            User = AuthenticatingUser.Guest,
+            User = AuthenticatedUser.Guest,
             Session = null,
             Token = null
         };
 
-        public static AuthenticationResult Success(AuthenticatingUser user, Session session, string token) => new AuthenticationResult
+        public static AuthenticationResult Success(AuthenticatedUser user, Session session, string token) => new AuthenticationResult
         {
             Error = AuthenticationError.NoError,
             User = user,

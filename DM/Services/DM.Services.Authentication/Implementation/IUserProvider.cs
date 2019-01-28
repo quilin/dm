@@ -5,7 +5,7 @@ namespace DM.Services.Authentication.Implementation
 {
     public interface IUserProvider
     {
-        IntendingUser Current { get; }
+        AuthenticatedUser Current { get; }
         Session CurrentSession { get; }
     }
 }

@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace DM.Web.Core.Authentication.Credentials
 {
-    public class ApiCredentialsExtractor : ICredentialsExtractor
+    public class ApiCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
         private const string LoginKey = "login";
@@ -49,6 +50,12 @@ namespace DM.Web.Core.Authentication.Credentials
             {
                 return default;
             }
+        }
+
+        public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)
+        {
+            httpContext.Response.Headers.Add(HttpAuthTokenHeader, authenticationResult.Token);
+            return Task.CompletedTask;
         }
     }
 }

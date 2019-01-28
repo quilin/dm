@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -20,21 +21,40 @@ namespace DM.Services.Authentication.Repositories
         {
             this.dbContext = dbContext;
         }
-        
-        public async Task<(bool Success, AuthenticatingUser User)> TryFindUser(string login)
+
+        private static readonly Func<User, AuthenticatedUser> MapAuthenticatedUser = user => new AuthenticatedUser
+        {
+            UserId = user.UserId,
+            Login = user.Login,
+            Role = user.Role,
+            LastVisitDate = user.LastVisitDate,
+            RatingDisabled = user.RatingDisabled,
+            QualityRating = user.QualityRating,
+            QuantityRating = user.QuantityRating,
+            Activated = user.Activated,
+            Salt = user.Salt,
+            PasswordHash = user.PasswordHash,
+            IsRemoved = user.IsRemoved,
+            AccessPolicy = user.AccessPolicy,
+            AccessRestrictionPolicies = user.BansReceived.Select(b => b.AccessRestrictionPolicy).ToArray()
+        };
+
+        public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users.AsNoTracking()
+                .Include(u => u.BansReceived)
                 .Where(u => u.Login == login)
-                .Select(u => AuthenticatingUser.FromDal.Invoke(u))
+                .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstOrDefaultAsync();
             return (result != null, result);
         }
 
-        public Task<AuthenticatingUser> FindUser(Guid userId)
+        public Task<AuthenticatedUser> FindUser(Guid userId)
         {
             return dbContext.Users.AsNoTracking()
+                .Include(u => u.BansReceived)
                 .Where(u => u.UserId == userId)
-                .Select(u => AuthenticatingUser.FromDal.Invoke(u))
+                .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstAsync();
         }
 
@@ -65,7 +85,22 @@ namespace DM.Services.Authentication.Repositories
         {
             return Collection.FindOneAndUpdateAsync(
                 Filter.Eq(u => u.Id, userId),
-                Update.Push(s => s.Sessions, session));
+                Update.Push(s => s.Sessions, session),
+                new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+        }
+
+        public async Task<IEnumerable<IntentionBan>> GetActiveUserBans(Guid userId)
+        {
+            return await dbContext.Bans.AsNoTracking()
+                .Where(b => b.StartDate <= DateTime.UtcNow &&
+                            b.EndDate >= DateTime.UtcNow &&
+                            !b.IsRemoved &&
+                            b.UserId == userId)
+                .Select(b => new IntentionBan
+                {
+                    AccessPolicy = b.AccessRestrictionPolicy
+                })
+                .ToArrayAsync();
         }
     }
 }
