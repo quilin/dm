@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Web.Core.Extensions.DictionaryExtensions
+namespace DM.Web.Core.Extensions.DictionaryExtensions
 {
     public static class DictionaryExtensions
     {
@@ -8,7 +8,7 @@ namespace Web.Core.Extensions.DictionaryExtensions
         {
             return dictionary.ContainsKey(key)
                        ? dictionary[key]
-                       : default(TValue);
+                       : default;
         }
 
         public static void SafeAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)

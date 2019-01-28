@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using DM.Web.Core.Extensions.TypeExtensions;
+using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Web.Core.Extensions.TypeExtensions;
-using Web.Core.Helpers;
 
-namespace Web.Core.Binders
+namespace DM.Web.Core.Binders
 {
     public class ReadableGuidBinder : IModelBinder
     {

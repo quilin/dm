@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace Web.Core.Extensions.HtmlHelperExtensions
+namespace DM.Web.Core.Extensions.HtmlHelperExtensions
 {
     public static class ButtonExtensions
     {

@@ -10,8 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Dto" />
       <Folder Include="Implementation" />
+      <Folder Include="Repositories" />
     </ItemGroup>
 
 </Project>

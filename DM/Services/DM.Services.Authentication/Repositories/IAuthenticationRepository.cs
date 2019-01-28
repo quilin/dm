@@ -10,5 +10,9 @@ namespace DM.Services.Authentication.Repositories
         Task<(bool Success, AuthenticatingUser User)> TryFindUser(string login);
         Task<AuthenticatingUser> FindUser(Guid userId);
         Task<Session> FindUserSession(Guid sessionId);
+
+        Task RemoveSession(Guid userId, Guid sessionId);
+        Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate);
+        Task AddSession(Guid userId, Session session);
     }
 }

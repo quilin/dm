@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Expressions;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
@@ -19,7 +18,7 @@ namespace DM.Services.Authentication.Dto
         public string PasswordHash { get; set; }
         public bool IsRemoved { get; set; }
 
-        public static Expression<Func<User, AuthenticatingUser>> FromDal => user => new AuthenticatingUser
+        public static Func<User, AuthenticatingUser> FromDal => user => new AuthenticatingUser
         {
             UserId = user.UserId,
             Login = user.Login,
@@ -34,5 +33,7 @@ namespace DM.Services.Authentication.Dto
             PasswordHash = user.PasswordHash,
             IsRemoved = user.IsRemoved
         };
+
+        public static AuthenticatingUser Guest => FromDal(User.Guest);
     }
 }

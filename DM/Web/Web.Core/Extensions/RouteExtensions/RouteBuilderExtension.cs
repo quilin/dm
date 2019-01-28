@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace Web.Core.Extensions.RouteExtensions
+namespace DM.Web.Core.Extensions.RouteExtensions
 {
     public static class RouteBuilderExtension
     {

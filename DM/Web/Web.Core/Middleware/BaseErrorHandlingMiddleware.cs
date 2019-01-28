@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace Web.Core.Middleware
+namespace DM.Web.Core.Middleware
 {
     public abstract class BaseErrorHandlingMiddleware
     {

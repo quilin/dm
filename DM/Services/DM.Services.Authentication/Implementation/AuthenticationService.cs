@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Factories;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Implementation;
@@ -14,6 +15,7 @@ namespace DM.Services.Authentication.Implementation
         private readonly ISecurityManager securityManager;
         private readonly ISymmetricCryptoService cryptoService;
         private readonly IAuthenticationRepository repository;
+        private readonly ISessionFactory sessionFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
         private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
@@ -25,42 +27,52 @@ namespace DM.Services.Authentication.Implementation
             ISecurityManager securityManager,
             ISymmetricCryptoService cryptoService,
             IAuthenticationRepository repository,
+            ISessionFactory sessionFactory,
             IDateTimeProvider dateTimeProvider)
         {
             this.securityManager = securityManager;
             this.cryptoService = cryptoService;
             this.repository = repository;
+            this.sessionFactory = sessionFactory;
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<(AuthenticationError Error, AuthenticatingUser User)> Authenticate(
-            string login, string password, string persistent)
+        public async Task<AuthenticationResult> Authenticate(string login, string password, bool persistent)
         {
             var (userFound, user) = await repository.TryFindUser(login);
             switch (userFound)
             {
                 case false:
-                    return (AuthenticationError.WrongLogin, user);
+                    return AuthenticationResult.Fail(AuthenticationError.WrongLogin);
                 case true when !user.Activated:
-                    return (AuthenticationError.Inactive, user);
+                    return AuthenticationResult.Fail(AuthenticationError.Inactive);
                 case true when user.IsRemoved:
-                    return (AuthenticationError.Removed, user);
+                    return AuthenticationResult.Fail(AuthenticationError.Removed);
                 case true when !securityManager.ComparePasswords(password, user.Salt, user.PasswordHash):
-                    return (AuthenticationError.WrongPassword, user);
+                    return AuthenticationResult.Fail(AuthenticationError.WrongPassword);
                 // todo: banned user?
+
                 default:
-                    return (AuthenticationError.NoError, user);
+                    var session = sessionFactory.Create(persistent);
+                    await repository.AddSession(user.UserId, session);
+                    var authData = new Dictionary<string, Guid>
+                    {
+                        [UserIdKey] = user.UserId,
+                        [SessionIdKey] = session.Id
+                    };
+                    var encryptedString = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
+                    return AuthenticationResult.Success(user, session, encryptedString);
             }
         }
 
-        public async Task<(AuthenticationError Error, AuthenticatingUser User)> Authenticate(string authToken)
+        public async Task<AuthenticationResult> Authenticate(string authToken)
         {
             try
             {
                 var decryptedString = await cryptoService.Decrypt(authToken, Key, Iv);
-                var data = JsonConvert.DeserializeObject<Dictionary<string, Guid>>(decryptedString);
-                var userId = data[UserIdKey];
-                var sessionId = data[SessionIdKey];
+                var authData = JsonConvert.DeserializeObject<Dictionary<string, Guid>>(decryptedString);
+                var userId = authData[UserIdKey];
+                var sessionId = authData[SessionIdKey];
 
                 var fetchUser = repository.FindUser(userId);
                 var fetchSession = repository.FindUserSession(sessionId);
@@ -68,17 +80,25 @@ namespace DM.Services.Authentication.Implementation
 
                 var user = await fetchUser;
                 var session = await fetchSession;
-                if (!session.IsPersistent && session.ExpirationDate < dateTimeProvider.Now)
+                if (!session.IsPersistent &&
+                    session.ExpirationDate < dateTimeProvider.Now)
                 {
-                    await repository.RemoveSession(session);
-                    return (AuthenticationError.SessionExpired, user);
+                    await repository.RemoveSession(userId, sessionId);
+                    return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
                 }
 
-                await repository.RefreshSession(session);
+                var sessionRefreshDelta = TimeSpan.FromMinutes(20);
+                if (!session.IsPersistent &&
+                    session.ExpirationDate - sessionRefreshDelta < dateTimeProvider.Now)
+                {
+                    await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
+                }
+
+                return AuthenticationResult.Success(user, session, authToken);
             }
             catch
             {
-                return (AuthenticationError.SessionExpired, null);
+                return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
             }
         }
     }

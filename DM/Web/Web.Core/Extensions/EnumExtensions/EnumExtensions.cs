@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace Web.Core.Extensions.EnumExtensions
+namespace DM.Web.Core.Extensions.EnumExtensions
 {
     public static class EnumExtensions
     {

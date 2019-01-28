@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Web.Core.Binders
+namespace DM.Web.Core.Binders
 {
     public class ReadableGuidBinderProvider : IModelBinderProvider
     {

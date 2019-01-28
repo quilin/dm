@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Web.Core.Helpers
+namespace DM.Web.Core.Helpers
 {
     public static class ReadableGuidHelper
     {

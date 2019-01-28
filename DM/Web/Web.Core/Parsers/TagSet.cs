@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BBCodeParser.Tags;
 
-namespace Web.Core.Parsers
+namespace DM.Web.Core.Parsers
 {
     public class TagSet
     {

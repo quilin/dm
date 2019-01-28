@@ -1,4 +1,4 @@
-﻿namespace Web.Core.Users
+﻿namespace DM.Web.Core.Users
 {
     public class UserRating
     {

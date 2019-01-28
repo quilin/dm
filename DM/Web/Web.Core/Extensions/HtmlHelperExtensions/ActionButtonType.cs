@@ -1,4 +1,4 @@
-namespace Web.Core.Extensions.HtmlHelperExtensions
+namespace DM.Web.Core.Extensions.HtmlHelperExtensions
 {
     public enum ActionButtonType
     {

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Web.Core.Extensions.HtmlHelperExtensions
+namespace DM.Web.Core.Extensions.HtmlHelperExtensions
 {
     public static class PlaceholderExtensions
     {

@@ -5,9 +5,8 @@ namespace DM.Services.Authentication.Implementation
 {
     public interface IAuthenticationService
     {
-        Task<(AuthenticationError Error, AuthenticatingUser User)> Authenticate(
-            string login, string password, string persistent);
+        Task<AuthenticationResult> Authenticate(string login, string password, bool persistent);
 
-        Task<(AuthenticationError Error, AuthenticatingUser User)> Authenticate(string authToken);
+        Task<AuthenticationResult> Authenticate(string authToken);
     }
 }

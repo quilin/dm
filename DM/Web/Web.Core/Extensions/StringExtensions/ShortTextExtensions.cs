@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Web.Core.Extensions.StringExtensions
+namespace DM.Web.Core.Extensions.StringExtensions
 {
     public static class ShortTextExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Web.Core.Extensions.TypeExtensions
+namespace DM.Web.Core.Extensions.TypeExtensions
 {
     public static class TypeExtensions
     {

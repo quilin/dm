@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Core.Extensions.RouteExtensions
+namespace DM.Web.Core.Extensions.RouteExtensions
 {
     public static class MvcNameOf
     {

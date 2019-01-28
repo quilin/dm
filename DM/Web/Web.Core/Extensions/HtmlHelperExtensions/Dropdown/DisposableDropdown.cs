@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Web.Core.Extensions.HtmlHelperExtensions.Dropdown
+namespace DM.Web.Core.Extensions.HtmlHelperExtensions.Dropdown
 {
     public class DisposableDropdown : IDisposable
     {

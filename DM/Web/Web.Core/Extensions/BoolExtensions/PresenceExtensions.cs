@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Web.Core.Extensions.BoolExtensions
+namespace DM.Web.Core.Extensions.BoolExtensions
 {
     public static class PresenceExtensions
     {

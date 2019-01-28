@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using DM.Services.DataAccess.BusinessObjects.Administration;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
 {
     public class IntendingUser : AuthenticatingUser
     {
-        public IntendingUser(IUser user, IEnumerable<Ban> activeBans)
+        public IntendingUser(IUser user, IEnumerable<IntentionBan> activeBans)
         {
             UserId = user.UserId;
             Login = user.Login;
@@ -18,7 +17,7 @@ namespace DM.Services.Authentication.Dto
             QualityRating = user.QualityRating;
             QuantityRating = user.QuantityRating;
 
-            GeneralAccessPolicy = activeBans.Aggregate(user.AccessPolicy, (seed, ban) => seed | ban.AccessRestrictionPolicy);
+            GeneralAccessPolicy = activeBans.Aggregate(user.AccessPolicy, (seed, ban) => seed | ban.AccessPolicy);
         }
 
         public AccessPolicy GeneralAccessPolicy { get; }

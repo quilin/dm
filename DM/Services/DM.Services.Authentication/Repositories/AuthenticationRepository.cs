@@ -25,7 +25,7 @@ namespace DM.Services.Authentication.Repositories
         {
             var result = await dbContext.Users.AsNoTracking()
                 .Where(u => u.Login == login)
-                .Select(AuthenticatingUser.FromDal)
+                .Select(u => AuthenticatingUser.FromDal.Invoke(u))
                 .FirstOrDefaultAsync();
             return (result != null, result);
         }
@@ -34,16 +34,38 @@ namespace DM.Services.Authentication.Repositories
         {
             return dbContext.Users.AsNoTracking()
                 .Where(u => u.UserId == userId)
-                .Select(AuthenticatingUser.FromDal)
+                .Select(u => AuthenticatingUser.FromDal.Invoke(u))
                 .FirstAsync();
         }
 
         public async Task<Session> FindUserSession(Guid sessionId)
         {
             var userSessions = await Collection
-                .Find(Filter.ElemMatch(s => s.Sessions, s => s.Id == sessionId))
+                .Find(Filter.ElemMatch(u => u.Sessions, s => s.Id == sessionId))
                 .FirstAsync();
-            return userSessions.Sessions.First(s => s.Id == sessionId);
+            return userSessions.Sessions.First();
+        }
+
+        public Task RemoveSession(Guid userId, Guid sessionId)
+        {
+            return Collection.FindOneAndUpdateAsync(
+                Filter.Eq(u => u.Id, userId),
+                Update.PullFilter(s => s.Sessions, s => s.Id == sessionId));
+        }
+
+        public Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate)
+        {
+            return Collection.FindOneAndUpdateAsync(
+                Filter.Eq(u => u.Id, userId) &
+                Filter.ElemMatch(u => u.Sessions, s => s.Id == sessionId),
+                Update.Set(u => u.Sessions[-1].ExpirationDate, expirationDate));
+        }
+
+        public Task AddSession(Guid userId, Session session)
+        {
+            return Collection.FindOneAndUpdateAsync(
+                Filter.Eq(u => u.Id, userId),
+                Update.Push(s => s.Sessions, session));
         }
     }
 }

@@ -8,6 +8,7 @@ using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Web.Core.Binders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Web.Core.Binders;
 
-namespace Web.Core
+namespace DM.Web.Core
 {
     public abstract class BaseStartup
     {

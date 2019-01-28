@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Web.Core.Helpers.PagingHelpers
+namespace DM.Web.Core.Helpers.PagingHelpers
 {
     public static class PagingHelper
     {

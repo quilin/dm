@@ -3,7 +3,7 @@ using System.Net;
 using DM.Services.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Web.Core.HttpAttributes
+namespace DM.Web.Core.HttpAttributes
 {
     public class ValidationRequiredAttribute : ActionFilterAttribute
     {

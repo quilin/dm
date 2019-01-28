@@ -1,6 +1,6 @@
 ﻿using BBCodeParser;
 
-namespace Web.Core.Parsers
+namespace DM.Web.Core.Parsers
 {
     public interface IBbParserFactory
     {

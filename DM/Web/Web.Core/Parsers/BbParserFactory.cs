@@ -2,7 +2,7 @@
 using BBCodeParser;
 using BBCodeParser.Tags;
 
-namespace Web.Core.Parsers
+namespace DM.Web.Core.Parsers
 {
     public class BbParserFactory : IBbParserFactory
     {

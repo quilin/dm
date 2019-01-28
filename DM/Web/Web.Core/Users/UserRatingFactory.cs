@@ -1,6 +1,6 @@
 ﻿using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace Web.Core.Users
+namespace DM.Web.Core.Users
 {
     public class UserRatingFactory : IUserRatingFactory
     {

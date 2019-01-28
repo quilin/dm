@@ -1,4 +1,4 @@
-﻿namespace Web.Core.Extensions.IconFontExtensions
+﻿namespace DM.Web.Core.Extensions.IconFontExtensions
 {
     public static class IconType
     {

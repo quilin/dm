@@ -1,4 +1,4 @@
-﻿namespace Web.Core.Helpers.PagingHelpers
+﻿namespace DM.Web.Core.Helpers.PagingHelpers
 {
     public class PagingData
     {

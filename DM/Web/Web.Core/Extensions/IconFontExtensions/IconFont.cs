@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Web.Core.Extensions.IconFontExtensions
+namespace DM.Web.Core.Extensions.IconFontExtensions
 {
     public static class IconFont
     {
