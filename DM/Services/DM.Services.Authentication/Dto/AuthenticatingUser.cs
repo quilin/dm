@@ -14,8 +14,12 @@ namespace DM.Services.Authentication.Dto
         public bool RatingDisabled { get; set; }
         public int QualityRating { get; set; }
         public int QuantityRating { get; set; }
+        public bool Activated { get; set; }
+        public string Salt { get; set; }
+        public string PasswordHash { get; set; }
+        public bool IsRemoved { get; set; }
 
-        public static Func<IUser, AuthenticatingUser> FromDal => user => new AuthenticatingUser
+        public static Expression<Func<User, AuthenticatingUser>> FromDal => user => new AuthenticatingUser
         {
             UserId = user.UserId,
             Login = user.Login,
@@ -24,7 +28,11 @@ namespace DM.Services.Authentication.Dto
             LastVisitDate = user.LastVisitDate,
             RatingDisabled = user.RatingDisabled,
             QualityRating = user.QualityRating,
-            QuantityRating = user.QuantityRating
+            QuantityRating = user.QuantityRating,
+            Activated = user.Activated,
+            Salt = user.Salt,
+            PasswordHash = user.PasswordHash,
+            IsRemoved = user.IsRemoved
         };
     }
 }
