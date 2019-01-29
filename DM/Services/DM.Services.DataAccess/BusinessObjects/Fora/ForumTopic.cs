@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Fora
 {
     [Table("ForumTopics")]
-    public class ForumTopic
+    public class ForumTopic : IRemovable
     {
         [Key]
         public Guid ForumTopicId { get; set; }
@@ -22,6 +23,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
 
         public bool Attached { get; set; }
         public bool Closed { get; set; }
+
+        public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(ForumId))]
         public virtual Forum Forum { get; set; }

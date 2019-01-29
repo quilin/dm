@@ -43,6 +43,7 @@ namespace DM.Services.DataAccess
         public DbSet<Forum> Fora { get; set; }
         public DbSet<ForumTopic> ForumTopics { get; set; }
         public DbSet<ForumModerator> ForumModerators { get; set; }
+        public DbQuery<ForumTopicsListItem> ForumTopicsList { get; set; }
 
         #endregion
 
@@ -79,5 +80,12 @@ namespace DM.Services.DataAccess
         public DbSet<Ban> Bans { get; set; }
 
         #endregion
+    }
+
+    public class ReadDmDbContext : DmDbContext
+    {
+        public ReadDmDbContext(DbContextOptions options) : base(options)
+        {
+        }
     }
 }

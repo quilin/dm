@@ -24,6 +24,6 @@ namespace DM.Services.Authentication.Dto
         public AccessPolicy GeneralAccessPolicy =>
             AccessRestrictionPolicies.Aggregate(AccessPolicy, (seed, restriction) => seed | restriction);
 
-        public static AuthenticatedUser Guest => new AuthenticatedUser();
+        public static readonly AuthenticatedUser Guest = new AuthenticatedUser();
     }
 }

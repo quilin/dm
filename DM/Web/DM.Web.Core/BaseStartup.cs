@@ -5,9 +5,13 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DM.Services.Authentication.Implementation;
+using DM.Services.Common.Implementation;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Services.Forum.Implementation;
 using DM.Web.Core.Binders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +29,12 @@ namespace DM.Web.Core
 
         private static readonly Assembly[] ExternalAssemblyTypes = new[]
             {
-                typeof(BaseStartup)
+                typeof(BaseStartup),
+                typeof(DmDbContext),
+                typeof(IGuidFactory),
+                typeof(IIntentionManager),
+                typeof(IAuthenticationService),
+                typeof(IForumService)
             }
             .Select(t => t.Assembly)
             .Distinct()
@@ -50,8 +59,11 @@ namespace DM.Web.Core
                 .AddOptions()
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
-                .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))));
+                .AddDbContext<DmDbContext>(options => options
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))))
+                .AddDbContext<ReadDmDbContext>(options => options
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext)))
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
             AddConfiguration(services)
                 .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
@@ -73,7 +85,7 @@ namespace DM.Web.Core
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            
+
             containerBuilder.Populate(services);
 
             var container = containerBuilder.Build();

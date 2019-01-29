@@ -3,10 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
+using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace DM.Web.Core.Authentication.Credentials
+namespace DM.Web.API.Implementation
 {
     public class ApiCredentialsStorage : ICredentialsStorage
     {

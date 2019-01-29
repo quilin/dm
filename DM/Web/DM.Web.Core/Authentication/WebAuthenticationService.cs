@@ -29,7 +29,10 @@ namespace DM.Web.Core.Authentication
             userSetter.Current = authResult.User;
             userSetter.CurrentSession = authResult.Session;
 
-            await credentialsStorage.Load(httpContext, authResult);
+            if (authResult.Error == AuthenticationError.NoError)
+            {
+                await credentialsStorage.Load(httpContext, authResult);
+            }
         }
 
         private async Task<AuthenticationResult> TryAuthenticate(HttpContext httpContext)
@@ -48,7 +51,7 @@ namespace DM.Web.Core.Authentication
                 case TokenCredentials tokenCredentials:
                     return await authenticationService.Authenticate(tokenCredentials.Token);
                 default:
-                    return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
+                    return AuthenticationResult.Success(AuthenticatedUser.Guest, null, null);
             }
         }
     }

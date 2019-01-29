@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Authentication.Credentials
 {
-    public class WebSiteCredentialsStorage : ICredentialsStorage
+    public class WebSiteCredentialsStorage
     {
         private const string HttpAuthorizationCookie = "__AUTH_cookie";
         private const string LoginKey = "login";

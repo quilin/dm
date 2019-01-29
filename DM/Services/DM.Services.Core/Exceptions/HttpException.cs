@@ -7,7 +7,7 @@ namespace DM.Services.Core.Exceptions
     {
         public HttpStatusCode StatusCode { get; }
 
-        public HttpException(HttpStatusCode statusCode, string message)
+        public HttpException(HttpStatusCode statusCode, string message = null)
             : base(message) => StatusCode = statusCode;
     }
 }

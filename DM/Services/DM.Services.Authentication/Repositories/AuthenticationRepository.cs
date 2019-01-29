@@ -13,10 +13,10 @@ namespace DM.Services.Authentication.Repositories
 {
     public class AuthenticationRepository : MongoRepository<UserSessions>, IAuthenticationRepository
     {
-        private readonly DmDbContext dbContext;
+        private readonly ReadDmDbContext dbContext;
 
         public AuthenticationRepository(
-            DmDbContext dbContext,
+            ReadDmDbContext dbContext,
             DmMongoClient mongoClient) : base(mongoClient)
         {
             this.dbContext = dbContext;
@@ -41,7 +41,7 @@ namespace DM.Services.Authentication.Repositories
 
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
-            var result = await dbContext.Users.AsNoTracking()
+            var result = await dbContext.Users
                 .Include(u => u.BansReceived)
                 .Where(u => u.Login == login)
                 .Select(u => MapAuthenticatedUser.Invoke(u))
@@ -51,7 +51,7 @@ namespace DM.Services.Authentication.Repositories
 
         public Task<AuthenticatedUser> FindUser(Guid userId)
         {
-            return dbContext.Users.AsNoTracking()
+            return dbContext.Users
                 .Include(u => u.BansReceived)
                 .Where(u => u.UserId == userId)
                 .Select(u => MapAuthenticatedUser.Invoke(u))
@@ -91,7 +91,7 @@ namespace DM.Services.Authentication.Repositories
 
         public async Task<IEnumerable<IntentionBan>> GetActiveUserBans(Guid userId)
         {
-            return await dbContext.Bans.AsNoTracking()
+            return await dbContext.Bans
                 .Where(b => b.StartDate <= DateTime.UtcNow &&
                             b.EndDate >= DateTime.UtcNow &&
                             !b.IsRemoved &&

@@ -19,4 +19,10 @@
       <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Logging.Debug, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+        <HintPath>C:\Users\vquil\.nuget\packages\microsoft.extensions.logging.debug\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Debug.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
