@@ -7,7 +7,7 @@ using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace DM.Web.API.Implementation
+namespace DM.Web.API.Authentication
 {
     public class ApiCredentialsStorage : ICredentialsStorage
     {

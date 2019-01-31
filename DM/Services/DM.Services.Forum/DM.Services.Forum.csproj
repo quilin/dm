@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
+      <ProjectReference Include="..\DM.Services.Common\DM.Services.Common.csproj" />
+      <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+      <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>

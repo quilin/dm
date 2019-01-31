@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Forum.Dto;
 using DM.Services.Forum.Implementation;
+using DM.Web.API.Dto.Fora;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers
@@ -18,10 +19,9 @@ namespace DM.Web.API.Controllers
         }
 
         [HttpGet("")]
-        public Task<IEnumerable<ForaListItem>> Get() => forumService.GetForaList();
+        public async Task<IEnumerable<Forum>> Get() => (await forumService.GetForaList()).Select(f => new Forum(f));
 
-        [HttpGet("{id}/topics")]
-        public async Task<IEnumerable<TopicsListItem>> Get(string id, [FromQuery] int n) =>
-            (await forumService.GetTopicsList(id, n)).Topics;
+        [HttpGet("{id}")]
+        public async Task<Forum> Get(string id) => new Forum(await forumService.GetForum(id));
     }
 }
