@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -8,10 +7,11 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.UserSettings;
 
 namespace DM.Services.Authentication.Repositories
 {
-    public class AuthenticationRepository : MongoRepository<UserSessions>, IAuthenticationRepository
+    public class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly ReadDmDbContext dbContext;
 
@@ -60,47 +60,50 @@ namespace DM.Services.Authentication.Repositories
 
         public async Task<Session> FindUserSession(Guid sessionId)
         {
-            var userSessions = await Collection
-                .Find(Filter.ElemMatch(u => u.Sessions, s => s.Id == sessionId))
+            var userSessions = await Collection<UserSessions>()
+                .Find(Filter<UserSessions>().ElemMatch(u => u.Sessions, s => s.Id == sessionId))
                 .FirstAsync();
             return userSessions.Sessions.First();
         }
 
+        public async Task<UserSettings> FindUserSettings(Guid userId)
+        {
+            return await Collection<DbUserSettings>()
+                .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
+                .Project(Select<DbUserSettings>().Expression(s => new UserSettings
+                {
+                    Id = s.Id,
+                    ColorScheme = (ColorScheme) s.ColorScheme,
+                    PostsPerPage = s.Paging.PostsPerPage,
+                    CommentsPerPage = s.Paging.CommentsPerPage,
+                    MessagesPerPage = s.Paging.MessagesPerPage,
+                    TopicsPerPage = s.Paging.TopicsPerPage,
+                    NannyGreetingsMessage = s.NannyGreetingsMessage
+                }))
+                .FirstOrDefaultAsync() ?? UserSettings.Default;
+        }
+
         public Task RemoveSession(Guid userId, Guid sessionId)
         {
-            return Collection.FindOneAndUpdateAsync(
-                Filter.Eq(u => u.Id, userId),
-                Update.PullFilter(s => s.Sessions, s => s.Id == sessionId));
+            return Collection<UserSessions>().FindOneAndUpdateAsync(
+                Filter<UserSessions>().Eq(u => u.Id, userId),
+                Update<UserSessions>().PullFilter(s => s.Sessions, s => s.Id == sessionId));
         }
 
         public Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate)
         {
-            return Collection.FindOneAndUpdateAsync(
-                Filter.Eq(u => u.Id, userId) &
-                Filter.ElemMatch(u => u.Sessions, s => s.Id == sessionId),
-                Update.Set(u => u.Sessions[-1].ExpirationDate, expirationDate));
+            return Collection<UserSessions>().FindOneAndUpdateAsync(
+                Filter<UserSessions>().Eq(u => u.Id, userId) &
+                Filter<UserSessions>().ElemMatch(u => u.Sessions, s => s.Id == sessionId),
+                Update<UserSessions>().Set(u => u.Sessions[-1].ExpirationDate, expirationDate));
         }
 
         public Task AddSession(Guid userId, Session session)
         {
-            return Collection.FindOneAndUpdateAsync(
-                Filter.Eq(u => u.Id, userId),
-                Update.Push(s => s.Sessions, session),
+            return Collection<UserSessions>().FindOneAndUpdateAsync(
+                Filter<UserSessions>().Eq(u => u.Id, userId),
+                Update<UserSessions>().Push(s => s.Sessions, session),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
-        }
-
-        public async Task<IEnumerable<IntentionBan>> GetActiveUserBans(Guid userId)
-        {
-            return await dbContext.Bans
-                .Where(b => b.StartDate <= DateTime.UtcNow &&
-                            b.EndDate >= DateTime.UtcNow &&
-                            !b.IsRemoved &&
-                            b.UserId == userId)
-                .Select(b => new IntentionBan
-                {
-                    AccessPolicy = b.AccessRestrictionPolicy
-                })
-                .ToArrayAsync();
         }
     }
 }

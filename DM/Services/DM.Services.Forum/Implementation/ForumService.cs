@@ -35,6 +35,13 @@ namespace DM.Services.Forum.Implementation
             return forumRepository.SelectFora(user.UserId, accessPolicy);
         }
 
+        public Task<ForaListItem> GetForum(string forumTitle)
+        {
+            var user = userProvider.Current;
+            var accessPolicy = accessPolicyConverter.Convert(user.Role);
+            return forumRepository.GetForum(forumTitle, user.UserId, accessPolicy);
+        }
+
         public async Task<(ForumTitle Forum, IEnumerable<TopicsListItem> Topics)> GetTopicsList(
             string forumTitle, int entityNumber)
         {
@@ -43,7 +50,7 @@ namespace DM.Services.Forum.Implementation
             var forum = await forumRepository.FindForum(forumTitle, accessPolicy);
             if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
 
-            var pageSize = 10; //userProvider.CurrentSettings.Paging.TopicsPerPage;
+            var pageSize = userProvider.CurrentSettings.TopicsPerPage;
             var topicsCount = await topicRepository.CountTopics(forum.ForumId);
             var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
             var topics = await topicRepository.SelectTopics(user.UserId, forum.ForumId, pagingData);

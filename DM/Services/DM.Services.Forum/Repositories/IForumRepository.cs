@@ -9,6 +9,7 @@ namespace DM.Services.Forum.Repositories
     public interface IForumRepository
     {
         Task<IEnumerable<ForaListItem>> SelectFora(Guid userId, ForumAccessPolicy accessPolicy);
+        Task<ForaListItem> GetForum(string forumTitle, Guid userId, ForumAccessPolicy accessPolicy);
         Task<ForumTitle> FindForum(string forumTitle, ForumAccessPolicy accessPolicy);
     }
 }

@@ -8,22 +8,21 @@ using MongoDB.Driver;
 
 namespace DM.Services.Common.Repositories
 {
-    public class UnreadCountersRepository : MongoRepository<UnreadCounter>, IUnreadCountersRepository
+    public class UnreadCountersRepository : MongoRepository, IUnreadCountersRepository
     {
         public UnreadCountersRepository(DmMongoClient client) : base(client)
         {
         }
 
         public async Task<IDictionary<Guid, int>> SelectByParents(
-            Guid userId, IEnumerable<Guid> parentIds, UnreadEntryType entryType)
+            Guid userId, UnreadEntryType entryType, params Guid[] parentIds)
         {
             var userIds = new[] {userId, Guid.Empty}.Distinct();
-            var ids = parentIds.ToArray();
-            var counters = (await Collection.Aggregate()
+            var counters = (await Collection<UnreadCounter>().Aggregate()
                     .Match(
-                        Filter.In(c => c.UserId, userIds) &
-                        Filter.In(c => c.ParentId, ids) &
-                        Filter.Eq(c => c.EntryType, entryType))
+                        Filter<UnreadCounter>().In(c => c.UserId, userIds) &
+                        Filter<UnreadCounter>().In(c => c.ParentId, parentIds) &
+                        Filter<UnreadCounter>().Eq(c => c.EntryType, entryType))
                     .Group(c => c.EntityId,
                         g => new UnreadCounter
                         {
@@ -39,19 +38,18 @@ namespace DM.Services.Common.Repositories
                         })
                     .ToListAsync())
                 .ToDictionary(c => c.EntityId, c => c.Counter);
-            return ids.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
+            return parentIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
         }
 
         public async Task<IDictionary<Guid, int>> SelectByEntities(
-            Guid userId, IEnumerable<Guid> entityIds, UnreadEntryType entryType)
+            Guid userId, UnreadEntryType entryType, params Guid[] entityIds)
         {
             var userIds = new[] {userId, Guid.Empty}.Distinct();
-            var ids = entityIds.ToArray();
-            var counters = (await Collection.Aggregate()
+            var counters = (await Collection<UnreadCounter>().Aggregate()
                     .Match(
-                        Filter.In(c => c.UserId, userIds) &
-                        Filter.In(c => c.EntityId, ids) &
-                        Filter.Eq(c => c.EntryType, entryType))
+                        Filter<UnreadCounter>().In(c => c.UserId, userIds) &
+                        Filter<UnreadCounter>().In(c => c.EntityId, entityIds) &
+                        Filter<UnreadCounter>().Eq(c => c.EntryType, entryType))
                     .Group(c => c.EntityId,
                         g => new UnreadCounter
                         {
@@ -60,7 +58,7 @@ namespace DM.Services.Common.Repositories
                         })
                     .ToListAsync())
                 .ToDictionary(c => c.EntityId, c => c.Counter);
-            return ids.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
+            return entityIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
         }
     }
 }

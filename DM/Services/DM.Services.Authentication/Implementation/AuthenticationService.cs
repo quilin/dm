@@ -62,8 +62,9 @@ namespace DM.Services.Authentication.Implementation
                         [UserIdKey] = user.UserId,
                         [SessionIdKey] = session.Id
                     };
+                    var settings = await repository.FindUserSettings(user.UserId);
                     var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
-                    return AuthenticationResult.Success(user, session, token);
+                    return AuthenticationResult.Success(user, session, settings, token);
             }
         }
 
@@ -86,10 +87,12 @@ namespace DM.Services.Authentication.Implementation
 
             var fetchUser = repository.FindUser(userId);
             var fetchSession = repository.FindUserSession(sessionId);
-            await Task.WhenAll(fetchUser, fetchSession);
+            var fetchSettings = repository.FindUserSettings(userId);
+            await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
 
             var user = await fetchUser;
             var session = await fetchSession;
+            var settings = await fetchSettings;
             if (!session.IsPersistent &&
                 session.ExpirationDate < dateTimeProvider.Now)
             {
@@ -104,7 +107,7 @@ namespace DM.Services.Authentication.Implementation
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
             }
 
-            return AuthenticationResult.Success(user, session, authToken);
+            return AuthenticationResult.Success(user, session, settings, authToken);
         }
     }
 }

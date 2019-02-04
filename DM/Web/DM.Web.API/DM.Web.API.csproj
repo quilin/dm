@@ -20,4 +20,9 @@
       <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Authentication" />
+      <Folder Include="Services" />
+    </ItemGroup>
+
 </Project>

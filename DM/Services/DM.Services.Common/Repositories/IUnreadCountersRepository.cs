@@ -8,9 +8,9 @@ namespace DM.Services.Common.Repositories
     public interface IUnreadCountersRepository
     {
         Task<IDictionary<Guid, int>> SelectByParents(
-            Guid userId, IEnumerable<Guid> parentIds, UnreadEntryType entryType);
+            Guid userId, UnreadEntryType entryType, params Guid[] parentIds);
 
         Task<IDictionary<Guid, int>> SelectByEntities(
-            Guid userId, IEnumerable<Guid> entityIds, UnreadEntryType entryType);
+            Guid userId, UnreadEntryType entryType, params Guid[] entityIds);
     }
 }

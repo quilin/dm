@@ -28,6 +28,7 @@ namespace DM.Web.Core.Authentication
 
             userSetter.Current = authResult.User;
             userSetter.CurrentSession = authResult.Session;
+            userSetter.CurrentSettings = authResult.Settings;
 
             if (authResult.Error == AuthenticationError.NoError)
             {
@@ -40,7 +41,7 @@ namespace DM.Web.Core.Authentication
             var (success, credentials) = await credentialsStorage.Extract(httpContext);
             if (!success)
             {
-                return AuthenticationResult.Success(AuthenticatedUser.Guest, null, null);
+                return AuthenticationResult.Success(AuthenticatedUser.Guest, null, UserSettings.Default, null);
             }
 
             switch (credentials)
@@ -51,7 +52,7 @@ namespace DM.Web.Core.Authentication
                 case TokenCredentials tokenCredentials:
                     return await authenticationService.Authenticate(tokenCredentials.Token);
                 default:
-                    return AuthenticationResult.Success(AuthenticatedUser.Guest, null, null);
+                    return AuthenticationResult.Success(AuthenticatedUser.Guest, null, UserSettings.Default, null);
             }
         }
     }

@@ -2,7 +2,7 @@ using MongoDB.Driver;
 
 namespace DM.Services.DataAccess.MongoIntegration
 {
-    public abstract class MongoRepository<TEntity> where TEntity : class
+    public abstract class MongoRepository
     {
         private readonly DmMongoClient client;
 
@@ -11,10 +11,11 @@ namespace DM.Services.DataAccess.MongoIntegration
             this.client = client;
         }
 
-        protected static FilterDefinitionBuilder<TEntity> Filter => new FilterDefinitionBuilder<TEntity>();
-        protected static UpdateDefinitionBuilder<TEntity> Update => new UpdateDefinitionBuilder<TEntity>();
-        protected static SortDefinitionBuilder<TEntity> Sort => new SortDefinitionBuilder<TEntity>();
+        protected static FilterDefinitionBuilder<TEntity> Filter<TEntity>() => new FilterDefinitionBuilder<TEntity>();
+        protected static UpdateDefinitionBuilder<TEntity> Update<TEntity>() => new UpdateDefinitionBuilder<TEntity>();
+        protected static SortDefinitionBuilder<TEntity> Sort<TEntity>() => new SortDefinitionBuilder<TEntity>();
+        protected static ProjectionDefinitionBuilder<TEntity> Select<TEntity>() => new ProjectionDefinitionBuilder<TEntity>();
 
-        protected IMongoCollection<TEntity> Collection => client.GetCollection<TEntity>();
+        protected IMongoCollection<TEntity> Collection<TEntity>() => client.GetCollection<TEntity>();
     }
 }
