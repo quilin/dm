@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DM.Web.API.Dto.Common;
+using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Fora
 {

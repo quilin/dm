@@ -2,6 +2,7 @@ using System;
 using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using DM.Web.API.Dto.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.Fora

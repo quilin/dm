@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DM.Web.API.Dto.Common
+namespace DM.Web.API.Dto.Users
 {
     public class User
     {

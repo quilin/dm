@@ -23,6 +23,7 @@
     <ItemGroup>
       <Folder Include="Authentication" />
       <Folder Include="Dto\Contracts" />
+      <Folder Include="Dto\Users" />
     </ItemGroup>
 
 </Project>

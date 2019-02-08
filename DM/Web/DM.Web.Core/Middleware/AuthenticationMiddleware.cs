@@ -13,9 +13,9 @@ namespace DM.Web.Core.Middleware
             this.next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext, IWebAuthenticationService authenticationService)
+        public async Task InvokeAsync(HttpContext httpContext,
+            IWebAuthenticationService authenticationService)
         {
-            // todo: only allow login credentials authentication for the certain endpoint, such as '/account/'
             await authenticationService.Authenticate(httpContext);
             await next(httpContext);
         }
