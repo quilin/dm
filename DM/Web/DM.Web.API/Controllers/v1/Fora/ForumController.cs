@@ -4,7 +4,7 @@ using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1
+namespace DM.Web.API.Controllers.v1.Fora
 {
     [Route("v1/fora")]
     public class ForumController : Controller

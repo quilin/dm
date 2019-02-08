@@ -4,12 +4,23 @@ namespace DM.Web.API.Dto.Contracts
 {
     public class Envelope<T>
     {
-        public T Resource { get; set; }
+        public Envelope(T resource)
+        {
+            Resource = resource;
+        }
+        
+        public T Resource { get; }
     }
 
     public class ListEnvelope<T>
     {
-        public IEnumerable<T> Resources { get; set; }
-        public Paging Paging { get; set; }
+        public ListEnvelope(IEnumerable<T> resources, Paging paging)
+        {
+            Resources = resources;
+            Paging = paging;
+        }
+        
+        public IEnumerable<T> Resources { get; }
+        public Paging Paging { get; }
     }
 }

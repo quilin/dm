@@ -7,14 +7,14 @@ namespace DM.Services.Common.Implementation
 {
     public class IntentionManager : IIntentionManager
     {
-        private readonly IUserProvider userProvider;
+        private readonly IIdentityProvider identityProvider;
         private readonly IIntentionResolver[] resolvers;
 
         public IntentionManager(
-            IUserProvider userProvider,
+            IIdentityProvider identityProvider,
             IIntentionResolver[] resolvers)
         {
-            this.userProvider = userProvider;
+            this.identityProvider = identityProvider;
             this.resolvers = resolvers;
         }
 
@@ -26,7 +26,7 @@ namespace DM.Services.Common.Implementation
                 .OfType<IIntentionResolver<TIntention, TTarget>>()
                 .FirstOrDefault();
             return matchingResolver != null &&
-                   await matchingResolver.IsAllowed(userProvider.Current, intention, target);
+                   await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
         }
 
         public async Task ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target)
@@ -35,7 +35,7 @@ namespace DM.Services.Common.Implementation
         {
             if (!await IsAllowed(intention, target))
             {
-                throw new IntentionManagerException(userProvider.Current, GetIntentionEnum(intention), target);
+                throw new IntentionManagerException(identityProvider.Current.User, GetIntentionEnum(intention), target);
             }
         }
 

@@ -26,6 +26,10 @@ namespace DM.Services.Authentication.Repositories
         {
             UserId = user.UserId,
             Login = user.Login,
+            ProfilePictureUrl = user.ProfilePictures
+                .Where(u => !u.IsRemoved)
+                .Select(u => u.VirtualPath)
+                .FirstOrDefault(),
             Role = user.Role,
             LastVisitDate = user.LastVisitDate,
             RatingDisabled = user.RatingDisabled,
@@ -36,14 +40,17 @@ namespace DM.Services.Authentication.Repositories
             PasswordHash = user.PasswordHash,
             IsRemoved = user.IsRemoved,
             AccessPolicy = user.AccessPolicy,
-            AccessRestrictionPolicies = user.BansReceived.Select(b => b.AccessRestrictionPolicy).ToArray()
+            AccessRestrictionPolicies = user.BansReceived
+                .Select(b => b.AccessRestrictionPolicy)
+                .ToArray()
         };
 
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users
                 .Include(u => u.BansReceived)
-                .Where(u => u.Login == login)
+                .Include(u => u.ProfilePictures)
+                .Where(u => u.Login.ToLower() == login.ToLower())
                 .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstOrDefaultAsync();
             return (result != null, result);
@@ -53,6 +60,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return dbContext.Users
                 .Include(u => u.BansReceived)
+                .Include(u => u.ProfilePictures)
                 .Where(u => u.UserId == userId)
                 .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstAsync();

@@ -6,7 +6,7 @@ using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1
+namespace DM.Web.API.Controllers.v1.Fora
 {
     [Route("v1/topics")]
     public class TopicController : Controller

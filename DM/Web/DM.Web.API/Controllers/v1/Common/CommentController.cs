@@ -5,7 +5,7 @@ using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1
+namespace DM.Web.API.Controllers.v1.Common
 {
     [Route("v1/comments")]
     public class CommentController : Controller

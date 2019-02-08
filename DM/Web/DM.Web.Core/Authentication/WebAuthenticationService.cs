@@ -10,16 +10,16 @@ namespace DM.Web.Core.Authentication
     {
         private readonly ICredentialsStorage credentialsStorage;
         private readonly IAuthenticationService authenticationService;
-        private readonly IUserSetter userSetter;
+        private readonly IIdentitySetter identitySetter;
 
         public WebAuthenticationService(
             ICredentialsStorage credentialsStorage,
             IAuthenticationService authenticationService,
-            IUserSetter userSetter)
+            IIdentitySetter identitySetter)
         {
             this.credentialsStorage = credentialsStorage;
             this.authenticationService = authenticationService;
-            this.userSetter = userSetter;
+            this.identitySetter = identitySetter;
         }
 
         public Task Authenticate(LoginCredentials credentials, HttpContext httpContext) =>
@@ -45,14 +45,12 @@ namespace DM.Web.Core.Authentication
                     break;
             }
 
-            userSetter.Current = authResult.User;
-            userSetter.CurrentSession = authResult.Session;
-            userSetter.CurrentSettings = authResult.Settings;
-
             if (authResult.Error == AuthenticationError.NoError && !authResult.User.IsGuest)
             {
                 await credentialsStorage.Load(httpContext, authResult);
             }
+
+            identitySetter.Current = authResult;
         }
     }
 }

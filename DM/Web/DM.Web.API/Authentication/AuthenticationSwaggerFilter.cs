@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Net.Mime;
-using DM.Web.API.Controllers.v1;
+using DM.Web.API.Controllers.v1.Users;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

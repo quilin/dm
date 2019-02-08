@@ -5,7 +5,7 @@ using DM.Web.API.Services.Users;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1
+namespace DM.Web.API.Controllers.v1.Users
 {
     [Route("v1/account")]
     public class AccountController : Controller
