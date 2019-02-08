@@ -14,6 +14,8 @@ namespace DM.Web.API.Dto.Fora
         public bool Attached { get; set; }
         public bool Closed { get; set; }
         public LastTopicComment LastComment { get; set; }
+        public int CommentsCount { get; set; }
+        public int UnreadCommentsCount { get; set; }
 
         public Forum Forum { get; set; }
     }
