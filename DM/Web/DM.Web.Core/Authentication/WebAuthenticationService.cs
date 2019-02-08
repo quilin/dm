@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
@@ -10,57 +8,50 @@ namespace DM.Web.Core.Authentication
 {
     public class WebAuthenticationService : IWebAuthenticationService
     {
-        private readonly IEnumerable<ICredentialsExtractor> credentialsExtractors;
-        private readonly ICredentialsLoader credentialsLoader;
+        private readonly ICredentialsStorage credentialsStorage;
         private readonly IAuthenticationService authenticationService;
         private readonly IUserSetter userSetter;
 
         public WebAuthenticationService(
-            IEnumerable<ICredentialsExtractor> credentialsExtractors,
-            ICredentialsLoader credentialsLoader,
+            ICredentialsStorage credentialsStorage,
             IAuthenticationService authenticationService,
             IUserSetter userSetter)
         {
-            this.credentialsExtractors = credentialsExtractors;
-            this.credentialsLoader = credentialsLoader;
+            this.credentialsStorage = credentialsStorage;
             this.authenticationService = authenticationService;
             this.userSetter = userSetter;
         }
 
-        public async Task Authenticate<TCredentials>(HttpContext httpContext) where TCredentials : AuthCredentials
+        public Task Authenticate(LoginCredentials credentials, HttpContext httpContext) =>
+            AuthenticateWithCredentials(credentials, httpContext);
+
+        public async Task Authenticate(HttpContext httpContext) =>
+            await AuthenticateWithCredentials(await credentialsStorage.ExtractToken(httpContext), httpContext);
+
+        private async Task AuthenticateWithCredentials(AuthCredentials credentials, HttpContext httpContext)
         {
-            var authResult = await TryAuthenticate<TCredentials>(httpContext);
+            AuthenticationResult authResult;
+            switch (credentials)
+            {
+                case LoginCredentials loginCredentials:
+                    authResult = await authenticationService.Authenticate(
+                        loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe);
+                    break;
+                case TokenCredentials tokenCredentials:
+                    authResult = await authenticationService.Authenticate(tokenCredentials.Token);
+                    break;
+                default:
+                    authResult = AuthenticationResult.Guest();
+                    break;
+            }
 
             userSetter.Current = authResult.User;
             userSetter.CurrentSession = authResult.Session;
             userSetter.CurrentSettings = authResult.Settings;
 
-            if (authResult.Error == AuthenticationError.NoError &&
-                authResult.User.IsGuest)
+            if (authResult.Error == AuthenticationError.NoError && !authResult.User.IsGuest)
             {
-                await credentialsLoader.Load(httpContext, authResult);
-            }
-        }
-
-        private async Task<AuthenticationResult> TryAuthenticate<TCredentials>(HttpContext httpContext)
-            where TCredentials : AuthCredentials
-        {
-            var credentialsExtractor = credentialsExtractors.OfType<ICredentialsExtractor<TCredentials>>().First();
-            var (success, credentials) = await credentialsExtractor.Extract(httpContext);
-            if (!success)
-            {
-                return AuthenticationResult.Guest();
-            }
-
-            switch (credentials)
-            {
-                case LoginCredentials loginCredentials:
-                    return await authenticationService.Authenticate(
-                        loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe);
-                case TokenCredentials tokenCredentials:
-                    return await authenticationService.Authenticate(tokenCredentials.Token);
-                default:
-                    return AuthenticationResult.Guest();
+                await credentialsStorage.Load(httpContext, authResult);
             }
         }
     }

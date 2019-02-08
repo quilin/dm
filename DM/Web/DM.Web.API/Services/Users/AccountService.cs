@@ -21,9 +21,9 @@ namespace DM.Web.API.Services.Users
             this.userProvider = userProvider;
         }
         
-        public async Task<Envelope<User>> Login(HttpContext httpContext)
+        public async Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext)
         {
-            await authenticationService.Authenticate<LoginCredentials>(httpContext);
+            await authenticationService.Authenticate(credentials, httpContext);
             return new Envelope<User>
             {
                 Resource = new User

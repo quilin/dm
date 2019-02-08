@@ -17,8 +17,9 @@ namespace DM.Web.API.Controllers.v1
         {
             this.accountService = accountService;
         }
-        
+
         [HttpPost("")]
-        public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) => accountService.Login(HttpContext);
+        public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) =>
+            accountService.Login(credentials, HttpContext);
     }
 }

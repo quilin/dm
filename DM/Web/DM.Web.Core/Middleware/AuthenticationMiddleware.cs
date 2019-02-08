@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using DM.Web.Core.Authentication;
-using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Middleware
@@ -17,7 +16,7 @@ namespace DM.Web.Core.Middleware
         public async Task InvokeAsync(HttpContext httpContext,
             IWebAuthenticationService authenticationService)
         {
-            await authenticationService.Authenticate<TokenCredentials>(httpContext);
+            await authenticationService.Authenticate(httpContext);
             await next(httpContext);
         }
     }
