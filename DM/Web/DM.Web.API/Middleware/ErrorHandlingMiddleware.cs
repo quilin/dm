@@ -1,17 +1,23 @@
 using System;
 using System.Net;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DM.Web.API.Middleware
 {
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
+        private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
 
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
@@ -49,7 +55,9 @@ namespace DM.Web.API.Middleware
                 }
 
                 httpContext.Response.StatusCode = statusCode;
-                await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(error)));
+                httpContext.Response.ContentType = MediaTypeNames.Application.Json;
+                var errorData = JsonConvert.SerializeObject(new {error}, Formatting.None, serializerSettings);
+                await httpContext.Response.WriteAsync(errorData, Encoding.UTF8);
             }
         }
     }

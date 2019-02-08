@@ -4,7 +4,9 @@ namespace DM.Services.Authentication.Dto
 {
     public class AuthenticationResult
     {
-        private AuthenticationResult() {}
+        private AuthenticationResult()
+        {
+        }
 
         public AuthenticatedUser User { get; private set; }
         public Session Session { get; private set; }
@@ -30,6 +32,15 @@ namespace DM.Services.Authentication.Dto
             Session = session,
             Settings = settings,
             Token = token
+        };
+
+        public static AuthenticationResult Guest() => new AuthenticationResult
+        {
+            Error = AuthenticationError.NoError,
+            User = AuthenticatedUser.Guest,
+            Settings = UserSettings.Default,
+            Token = null,
+            Session = null
         };
     }
 }

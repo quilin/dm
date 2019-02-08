@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Authentication.Credentials
 {
-    public interface ICredentialsStorage
+    public interface ICredentialsLoader
     {
-        Task<(bool success, AuthCredentials credentials)> Extract(HttpContext httpContext);
         Task Load(HttpContext httpContext, AuthenticationResult authenticationResult);
     }
 }

@@ -72,7 +72,7 @@ namespace DM.Services.Authentication.Implementation
         {
             Guid userId;
             Guid sessionId;
-            
+
             try
             {
                 var decryptedString = await cryptoService.Decrypt(authToken, Key, Iv);

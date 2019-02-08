@@ -5,7 +5,7 @@ using DM.Web.API.Services.Users;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.Users
+namespace DM.Web.API.Controllers.v1
 {
     [Route("v1/account")]
     public class AccountController : Controller
@@ -18,7 +18,7 @@ namespace DM.Web.API.Controllers.Users
             this.accountService = accountService;
         }
         
-        [HttpPost]
-        public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) => accountService.Login(credentials);
+        [HttpPost("")]
+        public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) => accountService.Login(HttpContext);
     }
 }

@@ -9,23 +9,19 @@ using Newtonsoft.Json;
 
 namespace DM.Web.API.Authentication
 {
-    public class ApiCredentialsStorage : ICredentialsStorage
+    public class ApiCredentialsExtractor :
+        ICredentialsExtractor<LoginCredentials>,
+        ICredentialsExtractor<TokenCredentials>,
+        ICredentialsLoader
     {
         private const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
         private const string LoginKey = "login";
         private const string PasswordKey = "password";
         private const string DoNotRememberKey = "doNotRemember";
 
-        public async Task<(bool success, AuthCredentials credentials)> Extract(HttpContext httpContext)
+        async Task<(bool success, LoginCredentials credentials)> ICredentialsExtractor<LoginCredentials>.Extract(
+            HttpContext httpContext)
         {
-            if (httpContext.Request.Headers.TryGetValue(HttpAuthTokenHeader, out var headerValues))
-            {
-                var authToken = headerValues.FirstOrDefault();
-                return string.IsNullOrEmpty(authToken)
-                    ? default
-                    : (true, new TokenCredentials {Token = authToken});
-            }
-
             try
             {
                 using (var reader = new StreamReader(httpContext.Request.Body))
@@ -51,6 +47,20 @@ namespace DM.Web.API.Authentication
             {
                 return default;
             }
+        }
+
+        Task<(bool success, TokenCredentials credentials)> ICredentialsExtractor<TokenCredentials>.Extract(
+            HttpContext httpContext)
+        {
+            if (!httpContext.Request.Headers.TryGetValue(HttpAuthTokenHeader, out var headerValues))
+            {
+                return Task.FromResult<(bool success, TokenCredentials credentials)>((false, null));
+            }
+            var authToken = headerValues.FirstOrDefault();
+            return string.IsNullOrEmpty(authToken)
+                ? Task.FromResult<(bool success, TokenCredentials credentials)>((false, null))
+                : Task.FromResult<(bool success, TokenCredentials credentials)>((true,
+                    new TokenCredentials {Token = authToken}));
         }
 
         public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)

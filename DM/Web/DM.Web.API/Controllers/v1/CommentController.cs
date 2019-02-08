@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.Common
+namespace DM.Web.API.Controllers.v1
 {
     [Route("v1/comments")]
     public class CommentController : Controller
@@ -14,26 +15,27 @@ namespace DM.Web.API.Controllers.Common
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Envelope<Comment> PutComment(Guid id, [FromBody] Comment comment) => null;
+        public Task<Envelope<Comment>> PutComment(Guid id, [FromBody] Comment comment) =>
+            throw new NotImplementedException();
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public void DeleteComment(Guid id) {}
+        public Task DeleteComment(Guid id) => throw new NotImplementedException();
 
         [HttpPost("{id}/likes")]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Envelope<User> PostLike(Guid id) => null;
+        public Task<Envelope<User>> PostLike(Guid id) => throw new NotImplementedException();
 
         [HttpDelete("{id}/likes")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public void DeleteLike(Guid id) {}
+        public Task DeleteLike(Guid id) => throw new NotImplementedException();
     }
 }

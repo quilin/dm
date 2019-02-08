@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
@@ -21,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Authentication" />
       <Folder Include="Dto\Contracts" />
       <Folder Include="Dto\Users" />
     </ItemGroup>
