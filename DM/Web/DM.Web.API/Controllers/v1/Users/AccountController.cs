@@ -18,8 +18,14 @@ namespace DM.Web.API.Controllers.v1.Users
             this.accountService = accountService;
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) =>
             accountService.Login(credentials, HttpContext);
+
+        [HttpDelete]
+        public Task Logout() => accountService.Logout(HttpContext);
+
+        [HttpDelete("all")]
+        public Task LogoutAll() => accountService.LogoutAll(HttpContext);
     }
 }

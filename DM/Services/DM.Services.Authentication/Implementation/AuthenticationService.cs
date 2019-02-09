@@ -18,6 +18,7 @@ namespace DM.Services.Authentication.Implementation
         private readonly IAuthenticationRepository repository;
         private readonly ISessionFactory sessionFactory;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IIdentityProvider identityProvider;
 
         private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
         private const string Iv = "dtEzMsz2ogg=";
@@ -29,13 +30,15 @@ namespace DM.Services.Authentication.Implementation
             ISymmetricCryptoService cryptoService,
             IAuthenticationRepository repository,
             ISessionFactory sessionFactory,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IIdentityProvider identityProvider)
         {
             this.securityManager = securityManager;
             this.cryptoService = cryptoService;
             this.repository = repository;
             this.sessionFactory = sessionFactory;
             this.dateTimeProvider = dateTimeProvider;
+            this.identityProvider = identityProvider;
         }
 
         public async Task<AuthenticationResult> Authenticate(string login, string password, bool persistent)
@@ -56,15 +59,8 @@ namespace DM.Services.Authentication.Implementation
 
                 default:
                     var session = sessionFactory.Create(persistent);
-                    await repository.AddSession(user.UserId, session);
-                    var authData = new Dictionary<string, Guid>
-                    {
-                        [UserIdKey] = user.UserId,
-                        [SessionIdKey] = session.Id
-                    };
                     var settings = await repository.FindUserSettings(user.UserId);
-                    var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
-                    return AuthenticationResult.Success(user, session, settings, token);
+                    return await CreateAuthenticationResult(user, session, settings);
             }
         }
 
@@ -108,6 +104,34 @@ namespace DM.Services.Authentication.Implementation
             }
 
             return AuthenticationResult.Success(user, session, settings, authToken);
+        }
+
+        public async Task Logout()
+        {
+            var identity = identityProvider.Current;
+            await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
+        }
+
+        public async Task<AuthenticationResult> LogoutAll()
+        {
+            var identity = identityProvider.Current;
+            await repository.RemoveSessions(identity.User.UserId);
+
+            var session = sessionFactory.Create(identity.Session.IsPersistent);
+            return await CreateAuthenticationResult(identity.User, session, identity.Settings);
+        }
+
+        private async Task<AuthenticationResult> CreateAuthenticationResult(
+            AuthenticatedUser user, Session session, UserSettings settings)
+        {
+            await repository.AddSession(user.UserId, session);
+            var authData = new Dictionary<string, Guid>
+            {
+                [UserIdKey] = user.UserId,
+                [SessionIdKey] = session.Id
+            };
+            var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
+            return AuthenticationResult.Success(user, session, settings, token);
         }
     }
 }

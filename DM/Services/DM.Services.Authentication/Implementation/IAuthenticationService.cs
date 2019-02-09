@@ -7,5 +7,8 @@ namespace DM.Services.Authentication.Implementation
     {
         Task<AuthenticationResult> Authenticate(string login, string password, bool persistent);
         Task<AuthenticationResult> Authenticate(string authToken);
+
+        Task Logout();
+        Task<AuthenticationResult> LogoutAll();
     }
 }

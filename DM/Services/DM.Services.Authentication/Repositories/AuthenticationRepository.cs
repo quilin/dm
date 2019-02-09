@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -111,6 +112,14 @@ namespace DM.Services.Authentication.Repositories
             return Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId),
                 Update<UserSessions>().Push(s => s.Sessions, session),
+                new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+        }
+
+        public Task RemoveSessions(Guid userId)
+        {
+            return Collection<UserSessions>().FindOneAndUpdateAsync(
+                Filter<UserSessions>().Eq(u => u.Id, userId),
+                Update<UserSessions>().Set(s => s.Sessions, new List<Session>()),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
         }
     }

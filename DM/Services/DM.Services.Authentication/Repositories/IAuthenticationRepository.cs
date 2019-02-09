@@ -15,5 +15,6 @@ namespace DM.Services.Authentication.Repositories
         Task RemoveSession(Guid userId, Guid sessionId);
         Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate);
         Task AddSession(Guid userId, Session session);
+        Task RemoveSessions(Guid userId);
     }
 }

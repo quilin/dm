@@ -9,5 +9,7 @@ namespace DM.Web.API.Services.Users
     public interface IAccountService
     {
         Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext);
+        Task Logout(HttpContext httpContext);
+        Task LogoutAll(HttpContext httpContext);
     }
 }

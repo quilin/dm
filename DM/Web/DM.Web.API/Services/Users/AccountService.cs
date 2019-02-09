@@ -56,10 +56,16 @@ namespace DM.Web.API.Services.Users
                 case AuthenticationError.Inactive:
                 case AuthenticationError.Removed:
                 case AuthenticationError.Forbidden:
-                    throw new HttpException(HttpStatusCode.Forbidden, $"User is {authenticationResult.Error.ToString().ToLower()}. Address the technical support for more details");
+                    var userState = authenticationResult.Error.ToString().ToLower();
+                    throw new HttpException(HttpStatusCode.Forbidden,
+                        $"User is {userState}. Address the technical support for more details");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public Task Logout(HttpContext httpContext) => authenticationService.Logout(httpContext);
+
+        public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutAll(httpContext);
     }
 }
