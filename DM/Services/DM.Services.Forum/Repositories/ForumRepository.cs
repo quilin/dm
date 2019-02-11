@@ -11,6 +11,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using DbForum = DM.Services.DataAccess.BusinessObjects.Fora.Forum;
 
 namespace DM.Services.Forum.Repositories
 {
@@ -32,33 +33,21 @@ namespace DM.Services.Forum.Repositories
 
         public async Task<IEnumerable<ForaListItem>> SelectFora(Guid userId, ForumAccessPolicy accessPolicy)
         {
-            var fora = await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>
-                await dmDbContext.Fora
-                    .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
-                    .OrderBy(f => f.Order)
-                    .Select(f => new {f.ForumId, f.Title})
-                    .ToArrayAsync());
+            var fora = await SelectFora(accessPolicy);
             var counters = await unreadCountersRepository.SelectByParents(
-                userId, UnreadEntryType.Message, fora.Select(f => f.ForumId).ToArray());
-            return fora.Select(f => new ForaListItem
+                userId, UnreadEntryType.Message, fora.Select(f => f.Id).ToArray());
+
+            foreach (var forum in fora)
             {
-                Title = f.Title,
-                UnreadTopicsCount = counters[f.ForumId]
-            });
+                forum.UnreadTopicsCount = counters[forum.Id];
+            }
+
+            return fora;
         }
 
         public async Task<ForaListItem> GetForum(string forumTitle, ForumAccessPolicy accessPolicy, Guid? userId = null)
         {
-            var fora = await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>
-                await dmDbContext.Fora
-                    .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
-                    .OrderBy(f => f.Order)
-                    .Select(f => new ForaListItem
-                    {
-                        Id = f.ForumId,
-                        Title = f.Title
-                    })
-                    .ToArrayAsync());
+            var fora = await SelectFora(accessPolicy);
             var forum = fora.FirstOrDefault(f => f.Title == forumTitle);
             if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
 
@@ -69,6 +58,26 @@ namespace DM.Services.Forum.Repositories
             }
 
             return forum;
+        }
+
+        private async Task<ICollection<ForaListItem>> SelectFora(ForumAccessPolicy accessPolicy)
+        {
+            return await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>
+                await dmDbContext.Fora
+                    .Include(f => f.Moderators)
+                    .ThenInclude(m => m.User)
+                    .ThenInclude(u => u.ProfilePictures)
+                    .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
+                    .OrderBy(f => f.Order)
+                    .Select(f => new ForaListItem
+                    {
+                        Id = f.ForumId,
+                        Title = f.Title,
+                        Moderators = f.Moderators
+                            .Where(u => !u.User.IsRemoved)
+                            .Select(u => Users.GeneralProjection.Invoke(u.User))
+                    })
+                    .ToArrayAsync());
         }
     }
 }

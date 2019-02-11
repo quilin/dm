@@ -10,22 +10,22 @@ namespace DM.Web.API.Controllers.v1.Users
     [Route("v1/account")]
     public class AccountController : Controller
     {
-        private readonly IAccountService accountService;
+        private readonly IAccountApiService accountApiService;
 
         public AccountController(
-            IAccountService accountService)
+            IAccountApiService accountApiService)
         {
-            this.accountService = accountService;
+            this.accountApiService = accountApiService;
         }
 
         [HttpPost]
         public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) =>
-            accountService.Login(credentials, HttpContext);
+            accountApiService.Login(credentials, HttpContext);
 
         [HttpDelete]
-        public Task Logout() => accountService.Logout(HttpContext);
+        public Task Logout() => accountApiService.Logout(HttpContext);
 
         [HttpDelete("all")]
-        public Task LogoutAll() => accountService.LogoutAll(HttpContext);
+        public Task LogoutAll() => accountApiService.LogoutAll(HttpContext);
     }
 }

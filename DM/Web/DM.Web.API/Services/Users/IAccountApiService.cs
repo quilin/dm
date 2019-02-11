@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Services.Users
 {
-    public interface IAccountService
+    public interface IAccountApiService
     {
         Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext);
         Task Logout(HttpContext httpContext);

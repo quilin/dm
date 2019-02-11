@@ -9,17 +9,16 @@ using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
-using DM.Web.Core.Extensions.EnumExtensions;
 using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Services.Users
 {
-    public class AccountService : IAccountService
+    public class AccountApiService : IAccountApiService
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;
 
-        public AccountService(
+        public AccountApiService(
             IWebAuthenticationService authenticationService,
             IIdentityProvider identityProvider)
         {
@@ -34,14 +33,7 @@ namespace DM.Web.API.Services.Users
             switch (authenticationResult.Error)
             {
                 case AuthenticationError.NoError:
-                    return new Envelope<User>(new User
-                    {
-                        Login = authenticationResult.User.Login,
-                        Roles = authenticationResult.User.Role.GetUserRoleDescription(),
-                        Rating = new Rating(authenticationResult.User),
-                        Online = authenticationResult.User.LastVisitDate,
-                        ProfilePictureUrl = authenticationResult.User.ProfilePictureUrl
-                    });
+                    return new Envelope<User>(new User(authenticationResult.User));
                 case AuthenticationError.WrongLogin:
                     throw new HttpBadRequestException(new Dictionary<string, string>
                     {

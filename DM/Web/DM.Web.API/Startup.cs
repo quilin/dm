@@ -24,6 +24,18 @@ namespace DM.Web.API
     {
         private IConfigurationRoot Configuration { get; set; }
 
+        private static Assembly[] GetAssemblies()
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
+            return referencedAssemblies
+                .Union(new[] {currentAssembly})
+                .Union(referencedAssemblies.SelectMany(a => a.GetReferencedAssemblies().Select(Assembly.Load)))
+                .Where(a => a.FullName.StartsWith("DM."))
+                .Distinct()
+                .ToArray();
+        }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             Configuration = new ConfigurationBuilder()
@@ -57,12 +69,7 @@ namespace DM.Web.API
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             var containerBuilder = new ContainerBuilder();
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            var assemblies = currentAssembly.GetReferencedAssemblies()
-                .Where(n => n.Name.StartsWith("DM."))
-                .Select(Assembly.Load)
-                .Union(new[] {currentAssembly})
-                .ToArray();
+            var assemblies = GetAssemblies();
             containerBuilder
                 .RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)

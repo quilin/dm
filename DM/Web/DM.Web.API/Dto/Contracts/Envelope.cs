@@ -14,7 +14,7 @@ namespace DM.Web.API.Dto.Contracts
 
     public class ListEnvelope<T>
     {
-        public ListEnvelope(IEnumerable<T> resources, Paging paging)
+        public ListEnvelope(IEnumerable<T> resources, Paging paging = null)
         {
             Resources = resources;
             Paging = paging;

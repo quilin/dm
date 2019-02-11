@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using DM.Web.API.Services.Fora;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Fora
@@ -9,14 +10,22 @@ namespace DM.Web.API.Controllers.v1.Fora
     [Route("v1/fora")]
     public class ForumController : Controller
     {
+        private readonly IForumApiService forumApiService;
+
+        public ForumController(
+            IForumApiService forumApiService)
+        {
+            this.forumApiService = forumApiService;
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(ListEnvelope<Forum>), 200)]
-        public Task<ListEnvelope<Forum>> GetFora() => throw new NotImplementedException();
+        public Task<ListEnvelope<Forum>> GetFora() => forumApiService.Get();
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Envelope<Forum>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Forum>> GetForum(string id) => throw new NotImplementedException();
+        public Task<Envelope<Forum>> GetForum(string id) => forumApiService.Get(id);
 
         [HttpGet("{id}/topics")]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
