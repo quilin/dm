@@ -10,49 +10,65 @@ namespace DM.Web.Core.Authentication
     {
         private readonly ICredentialsStorage credentialsStorage;
         private readonly IAuthenticationService authenticationService;
-        private readonly IUserSetter userSetter;
+        private readonly IIdentitySetter identitySetter;
 
         public WebAuthenticationService(
             ICredentialsStorage credentialsStorage,
             IAuthenticationService authenticationService,
-            IUserSetter userSetter)
+            IIdentitySetter identitySetter)
         {
             this.credentialsStorage = credentialsStorage;
             this.authenticationService = authenticationService;
-            this.userSetter = userSetter;
+            this.identitySetter = identitySetter;
         }
 
-        public Task Authenticate(LoginCredentials credentials, HttpContext httpContext) =>
-            AuthenticateWithCredentials(credentials, httpContext);
-
-        public async Task Authenticate(HttpContext httpContext) =>
-            await AuthenticateWithCredentials(await credentialsStorage.ExtractToken(httpContext), httpContext);
-
-        private async Task AuthenticateWithCredentials(AuthCredentials credentials, HttpContext httpContext)
+        private async Task<AuthenticationResult> GetAuthenticationResult(AuthCredentials credentials)
         {
-            AuthenticationResult authResult;
             switch (credentials)
             {
                 case LoginCredentials loginCredentials:
-                    authResult = await authenticationService.Authenticate(
+                    return await authenticationService.Authenticate(
                         loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe);
-                    break;
                 case TokenCredentials tokenCredentials:
-                    authResult = await authenticationService.Authenticate(tokenCredentials.Token);
-                    break;
+                    return await authenticationService.Authenticate(tokenCredentials.Token);
                 default:
-                    authResult = AuthenticationResult.Guest();
-                    break;
+                    return AuthenticationResult.Guest();
             }
+        }
 
-            userSetter.Current = authResult.User;
-            userSetter.CurrentSession = authResult.Session;
-            userSetter.CurrentSettings = authResult.Settings;
-
-            if (authResult.Error == AuthenticationError.NoError && !authResult.User.IsGuest)
+        private async Task StoreAuthentication(HttpContext httpContext, AuthenticationResult authenticationResult)
+        {
+            if (authenticationResult.Error == AuthenticationError.NoError && !authenticationResult.User.IsGuest)
             {
-                await credentialsStorage.Load(httpContext, authResult);
+                await credentialsStorage.Load(httpContext, authenticationResult);
             }
+
+            identitySetter.Current = authenticationResult;
+        }
+
+        public async Task Authenticate(LoginCredentials credentials, HttpContext httpContext)
+        {
+            var authenticationResult = await GetAuthenticationResult(credentials);
+            await StoreAuthentication(httpContext, authenticationResult);
+        }
+
+        public async Task Authenticate(HttpContext httpContext)
+        {
+            var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
+            var authenticationResult = await GetAuthenticationResult(tokenCredentials);
+            await StoreAuthentication(httpContext, authenticationResult);
+        }
+
+        public async Task Logout(HttpContext httpContext)
+        {
+            await authenticationService.Logout();
+            await credentialsStorage.Unload(httpContext);
+        }
+
+        public async Task LogoutAll(HttpContext httpContext)
+        {
+            var authenticationResult = await authenticationService.LogoutAll();
+            await StoreAuthentication(httpContext, authenticationResult);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace DM.Web.Core.Extensions.EnumExtensions
             return attr?.Description;
         }
 
-        public static IEnumerable<string> GetUserRoleDescriptions(this UserRole value)
+        public static IEnumerable<string> GetUserRoleDescription(this UserRole value)
         {
             return Enum.GetValues(typeof(UserRole))
                 .Cast<UserRole>()

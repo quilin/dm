@@ -8,7 +8,7 @@ namespace DM.Services.Core.Exceptions
     {
         public HttpStatusCode StatusCode { get; }
 
-        public HttpException(HttpStatusCode statusCode, string message = null)
+        public HttpException(HttpStatusCode statusCode, string message = "Something bad happened")
             : base(message) => StatusCode = statusCode;
     }
 
@@ -16,7 +16,7 @@ namespace DM.Services.Core.Exceptions
     {
         public IDictionary<string, string> ValidationErrors { get; }
 
-        public HttpBadRequestException(IDictionary<string, string> errors, string message)
+        public HttpBadRequestException(IDictionary<string, string> errors, string message = "Invalid request parameters")
             : base(HttpStatusCode.BadRequest, message) => ValidationErrors = errors;
     }
 }

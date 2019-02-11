@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -26,6 +27,10 @@ namespace DM.Services.Authentication.Repositories
         {
             UserId = user.UserId,
             Login = user.Login,
+            ProfilePictureUrl = user.ProfilePictures
+                .Where(u => !u.IsRemoved)
+                .Select(u => u.VirtualPath)
+                .FirstOrDefault(),
             Role = user.Role,
             LastVisitDate = user.LastVisitDate,
             RatingDisabled = user.RatingDisabled,
@@ -36,14 +41,17 @@ namespace DM.Services.Authentication.Repositories
             PasswordHash = user.PasswordHash,
             IsRemoved = user.IsRemoved,
             AccessPolicy = user.AccessPolicy,
-            AccessRestrictionPolicies = user.BansReceived.Select(b => b.AccessRestrictionPolicy).ToArray()
+            AccessRestrictionPolicies = user.BansReceived
+                .Select(b => b.AccessRestrictionPolicy)
+                .ToArray()
         };
 
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users
                 .Include(u => u.BansReceived)
-                .Where(u => u.Login == login)
+                .Include(u => u.ProfilePictures)
+                .Where(u => u.Login.ToLower() == login.ToLower())
                 .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstOrDefaultAsync();
             return (result != null, result);
@@ -53,6 +61,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return dbContext.Users
                 .Include(u => u.BansReceived)
+                .Include(u => u.ProfilePictures)
                 .Where(u => u.UserId == userId)
                 .Select(u => MapAuthenticatedUser.Invoke(u))
                 .FirstAsync();
@@ -103,6 +112,14 @@ namespace DM.Services.Authentication.Repositories
             return Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId),
                 Update<UserSessions>().Push(s => s.Sessions, session),
+                new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+        }
+
+        public Task RemoveSessions(Guid userId)
+        {
+            return Collection<UserSessions>().FindOneAndUpdateAsync(
+                Filter<UserSessions>().Eq(u => u.Id, userId),
+                Update<UserSessions>().Set(s => s.Sessions, new List<Session>()),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
         }
     }

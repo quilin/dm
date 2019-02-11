@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Authentication
 {
-    public class ApiTokenExtractor : ICredentialsStorage
+    public class ApiCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
 
@@ -25,6 +25,12 @@ namespace DM.Web.API.Authentication
         public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)
         {
             httpContext.Response.Headers.Add(HttpAuthTokenHeader, authenticationResult.Token);
+            return Task.CompletedTask;
+        }
+
+        public Task Unload(HttpContext httpContext)
+        {
+            httpContext.Response.Headers.Remove(HttpAuthTokenHeader);
             return Task.CompletedTask;
         }
     }

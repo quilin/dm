@@ -8,5 +8,7 @@ namespace DM.Web.Core.Authentication
     {
         Task Authenticate(HttpContext httpContext);
         Task Authenticate(LoginCredentials credentials, HttpContext httpContext);
+        Task Logout(HttpContext httpContext);
+        Task LogoutAll(HttpContext httpContext);
     }
 }

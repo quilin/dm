@@ -10,6 +10,7 @@ namespace DM.Services.Authentication.Dto
     {
         public Guid UserId { get; set; }
         public string Login { get; set; }
+        public string ProfilePictureUrl { get; set; }
         public UserRole Role { get; set; }
         public AccessPolicy AccessPolicy { get; set; }
         public DateTime? LastVisitDate { get; set; }

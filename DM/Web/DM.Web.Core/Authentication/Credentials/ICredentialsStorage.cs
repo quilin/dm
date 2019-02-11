@@ -8,5 +8,6 @@ namespace DM.Web.Core.Authentication.Credentials
     {
         Task<TokenCredentials> ExtractToken(HttpContext httpContext);
         Task Load(HttpContext httpContext, AuthenticationResult authenticationResult);
+        Task Unload(HttpContext httpContext);
     }
 }
