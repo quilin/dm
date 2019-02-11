@@ -37,6 +37,7 @@ namespace DM.Services.Forum.Repositories
                 @"select
                     ""Id"",
                     ""ForumId"",
+                    ""ForumTitle"",
                     ""CreateDate"",
                     ""Author"",
                     ""Title"",
@@ -50,6 +51,7 @@ namespace DM.Services.Forum.Repositories
                     (select
                         ft.""ForumTopicId"" as ""Id"",
                         ft.""ForumId"",
+                        ff.""ForumTitle"",
                         ft.""CreateDate"",
                         tu.""Login"" as ""Author"",
                         ft.""Title"",
@@ -64,6 +66,7 @@ namespace DM.Services.Forum.Repositories
                         inner join ""Users"" as tu on ft.""UserId"" = tu.""UserId""
                         left join ""Comments"" as c on c.""EntityId"" = ft.""ForumTopicId""
                         inner join ""Users"" as cu on c.""UserId"" = cu.""UserId"" 
+                        inner join ""Fora"" as ff on ft.""ForumId"" = ff.""ForumId""
                         where
                             ft.""ForumId"" = {0} and
                             ft.""Attached"" = false and
@@ -85,6 +88,7 @@ namespace DM.Services.Forum.Repositories
                 .Select(x => new TopicsListItem
                 {
                     Id = x.Id,
+                    ForumTitle = x.ForumTitle,
                     Title = x.Title,
                     Text = x.Text,
                     Author = x.Author,

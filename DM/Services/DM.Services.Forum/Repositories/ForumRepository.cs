@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Common.Repositories;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -47,37 +47,28 @@ namespace DM.Services.Forum.Repositories
             });
         }
 
-        public async Task<ForaListItem> GetForum(string forumTitle, Guid userId, ForumAccessPolicy accessPolicy)
+        public async Task<ForaListItem> GetForum(string forumTitle, ForumAccessPolicy accessPolicy, Guid? userId = null)
         {
             var fora = await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>
                 await dmDbContext.Fora
                     .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                     .OrderBy(f => f.Order)
-                    .Select(f => new {f.ForumId, f.Title})
+                    .Select(f => new ForaListItem
+                    {
+                        Id = f.ForumId,
+                        Title = f.Title
+                    })
                     .ToArrayAsync());
             var forum = fora.FirstOrDefault(f => f.Title == forumTitle);
             if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
 
-            var counters = await unreadCountersRepository.SelectByParents(
-                userId, UnreadEntryType.Message, forum.ForumId);
-            return new ForaListItem
+            if (userId.HasValue)
             {
-                Title = forum.Title,
-                UnreadTopicsCount = counters[forum.ForumId]
-            };
-        }
+                forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
+                    userId.Value, UnreadEntryType.Message, forum.Id))[forum.Id];
+            }
 
-        public Task<ForumTitle> FindForum(string forumTitle, ForumAccessPolicy accessPolicy)
-        {
-            return dmDbContext.Fora
-                .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
-                .Where(f => f.Title == forumTitle)
-                .Select(f => new ForumTitle
-                {
-                    ForumId = f.ForumId,
-                    Title = f.Title
-                })
-                .FirstOrDefaultAsync();
+            return forum;
         }
     }
 }

@@ -5,8 +5,8 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Repositories;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using Newtonsoft.Json;
 
 namespace DM.Services.Authentication.Implementation

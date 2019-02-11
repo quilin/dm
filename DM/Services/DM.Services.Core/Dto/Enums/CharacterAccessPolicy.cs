@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
+namespace DM.Services.Core.Dto.Enums
 {
     [Flags]
     public enum CharacterAccessPolicy

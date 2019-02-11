@@ -1,5 +1,4 @@
-using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Forum.Implementation
 {

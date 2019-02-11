@@ -1,4 +1,4 @@
-namespace DM.Services.DataAccess.BusinessObjects.Games
+namespace DM.Services.Core.Dto.Enums
 {
     public enum CommentariesAccessMode
     {

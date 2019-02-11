@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.Core.Dto;
 
 namespace DM.Services.Common.Implementation
 {

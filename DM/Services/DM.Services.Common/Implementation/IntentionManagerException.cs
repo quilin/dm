@@ -3,8 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using DM.Services.Authentication.Dto;
+using DM.Services.Core.Dto;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
-using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Common.Implementation
 {

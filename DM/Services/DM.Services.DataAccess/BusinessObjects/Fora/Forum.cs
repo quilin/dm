@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.DataAccess.BusinessObjects.Fora
 {

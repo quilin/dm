@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DM.Services.Core.Dto;
 using DM.Services.Forum.Dto;
 
 namespace DM.Services.Forum.Implementation
@@ -10,6 +11,6 @@ namespace DM.Services.Forum.Implementation
 
         Task<ForaListItem> GetForum(string forumTitle);
 
-        Task<(ForumTitle Forum, IEnumerable<TopicsListItem> Topics)> GetTopicsList(string forumTitle, int entityNumber);
+        Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
     }
 }

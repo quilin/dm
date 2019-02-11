@@ -1,6 +1,7 @@
 using System;
+using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.DataAccess.BusinessObjects.Users
+namespace DM.Services.Core.Dto
 {
     public interface IUser
     {

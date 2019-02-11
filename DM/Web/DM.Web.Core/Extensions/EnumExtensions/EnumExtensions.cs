@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.Core.Extensions.EnumExtensions
 {
@@ -26,14 +27,13 @@ namespace DM.Web.Core.Extensions.EnumExtensions
             return attr?.Description;
         }
 
-        public static string GetUserRoleDescription(this UserRole value)
+        public static IEnumerable<string> GetUserRoleDescriptions(this UserRole value)
         {
-            return string.Join(", ",
-                Enum.GetValues(typeof(UserRole))
-                    .Cast<UserRole>()
-                    .Where(role => role != UserRole.Guest && role != UserRole.Player)
-                    .Where(role => value.HasFlag(role))
-                    .Select(role => role.GetDescription()));
+            return Enum.GetValues(typeof(UserRole))
+                .Cast<UserRole>()
+                .Where(role => role != UserRole.Guest && role != UserRole.Player)
+                .Where(role => value.HasFlag(role))
+                .Select(role => role.GetDescription());
         }
     }
 }

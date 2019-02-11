@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.DataAccess.BusinessObjects.Fora
+namespace DM.Services.Core.Dto.Enums
 {
     [Flags]
     public enum ForumAccessPolicy
