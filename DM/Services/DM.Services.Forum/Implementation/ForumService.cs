@@ -54,9 +54,18 @@ namespace DM.Services.Forum.Implementation
             var pageSize = identityProvider.Current.Settings.TopicsPerPage;
             var topicsCount = await topicRepository.CountTopics(forum.Id);
             var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
-            var topics = await topicRepository.SelectTopics(user.UserId, forum.Id, pagingData);
+            var topics = await topicRepository.SelectTopics(user.UserId, forum.Id, pagingData, false);
 
             return (topics, pagingData);
+        }
+
+        public async Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle)
+        {
+            var user = identityProvider.Current.User;
+            var accessPolicy = accessPolicyConverter.Convert(user.Role);
+            var forum = await forumRepository.GetForum(forumTitle, accessPolicy);
+            if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
+            return await topicRepository.SelectTopics(user.UserId, forum.Id, new PagingData(), true);
         }
     }
 }

@@ -11,11 +11,14 @@ namespace DM.Web.API.Controllers.v1.Fora
     public class ForumController : Controller
     {
         private readonly IForumApiService forumApiService;
+        private readonly ITopicApiService topicApiService;
 
         public ForumController(
-            IForumApiService forumApiService)
+            IForumApiService forumApiService,
+            ITopicApiService topicApiService)
         {
             this.forumApiService = forumApiService;
+            this.topicApiService = topicApiService;
         }
 
         [HttpGet]
@@ -32,7 +35,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<ListEnvelope<Topic>> GetTopics(string id, [FromQuery] TopicFilters f, [FromQuery] int n = 1) =>
-            throw new NotImplementedException();
+            topicApiService.Get(id, f, n);
 
         [HttpPost("{id}/topics")]
         [ProducesResponseType(typeof(Envelope<Topic>), 201)]

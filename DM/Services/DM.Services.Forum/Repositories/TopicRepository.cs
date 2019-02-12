@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
@@ -31,64 +30,32 @@ namespace DM.Services.Forum.Repositories
         public Task<int> CountTopics(Guid forumId) =>
             dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId);
 
-        public async Task<IEnumerable<TopicsListItem>> SelectTopics(Guid userId, Guid forumId, PagingData pagingData)
+        public async Task<IEnumerable<TopicsListItem>> SelectTopics(
+            Guid userId, Guid forumId, PagingData pagingData, bool attached)
         {
-            var queryFormatBuilder = new StringBuilder(
-                @"select
-                    ""Id"",
-                    ""ForumId"",
-                    ""ForumTitle"",
-                    ""CreateDate"",
-                    ""Author"",
-                    ""Title"",
-                    ""Text"",
-                    ""Attached"",
-                    ""Closed"",
-                    ""CommentAuthor"" AS ""LastCommentAuthor"",
-                    ""CommentCreateDate"" AS ""LastCommentDate"",
-                    ""TotalCommentsCount""
-                    from 
-                    (select
-                        ft.""ForumTopicId"" as ""Id"",
-                        ft.""ForumId"",
-                        ff.""ForumTitle"",
-                        ft.""CreateDate"",
-                        tu.""Login"" as ""Author"",
-                        ft.""Title"",
-                        ft.""Text"",
-                        ft.""Attached"",
-                        ft.""Closed"",
-                        cu.""Login"" as ""CommentAuthor"",
-                        c.""CreateDate"" as ""CommentCreateDate"",
-                        count(c.*)   over(partition by ft.""ForumTopicId"" order by c.""CreateDate"" asc) as ""TotalCommentsCount"",
-                        row_number() over(partition by ft.""ForumTopicId"" order by c.""CreateDate"" desc) as rt
-                        from ""ForumTopics"" as ft
-                        inner join ""Users"" as tu on ft.""UserId"" = tu.""UserId""
-                        left join ""Comments"" as c on c.""EntityId"" = ft.""ForumTopicId""
-                        inner join ""Users"" as cu on c.""UserId"" = cu.""UserId"" 
-                        inner join ""Fora"" as ff on ft.""ForumId"" = ff.""ForumId""
-                        where
-                            ft.""ForumId"" = {0} and
-                            ft.""Attached"" = false and
-                            ft.""IsRemoved"" = false and
-                            c.""IsRemoved"" = false
-                        order by ");
-            queryFormatBuilder.Append(forumId == NewsForumId
-                ? @"ft.""CreateDate"" desc"
+            var forumType = forumId == NewsForumId
+                ? TopicQueries.TopicsSortType.News
                 : forumId == ErrorsForumId
-                    ? @"ft.""Closed"" desc, c.""CreateDate"" desc"
-                    : @"c.""CreateDate"" desc");
-            queryFormatBuilder.Append(@") as com
-                    where com.rt = 1
-                    limit {1} offset {2}");
-            
+                    ? TopicQueries.TopicsSortType.Errors
+                    : TopicQueries.TopicsSortType.Default;
+
+            var query = TopicQueries.List(forumId, pagingData, attached, forumType);
             var topics = await dmDbContext.ForumTopicsList
-                .FromSql(queryFormatBuilder.ToString(),
-                    forumId, pagingData.PageSize, pagingData.PageSize * (pagingData.CurrentPage - 1))
+                .FromSql(query,
+                    forumId,
+                    attached,
+                    pagingData == null
+                        ? 0
+                        : pagingData.PageSize * (pagingData.CurrentPage - 1),
+                    pagingData?.PageSize ?? 1000)
                 .Select(x => new TopicsListItem
                 {
                     Id = x.Id,
-                    ForumTitle = x.ForumTitle,
+                    Forum = new ForaListItem
+                    {
+                        Id = x.ForumId,
+                        Title = x.ForumTitle
+                    },
                     Title = x.Title,
                     Text = x.Text,
                     Author = x.Author,
@@ -100,6 +67,7 @@ namespace DM.Services.Forum.Repositories
                     Closed = x.Closed
                 })
                 .ToArrayAsync();
+
             var counters = await unreadCountersRepository.SelectByEntities(
                 userId, UnreadEntryType.Message, topics.Select(t => t.Id).ToArray());
 

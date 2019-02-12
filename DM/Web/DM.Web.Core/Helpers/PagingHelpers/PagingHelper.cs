@@ -1,4 +1,5 @@
 ﻿using System;
+using DM.Services.Core.Dto;
 
 namespace DM.Web.Core.Helpers.PagingHelpers
 {

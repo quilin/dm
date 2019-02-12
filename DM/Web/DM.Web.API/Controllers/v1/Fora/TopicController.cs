@@ -4,6 +4,7 @@ using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;
+using DM.Web.API.Services.Fora;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Fora
@@ -11,10 +12,18 @@ namespace DM.Web.API.Controllers.v1.Fora
     [Route("v1/topics")]
     public class TopicController : Controller
     {
+        private readonly ITopicApiService topicApiService;
+
+        public TopicController(
+            ITopicApiService topicApiService)
+        {
+            this.topicApiService = topicApiService;
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> GetTopic(Guid id) => throw new NotImplementedException();
+        public Task<Envelope<Topic>> GetTopic(Guid id) => topicApiService.Get(id);
 
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]

@@ -9,6 +9,6 @@ namespace DM.Services.Forum.Repositories
     public interface ITopicRepository
     {
         Task<int> CountTopics(Guid forumId);
-        Task<IEnumerable<TopicsListItem>> SelectTopics(Guid userId, Guid forumId, PagingData pagingData);
+        Task<IEnumerable<TopicsListItem>> SelectTopics(Guid userId, Guid forumId, PagingData pagingData, bool attached);
     }
 }
