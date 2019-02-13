@@ -49,7 +49,10 @@ namespace DM.Services.Forum.Repositories
         {
             var fora = await SelectFora(accessPolicy);
             var forum = fora.FirstOrDefault(f => f.Title == forumTitle);
-            if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
+            if (forum == null)
+            {
+                throw new HttpException(HttpStatusCode.NotFound, $"Forum \"{forumTitle}\" not found");
+            }
 
             if (userId.HasValue)
             {

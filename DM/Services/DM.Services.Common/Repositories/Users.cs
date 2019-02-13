@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
@@ -13,7 +14,7 @@ namespace DM.Services.Common.Repositories
             Role = u.Role,
             AccessPolicy = u.AccessPolicy,
             LastVisitDate = u.LastVisitDate,
-            // ProfilePictureUrl = u.ProfilePictures.FirstOrDefault().VirtualPath, // todo: finish the profile pictures db changes
+            ProfilePictureUrl = u.ProfilePictures.FirstOrDefault(p => !p.IsRemoved).VirtualPath,
             RatingDisabled = u.RatingDisabled,
             QualityRating = u.QualityRating,
             QuantityRating = u.QuantityRating

@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Exceptions;
 using DM.Services.Core.Extensions;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Repositories;
@@ -49,7 +47,6 @@ namespace DM.Services.Forum.Implementation
             var user = identityProvider.Current.User;
             var accessPolicy = accessPolicyConverter.Convert(user.Role);
             var forum = await forumRepository.GetForum(forumTitle, accessPolicy);
-            if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
 
             var pageSize = identityProvider.Current.Settings.TopicsPerPage;
             var topicsCount = await topicRepository.CountTopics(forum.Id);
@@ -64,7 +61,6 @@ namespace DM.Services.Forum.Implementation
             var user = identityProvider.Current.User;
             var accessPolicy = accessPolicyConverter.Convert(user.Role);
             var forum = await forumRepository.GetForum(forumTitle, accessPolicy);
-            if (forum == null) throw new HttpException(HttpStatusCode.NotFound);
             return await topicRepository.SelectTopics(user.UserId, forum.Id, new PagingData(), true);
         }
     }

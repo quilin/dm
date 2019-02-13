@@ -8,8 +8,7 @@ namespace DM.Services.Core.Exceptions
     {
         public HttpStatusCode StatusCode { get; }
 
-        public HttpException(HttpStatusCode statusCode, string message = "Something bad happened")
-            : base(message) => StatusCode = statusCode;
+        public HttpException(HttpStatusCode statusCode, string message) : base(message) => StatusCode = statusCode;
     }
 
     public class HttpBadRequestException : HttpException
