@@ -11,11 +11,11 @@ namespace DM.Web.API.Dto.Fora
         {
             Id = forum.Title;
             UnreadTopicsCount = forum.UnreadTopicsCount;
-            Moderators = forum.Moderators.Select(m => new User(m));
+            Moderators = forum.Moderators?.Select(m => new User(m));
         }
         
-        public string Id { get; set; }
-        public int UnreadTopicsCount { get; set; }
-        public IEnumerable<User> Moderators { get; set; }
+        public string Id { get; }
+        public int UnreadTopicsCount { get; }
+        public IEnumerable<User> Moderators { get; }
     }
 }

@@ -27,18 +27,18 @@ namespace DM.Web.API.Dto.Fora
         }
 
         public string Id { get; set; }
-        public User Author { get; set; }
-        public DateTime Created { get; set; }
+        public User Author { get; }
+        public DateTime Created { get; }
 
         public string Title { get; set; }
         public string Description { get; set; }
         public bool Attached { get; set; }
         public bool Closed { get; set; }
-        public LastTopicComment LastComment { get; set; }
-        public int CommentsCount { get; set; }
-        public int UnreadCommentsCount { get; set; }
+        public LastTopicComment LastComment { get; }
+        public int CommentsCount { get; }
+        public int UnreadCommentsCount { get; }
 
-        public Forum Forum { get; set; }
+        public Forum Forum { get; }
     }
 
     public class LastTopicComment

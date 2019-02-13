@@ -8,6 +8,7 @@ using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace DM.Services.Forum.Repositories
 {
@@ -39,15 +40,14 @@ namespace DM.Services.Forum.Repositories
                     ? TopicQueries.TopicsSortType.Errors
                     : TopicQueries.TopicsSortType.Default;
 
-            var query = TopicQueries.List(forumId, pagingData, attached, forumType);
+            var forumIdParameter = new NpgsqlParameter("@ForumId", forumId);
+            var attachedParameter = new NpgsqlParameter("@Attached", attached);
+            var skipParameter = new NpgsqlParameter(@"Page_From",
+                pagingData == null ? 0 : pagingData.PageSize * (pagingData.CurrentPage - 1));
+            var sizeParameter = new NpgsqlParameter("@Page_Size", pagingData?.PageSize ?? 0);
+            var query = TopicQueries.List(pagingData, attached, forumType);
             var topics = await dmDbContext.ForumTopicsList
-                .FromSql(query,
-                    forumId,
-                    attached,
-                    pagingData == null
-                        ? 0
-                        : pagingData.PageSize * (pagingData.CurrentPage - 1),
-                    pagingData?.PageSize ?? 1000)
+                .FromSql(query, forumIdParameter, attachedParameter, skipParameter, sizeParameter)
                 .Select(x => new TopicsListItem
                 {
                     Id = x.Id,
@@ -58,10 +58,32 @@ namespace DM.Services.Forum.Repositories
                     },
                     Title = x.Title,
                     Text = x.Text,
-                    Author = x.Author,
+                    Author = new GeneralUser
+                    {
+                        UserId = x.AuthorUserId,
+                        Login = x.AuthorLogin,
+                        Role = x.AuthorRole,
+                        AccessPolicy = x.AuthorAccessPolicy,
+                        LastVisitDate = x.AuthorLastVisitDate,
+                        ProfilePictureUrl = x.AuthorProfilePictureUrl,
+                        RatingDisabled = x.AuthorRatingDisabled,
+                        QualityRating = x.AuthorQualityRating,
+                        QuantityRating = x.AuthorQuantityRating
+                    },
                     CreateDate = x.CreateDate,
                     LastCommentDate = x.LastCommentDate,
-                    LastCommentAuthor = x.LastCommentAuthor,
+                    LastCommentAuthor = new GeneralUser
+                    {
+                        UserId = x.LastCommentAuthorUserId,
+                        Login = x.LastCommentAuthorLogin,
+                        Role = x.LastCommentAuthorRole,
+                        AccessPolicy = x.LastCommentAuthorAccessPolicy,
+                        LastVisitDate = x.LastCommentAuthorLastVisitDate,
+                        ProfilePictureUrl = x.LastCommentAuthorProfilePictureUrl,
+                        RatingDisabled = x.LastCommentAuthorRatingDisabled,
+                        QualityRating = x.LastCommentAuthorQualityRating,
+                        QuantityRating = x.LastCommentAuthorQuantityRating
+                    },
                     TotalCommentsCount = x.TotalCommentsCount,
                     Attached = x.Attached,
                     Closed = x.Closed

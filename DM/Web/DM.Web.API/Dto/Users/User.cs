@@ -10,7 +10,7 @@ namespace DM.Web.API.Dto.Users
         public User(GeneralUser user)
         {
             Login = user.Login;
-            Roles = user.Role.GetUserRoleDescription();
+            Roles = user.Role.GetUserRoles();
             ProfilePictureUrl = user.ProfilePictureUrl;
             Online = user.LastVisitDate;
             Rating = new Rating(user);

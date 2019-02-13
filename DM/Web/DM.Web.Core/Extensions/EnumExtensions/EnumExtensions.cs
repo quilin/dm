@@ -27,13 +27,13 @@ namespace DM.Web.Core.Extensions.EnumExtensions
             return attr?.Description;
         }
 
-        public static IEnumerable<string> GetUserRoleDescription(this UserRole value)
+        public static IEnumerable<string> GetUserRoles(this UserRole value)
         {
             return Enum.GetValues(typeof(UserRole))
                 .Cast<UserRole>()
                 .Where(role => role != UserRole.Guest && role != UserRole.Player)
                 .Where(role => value.HasFlag(role))
-                .Select(role => role.GetDescription());
+                .Select(role => role.ToString());
         }
     }
 }
