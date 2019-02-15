@@ -11,5 +11,6 @@ namespace DM.Services.Forum.Implementation
         Task<ForaListItem> GetForum(string forumTitle);
         Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
         Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle);
+        Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle);
     }
 }

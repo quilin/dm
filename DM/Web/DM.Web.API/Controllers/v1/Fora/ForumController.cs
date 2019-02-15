@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Fora;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +13,16 @@ namespace DM.Web.API.Controllers.v1.Fora
     {
         private readonly IForumApiService forumApiService;
         private readonly ITopicApiService topicApiService;
+        private readonly IModeratorsApiService moderatorsApiService;
 
         public ForumController(
             IForumApiService forumApiService,
-            ITopicApiService topicApiService)
+            ITopicApiService topicApiService,
+            IModeratorsApiService moderatorsApiService)
         {
             this.forumApiService = forumApiService;
             this.topicApiService = topicApiService;
+            this.moderatorsApiService = moderatorsApiService;
         }
 
         [HttpGet]
@@ -29,6 +33,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(Envelope<Forum>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<Envelope<Forum>> GetForum(string id) => forumApiService.Get(id);
+
+        [HttpGet("{id}/moderators")]
+        [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 404)]
+        public Task<ListEnvelope<User>> GetModerators(string id) => moderatorsApiService.GetModerators(id);
 
         [HttpGet("{id}/topics")]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]

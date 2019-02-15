@@ -22,19 +22,22 @@ namespace DM.Services.Forum.Implementation
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
+        private readonly IModeratorRepository moderatorRepository;
 
         public ForumService(
             IIdentityProvider identityProvider,
             IAccessPolicyConverter accessPolicyConverter,
             IUnreadCountersRepository unreadCountersRepository,
             IForumRepository forumRepository,
-            ITopicRepository topicRepository)
+            ITopicRepository topicRepository,
+            IModeratorRepository moderatorRepository)
         {
             identity = identityProvider.Current;
             this.accessPolicyConverter = accessPolicyConverter;
             this.unreadCountersRepository = unreadCountersRepository;
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
+            this.moderatorRepository = moderatorRepository;
         }
 
         public async Task<IEnumerable<ForaListItem>> GetForaList()
@@ -57,23 +60,27 @@ namespace DM.Services.Forum.Implementation
             var forum = await FindForum(forumTitle);
 
             var pageSize = identity.Settings.TopicsPerPage;
-            var topicsCount = await topicRepository.CountTopics(forum.Id);
+            var topicsCount = await topicRepository.Count(forum.Id);
             var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
 
-            var userId = identity.User.UserId;
-            var topics = (await topicRepository.SelectTopics(userId, forum.Id, pagingData, false)).ToArray();
-            await FillCounters(userId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+            var topics = (await topicRepository.Get(forum.Id, pagingData, false)).ToArray();
+            await FillCounters(identity.User.UserId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
 
             return (topics, pagingData);
         }
 
         public async Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle)
         {
-            var userId = identity.User.UserId;
             var forum = await FindForum(forumTitle);
-            var topics = (await topicRepository.SelectTopics(userId, forum.Id, null, true)).ToArray();
-            await FillCounters(userId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+            var topics = (await topicRepository.Get(forum.Id, null, true)).ToArray();
+            await FillCounters(identity.User.UserId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
             return topics;
+        }
+
+        public async Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle)
+        {
+            var forum = await FindForum(forumTitle);
+            return await moderatorRepository.Get(forum.Id);
         }
 
         private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,

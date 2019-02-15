@@ -23,11 +23,10 @@ namespace DM.Services.Forum.Repositories
         private static readonly Guid NewsForumId = Guid.Parse("00000000-0000-0000-0000-000000000008");
         private static readonly Guid ErrorsForumId = Guid.Parse("00000000-0000-0000-0000-000000000006");
 
-        public Task<int> CountTopics(Guid forumId) =>
+        public Task<int> Count(Guid forumId) =>
             dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId);
 
-        public async Task<IEnumerable<TopicsListItem>> SelectTopics(
-            Guid userId, Guid forumId, PagingData pagingData, bool attached)
+        public async Task<IEnumerable<TopicsListItem>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
             var forumType = forumId == NewsForumId
                 ? TopicQueries.TopicsSortType.News
