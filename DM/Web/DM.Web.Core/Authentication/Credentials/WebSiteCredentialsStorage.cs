@@ -36,16 +36,16 @@ namespace DM.Web.Core.Authentication.Credentials
             return default;
         }
 
-        public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)
+        public Task Load(HttpContext httpContext, Identity identity)
         {
-            httpContext.Response.Cookies.Append(HttpAuthorizationCookie, authenticationResult.Token,
+            httpContext.Response.Cookies.Append(HttpAuthorizationCookie, identity.Token,
                 new CookieOptions
                 {
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = false,
-                    Expires = authenticationResult.Session.IsPersistent
-                        ? authenticationResult.Session.ExpirationDate
+                    Expires = identity.Session.IsPersistent
+                        ? identity.Session.ExpirationDate
                         : (DateTimeOffset?) null
                 });
             return Task.CompletedTask;

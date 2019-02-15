@@ -2,9 +2,9 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
 {
-    public class AuthenticationResult
+    public class Identity : IIdentity
     {
-        private AuthenticationResult()
+        private Identity()
         {
         }
 
@@ -15,7 +15,7 @@ namespace DM.Services.Authentication.Dto
         public AuthenticationError Error { get; private set; }
         public string Token { get; private set; }
 
-        public static AuthenticationResult Fail(AuthenticationError error) => new AuthenticationResult
+        public static IIdentity Fail(AuthenticationError error) => new Identity
         {
             Error = error,
             User = AuthenticatedUser.Guest,
@@ -24,8 +24,8 @@ namespace DM.Services.Authentication.Dto
             Token = null
         };
 
-        public static AuthenticationResult Success(
-            AuthenticatedUser user, Session session, UserSettings settings, string token) => new AuthenticationResult
+        public static IIdentity Success(
+            AuthenticatedUser user, Session session, UserSettings settings, string token) => new Identity
         {
             Error = AuthenticationError.NoError,
             User = user,
@@ -34,7 +34,7 @@ namespace DM.Services.Authentication.Dto
             Token = token
         };
 
-        public static AuthenticationResult Guest() => new AuthenticationResult
+        public static IIdentity Guest() => new Identity
         {
             Error = AuthenticationError.NoError,
             User = AuthenticatedUser.Guest,

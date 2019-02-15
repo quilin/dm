@@ -42,21 +42,21 @@ namespace DM.Services.Authentication.Implementation
             this.identityProvider = identityProvider;
         }
 
-        public async Task<AuthenticationResult> Authenticate(string login, string password, bool persistent)
+        public async Task<IIdentity> Authenticate(string login, string password, bool persistent)
         {
             var (userFound, user) = await repository.TryFindUser(login);
             switch (userFound)
             {
                 case false:
-                    return AuthenticationResult.Fail(AuthenticationError.WrongLogin);
+                    return Identity.Fail(AuthenticationError.WrongLogin);
                 case true when !user.Activated:
-                    return AuthenticationResult.Fail(AuthenticationError.Inactive);
+                    return Identity.Fail(AuthenticationError.Inactive);
                 case true when user.IsRemoved:
-                    return AuthenticationResult.Fail(AuthenticationError.Removed);
+                    return Identity.Fail(AuthenticationError.Removed);
                 case true when user.AccessPolicy.HasFlag(AccessPolicy.FullBan):
-                    return AuthenticationResult.Fail(AuthenticationError.Banned);
+                    return Identity.Fail(AuthenticationError.Banned);
                 case true when !securityManager.ComparePasswords(password, user.Salt, user.PasswordHash):
-                    return AuthenticationResult.Fail(AuthenticationError.WrongPassword);
+                    return Identity.Fail(AuthenticationError.WrongPassword);
 
                 default:
                     var session = sessionFactory.Create(persistent);
@@ -65,7 +65,7 @@ namespace DM.Services.Authentication.Implementation
             }
         }
 
-        public async Task<AuthenticationResult> Authenticate(string authToken)
+        public async Task<IIdentity> Authenticate(string authToken)
         {
             Guid userId;
             Guid sessionId;
@@ -79,7 +79,7 @@ namespace DM.Services.Authentication.Implementation
             }
             catch
             {
-                return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
+                return Identity.Fail(AuthenticationError.SessionExpired);
             }
 
             var fetchUser = repository.FindUser(userId);
@@ -94,7 +94,7 @@ namespace DM.Services.Authentication.Implementation
                 session.ExpirationDate < dateTimeProvider.Now)
             {
                 await repository.RemoveSession(userId, sessionId);
-                return AuthenticationResult.Fail(AuthenticationError.SessionExpired);
+                return Identity.Fail(AuthenticationError.SessionExpired);
             }
 
             var sessionRefreshDelta = TimeSpan.FromMinutes(20);
@@ -104,7 +104,7 @@ namespace DM.Services.Authentication.Implementation
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
             }
 
-            return AuthenticationResult.Success(user, session, settings, authToken);
+            return Identity.Success(user, session, settings, authToken);
         }
 
         public async Task Logout()
@@ -113,7 +113,7 @@ namespace DM.Services.Authentication.Implementation
             await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
         }
 
-        public async Task<AuthenticationResult> LogoutAll()
+        public async Task<IIdentity> LogoutAll()
         {
             var identity = identityProvider.Current;
             await repository.RemoveSessions(identity.User.UserId);
@@ -122,7 +122,7 @@ namespace DM.Services.Authentication.Implementation
             return await CreateAuthenticationResult(identity.User, session, identity.Settings);
         }
 
-        private async Task<AuthenticationResult> CreateAuthenticationResult(
+        private async Task<IIdentity> CreateAuthenticationResult(
             AuthenticatedUser user, Session session, UserSettings settings)
         {
             await repository.AddSession(user.UserId, session);
@@ -132,7 +132,7 @@ namespace DM.Services.Authentication.Implementation
                 [SessionIdKey] = session.Id
             };
             var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
-            return AuthenticationResult.Success(user, session, settings, token);
+            return Identity.Success(user, session, settings, token);
         }
     }
 }

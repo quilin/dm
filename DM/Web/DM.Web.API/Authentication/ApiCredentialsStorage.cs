@@ -22,9 +22,9 @@ namespace DM.Web.API.Authentication
                 : Task.FromResult(new TokenCredentials {Token = authToken});
         }
 
-        public Task Load(HttpContext httpContext, AuthenticationResult authenticationResult)
+        public Task Load(HttpContext httpContext, IIdentity identity)
         {
-            httpContext.Response.Headers.Add(HttpAuthTokenHeader, authenticationResult.Token);
+            httpContext.Response.Headers.Add(HttpAuthTokenHeader, identity.Token);
             return Task.CompletedTask;
         }
 

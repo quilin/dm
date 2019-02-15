@@ -7,7 +7,7 @@ namespace DM.Web.Core.Authentication.Credentials
     public interface ICredentialsStorage
     {
         Task<TokenCredentials> ExtractToken(HttpContext httpContext);
-        Task Load(HttpContext httpContext, AuthenticationResult authenticationResult);
+        Task Load(HttpContext httpContext, IIdentity identity);
         Task Unload(HttpContext httpContext);
     }
 }

@@ -5,6 +5,6 @@ namespace DM.Web.Core.Authentication
 {
     public interface IAuthenticationStorage
     {
-        Task Store(AuthenticationResult authenticationResult);
+        Task Store(Identity identity);
     }
 }

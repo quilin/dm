@@ -4,6 +4,6 @@ namespace DM.Services.Authentication.Implementation
 {
     public class IdentityProvider : IIdentitySetter, IIdentityProvider
     {
-        public AuthenticationResult Current { get; set; }
+        public IIdentity Current { get; set; }
     }
 }

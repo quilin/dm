@@ -22,7 +22,7 @@ namespace DM.Web.Core.Authentication
             this.identitySetter = identitySetter;
         }
 
-        private async Task<AuthenticationResult> GetAuthenticationResult(AuthCredentials credentials)
+        private async Task<IIdentity> GetAuthenticationResult(AuthCredentials credentials)
         {
             switch (credentials)
             {
@@ -32,18 +32,18 @@ namespace DM.Web.Core.Authentication
                 case TokenCredentials tokenCredentials:
                     return await authenticationService.Authenticate(tokenCredentials.Token);
                 default:
-                    return AuthenticationResult.Guest();
+                    return Identity.Guest();
             }
         }
 
-        private async Task StoreAuthentication(HttpContext httpContext, AuthenticationResult authenticationResult)
+        private async Task StoreAuthentication(HttpContext httpContext, IIdentity identity)
         {
-            if (authenticationResult.Error == AuthenticationError.NoError && !authenticationResult.User.IsGuest)
+            if (identity.Error == AuthenticationError.NoError && !identity.User.IsGuest)
             {
-                await credentialsStorage.Load(httpContext, authenticationResult);
+                await credentialsStorage.Load(httpContext, identity);
             }
 
-            identitySetter.Current = authenticationResult;
+            identitySetter.Current = identity;
         }
 
         public async Task Authenticate(LoginCredentials credentials, HttpContext httpContext)
