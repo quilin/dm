@@ -3,7 +3,7 @@ using DM.Services.Core.Dto;
 
 namespace DM.Services.Forum.Repositories
 {
-    public static class TopicQueries
+    internal static class TopicQueries
     {
         public enum TopicsSortType
         {

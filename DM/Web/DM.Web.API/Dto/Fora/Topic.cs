@@ -18,8 +18,8 @@ namespace DM.Web.API.Dto.Fora
             Closed = topic.Closed;
             LastComment = new LastTopicComment
             {
-                Author = new User(topic.LastCommentAuthor),
-                Created = topic.LastCommentDate
+                Author = new User(topic.LastComment.Author),
+                Created = topic.LastComment.CreateDate
             };
             CommentsCount = topic.TotalCommentsCount;
             UnreadCommentsCount = topic.UnreadCommentsCount;

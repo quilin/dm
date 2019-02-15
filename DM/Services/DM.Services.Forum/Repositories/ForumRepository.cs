@@ -10,7 +10,7 @@ using DbForum = DM.Services.DataAccess.BusinessObjects.Fora.Forum;
 
 namespace DM.Services.Forum.Repositories
 {
-    public class ForumRepository : IForumRepository
+    internal class ForumRepository : IForumRepository
     {
         private readonly ReadDmDbContext dmDbContext;
         private readonly IMemoryCache memoryCache;

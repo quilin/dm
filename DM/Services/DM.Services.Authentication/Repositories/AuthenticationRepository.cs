@@ -12,7 +12,7 @@ using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.Use
 
 namespace DM.Services.Authentication.Repositories
 {
-    public class AuthenticationRepository : MongoRepository, IAuthenticationRepository
+    internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly ReadDmDbContext dbContext;
 

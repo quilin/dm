@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -36,26 +37,57 @@ namespace DM.Services.Forum.Implementation
             this.topicRepository = topicRepository;
         }
 
-        private async Task<ForaListItem[]> GetFora()
-        {
-            var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
-            return (await forumRepository.SelectFora(accessPolicy)).ToArray();
-        }
-
         public async Task<IEnumerable<ForaListItem>> GetForaList()
         {
             var fora = await GetFora();
-            var counters = await unreadCountersRepository.SelectByParents(identity.User.UserId,
-                UnreadEntryType.Message, fora.Select(f => f.Id).ToArray());
-            foreach (var forum in fora)
-            {
-                forum.UnreadTopicsCount = counters[forum.Id];
-            }
-
+            await FillCounters(identity.User.UserId, fora, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
             return fora;
         }
 
-        private async Task<ForaListItem> GetForumWithoutCounters(string forumTitle)
+        public async Task<ForaListItem> GetForum(string forumTitle)
+        {
+            var forum = await FindForum(forumTitle);
+            await FillCounters(identity.User.UserId, new[] {forum}, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
+            return forum;
+        }
+
+        public async Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(
+            string forumTitle, int entityNumber)
+        {
+            var forum = await FindForum(forumTitle);
+
+            var pageSize = identity.Settings.TopicsPerPage;
+            var topicsCount = await topicRepository.CountTopics(forum.Id);
+            var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
+
+            var userId = identity.User.UserId;
+            var topics = (await topicRepository.SelectTopics(userId, forum.Id, pagingData, false)).ToArray();
+            await FillCounters(userId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+
+            return (topics, pagingData);
+        }
+
+        public async Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle)
+        {
+            var userId = identity.User.UserId;
+            var forum = await FindForum(forumTitle);
+            var topics = (await topicRepository.SelectTopics(userId, forum.Id, null, true)).ToArray();
+            await FillCounters(userId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+            return topics;
+        }
+
+        private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,
+            Func<TEntity, Guid> getId, Action<TEntity, int> setCounter)
+        {
+            var counters = await unreadCountersRepository.SelectByEntities(
+                userId, UnreadEntryType.Message, entities.Select(getId).ToArray());
+            foreach (var entity in entities)
+            {
+                setCounter(entity, counters[getId(entity)]);
+            }
+        }
+
+        private async Task<ForaListItem> FindForum(string forumTitle)
         {
             var forum = (await GetFora()).FirstOrDefault(f => f.Title == forumTitle);
             if (forum == null)
@@ -66,31 +98,10 @@ namespace DM.Services.Forum.Implementation
             return forum;
         }
 
-        public async Task<ForaListItem> GetForum(string forumTitle)
+        private async Task<ForaListItem[]> GetFora()
         {
-            var forum = await GetForumWithoutCounters(forumTitle);
-            forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
-                identity.User.UserId, UnreadEntryType.Message, forum.Id))[forum.Id];
-            return forum;
-        }
-
-        public async Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(
-            string forumTitle, int entityNumber)
-        {
-            var forum = await GetForumWithoutCounters(forumTitle);
-
-            var pageSize = identity.Settings.TopicsPerPage;
-            var topicsCount = await topicRepository.CountTopics(forum.Id);
-            var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
-            var topics = await topicRepository.SelectTopics(identity.User.UserId, forum.Id, pagingData, false);
-
-            return (topics, pagingData);
-        }
-
-        public async Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle)
-        {
-            var forum = await GetForumWithoutCounters(forumTitle);
-            return await topicRepository.SelectTopics(identity.User.UserId, forum.Id, null, true);
+            var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
+            return (await forumRepository.SelectFora(accessPolicy)).ToArray();
         }
     }
 }

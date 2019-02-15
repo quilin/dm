@@ -10,15 +10,20 @@ namespace DM.Services.Forum.Dto
         public string Title { get; set; }
         public string Text { get; set; }
         public DateTime CreateDate { get; set; }
-        
+
         public GeneralUser Author { get; set; }
 
         public int TotalCommentsCount { get; set; }
         public int UnreadCommentsCount { get; set; }
-        
-        public GeneralUser LastCommentAuthor { get; set; }
-        public DateTime LastCommentDate { get; set; }
+
+        public LastComment LastComment { get; set; }
         public bool Attached { get; set; }
         public bool Closed { get; set; }
+    }
+
+    public class LastComment
+    {
+        public GeneralUser Author { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }
