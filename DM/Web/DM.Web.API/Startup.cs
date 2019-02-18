@@ -64,26 +64,23 @@ namespace DM.Web.API
                     c.DescribeAllEnumsAsStrings();
                     c.OperationFilter<AuthenticationSwaggerFilter>();
                 })
-                .AddAutoMapper(assemblies)
+                .AddAutoMapper()
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder
-                .RegisterAssemblyTypes(assemblies)
+            
+            var builder = new ContainerBuilder();
+            builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
-            containerBuilder.RegisterTypes(typeof(DmMongoClient))
+            builder.RegisterTypes(typeof(DmMongoClient))
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.Populate(services);
 
-            containerBuilder.Populate(services);
-
-            var container = containerBuilder.Build();
+            var container = builder.Build();
             return new AutofacServiceProvider(container);
         }
 

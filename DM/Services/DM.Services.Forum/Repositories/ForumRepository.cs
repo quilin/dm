@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using DM.Services.Forum.Dto;
@@ -12,11 +14,14 @@ namespace DM.Services.Forum.Repositories
     internal class ForumRepository : IForumRepository
     {
         private readonly ReadDmDbContext dmDbContext;
+        private readonly IMapper mapper;
 
         public ForumRepository(
-            ReadDmDbContext dmDbContext)
+            ReadDmDbContext dmDbContext,
+            IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<ForaListItem>> SelectFora(ForumAccessPolicy accessPolicy)
@@ -24,12 +29,7 @@ namespace DM.Services.Forum.Repositories
             return await dmDbContext.Fora
                 .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .OrderBy(f => f.Order)
-                .Select(f => new ForaListItem
-                {
-                    Id = f.ForumId,
-                    Title = f.Title,
-                    UnreadTopicsCount = 0
-                })
+                .ProjectTo<ForaListItem>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
     }

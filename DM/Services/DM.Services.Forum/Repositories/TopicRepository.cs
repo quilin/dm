@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess;
@@ -13,11 +14,14 @@ namespace DM.Services.Forum.Repositories
     internal class TopicRepository : ITopicRepository
     {
         private readonly ReadDmDbContext dmDbContext;
+        private readonly IMapper mapper;
 
         public TopicRepository(
-            ReadDmDbContext dmDbContext)
+            ReadDmDbContext dmDbContext,
+            IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
+            this.mapper = mapper;
         }
 
         private static readonly Guid NewsForumId = Guid.Parse("00000000-0000-0000-0000-000000000008");
@@ -33,7 +37,7 @@ namespace DM.Services.Forum.Repositories
                 .Include(t => t.LastComment)
                 .ThenInclude(c => c.Author)
                 .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
-                .ProjectTo<TopicsListItem>();
+                .ProjectTo<TopicsListItem>(mapper.ConfigurationProvider);
 
             if (forumId == NewsForumId || attached)
             {

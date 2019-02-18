@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Authentication.Dto;
 using DM.Services.DataAccess;
@@ -16,19 +17,22 @@ namespace DM.Services.Authentication.Repositories
     internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly ReadDmDbContext dbContext;
+        private readonly IMapper mapper;
 
         public AuthenticationRepository(
             ReadDmDbContext dbContext,
-            DmMongoClient mongoClient) : base(mongoClient)
+            DmMongoClient mongoClient,
+            IMapper mapper) : base(mongoClient)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users
                 .Where(u => u.Login.ToLower() == login.ToLower())
-                .ProjectTo<AuthenticatedUser>()
+                .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
             return (result != null, result);
         }
@@ -37,7 +41,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return dbContext.Users
                 .Where(u => u.UserId == userId)
-                .ProjectTo<AuthenticatedUser>()
+                .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
 
