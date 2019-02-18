@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
@@ -42,13 +43,13 @@ namespace DM.Web.API
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
+            var assemblies = GetAssemblies();
 
             services
                 .AddOptions()
                 .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
@@ -56,7 +57,6 @@ namespace DM.Web.API
                 .AddDbContext<ReadDmDbContext>(options => options
                     .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext)))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
-
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info {Title = "DM.API", Version = "v1"});
@@ -64,12 +64,11 @@ namespace DM.Web.API
                     c.DescribeAllEnumsAsStrings();
                     c.OperationFilter<AuthenticationSwaggerFilter>();
                 })
-
+                .AddAutoMapper(assemblies)
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             var containerBuilder = new ContainerBuilder();
-            var assemblies = GetAssemblies();
             containerBuilder
                 .RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
@@ -87,7 +86,7 @@ namespace DM.Web.API
             var container = containerBuilder.Build();
             return new AutofacServiceProvider(container);
         }
-        
+
         public void Configure(IApplicationBuilder appBuilder)
         {
             appBuilder

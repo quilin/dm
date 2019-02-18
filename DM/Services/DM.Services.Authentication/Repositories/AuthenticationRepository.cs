@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using DM.Services.Authentication.Dto;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -24,36 +24,11 @@ namespace DM.Services.Authentication.Repositories
             this.dbContext = dbContext;
         }
 
-        private static readonly Expression<Func<User, AuthenticatedUser>> MapAuthenticatedUser = user =>
-            new AuthenticatedUser
-            {
-                UserId = user.UserId,
-                Login = user.Login,
-                ProfilePictureUrl = user.ProfilePictures
-                    .Where(u => !u.IsRemoved)
-                    .Select(u => u.VirtualPath)
-                    .FirstOrDefault(),
-                Role = user.Role,
-                LastVisitDate = user.LastVisitDate,
-                RatingDisabled = user.RatingDisabled,
-                QualityRating = user.QualityRating,
-                QuantityRating = user.QuantityRating,
-                Activated = user.Activated,
-                Salt = user.Salt,
-                PasswordHash = user.PasswordHash,
-                IsRemoved = user.IsRemoved,
-                AccessPolicy = user.AccessPolicy,
-                AccessRestrictionPolicies = user.BansReceived
-                    .Where(b => !b.IsRemoved)
-                    .Select(b => b.AccessRestrictionPolicy)
-                    .ToArray()
-            };
-
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users
                 .Where(u => u.Login.ToLower() == login.ToLower())
-                .Select(MapAuthenticatedUser)
+                .ProjectTo<AuthenticatedUser>()
                 .FirstOrDefaultAsync();
             return (result != null, result);
         }
@@ -62,7 +37,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return dbContext.Users
                 .Where(u => u.UserId == userId)
-                .Select(MapAuthenticatedUser)
+                .ProjectTo<AuthenticatedUser>()
                 .FirstAsync();
         }
 
