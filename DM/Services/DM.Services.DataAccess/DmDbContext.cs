@@ -43,7 +43,6 @@ namespace DM.Services.DataAccess
         public DbSet<Forum> Fora { get; set; }
         public DbSet<ForumTopic> ForumTopics { get; set; }
         public DbSet<ForumModerator> ForumModerators { get; set; }
-        public DbQuery<ForumTopicsListItem> ForumTopicsList { get; set; }
 
         #endregion
 

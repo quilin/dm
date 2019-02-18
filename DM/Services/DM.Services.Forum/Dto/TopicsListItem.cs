@@ -19,6 +19,8 @@ namespace DM.Services.Forum.Dto
         public LastComment LastComment { get; set; }
         public bool Attached { get; set; }
         public bool Closed { get; set; }
+
+        public DateTime LastActivityDate { get; set; }
     }
 
     public class LastComment

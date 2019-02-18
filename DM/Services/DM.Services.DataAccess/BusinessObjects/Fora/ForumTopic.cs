@@ -13,8 +13,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
     {
         [Key]
         public Guid ForumTopicId { get; set; }
-
         public Guid ForumId { get; set; }
+
         public Guid UserId { get; set; }
         public DateTime CreateDate { get; set; }
 
@@ -24,6 +24,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public bool Attached { get; set; }
         public bool Closed { get; set; }
 
+        public Guid? LastCommentId { get; set; }
+
         public bool IsRemoved { get; set; }
 
         [ForeignKey(nameof(ForumId))]
@@ -31,6 +33,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
 
         [ForeignKey(nameof(UserId))]
         public virtual User Author { get; set; }
+
+        [ForeignKey(nameof(LastCommentId))]
+        public virtual Comment LastComment { get; set; }
 
         [InverseProperty(nameof(Comment.Topic))]
         public virtual ICollection<Comment> Comments { get; set; }

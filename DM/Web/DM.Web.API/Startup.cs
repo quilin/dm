@@ -73,6 +73,7 @@ namespace DM.Web.API
             containerBuilder
                 .RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
+                .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 

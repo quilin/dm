@@ -6,7 +6,6 @@ using DM.Services.Core.Dto;
 using DM.Services.DataAccess;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace DM.Services.Forum.Repositories
 {
@@ -28,64 +27,85 @@ namespace DM.Services.Forum.Repositories
 
         public async Task<IEnumerable<TopicsListItem>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
-            var forumType = forumId == NewsForumId
-                ? TopicQueries.TopicsSortType.News
-                : forumId == ErrorsForumId
-                    ? TopicQueries.TopicsSortType.Errors
-                    : TopicQueries.TopicsSortType.Default;
-
-            var forumIdParameter = new NpgsqlParameter("@ForumId", forumId);
-            var attachedParameter = new NpgsqlParameter("@Attached", attached);
-            var skipParameter = new NpgsqlParameter(@"Page_From",
-                pagingData == null ? 0 : pagingData.PageSize * (pagingData.CurrentPage - 1));
-            var sizeParameter = new NpgsqlParameter("@Page_Size", pagingData?.PageSize ?? 0);
-            var query = TopicQueries.List(pagingData, attached, forumType);
-            return await dmDbContext.ForumTopicsList
-                .FromSql(query, forumIdParameter, attachedParameter, skipParameter, sizeParameter)
-                .Select(x => new TopicsListItem
+            var query = dmDbContext.ForumTopics
+                .Include(t => t.Author)
+                .Include(t => t.LastComment)
+                .ThenInclude(c => c.Author)
+                .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
+                .Select(t => new TopicsListItem
                 {
-                    Id = x.Id,
+                    Id = t.ForumTopicId,
                     Forum = new ForaListItem
                     {
-                        Id = x.ForumId,
-                        Title = x.ForumTitle
+                        Id = t.Forum.ForumId,
+                        Title = t.Forum.Title,
+                        UnreadTopicsCount = 0
                     },
-                    Title = x.Title,
-                    Text = x.Text,
+                    Title = t.Title,
+                    Text = t.Text,
+                    CreateDate = t.CreateDate,
+                    Closed = t.Closed,
+                    Attached = t.Attached,
+                    LastActivityDate = t.LastComment == null ? t.CreateDate : t.LastComment.CreateDate,
                     Author = new GeneralUser
                     {
-                        UserId = x.AuthorUserId,
-                        Login = x.AuthorLogin,
-                        Role = x.AuthorRole,
-                        AccessPolicy = x.AuthorAccessPolicy,
-                        LastVisitDate = x.AuthorLastVisitDate,
-                        ProfilePictureUrl = x.AuthorProfilePictureUrl,
-                        RatingDisabled = x.AuthorRatingDisabled,
-                        QualityRating = x.AuthorQualityRating,
-                        QuantityRating = x.AuthorQuantityRating
+                        UserId = t.Author.UserId,
+                        Login = t.Author.Login,
+                        Role = t.Author.Role,
+                        AccessPolicy = t.Author.AccessPolicy,
+                        LastVisitDate = t.Author.LastVisitDate,
+                        ProfilePictureUrl = t.Author.ProfilePictures
+                            .Where(p => !p.IsRemoved)
+                            .Select(p => p.VirtualPath)
+                            .FirstOrDefault(),
+                        RatingDisabled = t.Author.RatingDisabled,
+                        QualityRating = t.Author.QualityRating,
+                        QuantityRating = t.Author.QuantityRating
                     },
-                    CreateDate = x.CreateDate,
-                    LastComment = new LastComment
-                    {
-                        CreateDate = x.LastCommentDate,
-                        Author = new GeneralUser
+                    TotalCommentsCount = t.Comments.Count(c => !c.IsRemoved),
+                    LastComment = t.LastComment == null
+                        ? null
+                        : new LastComment
                         {
-                            UserId = x.LastCommentAuthorUserId,
-                            Login = x.LastCommentAuthorLogin,
-                            Role = x.LastCommentAuthorRole,
-                            AccessPolicy = x.LastCommentAuthorAccessPolicy,
-                            LastVisitDate = x.LastCommentAuthorLastVisitDate,
-                            ProfilePictureUrl = x.LastCommentAuthorProfilePictureUrl,
-                            RatingDisabled = x.LastCommentAuthorRatingDisabled,
-                            QualityRating = x.LastCommentAuthorQualityRating,
-                            QuantityRating = x.LastCommentAuthorQuantityRating
+                            CreateDate = t.LastComment.CreateDate,
+                            Author = new GeneralUser
+                            {
+                                UserId = t.LastComment.Author.UserId,
+                                Login = t.LastComment.Author.Login,
+                                Role = t.LastComment.Author.Role,
+                                AccessPolicy = t.LastComment.Author.AccessPolicy,
+                                LastVisitDate = t.LastComment.Author.LastVisitDate,
+                                ProfilePictureUrl = t.LastComment.Author.ProfilePictures
+                                    .Where(p => !p.IsRemoved)
+                                    .Select(p => p.VirtualPath)
+                                    .FirstOrDefault(),
+                                RatingDisabled = t.LastComment.Author.RatingDisabled,
+                                QualityRating = t.LastComment.Author.QualityRating,
+                                QuantityRating = t.LastComment.Author.QuantityRating
+                            }
                         }
-                    },
-                    TotalCommentsCount = x.TotalCommentsCount,
-                    Attached = x.Attached,
-                    Closed = x.Closed
-                })
-                .ToArrayAsync();
+                });
+
+            if (forumId == NewsForumId || attached)
+            {
+                query = query.OrderByDescending(q => q.CreateDate);
+            }
+            else
+            {
+                if (forumId == ErrorsForumId)
+                {
+                    query = query.OrderBy(q => q.Closed);
+                }
+
+                query = query.OrderByDescending(q => q.LastActivityDate);
+            }
+
+            if (pagingData != null)
+            {
+                query = query.Skip((pagingData.CurrentPage - 1) * pagingData.PageSize).Take(pagingData.PageSize);
+            }
+
+            return await query.ToArrayAsync();
         }
     }
 }

@@ -12,6 +12,7 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Repositories;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Forum.Implementation
 {
@@ -23,6 +24,7 @@ namespace DM.Services.Forum.Implementation
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
         private readonly IModeratorRepository moderatorRepository;
+        private readonly IMemoryCache memoryCache;
 
         public ForumService(
             IIdentityProvider identityProvider,
@@ -30,7 +32,8 @@ namespace DM.Services.Forum.Implementation
             IUnreadCountersRepository unreadCountersRepository,
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
-            IModeratorRepository moderatorRepository)
+            IModeratorRepository moderatorRepository,
+            IMemoryCache memoryCache)
         {
             identity = identityProvider.Current;
             this.accessPolicyConverter = accessPolicyConverter;
@@ -38,6 +41,7 @@ namespace DM.Services.Forum.Implementation
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
             this.moderatorRepository = moderatorRepository;
+            this.memoryCache = memoryCache;
         }
 
         public async Task<IEnumerable<ForaListItem>> GetForaList()
@@ -108,7 +112,8 @@ namespace DM.Services.Forum.Implementation
         private async Task<ForaListItem[]> GetFora()
         {
             var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
-            return (await forumRepository.SelectFora(accessPolicy)).ToArray();
+            return await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>
+                (await forumRepository.SelectFora(accessPolicy)).ToArray());
         }
     }
 }

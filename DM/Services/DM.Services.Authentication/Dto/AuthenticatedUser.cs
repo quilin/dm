@@ -11,7 +11,7 @@ namespace DM.Services.Authentication.Dto
         public string Salt { get; set; }
         public string PasswordHash { get; set; }
         public bool IsRemoved { get; set; }
-        public IEnumerable<AccessPolicy> AccessRestrictionPolicies { private get; set; }
+        public IEnumerable<AccessPolicy> AccessRestrictionPolicies { get; set; }
 
         public AccessPolicy GeneralAccessPolicy =>
             AccessRestrictionPolicies.Aggregate(AccessPolicy, (seed, restriction) => seed | restriction);
