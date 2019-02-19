@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto;
 
 namespace DM.Services.Forum.Dto
@@ -21,6 +22,8 @@ namespace DM.Services.Forum.Dto
         public bool Closed { get; set; }
 
         public DateTime LastActivityDate { get; set; }
+
+        public IEnumerable<GeneralUser> Likes { get; set; }
     }
 
     public class LastComment

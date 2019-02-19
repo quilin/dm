@@ -15,7 +15,8 @@ namespace DM.Services.Forum.Dto
                 .ForMember(d => d.LastActivityDate, s => s.MapFrom(t => t.LastComment == null
                     ? t.CreateDate
                     : t.LastComment.CreateDate))
-                .ForMember(d => d.TotalCommentsCount, s => s.MapFrom(t => t.Comments.Count(c => !c.IsRemoved)));
+                .ForMember(d => d.TotalCommentsCount, s => s.MapFrom(t => t.Comments.Count(c => !c.IsRemoved)))
+                .ForMember(d => d.Likes, s => s.MapFrom(t => t.Likes.Select(l => l.User)));
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Forum.Implementation;
+using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 
@@ -34,6 +35,12 @@ namespace DM.Web.API.Services.Fora
         {
             var topic = await forumService.GetTopic(topicId);
             return new Envelope<Topic>(mapper.Map<Topic>(topic));
+        }
+
+        public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
+        {
+            var (comments, paging) = await forumService.GetCommentsList(topicId, entityNumber);
+            return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
         }
     }
 }

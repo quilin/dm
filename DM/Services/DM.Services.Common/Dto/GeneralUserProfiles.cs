@@ -1,13 +1,14 @@
 using System.Linq;
 using AutoMapper;
+using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Common.MapperProfiles
+namespace DM.Services.Common.Dto
 {
-    public class GeneralUserProfile : Profile
+    public class GeneralUserProfiles : Profile
     {
-        public GeneralUserProfile()
+        public GeneralUserProfiles()
         {
             CreateMap<User, GeneralUser>()
                 .ForMember(
@@ -16,6 +17,9 @@ namespace DM.Services.Common.MapperProfiles
                         .Where(p => !p.IsRemoved)
                         .Select(p => p.VirtualPath)
                         .FirstOrDefault()));
+            CreateMap<User, AuthenticatedUser>()
+                .ForMember(d => d.AccessRestrictionPolicies, s => s.MapFrom(
+                    u => u.BansReceived.Where(b => !b.IsRemoved).Select(b => b.AccessRestrictionPolicy).ToList()));
         }
     }
 }

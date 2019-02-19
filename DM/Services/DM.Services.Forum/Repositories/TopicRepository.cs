@@ -34,9 +34,6 @@ namespace DM.Services.Forum.Repositories
         public async Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
             var query = dmDbContext.ForumTopics
-                .Include(t => t.Author)
-                .Include(t => t.LastComment)
-                .ThenInclude(c => c.Author)
                 .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider);
 
@@ -65,12 +62,9 @@ namespace DM.Services.Forum.Repositories
         public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)
         {
             return await dmDbContext.ForumTopics
-                .Include(t => t.Author)
-                .Include(t => t.LastComment)
-                .ThenInclude(c => c.Author)
                 .Where(t => !t.IsRemoved && t.ForumTopicId == topicId &&
                     (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
-                .ProjectTo<Topic>()
+                .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
     }

@@ -55,7 +55,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}/comments")]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<Comment>> GetComments(Guid id, [FromQuery] int n = 1) => throw new NotImplementedException();
+        public Task<ListEnvelope<Comment>> GetComments(Guid id, [FromQuery] int n = 1) => topicApiService.Get(id, n);
 
         [HttpPost("{id}/comments")]
         [ProducesResponseType(typeof(Envelope<Comment>), 201)]

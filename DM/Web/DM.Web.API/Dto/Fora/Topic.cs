@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Fora
@@ -18,6 +19,7 @@ namespace DM.Web.API.Dto.Fora
         public int UnreadCommentsCount { get; set; }
 
         public Forum Forum { get; set; }
+        public IEnumerable<User> Likes { get; set; }
     }
 
     public class LastTopicComment

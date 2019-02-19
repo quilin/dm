@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 
@@ -9,5 +10,7 @@ namespace DM.Web.API.Services.Fora
     {
         Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber);
         Task<Envelope<Topic>> Get(Guid topicId);
+
+        Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber);
     }
 }

@@ -13,6 +13,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Repositories;
 using Microsoft.Extensions.Caching.Memory;
+using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Forum.Implementation
 {
@@ -24,6 +25,7 @@ namespace DM.Services.Forum.Implementation
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
         private readonly IModeratorRepository moderatorRepository;
+        private readonly ICommentRepository commentRepository;
         private readonly IMemoryCache memoryCache;
 
         public ForumService(
@@ -33,6 +35,7 @@ namespace DM.Services.Forum.Implementation
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
+            ICommentRepository commentRepository,
             IMemoryCache memoryCache)
         {
             identity = identityProvider.Current;
@@ -41,6 +44,7 @@ namespace DM.Services.Forum.Implementation
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
             this.moderatorRepository = moderatorRepository;
+            this.commentRepository = commentRepository;
             this.memoryCache = memoryCache;
         }
 
@@ -97,6 +101,19 @@ namespace DM.Services.Forum.Implementation
             }
 
             return topic;
+        }
+
+        public async Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(
+            Guid topicId, int entityNumber)
+        {
+            await GetTopic(topicId);
+
+            var pageSize = identity.Settings.CommentsPerPage;
+            var commentsCount = await commentRepository.Count(topicId);
+            var pagingData = PagingHelper.GetPaging(commentsCount, entityNumber, pageSize);
+
+            var comments = await commentRepository.Get(topicId, pagingData);
+            return (comments, pagingData);
         }
 
         private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,
