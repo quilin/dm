@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;
@@ -62,13 +63,14 @@ namespace DM.Services.Forum.Repositories
             return await query.ToArrayAsync();
         }
 
-        public async Task<Topic> Get(Guid topicId)
+        public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)
         {
             return await dmDbContext.ForumTopics
                 .Include(t => t.Author)
                 .Include(t => t.LastComment)
                 .ThenInclude(c => c.Author)
-                .Where(t => !t.IsRemoved && t.ForumTopicId == topicId)
+                .Where(t => !t.IsRemoved && t.ForumTopicId == topicId &&
+                    (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>()
                 .FirstOrDefaultAsync();
         }

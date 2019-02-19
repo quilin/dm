@@ -94,7 +94,8 @@ namespace DM.Services.Forum.Implementation
 
         public async Task<Topic> GetTopic(Guid topicId)
         {
-            var topic = await topicRepository.Get(topicId);
+            var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
+            var topic = await topicRepository.Get(topicId, accessPolicy);
             if (topic == null)
             {
                 throw new HttpException(HttpStatusCode.NotFound, "Topic not found");
