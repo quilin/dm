@@ -17,7 +17,5 @@ namespace DM.Services.Authentication.Dto
             AccessRestrictionPolicies.Aggregate(AccessPolicy, (seed, restriction) => seed | restriction);
 
         public static readonly AuthenticatedUser Guest = new AuthenticatedUser();
-
-        public bool IsGuest => Role == UserRole.Guest;
     }
 }

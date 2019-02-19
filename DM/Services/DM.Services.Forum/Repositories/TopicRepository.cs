@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,14 +31,14 @@ namespace DM.Services.Forum.Repositories
         public Task<int> Count(Guid forumId) =>
             dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
 
-        public async Task<IEnumerable<TopicsListItem>> Get(Guid forumId, PagingData pagingData, bool attached)
+        public async Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
             var query = dmDbContext.ForumTopics
                 .Include(t => t.Author)
                 .Include(t => t.LastComment)
                 .ThenInclude(c => c.Author)
                 .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
-                .ProjectTo<TopicsListItem>(mapper.ConfigurationProvider);
+                .ProjectTo<Topic>(mapper.ConfigurationProvider);
 
             if (forumId == NewsForumId || attached)
             {
@@ -61,15 +62,23 @@ namespace DM.Services.Forum.Repositories
             return await query.ToArrayAsync();
         }
 
-        public async Task<TopicsListItem> Get(Guid topicId)
+        public async Task<Topic> Get(Guid topicId)
         {
             return await dmDbContext.ForumTopics
                 .Include(t => t.Author)
                 .Include(t => t.LastComment)
                 .ThenInclude(c => c.Author)
                 .Where(t => !t.IsRemoved && t.ForumTopicId == topicId)
-                .ProjectTo<TopicsListItem>()
+                .ProjectTo<Topic>()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Topic> Create(Topic topic)
+        {
+            var forumTopic = mapper.Map<ForumTopic>(topic);
+            var entry = await dmDbContext.ForumTopics.AddAsync(forumTopic);
+            await dmDbContext.SaveChangesAsync();
+            return mapper.Map<Topic>(entry.Entity);
         }
     }
 }

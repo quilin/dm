@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DM.Services.Core.Dto;
+using DM.Services.Authentication.Dto;
 
 namespace DM.Services.Common.Implementation
 {
@@ -11,6 +11,6 @@ namespace DM.Services.Common.Implementation
         where TIntention : struct
         where TTarget : class
     {
-        Task<bool> IsAllowed(IUser user, TIntention intention, TTarget target);
+        Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention, TTarget target);
     }
 }

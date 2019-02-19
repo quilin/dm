@@ -18,7 +18,7 @@ namespace DM.Web.Core.Helpers
             return $"{Transliterate(readableText.ToLower())}~{base64Guid}";
         }
 
-        private static Guid DecodeFromReadableGuid(this string encodedGuid)
+        public static Guid DecodeFromReadableGuid(this string encodedGuid)
         {
             var base64Guid = encodedGuid.Split(new[] {"~"}, StringSplitOptions.None).Last().Replace("-", "/").Replace("_", "+") + "==";
             return new Guid(Convert.FromBase64String(base64Guid));

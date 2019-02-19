@@ -8,13 +8,14 @@ namespace DM.Services.Forum.Implementation
 {
     public interface IForumService
     {
-        Task<IEnumerable<ForaListItem>> GetForaList();
-        Task<ForaListItem> GetForum(string forumTitle);
+        Task<IEnumerable<Dto.Forum>> GetForaList();
+        Task<Dto.Forum> GetForum(string forumTitle);
 
         Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle);
 
-        Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
-        Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle);
-        Task<TopicsListItem> GetTopic(Guid topicId);
+        Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
+        Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle);
+        Task<Topic> GetTopic(Guid topicId);
+        Task<Topic> CreateTopic(string forumTitle, Topic topic);
     }
 }

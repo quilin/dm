@@ -14,5 +14,7 @@ namespace DM.Services.Core.Dto
         public bool RatingDisabled { get; set; }
         public int QualityRating { get; set; }
         public int QuantityRating { get; set; }
+
+        public bool IsAuthenticated => Role != UserRole.Guest;
     }
 }

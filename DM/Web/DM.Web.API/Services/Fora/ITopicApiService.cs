@@ -9,5 +9,6 @@ namespace DM.Web.API.Services.Fora
     {
         Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber);
         Task<Envelope<Topic>> Get(Guid topicId);
+        Task<Envelope<Topic>> Create(string forumId, Topic topic);
     }
 }

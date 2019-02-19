@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Forum.Dto;
 
 namespace DM.Web.API.Dto.Fora
 {
@@ -7,8 +6,9 @@ namespace DM.Web.API.Dto.Fora
     {
         public ForumProfile()
         {
-            CreateMap<ForaListItem, Forum>()
-                .ForMember(d => d.Id, s => s.MapFrom(f => f.Title));
+            CreateMap<DM.Services.Forum.Dto.Forum, Forum>()
+                .ForMember(d => d.Id, s => s.MapFrom(f => f.Title))
+                .ReverseMap();
         }
     }
 }

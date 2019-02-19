@@ -38,7 +38,7 @@ namespace DM.Web.Core.Authentication
 
         private async Task StoreAuthentication(HttpContext httpContext, IIdentity identity)
         {
-            if (identity.Error == AuthenticationError.NoError && !identity.User.IsGuest)
+            if (identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated)
             {
                 await credentialsStorage.Load(httpContext, identity);
             }

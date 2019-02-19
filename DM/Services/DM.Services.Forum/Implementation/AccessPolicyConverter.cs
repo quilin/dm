@@ -6,26 +6,26 @@ namespace DM.Services.Forum.Implementation
     {
         public ForumAccessPolicy Convert(UserRole role)
         {
-            var result = ForumAccessPolicy.Everyone;
+            var result = ForumAccessPolicy.Guest;
             if (role != UserRole.Guest)
             {
-                result = result | ForumAccessPolicy.Players;
+                result = result | ForumAccessPolicy.Player;
             }
             if (role.HasFlag(UserRole.Administrator))
             {
-                result = result | ForumAccessPolicy.Administrators;
+                result = result | ForumAccessPolicy.Administrator;
             }
             if (role.HasFlag(UserRole.SeniorModerator))
             {
-                result = result | ForumAccessPolicy.SeniorModerators;
+                result = result | ForumAccessPolicy.SeniorModerator;
             }
             if (role.HasFlag(UserRole.RegularModerator))
             {
-                result = result | ForumAccessPolicy.RegularModerators;
+                result = result | ForumAccessPolicy.RegularModerator;
             }
             if (role.HasFlag(UserRole.NurseModerator))
             {
-                result = result | ForumAccessPolicy.NannyModerators;
+                result = result | ForumAccessPolicy.NurseModerator;
             }
             return result;
         }

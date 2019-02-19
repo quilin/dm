@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.Core.Dto;
 
 namespace DM.Web.API.Dto.Users
 {
@@ -15,13 +14,6 @@ namespace DM.Web.API.Dto.Users
 
     public class Rating
     {
-        public Rating(IUser user)
-        {
-            Enabled = !user.RatingDisabled;
-            Quality = user.QualityRating;
-            Quantity = user.QuantityRating;
-        }
-        
         public bool Enabled { get; set; }
         public int Quality { get; set; }
         public int Quantity { get; set; }

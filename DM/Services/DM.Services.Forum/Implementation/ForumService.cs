@@ -5,11 +5,13 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
+using DM.Services.Common.Implementation;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Repositories;
 using Microsoft.Extensions.Caching.Memory;
@@ -24,6 +26,7 @@ namespace DM.Services.Forum.Implementation
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
         private readonly IModeratorRepository moderatorRepository;
+        private readonly IIntentionManager intentionManager;
         private readonly IMemoryCache memoryCache;
 
         public ForumService(
@@ -33,6 +36,7 @@ namespace DM.Services.Forum.Implementation
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
+            IIntentionManager intentionManager,
             IMemoryCache memoryCache)
         {
             identity = identityProvider.Current;
@@ -41,24 +45,31 @@ namespace DM.Services.Forum.Implementation
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
             this.moderatorRepository = moderatorRepository;
+            this.intentionManager = intentionManager;
             this.memoryCache = memoryCache;
         }
 
-        public async Task<IEnumerable<ForaListItem>> GetForaList()
+        public async Task<IEnumerable<Dto.Forum>> GetForaList()
         {
             var fora = await GetFora();
             await FillCounters(identity.User.UserId, fora, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
             return fora;
         }
 
-        public async Task<ForaListItem> GetForum(string forumTitle)
+        public async Task<Dto.Forum> GetForum(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
             await FillCounters(identity.User.UserId, new[] {forum}, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
             return forum;
         }
 
-        public async Task<(IEnumerable<TopicsListItem> topics, PagingData paging)> GetTopicsList(
+        public async Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle)
+        {
+            var forum = await FindForum(forumTitle);
+            return await moderatorRepository.Get(forum.Id);
+        }
+
+        public async Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(
             string forumTitle, int entityNumber)
         {
             var forum = await FindForum(forumTitle);
@@ -73,7 +84,7 @@ namespace DM.Services.Forum.Implementation
             return (topics, pagingData);
         }
 
-        public async Task<IEnumerable<TopicsListItem>> GetAttachedTopics(string forumTitle)
+        public async Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
             var topics = (await topicRepository.Get(forum.Id, null, true)).ToArray();
@@ -81,7 +92,7 @@ namespace DM.Services.Forum.Implementation
             return topics;
         }
 
-        public async Task<TopicsListItem> GetTopic(Guid topicId)
+        public async Task<Topic> GetTopic(Guid topicId)
         {
             var topic = await topicRepository.Get(topicId);
             if (topic == null)
@@ -92,10 +103,16 @@ namespace DM.Services.Forum.Implementation
             return topic;
         }
 
-        public async Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle)
+        public async Task<Topic> CreateTopic(string forumTitle, Topic topic)
         {
             var forum = await FindForum(forumTitle);
-            return await moderatorRepository.Get(forum.Id);
+            await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+
+            topic.Id = Guid.NewGuid();
+            topic.CreateDate = DateTime.UtcNow;
+            topic.Author = new GeneralUser {UserId = identity.User.UserId};
+            topic.Forum = new Dto.Forum {Id = forum.Id};
+            return await topicRepository.Create(topic);
         }
 
         private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,
@@ -109,7 +126,7 @@ namespace DM.Services.Forum.Implementation
             }
         }
 
-        private async Task<ForaListItem> FindForum(string forumTitle)
+        private async Task<Dto.Forum> FindForum(string forumTitle)
         {
             var forum = (await GetFora()).FirstOrDefault(f => f.Title == forumTitle);
             if (forum == null)
@@ -120,7 +137,7 @@ namespace DM.Services.Forum.Implementation
             return forum;
         }
 
-        private async Task<ForaListItem[]> GetFora()
+        private async Task<Dto.Forum[]> GetFora()
         {
             var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
             return await memoryCache.GetOrCreateAsync($"ForaList_{accessPolicy}", async _ =>

@@ -11,7 +11,13 @@ namespace DM.Web.API.Dto.Users
             CreateMap<GeneralUser, User>()
                 .ForMember(d => d.Roles, s => s.MapFrom(u => u.Role.GetUserRoles()))
                 .ForMember(d => d.Online, s => s.MapFrom(u => u.LastVisitDate))
-                .ForMember(d => d.Rating, s => s.MapFrom(u => new Rating(u)));
+                .ForMember(d => d.Rating, s => s.MapFrom(u => new Rating
+                {
+                    Enabled = !u.RatingDisabled,
+                    Quality = u.QualityRating,
+                    Quantity = u.QuantityRating
+                }))
+                .ReverseMap();
         }
     }
 }
