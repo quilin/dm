@@ -10,5 +10,6 @@ namespace DM.Services.Forum.Repositories
     {
         Task<int> Count(Guid forumId);
         Task<IEnumerable<TopicsListItem>> Get(Guid forumId, PagingData pagingData, bool attached);
+        Task<TopicsListItem> Get(Guid topicId);
     }
 }

@@ -28,7 +28,7 @@ namespace DM.Services.Forum.Repositories
         private static readonly Guid ErrorsForumId = Guid.Parse("00000000-0000-0000-0000-000000000006");
 
         public Task<int> Count(Guid forumId) =>
-            dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId);
+            dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
 
         public async Task<IEnumerable<TopicsListItem>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
@@ -59,6 +59,17 @@ namespace DM.Services.Forum.Repositories
             }
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<TopicsListItem> Get(Guid topicId)
+        {
+            return await dmDbContext.ForumTopics
+                .Include(t => t.Author)
+                .Include(t => t.LastComment)
+                .ThenInclude(c => c.Author)
+                .Where(t => !t.IsRemoved && t.ForumTopicId == topicId)
+                .ProjectTo<TopicsListItem>()
+                .FirstOrDefaultAsync();
         }
     }
 }
