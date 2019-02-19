@@ -26,7 +26,6 @@
       <Folder Include="Controllers\v1\Fora" />
       <Folder Include="Controllers\v1\Users" />
       <Folder Include="Dto\Contracts" />
-      <Folder Include="Dto\Users" />
     </ItemGroup>
 
 </Project>

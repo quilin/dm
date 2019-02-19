@@ -11,4 +11,8 @@
       <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Dto\MapperProfiles" />
+    </ItemGroup>
+
 </Project>

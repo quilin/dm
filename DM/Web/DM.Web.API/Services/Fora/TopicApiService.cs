@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DM.Services.Forum.Implementation;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
@@ -10,11 +11,14 @@ namespace DM.Web.API.Services.Fora
     public class TopicApiService : ITopicApiService
     {
         private readonly IForumService forumService;
+        private readonly IMapper mapper;
 
         public TopicApiService(
-            IForumService forumService)
+            IForumService forumService,
+            IMapper mapper)
         {
             this.forumService = forumService;
+            this.mapper = mapper;
         }
         
         public async Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
@@ -22,7 +26,7 @@ namespace DM.Web.API.Services.Fora
             var (topics, paging) = filters.Attached
                 ? (await forumService.GetAttachedTopics(forumId), null)
                 : await forumService.GetTopicsList(forumId, entityNumber);
-            return new ListEnvelope<Topic>(topics.Select(t => new Topic(t)),
+            return new ListEnvelope<Topic>(topics.Select(mapper.Map<Topic>),
                 paging == null ? null : new Paging(paging));
         }
 

@@ -2,9 +2,8 @@ using System.Linq;
 using AutoMapper;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.Forum.Dto;
 
-namespace DM.Services.Forum.MapperProfiles
+namespace DM.Services.Forum.Dto.MapperProfiles
 {
     public class TopicProfile : Profile
     {

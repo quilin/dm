@@ -1,9 +1,8 @@
 using System.Linq;
 using AutoMapper;
-using DM.Services.Authentication.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Authentication.MapperProfiles
+namespace DM.Services.Authentication.Dto.MapperProfiles
 {
     public class AuthenticatedUserProfile : Profile
     {

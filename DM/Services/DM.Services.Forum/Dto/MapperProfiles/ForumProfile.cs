@@ -1,7 +1,6 @@
 using AutoMapper;
-using DM.Services.Forum.Dto;
 
-namespace DM.Services.Forum.MapperProfiles
+namespace DM.Services.Forum.Dto.MapperProfiles
 {
     public class ForumProfile : Profile
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
 using DM.Services.Core.Exceptions;
@@ -17,13 +18,16 @@ namespace DM.Web.API.Services.Users
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;
+        private readonly IMapper mapper;
 
         public AccountApiService(
             IWebAuthenticationService authenticationService,
-            IIdentityProvider identityProvider)
+            IIdentityProvider identityProvider,
+            IMapper mapper)
         {
             this.authenticationService = authenticationService;
             this.identityProvider = identityProvider;
+            this.mapper = mapper;
         }
         
         public async Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext)
@@ -33,7 +37,7 @@ namespace DM.Web.API.Services.Users
             switch (authenticationResult.Error)
             {
                 case AuthenticationError.NoError:
-                    return new Envelope<User>(new User(authenticationResult.User));
+                    return new Envelope<User>(mapper.Map<User>(authenticationResult.User));
                 case AuthenticationError.WrongLogin:
                     throw new HttpBadRequestException(new Dictionary<string, string>
                     {
