@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
@@ -50,6 +51,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> PostTopic(string id, [FromBody] Topic topic) => topicApiService.Create(id, topic);
+        public Task<Envelope<Topic>> PostTopic(string id, [FromBody] Topic topic) =>
+            throw new NotImplementedException();
     }
 }

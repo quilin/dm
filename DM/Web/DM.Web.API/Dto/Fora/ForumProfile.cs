@@ -7,8 +7,7 @@ namespace DM.Web.API.Dto.Fora
         public ForumProfile()
         {
             CreateMap<DM.Services.Forum.Dto.Forum, Forum>()
-                .ForMember(d => d.Id, s => s.MapFrom(f => f.Title))
-                .ReverseMap();
+                .ForMember(d => d.Id, s => s.MapFrom(f => f.Title));
         }
     }
 }

@@ -5,7 +5,6 @@ using AutoMapper;
 using DM.Services.Forum.Implementation;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
-using Topic = DM.Services.Forum.Dto.Topic;
 
 namespace DM.Web.API.Services.Fora
 {
@@ -22,26 +21,19 @@ namespace DM.Web.API.Services.Fora
             this.mapper = mapper;
         }
         
-        public async Task<ListEnvelope<Dto.Fora.Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
+        public async Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
         {
             var (topics, paging) = filters.Attached
                 ? (await forumService.GetAttachedTopics(forumId), null)
                 : await forumService.GetTopicsList(forumId, entityNumber);
-            return new ListEnvelope<Dto.Fora.Topic>(topics.Select(mapper.Map<Dto.Fora.Topic>),
+            return new ListEnvelope<Topic>(topics.Select(mapper.Map<Topic>),
                 paging == null ? null : new Paging(paging));
         }
 
-        public async Task<Envelope<Dto.Fora.Topic>> Get(Guid topicId)
+        public async Task<Envelope<Topic>> Get(Guid topicId)
         {
             var topic = await forumService.GetTopic(topicId);
-            return new Envelope<Dto.Fora.Topic>(mapper.Map<Dto.Fora.Topic>(topic));
-        }
-
-        public async Task<Envelope<Dto.Fora.Topic>> Create(string forumId, Dto.Fora.Topic topic)
-        {
-            var topicToCreate = mapper.Map<Topic>(topic);
-            var createdTopic = await forumService.CreateTopic(forumId, topicToCreate);
-            return new Envelope<Dto.Fora.Topic>(mapper.Map<Dto.Fora.Topic>(createdTopic));
+            return new Envelope<Topic>(mapper.Map<Topic>(topic));
         }
     }
 }

@@ -5,13 +5,11 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
-using DM.Services.Common.Implementation;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Repositories;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,7 +24,6 @@ namespace DM.Services.Forum.Implementation
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
         private readonly IModeratorRepository moderatorRepository;
-        private readonly IIntentionManager intentionManager;
         private readonly IMemoryCache memoryCache;
 
         public ForumService(
@@ -36,7 +33,6 @@ namespace DM.Services.Forum.Implementation
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
-            IIntentionManager intentionManager,
             IMemoryCache memoryCache)
         {
             identity = identityProvider.Current;
@@ -45,7 +41,6 @@ namespace DM.Services.Forum.Implementation
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
             this.moderatorRepository = moderatorRepository;
-            this.intentionManager = intentionManager;
             this.memoryCache = memoryCache;
         }
 
@@ -102,18 +97,6 @@ namespace DM.Services.Forum.Implementation
             }
 
             return topic;
-        }
-
-        public async Task<Topic> CreateTopic(string forumTitle, Topic topic)
-        {
-            var forum = await FindForum(forumTitle);
-            await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
-
-            topic.Id = Guid.NewGuid();
-            topic.CreateDate = DateTime.UtcNow;
-            topic.Author = new GeneralUser {UserId = identity.User.UserId};
-            topic.Forum = new Dto.Forum {Id = forum.Id};
-            return await topicRepository.Create(topic);
         }
 
         private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,

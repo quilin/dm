@@ -7,7 +7,6 @@ using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -73,14 +72,6 @@ namespace DM.Services.Forum.Repositories
                     (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>()
                 .FirstOrDefaultAsync();
-        }
-
-        public async Task<Topic> Create(Topic topic)
-        {
-            var forumTopic = mapper.Map<ForumTopic>(topic);
-            var entry = await dmDbContext.ForumTopics.AddAsync(forumTopic);
-            await dmDbContext.SaveChangesAsync();
-            return mapper.Map<Topic>(entry.Entity);
         }
     }
 }

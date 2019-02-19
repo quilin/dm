@@ -12,6 +12,5 @@ namespace DM.Services.Forum.Repositories
         Task<int> Count(Guid forumId);
         Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached);
         Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy);
-        Task<Topic> Create(Topic topic);
     }
 }

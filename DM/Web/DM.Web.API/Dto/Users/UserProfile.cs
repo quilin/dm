@@ -16,8 +16,7 @@ namespace DM.Web.API.Dto.Users
                     Enabled = !u.RatingDisabled,
                     Quality = u.QualityRating,
                     Quantity = u.QuantityRating
-                }))
-                .ReverseMap();
+                }));
         }
     }
 }
