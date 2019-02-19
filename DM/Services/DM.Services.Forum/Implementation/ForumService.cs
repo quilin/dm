@@ -81,6 +81,17 @@ namespace DM.Services.Forum.Implementation
             return topics;
         }
 
+        public async Task<TopicsListItem> GetTopic(Guid topicId)
+        {
+            var topic = await topicRepository.Get(topicId);
+            if (topic == null)
+            {
+                throw new HttpException(HttpStatusCode.NotFound, "Topic not found");
+            }
+
+            return topic;
+        }
+
         public async Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle)
         {
             var forum = await FindForum(forumTitle);

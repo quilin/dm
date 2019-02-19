@@ -30,9 +30,10 @@ namespace DM.Web.API.Services.Fora
                 paging == null ? null : new Paging(paging));
         }
 
-        public Task<Envelope<Topic>> Get(Guid topicId)
+        public async Task<Envelope<Topic>> Get(Guid topicId)
         {
-            throw new NotImplementedException();
+            var topic = await forumService.GetTopic(topicId);
+            return new Envelope<Topic>(mapper.Map<Topic>(topic));
         }
     }
 }
