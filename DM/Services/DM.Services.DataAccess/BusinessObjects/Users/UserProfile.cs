@@ -9,8 +9,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
     public class UserProfile : IRemovable
     {
         [Key]
-        public Guid UserProfileId { get; set; }
-
         public Guid UserId { get; set; }
 
         public string Status { get; set; }

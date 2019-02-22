@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -51,12 +52,7 @@ namespace DM.Services.Forum.Repositories
                 query = query.OrderByDescending(q => q.LastActivityDate);
             }
 
-            if (pagingData != null)
-            {
-                query = query.Skip((pagingData.CurrentPage - 1) * pagingData.PageSize).Take(pagingData.PageSize);
-            }
-
-            return await query.ToArrayAsync();
+            return await query.Page(pagingData).ToArrayAsync();
         }
 
         public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)

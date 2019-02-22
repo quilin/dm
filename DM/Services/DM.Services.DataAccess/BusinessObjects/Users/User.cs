@@ -23,8 +23,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         [Key]
         public Guid UserId { get; set; }
 
-//        public Guid ProfileId { get; set; }
-
         public string Login { get; set; }
         public string Email { get; set; }
 
@@ -50,8 +48,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         #region Profile navigations
 
-//        [ForeignKey(nameof(ProfileId))]
-//        public virtual UserProfile Profile { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual UserProfile Profile { get; set; }
 
         [InverseProperty(nameof(Upload.UserProfile))]
         public virtual ICollection<Upload> ProfilePictures { get; set; }
