@@ -51,14 +51,16 @@ namespace DM.Services.Forum.Implementation
         public async Task<IEnumerable<Dto.Forum>> GetForaList()
         {
             var fora = await GetFora();
-            await FillCounters(identity.User.UserId, fora, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
+            await FillCounters(fora, f => f.Id, unreadCountersRepository.SelectByParents,
+                (f, c) => f.UnreadTopicsCount = c);
             return fora;
         }
 
         public async Task<Dto.Forum> GetForum(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
-            await FillCounters(identity.User.UserId, new[] {forum}, f => f.Id, (f, c) => f.UnreadTopicsCount = c);
+            await FillCounters(new[] {forum}, f => f.Id, unreadCountersRepository.SelectByParents,
+                (f, c) => f.UnreadTopicsCount = c);
             return forum;
         }
 
@@ -78,7 +80,8 @@ namespace DM.Services.Forum.Implementation
             var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
 
             var topics = (await topicRepository.Get(forum.Id, pagingData, false)).ToArray();
-            await FillCounters(identity.User.UserId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+            await FillCounters(topics, t => t.Id, unreadCountersRepository.SelectByEntities,
+                (t, c) => t.UnreadCommentsCount = c);
 
             return (topics, pagingData);
         }
@@ -87,7 +90,7 @@ namespace DM.Services.Forum.Implementation
         {
             var forum = await FindForum(forumTitle);
             var topics = (await topicRepository.Get(forum.Id, null, true)).ToArray();
-            await FillCounters(identity.User.UserId, topics, t => t.Id, (t, c) => t.UnreadCommentsCount = c);
+            await FillCounters(topics, t => t.Id, unreadCountersRepository.SelectByEntities, (t, c) => t.UnreadCommentsCount = c);
             return topics;
         }
 
@@ -113,14 +116,20 @@ namespace DM.Services.Forum.Implementation
             var pagingData = PagingHelper.GetPaging(commentsCount, entityNumber, pageSize);
 
             var comments = await commentRepository.Get(topicId, pagingData);
+            if (identity.User.IsAuthenticated)
+            {
+                await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
+            }
+
             return (comments, pagingData);
         }
 
-        private async Task FillCounters<TEntity>(Guid userId, TEntity[] entities,
-            Func<TEntity, Guid> getId, Action<TEntity, int> setCounter)
+        private async Task FillCounters<TEntity>(TEntity[] entities, Func<TEntity, Guid> getId,
+            Func<Guid, UnreadEntryType, Guid[], Task<IDictionary<Guid, int>>> getCounters,
+            Action<TEntity, int> setCounter)
         {
-            var counters = await unreadCountersRepository.SelectByEntities(
-                userId, UnreadEntryType.Message, entities.Select(getId).ToArray());
+            var counters = await getCounters(
+                identity.User.UserId, UnreadEntryType.Message, entities.Select(getId).ToArray());
             foreach (var entity in entities)
             {
                 setCounter(entity, counters[getId(entity)]);

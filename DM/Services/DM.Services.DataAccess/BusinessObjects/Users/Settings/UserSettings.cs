@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.MongoIntegration;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users.Settings

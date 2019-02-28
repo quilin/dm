@@ -60,7 +60,7 @@ namespace DM.Services.Authentication.Repositories
                 .Project(Select<DbUserSettings>().Expression(s => new UserSettings
                 {
                     Id = s.Id,
-                    ColorScheme = (ColorScheme) s.ColorScheme,
+                    ColorScheme = s.ColorScheme,
                     PostsPerPage = s.Paging.PostsPerPage,
                     CommentsPerPage = s.Paging.CommentsPerPage,
                     MessagesPerPage = s.Paging.MessagesPerPage,

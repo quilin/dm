@@ -1,4 +1,4 @@
-namespace DM.Services.DataAccess.BusinessObjects.Users.Settings
+namespace DM.Services.Core.Dto.Enums
 {
     public enum ColorScheme
     {
