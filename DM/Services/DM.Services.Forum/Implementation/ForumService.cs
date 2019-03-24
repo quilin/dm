@@ -5,12 +5,15 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
+using DM.Services.Common.Implementation;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
+using DM.Services.Forum.Factories;
 using DM.Services.Forum.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 using Comment = DM.Services.Common.Dto.Comment;
@@ -21,6 +24,8 @@ namespace DM.Services.Forum.Implementation
     {
         private readonly IIdentity identity;
         private readonly IAccessPolicyConverter accessPolicyConverter;
+        private readonly IIntentionManager intentionManager;
+        private readonly ITopicFactory topicFactory;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
@@ -31,6 +36,8 @@ namespace DM.Services.Forum.Implementation
         public ForumService(
             IIdentityProvider identityProvider,
             IAccessPolicyConverter accessPolicyConverter,
+            IIntentionManager intentionManager,
+            ITopicFactory topicFactory,
             IUnreadCountersRepository unreadCountersRepository,
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
@@ -40,6 +47,8 @@ namespace DM.Services.Forum.Implementation
         {
             identity = identityProvider.Current;
             this.accessPolicyConverter = accessPolicyConverter;
+            this.intentionManager = intentionManager;
+            this.topicFactory = topicFactory;
             this.unreadCountersRepository = unreadCountersRepository;
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
@@ -104,6 +113,14 @@ namespace DM.Services.Forum.Implementation
             }
 
             return topic;
+        }
+
+        public async Task<Topic> CreateTopic(CreateTopic createTopic)
+        {
+            var forum = await FindForum(createTopic.ForumTitle);
+            await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+            var forumTopic = topicFactory.Create(forum.Id, createTopic);
+            return await topicRepository.Create(forumTopic);
         }
 
         public async Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(

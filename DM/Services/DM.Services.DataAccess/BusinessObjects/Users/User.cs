@@ -48,7 +48,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         #region Profile navigations
 
-        [ForeignKey(nameof(UserId))]
+        [InverseProperty(nameof(UserProfile.User))]
         public virtual UserProfile Profile { get; set; }
 
         [InverseProperty(nameof(Upload.UserProfile))]

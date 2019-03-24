@@ -3,6 +3,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Factories
 {
+    /// <inheritdoc />
     public class SessionFactory : ISessionFactory
     {
         private readonly IGuidFactory guidFactory;
@@ -15,7 +16,8 @@ namespace DM.Services.Authentication.Factories
             this.guidFactory = guidFactory;
             this.dateTimeProvider = dateTimeProvider;
         }
-        
+
+        /// <inheritdoc />
         public Session Create(bool persistent)
         {
             return new Session

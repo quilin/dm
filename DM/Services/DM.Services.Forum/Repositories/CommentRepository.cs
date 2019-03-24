@@ -13,11 +13,11 @@ namespace DM.Services.Forum.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        private readonly ReadDmDbContext dmDbContext;
+        private readonly DmDbContext dmDbContext;
         private readonly IMapper mapper;
 
         public CommentRepository(
-            ReadDmDbContext dmDbContext,
+            DmDbContext dmDbContext,
             IMapper mapper)
         {
             this.dmDbContext = dmDbContext;

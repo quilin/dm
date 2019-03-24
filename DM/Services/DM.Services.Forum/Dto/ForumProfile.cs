@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 
 namespace DM.Services.Forum.Dto
@@ -7,7 +8,9 @@ namespace DM.Services.Forum.Dto
         public ForumProfile()
         {
             CreateMap<DataAccess.BusinessObjects.Fora.Forum, Forum>()
-                .ForMember(d => d.Id, s => s.MapFrom(f => f.ForumId));
+                .ForMember(d => d.Id, s => s.MapFrom(f => f.ForumId))
+                .ForMember(d => d.ModeratorIds, 
+                    s => s.MapFrom(f => f.Moderators.Select(m => m.UserId)));
         }
     }
 }

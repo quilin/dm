@@ -1,9 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Fora;
+using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Fora
@@ -47,11 +47,13 @@ namespace DM.Web.API.Controllers.v1.Fora
             topicApiService.Get(id, f, n);
 
         [HttpPost("{id}/topics")]
+        [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Topic>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<Envelope<Topic>> PostTopic(string id, [FromBody] Topic topic) =>
-            throw new NotImplementedException();
+            topicApiService.Create(id, topic);
     }
 }

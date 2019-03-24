@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Web.API", "Web\DM.Web.AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Community", "Services\DM.Services.Community\DM.Services.Community.csproj", "{8F8450CD-2BD0-4E06-A656-F328E84B57A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Authentication.Tests", "Services\Core\DM.Services.Authentication.Tests\DM.Services.Authentication.Tests.csproj", "{43D4DA2C-58EA-4E07-B567-E21D07FDE951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{8F8450CD-2BD0-4E06-A656-F328E84B57A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F8450CD-2BD0-4E06-A656-F328E84B57A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F8450CD-2BD0-4E06-A656-F328E84B57A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43D4DA2C-58EA-4E07-B567-E21D07FDE951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D4DA2C-58EA-4E07-B567-E21D07FDE951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D4DA2C-58EA-4E07-B567-E21D07FDE951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D4DA2C-58EA-4E07-B567-E21D07FDE951}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA094429-3BE0-4924-9B65-00ABC1627395} = {DB521FBE-9B99-4349-9736-6C3E6E418964}
@@ -71,5 +77,6 @@ Global
 		{6F5649B7-D7FB-4BF1-88E3-6759895A3A09} = {37EE71A5-6F98-42E7-B92F-3E2B65C67850}
 		{711CF2B9-8549-4CFE-9FAB-7AD773BBAAA9} = {DB521FBE-9B99-4349-9736-6C3E6E418964}
 		{8F8450CD-2BD0-4E06-A656-F328E84B57A0} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
+		{43D4DA2C-58EA-4E07-B567-E21D07FDE951} = {37EE71A5-6F98-42E7-B92F-3E2B65C67850}
 	EndGlobalSection
 EndGlobal

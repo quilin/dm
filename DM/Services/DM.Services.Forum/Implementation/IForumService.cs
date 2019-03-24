@@ -17,6 +17,7 @@ namespace DM.Services.Forum.Implementation
         Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
         Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle);
         Task<Topic> GetTopic(Guid topicId);
+        Task<Topic> CreateTopic(CreateTopic createTopic);
 
         Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(Guid topicId, int entityNumber);
     }

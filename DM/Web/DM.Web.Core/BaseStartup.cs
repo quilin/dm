@@ -53,10 +53,7 @@ namespace DM.Web.Core
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))))
-                .AddDbContext<ReadDmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext)))
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))));
             AddConfiguration(services)
                 .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)

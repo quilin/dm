@@ -80,11 +80,4 @@ namespace DM.Services.DataAccess
 
         #endregion
     }
-
-    public class ReadDmDbContext : DmDbContext
-    {
-        public ReadDmDbContext(DbContextOptions options) : base(options)
-        {
-        }
-    }
 }

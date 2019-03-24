@@ -54,9 +54,6 @@ namespace DM.Web.API
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
                     .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))))
-                .AddDbContext<ReadDmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext)))
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info {Title = "DM.API", Version = "v1"});

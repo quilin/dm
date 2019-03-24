@@ -15,6 +15,9 @@ namespace DM.Web.API.Dto.Fora
                 .ForMember(d => d.Description, s => s.MapFrom(t => t.Text));
             CreateMap<LastComment, LastTopicComment>()
                 .ForMember(d => d.Created, s => s.MapFrom(c => c.CreateDate));
+
+            CreateMap<Topic, CreateTopic>()
+                .ForMember(d => d.Text, s => s.MapFrom(t => t.Description));
         }
     }
 }

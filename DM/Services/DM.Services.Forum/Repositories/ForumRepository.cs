@@ -12,11 +12,11 @@ namespace DM.Services.Forum.Repositories
 {
     internal class ForumRepository : IForumRepository
     {
-        private readonly ReadDmDbContext dmDbContext;
+        private readonly DmDbContext dmDbContext;
         private readonly IMapper mapper;
 
         public ForumRepository(
-            ReadDmDbContext dmDbContext,
+            DmDbContext dmDbContext,
             IMapper mapper)
         {
             this.dmDbContext = dmDbContext;

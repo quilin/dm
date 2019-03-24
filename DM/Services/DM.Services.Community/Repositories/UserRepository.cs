@@ -14,11 +14,11 @@ namespace DM.Services.Community.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ReadDmDbContext dmDbContext;
+        private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;
 
         public UserRepository(
-            ReadDmDbContext dmDbContext,
+            DmDbContext dmDbContext,
             IDateTimeProvider dateTimeProvider)
         {
             this.dmDbContext = dmDbContext;

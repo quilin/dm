@@ -8,6 +8,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +16,11 @@ namespace DM.Services.Forum.Repositories
 {
     internal class TopicRepository : ITopicRepository
     {
-        private readonly ReadDmDbContext dmDbContext;
+        private readonly DmDbContext dmDbContext;
         private readonly IMapper mapper;
 
         public TopicRepository(
-            ReadDmDbContext dmDbContext,
+            DmDbContext dmDbContext,
             IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
@@ -62,6 +63,16 @@ namespace DM.Services.Forum.Repositories
                     (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Topic> Create(ForumTopic forumTopic)
+        {
+            dmDbContext.ForumTopics.Add(forumTopic);
+            await dmDbContext.SaveChangesAsync();
+            return await dmDbContext.ForumTopics
+                .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
+                .ProjectTo<Topic>(mapper.ConfigurationProvider)
+                .FirstAsync();
         }
     }
 }

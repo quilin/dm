@@ -2,10 +2,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Forum.Dto;
 using DM.Services.Forum.Implementation;
 using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using Topic = DM.Web.API.Dto.Fora.Topic;
 
 namespace DM.Web.API.Services.Fora
 {
@@ -35,6 +37,14 @@ namespace DM.Web.API.Services.Fora
         {
             var topic = await forumService.GetTopic(topicId);
             return new Envelope<Topic>(mapper.Map<Topic>(topic));
+        }
+
+        public async Task<Envelope<Topic>> Create(string forumId, Topic topic)
+        {
+            var createTopic = mapper.Map<CreateTopic>(topic);
+            createTopic.ForumTitle = forumId;
+            var createdTopic = await forumService.CreateTopic(createTopic);
+            return new Envelope<Topic>(mapper.Map<Topic>(createdTopic));
         }
 
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)

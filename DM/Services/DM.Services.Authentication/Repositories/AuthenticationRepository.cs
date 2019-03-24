@@ -16,11 +16,11 @@ namespace DM.Services.Authentication.Repositories
 {
     internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
-        private readonly ReadDmDbContext dbContext;
+        private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         public AuthenticationRepository(
-            ReadDmDbContext dbContext,
+            DmDbContext dbContext,
             DmMongoClient mongoClient,
             IMapper mapper) : base(mongoClient)
         {
