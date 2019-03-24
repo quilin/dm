@@ -8,8 +8,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
     [Table("TagGroups")]
     public class TagGroup
     {
-        [Key]
-        public Guid TagGroupId { get; set; }
+        [Key] public Guid TagGroupId { get; set; }
 
         public string Title { get; set; }
 

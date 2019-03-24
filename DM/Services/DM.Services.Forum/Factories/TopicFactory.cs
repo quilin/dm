@@ -21,7 +21,7 @@ namespace DM.Services.Forum.Factories
             this.identityProvider = identityProvider;
             this.dateTimeProvider = dateTimeProvider;
         }
-        
+
         public ForumTopic Create(Guid forumId, CreateTopic createTopic)
         {
             return new ForumTopic

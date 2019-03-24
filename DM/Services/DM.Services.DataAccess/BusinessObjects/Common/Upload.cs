@@ -12,8 +12,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
     [Table("Uploads")]
     public class Upload : IRemovable
     {
-        [Key]
-        public Guid UploadId { get; set; }
+        [Key] public Guid UploadId { get; set; }
 
         public DateTime CreateDate { get; set; }
         public Guid? EntityId { get; set; }
@@ -24,19 +23,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual User UserProfile { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual User UserProfile { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual Game Game { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual Game Game { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual Character Character { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual Character Character { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual Post Post { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual Post Post { get; set; }
     }
 }

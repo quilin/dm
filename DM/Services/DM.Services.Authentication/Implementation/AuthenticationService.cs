@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace DM.Services.Authentication.Implementation
 {
+    /// <inheritdoc />
     public class AuthenticationService : IAuthenticationService
     {
         private readonly ISecurityManager securityManager;
@@ -42,6 +43,7 @@ namespace DM.Services.Authentication.Implementation
             this.identityProvider = identityProvider;
         }
 
+        /// <inheritdoc />
         public async Task<IIdentity> Authenticate(string login, string password, bool persistent)
         {
             var (userFound, user) = await repository.TryFindUser(login);
@@ -65,6 +67,7 @@ namespace DM.Services.Authentication.Implementation
             }
         }
 
+        /// <inheritdoc />
         public async Task<IIdentity> Authenticate(string authToken)
         {
             Guid userId;
@@ -107,12 +110,14 @@ namespace DM.Services.Authentication.Implementation
             return Identity.Success(user, session, settings, authToken);
         }
 
+        /// <inheritdoc />
         public async Task Logout()
         {
             var identity = identityProvider.Current;
             await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
         }
 
+        /// <inheritdoc />
         public async Task<IIdentity> LogoutAll()
         {
             var identity = identityProvider.Current;

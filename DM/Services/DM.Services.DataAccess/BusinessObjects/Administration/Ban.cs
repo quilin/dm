@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
     [Table("Bans")]
     public class Ban : IAdministrated
     {
-        [Key]
-        public Guid BanId { get; set; }
+        [Key] public Guid BanId { get; set; }
 
         public Guid UserId { get; set; }
         public Guid ModeratorId { get; set; }
@@ -24,10 +23,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
-        [ForeignKey(nameof(ModeratorId))]
-        public virtual User Moderator { get; set; }
+        [ForeignKey(nameof(ModeratorId))] public virtual User Moderator { get; set; }
     }
 }

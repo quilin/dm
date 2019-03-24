@@ -11,7 +11,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
 
         [InverseProperty(nameof(UserConversationLink.Conversation))]
         public virtual ICollection<UserConversationLink> UserLinks { get; set; }
-        
+
         [InverseProperty(nameof(Message.Conversation))]
         public virtual ICollection<Message> Messages { get; set; }
     }

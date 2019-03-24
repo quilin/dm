@@ -2,6 +2,10 @@ using MongoDB.Driver;
 
 namespace DM.Services.DataAccess.MongoIntegration
 {
+    /// <summary>
+    /// Repository for Mongo collection
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
     public abstract class MongoCollectionRepository<TEntity> : MongoRepository
         where TEntity : class
     {

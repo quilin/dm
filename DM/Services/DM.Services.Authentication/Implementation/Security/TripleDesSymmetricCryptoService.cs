@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace DM.Services.Authentication.Implementation.Security
 {
+    /// <inheritdoc />
     public class TripleDesSymmetricCryptoService : ISymmetricCryptoService
     {
         private readonly Lazy<TripleDESCryptoServiceProvider> tripleDesService =
             new Lazy<TripleDESCryptoServiceProvider>(() => new TripleDESCryptoServiceProvider());
-        
+
+        /// <inheritdoc />
         public async Task<string> Encrypt(string valueToEncrypt, string keyInBase64, string ivInBase64)
         {
             using (var encryptedStream = new MemoryStream())
@@ -29,6 +31,7 @@ namespace DM.Services.Authentication.Implementation.Security
             }
         }
 
+        /// <inheritdoc />
         public async Task<string> Decrypt(string valueToDecrypt, string keyInBase64, string ivInBase64)
         {
             using (var decryptedStream = new MemoryStream())

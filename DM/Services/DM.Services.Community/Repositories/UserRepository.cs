@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Community.Repositories
 {
+    /// <inheritdoc />
     public class UserRepository : IUserRepository
     {
         private readonly DmDbContext dmDbContext;
@@ -26,7 +27,8 @@ namespace DM.Services.Community.Repositories
         }
 
         private static readonly TimeSpan ActivityRange = TimeSpan.FromDays(30);
-        
+
+        /// <inheritdoc />
         public Task<int> CountUsers(bool withInactive)
         {
             var query = dmDbContext.Users.Where(u => !u.IsRemoved);
@@ -39,6 +41,7 @@ namespace DM.Services.Community.Repositories
             return query.CountAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<GeneralUser>> GetUsers(PagingData paging, bool withInactive)
         {
             var query = dmDbContext.Users.Where(u => !u.IsRemoved);
@@ -57,6 +60,7 @@ namespace DM.Services.Community.Repositories
                 .ToArrayAsync();
         }
 
+        /// <inheritdoc />
         public Task<GeneralUser> GetUser(string login)
         {
             var lowerLogin = login.ToLower();
@@ -66,6 +70,7 @@ namespace DM.Services.Community.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        /// <inheritdoc />
         public Task<UserProfile> GetProfile(string login)
         {
             var lowerLogin = login.ToLower();

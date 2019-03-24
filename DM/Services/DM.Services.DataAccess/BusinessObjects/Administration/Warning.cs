@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
     [Table("Warnings")]
     public class Warning : IAdministrated
     {
-        [Key]
-        public Guid WarningId { get; set; }
+        [Key] public Guid WarningId { get; set; }
 
         public Guid UserId { get; set; }
         public Guid ModeratorId { get; set; }
@@ -23,13 +22,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
-        [ForeignKey(nameof(ModeratorId))]
-        public virtual User Moderator { get; set; }
+        [ForeignKey(nameof(ModeratorId))] public virtual User Moderator { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual Comment Comment { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual Comment Comment { get; set; }
     }
 }

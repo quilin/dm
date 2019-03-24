@@ -14,6 +14,7 @@ using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.Use
 
 namespace DM.Services.Authentication.Repositories
 {
+    /// <inheritdoc cref="IAuthenticationRepository" />
     internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly DmDbContext dbContext;
@@ -28,6 +29,7 @@ namespace DM.Services.Authentication.Repositories
             this.mapper = mapper;
         }
 
+        /// <inheritdoc />
         public async Task<(bool Success, AuthenticatedUser User)> TryFindUser(string login)
         {
             var result = await dbContext.Users
@@ -37,6 +39,7 @@ namespace DM.Services.Authentication.Repositories
             return (result != null, result);
         }
 
+        /// <inheritdoc />
         public Task<AuthenticatedUser> FindUser(Guid userId)
         {
             return dbContext.Users
@@ -45,6 +48,7 @@ namespace DM.Services.Authentication.Repositories
                 .FirstAsync();
         }
 
+        /// <inheritdoc />
         public async Task<Session> FindUserSession(Guid sessionId)
         {
             var userSessions = await Collection<UserSessions>()
@@ -53,23 +57,25 @@ namespace DM.Services.Authentication.Repositories
             return userSessions.Sessions.First();
         }
 
+        /// <inheritdoc />
         public async Task<UserSettings> FindUserSettings(Guid userId)
         {
             return await Collection<DbUserSettings>()
-                .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
-                .Project(Select<DbUserSettings>().Expression(s => new UserSettings
-                {
-                    Id = s.Id,
-                    ColorScheme = s.ColorScheme,
-                    PostsPerPage = s.Paging.PostsPerPage,
-                    CommentsPerPage = s.Paging.CommentsPerPage,
-                    MessagesPerPage = s.Paging.MessagesPerPage,
-                    TopicsPerPage = s.Paging.TopicsPerPage,
-                    NannyGreetingsMessage = s.NannyGreetingsMessage
-                }))
-                .FirstOrDefaultAsync() ?? UserSettings.Default;
+                       .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
+                       .Project(Select<DbUserSettings>().Expression(s => new UserSettings
+                       {
+                           Id = s.Id,
+                           ColorScheme = s.ColorScheme,
+                           PostsPerPage = s.Paging.PostsPerPage,
+                           CommentsPerPage = s.Paging.CommentsPerPage,
+                           MessagesPerPage = s.Paging.MessagesPerPage,
+                           TopicsPerPage = s.Paging.TopicsPerPage,
+                           NannyGreetingsMessage = s.NannyGreetingsMessage
+                       }))
+                       .FirstOrDefaultAsync() ?? UserSettings.Default;
         }
 
+        /// <inheritdoc />
         public Task RemoveSession(Guid userId, Guid sessionId)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
@@ -77,6 +83,7 @@ namespace DM.Services.Authentication.Repositories
                 Update<UserSessions>().PullFilter(s => s.Sessions, s => s.Id == sessionId));
         }
 
+        /// <inheritdoc />
         public Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
@@ -85,6 +92,7 @@ namespace DM.Services.Authentication.Repositories
                 Update<UserSessions>().Set(u => u.Sessions[-1].ExpirationDate, expirationDate));
         }
 
+        /// <inheritdoc />
         public Task AddSession(Guid userId, Session session)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
@@ -93,6 +101,7 @@ namespace DM.Services.Authentication.Repositories
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
         }
 
+        /// <inheritdoc />
         public Task RemoveSessions(Guid userId)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(

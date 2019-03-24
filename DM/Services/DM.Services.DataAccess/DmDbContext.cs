@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.DataAccess
 {
+    /// <summary>
+    /// RDB storage context
+    /// </summary>
     public class DmDbContext : DbContext
     {
         public DmDbContext(DbContextOptions options) : base(options)

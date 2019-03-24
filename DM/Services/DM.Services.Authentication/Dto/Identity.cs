@@ -11,13 +11,16 @@ namespace DM.Services.Authentication.Dto
 
         /// <inheritdoc />
         public AuthenticatedUser User { get; private set; }
+
         /// <inheritdoc />
         public Session Session { get; private set; }
+
         /// <inheritdoc />
         public UserSettings Settings { get; private set; }
 
         /// <inheritdoc />
         public AuthenticationError Error { get; private set; }
+
         /// <inheritdoc />
         public string Token { get; private set; }
 

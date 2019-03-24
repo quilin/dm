@@ -8,8 +8,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
     [Table("Reports")]
     public class Report
     {
-        [Key]
-        public Guid ReportId { get; set; }
+        [Key] public Guid ReportId { get; set; }
 
         public Guid UserId { get; set; }
         public Guid TargetId { get; set; }
@@ -21,13 +20,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         public Guid? AnswerAuthorId { get; set; }
         public string Answer { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User Author { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
 
-        [ForeignKey(nameof(TargetId))]
-        public virtual User Target { get; set; }
+        [ForeignKey(nameof(TargetId))] public virtual User Target { get; set; }
 
-        [ForeignKey(nameof(AnswerAuthorId))]
-        public virtual User AnswerAuthor { get; set; }
+        [ForeignKey(nameof(AnswerAuthorId))] public virtual User AnswerAuthor { get; set; }
     }
 }

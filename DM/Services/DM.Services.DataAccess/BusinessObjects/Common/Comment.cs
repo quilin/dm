@@ -13,8 +13,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
     [Table("Comments")]
     public class Comment : IRemovable
     {
-        [Key]
-        public Guid CommentId { get; set; }
+        [Key] public Guid CommentId { get; set; }
 
         public Guid EntityId { get; set; }
         public Guid UserId { get; set; }
@@ -25,14 +24,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual ForumTopic Topic { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual ForumTopic Topic { get; set; }
 
-        [ForeignKey(nameof(EntityId))]
-        public virtual Game Game { get; set; }
+        [ForeignKey(nameof(EntityId))] public virtual Game Game { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User Author { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
 
         [InverseProperty(nameof(Like.Comment))]
         public virtual ICollection<Like> Likes { get; set; }

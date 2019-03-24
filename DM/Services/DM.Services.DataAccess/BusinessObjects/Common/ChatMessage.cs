@@ -11,8 +11,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public Guid UserId { get; set; }
         public long CreateTicks { get; set; }
 
-        [BsonIgnore]
-        public DateTime CreateDate => DateTime.SpecifyKind(new DateTime(CreateTicks), DateTimeKind.Utc);
+        [BsonIgnore] public DateTime CreateDate => DateTime.SpecifyKind(new DateTime(CreateTicks), DateTimeKind.Utc);
 
         public string Text { get; set; }
     }

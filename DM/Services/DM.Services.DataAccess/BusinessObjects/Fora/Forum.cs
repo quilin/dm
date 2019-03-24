@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
     [Table("Fora")]
     public class Forum
     {
-        [Key]
-        public Guid ForumId { get; set; }
+        [Key] public Guid ForumId { get; set; }
 
         public string Title { get; set; }
         public string Description { get; set; }

@@ -39,28 +39,29 @@ namespace DM.Services.Forum.Repositories
                 .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider);
 
+            IOrderedQueryable<Topic> orderedTopicsQuery = null;
             if (forumId == NewsForumId || attached)
             {
-                query = query.OrderByDescending(q => q.CreateDate);
+                orderedTopicsQuery = query.OrderByDescending(q => q.CreateDate);
             }
             else
             {
                 if (forumId == ErrorsForumId)
                 {
-                    query = query.OrderBy(q => q.Closed);
+                    orderedTopicsQuery = query.OrderBy(q => q.Closed);
                 }
 
-                query = query.OrderByDescending(q => q.LastActivityDate);
+                orderedTopicsQuery = (orderedTopicsQuery ?? query).OrderByDescending(q => q.LastActivityDate);
             }
 
-            return await query.Page(pagingData).ToArrayAsync();
+            return await orderedTopicsQuery.Page(pagingData).ToArrayAsync();
         }
 
         public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)
         {
             return await dmDbContext.ForumTopics
                 .Where(t => !t.IsRemoved && t.ForumTopicId == topicId &&
-                    (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
+                            (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }

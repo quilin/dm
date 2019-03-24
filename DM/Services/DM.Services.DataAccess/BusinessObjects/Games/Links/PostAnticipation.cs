@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     [Table("PostWaitNotifications")]
     public class PostAnticipation
     {
-        [Key]
-        public Guid PostAnticipationId { get; set; }
+        [Key] public Guid PostAnticipationId { get; set; }
 
         public Guid UserId { get; set; }
         public Guid TargetId { get; set; }
@@ -18,13 +17,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
 
         public DateTime CreateDate { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
-        [ForeignKey(nameof(TargetId))]
-        public virtual User Target { get; set; }
+        [ForeignKey(nameof(TargetId))] public virtual User Target { get; set; }
 
-        [ForeignKey(nameof(RoomId))]
-        public virtual Room Room { get; set; }
+        [ForeignKey(nameof(RoomId))] public virtual Room Room { get; set; }
     }
 }

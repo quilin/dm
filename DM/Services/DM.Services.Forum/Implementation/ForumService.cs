@@ -99,7 +99,8 @@ namespace DM.Services.Forum.Implementation
         {
             var forum = await FindForum(forumTitle);
             var topics = (await topicRepository.Get(forum.Id, null, true)).ToArray();
-            await FillCounters(topics, t => t.Id, unreadCountersRepository.SelectByEntities, (t, c) => t.UnreadCommentsCount = c);
+            await FillCounters(topics, t => t.Id, unreadCountersRepository.SelectByEntities,
+                (t, c) => t.UnreadCommentsCount = c);
             return topics;
         }
 

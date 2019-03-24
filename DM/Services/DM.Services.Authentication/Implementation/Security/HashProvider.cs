@@ -5,10 +5,12 @@ using System.Text;
 
 namespace DM.Services.Authentication.Implementation.Security
 {
+    /// <inheritdoc />
     public class HashProvider : IHashProvider
     {
         private readonly Lazy<SHA256> sha256 = new Lazy<SHA256>(SHA256.Create);
-        
+
+        /// <inheritdoc />
         public byte[] ComputeSha256(string plainText, string salt)
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);

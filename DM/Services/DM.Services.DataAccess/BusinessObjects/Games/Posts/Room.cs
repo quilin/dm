@@ -10,8 +10,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
     [Table("Rooms")]
     public class Room : IRemovable
     {
-        [Key]
-        public Guid RoomId { get; set; }
+        [Key] public Guid RoomId { get; set; }
 
         public Guid GameId { get; set; }
 
@@ -26,14 +25,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(GameId))]
-        public virtual Game Game { get; set; }
+        [ForeignKey(nameof(GameId))] public virtual Game Game { get; set; }
 
         [InverseProperty(nameof(CharacterRoomLink.Room))]
         public virtual ICollection<CharacterRoomLink> CharacterLinks { get; set; }
 
-        [InverseProperty(nameof(Post.Room))]
-        public virtual ICollection<Post> Posts { get; set; }
+        [InverseProperty(nameof(Post.Room))] public virtual ICollection<Post> Posts { get; set; }
 
         [InverseProperty(nameof(PostAnticipation.Room))]
         public virtual ICollection<PostAnticipation> PostsAwaited { get; set; }

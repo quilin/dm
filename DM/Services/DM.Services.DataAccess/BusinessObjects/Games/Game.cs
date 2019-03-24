@@ -16,8 +16,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
     [Table("Modules")]
     public class Game : IRemovable
     {
-        [Key]
-        public Guid ModuleId { get; set; }
+        [Key] public Guid ModuleId { get; set; }
 
         public DateTime CreateDate { get; set; }
         public DateTime? ReleaseDate { get; set; }
@@ -47,14 +46,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(MasterId))]
-        public User Master { get; set; }
+        [ForeignKey(nameof(MasterId))] public User Master { get; set; }
 
-        [ForeignKey(nameof(AssistantId))]
-        public User Assistant { get; set; }
+        [ForeignKey(nameof(AssistantId))] public User Assistant { get; set; }
 
-        [ForeignKey(nameof(NannyId))]
-        public User Nanny { get; set; }
+        [ForeignKey(nameof(NannyId))] public User Nanny { get; set; }
 
         [InverseProperty(nameof(BlackListLink.Game))]
         public virtual ICollection<BlackListLink> BlackList { get; set; }
@@ -62,22 +58,18 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         [InverseProperty(nameof(GameTag.Game))]
         public virtual ICollection<GameTag> GameTags { get; set; }
 
-        [InverseProperty(nameof(Reader.Game))]
-        public virtual ICollection<Reader> Readers { get; set; }
+        [InverseProperty(nameof(Reader.Game))] public virtual ICollection<Reader> Readers { get; set; }
 
         [InverseProperty(nameof(Character.Game))]
         public virtual ICollection<Character> Characters { get; set; }
 
-        [InverseProperty(nameof(Room.Game))]
-        public virtual ICollection<Room> Rooms { get; set; }
+        [InverseProperty(nameof(Room.Game))] public virtual ICollection<Room> Rooms { get; set; }
 
-        [InverseProperty(nameof(Vote.Game))]
-        public virtual ICollection<Vote> Votes { get; set; }
+        [InverseProperty(nameof(Vote.Game))] public virtual ICollection<Vote> Votes { get; set; }
 
         [InverseProperty(nameof(Comment.Game))]
         public virtual ICollection<Comment> Comments { get; set; }
 
-        [InverseProperty(nameof(Upload.Game))]
-        public virtual ICollection<Upload> Pictures { get; set; }
+        [InverseProperty(nameof(Upload.Game))] public virtual ICollection<Upload> Pictures { get; set; }
     }
 }

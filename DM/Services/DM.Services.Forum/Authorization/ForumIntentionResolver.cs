@@ -7,6 +7,7 @@ using DM.Services.Forum.Implementation;
 
 namespace DM.Services.Forum.Authorization
 {
+    /// <inheritdoc />
     public class ForumIntentionResolver : IIntentionResolver<ForumIntention, Dto.Forum>
     {
         private readonly IAccessPolicyConverter accessPolicyConverter;
@@ -16,7 +17,8 @@ namespace DM.Services.Forum.Authorization
         {
             this.accessPolicyConverter = accessPolicyConverter;
         }
-        
+
+        /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, ForumIntention intention, Dto.Forum target)
         {
             switch (intention)

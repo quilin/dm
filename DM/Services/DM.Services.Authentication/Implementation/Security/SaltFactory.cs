@@ -3,11 +3,13 @@ using System.Security.Cryptography;
 
 namespace DM.Services.Authentication.Implementation.Security
 {
+    /// <inheritdoc />
     public class SaltFactory : ISaltFactory
     {
         private readonly Lazy<RNGCryptoServiceProvider> rngCryptoServiceProvider = new Lazy<RNGCryptoServiceProvider>(
             () => new RNGCryptoServiceProvider());
-        
+
+        /// <inheritdoc />
         public string Create(int saltLength)
         {
             var size = saltLength * 4 / 3;

@@ -3,6 +3,7 @@ using System.Text;
 
 namespace DM.Services.Authentication.Implementation.Security
 {
+    /// <inheritdoc />
     public class SecurityManager : ISecurityManager
     {
         private readonly ISaltFactory saltFactory;
@@ -15,7 +16,8 @@ namespace DM.Services.Authentication.Implementation.Security
             this.saltFactory = saltFactory;
             this.hashProvider = hashProvider;
         }
-        
+
+        /// <inheritdoc />
         public (string Hash, string Salt) GeneratePassword(string password)
         {
             var salt = saltFactory.Create(100);
@@ -23,6 +25,7 @@ namespace DM.Services.Authentication.Implementation.Security
             return (Convert.ToBase64String(hash), salt);
         }
 
+        /// <inheritdoc />
         public bool ComparePasswords(string password, string salt, string hash)
         {
             var saltedHash = hashProvider.ComputeSha256(password, salt);

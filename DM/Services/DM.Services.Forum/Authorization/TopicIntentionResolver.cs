@@ -6,8 +6,10 @@ using DM.Services.Forum.Dto;
 
 namespace DM.Services.Forum.Authorization
 {
+    /// <inheritdoc />
     public class TopicIntentionResolver : IIntentionResolver<TopicIntention, Topic>
     {
+        /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, TopicIntention intention, Topic target)
         {
             switch (intention)
@@ -17,7 +19,7 @@ namespace DM.Services.Forum.Authorization
                 case TopicIntention.Edit when user.IsAuthenticated:
                 case TopicIntention.Delete when user.IsAuthenticated:
                     return Task.FromResult(target.Author.UserId == user.UserId ||
-                        user.Role.HasFlag(UserRole.Administrator | UserRole.SeniorModerator));
+                                           user.Role.HasFlag(UserRole.Administrator | UserRole.SeniorModerator));
                 default:
                     return Task.FromResult(false);
             }

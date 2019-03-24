@@ -9,6 +9,7 @@ using MongoDB.Driver;
 
 namespace DM.Services.Common.Repositories
 {
+    /// <inheritdoc cref="IUnreadCountersRepository" />
     public class UnreadCountersRepository : MongoCollectionRepository<UnreadCounter>, IUnreadCountersRepository
     {
         private readonly IDateTimeProvider dateTimeProvider;
@@ -19,6 +20,7 @@ namespace DM.Services.Common.Repositories
             this.dateTimeProvider = dateTimeProvider;
         }
 
+        /// <inheritdoc />
         public Task Create(Guid entityId, Guid parentId, UnreadEntryType entryType)
         {
             return Collection.InsertOneAsync(new UnreadCounter
@@ -32,6 +34,7 @@ namespace DM.Services.Common.Repositories
             });
         }
 
+        /// <inheritdoc />
         public Task Increment(Guid entityId, UnreadEntryType entryType)
         {
             return Collection.UpdateManyAsync(
@@ -40,6 +43,7 @@ namespace DM.Services.Common.Repositories
                 Update.Inc(c => c.Counter, 1));
         }
 
+        /// <inheritdoc />
         public Task Decrement(Guid entityId, UnreadEntryType entryType, DateTime createDate)
         {
             return Collection.UpdateManyAsync(
@@ -49,6 +53,7 @@ namespace DM.Services.Common.Repositories
                 Update.Inc(c => c.Counter, -1));
         }
 
+        /// <inheritdoc />
         public async Task<IDictionary<Guid, int>> SelectByParents(
             Guid userId, UnreadEntryType entryType, params Guid[] parentIds)
         {
@@ -76,6 +81,7 @@ namespace DM.Services.Common.Repositories
             return parentIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
         }
 
+        /// <inheritdoc />
         public async Task<IDictionary<Guid, int>> SelectByEntities(
             Guid userId, UnreadEntryType entryType, params Guid[] entityIds)
         {
@@ -96,6 +102,7 @@ namespace DM.Services.Common.Repositories
             return entityIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
         }
 
+        /// <inheritdoc />
         public async Task Flush(Guid userId, UnreadEntryType entryType, Guid entityId)
         {
             var counter = await Collection.Find(
@@ -120,6 +127,7 @@ namespace DM.Services.Common.Repositories
                     new UpdateOptions {IsUpsert = true});
         }
 
+        /// <inheritdoc />
         public async Task FlushAll(Guid userId, UnreadEntryType entryType, Guid parentId)
         {
             var entityIds = await Collection.Distinct(c => c.EntityId,

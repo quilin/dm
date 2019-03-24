@@ -20,8 +20,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
     [Table("Users")]
     public class User : IUser, IRemovable
     {
-        [Key]
-        public Guid UserId { get; set; }
+        [Key] public Guid UserId { get; set; }
 
         public string Login { get; set; }
         public string Email { get; set; }
@@ -54,8 +53,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         [InverseProperty(nameof(Upload.UserProfile))]
         public virtual ICollection<Upload> ProfilePictures { get; set; }
 
-        [InverseProperty(nameof(Token.User))]
-        public virtual ICollection<Token> Tokens { get; set; }
+        [InverseProperty(nameof(Token.User))] public virtual ICollection<Token> Tokens { get; set; }
 
         #endregion
 
@@ -64,14 +62,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         [InverseProperty(nameof(Comment.Author))]
         public virtual ICollection<Comment> Comments { get; set; }
 
-        [InverseProperty(nameof(Like.User))]
-        public virtual ICollection<Like> Likes { get; set; }
+        [InverseProperty(nameof(Like.User))] public virtual ICollection<Like> Likes { get; set; }
 
         [InverseProperty(nameof(Review.Author))]
         public virtual ICollection<Review> Reviews { get; set; }
 
-        [InverseProperty(nameof(Upload.User))]
-        public virtual ICollection<Upload> Uploads { get; set; }
+        [InverseProperty(nameof(Upload.User))] public virtual ICollection<Upload> Uploads { get; set; }
 
         #endregion
 
@@ -87,26 +83,22 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         #region Game navigations
 
-        [InverseProperty(nameof(Game.Master))]
-        public virtual ICollection<Game> GamesAsMaster { get; set; }
+        [InverseProperty(nameof(Game.Master))] public virtual ICollection<Game> GamesAsMaster { get; set; }
 
         [InverseProperty(nameof(Game.Assistant))]
         public virtual ICollection<Game> GamesAsAssistant { get; set; }
 
-        [InverseProperty(nameof(Game.Nanny))]
-        public virtual ICollection<Game> GamesAsNanny { get; set; }
+        [InverseProperty(nameof(Game.Nanny))] public virtual ICollection<Game> GamesAsNanny { get; set; }
 
         [InverseProperty(nameof(BlackListLink.User))]
         public virtual ICollection<BlackListLink> GamesBlacklisted { get; set; }
 
-        [InverseProperty(nameof(Reader.User))]
-        public virtual ICollection<Reader> GamesObserved { get; set; }
+        [InverseProperty(nameof(Reader.User))] public virtual ICollection<Reader> GamesObserved { get; set; }
 
         [InverseProperty(nameof(Character.User))]
         public virtual ICollection<Character> Characters { get; set; }
 
-        [InverseProperty(nameof(Post.Author))]
-        public virtual ICollection<Post> Posts { get; set; }
+        [InverseProperty(nameof(Post.Author))] public virtual ICollection<Post> Posts { get; set; }
 
         [InverseProperty(nameof(Vote.VotedUser))]
         public virtual ICollection<Vote> VotesGiven { get; set; }
@@ -149,8 +141,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         [InverseProperty(nameof(Warning.Moderator))]
         public virtual ICollection<Warning> WarningsGiven { get; set; }
 
-        [InverseProperty(nameof(Ban.User))]
-        public virtual ICollection<Ban> BansReceived { get; set; }
+        [InverseProperty(nameof(Ban.User))] public virtual ICollection<Ban> BansReceived { get; set; }
 
         [InverseProperty(nameof(Ban.Moderator))]
         public virtual ICollection<Ban> BansGiven { get; set; }

@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
     [Table("Messages")]
     public class Message : IRemovable
     {
-        [Key]
-        public Guid MessageId { get; set; }
+        [Key] public Guid MessageId { get; set; }
 
         public Guid UserId { get; set; }
         public Guid ConversationId { get; set; }
@@ -20,10 +19,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User Author { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
 
-        [ForeignKey(nameof(ConversationId))]
-        public virtual Conversation Conversation { get; set; }
+        [ForeignKey(nameof(ConversationId))] public virtual Conversation Conversation { get; set; }
     }
 }

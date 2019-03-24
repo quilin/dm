@@ -11,8 +11,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
     [Table("ForumTopics")]
     public class ForumTopic : IRemovable
     {
-        [Key]
-        public Guid ForumTopicId { get; set; }
+        [Key] public Guid ForumTopicId { get; set; }
         public Guid ForumId { get; set; }
 
         public Guid UserId { get; set; }
@@ -28,19 +27,15 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(ForumId))]
-        public virtual Forum Forum { get; set; }
+        [ForeignKey(nameof(ForumId))] public virtual Forum Forum { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User Author { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
 
-        [ForeignKey(nameof(LastCommentId))]
-        public virtual Comment LastComment { get; set; }
+        [ForeignKey(nameof(LastCommentId))] public virtual Comment LastComment { get; set; }
 
         [InverseProperty(nameof(Comment.Topic))]
         public virtual ICollection<Comment> Comments { get; set; }
 
-        [InverseProperty(nameof(Like.Topic))]
-        public virtual ICollection<Like> Likes { get; set; }
+        [InverseProperty(nameof(Like.Topic))] public virtual ICollection<Like> Likes { get; set; }
     }
 }

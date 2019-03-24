@@ -9,6 +9,9 @@ using DM.Services.Core.Exceptions;
 
 namespace DM.Services.Common.Implementation
 {
+    /// <summary>
+    /// Specific exception when user tries to perform unauthorized action
+    /// </summary>
     public class IntentionManagerException : HttpException
     {
         public IntentionManagerException(IUser user, Enum intention, object target)

@@ -4,6 +4,9 @@ using DM.Services.Core.Dto;
 
 namespace DM.Services.Forum.Dto
 {
+    /// <summary>
+    /// Topic DTO model
+    /// </summary>
     public class Topic
     {
         public Guid Id { get; set; }

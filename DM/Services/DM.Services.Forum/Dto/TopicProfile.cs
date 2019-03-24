@@ -5,6 +5,9 @@ using DM.Services.DataAccess.BusinessObjects.Fora;
 
 namespace DM.Services.Forum.Dto
 {
+    /// <summary>
+    /// Profile for topic DTO and DAL mapping
+    /// </summary>
     public class TopicProfile : Profile
     {
         public TopicProfile()

@@ -6,6 +6,9 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Common.Dto
 {
+    /// <summary>
+    /// Profile for user mapping
+    /// </summary>
     public class GeneralUserProfiles : Profile
     {
         public GeneralUserProfiles()

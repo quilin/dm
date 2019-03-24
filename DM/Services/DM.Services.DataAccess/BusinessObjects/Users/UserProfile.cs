@@ -8,8 +8,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
     [Table("UserDatas")]
     public class UserProfile : IRemovable
     {
-        [Key]
-        public Guid UserProfileId { get; set; }
+        [Key] public Guid UserProfileId { get; set; }
         public Guid UserId { get; set; }
 
         public string Status { get; set; }
@@ -22,7 +21,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
     }
 }

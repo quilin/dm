@@ -10,6 +10,7 @@ using DM.Services.Core.Extensions;
 
 namespace DM.Services.Community.Implementation
 {
+    /// <inheritdoc />
     public class UserService : IUserService
     {
         private readonly IIdentity identity;
@@ -23,6 +24,7 @@ namespace DM.Services.Community.Implementation
             this.repository = repository;
         }
 
+        /// <inheritdoc />
         public async Task<(IEnumerable<GeneralUser> users, PagingData paging)> Get(int entityNumber, bool withInactive)
         {
             var totalUsersCount = await repository.CountUsers(withInactive);
@@ -31,6 +33,7 @@ namespace DM.Services.Community.Implementation
             return (users, paging);
         }
 
+        /// <inheritdoc />
         public async Task<GeneralUser> Get(string login)
         {
             var user = await repository.GetUser(login);
@@ -42,6 +45,7 @@ namespace DM.Services.Community.Implementation
             return user;
         }
 
+        /// <inheritdoc />
         public async Task<UserProfile> GetProfile(string login)
         {
             var profile = await repository.GetProfile(login);

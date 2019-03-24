@@ -5,6 +5,7 @@ using DM.Services.Authentication.Implementation;
 
 namespace DM.Services.Common.Implementation
 {
+    /// <inheritdoc />
     public class IntentionManager : IIntentionManager
     {
         private readonly IIdentityProvider identityProvider;
@@ -18,6 +19,7 @@ namespace DM.Services.Common.Implementation
             this.resolvers = resolvers;
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target)
             where TIntention : struct
             where TTarget : class
@@ -29,6 +31,7 @@ namespace DM.Services.Common.Implementation
                    await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
         }
 
+        /// <inheritdoc />
         public async Task ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target)
             where TIntention : struct
             where TTarget : class

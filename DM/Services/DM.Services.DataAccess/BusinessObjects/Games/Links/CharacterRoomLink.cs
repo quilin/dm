@@ -9,16 +9,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     [Table("CharacterRoomLinks")]
     public class CharacterRoomLink
     {
-        [Key]
-        public Guid CharacterRoomLinkId { get; set; }
+        [Key] public Guid CharacterRoomLinkId { get; set; }
 
         public Guid CharacterId { get; set; }
         public Guid RoomId { get; set; }
 
-        [ForeignKey(nameof(CharacterId))]
-        public virtual Character Character { get; set; }
+        [ForeignKey(nameof(CharacterId))] public virtual Character Character { get; set; }
 
-        [ForeignKey(nameof(RoomId))]
-        public virtual Room Room { get; set; }
+        [ForeignKey(nameof(RoomId))] public virtual Room Room { get; set; }
     }
 }

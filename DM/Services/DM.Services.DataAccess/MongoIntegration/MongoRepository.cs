@@ -2,6 +2,9 @@ using MongoDB.Driver;
 
 namespace DM.Services.DataAccess.MongoIntegration
 {
+    /// <summary>
+    /// Base Mongo entity repository
+    /// </summary>
     public abstract class MongoRepository
     {
         private readonly DmMongoClient client;
@@ -14,7 +17,9 @@ namespace DM.Services.DataAccess.MongoIntegration
         protected static FilterDefinitionBuilder<TEntity> Filter<TEntity>() => new FilterDefinitionBuilder<TEntity>();
         protected static UpdateDefinitionBuilder<TEntity> Update<TEntity>() => new UpdateDefinitionBuilder<TEntity>();
         protected static SortDefinitionBuilder<TEntity> Sort<TEntity>() => new SortDefinitionBuilder<TEntity>();
-        protected static ProjectionDefinitionBuilder<TEntity> Select<TEntity>() => new ProjectionDefinitionBuilder<TEntity>();
+
+        protected static ProjectionDefinitionBuilder<TEntity> Select<TEntity>() =>
+            new ProjectionDefinitionBuilder<TEntity>();
 
         protected IMongoCollection<TEntity> Collection<TEntity>() => client.GetCollection<TEntity>();
     }

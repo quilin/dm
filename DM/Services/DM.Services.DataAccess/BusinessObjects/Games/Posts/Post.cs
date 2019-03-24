@@ -13,8 +13,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
     [Table("Posts")]
     public class Post : IRemovable
     {
-        [Key]
-        public Guid PostId { get; set; }
+        [Key] public Guid PostId { get; set; }
 
         public Guid RoomId { get; set; }
         public Guid? CharacterId { get; set; }
@@ -29,19 +28,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(RoomId))]
-        public virtual Room Room { get; set; }
+        [ForeignKey(nameof(RoomId))] public virtual Room Room { get; set; }
 
-        [ForeignKey(nameof(CharacterId))]
-        public virtual Character Character { get; set; }
+        [ForeignKey(nameof(CharacterId))] public virtual Character Character { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User Author { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
 
-        [InverseProperty(nameof(Vote.Post))]
-        public virtual ICollection<Vote> Votes { get; set; }
+        [InverseProperty(nameof(Vote.Post))] public virtual ICollection<Vote> Votes { get; set; }
 
-        [InverseProperty(nameof(Upload.Post))]
-        public virtual ICollection<Upload> Attachments { get; set; }
+        [InverseProperty(nameof(Upload.Post))] public virtual ICollection<Upload> Attachments { get; set; }
     }
 }

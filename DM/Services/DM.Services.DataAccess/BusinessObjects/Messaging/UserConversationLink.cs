@@ -14,10 +14,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
-        [ForeignKey(nameof(ConversationId))]
-        public virtual Conversation Conversation { get; set; }
+        [ForeignKey(nameof(ConversationId))] public virtual Conversation Conversation { get; set; }
     }
 }

@@ -4,6 +4,9 @@ using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Forum.Dto
 {
+    /// <summary>
+    /// Forum DTO model
+    /// </summary>
     public class Forum
     {
         public Guid Id { get; set; }

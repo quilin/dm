@@ -12,10 +12,12 @@ namespace DM.Services.Authentication.Dto
         /// Settings id (should be same as UserId)
         /// </summary>
         public Guid Id { get; set; }
+
         /// <summary>
         /// If the user is nanny, each newbie linked to it will receive the custom private message upon registration
         /// </summary>
         public string NannyGreetingsMessage { get; set; }
+
         /// <summary>
         /// Color scheme for the website view
         /// </summary>
@@ -25,14 +27,17 @@ namespace DM.Services.Authentication.Dto
         /// Number of game posts to display on a page
         /// </summary>
         public int PostsPerPage { get; set; }
+
         /// <summary>
         /// Number of game or topic comments to display on a page
         /// </summary>
         public int CommentsPerPage { get; set; }
+
         /// <summary>
         /// Number of forum topics to display on a page
         /// </summary>
         public int TopicsPerPage { get; set; }
+
         /// <summary>
         /// Number of private dialogues and messages to display on a page
         /// </summary>

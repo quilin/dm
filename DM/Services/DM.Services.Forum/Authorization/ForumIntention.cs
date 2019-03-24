@@ -9,7 +9,7 @@ namespace DM.Services.Forum.Authorization
         /// Create a topic on the forum
         /// </summary>
         CreateTopic = 0,
-        
+
         /// <summary>
         /// Close, attach and move any topic of the forum
         /// </summary>

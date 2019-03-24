@@ -8,15 +8,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
     [Table("ForumModerators")]
     public class ForumModerator
     {
-        [Key]
-        public Guid ForumModeratorId { get; set; }
+        [Key] public Guid ForumModeratorId { get; set; }
         public Guid ForumId { get; set; }
         public Guid UserId { get; set; }
 
-        [ForeignKey(nameof(ForumId))]
-        public virtual Forum Forum { get; set; }
+        [ForeignKey(nameof(ForumId))] public virtual Forum Forum { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
     }
 }

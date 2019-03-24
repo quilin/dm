@@ -9,8 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Rating
     [Table("Votes")]
     public class Vote
     {
-        [Key]
-        public Guid VoteId { get; set; }
+        [Key] public Guid VoteId { get; set; }
 
         public Guid PostId { get; set; }
         public Guid GameId { get; set; }
@@ -22,16 +21,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Rating
         public short SignValue { get; set; }
         public VoteSign Sign => (VoteSign) SignValue;
 
-        [ForeignKey(nameof(PostId))]
-        public virtual Post Post { get; set; }
+        [ForeignKey(nameof(PostId))] public virtual Post Post { get; set; }
 
-        [ForeignKey(nameof(GameId))]
-        public virtual Game Game { get; set; }
+        [ForeignKey(nameof(GameId))] public virtual Game Game { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User VotedUser { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User VotedUser { get; set; }
 
-        [ForeignKey(nameof(TargetUserId))]
-        public virtual User TargetUser { get; set; }
+        [ForeignKey(nameof(TargetUserId))] public virtual User TargetUser { get; set; }
     }
 }

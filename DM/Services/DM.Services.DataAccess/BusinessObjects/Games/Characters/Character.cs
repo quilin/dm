@@ -15,8 +15,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
     [Table("Characters")]
     public class Character : IRemovable
     {
-        [Key]
-        public Guid CharacterId { get; set; }
+        [Key] public Guid CharacterId { get; set; }
 
         public Guid GameId { get; set; }
         public Guid UserId { get; set; }
@@ -41,11 +40,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
 
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(GameId))]
-        public virtual Game Game { get; set; }
+        [ForeignKey(nameof(GameId))] public virtual Game Game { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(UserId))] public virtual User User { get; set; }
 
         [InverseProperty(nameof(Upload.Character))]
         public virtual ICollection<Upload> Pictures { get; set; }
