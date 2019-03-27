@@ -10,6 +10,7 @@ using DbForum = DM.Services.DataAccess.BusinessObjects.Fora.Forum;
 
 namespace DM.Services.Forum.Repositories
 {
+    /// <inheritdoc />
     internal class ForumRepository : IForumRepository
     {
         private readonly DmDbContext dmDbContext;
@@ -23,6 +24,7 @@ namespace DM.Services.Forum.Repositories
             this.mapper = mapper;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy accessPolicy)
         {
             return await dmDbContext.Fora

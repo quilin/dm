@@ -6,6 +6,7 @@ using DM.Services.Forum.Dto;
 
 namespace DM.Services.Forum.Factories
 {
+    /// <inheritdoc />
     public class TopicFactory : ITopicFactory
     {
         private readonly IGuidFactory guidFactory;
@@ -22,6 +23,7 @@ namespace DM.Services.Forum.Factories
             this.dateTimeProvider = dateTimeProvider;
         }
 
+        /// <inheritdoc />
         public ForumTopic Create(Guid forumId, CreateTopic createTopic)
         {
             return new ForumTopic

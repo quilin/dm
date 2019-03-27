@@ -2,8 +2,10 @@ using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Forum.Implementation
 {
+    /// <inheritdoc />
     public class AccessPolicyConverter : IAccessPolicyConverter
     {
+        /// <inheritdoc />
         public ForumAccessPolicy Convert(UserRole role)
         {
             var result = ForumAccessPolicy.Guest;

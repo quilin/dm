@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Forum.Repositories
 {
+    /// <inheritdoc />
     public class ModeratorRepository : IModeratorRepository
     {
         private readonly DmDbContext dmDbContext;
@@ -23,6 +24,7 @@ namespace DM.Services.Forum.Repositories
             this.mapper = mapper;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<GeneralUser>> Get(Guid forumId)
         {
             return await dmDbContext.ForumModerators

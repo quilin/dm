@@ -20,6 +20,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Forum.Implementation
 {
+    /// <inheritdoc />
     public class ForumService : IForumService
     {
         private readonly IIdentity identity;
@@ -57,6 +58,7 @@ namespace DM.Services.Forum.Implementation
             this.memoryCache = memoryCache;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Dto.Forum>> GetForaList()
         {
             var fora = await GetFora();
@@ -65,6 +67,7 @@ namespace DM.Services.Forum.Implementation
             return fora;
         }
 
+        /// <inheritdoc />
         public async Task<Dto.Forum> GetForum(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
@@ -73,12 +76,14 @@ namespace DM.Services.Forum.Implementation
             return forum;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<GeneralUser>> GetModerators(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
             return await moderatorRepository.Get(forum.Id);
         }
 
+        /// <inheritdoc />
         public async Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(
             string forumTitle, int entityNumber)
         {
@@ -95,6 +100,7 @@ namespace DM.Services.Forum.Implementation
             return (topics, pagingData);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle)
         {
             var forum = await FindForum(forumTitle);
@@ -104,6 +110,7 @@ namespace DM.Services.Forum.Implementation
             return topics;
         }
 
+        /// <inheritdoc />
         public async Task<Topic> GetTopic(Guid topicId)
         {
             var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
@@ -116,6 +123,7 @@ namespace DM.Services.Forum.Implementation
             return topic;
         }
 
+        /// <inheritdoc />
         public async Task<Topic> CreateTopic(CreateTopic createTopic)
         {
             var forum = await FindForum(createTopic.ForumTitle);
@@ -124,6 +132,7 @@ namespace DM.Services.Forum.Implementation
             return await topicRepository.Create(forumTopic);
         }
 
+        /// <inheritdoc />
         public async Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(
             Guid topicId, int entityNumber)
         {

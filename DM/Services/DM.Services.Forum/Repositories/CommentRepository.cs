@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Forum.Repositories
 {
+    /// <inheritdoc />
     public class CommentRepository : ICommentRepository
     {
         private readonly DmDbContext dmDbContext;
@@ -24,9 +25,11 @@ namespace DM.Services.Forum.Repositories
             this.mapper = mapper;
         }
 
+        /// <inheritdoc />
         public Task<int> Count(Guid topicId) =>
             dmDbContext.Comments.CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging)
         {
             return await dmDbContext.Comments
