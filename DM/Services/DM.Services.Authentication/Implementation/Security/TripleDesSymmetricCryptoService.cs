@@ -9,16 +9,18 @@ namespace DM.Services.Authentication.Implementation.Security
     /// <inheritdoc />
     public class TripleDesSymmetricCryptoService : ISymmetricCryptoService
     {
+        private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
+        private const string Iv = "dtEzMsz2ogg=";
         private readonly Lazy<TripleDESCryptoServiceProvider> tripleDesService =
             new Lazy<TripleDESCryptoServiceProvider>(() => new TripleDESCryptoServiceProvider());
 
         /// <inheritdoc />
-        public async Task<string> Encrypt(string valueToEncrypt, string keyInBase64, string ivInBase64)
+        public async Task<string> Encrypt(string valueToEncrypt)
         {
             using (var encryptedStream = new MemoryStream())
             {
-                var key = Convert.FromBase64String(keyInBase64);
-                var iv = Convert.FromBase64String(ivInBase64);
+                var key = Convert.FromBase64String(Key);
+                var iv = Convert.FromBase64String(Iv);
                 using (var stream = new CryptoStream(encryptedStream,
                     tripleDesService.Value.CreateEncryptor(key, iv),
                     CryptoStreamMode.Write))
@@ -32,12 +34,12 @@ namespace DM.Services.Authentication.Implementation.Security
         }
 
         /// <inheritdoc />
-        public async Task<string> Decrypt(string valueToDecrypt, string keyInBase64, string ivInBase64)
+        public async Task<string> Decrypt(string valueToDecrypt)
         {
             using (var decryptedStream = new MemoryStream())
             {
-                var key = Convert.FromBase64String(keyInBase64);
-                var iv = Convert.FromBase64String(ivInBase64);
+                var key = Convert.FromBase64String(Key);
+                var iv = Convert.FromBase64String(Iv);
                 using (var stream = new CryptoStream(decryptedStream,
                     tripleDesService.Value.CreateDecryptor(key, iv),
                     CryptoStreamMode.Write))

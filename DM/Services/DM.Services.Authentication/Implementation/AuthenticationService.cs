@@ -22,8 +22,6 @@ namespace DM.Services.Authentication.Implementation
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IIdentityProvider identityProvider;
 
-        private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
-        private const string Iv = "dtEzMsz2ogg=";
         private const string UserIdKey = "userId";
         private const string SessionIdKey = "sessionId";
 
@@ -75,14 +73,14 @@ namespace DM.Services.Authentication.Implementation
 
             try
             {
-                var decryptedString = await cryptoService.Decrypt(authToken, Key, Iv);
+                var decryptedString = await cryptoService.Decrypt(authToken);
                 var authData = JsonConvert.DeserializeObject<Dictionary<string, Guid>>(decryptedString);
                 userId = authData[UserIdKey];
                 sessionId = authData[SessionIdKey];
             }
             catch
             {
-                return Identity.Fail(AuthenticationError.SessionExpired);
+                return Identity.Fail(AuthenticationError.ForgedToken);
             }
 
             var fetchUser = repository.FindUser(userId);
@@ -136,7 +134,7 @@ namespace DM.Services.Authentication.Implementation
                 [UserIdKey] = user.UserId,
                 [SessionIdKey] = session.Id
             };
-            var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData), Key, Iv);
+            var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData));
             return Identity.Success(user, session, settings, token);
         }
     }

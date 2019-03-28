@@ -43,6 +43,11 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Unknown authentication error
         /// </summary>
-        Forbidden = 7
+        Forbidden = 7,
+
+        /// <summary>
+        /// Token is supposedly forged
+        /// </summary>
+        ForgedToken = 8,
     }
 }

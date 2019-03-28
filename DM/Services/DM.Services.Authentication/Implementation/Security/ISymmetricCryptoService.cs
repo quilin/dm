@@ -11,18 +11,14 @@ namespace DM.Services.Authentication.Implementation.Security
         /// Encrypts value for storage
         /// </summary>
         /// <param name="valueToEncrypt">Given value</param>
-        /// <param name="keyInBase64">Key</param>
-        /// <param name="ivInBase64">Iv</param>
         /// <returns></returns>
-        Task<string> Encrypt(string valueToEncrypt, string keyInBase64, string ivInBase64);
+        Task<string> Encrypt(string valueToEncrypt);
 
         /// <summary>
         /// Decrypts stored value
         /// </summary>
         /// <param name="valueToDecrypt">Stored value</param>
-        /// <param name="keyInBase64">Key</param>
-        /// <param name="ivInBase64">Iv</param>
         /// <returns></returns>
-        Task<string> Decrypt(string valueToDecrypt, string keyInBase64, string ivInBase64);
+        Task<string> Decrypt(string valueToDecrypt);
     }
 }
