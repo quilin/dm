@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Tests.Core", "Tests\DM.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Authentication.Tests", "Services\DM.Services.Authentication.Tests\DM.Services.Authentication.Tests.csproj", "{0C512098-9833-45F4-9DAE-7C86055ABD0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Core.Tests", "Services\DM.Services.Core.Tests\DM.Services.Core.Tests.csproj", "{5D60AD79-6266-4800-AB7F-FC5FEDC076F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{0C512098-9833-45F4-9DAE-7C86055ABD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C512098-9833-45F4-9DAE-7C86055ABD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C512098-9833-45F4-9DAE-7C86055ABD0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D60AD79-6266-4800-AB7F-FC5FEDC076F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D60AD79-6266-4800-AB7F-FC5FEDC076F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D60AD79-6266-4800-AB7F-FC5FEDC076F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D60AD79-6266-4800-AB7F-FC5FEDC076F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA094429-3BE0-4924-9B65-00ABC1627395} = {DB521FBE-9B99-4349-9736-6C3E6E418964}
@@ -87,5 +93,6 @@ Global
 		{8F8450CD-2BD0-4E06-A656-F328E84B57A0} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
 		{8C8469FB-58FA-4345-B88E-C52367291492} = {0711BC73-F5AF-4D26-891B-4ADB0176AA6D}
 		{0C512098-9833-45F4-9DAE-7C86055ABD0B} = {37EE71A5-6F98-42E7-B92F-3E2B65C67850}
+		{5D60AD79-6266-4800-AB7F-FC5FEDC076F8} = {37EE71A5-6F98-42E7-B92F-3E2B65C67850}
 	EndGlobalSection
 EndGlobal

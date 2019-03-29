@@ -20,7 +20,7 @@ namespace DM.Services.Core.Extensions
             return new PagingData
             {
                 TotalPagesCount = (int) Math.Ceiling((decimal) totalEntitiesCount / pageSize),
-                CurrentPage = (int) Math.Ceiling((decimal) entityNumber / pageSize),
+                CurrentPage = (int) Math.Ceiling((decimal) Math.Max(1, entityNumber) / pageSize),
                 PageSize = pageSize,
                 EntityNumber = Math.Min(Math.Max(1, entityNumber), totalEntitiesCount)
             };
