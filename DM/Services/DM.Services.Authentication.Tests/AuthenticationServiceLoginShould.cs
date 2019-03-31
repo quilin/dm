@@ -62,7 +62,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(AuthenticatedUser.Guest);
             actual.Session.Should().BeNull();
             actual.Settings.Should().Be(UserSettings.Default);
-            actual.Token.Should().BeNull();
+            actual.AuthenticationToken.Should().BeNull();
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(AuthenticatedUser.Guest);
             actual.Session.Should().BeNull();
             actual.Settings.Should().Be(UserSettings.Default);
-            actual.Token.Should().BeNull();
+            actual.AuthenticationToken.Should().BeNull();
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(AuthenticatedUser.Guest);
             actual.Session.Should().BeNull();
             actual.Settings.Should().Be(UserSettings.Default);
-            actual.Token.Should().BeNull();
+            actual.AuthenticationToken.Should().BeNull();
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(AuthenticatedUser.Guest);
             actual.Session.Should().BeNull();
             actual.Settings.Should().Be(UserSettings.Default);
-            actual.Token.Should().BeNull();
+            actual.AuthenticationToken.Should().BeNull();
             securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
         }
 
@@ -163,7 +163,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(user);
             actual.Session.Should().Be(session);
             actual.Settings.Should().Be(userSettings);
-            actual.Token.Should().Be("token");
+            actual.AuthenticationToken.Should().Be("token");
             securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
             sessionFactory.Verify(f => f.Create(true));
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);

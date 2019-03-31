@@ -84,7 +84,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(user);
             actual.Session.Should().Be(newSession);
             actual.Settings.Should().Be(userSettings);
-            actual.Token.Should().Be("token");
+            actual.AuthenticationToken.Should().Be("token");
 
             authenticationRepository.Verify(r => r.RemoveSessions(userId), Times.Once);
             authenticationRepository.Verify(r => r.AddSession(userId, newSession), Times.Once);

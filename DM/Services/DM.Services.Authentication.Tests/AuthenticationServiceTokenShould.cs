@@ -143,7 +143,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(user);
             actual.Session.Should().Be(session);
             actual.Settings.Should().Be(settings);
-            actual.Token.Should().Be("token");
+            actual.AuthenticationToken.Should().Be("token");
 
             cryptoService.Verify(s => s.Decrypt("token"));
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
@@ -187,7 +187,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(user);
             actual.Session.Should().Be(session);
             actual.Settings.Should().Be(settings);
-            actual.Token.Should().Be("token");
+            actual.AuthenticationToken.Should().Be("token");
 
             cryptoService.Verify(s => s.Decrypt("token"));
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
@@ -226,7 +226,7 @@ namespace DM.Services.Authentication.Tests
             actual.User.Should().Be(user);
             actual.Session.Should().Be(session);
             actual.Settings.Should().Be(settings);
-            actual.Token.Should().Be("token");
+            actual.AuthenticationToken.Should().Be("token");
 
             cryptoService.Verify(s => s.Decrypt("token"));
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);

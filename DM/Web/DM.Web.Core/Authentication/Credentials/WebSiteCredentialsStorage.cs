@@ -38,7 +38,7 @@ namespace DM.Web.Core.Authentication.Credentials
 
         public Task Load(HttpContext httpContext, Identity identity)
         {
-            httpContext.Response.Cookies.Append(HttpAuthorizationCookie, identity.Token,
+            httpContext.Response.Cookies.Append(HttpAuthorizationCookie, identity.AuthenticationToken,
                 new CookieOptions
                 {
                     HttpOnly = true,

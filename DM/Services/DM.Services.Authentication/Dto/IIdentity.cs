@@ -1,3 +1,4 @@
+using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
@@ -30,6 +31,11 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Current authentication token, provided or generated
         /// </summary>
-        string Token { get; }
+        string AuthenticationToken { get; }
+
+        /// <summary>
+        /// Correlation token
+        /// </summary>
+        Guid CorrelationToken { get; }
     }
 }

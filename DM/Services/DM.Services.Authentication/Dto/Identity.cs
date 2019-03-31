@@ -1,3 +1,4 @@
+using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
@@ -22,7 +23,10 @@ namespace DM.Services.Authentication.Dto
         public AuthenticationError Error { get; private set; }
 
         /// <inheritdoc />
-        public string Token { get; private set; }
+        public string AuthenticationToken { get; private set; }
+
+        /// <inheritdoc />
+        public Guid CorrelationToken { get; private set; }
 
         /// <summary>
         /// Creates identity for an unauthenticated user
@@ -35,7 +39,7 @@ namespace DM.Services.Authentication.Dto
             User = AuthenticatedUser.Guest,
             Session = null,
             Settings = UserSettings.Default,
-            Token = null
+            AuthenticationToken = null
         };
 
         /// <summary>
@@ -53,7 +57,7 @@ namespace DM.Services.Authentication.Dto
             User = user,
             Session = session,
             Settings = settings,
-            Token = token
+            AuthenticationToken = token
         };
 
         /// <summary>
@@ -65,7 +69,7 @@ namespace DM.Services.Authentication.Dto
             Error = AuthenticationError.NoError,
             User = AuthenticatedUser.Guest,
             Settings = UserSettings.Default,
-            Token = null,
+            AuthenticationToken = null,
             Session = null
         };
     }

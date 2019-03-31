@@ -41,7 +41,7 @@ namespace DM.Web.API
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
+                .AddJsonFile("appsettings.json", false)
                 .Build();
             var assemblies = GetAssemblies();
 
