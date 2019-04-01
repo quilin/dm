@@ -6,6 +6,7 @@ using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
+using DM.Services.SearchEngine.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,12 +33,14 @@ namespace DM.Services.SearchEngine.Indexing
                 .AddOptions()
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<MessageConsumeConfiguration>(configuration.GetSection("ConsumerConfiguration").Bind)
+                .Configure<SearchEngineConfiguration>(configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
 
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<MessageQueuingModule>();
+            builder.RegisterModule<SearchEngineModule>();
             builder.RegisterAssemblyTypes(
                     Assembly.GetExecutingAssembly(),
                     Assembly.Load("DM.Services.Core"),

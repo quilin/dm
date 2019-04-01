@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BBCodeParser;
 using BBCodeParser.Tags;
 
-namespace DM.Web.Core.Parsers
+namespace DM.Services.Core.Parsing
 {
     /// <inheritdoc />
     public class BbParserProvider : IBbParserProvider
@@ -83,7 +83,7 @@ namespace DM.Web.Core.Parsers
             {"\r\n", "<br />"}
         };
 
-        private static TagSet DefaultTags => new TagSet(new[]
+        private static TagSetBuilder DefaultTags => new TagSetBuilder(new[]
         {
             Strong, Italic, Underlined, Strike,
             Preformatted, Spoiler, Quote, Image,
@@ -91,34 +91,34 @@ namespace DM.Web.Core.Parsers
             Link, Tab, Code
         });
 
-        private static TagSet DefaultSafeTags => DefaultTags.Without(Preformatted, Image).With(SafeImage);
+        private static TagSetBuilder DefaultSafeTags => DefaultTags.Without(Preformatted, Image).With(SafeImage);
 
         private static readonly Lazy<IBbParser> CommonParser = new Lazy<IBbParser>(() =>
-            new BbParser(DefaultTags.ToArray(),
+            new BbParser(DefaultTags.Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
         private static readonly Lazy<IBbParser> PostParser = new Lazy<IBbParser>(
-            new BbParser(DefaultTags.With(Private).ToArray(),
+            new BbParser(DefaultTags.With(Private).Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
         private static readonly Lazy<IBbParser> InfoParser = new Lazy<IBbParser>(
-            new BbParser(DefaultTags.With(Head).ToArray(),
+            new BbParser(DefaultTags.With(Head).Build(),
                 BbParser.SecuritySubstitutions, InfoSubstitutions));
 
         private static readonly Lazy<IBbParser> ConversationMessageParser = new Lazy<IBbParser>(
-            new BbParser(DefaultTags.ToArray(),
+            new BbParser(DefaultTags.Build(),
                 BbParser.SecuritySubstitutions, ConversationMessageSubstitutions));
 
         private static readonly Lazy<IBbParser> GeneralChatMessageParser = new Lazy<IBbParser>(
-            new BbParser(DefaultSafeTags.With(Preformatted).ToArray(),
+            new BbParser(DefaultSafeTags.With(Preformatted).Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
         private static readonly Lazy<IBbParser> SafePostParser = new Lazy<IBbParser>(
-            new BbParser(DefaultSafeTags.With(Private).ToArray(),
+            new BbParser(DefaultSafeTags.With(Private).Build(),
                 BbParser.SecuritySubstitutions, SafeSubstitutions));
 
         private static readonly Lazy<IBbParser> SafeRatingParser = new Lazy<IBbParser>(
-            new BbParser(DefaultSafeTags.ToArray(),
+            new BbParser(DefaultSafeTags.Build(),
                 BbParser.SecuritySubstitutions, SafeSubstitutions));
 
         /// <inheritdoc />

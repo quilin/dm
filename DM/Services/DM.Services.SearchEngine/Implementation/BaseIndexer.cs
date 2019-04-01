@@ -1,0 +1,20 @@
+using System.Threading.Tasks;
+using DM.Services.DataAccess.Eventing;
+
+namespace DM.Services.SearchEngine.Implementation
+{
+    /// <inheritdoc />
+    public abstract class BaseIndexer : IIndexer
+    {
+        /// <summary>
+        /// Event type that this indexer can process
+        /// </summary>
+        protected abstract EventType EventType { get; }
+
+        /// <inheritdoc />
+        public bool CanIndex(InvokedEvent invokedEvent) => invokedEvent.Type == EventType;
+
+        /// <inheritdoc />
+        public abstract Task Index(InvokedEvent invokedEvent);
+    }
+}

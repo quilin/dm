@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
 using BBCodeParser.Tags;
 
-namespace DM.Web.Core.Parsers
+namespace DM.Services.Core.Parsing
 {
     /// <summary>
     /// BBCode parser tag set
     /// </summary>
-    public class TagSet
+    public class TagSetBuilder
     {
         private readonly List<Tag> set;
 
         /// <inheritdoc />
-        public TagSet(Tag[] defaultSet)
+        public TagSetBuilder(IEnumerable<Tag> defaultSet)
         {
             set = new List<Tag>(defaultSet);
         }
 
         /// <summary>
-        /// Get tags
+        /// Build set of tags
         /// </summary>
         /// <returns></returns>
-        public Tag[] ToArray()
+        public Tag[] Build()
         {
             return set.ToArray();
         }
@@ -30,7 +30,7 @@ namespace DM.Web.Core.Parsers
         /// </summary>
         /// <param name="tags">Tags</param>
         /// <returns>Self</returns>
-        public TagSet With(params Tag[] tags)
+        public TagSetBuilder With(params Tag[] tags)
         {
             set.AddRange(tags);
             return this;
@@ -41,7 +41,7 @@ namespace DM.Web.Core.Parsers
         /// </summary>
         /// <param name="tags">Tags</param>
         /// <returns>Self</returns>
-        public TagSet Without(params Tag[] tags)
+        public TagSetBuilder Without(params Tag[] tags)
         {
             foreach (var tag in tags)
             {

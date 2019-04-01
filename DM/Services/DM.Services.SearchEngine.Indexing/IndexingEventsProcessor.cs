@@ -1,32 +1,31 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
-using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Processing;
+using DM.Services.SearchEngine.Implementation;
 
 namespace DM.Services.SearchEngine.Indexing
 {
     /// <inheritdoc />
     public class IndexingEventsProcessor : IMessageProcessor<InvokedEvent>
     {
-        private readonly ICorrelationTokenProvider correlationTokenProvider;
+        private readonly ICompositeIndexer indexer;
 
         /// <inheritdoc />
         public IndexingEventsProcessor(
-            ICorrelationTokenProvider correlationTokenProvider)
+            ICompositeIndexer indexer)
         {
-            this.correlationTokenProvider = correlationTokenProvider;
+            this.indexer = indexer;
         }
 
         /// <inheritdoc />
-        public Task<ProcessResult> Process(InvokedEvent message)
+        public async Task<ProcessResult> Process(InvokedEvent message)
         {
-            Console.WriteLine(new StringBuilder()
-                .AppendLine($"Incoming message with correlation token {correlationTokenProvider.Current}")
-                .AppendLine($"Invoked event {message.Type} for entity {message.EntityId}").ToString());
-            return Task.FromResult(ProcessResult.Success);
+            Console.WriteLine($"Indexing {message.Type} event...");
+            await indexer.Index(message);
+            Console.WriteLine($"{message.Type} has been indexed!");
+            return ProcessResult.Success;
         }
     }
 }

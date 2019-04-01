@@ -1,6 +1,6 @@
 ﻿using BBCodeParser;
 
-namespace DM.Web.Core.Parsers
+namespace DM.Services.Core.Parsing
 {
     /// <summary>
     /// BBCode parsers provider

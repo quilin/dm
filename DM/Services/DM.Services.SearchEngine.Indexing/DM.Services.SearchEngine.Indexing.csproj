@@ -19,6 +19,7 @@
       <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
       <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
       <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
+      <ProjectReference Include="..\DM.Services.SearchEngine\DM.Services.SearchEngine.csproj" />
     </ItemGroup>
 
 </Project>
