@@ -22,11 +22,11 @@ namespace DM.Services.MessageQueuing
             connection = connectionFactory.CreateConnection();
             channel = connection.CreateModel();
         }
-        
+
         public void Consume(MessageConsumeConfiguration configuration)
         {
             channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
-            channel.QueueDeclare(configuration.QueueName, true);
+            channel.QueueDeclare(configuration.QueueName, true, false, false);
             channel.QueueBind(configuration.QueueName, configuration.ExchangeName, configuration.RoutingKey);
 
             var consumer = new EventingBasicConsumer(channel);

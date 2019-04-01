@@ -1,4 +1,3 @@
-using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Authentication.Dto
@@ -24,9 +23,6 @@ namespace DM.Services.Authentication.Dto
 
         /// <inheritdoc />
         public string AuthenticationToken { get; private set; }
-
-        /// <inheritdoc />
-        public Guid CorrelationToken { get; private set; }
 
         /// <summary>
         /// Creates identity for an unauthenticated user

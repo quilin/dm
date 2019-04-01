@@ -19,22 +19,19 @@ namespace DM.Services.Authentication.Tests
     {
         private readonly AuthenticationService service;
         private readonly Mock<IAuthenticationRepository> authenticationRepository;
-        private readonly Mock<ISecurityManager> securityManager;
-        private readonly Mock<ISessionFactory> sessionFactory;
         private readonly Mock<IDateTimeProvider> dateTimeProvider;
-        private readonly Mock<IIdentityProvider> identityProvider;
         private readonly ISetup<ISymmetricCryptoService, Task<string>> tokenDecryptSetup;
         private readonly Mock<ISymmetricCryptoService> cryptoService;
 
         public AuthenticationServiceTokenShould()
         {
-            securityManager = Mock<ISecurityManager>();
+            var securityManager = Mock<ISecurityManager>();
             cryptoService = Mock<ISymmetricCryptoService>();
             tokenDecryptSetup = cryptoService.Setup(s => s.Decrypt(It.IsAny<string>()));
             authenticationRepository = Mock<IAuthenticationRepository>();
-            sessionFactory = Mock<ISessionFactory>();
+            var sessionFactory = Mock<ISessionFactory>();
             dateTimeProvider = Mock<IDateTimeProvider>();
-            identityProvider = Mock<IIdentityProvider>();
+            var identityProvider = Mock<IIdentityProvider>();
             service = new AuthenticationService(securityManager.Object, cryptoService.Object,
                 authenticationRepository.Object, sessionFactory.Object, dateTimeProvider.Object,
                 identityProvider.Object);
