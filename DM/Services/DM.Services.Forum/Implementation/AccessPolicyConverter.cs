@@ -31,7 +31,7 @@ namespace DM.Services.Forum.Implementation
 
             if (role.HasFlag(UserRole.NannyModerator))
             {
-                result = result | ForumAccessPolicy.NurseModerator;
+                result = result | ForumAccessPolicy.NannyModerator;
             }
 
             return result;

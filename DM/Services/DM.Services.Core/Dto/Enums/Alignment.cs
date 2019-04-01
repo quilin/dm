@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
@@ -7,17 +5,49 @@ namespace DM.Services.Core.Dto.Enums
     /// </summary>
     public enum Alignment
     {
-        [Description("Законопослушный добрый")]
+        /// <summary>
+        /// Законопослушный добрый
+        /// </summary>
         LawfulGood = 0,
-        [Description("Нейтральный добрый")] NeutralGood,
-        [Description("Хаотичный добрый")] ChaoticGood,
 
-        [Description("Законопослушный нейтральный")]
+        /// <summary>
+        /// Нейтральный добрый
+        /// </summary>
+        NeutralGood,
+
+        /// <summary>
+        /// Хаотичный добрый
+        /// </summary>
+        ChaoticGood,
+
+        /// <summary>
+        /// Законопослушный нейтральный
+        /// </summary>
         LawfulNeutral,
-        [Description("Нейтральный")] TrueNeutral,
-        [Description("Хаотичный нейтральный")] ChaoticNeutral,
-        [Description("Законопослушный злой")] LawfulEvil,
-        [Description("Нейтральный злой")] NeutralEvil,
-        [Description("Хаотичный злой")] ChaoticEvil
+
+        /// <summary>
+        /// Нейтральный
+        /// </summary>
+        TrueNeutral,
+
+        /// <summary>
+        /// Хаотичный нейтральный
+        /// </summary>
+        ChaoticNeutral,
+
+        /// <summary>
+        /// Законопослушный злой
+        /// </summary>
+        LawfulEvil,
+
+        /// <summary>
+        /// Нейтральный злой
+        /// </summary>
+        NeutralEvil,
+
+        /// <summary>
+        /// Хаотичный злой
+        /// </summary>
+        ChaoticEvil
     }
 }

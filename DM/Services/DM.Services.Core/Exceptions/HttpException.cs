@@ -14,6 +14,11 @@ namespace DM.Services.Core.Exceptions
         /// </summary>
         public HttpStatusCode StatusCode { get; }
 
+        /// <summary>
+        /// New HTTP bypass exception
+        /// </summary>
+        /// <param name="statusCode">HTTP status code</param>
+        /// <param name="message">Client message</param>
         public HttpException(HttpStatusCode statusCode, string message) : base(message) => StatusCode = statusCode;
     }
 
@@ -27,6 +32,11 @@ namespace DM.Services.Core.Exceptions
         /// </summary>
         public IDictionary<string, string> ValidationErrors { get; }
 
+        /// <summary>
+        /// New HTTP Bad Request exception
+        /// </summary>
+        /// <param name="errors">Key-value list of invalid client fields and errors</param>
+        /// <param name="message">Client message</param>
         public HttpBadRequestException(IDictionary<string, string> errors,
             string message = "Invalid request parameters")
             : base(HttpStatusCode.BadRequest, message) => ValidationErrors = errors;

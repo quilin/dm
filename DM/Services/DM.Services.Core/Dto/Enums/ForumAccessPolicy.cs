@@ -31,7 +31,7 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Nanny moderators allowed
         /// </summary>
-        NurseModerator = 1 << 3,
+        NannyModerator = 1 << 3,
 
         /// <summary>
         /// Forum moderators allowed

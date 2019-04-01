@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DM.Web.Core.Binders
 {
+    /// <inheritdoc />
     public class ReadableGuidBinder : IModelBinder
     {
+        /// <inheritdoc />
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var key = bindingContext.ModelName;

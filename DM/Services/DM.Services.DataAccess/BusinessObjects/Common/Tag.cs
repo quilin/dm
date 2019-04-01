@@ -6,17 +6,38 @@ using DM.Services.DataAccess.BusinessObjects.Games.Links;
 
 namespace DM.Services.DataAccess.BusinessObjects.Common
 {
+    /// <summary>
+    /// DAL model for tag
+    /// </summary>
     [Table("Tags")]
     public class Tag
     {
-        [Key] public Guid TagId { get; set; }
+        /// <summary>
+        /// Tag identifier
+        /// </summary>
+        [Key]
+        public Guid TagId { get; set; }
 
+        /// <summary>
+        /// Tag group identifier
+        /// </summary>
         public Guid TagGroupId { get; set; }
 
+        /// <summary>
+        /// Title
+        /// </summary>
         public string Title { get; set; }
 
-        [ForeignKey(nameof(TagGroupId))] public virtual TagGroup TagGroup { get; set; }
+        /// <summary>
+        /// Tag group
+        /// </summary>
+        [ForeignKey(nameof(TagGroupId))]
+        public virtual TagGroup TagGroup { get; set; }
 
-        [InverseProperty(nameof(GameTag.Tag))] public virtual ICollection<GameTag> GameTags { get; set; }
+        /// <summary>
+        /// Games under the tag
+        /// </summary>
+        [InverseProperty(nameof(GameTag.Tag))]
+        public virtual ICollection<GameTag> GameTags { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace DM.Services.Forum.Authorization
     {
         private readonly IAccessPolicyConverter accessPolicyConverter;
 
+        /// <inheritdoc />
         public ForumIntentionResolver(
             IAccessPolicyConverter accessPolicyConverter)
         {

@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <LangVersion>7.2</LangVersion>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <LangVersion>latest</LangVersion>
         <AssemblyName>DM.Web.Core</AssemblyName>
         <RootNamespace>DM.Web.Core</RootNamespace>
     </PropertyGroup>

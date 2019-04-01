@@ -8,16 +8,19 @@ using DM.Services.MessageQueuing.Processing;
 
 namespace DM.Services.SearchEngine.Indexing
 {
+    /// <inheritdoc />
     public class IndexingEventsProcessor : IMessageProcessor<InvokedEvent>
     {
         private readonly ICorrelationTokenProvider correlationTokenProvider;
 
+        /// <inheritdoc />
         public IndexingEventsProcessor(
             ICorrelationTokenProvider correlationTokenProvider)
         {
             this.correlationTokenProvider = correlationTokenProvider;
         }
-        
+
+        /// <inheritdoc />
         public Task<ProcessResult> Process(InvokedEvent message)
         {
             Console.WriteLine(new StringBuilder()

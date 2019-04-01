@@ -1,10 +1,13 @@
 namespace DM.Services.MessageQueuing.Configuration
 {
+    /// <summary>
+    /// Publisher configuration
+    /// </summary>
     public class MessagePublishConfiguration
     {
+        /// <summary>
+        /// Exchange to publish to
+        /// </summary>
         public string ExchangeName { get; set; }
-        public string ExchangeType { get; set; }
-        public string RoutingKey { get; set; }
-        public string DurableQueueName { get; set; }
     }
 }

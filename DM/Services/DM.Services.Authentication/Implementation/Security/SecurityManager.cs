@@ -9,6 +9,7 @@ namespace DM.Services.Authentication.Implementation.Security
         private readonly ISaltFactory saltFactory;
         private readonly IHashProvider hashProvider;
 
+        /// <inheritdoc />
         public SecurityManager(
             ISaltFactory saltFactory,
             IHashProvider hashProvider)

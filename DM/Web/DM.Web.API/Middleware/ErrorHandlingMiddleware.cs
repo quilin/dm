@@ -11,6 +11,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace DM.Web.API.Middleware
 {
+    /// <summary>
+    /// Middleware for exceptions handling
+    /// </summary>
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
@@ -19,11 +22,17 @@ namespace DM.Web.API.Middleware
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
+        /// <inheritdoc />
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;
         }
 
+        /// <summary>
+        /// Before request
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try

@@ -5,12 +5,14 @@ using DM.Services.Core.Implementation;
 
 namespace DM.Services.MessageQueuing.Processing
 {
+    /// <inheritdoc />
     public class MessageProcessorWrapper<TMessage> : IMessageProcessorWrapper<TMessage>
     {
         private readonly ICorrelationTokenSetter correlationTokenSetter;
         private readonly IGuidFactory guidFactory;
         private readonly IMessageProcessor<TMessage> processor;
 
+        /// <inheritdoc />
         public MessageProcessorWrapper(
             ICorrelationTokenSetter correlationTokenSetter,
             IGuidFactory guidFactory,
@@ -21,6 +23,7 @@ namespace DM.Services.MessageQueuing.Processing
             this.processor = processor;
         }
 
+        /// <inheritdoc />
         public Task<ProcessResult> ProcessWithCorrelation(TMessage message, string correlationToken)
         {
             correlationTokenSetter.Current = Guid.TryParse(correlationToken, out var token)

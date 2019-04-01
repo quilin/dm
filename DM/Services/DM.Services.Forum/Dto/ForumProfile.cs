@@ -8,6 +8,7 @@ namespace DM.Services.Forum.Dto
     /// </summary>
     public class ForumProfile : Profile
     {
+        /// <inheritdoc />
         public ForumProfile()
         {
             CreateMap<DataAccess.BusinessObjects.Fora.Forum, Forum>()

@@ -4,8 +4,12 @@ using DM.Web.Core.Helpers;
 
 namespace DM.Web.API.Dto.Fora
 {
+    /// <summary>
+    /// Mapping profile from Service DTO to API DTO for topics
+    /// </summary>
     public class TopicProfile : Profile
     {
+        /// <inheritdoc />
         public TopicProfile()
         {
             CreateMap<DM.Services.Forum.Dto.Topic, Topic>()

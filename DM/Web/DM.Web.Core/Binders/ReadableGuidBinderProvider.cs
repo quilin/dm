@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DM.Web.Core.Binders
 {
+    /// <inheritdoc />
     public class ReadableGuidBinderProvider : IModelBinderProvider
     {
+        /// <inheritdoc />
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context.Metadata.ModelType == typeof(Guid) ||

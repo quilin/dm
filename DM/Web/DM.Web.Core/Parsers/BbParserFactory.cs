@@ -118,39 +118,18 @@ namespace DM.Web.Core.Parsers
         private static readonly IBbParser SafeRatingParser =
             new BbParser(DefaultSafeTags.ToArray(), BbParser.SecuritySubstitutions, SafeSubstitutions);
 
-        public IBbParser CreateConversationMessage()
-        {
-            return ConversationMessageParser;
-        }
+        public IBbParser CreateConversationMessage() => ConversationMessageParser;
 
-        public IBbParser CreateCommon()
-        {
-            return CommonParser;
-        }
+        public IBbParser CreateCommon() => CommonParser;
 
-        public IBbParser CreateInfo()
-        {
-            return InfoParser;
-        }
+        public IBbParser CreateInfo() => InfoParser;
 
-        public IBbParser CreatePost()
-        {
-            return PostParser;
-        }
+        public IBbParser CreatePost() => PostParser;
 
-        public IBbParser CreateSafePost()
-        {
-            return SafePostParser;
-        }
+        public IBbParser CreateSafePost() => SafePostParser;
 
-        public IBbParser CreateSafeRating()
-        {
-            return SafeRatingParser;
-        }
+        public IBbParser CreateSafeRating() => SafeRatingParser;
 
-        public IBbParser CreateGeneralChat()
-        {
-            return GeneralChatMessageParser;
-        }
+        public IBbParser CreateGeneralChat() => GeneralChatMessageParser;
     }
 }

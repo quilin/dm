@@ -14,6 +14,7 @@ namespace DM.Services.Common.Implementation
     /// </summary>
     public class IntentionManagerException : HttpException
     {
+        /// <inheritdoc />
         public IntentionManagerException(IUser user, Enum intention, object target)
             : base(HttpStatusCode.Forbidden, GenerateMessage(user, intention, target))
         {

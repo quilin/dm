@@ -7,11 +7,13 @@ using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Services.Fora
 {
+    /// <inheritdoc />
     public class ModeratorsApiService : IModeratorsApiService
     {
         private readonly IForumService forumService;
         private readonly IMapper mapper;
 
+        /// <inheritdoc />
         public ModeratorsApiService(
             IForumService forumService,
             IMapper mapper)
@@ -19,7 +21,8 @@ namespace DM.Web.API.Services.Fora
             this.forumService = forumService;
             this.mapper = mapper;
         }
-        
+
+        /// <inheritdoc />
         public async Task<ListEnvelope<User>> GetModerators(string id)
         {
             var moderators = await forumService.GetModerators(id);

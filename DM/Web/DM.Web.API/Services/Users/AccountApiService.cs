@@ -14,12 +14,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Services.Users
 {
+    /// <inheritdoc />
     public class AccountApiService : IAccountApiService
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;
         private readonly IMapper mapper;
 
+        /// <inheritdoc />
         public AccountApiService(
             IWebAuthenticationService authenticationService,
             IIdentityProvider identityProvider,
@@ -29,7 +31,8 @@ namespace DM.Web.API.Services.Users
             this.identityProvider = identityProvider;
             this.mapper = mapper;
         }
-        
+
+        /// <inheritdoc />
         public async Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext)
         {
             await authenticationService.Authenticate(credentials, httpContext);
@@ -60,8 +63,10 @@ namespace DM.Web.API.Services.Users
             }
         }
 
+        /// <inheritdoc />
         public Task Logout(HttpContext httpContext) => authenticationService.Logout(httpContext);
 
+        /// <inheritdoc />
         public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutAll(httpContext);
     }
 }

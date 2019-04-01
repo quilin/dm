@@ -15,6 +15,7 @@ namespace DM.Services.DataAccess.MongoIntegration
 
         private IMongoDatabase Database => GetDatabase(databaseName);
 
+        /// <inheritdoc />
         public DmMongoClient(IOptions<ConnectionStrings> options) : base(options.Value.DmMongoClient)
         {
             var uri = new Uri(options.Value.DmMongoClient);

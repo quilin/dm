@@ -10,6 +10,7 @@ namespace DM.Services.Forum.Dto
     /// </summary>
     public class TopicProfile : Profile
     {
+        /// <inheritdoc />
         public TopicProfile()
         {
             CreateMap<LastComment, Comment>();

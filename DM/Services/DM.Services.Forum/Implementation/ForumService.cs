@@ -34,6 +34,7 @@ namespace DM.Services.Forum.Implementation
         private readonly ICommentRepository commentRepository;
         private readonly IMemoryCache memoryCache;
 
+        /// <inheritdoc />
         public ForumService(
             IIdentityProvider identityProvider,
             IAccessPolicyConverter accessPolicyConverter,

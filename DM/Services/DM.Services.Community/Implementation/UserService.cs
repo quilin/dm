@@ -16,6 +16,7 @@ namespace DM.Services.Community.Implementation
         private readonly IIdentity identity;
         private readonly IUserRepository repository;
 
+        /// <inheritdoc />
         public UserService(
             IIdentity identity,
             IUserRepository repository)

@@ -34,7 +34,7 @@ namespace DM.Services.Core.Dto
         DateTime? LastVisitDate { get; }
 
         /// <summary>
-        /// Whether user participates in DM rating or not
+        /// Rating participation flag
         /// </summary>
         bool RatingDisabled { get; set; }
 

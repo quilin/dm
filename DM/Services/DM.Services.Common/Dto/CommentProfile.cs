@@ -8,6 +8,7 @@ namespace DM.Services.Common.Dto
     /// </summary>
     public class CommentProfile : Profile
     {
+        /// <inheritdoc />
         public CommentProfile()
         {
             CreateMap<DataAccess.BusinessObjects.Common.Comment, Comment>()

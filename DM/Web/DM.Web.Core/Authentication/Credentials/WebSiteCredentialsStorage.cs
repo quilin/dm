@@ -1,42 +1,30 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Authentication.Credentials
 {
-    public class WebSiteCredentialsStorage
+    /// <summary>
+    /// Cookie-based authentication token storage
+    /// </summary>
+    public class WebSiteCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthorizationCookie = "__AUTH_cookie";
         private const string LoginKey = "login";
         private const string PasswordKey = "password";
         private const string DoNotRememberKey = "doNotRemember";
 
-        public async Task<(bool success, AuthCredentials credentials)> Extract(HttpContext httpContext)
+        /// <inheritdoc />
+        public Task<TokenCredentials> ExtractToken(HttpContext httpContext)
         {
-            if (httpContext.Request.Cookies.TryGetValue(HttpAuthorizationCookie, out var authCookie))
-            {
-                return (true, new TokenCredentials {Token = authCookie});
-            }
-
-            var form = await httpContext.Request.ReadFormAsync();
-            if (form.TryGetValue(LoginKey, out var loginValues) &&
-                form.TryGetValue(PasswordKey, out var passwordValues))
-            {
-                return (true, new LoginCredentials
-                {
-                    Login = loginValues.First(),
-                    Password = passwordValues.First(),
-                    RememberMe = form.TryGetValue(DoNotRememberKey, out var rememberValues) &&
-                        rememberValues.First().Contains(false.ToString())
-                });
-            }
-
-            return default;
+            return httpContext.Request.Cookies.TryGetValue(HttpAuthorizationCookie, out var authCookie)
+                ? Task.FromResult(new TokenCredentials {Token = authCookie})
+                : Task.FromResult<TokenCredentials>(null);
         }
 
-        public Task Load(HttpContext httpContext, Identity identity)
+        /// <inheritdoc />
+        public Task Load(HttpContext httpContext, IIdentity identity)
         {
             httpContext.Response.Cookies.Append(HttpAuthorizationCookie, identity.AuthenticationToken,
                 new CookieOptions
@@ -48,6 +36,13 @@ namespace DM.Web.Core.Authentication.Credentials
                         ? identity.Session.ExpirationDate
                         : (DateTimeOffset?) null
                 });
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task Unload(HttpContext httpContext)
+        {
+            httpContext.Response.Cookies.Delete(HttpAuthorizationCookie);
             return Task.CompletedTask;
         }
     }

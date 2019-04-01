@@ -11,6 +11,7 @@ namespace DM.Services.Common.Dto
     /// </summary>
     public class GeneralUserProfiles : Profile
     {
+        /// <inheritdoc />
         public GeneralUserProfiles()
         {
             CreateMap<User, GeneralUser>()

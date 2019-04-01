@@ -6,8 +6,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DM.Web.API.Authentication
 {
+    /// <inheritdoc />
     public class AuthenticationSwaggerFilter : IOperationFilter
     {
+        /// <inheritdoc />
         public void Apply(Operation operation, OperationFilterContext context)
         {
             operation.Produces = new List<string> {MediaTypeNames.Application.Json};

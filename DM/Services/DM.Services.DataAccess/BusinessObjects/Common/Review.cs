@@ -6,19 +6,48 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Common
 {
+    /// <summary>
+    /// DAL model for user review
+    /// </summary>
     [Table("Reviews")]
     public class Review
     {
-        [Key] public Guid ReviewId { get; set; }
+        /// <summary>
+        /// Review identifier
+        /// </summary>
+        [Key]
+        public Guid ReviewId { get; set; }
 
+        /// <summary>
+        /// Author identifier
+        /// </summary>
         public Guid UserId { get; set; }
+
+        /// <summary>
+        /// Creation moment
+        /// </summary>
         public DateTime CreateDate { get; set; }
 
+        /// <summary>
+        /// Review content
+        /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Premoderation flag
+        /// </summary>
         public bool IsApproved { get; set; }
 
-        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
+        /// <summary>
+        /// Author
+        /// </summary>
+        [ForeignKey(nameof(UserId))]
+        public virtual User Author { get; set; }
 
-        [InverseProperty(nameof(Like.Review))] public virtual ICollection<Like> Likes { get; set; }
+        /// <summary>
+        /// Likes
+        /// </summary>
+        [InverseProperty(nameof(Like.Review))]
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }

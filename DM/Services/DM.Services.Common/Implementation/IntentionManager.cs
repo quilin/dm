@@ -11,6 +11,7 @@ namespace DM.Services.Common.Implementation
         private readonly IIdentityProvider identityProvider;
         private readonly IIntentionResolver[] resolvers;
 
+        /// <inheritdoc />
         public IntentionManager(
             IIdentityProvider identityProvider,
             IIntentionResolver[] resolvers)

@@ -9,6 +9,7 @@ namespace DM.Services.Authentication.Factories
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
+        /// <inheritdoc />
         public SessionFactory(
             IGuidFactory guidFactory,
             IDateTimeProvider dateTimeProvider)

@@ -26,6 +26,7 @@ namespace DM.Services.Authentication.Implementation
         private const string UserIdKey = "userId";
         private const string SessionIdKey = "sessionId";
 
+        /// <inheritdoc />
         public AuthenticationService(
             ISecurityManager securityManager,
             ISymmetricCryptoService cryptoService,

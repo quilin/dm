@@ -9,11 +9,13 @@ using RabbitMQ.Client.Framing;
 
 namespace DM.Services.MessageQueuing.Publish
 {
+    /// <inheritdoc />
     public class MessagePublisher : IMessagePublisher
     {
         private readonly IConnectionFactory connectionFactory;
         private readonly ICorrelationTokenProvider correlationTokenProvider;
 
+        /// <inheritdoc />
         public MessagePublisher(
             IConnectionFactory connectionFactory,
             ICorrelationTokenProvider correlationTokenProvider)
@@ -22,18 +24,17 @@ namespace DM.Services.MessageQueuing.Publish
             this.correlationTokenProvider = correlationTokenProvider;
         }
 
-        public Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration)
+        /// <inheritdoc />
+        public Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration, string routingKey)
             where TMessage : class
         {
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(configuration.ExchangeName, configuration.ExchangeType, true);
-                channel.QueueDeclare(configuration.DurableQueueName, true);
-                channel.QueueBind(configuration.DurableQueueName, configuration.ExchangeName, "#");
+                channel.ExchangeDeclare(configuration.ExchangeName, "#", true);
 
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                channel.BasicPublish(configuration.ExchangeName, configuration.RoutingKey,
+                channel.BasicPublish(configuration.ExchangeName, routingKey,
                     new BasicProperties
                     {
                         Persistent = true,

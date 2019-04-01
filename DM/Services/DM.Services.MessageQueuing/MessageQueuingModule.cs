@@ -7,8 +7,10 @@ using Module = Autofac.Module;
 
 namespace DM.Services.MessageQueuing
 {
+    /// <inheritdoc />
     public class MessageQueuingModule : Module
     {
+        /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())

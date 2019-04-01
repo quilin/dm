@@ -21,6 +21,9 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace DM.Web.API
 {
+    /// <summary>
+    /// Application
+    /// </summary>
     public class Startup
     {
         private IConfigurationRoot Configuration { get; set; }
@@ -37,6 +40,11 @@ namespace DM.Web.API
                 .ToArray();
         }
 
+        /// <summary>
+        /// Configure application services
+        /// </summary>
+        /// <param name="services">Service collection</param>
+        /// <returns>Service provider</returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             Configuration = new ConfigurationBuilder()
@@ -81,6 +89,10 @@ namespace DM.Web.API
             return new AutofacServiceProvider(container);
         }
 
+        /// <summary>
+        /// Configure application
+        /// </summary>
+        /// <param name="appBuilder"></param>
         public void Configure(IApplicationBuilder appBuilder)
         {
             appBuilder

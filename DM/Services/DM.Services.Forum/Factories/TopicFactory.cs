@@ -13,6 +13,7 @@ namespace DM.Services.Forum.Factories
         private readonly IIdentityProvider identityProvider;
         private readonly IDateTimeProvider dateTimeProvider;
 
+        /// <inheritdoc />
         public TopicFactory(
             IGuidFactory guidFactory,
             IIdentityProvider identityProvider,

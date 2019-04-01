@@ -12,8 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DM.Services.SearchEngine.Indexing
 {
+    /// <summary>
+    /// Configures container for search engine MQ consumer
+    /// </summary>
     public static class ContainerConfiguration
     {
+        /// <summary>
+        /// Create service provider for search engine MQ consumer
+        /// </summary>
+        /// <returns>Service provider</returns>
         public static AutofacServiceProvider ConfigureProvider()
         {
             var configuration = new ConfigurationBuilder()

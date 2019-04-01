@@ -9,6 +9,7 @@ using RabbitMQ.Client.Events;
 
 namespace DM.Services.MessageQueuing.Consume
 {
+    /// <inheritdoc cref="IMessageConsumer{TMessage}" />
     public class MessageConsumer<TMessage> : IDisposable, IMessageConsumer<TMessage>
         where TMessage : class
     {
@@ -16,6 +17,7 @@ namespace DM.Services.MessageQueuing.Consume
         private readonly IConnection connection;
         private readonly IModel channel;
 
+        /// <inheritdoc />
         public MessageConsumer(
             IConnectionFactory connectionFactory,
             Func<IMessageProcessorWrapper<TMessage>> processorFactory)
@@ -25,6 +27,7 @@ namespace DM.Services.MessageQueuing.Consume
             channel = connection.CreateModel();
         }
 
+        /// <inheritdoc />
         public void Consume(MessageConsumeConfiguration configuration)
         {
             channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
@@ -68,6 +71,7 @@ namespace DM.Services.MessageQueuing.Consume
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             channel.Close();

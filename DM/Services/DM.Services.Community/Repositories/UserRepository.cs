@@ -18,6 +18,7 @@ namespace DM.Services.Community.Repositories
         private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;
 
+        /// <inheritdoc />
         public UserRepository(
             DmDbContext dmDbContext,
             IDateTimeProvider dateTimeProvider)
@@ -32,13 +33,15 @@ namespace DM.Services.Community.Repositories
         public Task<int> CountUsers(bool withInactive)
         {
             var query = dmDbContext.Users.Where(u => !u.IsRemoved);
-            if (!withInactive)
+            if (withInactive)
             {
-                var activeRange = dateTimeProvider.Now - ActivityRange;
-                query = query.Where(u => u.LastVisitDate > activeRange);
+                return query.CountAsync();
             }
 
-            return query.CountAsync();
+            var activeRange = dateTimeProvider.Now - ActivityRange;
+            return query
+                .Where(u => u.LastVisitDate > activeRange)
+                .CountAsync();
         }
 
         /// <inheritdoc />

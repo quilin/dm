@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.Core.Authentication
 {
+    /// <inheritdoc />
     public class WebAuthenticationService : IWebAuthenticationService
     {
         private readonly ICredentialsStorage credentialsStorage;
         private readonly IAuthenticationService authenticationService;
         private readonly IIdentitySetter identitySetter;
 
+        /// <inheritdoc />
         public WebAuthenticationService(
             ICredentialsStorage credentialsStorage,
             IAuthenticationService authenticationService,
@@ -47,12 +49,14 @@ namespace DM.Web.Core.Authentication
             identitySetter.Current = identity;
         }
 
+        /// <inheritdoc />
         public async Task Authenticate(LoginCredentials credentials, HttpContext httpContext)
         {
             var authenticationResult = await GetAuthenticationResult(credentials);
             await StoreAuthentication(httpContext, authenticationResult);
         }
 
+        /// <inheritdoc />
         public async Task Authenticate(HttpContext httpContext)
         {
             var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
@@ -60,12 +64,14 @@ namespace DM.Web.Core.Authentication
             await StoreAuthentication(httpContext, authenticationResult);
         }
 
+        /// <inheritdoc />
         public async Task Logout(HttpContext httpContext)
         {
             await authenticationService.Logout();
             await credentialsStorage.Unload(httpContext);
         }
 
+        /// <inheritdoc />
         public async Task LogoutAll(HttpContext httpContext)
         {
             var authenticationResult = await authenticationService.LogoutAll();

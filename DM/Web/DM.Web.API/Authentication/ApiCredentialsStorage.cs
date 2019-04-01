@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Authentication
 {
+    /// <inheritdoc />
     public class ApiCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
 
+        /// <inheritdoc />
         public Task<TokenCredentials> ExtractToken(HttpContext httpContext)
         {
             if (!httpContext.Request.Headers.TryGetValue(HttpAuthTokenHeader, out var headerValues))
@@ -22,12 +24,14 @@ namespace DM.Web.API.Authentication
                 : Task.FromResult(new TokenCredentials {Token = authToken});
         }
 
+        /// <inheritdoc />
         public Task Load(HttpContext httpContext, IIdentity identity)
         {
             httpContext.Response.Headers.Add(HttpAuthTokenHeader, identity.AuthenticationToken);
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
         public Task Unload(HttpContext httpContext)
         {
             httpContext.Response.Headers.Remove(HttpAuthTokenHeader);

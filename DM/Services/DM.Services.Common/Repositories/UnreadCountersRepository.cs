@@ -14,6 +14,7 @@ namespace DM.Services.Common.Repositories
     {
         private readonly IDateTimeProvider dateTimeProvider;
 
+        /// <inheritdoc />
         public UnreadCountersRepository(DmMongoClient client,
             IDateTimeProvider dateTimeProvider) : base(client)
         {

@@ -10,32 +10,89 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 {
+    /// <summary>
+    /// DAL model for game post
+    /// </summary>
     [Table("Posts")]
     public class Post : IRemovable
     {
-        [Key] public Guid PostId { get; set; }
+        /// <summary>
+        /// Post identifier
+        /// </summary>
+        [Key]
+        public Guid PostId { get; set; }
 
+        /// <summary>
+        /// Room identifier
+        /// </summary>
         public Guid RoomId { get; set; }
+
+        /// <summary>
+        /// Character identifier
+        /// </summary>
         public Guid? CharacterId { get; set; }
+
+        /// <summary>
+        /// Author identifier
+        /// </summary>
         public Guid UserId { get; set; }
 
+        /// <summary>
+        /// Creation moment
+        /// </summary>
         public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// Last update moment
+        /// </summary>
         public DateTime? LastUpdateDate { get; set; }
 
+        /// <summary>
+        /// Post text
+        /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Additional text
+        /// </summary>
         public string Commentary { get; set; }
+
+        /// <summary>
+        /// Private message to master
+        /// </summary>
         public string MasterMessage { get; set; }
 
+        /// <inheritdoc />
         public bool IsRemoved { get; set; }
 
-        [ForeignKey(nameof(RoomId))] public virtual Room Room { get; set; }
+        /// <summary>
+        /// Room
+        /// </summary>
+        [ForeignKey(nameof(RoomId))]
+        public virtual Room Room { get; set; }
 
-        [ForeignKey(nameof(CharacterId))] public virtual Character Character { get; set; }
+        /// <summary>
+        /// Character
+        /// </summary>
+        [ForeignKey(nameof(CharacterId))]
+        public virtual Character Character { get; set; }
 
-        [ForeignKey(nameof(UserId))] public virtual User Author { get; set; }
+        /// <summary>
+        /// Author
+        /// </summary>
+        [ForeignKey(nameof(UserId))]
+        public virtual User Author { get; set; }
 
-        [InverseProperty(nameof(Vote.Post))] public virtual ICollection<Vote> Votes { get; set; }
+        /// <summary>
+        /// Votes for the post
+        /// </summary>
+        [InverseProperty(nameof(Vote.Post))]
+        public virtual ICollection<Vote> Votes { get; set; }
 
-        [InverseProperty(nameof(Upload.Post))] public virtual ICollection<Upload> Attachments { get; set; }
+        /// <summary>
+        /// Files attached to post
+        /// </summary>
+        [InverseProperty(nameof(Upload.Post))]
+        public virtual ICollection<Upload> Attachments { get; set; }
     }
 }

@@ -11,11 +11,13 @@ using Topic = DM.Web.API.Dto.Fora.Topic;
 
 namespace DM.Web.API.Services.Fora
 {
+    /// <inheritdoc />
     public class TopicApiService : ITopicApiService
     {
         private readonly IForumService forumService;
         private readonly IMapper mapper;
 
+        /// <inheritdoc />
         public TopicApiService(
             IForumService forumService,
             IMapper mapper)
@@ -23,7 +25,8 @@ namespace DM.Web.API.Services.Fora
             this.forumService = forumService;
             this.mapper = mapper;
         }
-        
+
+        /// <inheritdoc />
         public async Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
         {
             var (topics, paging) = filters.Attached
@@ -33,12 +36,14 @@ namespace DM.Web.API.Services.Fora
                 paging == null ? null : new Paging(paging));
         }
 
+        /// <inheritdoc />
         public async Task<Envelope<Topic>> Get(Guid topicId)
         {
             var topic = await forumService.GetTopic(topicId);
             return new Envelope<Topic>(mapper.Map<Topic>(topic));
         }
 
+        /// <inheritdoc />
         public async Task<Envelope<Topic>> Create(string forumId, Topic topic)
         {
             var createTopic = mapper.Map<CreateTopic>(topic);
@@ -47,6 +52,7 @@ namespace DM.Web.API.Services.Fora
             return new Envelope<Topic>(mapper.Map<Topic>(createdTopic));
         }
 
+        /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
         {
             var (comments, paging) = await forumService.GetCommentsList(topicId, entityNumber);

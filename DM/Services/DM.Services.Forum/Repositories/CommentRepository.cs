@@ -17,6 +17,7 @@ namespace DM.Services.Forum.Repositories
         private readonly DmDbContext dmDbContext;
         private readonly IMapper mapper;
 
+        /// <inheritdoc />
         public CommentRepository(
             DmDbContext dmDbContext,
             IMapper mapper)

@@ -13,6 +13,7 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// </summary>
         public string CollectionName { get; }
 
+        /// <inheritdoc />
         public MongoCollectionNameAttribute(string collectionName)
         {
             CollectionName = collectionName;

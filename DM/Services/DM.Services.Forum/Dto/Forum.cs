@@ -9,10 +9,29 @@ namespace DM.Services.Forum.Dto
     /// </summary>
     public class Forum
     {
+        /// <summary>
+        /// Forum identifier
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Forum title
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Create topic policy
+        /// </summary>
         public ForumAccessPolicy CreateTopicPolicy { get; set; }
+
+        /// <summary>
+        /// Moderator identifiers
+        /// </summary>
         public IEnumerable<Guid> ModeratorIds { get; set; }
+
+        /// <summary>
+        /// Total number of forum topics that has unread commentaries
+        /// </summary>
         public int UnreadTopicsCount { get; set; }
     }
 }

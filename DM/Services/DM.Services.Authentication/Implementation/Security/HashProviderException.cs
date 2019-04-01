@@ -8,6 +8,7 @@ namespace DM.Services.Authentication.Implementation.Security
     /// </summary>
     public class HashProviderException : Exception
     {
+        /// <inheritdoc />
         public HashProviderException(byte[] bytes, Exception inner)
             : base($"Fail to compute hash for {Encoding.UTF8.GetString(bytes)}", inner)
         {
