@@ -68,6 +68,8 @@ namespace DM.Web.API
                     c.DescribeAllParametersInCamelCase();
                     c.DescribeAllEnumsAsStrings();
                     c.OperationFilter<AuthenticationSwaggerFilter>();
+                    var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+                    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));
                 })
                 .AddAutoMapper()
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
