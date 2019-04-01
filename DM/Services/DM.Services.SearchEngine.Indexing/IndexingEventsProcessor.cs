@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Implementation.CorrelationToken;
+using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Processing;

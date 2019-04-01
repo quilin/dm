@@ -1,7 +1,7 @@
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Implementation.CorrelationToken;
+using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.MessageQueuing.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;

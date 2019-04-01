@@ -1,4 +1,4 @@
-using DM.Services.Core.Extensions;
+using DM.Services.Core.Dto;
 using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
@@ -14,7 +14,7 @@ namespace DM.Services.Core.Tests
         [InlineData(0, 10, 0)]
         public void CalculateTotalPagesCountOfGivenSize(int totalEntitiesCount, int pageSize, int expectedPagesCount)
         {
-            var actual = PagingHelper.GetPaging(totalEntitiesCount, 1, pageSize);
+            var actual = PagingData.Create(totalEntitiesCount, 1, pageSize);
             actual.TotalPagesCount.Should().Be(expectedPagesCount);
         }
 
@@ -26,7 +26,7 @@ namespace DM.Services.Core.Tests
         public void CalculateCurrentPageBasedOnGivenEntityNumberAndPageSize(int entityNumber,
             int pageSize, int expectedPageNumber)
         {
-            var actual = PagingHelper.GetPaging(entityNumber + 1, entityNumber, pageSize);
+            var actual = PagingData.Create(entityNumber + 1, entityNumber, pageSize);
             actual.CurrentPage.Should().Be(expectedPageNumber);
         }
 
@@ -38,7 +38,7 @@ namespace DM.Services.Core.Tests
         [InlineData(5)]
         public void GuaranteeCurrentPageIsAtLeastFirst(int entityNumber)
         {
-            var actual = PagingHelper.GetPaging(100, entityNumber, 10);
+            var actual = PagingData.Create(100, entityNumber, 10);
             actual.CurrentPage.Should().BeGreaterOrEqualTo(1);
         }
     }

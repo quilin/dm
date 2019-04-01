@@ -2,8 +2,17 @@
 
 namespace DM.Web.Core.Extensions.StringExtensions
 {
+    /// <summary>
+    /// String extensions related to text display shortage
+    /// </summary>
     public static class ShortTextExtensions
     {
+        /// <summary>
+        /// Shorten the text
+        /// </summary>
+        /// <param name="input">Input string</param>
+        /// <param name="maxSymbolsCount">Maximum result string length</param>
+        /// <returns>Shorten text</returns>
         public static string Shorten(this string input, int maxSymbolsCount)
         {
             input = input.Trim();

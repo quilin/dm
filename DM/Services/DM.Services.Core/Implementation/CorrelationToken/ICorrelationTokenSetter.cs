@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Authentication.Implementation.CorrelationToken
+namespace DM.Services.Core.Implementation.CorrelationToken
 {
     /// <summary>
     /// Correlation token setter

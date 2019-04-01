@@ -6,8 +6,17 @@ using System.Text;
 
 namespace DM.Web.Core.Helpers
 {
+    /// <summary>
+    /// Utils to encode Guid into more readable format
+    /// </summary>
     public static class ReadableGuidHelper
     {
+        /// <summary>
+        /// Encode Guid to readable format
+        /// </summary>
+        /// <param name="guid">Guid</param>
+        /// <param name="readableText">Custom text</param>
+        /// <returns>Readable guid</returns>
         public static string EncodeToReadable(this Guid guid, string readableText)
         {
             var base64Guid = Convert.ToBase64String(guid.ToByteArray()).Replace("/", "-").Replace("+", "_").Replace("=", "");
@@ -18,12 +27,23 @@ namespace DM.Web.Core.Helpers
             return $"{Transliterate(readableText.ToLower())}~{base64Guid}";
         }
 
+        /// <summary>
+        /// Decode guid from readable format
+        /// </summary>
+        /// <param name="encodedGuid">Encoded guid</param>
+        /// <returns>Guid</returns>
         public static Guid DecodeFromReadableGuid(this string encodedGuid)
         {
             var base64Guid = encodedGuid.Split(new[] {"~"}, StringSplitOptions.None).Last().Replace("-", "/").Replace("_", "+") + "==";
             return new Guid(Convert.FromBase64String(base64Guid));
         }
 
+        /// <summary>
+        /// Try decode guid from readable format
+        /// </summary>
+        /// <param name="encodedGuid">Encoded guid</param>
+        /// <param name="result">Guid</param>
+        /// <returns>Can be decoded</returns>
         public static bool TryDecodeFromReadableGuid(this string encodedGuid, out Guid result)
         {
             try

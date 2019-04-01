@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <LangVersion>latest</LangVersion>
         <AssemblyName>DM.Web.Core</AssemblyName>
         <RootNamespace>DM.Web.Core</RootNamespace>

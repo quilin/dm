@@ -9,7 +9,6 @@ using DM.Services.Common.Implementation;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using DM.Services.Core.Extensions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
@@ -92,7 +91,7 @@ namespace DM.Services.Forum.Implementation
 
             var pageSize = identity.Settings.TopicsPerPage;
             var topicsCount = await topicRepository.Count(forum.Id);
-            var pagingData = PagingHelper.GetPaging(topicsCount, entityNumber, pageSize);
+            var pagingData = PagingData.Create(topicsCount, entityNumber, pageSize);
 
             var topics = (await topicRepository.Get(forum.Id, pagingData, false)).ToArray();
             await FillCounters(topics, t => t.Id, unreadCountersRepository.SelectByEntities,
@@ -141,7 +140,7 @@ namespace DM.Services.Forum.Implementation
 
             var pageSize = identity.Settings.CommentsPerPage;
             var commentsCount = await commentRepository.Count(topicId);
-            var pagingData = PagingHelper.GetPaging(commentsCount, entityNumber, pageSize);
+            var pagingData = PagingData.Create(commentsCount, entityNumber, pageSize);
 
             var comments = await commentRepository.Get(topicId, pagingData);
             if (identity.User.IsAuthenticated)

@@ -6,7 +6,6 @@ using DM.Services.Community.Dto;
 using DM.Services.Community.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using DM.Services.Core.Extensions;
 
 namespace DM.Services.Community.Implementation
 {
@@ -29,7 +28,7 @@ namespace DM.Services.Community.Implementation
         public async Task<(IEnumerable<GeneralUser> users, PagingData paging)> Get(int entityNumber, bool withInactive)
         {
             var totalUsersCount = await repository.CountUsers(withInactive);
-            var paging = PagingHelper.GetPaging(totalUsersCount, entityNumber, identity.Settings.TopicsPerPage);
+            var paging = PagingData.Create(totalUsersCount, entityNumber, identity.Settings.TopicsPerPage);
             var users = await repository.GetUsers(paging, withInactive);
             return (users, paging);
         }
