@@ -8,6 +8,8 @@ using AutoMapper;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Services.SearchEngine;
+using DM.Services.SearchEngine.Configuration;
 using DM.Web.API.Authentication;
 using DM.Web.API.Middleware;
 using DM.Web.Core.Binders;
@@ -58,6 +60,7 @@ namespace DM.Web.API
                 .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<SearchEngineConfiguration>(Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
@@ -85,6 +88,7 @@ namespace DM.Web.API
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterModule<SearchEngineModule>();
             builder.Populate(services);
 
             var container = builder.Build();

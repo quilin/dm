@@ -25,10 +25,10 @@ namespace DM.Services.SearchEngine.Repositories
         /// <param name="query">Search query</param>
         /// <param name="skip">Skip first entities</param>
         /// <param name="take">Take next entities</param>
-        /// <param name="role">Authenticated user role</param>
+        /// <param name="roles">Authenticated user roles</param>
         /// <param name="userId">Authenticated user identifier</param>
         /// <returns></returns>
         Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(string query, int skip, int take,
-            UserRole role, Guid userId);
+            IEnumerable<UserRole> roles, Guid userId);
     }
 }
