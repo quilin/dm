@@ -1,5 +1,5 @@
 using System;
-using DM.Services.Authentication.Implementation;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto;

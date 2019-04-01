@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Implementation;
+using DM.Services.Authentication.Implementation.UserIdentity;
 
 namespace DM.Services.Common.Implementation
 {

@@ -1,5 +1,5 @@
 using System.Net;
-using DM.Services.Authentication.Implementation;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

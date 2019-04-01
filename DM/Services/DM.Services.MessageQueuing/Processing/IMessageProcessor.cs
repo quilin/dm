@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DM.Services.MessageQueuing
+namespace DM.Services.MessageQueuing.Processing
 {
     public interface IMessageProcessor<in TMessage>
     {

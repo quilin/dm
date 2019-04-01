@@ -1,21 +1,25 @@
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Implementation.CorrelationToken;
 using DM.Services.MessageQueuing.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Framing;
 
-namespace DM.Services.MessageQueuing
+namespace DM.Services.MessageQueuing.Publish
 {
     public class MessagePublisher : IMessagePublisher
     {
         private readonly IConnectionFactory connectionFactory;
+        private readonly ICorrelationTokenProvider correlationTokenProvider;
 
         public MessagePublisher(
-            IConnectionFactory connectionFactory)
+            IConnectionFactory connectionFactory,
+            ICorrelationTokenProvider correlationTokenProvider)
         {
             this.connectionFactory = connectionFactory;
+            this.correlationTokenProvider = correlationTokenProvider;
         }
 
         public Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration)
@@ -33,7 +37,8 @@ namespace DM.Services.MessageQueuing
                     new BasicProperties
                     {
                         Persistent = true,
-                        ContentType = MediaTypeNames.Application.Json
+                        ContentType = MediaTypeNames.Application.Json,
+                        CorrelationId = correlationTokenProvider.Current.ToString()
                     }, body);
                 return Task.CompletedTask;
             }

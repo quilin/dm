@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Implementation;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;

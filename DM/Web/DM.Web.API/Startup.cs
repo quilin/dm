@@ -84,6 +84,7 @@ namespace DM.Web.API
         public void Configure(IApplicationBuilder appBuilder)
         {
             appBuilder
+                .UseMiddleware<CorrelationMiddleware>()
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseSwagger()

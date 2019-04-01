@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
 

@@ -1,6 +1,6 @@
 using DM.Services.Authentication.Dto;
 
-namespace DM.Services.Authentication.Implementation
+namespace DM.Services.Authentication.Implementation.UserIdentity
 {
     /// <summary>
     /// Stores current user identity

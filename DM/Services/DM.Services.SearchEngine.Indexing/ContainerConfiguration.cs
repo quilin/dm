@@ -9,7 +9,6 @@ using DM.Services.MessageQueuing.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitMQ.Client;
 
 namespace DM.Services.SearchEngine.Indexing
 {
@@ -30,20 +29,17 @@ namespace DM.Services.SearchEngine.Indexing
                     options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
 
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+
+            builder.RegisterModule<MessageQueuingModule>();
+            builder.RegisterAssemblyTypes(
+                    Assembly.GetExecutingAssembly(),
+                    Assembly.Load("DM.Services.Core"),
+                    Assembly.Load("DM.Services.Authentication"))
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.RegisterType<IndexingEventsProcessor>()
-                .AsImplementedInterfaces()
-                .InstancePerDependency();
-            builder.Register<IConnectionFactory>(x => new ConnectionFactory())
-                .AsImplementedInterfaces()
-                .InstancePerDependency();
-            builder.RegisterGeneric(typeof(MessageConsumer<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+
             builder.Populate(services);
 
             var container = builder.Build();

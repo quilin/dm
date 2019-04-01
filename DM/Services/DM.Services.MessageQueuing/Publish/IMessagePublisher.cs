@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing.Configuration;
 
-namespace DM.Services.MessageQueuing
+namespace DM.Services.MessageQueuing.Publish
 {
     public interface IMessagePublisher
     {
