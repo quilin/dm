@@ -1,7 +1,7 @@
-namespace DM.Services.DataAccess.SearchEngine
+namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
-    /// Type of indexed entity
+    /// Nature of indexed entity
     /// </summary>
     public enum SearchEntityType
     {
@@ -11,7 +11,7 @@ namespace DM.Services.DataAccess.SearchEngine
         Unknown = 0,
 
         /// <summary>
-        /// Topic
+        /// Forum topic
         /// </summary>
         Topic = 1
     }
