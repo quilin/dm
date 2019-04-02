@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.SearchEngine.Repositories;
 using DM.Web.API.Dto.Contracts;
@@ -14,12 +17,15 @@ namespace DM.Web.API.Controllers.v1.Common
     public class SearchController : Controller
     {
         private readonly ISearchEngineRepository repository;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public SearchController(
-            ISearchEngineRepository repository)
+            ISearchEngineRepository repository,
+            IIdentityProvider identityProvider)
         {
             this.repository = repository;
+            this.identityProvider = identityProvider;
         }
 
         /// <summary>
@@ -30,8 +36,14 @@ namespace DM.Web.API.Controllers.v1.Common
         public async Task<ListEnvelope<object>> Search([FromQuery] string query)
         {
             // TODO: Move to service and massage it
-            var (entities, _) = await repository.Search(query, 0, 10, new[] {UserRole.Guest}, Guid.Empty);
-            return new ListEnvelope<object>(entities);
+            var currentUserRole = identityProvider.Current.User.Role;
+            var userRoles = currentUserRole == UserRole.Guest
+                ? Enumerable.Repeat(UserRole.Guest, 1)
+                : Enum.GetValues(typeof(UserRole))
+                    .Cast<UserRole>()
+                    .Where(r => (r & currentUserRole) != UserRole.Guest);
+            var (entities, total) = await repository.Search(query, 0, 10, userRoles, Guid.Empty);
+            return new ListEnvelope<object>(entities, new Paging(PagingData.Create(total, 1, 10)));
         }
     }
 }

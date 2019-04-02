@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace DM.Web.API.Middleware
 {
@@ -27,8 +29,11 @@ namespace DM.Web.API.Middleware
         public async Task InvokeAsync(HttpContext httpContext,
             ILogger<RequestLoggingMiddleware> logger)
         {
-            logger.LogWarning("API has been called: {Url}", httpContext.Request.GetEncodedUrl());
+            LogContext.PushProperty("URL", httpContext.Request.GetEncodedPathAndQuery());
+            var stopwatch = Stopwatch.StartNew();
             await next(httpContext);
+            stopwatch.Stop();
+            logger.LogInformation("Request took {elapsed}ms", stopwatch.ElapsedMilliseconds);
         }
     }
 }

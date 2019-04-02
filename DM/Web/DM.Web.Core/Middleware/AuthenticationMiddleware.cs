@@ -29,7 +29,8 @@ namespace DM.Web.Core.Middleware
             IWebAuthenticationService authenticationService)
         {
             var identity = await authenticationService.Authenticate(httpContext);
-            LogContext.PushProperty("User", identity.User.Role == UserRole.Guest ? "Guest" : identity.User.Login);
+            var currentUserName = identity.User.Role == UserRole.Guest ? "Guest" : identity.User.Login;
+            LogContext.PushProperty("User", currentUserName);
             await next(httpContext);
         }
     }

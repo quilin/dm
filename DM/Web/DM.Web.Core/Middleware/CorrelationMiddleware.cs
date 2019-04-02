@@ -29,7 +29,7 @@ namespace DM.Web.Core.Middleware
         /// <param name="setter"></param>
         /// <param name="guidFactory"></param>
         /// <returns></returns>
-        public Task InvokeAsync(HttpContext httpContext,
+        public async Task InvokeAsync(HttpContext httpContext,
             ICorrelationTokenSetter setter,
             IGuidFactory guidFactory)
         {
@@ -38,8 +38,8 @@ namespace DM.Web.Core.Middleware
                     ? token
                     : guidFactory.Create();
             setter.Current = correlationToken;
-            LogContext.PushProperty("CorrelationId", correlationToken);
-            return next(httpContext);
+            LogContext.PushProperty("CorrelationId", correlationToken.ToString());
+            await next(httpContext);
         }
     }
 }

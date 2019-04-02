@@ -8,6 +8,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;
@@ -32,6 +33,7 @@ namespace DM.Services.Forum.Implementation
         private readonly IModeratorRepository moderatorRepository;
         private readonly ICommentRepository commentRepository;
         private readonly IMemoryCache memoryCache;
+        private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
         public ForumService(
@@ -44,7 +46,8 @@ namespace DM.Services.Forum.Implementation
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
             ICommentRepository commentRepository,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            IInvokedEventPublisher invokedEventPublisher)
         {
             identity = identityProvider.Current;
             this.accessPolicyConverter = accessPolicyConverter;
@@ -56,6 +59,7 @@ namespace DM.Services.Forum.Implementation
             this.moderatorRepository = moderatorRepository;
             this.commentRepository = commentRepository;
             this.memoryCache = memoryCache;
+            this.invokedEventPublisher = invokedEventPublisher;
         }
 
         /// <inheritdoc />
@@ -128,8 +132,9 @@ namespace DM.Services.Forum.Implementation
         {
             var forum = await FindForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
-            var forumTopic = topicFactory.Create(forum.Id, createTopic);
-            return await topicRepository.Create(forumTopic);
+            var topic = await topicRepository.Create(topicFactory.Create(forum.Id, createTopic));
+            await invokedEventPublisher.Publish(EventType.NewTopic, topic.Id);
+            return topic;
         }
 
         /// <inheritdoc />

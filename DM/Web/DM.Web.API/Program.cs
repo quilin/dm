@@ -17,12 +17,16 @@ namespace DM.Web.API
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Application", "DM.API")
                 .Enrich.WithProperty("Environment", "Test")
                 .WriteTo.Logger(lc => lc
-//                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
-                    .WriteTo.Elasticsearch("localhost:9200", "test_{0}"))
+                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+                    .WriteTo.Elasticsearch(
+                        "http://localhost:9200",
+                        "dm_logs-{0:yyyy.MM.dd}",
+                        inlineFields: true))
                 .CreateLogger();
             CreateWebHostBuilder(args).Build().Run();
         }
