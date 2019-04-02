@@ -8,6 +8,8 @@ using AutoMapper;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Configuration;
 using DM.Services.SearchEngine;
 using DM.Services.SearchEngine.Configuration;
 using DM.Web.API.Authentication;
@@ -57,10 +59,16 @@ namespace DM.Web.API
 
             services
                 .AddOptions()
-                .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
-                .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<SearchEngineConfiguration>(Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
+                .Configure<ConnectionStrings>(
+                    Configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<IntegrationSettings>(
+                    Configuration.GetSection(nameof(IntegrationSettings)).Bind)
+                .Configure<EmailConfiguration>(
+                    Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<MessagePublishConfiguration>(
+                    Configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .Configure<SearchEngineConfiguration>(
+                    Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
@@ -77,7 +85,7 @@ namespace DM.Web.API
                 .AddAutoMapper()
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
@@ -88,6 +96,7 @@ namespace DM.Web.API
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterModule<MessageQueuingModule>();
             builder.RegisterModule<SearchEngineModule>();
             builder.Populate(services);
 

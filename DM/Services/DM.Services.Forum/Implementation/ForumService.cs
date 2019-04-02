@@ -10,11 +10,15 @@ using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.Eventing;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Factories;
 using DM.Services.Forum.Repositories;
+using DM.Services.MessageQueuing.Configuration;
+using DM.Services.MessageQueuing.Publish;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Forum.Implementation
@@ -32,6 +36,8 @@ namespace DM.Services.Forum.Implementation
         private readonly IModeratorRepository moderatorRepository;
         private readonly ICommentRepository commentRepository;
         private readonly IMemoryCache memoryCache;
+        private readonly IMessagePublisher messagePublisher;
+        private readonly MessagePublishConfiguration messagePublishConfiguration;
 
         /// <inheritdoc />
         public ForumService(
@@ -44,7 +50,9 @@ namespace DM.Services.Forum.Implementation
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
             ICommentRepository commentRepository,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            IMessagePublisher messagePublisher,
+            IOptions<MessagePublishConfiguration> messagePublishOptions)
         {
             identity = identityProvider.Current;
             this.accessPolicyConverter = accessPolicyConverter;
@@ -56,6 +64,8 @@ namespace DM.Services.Forum.Implementation
             this.moderatorRepository = moderatorRepository;
             this.commentRepository = commentRepository;
             this.memoryCache = memoryCache;
+            this.messagePublisher = messagePublisher;
+            messagePublishConfiguration = messagePublishOptions.Value;
         }
 
         /// <inheritdoc />
@@ -129,7 +139,13 @@ namespace DM.Services.Forum.Implementation
             var forum = await FindForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
             var forumTopic = topicFactory.Create(forum.Id, createTopic);
-            return await topicRepository.Create(forumTopic);
+            var createdTopic = await topicRepository.Create(forumTopic);
+            await messagePublisher.Publish(new InvokedEvent
+            {
+                Type = EventType.NewTopic,
+                EntityId = createdTopic.Id
+            }, messagePublishConfiguration, "new.topic");
+            return createdTopic;
         }
 
         /// <inheritdoc />

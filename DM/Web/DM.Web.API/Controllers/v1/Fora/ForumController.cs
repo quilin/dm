@@ -82,6 +82,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="topic"></param>
         /// <response code="201"></response>
         /// <response code="400">Some of the passed topic properties were invalid</response>
+        /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to create topics in this forum</response>
         /// <response code="404">No available forum with this id</response>
         [HttpPost("{id}/topics")]

@@ -31,9 +31,12 @@ namespace DM.Services.SearchEngine.Indexing
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<MessageConsumeConfiguration>(configuration.GetSection("ConsumerConfiguration").Bind)
-                .Configure<SearchEngineConfiguration>(configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
+                .Configure<ConnectionStrings>(
+                    configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<MessageConsumeConfiguration>(
+                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
+                .Configure<SearchEngineConfiguration>(
+                    configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
 
