@@ -5,7 +5,7 @@ using DM.Services.MessageQueuing.Consume;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace DM.Services.SearchEngine.Indexing
+namespace DM.Services.Search.IndexingConsumer
 {
     class Program
     {

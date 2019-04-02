@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="NEST" Version="6.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>

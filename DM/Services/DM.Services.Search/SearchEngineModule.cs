@@ -3,12 +3,12 @@ using System.Reflection;
 using Autofac;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.SearchEngine.Configuration;
+using DM.Services.Search.Configuration;
 using Microsoft.Extensions.Options;
 using Nest;
 using Module = Autofac.Module;
 
-namespace DM.Services.SearchEngine
+namespace DM.Services.Search
 {
     /// <inheritdoc />
     public class SearchEngineModule : Module

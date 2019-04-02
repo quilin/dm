@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.SearchEngine.Repositories;
+using DM.Services.Search.Repositories;
 using DM.Web.API.Dto.Contracts;
 using Microsoft.AspNetCore.Mvc;
 

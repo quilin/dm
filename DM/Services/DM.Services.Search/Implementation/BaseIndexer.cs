@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.Eventing;
 
-namespace DM.Services.SearchEngine.Implementation
+namespace DM.Services.Search.Implementation
 {
     /// <inheritdoc />
     public abstract class BaseIndexer : IIndexer

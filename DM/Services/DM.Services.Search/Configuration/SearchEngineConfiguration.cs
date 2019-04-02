@@ -1,4 +1,4 @@
-namespace DM.Services.SearchEngine.Configuration
+namespace DM.Services.Search.Configuration
 {
     /// <summary>
     /// Search engine configuration

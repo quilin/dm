@@ -38,8 +38,10 @@ namespace DM.Web.Core.Middleware
                     ? token
                     : guidFactory.Create();
             setter.Current = correlationToken;
-            LogContext.PushProperty("CorrelationId", correlationToken.ToString());
-            await next(httpContext);
+            using (LogContext.PushProperty("CorrelationToken", correlationToken.ToString()))
+            {
+                await next(httpContext);
+            }
         }
     }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.SearchEngine.Configuration;
-using DM.Services.SearchEngine.Dto;
+using DM.Services.Search.Configuration;
+using DM.Services.Search.Dto;
 using Microsoft.Extensions.Options;
 using Nest;
 
-namespace DM.Services.SearchEngine.Repositories
+namespace DM.Services.Search.Repositories
 {
     /// <inheritdoc />
     public class SearchEngineRepository : ISearchEngineRepository

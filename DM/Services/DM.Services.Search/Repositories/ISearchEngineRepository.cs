@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.SearchEngine.Dto;
+using DM.Services.Search.Dto;
 
-namespace DM.Services.SearchEngine.Repositories
+namespace DM.Services.Search.Repositories
 {
     /// <summary>
     /// Searchable entities storage

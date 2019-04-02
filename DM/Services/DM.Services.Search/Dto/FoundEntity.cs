@@ -1,7 +1,7 @@
 using System;
 using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.SearchEngine.Dto
+namespace DM.Services.Search.Dto
 {
     /// <summary>
     /// DTO model for search result

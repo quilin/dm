@@ -6,10 +6,10 @@ using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.Eventing;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.SearchEngine.Repositories;
+using DM.Services.Search.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.SearchEngine.Implementation.Indexers
+namespace DM.Services.Search.Implementation.Indexers
 {
     /// <summary>
     /// Indexer for newly created topics

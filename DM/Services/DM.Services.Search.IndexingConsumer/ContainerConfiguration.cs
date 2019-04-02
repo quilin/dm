@@ -6,12 +6,12 @@ using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
-using DM.Services.SearchEngine.Configuration;
+using DM.Services.Search.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.SearchEngine.Indexing
+namespace DM.Services.Search.IndexingConsumer
 {
     /// <summary>
     /// Configures container for search engine MQ consumer

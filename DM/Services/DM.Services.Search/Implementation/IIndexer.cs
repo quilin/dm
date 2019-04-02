@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.DataAccess.Eventing;
 
-namespace DM.Services.SearchEngine.Implementation
+namespace DM.Services.Search.Implementation
 {
     /// <summary>
     /// Certain indexer for search engine

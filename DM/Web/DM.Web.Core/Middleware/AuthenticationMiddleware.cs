@@ -30,8 +30,10 @@ namespace DM.Web.Core.Middleware
         {
             var identity = await authenticationService.Authenticate(httpContext);
             var currentUserName = identity.User.Role == UserRole.Guest ? "Guest" : identity.User.Login;
-            LogContext.PushProperty("User", currentUserName);
-            await next(httpContext);
+            using (LogContext.PushProperty("User", currentUserName))
+            {
+                await next(httpContext);
+            }
         }
     }
 }
