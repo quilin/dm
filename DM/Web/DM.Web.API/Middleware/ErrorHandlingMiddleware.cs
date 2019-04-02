@@ -3,9 +3,11 @@ using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using DM.Services.Common.Implementation;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -31,9 +33,11 @@ namespace DM.Web.API.Middleware
         /// <summary>
         /// Before request
         /// </summary>
-        /// <param name="httpContext"></param>
+        /// <param name="httpContext">HTTP context</param>
+        /// <param name="logger">Logger</param>
         /// <returns></returns>
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext,
+            ILogger<ErrorHandlingMiddleware> logger)
         {
             try
             {
@@ -49,6 +53,11 @@ namespace DM.Web.API.Middleware
                         statusCode = (int) badRequestException.StatusCode;
                         error = new BadRequestError(badRequestException.Message, badRequestException.ValidationErrors);
                         break;
+                    case IntentionManagerException securityException:
+                        statusCode = (int) securityException.StatusCode;
+                        error = new GeneralError(securityException.Message);
+                        logger.LogWarning(securityException, securityException.Message);
+                        break;
                     case HttpException httpException:
                         statusCode = (int) httpException.StatusCode;
                         error = new GeneralError(httpException.Message);
@@ -60,6 +69,7 @@ namespace DM.Web.API.Middleware
                     default:
                         statusCode = (int) HttpStatusCode.InternalServerError;
                         error = new GeneralError("Server error. Address the administration for technical support.");
+                        logger.LogCritical(e, e.Message);
                         break;
                 }
 

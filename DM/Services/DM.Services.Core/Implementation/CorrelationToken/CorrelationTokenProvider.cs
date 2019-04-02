@@ -1,4 +1,5 @@
 using System;
+using Serilog.Context;
 
 namespace DM.Services.Core.Implementation.CorrelationToken
 {
@@ -13,7 +14,11 @@ namespace DM.Services.Core.Implementation.CorrelationToken
         public Guid Current
         {
             get => token.Value;
-            set => token = new Lazy<Guid>(() => value);
+            set
+            {
+                token = new Lazy<Guid>(() => value);
+                LogContext.PushProperty("CorrelationToken", value);
+            }
         }
     }
 }

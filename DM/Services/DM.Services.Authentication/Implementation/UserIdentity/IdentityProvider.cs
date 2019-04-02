@@ -1,4 +1,6 @@
 using DM.Services.Authentication.Dto;
+using DM.Services.Core.Dto.Enums;
+using Serilog.Context;
 
 namespace DM.Services.Authentication.Implementation.UserIdentity
 {
@@ -7,7 +9,18 @@ namespace DM.Services.Authentication.Implementation.UserIdentity
     /// </summary>
     public class IdentityProvider : IIdentitySetter, IIdentityProvider
     {
+        private IIdentity identity;
+
         /// <inheritdoc cref="IdentityProvider" />
-        public IIdentity Current { get; set; }
+        public IIdentity Current
+        {
+            get => identity;
+            set
+            {
+                identity = value;
+                var userName = value.User.Role == UserRole.Guest ? "Guest" : value.User.Login;
+                LogContext.PushProperty("User", userName);
+            }
+        }
     }
 }

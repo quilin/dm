@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
-using DM.Services.Core.Dto.Enums;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Http;
-using Serilog.Context;
 
 namespace DM.Web.Core.Middleware
 {
@@ -28,12 +26,8 @@ namespace DM.Web.Core.Middleware
         public async Task InvokeAsync(HttpContext httpContext,
             IWebAuthenticationService authenticationService)
         {
-            var identity = await authenticationService.Authenticate(httpContext);
-            var currentUserName = identity.User.Role == UserRole.Guest ? "Guest" : identity.User.Login;
-            using (LogContext.PushProperty("User", currentUserName))
-            {
-                await next(httpContext);
-            }
+            await authenticationService.Authenticate(httpContext);
+            await next(httpContext);
         }
     }
 }

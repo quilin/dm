@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using DM.Services.Core.Implementation;
 using DM.Services.Core.Implementation.CorrelationToken;
 using Microsoft.AspNetCore.Http;
-using Serilog.Context;
 
 namespace DM.Web.Core.Middleware
 {
@@ -38,10 +37,7 @@ namespace DM.Web.Core.Middleware
                     ? token
                     : guidFactory.Create();
             setter.Current = correlationToken;
-            using (LogContext.PushProperty("CorrelationToken", correlationToken.ToString()))
-            {
-                await next(httpContext);
-            }
+            await next(httpContext);
         }
     }
 }
