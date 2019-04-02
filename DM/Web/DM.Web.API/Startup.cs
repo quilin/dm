@@ -60,11 +60,16 @@ namespace DM.Web.API
                 .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<SearchEngineConfiguration>(Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
+                .Configure<SearchEngineConfiguration>(Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind);
+
+            services
+                .AddAutoMapper()
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))))
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))));
+
+            services
                 .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info {Title = "DM.API", Version = "v1"});
@@ -74,10 +79,9 @@ namespace DM.Web.API
                     var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
                     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));
                 })
-                .AddAutoMapper()
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
@@ -88,6 +92,7 @@ namespace DM.Web.API
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
             builder.RegisterModule<SearchEngineModule>();
             builder.Populate(services);
 
@@ -105,6 +110,7 @@ namespace DM.Web.API
                 .UseMiddleware<CorrelationMiddleware>()
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
+                .UseMiddleware<RequestLoggingMiddleware>()
                 .UseSwagger()
                 .UseSwaggerUI(c =>
                 {

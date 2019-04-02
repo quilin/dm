@@ -50,18 +50,20 @@ namespace DM.Web.Core.Authentication
         }
 
         /// <inheritdoc />
-        public async Task Authenticate(LoginCredentials credentials, HttpContext httpContext)
+        public async Task<IIdentity> Authenticate(LoginCredentials credentials, HttpContext httpContext)
         {
             var authenticationResult = await GetAuthenticationResult(credentials);
             await StoreAuthentication(httpContext, authenticationResult);
+            return authenticationResult;
         }
 
         /// <inheritdoc />
-        public async Task Authenticate(HttpContext httpContext)
+        public async Task<IIdentity> Authenticate(HttpContext httpContext)
         {
             var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
             var authenticationResult = await GetAuthenticationResult(tokenCredentials);
             await StoreAuthentication(httpContext, authenticationResult);
+            return authenticationResult;
         }
 
         /// <inheritdoc />
@@ -72,10 +74,11 @@ namespace DM.Web.Core.Authentication
         }
 
         /// <inheritdoc />
-        public async Task LogoutAll(HttpContext httpContext)
+        public async Task<IIdentity> LogoutAll(HttpContext httpContext)
         {
             var authenticationResult = await authenticationService.LogoutAll();
             await StoreAuthentication(httpContext, authenticationResult);
+            return authenticationResult;
         }
     }
 }

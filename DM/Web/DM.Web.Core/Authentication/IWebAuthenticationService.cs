@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
 
@@ -14,7 +15,7 @@ namespace DM.Web.Core.Authentication
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
-        Task Authenticate(HttpContext httpContext);
+        Task<IIdentity> Authenticate(HttpContext httpContext);
 
         /// <summary>
         /// Authenticate via login-password
@@ -22,7 +23,7 @@ namespace DM.Web.Core.Authentication
         /// <param name="credentials">Login credentials</param>
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
-        Task Authenticate(LoginCredentials credentials, HttpContext httpContext);
+        Task<IIdentity> Authenticate(LoginCredentials credentials, HttpContext httpContext);
 
         /// <summary>
         /// Logout as current user
@@ -36,6 +37,6 @@ namespace DM.Web.Core.Authentication
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
-        Task LogoutAll(HttpContext httpContext);
+        Task<IIdentity> LogoutAll(HttpContext httpContext);
     }
 }

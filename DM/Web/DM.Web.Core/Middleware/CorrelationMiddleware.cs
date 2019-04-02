@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Implementation;
 using DM.Services.Core.Implementation.CorrelationToken;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 
 namespace DM.Web.Core.Middleware
 {
@@ -32,11 +33,12 @@ namespace DM.Web.Core.Middleware
             ICorrelationTokenSetter setter,
             IGuidFactory guidFactory)
         {
-            setter.Current =
-                httpContext.Request.Headers.TryGetValue(CorrelationTokenHeader, out var tokens) &&
+            var correlationToken = httpContext.Request.Headers.TryGetValue(CorrelationTokenHeader, out var tokens) &&
                 Guid.TryParse(tokens.FirstOrDefault(), out var token)
                     ? token
                     : guidFactory.Create();
+            setter.Current = correlationToken;
+            LogContext.PushProperty("CorrelationId", correlationToken);
             return next(httpContext);
         }
     }
