@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
@@ -19,6 +20,7 @@ namespace DM.Web.API.Middleware
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
+
         private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -35,9 +37,11 @@ namespace DM.Web.API.Middleware
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="logger">Logger</param>
+        /// <param name="identitySetter">Identity setter for Serilog issue fix</param>
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext httpContext,
-            ILogger<ErrorHandlingMiddleware> logger)
+            ILogger<ErrorHandlingMiddleware> logger,
+            IIdentitySetter identitySetter)
         {
             try
             {
@@ -45,6 +49,7 @@ namespace DM.Web.API.Middleware
             }
             catch (Exception e)
             {
+                identitySetter.Refresh();
                 int statusCode;
                 GeneralError error;
                 switch (e)

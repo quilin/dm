@@ -16,8 +16,8 @@ namespace DM.Services.Core.Implementation.CorrelationToken
             get => token.Value;
             set
             {
-                token = new Lazy<Guid>(() => value);
                 LogContext.PushProperty("CorrelationToken", value);
+                token = new Lazy<Guid>(() => value);
             }
         }
     }

@@ -119,7 +119,6 @@ namespace DM.Web.API
                 .UseMiddleware<CorrelationMiddleware>()
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
-                .UseMiddleware<RequestLoggingMiddleware>()
                 .UseSwagger()
                 .UseSwaggerUI(c =>
                 {

@@ -1,5 +1,4 @@
 using DM.Services.Authentication.Dto;
-using DM.Services.Core.Dto.Enums;
 using Serilog.Context;
 
 namespace DM.Services.Authentication.Implementation.UserIdentity
@@ -18,9 +17,12 @@ namespace DM.Services.Authentication.Implementation.UserIdentity
             set
             {
                 identity = value;
-                var userName = value.User.Role == UserRole.Guest ? "Guest" : value.User.Login;
+                var userName = identity.User.IsAuthenticated ? identity.User.Login : "Guest";
                 LogContext.PushProperty("User", userName);
             }
         }
+
+        /// <inheritdoc />
+        public void Refresh() => Current = Current;
     }
 }

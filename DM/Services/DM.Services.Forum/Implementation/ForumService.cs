@@ -132,8 +132,13 @@ namespace DM.Services.Forum.Implementation
         {
             var forum = await FindForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+
             var topic = await topicRepository.Create(topicFactory.Create(forum.Id, createTopic));
-            await invokedEventPublisher.Publish(EventType.NewTopic, topic.Id);
+
+            await Task.WhenAll(
+                invokedEventPublisher.Publish(EventType.NewTopic, topic.Id),
+                unreadCountersRepository.Create(topic.Id, forum.Id, UnreadEntryType.Message));
+
             return topic;
         }
 
