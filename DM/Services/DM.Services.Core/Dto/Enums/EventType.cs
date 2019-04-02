@@ -1,4 +1,6 @@
-namespace DM.Services.DataAccess.Eventing
+using DM.Services.Core.Extensions;
+
+namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
     /// Message queue event type
@@ -13,6 +15,7 @@ namespace DM.Services.DataAccess.Eventing
         /// <summary>
         /// New topic has been created
         /// </summary>
+        [EventRoutingKey("new.topic")]
         NewTopic = 1
     }
 }
