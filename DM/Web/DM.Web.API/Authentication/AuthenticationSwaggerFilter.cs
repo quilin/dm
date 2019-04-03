@@ -13,8 +13,8 @@ namespace DM.Web.API.Authentication
         public void Apply(Operation operation, OperationFilterContext context)
         {
             operation.Produces = new List<string> {MediaTypeNames.Application.Json};
-            if (context.MethodInfo.DeclaringType == typeof(AccountController) &&
-                context.MethodInfo.Name == nameof(AccountController.Login))
+            if (context.MethodInfo.DeclaringType == typeof(LoginController) &&
+                context.MethodInfo.Name == nameof(LoginController.Login))
             {
                 return;
             }

@@ -69,5 +69,12 @@ namespace DM.Services.Authentication.Repositories
         /// <param name="userId">Authenticated user id</param>
         /// <returns></returns>
         Task RemoveSessions(Guid userId);
+
+        /// <summary>
+        /// Create new user
+        /// </summary>
+        /// <param name="user">User DAL</param>
+        /// <returns></returns>
+        Task CreateUserWithRegistrationToken(User user);
     }
 }

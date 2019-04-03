@@ -15,14 +15,14 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class AccountApiService : IAccountApiService
+    public class LoginApiService : ILoginApiService
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public AccountApiService(
+        public LoginApiService(
             IWebAuthenticationService authenticationService,
             IIdentityProvider identityProvider,
             IMapper mapper)

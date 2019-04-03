@@ -9,7 +9,7 @@ namespace DM.Web.API.Services.Users
     /// <summary>
     /// API service for user authentication
     /// </summary>
-    public interface IAccountApiService
+    public interface ILoginApiService
     {
         /// <summary>
         /// Login using login-password tuple

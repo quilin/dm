@@ -13,6 +13,12 @@ namespace DM.Services.Core.Dto.Enums
         Unknown = 0,
 
         /// <summary>
+        /// New user has been created
+        /// </summary>
+        [EventRoutingKey("new.user")]
+        NewUser = 1,
+
+        /// <summary>
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("new.topic")]

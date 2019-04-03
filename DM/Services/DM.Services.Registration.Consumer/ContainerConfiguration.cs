@@ -6,12 +6,11 @@ using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
-using DM.Services.Search.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.Search.IndexingConsumer
+namespace DM.Services.Registration.Consumer
 {
     /// <summary>
     /// Configures container for search engine MQ consumer
@@ -33,17 +32,16 @@ namespace DM.Services.Search.IndexingConsumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<EmailConfiguration>(
+                    configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<MessageConsumeConfiguration>(
                     configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
-                .Configure<SearchEngineConfiguration>(
-                    configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
 
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<MessageQueuingModule>();
-            builder.RegisterModule<SearchEngineModule>();
             builder.RegisterAssemblyTypes(
                     Assembly.GetExecutingAssembly(),
                     Assembly.Load("DM.Services.Core"))

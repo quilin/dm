@@ -65,9 +65,8 @@ namespace DM.Services.MessageQueuing.Consume
                         break;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                var x = e.Message;
                 channel.BasicNack(eventArgs.DeliveryTag, false, false);
             }
         }

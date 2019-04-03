@@ -1,4 +1,5 @@
 using AutoMapper;
+using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
 using DM.Web.Core.Extensions.EnumExtensions;
 
@@ -21,6 +22,8 @@ namespace DM.Web.API.Dto.Users
                     Quality = u.QualityRating,
                     Quantity = u.QuantityRating
                 }));
+
+            CreateMap<Registration, UserRegistration>();
         }
     }
 }
