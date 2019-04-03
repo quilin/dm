@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Text;
@@ -7,6 +8,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -56,7 +58,7 @@ namespace DM.Web.API.Middleware
                 {
                     case HttpBadRequestException badRequestException:
                         statusCode = (int) badRequestException.StatusCode;
-                        error = new BadRequestError(badRequestException.Message, badRequestException.ValidationErrors);
+                        error = new BadRequestError(badRequestException);
                         break;
                     case IntentionManagerException securityException:
                         statusCode = (int) securityException.StatusCode;
@@ -70,6 +72,11 @@ namespace DM.Web.API.Middleware
                     case NotImplementedException notImplementedException:
                         statusCode = (int) HttpStatusCode.NotImplemented;
                         error = new GeneralError(notImplementedException.Message);
+                        break;
+                    case ValidationException validationException:
+                        statusCode = (int) HttpStatusCode.BadRequest;
+                        error = new BadRequestError("Validation failed",
+                            validationException.Errors.ToDictionary(er => er.PropertyName, er => er.ErrorMessage));
                         break;
                     default:
                         statusCode = (int) HttpStatusCode.InternalServerError;

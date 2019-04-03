@@ -25,10 +25,15 @@ namespace DM.Services.Forum.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy accessPolicy)
+        public async Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
         {
-            return await dmDbContext.Fora
-                .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
+            var query = dmDbContext.Fora.AsQueryable();
+            if (accessPolicy.HasValue)
+            {
+                query = query.Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne);
+            }
+
+            return await query
                 .OrderBy(f => f.Order)
                 .ProjectTo<Dto.Forum>(mapper.ConfigurationProvider)
                 .ToArrayAsync();

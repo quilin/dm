@@ -15,6 +15,7 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Factories;
 using DM.Services.Forum.Repositories;
+using FluentValidation;
 using Microsoft.Extensions.Caching.Memory;
 using Comment = DM.Services.Common.Dto.Comment;
 
@@ -24,6 +25,8 @@ namespace DM.Services.Forum.Implementation
     public class ForumService : IForumService
     {
         private readonly IIdentity identity;
+        private readonly IValidator<CreateTopic> createTopicValidator;
+        private readonly IValidator<UpdateTopic> updateTopicValidator;
         private readonly IAccessPolicyConverter accessPolicyConverter;
         private readonly IIntentionManager intentionManager;
         private readonly ITopicFactory topicFactory;
@@ -37,6 +40,8 @@ namespace DM.Services.Forum.Implementation
 
         /// <inheritdoc />
         public ForumService(
+            IValidator<CreateTopic> createTopicValidator,
+            IValidator<UpdateTopic> updateTopicValidator,
             IIdentityProvider identityProvider,
             IAccessPolicyConverter accessPolicyConverter,
             IIntentionManager intentionManager,
@@ -50,6 +55,8 @@ namespace DM.Services.Forum.Implementation
             IInvokedEventPublisher invokedEventPublisher)
         {
             identity = identityProvider.Current;
+            this.createTopicValidator = createTopicValidator;
+            this.updateTopicValidator = updateTopicValidator;
             this.accessPolicyConverter = accessPolicyConverter;
             this.intentionManager = intentionManager;
             this.topicFactory = topicFactory;
@@ -130,6 +137,8 @@ namespace DM.Services.Forum.Implementation
         /// <inheritdoc />
         public async Task<Topic> CreateTopic(CreateTopic createTopic)
         {
+            await createTopicValidator.ValidateAndThrowAsync(createTopic);
+
             var forum = await FindForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
 
@@ -138,6 +147,44 @@ namespace DM.Services.Forum.Implementation
             await Task.WhenAll(
                 invokedEventPublisher.Publish(EventType.NewTopic, topic.Id),
                 unreadCountersRepository.Create(topic.Id, forum.Id, UnreadEntryType.Message));
+
+            return topic;
+        }
+
+        /// <inheritdoc />
+        public async Task<Topic> UpdateTopic(UpdateTopic updateTopic)
+        {
+            await updateTopicValidator.ValidateAndThrowAsync(updateTopic);
+
+            var oldTopic = await GetTopic(updateTopic.TopicId);
+
+            var topicMovesToAnotherForum = !string.IsNullOrEmpty(updateTopic.ForumTitle) &&
+                                           oldTopic.Forum.Title != updateTopic.ForumTitle;
+            var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
+            var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
+            var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
+
+            var topicToUpdate = await topicRepository.Get(oldTopic.Id);
+            if (hasAdministrativeChanges)
+            {
+                await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopic, oldTopic.Forum);
+                if (topicMovesToAnotherForum)
+                {
+                    var forum = (await forumRepository.SelectFora(null))
+                        .First(f => f.Title == updateTopic.ForumTitle);
+                    await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+                    topicToUpdate.ForumId = forum.Id;
+                }
+
+                topicToUpdate.Closed = updateTopic.Closed;
+                topicToUpdate.Attached = updateTopic.Attached;
+            }
+
+            topicToUpdate.Title = updateTopic.Title;
+            topicToUpdate.Text = updateTopic.Text;
+
+            var topic = await topicRepository.Update(topicToUpdate);
+            await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
 
             return topic;
         }

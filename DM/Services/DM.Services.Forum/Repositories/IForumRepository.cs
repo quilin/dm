@@ -14,6 +14,6 @@ namespace DM.Services.Forum.Repositories
         /// </summary>
         /// <param name="accessPolicy">Forum access policy</param>
         /// <returns></returns>
-        Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy accessPolicy);
+        Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy? accessPolicy);
     }
 }

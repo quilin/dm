@@ -57,9 +57,16 @@ namespace DM.Services.Forum.Implementation
         /// <summary>
         /// Create new topic
         /// </summary>
-        /// <param name="createTopic"></param>
+        /// <param name="createTopic">Create topic model</param>
         /// <returns></returns>
         Task<Topic> CreateTopic(CreateTopic createTopic);
+
+        /// <summary>
+        /// Update existing topic
+        /// </summary>
+        /// <param name="updateTopic">Update topic model</param>
+        /// <returns></returns>
+        Task<Topic> UpdateTopic(UpdateTopic updateTopic);
 
         /// <summary>
         /// Get list of topic comments by topic id

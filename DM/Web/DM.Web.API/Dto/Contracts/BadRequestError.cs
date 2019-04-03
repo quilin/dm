@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DM.Services.Core.Exceptions;
 
 namespace DM.Web.API.Dto.Contracts
 {
@@ -15,5 +16,9 @@ namespace DM.Web.API.Dto.Contracts
         /// <inheritdoc />
         public BadRequestError(string message, IDictionary<string, string> invalidProperties)
             : base(message) => InvalidProperties = invalidProperties;
+
+        /// <inheritdoc />
+        public BadRequestError(HttpBadRequestException exception)
+            : base(exception.Message) => InvalidProperties = exception.ValidationErrors;
     }
 }

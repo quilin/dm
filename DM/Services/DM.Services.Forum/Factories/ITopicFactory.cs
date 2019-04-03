@@ -10,9 +10,9 @@ namespace DM.Services.Forum.Factories
     public interface ITopicFactory
     {
         /// <summary>
-        /// Create topic DAL from forum Id and topic DTO
+        /// Create topic DAL for topic creation
         /// </summary>
-        /// <param name="forumId">Forum Id</param>
+        /// <param name="forumId">Forum identifier</param>
         /// <param name="createTopic">Topic DTO</param>
         /// <returns></returns>
         ForumTopic Create(Guid forumId, CreateTopic createTopic);

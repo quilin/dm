@@ -53,7 +53,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> PutTopic(Guid id, [FromBody] Topic topic) => throw new NotImplementedException();
+        public Task<Envelope<Topic>> PutTopic(Guid id, [FromBody] Topic topic) => topicApiService.Update(id, topic);
 
         /// <summary>
         /// Delete certain topic

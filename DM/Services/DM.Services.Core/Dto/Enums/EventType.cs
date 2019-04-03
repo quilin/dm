@@ -22,6 +22,12 @@ namespace DM.Services.Core.Dto.Enums
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("new.topic")]
-        NewTopic = 1
+        NewTopic = 2,
+        
+        /// <summary>
+        /// Topic has been updated
+        /// </summary>
+        [EventRoutingKey("changed.topic")]
+        ChangedTopic = 3,
     }
 }

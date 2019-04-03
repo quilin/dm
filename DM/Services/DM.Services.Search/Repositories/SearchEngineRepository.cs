@@ -33,6 +33,8 @@ namespace DM.Services.Search.Repositories
             await client.IndexManyAsync(entities);
         }
 
+        private static readonly Fuzziness SearchFuzziness = Fuzziness.EditDistance(1);
+
         /// <inheritdoc />
         public async Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(string query, int skip, int take,
             IEnumerable<UserRole> roles, Guid userId)
@@ -40,27 +42,40 @@ namespace DM.Services.Search.Repositories
             var searchResponse = await client.SearchAsync<SearchEntity>(s => s
                 .Source(sf => sf.Excludes(e => e.Fields(f => f.AuthorizedRoles, f => f.AuthorizedUsers)))
                 .Query(q =>
-                    q.Match(mt => mt.Field(f => f.Text)
-                        .Query(query)
-                        .Fuzziness(Fuzziness.EditDistance(2))) &&
+                    (q.Match(mt => mt.Field(f => f.Text)
+                         .Query(query)
+                         .Fuzziness(SearchFuzziness)
+                         .Boost(5)) ||
+                     q.Match(mt => mt.Field(f => f.Title)
+                         .Query(query)
+                         .Fuzziness(SearchFuzziness))) &&
                     (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles).Boost(0)) ||
-                        q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0))))
+                     q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0))))
                 .Sort(so => so.Descending(SortSpecialField.Score))
                 .Highlight(h => h
-                    .Fields(f => f
-                        .Field(ff => ff.Text)
-                        .PreTags("<mark>")
-                        .PostTags("</mark>")))
+                    .Fields(
+                        f => f
+                            .Field(ff => ff.Title)
+                            .PreTags("<mark>")
+                            .PostTags("</mark>"),
+                        f => f
+                            .Field(ff => ff.Text)
+                            .PreTags("<mark>")
+                            .PostTags("</mark>")))
                 .From(skip)
                 .Size(take));
 
-            return (searchResponse.Hits.Zip(searchResponse.Documents,
-                    (hit, doc) => (Hit: hit, Document: doc))
-                .Select(p => new FoundEntity
+            return (searchResponse.Hits
+                .Select(h => new FoundEntity
                 {
-                    Id = p.Document.Id,
-                    Type = p.Document.EntityType,
-                    FoundText = p.Hit.Highlights.First().Value.Highlights.First()
+                    Id = h.Source.Id,
+                    Type = h.Source.EntityType,
+                    FoundTitle = h.Highlights.TryGetValue(nameof(SearchEntity.Title).ToLower(), out var titleHit)
+                        ? titleHit.Highlights.First()
+                        : h.Source.Title,
+                    FoundText = h.Highlights.TryGetValue(nameof(SearchEntity.Text).ToLower(), out var textHit)
+                        ? textHit.Highlights.First()
+                        : h.Source.Text
                 }), (int) searchResponse.Total);
         }
 

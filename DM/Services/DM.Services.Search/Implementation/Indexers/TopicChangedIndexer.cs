@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Search.Implementation.Indexers
 {
     /// <summary>
-    /// Indexer for newly created topics
+    /// Indexer for modified topic
     /// </summary>
-    public class NewTopicIndexer : BaseIndexer
+    public class TopicChangedIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;
         private readonly ISearchEngineRepository repository;
 
         /// <inheritdoc />
-        public NewTopicIndexer(
+        public TopicChangedIndexer(
             DmDbContext dbContext,
             IBbParserProvider parserProvider,
             ISearchEngineRepository repository)
@@ -32,7 +32,7 @@ namespace DM.Services.Search.Implementation.Indexers
         }
         
         /// <inheritdoc />
-        protected override EventType EventType => EventType.NewTopic;
+        protected override EventType EventType => EventType.ChangedTopic;
 
         /// <inheritdoc />
         public override async Task Index(InvokedEvent invokedEvent)

@@ -19,6 +19,11 @@ namespace DM.Services.Search.Dto
         public SearchEntityType Type { get; set; }
 
         /// <summary>
+        /// Title with highlights
+        /// </summary>
+        public string FoundTitle { get; set; }
+
+        /// <summary>
         /// Text with highlights
         /// </summary>
         public string FoundText { get; set; }

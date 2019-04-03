@@ -53,6 +53,15 @@ namespace DM.Web.API.Services.Fora
         }
 
         /// <inheritdoc />
+        public async Task<Envelope<Topic>> Update(Guid topicId, Topic topic)
+        {
+            var updateTopic = mapper.Map<UpdateTopic>(topic);
+            updateTopic.TopicId = topicId;
+            var updatedTopic = await forumService.UpdateTopic(updateTopic);
+            return new Envelope<Topic>(mapper.Map<Topic>(updatedTopic));
+        }
+
+        /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
         {
             var (comments, paging) = await forumService.GetCommentsList(topicId, entityNumber);

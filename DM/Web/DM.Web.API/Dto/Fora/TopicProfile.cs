@@ -22,6 +22,11 @@ namespace DM.Web.API.Dto.Fora
 
             CreateMap<Topic, CreateTopic>()
                 .ForMember(d => d.Text, s => s.MapFrom(t => t.Description));
+
+            CreateMap<Topic, UpdateTopic>()
+                .ForMember(d => d.Text, s => s.MapFrom(t => t.Description))
+                .ForMember(d => d.TopicId, s => s.MapFrom(t => t.Id))
+                .ForMember(d => d.ForumTitle, s => s.MapFrom(t => t.Forum.Id));
         }
     }
 }

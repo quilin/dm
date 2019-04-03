@@ -20,6 +20,11 @@ namespace DM.Services.DataAccess.SearchEngine
         public SearchEntityType EntityType { get; set; }
 
         /// <summary>
+        /// Title to index
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
         /// Text to index
         /// </summary>
         public string Text { get; set; }

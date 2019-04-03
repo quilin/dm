@@ -16,14 +16,14 @@ namespace DM.Services.Forum.Repositories
         /// <summary>
         /// Get number of forum topics
         /// </summary>
-        /// <param name="forumId">Forum id</param>
+        /// <param name="forumId">Forum identifier</param>
         /// <returns></returns>
         Task<int> Count(Guid forumId);
 
         /// <summary>
         /// Get list of forum topics
         /// </summary>
-        /// <param name="forumId">Forum id</param>
+        /// <param name="forumId">Forum identifier</param>
         /// <param name="pagingData">Paging data</param>
         /// <param name="attached">Select attached/not attached topics exclusively</param>
         /// <returns></returns>
@@ -32,10 +32,17 @@ namespace DM.Services.Forum.Repositories
         /// <summary>
         /// Get topic
         /// </summary>
-        /// <param name="topicId">Topic id</param>
+        /// <param name="topicId">Topic identifier</param>
         /// <param name="accessPolicy">Forum access policy</param>
         /// <returns></returns>
         Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy);
+
+        /// <summary>
+        /// Get topic DAL model for modification
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns>Topic DAL model</returns>
+        Task<ForumTopic> Get(Guid topicId);
 
         /// <summary>
         /// Create new topic
@@ -43,5 +50,12 @@ namespace DM.Services.Forum.Repositories
         /// <param name="forumTopic">DAL model</param>
         /// <returns>DTO model of created topic</returns>
         Task<Topic> Create(ForumTopic forumTopic);
+
+        /// <summary>
+        /// Update existing topic
+        /// </summary>
+        /// <param name="forumTopic">DAL model</param>
+        /// <returns>DTO model of updated topic</returns>
+        Task<Topic> Update(ForumTopic forumTopic);
     }
 }

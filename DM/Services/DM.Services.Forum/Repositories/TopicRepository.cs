@@ -69,10 +69,23 @@ namespace DM.Services.Forum.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public Task<ForumTopic> Get(Guid topicId) =>
+            dmDbContext.ForumTopics.FirstAsync(t => t.ForumTopicId == topicId);
+
         /// <inheritdoc />
         public async Task<Topic> Create(ForumTopic forumTopic)
         {
             dmDbContext.ForumTopics.Add(forumTopic);
+            await dmDbContext.SaveChangesAsync();
+            return await dmDbContext.ForumTopics
+                .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
+                .ProjectTo<Topic>(mapper.ConfigurationProvider)
+                .FirstAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<Topic> Update(ForumTopic forumTopic)
+        {
             await dmDbContext.SaveChangesAsync();
             return await dmDbContext.ForumTopics
                 .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
