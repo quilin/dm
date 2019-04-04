@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Implementation;
@@ -19,7 +20,8 @@ namespace DM.Services.Forum.Authorization
                 case TopicIntention.Edit when user.IsAuthenticated:
                 case TopicIntention.Delete when user.IsAuthenticated:
                     return Task.FromResult(target.Author.UserId == user.UserId ||
-                                           user.Role.HasFlag(UserRole.Administrator | UserRole.SeniorModerator));
+                                           target.Forum.ModeratorIds.Contains(user.UserId) ||
+                                           user.Role.HasFlag(UserRole.Administrator));
                 default:
                     return Task.FromResult(false);
             }
