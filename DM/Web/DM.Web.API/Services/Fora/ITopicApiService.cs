@@ -44,6 +44,13 @@ namespace DM.Web.API.Services.Fora
         Task<Envelope<Topic>> Update(Guid topicId, Topic topic);
 
         /// <summary>
+        /// Removes topic
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns></returns>
+        Task Delete(Guid topicId);
+
+        /// <summary>
         /// Get topics commentaries
         /// </summary>
         /// <param name="topicId">Topic identifier</param>

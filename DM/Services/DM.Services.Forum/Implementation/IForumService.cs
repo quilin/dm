@@ -69,11 +69,32 @@ namespace DM.Services.Forum.Implementation
         Task<Topic> UpdateTopic(UpdateTopic updateTopic);
 
         /// <summary>
+        /// Remove existing topic
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns></returns>
+        Task RemoveTopic(Guid topicId);
+
+        /// <summary>
         /// Get list of topic comments by topic id
         /// </summary>
-        /// <param name="topicId">Topic id</param>
+        /// <param name="topicId">Topic identifier</param>
         /// <param name="entityNumber">Number of entity that page must contain</param>
         /// <returns>Pair of comments list and paging data</returns>
         Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(Guid topicId, int entityNumber);
+
+        /// <summary>
+        /// Create new like from current user to selected topic
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns>User who liked the topic</returns>
+        Task<GeneralUser> LikeTopic(Guid topicId);
+
+        /// <summary>
+        /// Remove existing like from current user to selected topic
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns></returns>
+        Task DislikeTopic(Guid topicId);
     }
 }

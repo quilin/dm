@@ -17,12 +17,15 @@ namespace DM.Web.API.Controllers.v1.Fora
     public class TopicController : Controller
     {
         private readonly ITopicApiService topicApiService;
+        private readonly ILikeApiService likeApiService;
 
         /// <inheritdoc />
         public TopicController(
-            ITopicApiService topicApiService)
+            ITopicApiService topicApiService,
+            ILikeApiService likeApiService)
         {
             this.topicApiService = topicApiService;
+            this.likeApiService = likeApiService;
         }
 
         /// <summary>
@@ -67,9 +70,9 @@ namespace DM.Web.API.Controllers.v1.Fora
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
-        [ProducesResponseType(typeof(BadRequestError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task DeleteTopic(Guid id) => throw new NotImplementedException();
+        public Task DeleteTopic(Guid id) => topicApiService.Delete(id);
 
         /// <summary>
         /// Post new like
@@ -87,7 +90,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostLike(Guid id) => throw new NotImplementedException();
+        public Task<Envelope<User>> PostLike(Guid id) => likeApiService.LikeTopic(id);
 
         /// <summary>
         /// Delete like
@@ -105,7 +108,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteLike(Guid id) => throw new NotImplementedException();
+        public Task DeleteLike(Guid id) => likeApiService.DislikeTopic(id);
 
         /// <summary>
         /// Get list of comments

@@ -31,10 +31,12 @@ namespace DM.Services.Forum.Implementation
         private readonly IAccessPolicyConverter accessPolicyConverter;
         private readonly IIntentionManager intentionManager;
         private readonly ITopicFactory topicFactory;
+        private readonly ILikeFactory likeFactory;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IForumRepository forumRepository;
         private readonly ITopicRepository topicRepository;
         private readonly IModeratorRepository moderatorRepository;
+        private readonly ILikeRepository likeRepository;
         private readonly ICommentRepository commentRepository;
         private readonly IMemoryCache memoryCache;
         private readonly IInvokedEventPublisher invokedEventPublisher;
@@ -47,10 +49,12 @@ namespace DM.Services.Forum.Implementation
             IAccessPolicyConverter accessPolicyConverter,
             IIntentionManager intentionManager,
             ITopicFactory topicFactory,
+            ILikeFactory likeFactory,
             IUnreadCountersRepository unreadCountersRepository,
             IForumRepository forumRepository,
             ITopicRepository topicRepository,
             IModeratorRepository moderatorRepository,
+            ILikeRepository likeRepository,
             ICommentRepository commentRepository,
             IMemoryCache memoryCache,
             IInvokedEventPublisher invokedEventPublisher)
@@ -61,10 +65,12 @@ namespace DM.Services.Forum.Implementation
             this.accessPolicyConverter = accessPolicyConverter;
             this.intentionManager = intentionManager;
             this.topicFactory = topicFactory;
+            this.likeFactory = likeFactory;
             this.unreadCountersRepository = unreadCountersRepository;
             this.forumRepository = forumRepository;
             this.topicRepository = topicRepository;
             this.moderatorRepository = moderatorRepository;
+            this.likeRepository = likeRepository;
             this.commentRepository = commentRepository;
             this.memoryCache = memoryCache;
             this.invokedEventPublisher = invokedEventPublisher;
@@ -169,7 +175,7 @@ namespace DM.Services.Forum.Implementation
             var topicToUpdate = await topicRepository.Get(oldTopic.Id);
             if (hasAdministrativeChanges)
             {
-                await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopic, oldTopic.Forum);
+                await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
                 if (topicMovesToAnotherForum)
                 {
                     var forum = (await forumRepository.SelectFora(null))
@@ -196,6 +202,18 @@ namespace DM.Services.Forum.Implementation
         }
 
         /// <inheritdoc />
+        public async Task RemoveTopic(Guid topicId)
+        {
+            var topic = await GetTopic(topicId);
+            await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
+
+            var forumTopic = await topicRepository.Get(topicId);
+            forumTopic.IsRemoved = true;
+            await topicRepository.Update(forumTopic);
+            await invokedEventPublisher.Publish(EventType.DeletedTopic, topicId);
+        }
+
+        /// <inheritdoc />
         public async Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(
             Guid topicId, int entityNumber)
         {
@@ -212,6 +230,36 @@ namespace DM.Services.Forum.Implementation
             }
 
             return (comments, pagingData);
+        }
+
+        /// <inheritdoc />
+        public async Task<GeneralUser> LikeTopic(Guid topicId)
+        {
+            var topic = await GetTopic(topicId);
+            await intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
+
+            var currentUser = identity.User;
+            if (topic.Likes.Any(l => l.UserId == currentUser.UserId))
+            {
+                throw new HttpException(HttpStatusCode.Conflict, "User already liked this topic!");
+            }
+
+            var like = likeFactory.Create(topicId, currentUser.UserId);
+            await likeRepository.Add(like);
+            return currentUser;
+        }
+
+        /// <inheritdoc />
+        public async Task DislikeTopic(Guid topicId)
+        {
+            var topic = await GetTopic(topicId);
+            var currentUser = identity.User;
+            if (topic.Likes.All(l => l.UserId != currentUser.UserId))
+            {
+                throw new HttpException(HttpStatusCode.Conflict, "User never liked this topic in the first place!");
+            }
+
+            await likeRepository.Delete(topicId, currentUser.UserId);
         }
 
         private async Task FillCounters<TEntity>(TEntity[] entities, Func<TEntity, Guid> getId,

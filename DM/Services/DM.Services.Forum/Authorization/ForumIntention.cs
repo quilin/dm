@@ -13,6 +13,6 @@ namespace DM.Services.Forum.Authorization
         /// <summary>
         /// Close, attach and move any topic of the forum
         /// </summary>
-        AdministrateTopic = 1
+        AdministrateTopics = 1
     }
 }

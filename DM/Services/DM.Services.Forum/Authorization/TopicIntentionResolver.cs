@@ -18,10 +18,14 @@ namespace DM.Services.Forum.Authorization
                 case TopicIntention.CreateComment when user.IsAuthenticated:
                     return Task.FromResult(!target.Closed);
                 case TopicIntention.Edit when user.IsAuthenticated:
-                case TopicIntention.Delete when user.IsAuthenticated:
                     return Task.FromResult(target.Author.UserId == user.UserId ||
                                            target.Forum.ModeratorIds.Contains(user.UserId) ||
                                            user.Role.HasFlag(UserRole.Administrator));
+                case TopicIntention.Delete when user.IsAuthenticated:
+                    return Task.FromResult(target.Forum.ModeratorIds.Contains(user.UserId) ||
+                                           user.Role.HasFlag(UserRole.Administrator));
+                case TopicIntention.Like when user.IsAuthenticated:
+                    return Task.FromResult(target.Author.UserId != user.UserId);
                 default:
                     return Task.FromResult(false);
             }

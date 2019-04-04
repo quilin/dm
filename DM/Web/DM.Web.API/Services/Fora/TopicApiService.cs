@@ -62,6 +62,9 @@ namespace DM.Web.API.Services.Fora
         }
 
         /// <inheritdoc />
+        public Task Delete(Guid topicId) => forumService.RemoveTopic(topicId);
+
+        /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
         {
             var (comments, paging) = await forumService.GetCommentsList(topicId, entityNumber);

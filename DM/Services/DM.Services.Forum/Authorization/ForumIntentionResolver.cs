@@ -27,7 +27,7 @@ namespace DM.Services.Forum.Authorization
                 case ForumIntention.CreateTopic when user.IsAuthenticated:
                     var userPolicy = accessPolicyConverter.Convert(user.Role);
                     return Task.FromResult((target.CreateTopicPolicy & userPolicy) != ForumAccessPolicy.NoOne);
-                case ForumIntention.AdministrateTopic when user.IsAuthenticated:
+                case ForumIntention.AdministrateTopics when user.IsAuthenticated:
                     return Task.FromResult(user.Role.HasFlag(UserRole.Administrator) ||
                                            target.ModeratorIds.Contains(user.UserId));
                 default:

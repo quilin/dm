@@ -20,6 +20,13 @@ namespace DM.Services.Search.Repositories
         Task Index(params SearchEntity[] entities);
 
         /// <summary>
+        /// Delete indexed document
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <returns></returns>
+        Task Delete(Guid entityId);
+
+        /// <summary>
         /// Search entities in index by text
         /// </summary>
         /// <param name="query">Search query</param>

@@ -33,6 +33,12 @@ namespace DM.Services.Search.Repositories
             await client.IndexManyAsync(entities);
         }
 
+        /// <inheritdoc />
+        public Task Delete(Guid entityId)
+        {
+            return client.DeleteAsync<SearchEntity>(entityId);
+        }
+
         private static readonly Fuzziness SearchFuzziness = Fuzziness.EditDistance(1);
 
         /// <inheritdoc />

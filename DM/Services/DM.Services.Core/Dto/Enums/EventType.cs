@@ -29,5 +29,11 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("changed.topic")]
         ChangedTopic = 3,
+
+        /// <summary>
+        /// Topic has been deleted
+        /// </summary>
+        [EventRoutingKey("deleted.topic")]
+        DeletedTopic = 4
     }
 }

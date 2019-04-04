@@ -69,6 +69,7 @@ namespace DM.Services.Forum.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        /// <inheritdoc />
         public Task<ForumTopic> Get(Guid topicId) =>
             dmDbContext.ForumTopics.FirstAsync(t => t.ForumTopicId == topicId);
 
