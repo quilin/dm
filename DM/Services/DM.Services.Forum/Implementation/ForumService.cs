@@ -164,6 +164,7 @@ namespace DM.Services.Forum.Implementation
             var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
             var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
             var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
+            var textChanges = updateTopic.Title != oldTopic.Title || updateTopic.Text != oldTopic.Text;
 
             var topicToUpdate = await topicRepository.Get(oldTopic.Id);
             if (hasAdministrativeChanges)
@@ -181,8 +182,12 @@ namespace DM.Services.Forum.Implementation
                 topicToUpdate.Attached = updateTopic.Attached;
             }
 
-            topicToUpdate.Title = updateTopic.Title;
-            topicToUpdate.Text = updateTopic.Text;
+            if (textChanges)
+            {
+                await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
+                topicToUpdate.Title = updateTopic.Title;
+                topicToUpdate.Text = updateTopic.Text;
+            }
 
             var topic = await topicRepository.Update(topicToUpdate);
             await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
