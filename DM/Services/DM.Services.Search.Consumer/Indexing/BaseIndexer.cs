@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.Eventing;
+using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Implementation
+namespace DM.Services.Search.Consumer.Indexing
 {
     /// <inheritdoc />
     public abstract class BaseIndexer : IIndexer

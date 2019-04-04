@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
+using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
@@ -12,7 +13,7 @@ namespace DM.Services.Core.Emails
     /// <inheritdoc />
     public class MailSender : IMailSender
     {
-        private readonly Lazy<SmtpClient> client;
+        private readonly Lazy<IMailTransport> client;
         private readonly EmailConfiguration configuration;
 
         /// <inheritdoc />
@@ -20,7 +21,7 @@ namespace DM.Services.Core.Emails
             IOptions<EmailConfiguration> emailOptions)
         {
             configuration = emailOptions.Value;
-            client = new Lazy<SmtpClient>(() =>
+            client = new Lazy<IMailTransport>(() =>
             {
                 var smtpClient = new SmtpClient();
                 smtpClient.Connect(configuration.ServerHost, configuration.ServerPort,

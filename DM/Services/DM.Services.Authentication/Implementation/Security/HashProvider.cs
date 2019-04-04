@@ -18,16 +18,9 @@ namespace DM.Services.Authentication.Implementation.Security
 
             var buffer = plainTextBytes.Concat(saltBytes).ToArray();
 
-            try
+            lock (sha256)
             {
-                lock (sha256)
-                {
-                    return sha256.Value.ComputeHash(buffer);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new HashProviderException(buffer, e);
+                return sha256.Value.ComputeHash(buffer);
             }
         }
     }

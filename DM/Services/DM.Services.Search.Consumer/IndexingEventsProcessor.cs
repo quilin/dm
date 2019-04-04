@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
-using DM.Services.Search.Implementation;
+using DM.Services.Search.Consumer.Indexing;
 
-namespace DM.Services.Search.IndexingConsumer
+namespace DM.Services.Search.Consumer
 {
     /// <inheritdoc />
     public class IndexingEventsProcessor : IMessageProcessor<InvokedEvent>

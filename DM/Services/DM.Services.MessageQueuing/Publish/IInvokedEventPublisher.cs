@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.Common.Implementation
+namespace DM.Services.MessageQueuing.Publish
 {
     /// <summary>
     /// Publisher for the general invoked event

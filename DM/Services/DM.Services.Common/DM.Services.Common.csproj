@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
-      <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
     </ItemGroup>
 
 </Project>

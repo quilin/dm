@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.Search.IndexingConsumer
+namespace DM.Services.Search.Consumer
 {
     /// <summary>
     /// Configures container for search engine MQ consumer
