@@ -2,12 +2,11 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
-using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.Dto;
 using Microsoft.Extensions.Options;
 
-namespace DM.Services.Common.Implementation
+namespace DM.Services.MessageQueuing.Publish
 {
     /// <inheritdoc />
     public class InvokedEventPublisher : IInvokedEventPublisher

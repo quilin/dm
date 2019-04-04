@@ -15,6 +15,7 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Factories;
 using DM.Services.Forum.Repositories;
+using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 using Microsoft.Extensions.Caching.Memory;
 using Comment = DM.Services.Common.Dto.Comment;

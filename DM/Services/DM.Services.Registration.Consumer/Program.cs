@@ -1,7 +1,7 @@
 ﻿using System;
-using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Consume;
+using DM.Services.MessageQueuing.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

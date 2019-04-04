@@ -38,9 +38,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Tests.UI", "Tests\DM.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Search", "Services\DM.Services.Search\DM.Services.Search.csproj", "{A6BEBF4E-D244-491F-AC6A-F22E7572FAC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Search.IndexingConsumer", "Services\DM.Services.Search.IndexingConsumer\DM.Services.Search.IndexingConsumer.csproj", "{BC7D35D2-6F84-410C-87E5-F196AE8C4536}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Search.Consumer", "Services\DM.Services.Search.Consumer\DM.Services.Search.Consumer.csproj", "{BC7D35D2-6F84-410C-87E5-F196AE8C4536}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Registration.Consumer", "Services\DM.Services.Registration.Consumer\DM.Services.Registration.Consumer.csproj", "{12D02022-1142-458F-AFE2-F39A400B2C05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.MessageQueuing.Tests", "Services\DM.Services.MessageQueuing.Tests\DM.Services.MessageQueuing.Tests.csproj", "{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +118,10 @@ Global
 		{12D02022-1142-458F-AFE2-F39A400B2C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12D02022-1142-458F-AFE2-F39A400B2C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12D02022-1142-458F-AFE2-F39A400B2C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DA094429-3BE0-4924-9B65-00ABC1627395} = {DB521FBE-9B99-4349-9736-6C3E6E418964}
@@ -136,5 +142,6 @@ Global
 		{A6BEBF4E-D244-491F-AC6A-F22E7572FAC8} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
 		{BC7D35D2-6F84-410C-87E5-F196AE8C4536} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
 		{12D02022-1142-458F-AFE2-F39A400B2C05} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
+		{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE} = {37EE71A5-6F98-42E7-B92F-3E2B65C67850}
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Emails;
-using DM.Services.DataAccess.Eventing;
 using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
 
 namespace DM.Services.Registration.Consumer

@@ -3,25 +3,25 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.Eventing;
 using DM.Services.DataAccess.SearchEngine;
+using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
 using DM.Services.Search.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Search.Implementation.Indexers
+namespace DM.Services.Search.Consumer.Indexing.Indexers
 {
     /// <summary>
-    /// Indexer for newly created topics
+    /// Indexer for modified topic
     /// </summary>
-    public class NewTopicIndexer : BaseIndexer
+    public class TopicChangedIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;
         private readonly ISearchEngineRepository repository;
 
         /// <inheritdoc />
-        public NewTopicIndexer(
+        public TopicChangedIndexer(
             DmDbContext dbContext,
             IBbParserProvider parserProvider,
             ISearchEngineRepository repository)
@@ -32,7 +32,7 @@ namespace DM.Services.Search.Implementation.Indexers
         }
         
         /// <inheritdoc />
-        protected override EventType EventType => EventType.NewTopic;
+        protected override EventType EventType => EventType.ChangedTopic;
 
         /// <inheritdoc />
         public override async Task Index(InvokedEvent invokedEvent)

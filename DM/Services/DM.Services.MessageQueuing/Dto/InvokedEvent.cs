@@ -1,7 +1,7 @@
 using System;
 using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.DataAccess.Eventing
+namespace DM.Services.MessageQueuing.Dto
 {
     /// <summary>
     /// DTO model for general DM event

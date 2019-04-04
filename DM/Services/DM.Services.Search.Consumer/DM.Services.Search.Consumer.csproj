@@ -6,6 +6,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <LangVersion>latest</LangVersion>
+        <RootNamespace>DM.Services.Search.Consumer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

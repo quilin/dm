@@ -111,7 +111,7 @@ namespace DM.Services.Authentication.Repositories
         }
 
         /// <inheritdoc />
-        public Task CreateUserWithRegistrationToken(User user)
+        public Task AddUser(User user)
         {
             dbContext.Users.Add(user);
             return dbContext.SaveChangesAsync();

@@ -16,6 +16,7 @@ namespace DM.Services.Authentication.Dto.Validations
                 .MaximumLength(60);
 
             RuleFor(r => r.Email)
+                .NotEmpty()
                 .MaximumLength(100)
                 .EmailAddress();
 

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.DataAccess.Eventing;
+using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Implementation
+namespace DM.Services.Search.Consumer.Indexing
 {
     /// <inheritdoc />
     public class CompositeIndexer : ICompositeIndexer
