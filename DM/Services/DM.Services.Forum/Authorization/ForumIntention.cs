@@ -11,7 +11,7 @@ namespace DM.Services.Forum.Authorization
         CreateTopic = 0,
 
         /// <summary>
-        /// Close, attach and move any topic of the forum
+        /// Close, attach, delete and move any topic of the forum
         /// </summary>
         AdministrateTopics = 1
     }
