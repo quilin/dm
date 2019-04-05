@@ -172,8 +172,6 @@ namespace DM.Services.Forum.Implementation
             var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
             var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
             var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
-            var textChanges = !string.IsNullOrEmpty(updateTopic.Title) && updateTopic.Title != oldTopic.Title ||
-                              !string.IsNullOrEmpty(updateTopic.Text) && updateTopic.Text != oldTopic.Text;
 
             var changes = new UpdateBuilder<ForumTopic>();
             if (hasAdministrativeChanges)
@@ -192,7 +190,8 @@ namespace DM.Services.Forum.Implementation
                 }
             }
 
-            if (textChanges)
+            if (!string.IsNullOrEmpty(updateTopic.Title) && updateTopic.Title != oldTopic.Title ||
+                !string.IsNullOrEmpty(updateTopic.Text) && updateTopic.Text != oldTopic.Text)
             {
                 await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
                 changes
