@@ -6,7 +6,6 @@ using DM.Services.DataAccess;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
-using DM.Services.Search.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Search.Consumer.Indexing.Indexers
@@ -18,13 +17,13 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;
-        private readonly ISearchEngineRepository repository;
+        private readonly IIndexingRepository repository;
 
         /// <inheritdoc />
         public NewTopicIndexer(
             DmDbContext dbContext,
             IBbParserProvider parserProvider,
-            ISearchEngineRepository repository)
+            IIndexingRepository repository)
         {
             this.dbContext = dbContext;
             this.parserProvider = parserProvider;

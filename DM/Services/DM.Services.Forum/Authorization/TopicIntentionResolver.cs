@@ -21,9 +21,6 @@ namespace DM.Services.Forum.Authorization
                     return Task.FromResult(target.Author.UserId == user.UserId ||
                                            target.Forum.ModeratorIds.Contains(user.UserId) ||
                                            user.Role.HasFlag(UserRole.Administrator));
-                case TopicIntention.Delete when user.IsAuthenticated:
-                    return Task.FromResult(target.Forum.ModeratorIds.Contains(user.UserId) ||
-                                           user.Role.HasFlag(UserRole.Administrator));
                 case TopicIntention.Like when user.IsAuthenticated:
                     return Task.FromResult(target.Author.UserId != user.UserId);
                 default:

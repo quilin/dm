@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -9,12 +10,12 @@ namespace DM.Services.Common.Implementation
     public class IntentionManager : IIntentionManager
     {
         private readonly IIdentityProvider identityProvider;
-        private readonly IIntentionResolver[] resolvers;
+        private readonly IEnumerable<IIntentionResolver> resolvers;
 
         /// <inheritdoc />
         public IntentionManager(
             IIdentityProvider identityProvider,
-            IIntentionResolver[] resolvers)
+            IEnumerable<IIntentionResolver> resolvers)
         {
             this.identityProvider = identityProvider;
             this.resolvers = resolvers;

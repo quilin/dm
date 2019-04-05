@@ -151,7 +151,7 @@ namespace DM.Services.Forum.Implementation
             var forum = await FindForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
 
-            var topic = await topicRepository.Create(topicFactory.Create(forum.Id, createTopic));
+            var topic = await topicRepository.Create(topicFactory.Create(forum.Id, identity.User.UserId, createTopic));
 
             await Task.WhenAll(
                 invokedEventPublisher.Publish(EventType.NewTopic, topic.Id),

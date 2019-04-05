@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Dto;
-using DM.Services.Search.Repositories;
 
 namespace DM.Services.Search.Consumer.Indexing.Indexers
 {
@@ -10,13 +9,13 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
     /// </summary>
     public class TopicDeletedIndexer : BaseIndexer
     {
-        private readonly ISearchEngineRepository searchEngineRepository;
+        private readonly IIndexingRepository repository;
 
         /// <inheritdoc />
         public TopicDeletedIndexer(
-            ISearchEngineRepository searchEngineRepository)
+            IIndexingRepository repository)
         {
-            this.searchEngineRepository = searchEngineRepository;
+            this.repository = repository;
         }
         
         /// <inheritdoc />
@@ -25,7 +24,7 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         /// <inheritdoc />
         public override Task Index(InvokedEvent invokedEvent)
         {
-            return searchEngineRepository.Delete(invokedEvent.EntityId);
+            return repository.Delete(invokedEvent.EntityId);
         }
     }
 }

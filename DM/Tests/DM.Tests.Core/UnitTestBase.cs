@@ -15,6 +15,6 @@ namespace DM.Tests.Core
         protected Mock<T> Mock<T>(MockBehavior behavior = MockBehavior.Strict) where T : class =>
             repository.Create<T>();
 
-        public virtual void Dispose() => repository.VerifyAll();
+        public virtual void Dispose() => repository.Verify();
     }
 }

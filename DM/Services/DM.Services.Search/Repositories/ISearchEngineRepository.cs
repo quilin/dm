@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Dto;
 
 namespace DM.Services.Search.Repositories
@@ -12,20 +11,6 @@ namespace DM.Services.Search.Repositories
     /// </summary>
     public interface ISearchEngineRepository
     {
-        /// <summary>
-        /// Store searchable entities in index
-        /// </summary>
-        /// <param name="entities">Entities to store</param>
-        /// <returns></returns>
-        Task Index(params SearchEntity[] entities);
-
-        /// <summary>
-        /// Delete indexed document
-        /// </summary>
-        /// <param name="entityId">Entity identifier</param>
-        /// <returns></returns>
-        Task Delete(Guid entityId);
-
         /// <summary>
         /// Search entities in index by text
         /// </summary>

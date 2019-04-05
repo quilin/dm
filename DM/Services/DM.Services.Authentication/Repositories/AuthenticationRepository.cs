@@ -15,11 +15,12 @@ using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.Use
 namespace DM.Services.Authentication.Repositories
 {
     /// <inheritdoc cref="IAuthenticationRepository" />
-    internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
+    public class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
+        /// <inheritdoc />
         public AuthenticationRepository(
             DmDbContext dbContext,
             DmMongoClient mongoClient,

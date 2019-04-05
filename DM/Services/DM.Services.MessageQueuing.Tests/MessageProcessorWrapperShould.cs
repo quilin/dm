@@ -69,11 +69,5 @@ namespace DM.Services.MessageQueuing.Tests
             messageProcessor.Verify(p => p.Process(message), Times.Once);
             messageProcessor.VerifyNoOtherCalls();
         }
-
-        public class TestMessage
-        {
-            public Guid SomeId { get; set; }
-            public string SomeText { get; set; }
-        }
     }
 }

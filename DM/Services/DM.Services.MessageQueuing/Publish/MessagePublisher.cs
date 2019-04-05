@@ -31,8 +31,6 @@ namespace DM.Services.MessageQueuing.Publish
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
-
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
                 channel.BasicPublish(configuration.ExchangeName, routingKey,
                     new BasicProperties

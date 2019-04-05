@@ -16,13 +16,8 @@ namespace DM.Services.Forum.Authorization
         Edit = 1,
 
         /// <summary>
-        /// Remove the topic with all its commentaries
-        /// </summary>
-        Delete = 2,
-
-        /// <summary>
         /// Like the topic
         /// </summary>
-        Like = 3
+        Like = 2
     }
 }

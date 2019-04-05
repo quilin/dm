@@ -8,12 +8,12 @@ namespace DM.Services.Forum.Implementation
         /// <inheritdoc />
         public ForumAccessPolicy Convert(UserRole role)
         {
-            var result = ForumAccessPolicy.Guest;
-            if (role != UserRole.Guest)
+            if (role == UserRole.Guest)
             {
-                result = result | ForumAccessPolicy.Player;
+                return ForumAccessPolicy.Guest;
             }
-
+            
+            var result = ForumAccessPolicy.Player;
             if (role.HasFlag(UserRole.Administrator))
             {
                 result = result | ForumAccessPolicy.Administrator;

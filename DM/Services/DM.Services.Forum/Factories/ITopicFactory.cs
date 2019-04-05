@@ -13,8 +13,9 @@ namespace DM.Services.Forum.Factories
         /// Create topic DAL for topic creation
         /// </summary>
         /// <param name="forumId">Forum identifier</param>
+        /// <param name="userId">Author identifier</param>
         /// <param name="createTopic">Topic DTO</param>
         /// <returns></returns>
-        ForumTopic Create(Guid forumId, CreateTopic createTopic);
+        ForumTopic Create(Guid forumId, Guid userId, CreateTopic createTopic);
     }
 }

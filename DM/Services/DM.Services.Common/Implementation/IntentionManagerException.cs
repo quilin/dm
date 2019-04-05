@@ -33,7 +33,7 @@ namespace DM.Services.Common.Implementation
 
             var subjectType = target.GetType();
             var subjectName = subjectType.Name;
-            result.Append($" with object {subjectName}");
+            result.Append($" with {subjectName}");
             var subjectId = subjectType.GetProperty("Id")?.GetValue(target);
             if (subjectId != null)
             {
