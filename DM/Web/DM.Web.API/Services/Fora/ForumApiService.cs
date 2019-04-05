@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Forum.Implementation;
+using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 
@@ -10,12 +10,12 @@ namespace DM.Web.API.Services.Fora
     /// <inheritdoc />
     public class ForumApiService : IForumApiService
     {
-        private readonly IForumService forumService;
+        private readonly IForumReadingService forumService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public ForumApiService(
-            IForumService forumService,
+            IForumReadingService forumService,
             IMapper mapper)
         {
             this.forumService = forumService;

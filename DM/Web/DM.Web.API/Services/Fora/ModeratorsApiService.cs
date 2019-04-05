@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Forum.Implementation;
+using DM.Services.Forum.BusinessProcesses.Moderation;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 
@@ -10,22 +10,22 @@ namespace DM.Web.API.Services.Fora
     /// <inheritdoc />
     public class ModeratorsApiService : IModeratorsApiService
     {
-        private readonly IForumService forumService;
+        private readonly IModeratorsReadingService moderatorsReadingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public ModeratorsApiService(
-            IForumService forumService,
+            IModeratorsReadingService moderatorsReadingService,
             IMapper mapper)
         {
-            this.forumService = forumService;
+            this.moderatorsReadingService = moderatorsReadingService;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
         public async Task<ListEnvelope<User>> GetModerators(string id)
         {
-            var moderators = await forumService.GetModerators(id);
+            var moderators = await moderatorsReadingService.GetModerators(id);
             return new ListEnvelope<User>(moderators.Select(mapper.Map<User>));
         }
     }

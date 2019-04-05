@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Forum.BusinessProcesses.Commentaries;
+using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto;
-using DM.Services.Forum.Implementation;
 using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
@@ -14,15 +15,27 @@ namespace DM.Web.API.Services.Fora
     /// <inheritdoc />
     public class TopicApiService : ITopicApiService
     {
-        private readonly IForumService forumService;
+        private readonly ITopicReadingService topicReadingService;
+        private readonly ITopicCreatingService topicCreatingService;
+        private readonly ITopicUpdatingService topicUpdatingService;
+        private readonly ITopicDeletingService topicDeletingService;
+        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public TopicApiService(
-            IForumService forumService,
+            ITopicReadingService topicReadingService,
+            ITopicCreatingService topicCreatingService,
+            ITopicUpdatingService topicUpdatingService,
+            ITopicDeletingService topicDeletingService,
+            ICommentaryReadingService commentaryReadingService,
             IMapper mapper)
         {
-            this.forumService = forumService;
+            this.topicReadingService = topicReadingService;
+            this.topicCreatingService = topicCreatingService;
+            this.topicUpdatingService = topicUpdatingService;
+            this.topicDeletingService = topicDeletingService;
+            this.commentaryReadingService = commentaryReadingService;
             this.mapper = mapper;
         }
 
@@ -30,8 +43,8 @@ namespace DM.Web.API.Services.Fora
         public async Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
         {
             var (topics, paging) = filters.Attached
-                ? (await forumService.GetAttachedTopics(forumId), null)
-                : await forumService.GetTopicsList(forumId, entityNumber);
+                ? (await topicReadingService.GetAttachedTopics(forumId), null)
+                : await topicReadingService.GetTopicsList(forumId, entityNumber);
             return new ListEnvelope<Topic>(topics.Select(mapper.Map<Topic>),
                 paging == null ? null : new Paging(paging));
         }
@@ -39,7 +52,7 @@ namespace DM.Web.API.Services.Fora
         /// <inheritdoc />
         public async Task<Envelope<Topic>> Get(Guid topicId)
         {
-            var topic = await forumService.GetTopic(topicId);
+            var topic = await topicReadingService.GetTopic(topicId);
             return new Envelope<Topic>(mapper.Map<Topic>(topic));
         }
 
@@ -48,7 +61,7 @@ namespace DM.Web.API.Services.Fora
         {
             var createTopic = mapper.Map<CreateTopic>(topic);
             createTopic.ForumTitle = forumId;
-            var createdTopic = await forumService.CreateTopic(createTopic);
+            var createdTopic = await topicCreatingService.CreateTopic(createTopic);
             return new Envelope<Topic>(mapper.Map<Topic>(createdTopic));
         }
 
@@ -57,17 +70,17 @@ namespace DM.Web.API.Services.Fora
         {
             var updateTopic = mapper.Map<UpdateTopic>(topic);
             updateTopic.TopicId = topicId;
-            var updatedTopic = await forumService.UpdateTopic(updateTopic);
+            var updatedTopic = await topicUpdatingService.UpdateTopic(updateTopic);
             return new Envelope<Topic>(mapper.Map<Topic>(updatedTopic));
         }
 
         /// <inheritdoc />
-        public Task Delete(Guid topicId) => forumService.RemoveTopic(topicId);
+        public Task Delete(Guid topicId) => topicDeletingService.DeleteTopic(topicId);
 
         /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
         {
-            var (comments, paging) = await forumService.GetCommentsList(topicId, entityNumber);
+            var (comments, paging) = await commentaryReadingService.GetCommentsList(topicId, entityNumber);
             return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
         }
     }

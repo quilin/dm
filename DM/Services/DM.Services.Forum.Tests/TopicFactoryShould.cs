@@ -1,8 +1,8 @@
 using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto;
-using DM.Services.Forum.Factories;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq.Language.Flow;

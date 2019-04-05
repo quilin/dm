@@ -1,5 +1,5 @@
 using DM.Services.Core.Dto.Enums;
-using DM.Services.Forum.Implementation;
+using DM.Services.Forum.BusinessProcesses.Common;
 using FluentAssertions;
 using Xunit;
 

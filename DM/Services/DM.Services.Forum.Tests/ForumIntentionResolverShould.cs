@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.Implementation;
+using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
