@@ -11,6 +11,8 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto;
 using DM.Services.Forum.Factories;
@@ -170,32 +172,33 @@ namespace DM.Services.Forum.Implementation
             var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
             var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
             var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
-            var textChanges = updateTopic.Title != oldTopic.Title || updateTopic.Text != oldTopic.Text;
+            var textChanges = !string.IsNullOrEmpty(updateTopic.Title) && updateTopic.Title != oldTopic.Title ||
+                              !string.IsNullOrEmpty(updateTopic.Text) && updateTopic.Text != oldTopic.Text;
 
-            var topicToUpdate = await topicRepository.Get(oldTopic.Id);
+            var changes = new UpdateBuilder<ForumTopic>();
             if (hasAdministrativeChanges)
             {
                 await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
+                changes.Field(t => t.Closed, updateTopic.Closed);
+                changes.Field(t => t.Attached, updateTopic.Attached);
+
                 if (topicMovesToAnotherForum)
                 {
                     var forum = (await forumRepository.SelectFora(null))
                         .First(f => f.Title == updateTopic.ForumTitle);
                     await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
-                    topicToUpdate.ForumId = forum.Id;
+                    changes.Field(t => t.ForumId, forum.Id);
                 }
-
-                topicToUpdate.Closed = updateTopic.Closed;
-                topicToUpdate.Attached = updateTopic.Attached;
             }
 
             if (textChanges)
             {
                 await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
-                topicToUpdate.Title = updateTopic.Title;
-                topicToUpdate.Text = updateTopic.Text;
+                changes.Field(t => t.Title, updateTopic.Title);
+                changes.Field(t => t.Text, updateTopic.Text);
             }
 
-            var topic = await topicRepository.Update(topicToUpdate);
+            var topic = await topicRepository.Update(updateTopic.TopicId, changes);
             await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
 
             return topic;
@@ -207,9 +210,7 @@ namespace DM.Services.Forum.Implementation
             var topic = await GetTopic(topicId);
             await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
 
-            var forumTopic = await topicRepository.Get(topicId);
-            forumTopic.IsRemoved = true;
-            await topicRepository.Update(forumTopic);
+            await topicRepository.Update(topicId, new UpdateBuilder<ForumTopic>().Field(t => t.IsRemoved, true));
             await invokedEventPublisher.Publish(EventType.DeletedTopic, topicId);
         }
 

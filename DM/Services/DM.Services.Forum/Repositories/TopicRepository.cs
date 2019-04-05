@@ -9,6 +9,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,14 +18,14 @@ namespace DM.Services.Forum.Repositories
     /// <inheritdoc />
     internal class TopicRepository : ITopicRepository
     {
-        private readonly DmDbContext dmDbContext;
+        private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         public TopicRepository(
-            DmDbContext dmDbContext,
+            DmDbContext dbContext,
             IMapper mapper)
         {
-            this.dmDbContext = dmDbContext;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
@@ -33,12 +34,12 @@ namespace DM.Services.Forum.Repositories
 
         /// <inheritdoc />
         public Task<int> Count(Guid forumId) =>
-            dmDbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
+            dbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
 
         /// <inheritdoc />
         public async Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached)
         {
-            var query = dmDbContext.ForumTopics
+            var query = dbContext.ForumTopics
                 .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider);
 
@@ -62,7 +63,7 @@ namespace DM.Services.Forum.Repositories
         /// <inheritdoc />
         public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)
         {
-            return await dmDbContext.ForumTopics
+            return await dbContext.ForumTopics
                 .Where(t => !t.IsRemoved && t.ForumTopicId == topicId &&
                             (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
@@ -70,26 +71,22 @@ namespace DM.Services.Forum.Repositories
         }
 
         /// <inheritdoc />
-        public Task<ForumTopic> Get(Guid topicId) =>
-            dmDbContext.ForumTopics.FirstAsync(t => t.ForumTopicId == topicId);
-
-        /// <inheritdoc />
         public async Task<Topic> Create(ForumTopic forumTopic)
         {
-            dmDbContext.ForumTopics.Add(forumTopic);
-            await dmDbContext.SaveChangesAsync();
-            return await dmDbContext.ForumTopics
+            dbContext.ForumTopics.Add(forumTopic);
+            await dbContext.SaveChangesAsync();
+            return await dbContext.ForumTopics
                 .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
 
         /// <inheritdoc />
-        public async Task<Topic> Update(ForumTopic forumTopic)
+        public async Task<Topic> Update(Guid id, UpdateBuilder<ForumTopic> updateBuilder)
         {
-            await dmDbContext.SaveChangesAsync();
-            return await dmDbContext.ForumTopics
-                .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
+            await updateBuilder.Update(id, dbContext);
+            return await dbContext.ForumTopics
+                .Where(t => t.ForumTopicId == id)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }

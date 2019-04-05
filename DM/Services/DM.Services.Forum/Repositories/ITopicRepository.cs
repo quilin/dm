@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto;
 
 namespace DM.Services.Forum.Repositories
@@ -38,13 +39,6 @@ namespace DM.Services.Forum.Repositories
         Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy);
 
         /// <summary>
-        /// Get topic DAL model for modification
-        /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <returns>Topic DAL model</returns>
-        Task<ForumTopic> Get(Guid topicId);
-
-        /// <summary>
         /// Create new topic
         /// </summary>
         /// <param name="forumTopic">DAL model</param>
@@ -54,8 +48,9 @@ namespace DM.Services.Forum.Repositories
         /// <summary>
         /// Update existing topic
         /// </summary>
-        /// <param name="forumTopic">DAL model</param>
+        /// <param name="id"></param>
+        /// <param name="updateBuilder"></param>
         /// <returns>DTO model of updated topic</returns>
-        Task<Topic> Update(ForumTopic forumTopic);
+        Task<Topic> Update(Guid id, UpdateBuilder<ForumTopic> updateBuilder);
     }
 }
