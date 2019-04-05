@@ -179,8 +179,9 @@ namespace DM.Services.Forum.Implementation
             if (hasAdministrativeChanges)
             {
                 await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
-                changes.Field(t => t.Closed, updateTopic.Closed);
-                changes.Field(t => t.Attached, updateTopic.Attached);
+                changes
+                    .Field(t => t.Closed, updateTopic.Closed)
+                    .Field(t => t.Attached, updateTopic.Attached);
 
                 if (topicMovesToAnotherForum)
                 {
@@ -194,8 +195,9 @@ namespace DM.Services.Forum.Implementation
             if (textChanges)
             {
                 await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
-                changes.Field(t => t.Title, updateTopic.Title);
-                changes.Field(t => t.Text, updateTopic.Text);
+                changes
+                    .Field(t => t.Title, updateTopic.Title)
+                    .Field(t => t.Text, updateTopic.Text);
             }
 
             var topic = await topicRepository.Update(updateTopic.TopicId, changes);
