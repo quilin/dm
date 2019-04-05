@@ -22,18 +22,24 @@ namespace DM.Services.Core.Dto.Enums
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("new.topic")]
-        NewTopic = 2,
-        
+        NewTopic = 101,
+
         /// <summary>
         /// Topic has been updated
         /// </summary>
         [EventRoutingKey("changed.topic")]
-        ChangedTopic = 3,
+        ChangedTopic = 102,
 
         /// <summary>
         /// Topic has been deleted
         /// </summary>
         [EventRoutingKey("deleted.topic")]
-        DeletedTopic = 4
+        DeletedTopic = 103,
+
+        /// <summary>
+        /// Topic has been liked
+        /// </summary>
+        [EventRoutingKey("liked.topic")]
+        LikedTopic = 601
     }
 }

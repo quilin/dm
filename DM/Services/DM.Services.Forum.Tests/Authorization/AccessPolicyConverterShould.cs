@@ -3,7 +3,7 @@ using DM.Services.Forum.BusinessProcesses.Common;
 using FluentAssertions;
 using Xunit;
 
-namespace DM.Services.Forum.Tests
+namespace DM.Services.Forum.Tests.Authorization
 {
     public class AccessPolicyConverterShould
     {

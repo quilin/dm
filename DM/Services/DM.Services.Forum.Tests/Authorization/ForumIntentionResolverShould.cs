@@ -9,7 +9,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace DM.Services.Forum.Tests
+namespace DM.Services.Forum.Tests.Authorization
 {
     public class ForumIntentionResolverShould : UnitTestBase
     {
