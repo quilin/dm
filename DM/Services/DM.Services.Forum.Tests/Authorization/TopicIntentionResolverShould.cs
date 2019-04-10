@@ -4,7 +4,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Output;
 using FluentAssertions;
 using Xunit;
 
@@ -66,7 +66,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = Guid.NewGuid()},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {Guid.NewGuid(), Guid.NewGuid()}
                     }
@@ -89,7 +89,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = userId},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {Guid.NewGuid(), Guid.NewGuid()}
                     }
@@ -112,7 +112,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = Guid.NewGuid()},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {userId, Guid.NewGuid()}
                     }
@@ -134,7 +134,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = Guid.NewGuid()},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {Guid.NewGuid(), Guid.NewGuid()}
                     }
@@ -157,7 +157,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = userId},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {Guid.NewGuid(), Guid.NewGuid()}
                     }
@@ -179,7 +179,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 {
                     Author = new GeneralUser{UserId = Guid.NewGuid()},
                     Closed = false,
-                    Forum = new Dto.Forum
+                    Forum = new Dto.Output.Forum
                     {
                         ModeratorIds = new[] {Guid.NewGuid(), Guid.NewGuid()}
                     }

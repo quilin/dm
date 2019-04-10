@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Configuration;
 using Microsoft.Extensions.Options;
@@ -33,6 +36,35 @@ namespace DM.Services.Search.Consumer
         public Task Delete(Guid entityId)
         {
             return client.DeleteAsync<SearchEntity>(entityId);
+        }
+
+        /// <inheritdoc />
+        public Task DeleteByParent(Guid parentEntityId)
+        {
+            return client.DeleteByQueryAsync<SearchEntity>(d => d.Query(q => q
+                .Term(t => t
+                    .Field(f => f.ParentEntityId)
+                    .Value(parentEntityId))));
+        }
+
+        /// <inheritdoc />
+        public Task UpdateByParent(Guid parentEntityId, IEnumerable<UserRole> roles)
+        {
+            return client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
+                .Term(t => t
+                    .Field(f => f.ParentEntityId)
+                    .Value(parentEntityId)))
+                .Script($"ctx._source.authorizedRoles = [{string.Join(",", roles.Cast<int>())}]"));
+        }
+
+        /// <inheritdoc />
+        public Task UpdateByParent(Guid parentEntityId, IEnumerable<Guid> userIds)
+        {
+            return client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
+                    .Term(t => t
+                        .Field(f => f.ParentEntityId)
+                        .Value(parentEntityId)))
+                .Script($"ctx._source.authorizedUsers = [{string.Join(",", userIds)}]"));
         }
 
         private async Task DeclareIndex()

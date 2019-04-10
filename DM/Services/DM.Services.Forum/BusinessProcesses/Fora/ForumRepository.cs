@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Forum.BusinessProcesses.Fora
 {
@@ -13,29 +14,30 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
     internal class ForumRepository : IForumRepository
     {
         private readonly DmDbContext dmDbContext;
+        private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
         public ForumRepository(
             DmDbContext dmDbContext,
+            IMemoryCache memoryCache,
             IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
+            this.memoryCache = memoryCache;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Dto.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
+        public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
         {
-            var query = dmDbContext.Fora.AsQueryable();
-            if (accessPolicy.HasValue)
-            {
-                query = query.Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne);
-            }
-
-            return await query
+            var forums = await memoryCache.GetOrCreateAsync("Fora", _ => dmDbContext.Fora
                 .OrderBy(f => f.Order)
-                .ProjectTo<Dto.Forum>(mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
+                .ToArrayAsync());
+
+            return accessPolicy.HasValue
+                ? forums.Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
+                : forums;
         }
     }
 }

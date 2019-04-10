@@ -13,6 +13,11 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Forum topic
         /// </summary>
-        Topic = 1
+        Topic = 1,
+
+        /// <summary>
+        /// Forum commentary
+        /// </summary>
+        ForumComment = 2
     }
 }

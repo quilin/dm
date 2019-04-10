@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Input;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics
 {

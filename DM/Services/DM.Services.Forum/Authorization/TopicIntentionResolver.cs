@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.Authorization
 {

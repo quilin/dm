@@ -35,7 +35,7 @@ namespace DM.Services.Forum.Tests.Authorization
             var actual = await resolver.IsAllowed(
                 new AuthenticatedUser {Role = UserRole.Administrator},
                 ForumIntention.CreateTopic,
-                new Dto.Forum
+                new Dto.Output.Forum
             {
                 CreateTopicPolicy = ForumAccessPolicy.Guest | ForumAccessPolicy.SeniorModerator
             });
@@ -55,7 +55,7 @@ namespace DM.Services.Forum.Tests.Authorization
             var actual = await resolver.IsAllowed(
                 new AuthenticatedUser {Role = UserRole.Administrator | UserRole.Player},
                 ForumIntention.CreateTopic,
-                new Dto.Forum
+                new Dto.Output.Forum
                 {
                     CreateTopicPolicy = ForumAccessPolicy.Administrator | ForumAccessPolicy.SeniorModerator
                 });
@@ -72,7 +72,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     UserId = Guid.NewGuid()
                 },
                 ForumIntention.AdministrateTopics,
-                new Dto.Forum
+                new Dto.Output.Forum
                 {
                     ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
                 });
@@ -89,7 +89,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     UserId = Guid.NewGuid()
                 },
                 ForumIntention.AdministrateTopics,
-                new Dto.Forum
+                new Dto.Output.Forum
                 {
                     ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
                 });
@@ -107,7 +107,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     UserId = userId
                 },
                 ForumIntention.AdministrateTopics,
-                new Dto.Forum
+                new Dto.Output.Forum
                 {
                     ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid(), userId}
                 });
@@ -119,7 +119,7 @@ namespace DM.Services.Forum.Tests.Authorization
         [InlineData(ForumIntention.AdministrateTopics)]
         public async Task AllowNothingWhenUserGuest(ForumIntention intention)
         {
-            (await resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Forum())).Should().BeFalse();
+            (await resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Output.Forum())).Should().BeFalse();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace DM.Web.API.Controllers.v1.Common
                 ? Enumerable.Repeat(UserRole.Guest, 1)
                 : Enum.GetValues(typeof(UserRole))
                     .Cast<UserRole>()
-                    .Where(r => (r & currentUserRole) != UserRole.Guest);
+                    .Where(r => currentUserRole.HasFlag(r));
             var (entities, total) = await repository.Search(query, 0, 10, userRoles, Guid.Empty);
             return new ListEnvelope<object>(entities, new Paging(PagingData.Create(total, 1, 10)));
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 
@@ -49,13 +48,5 @@ namespace DM.Web.API.Services.Fora
         /// <param name="topicId">Topic identifier</param>
         /// <returns></returns>
         Task Delete(Guid topicId);
-
-        /// <summary>
-        /// Get topics commentaries
-        /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <param name="entityNumber">Entity number</param>
-        /// <returns>Envelope of commentaries list</returns>
-        Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber);
     }
 }

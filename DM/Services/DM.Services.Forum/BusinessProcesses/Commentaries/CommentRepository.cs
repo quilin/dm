@@ -14,30 +14,41 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
     /// <inheritdoc />
     public class CommentRepository : ICommentRepository
     {
-        private readonly DmDbContext dmDbContext;
+        private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public CommentRepository(
-            DmDbContext dmDbContext,
+            DmDbContext dbContext,
             IMapper mapper)
         {
-            this.dmDbContext = dmDbContext;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
         public Task<int> Count(Guid topicId) =>
-            dmDbContext.Comments.CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
+            dbContext.Comments.CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
 
         /// <inheritdoc />
         public async Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging)
         {
-            return await dmDbContext.Comments
+            return await dbContext.Comments
                 .Where(c => !c.IsRemoved && c.EntityId == topicId)
                 .OrderBy(c => c.CreateDate)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<Comment> Create(DataAccess.BusinessObjects.Common.Comment comment)
+        {
+            dbContext.Comments.Add(comment);
+            await dbContext.SaveChangesAsync();
+            return await dbContext.Comments
+                .Where(c => c.CommentId == comment.CommentId)
+                .ProjectTo<Comment>(mapper.ConfigurationProvider)
+                .FirstAsync();
         }
     }
 }

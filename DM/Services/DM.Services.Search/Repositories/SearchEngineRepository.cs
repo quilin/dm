@@ -37,7 +37,7 @@ namespace DM.Services.Search.Repositories
                      q.Match(mt => mt.Field(f => f.Title)
                          .Query(query)
                          .Fuzziness(SearchFuzziness))) &&
-                    (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles).Boost(0)) ||
+                    (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles.Cast<int>()).Boost(0)) ||
                      q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0))))
                 .Sort(so => so.Descending(SortSpecialField.Score))
                 .Highlight(h => h

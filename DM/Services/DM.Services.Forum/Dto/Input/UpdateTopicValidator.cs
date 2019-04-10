@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace DM.Services.Forum.Dto
+namespace DM.Services.Forum.Dto.Input
 {
     /// <summary>
     /// Validator for topic modification DTO model

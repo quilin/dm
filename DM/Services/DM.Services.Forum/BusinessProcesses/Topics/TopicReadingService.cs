@@ -11,7 +11,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics
 {

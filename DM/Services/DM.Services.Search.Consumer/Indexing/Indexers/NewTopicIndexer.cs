@@ -43,6 +43,7 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
             await repository.Index(new SearchEntity
             {
                 Id = invokedEvent.EntityId,
+                ParentEntityId = invokedEvent.EntityId,
                 EntityType = SearchEntityType.Topic,
                 Title = topic.Title,
                 Text = parserProvider.CurrentCommon.Parse(topic.Text).ToHtml(),

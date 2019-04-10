@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.Forum.Dto
+namespace DM.Services.Forum.Dto.Output
 {
     /// <summary>
     /// Forum DTO model
@@ -23,6 +23,11 @@ namespace DM.Services.Forum.Dto
         /// Create topic policy
         /// </summary>
         public ForumAccessPolicy CreateTopicPolicy { get; set; }
+
+        /// <summary>
+        /// View topic policy
+        /// </summary>
+        public ForumAccessPolicy ViewPolicy { get; set; }
 
         /// <summary>
         /// Moderator identifiers

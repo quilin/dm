@@ -55,6 +55,15 @@ namespace DM.Services.Common.Repositories
         }
 
         /// <inheritdoc />
+        public Task Delete(Guid entityId, UnreadEntryType entryType)
+        {
+            return Collection.UpdateManyAsync(
+                Filter.Eq(c => c.EntityId, entityId) &
+                Filter.Eq(c => c.EntryType, entryType),
+                Update.Set(c => c.IsRemoved, true));
+        }
+
+        /// <inheritdoc />
         public async Task<IDictionary<Guid, int>> SelectByParents(
             Guid userId, UnreadEntryType entryType, params Guid[] parentIds)
         {
@@ -63,7 +72,8 @@ namespace DM.Services.Common.Repositories
                     .Match(
                         Filter.In(c => c.UserId, userIds) &
                         Filter.In(c => c.ParentId, parentIds) &
-                        Filter.Eq(c => c.EntryType, entryType))
+                        Filter.Eq(c => c.EntryType, entryType) &
+                        Filter.Eq(c => c.IsRemoved, false))
                     .Group(c => c.EntityId,
                         g => new UnreadCounter
                         {
@@ -91,7 +101,8 @@ namespace DM.Services.Common.Repositories
                     .Match(
                         Filter.In(c => c.UserId, userIds) &
                         Filter.In(c => c.EntityId, entityIds) &
-                        Filter.Eq(c => c.EntryType, entryType))
+                        Filter.Eq(c => c.EntryType, entryType) &
+                        Filter.Eq(c => c.IsRemoved, false))
                     .Group(c => c.EntityId,
                         g => new UnreadCounter
                         {

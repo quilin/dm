@@ -2,10 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.BusinessProcesses.Topics;
-using DM.Services.Forum.Dto;
-using DM.Web.API.Dto.Common;
+using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using Topic = DM.Web.API.Dto.Fora.Topic;
@@ -19,7 +17,6 @@ namespace DM.Web.API.Services.Fora
         private readonly ITopicCreatingService topicCreatingService;
         private readonly ITopicUpdatingService topicUpdatingService;
         private readonly ITopicDeletingService topicDeletingService;
-        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
@@ -28,14 +25,12 @@ namespace DM.Web.API.Services.Fora
             ITopicCreatingService topicCreatingService,
             ITopicUpdatingService topicUpdatingService,
             ITopicDeletingService topicDeletingService,
-            ICommentaryReadingService commentaryReadingService,
             IMapper mapper)
         {
             this.topicReadingService = topicReadingService;
             this.topicCreatingService = topicCreatingService;
             this.topicUpdatingService = topicUpdatingService;
             this.topicDeletingService = topicDeletingService;
-            this.commentaryReadingService = commentaryReadingService;
             this.mapper = mapper;
         }
 
@@ -76,12 +71,5 @@ namespace DM.Web.API.Services.Fora
 
         /// <inheritdoc />
         public Task Delete(Guid topicId) => topicDeletingService.DeleteTopic(topicId);
-
-        /// <inheritdoc />
-        public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
-        {
-            var (comments, paging) = await commentaryReadingService.GetCommentsList(topicId, entityNumber);
-            return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
-        }
     }
 }

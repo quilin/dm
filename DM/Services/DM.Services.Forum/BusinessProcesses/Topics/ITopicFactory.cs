@@ -1,6 +1,6 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Input;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics
 {

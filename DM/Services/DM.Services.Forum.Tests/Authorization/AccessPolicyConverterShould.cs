@@ -30,5 +30,15 @@ namespace DM.Services.Forum.Tests.Authorization
         {
             converter.Convert(role).Should().HaveFlag(policy);
         }
+
+        [Theory]
+        [InlineData(UserRole.Player)]
+        [InlineData(UserRole.SeniorModerator)]
+        [InlineData(UserRole.Administrator | UserRole.NannyModerator)]
+        [InlineData(UserRole.RegularModerator | UserRole.Player)]
+        public void ContainGuestAccessForNonGuestUsers(UserRole role)
+        {
+            converter.Convert(role).Should().HaveFlag(UserRole.Guest);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.MongoIntegration;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -9,7 +10,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
     /// </summary>
     [MongoCollectionName("UnreadCounters")]
     [BsonIgnoreExtraElements]
-    public class UnreadCounter
+    public class UnreadCounter : IRemovable
     {
         /// <summary>
         /// User identifier
@@ -41,5 +42,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// Counter itself
         /// </summary>
         public int Counter { get; set; }
+
+        /// <inheritdoc />
+        public bool IsRemoved { get; set; }
     }
 }

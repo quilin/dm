@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DM.Services.DataAccess.RelationalStorage
 {
@@ -52,19 +53,24 @@ namespace DM.Services.DataAccess.RelationalStorage
             return dbContext.SaveChangesAsync();
         }
 
-        private static void SetPropertyValue<T, TValue>(TEntity target,
-            Expression<Func<T, TValue>> memberLambda, TValue value)
+        private static void SetPropertyValue(TEntity target,
+            Expression<Func<TEntity, object>> memberLambda, object value)
         {
-            if (!(memberLambda.Body is MemberExpression memberSelectorExpression))
+            MemberExpression memberExpression;
+            switch (memberLambda.Body)
             {
-                return;
+                case MemberExpression body:
+                    memberExpression = body;
+                    break;
+                case UnaryExpression unary:
+                    memberExpression = (MemberExpression) unary.RemoveConvert();
+                    break;
+                default:
+                    return;
             }
 
-            var property = memberSelectorExpression.Member as PropertyInfo;
-            if (property != null)
-            {
-                property.SetValue(target, value, null);
-            }
+            var property = (PropertyInfo) memberExpression.Member;
+            property.SetValue(target, value);
         }
     }
 }

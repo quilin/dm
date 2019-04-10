@@ -18,14 +18,17 @@ namespace DM.Web.API.Controllers.v1.Fora
     {
         private readonly ITopicApiService topicApiService;
         private readonly ILikeApiService likeApiService;
+        private readonly ICommentApiService commentApiService;
 
         /// <inheritdoc />
         public TopicController(
             ITopicApiService topicApiService,
-            ILikeApiService likeApiService)
+            ILikeApiService likeApiService,
+            ICommentApiService commentApiService)
         {
             this.topicApiService = topicApiService;
             this.likeApiService = likeApiService;
+            this.commentApiService = commentApiService;
         }
 
         /// <summary>
@@ -120,7 +123,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}/comments")]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<Comment>> GetComments(Guid id, [FromQuery] int n = 1) => topicApiService.Get(id, n);
+        public Task<ListEnvelope<Comment>> GetComments(Guid id, [FromQuery] int n = 1) => commentApiService.Get(id, n);
 
         /// <summary>
         /// Post new comment
@@ -140,6 +143,6 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<Envelope<Comment>> PostComment(Guid id, [FromBody] Comment comment) =>
-            throw new NotImplementedException();
+            commentApiService.Create(id, comment);
     }
 }

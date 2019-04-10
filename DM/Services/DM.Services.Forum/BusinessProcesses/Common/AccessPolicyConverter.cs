@@ -12,8 +12,8 @@ namespace DM.Services.Forum.BusinessProcesses.Common
             {
                 return ForumAccessPolicy.Guest;
             }
-            
-            var result = ForumAccessPolicy.Player;
+
+            var result = ForumAccessPolicy.Guest | ForumAccessPolicy.Player;
             if (role.HasFlag(UserRole.Administrator))
             {
                 result = result | ForumAccessPolicy.Administrator;

@@ -7,7 +7,8 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Fora;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Input;
+using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 

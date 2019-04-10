@@ -1,4 +1,4 @@
-namespace DM.Services.Forum.Dto
+namespace DM.Services.Forum.Dto.Input
 {
     /// <summary>
     /// DTO model for creating new topic

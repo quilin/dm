@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Forum.Dto
+namespace DM.Services.Forum.Dto.Output
 {
     /// <summary>
     /// Topic DTO model

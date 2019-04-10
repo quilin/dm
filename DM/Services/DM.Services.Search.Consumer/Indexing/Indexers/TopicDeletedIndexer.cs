@@ -24,7 +24,7 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         /// <inheritdoc />
         public override Task Index(InvokedEvent invokedEvent)
         {
-            return repository.Delete(invokedEvent.EntityId);
+            return repository.DeleteByParent(invokedEvent.EntityId);
         }
     }
 }

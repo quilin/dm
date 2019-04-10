@@ -10,7 +10,7 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Dto;
+using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics

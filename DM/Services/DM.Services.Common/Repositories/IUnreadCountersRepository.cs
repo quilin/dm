@@ -37,6 +37,14 @@ namespace DM.Services.Common.Repositories
         Task Decrement(Guid entityId, UnreadEntryType entryType, DateTime createDate);
 
         /// <summary>
+        /// Remove counter for everyone
+        /// </summary>
+        /// <param name="entityId">Entity Id</param>
+        /// <param name="entryType">Entry type</param>
+        /// <returns></returns>
+        Task Delete(Guid entityId, UnreadEntryType entryType);
+
+        /// <summary>
         /// Get count of entities that have unread entries by parent entity ids
         /// </summary>
         /// <param name="userId">User Id</param>

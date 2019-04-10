@@ -1,36 +1,36 @@
 using System;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto.Input;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
-    public class TopicFactory : ITopicFactory
+    public class CommentFactory : ICommentFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
-        public TopicFactory(
+        public CommentFactory(
             IGuidFactory guidFactory,
             IDateTimeProvider dateTimeProvider)
         {
             this.guidFactory = guidFactory;
             this.dateTimeProvider = dateTimeProvider;
         }
-
+        
         /// <inheritdoc />
-        public ForumTopic Create(Guid forumId, Guid userId, CreateTopic createTopic)
+        public Comment Create(CreateComment createComment, Guid userId)
         {
-            return new ForumTopic
+            return new Comment
             {
-                ForumId = forumId,
-                ForumTopicId = guidFactory.Create(),
-                CreateDate = dateTimeProvider.Now,
+                CommentId = guidFactory.Create(),
+                EntityId = createComment.TopicId,
                 UserId = userId,
-                Title = createTopic.Title,
-                Text = createTopic.Text
+                CreateDate = dateTimeProvider.Now,
+                Text = createComment.Text,
+                IsRemoved = false
             };
         }
     }

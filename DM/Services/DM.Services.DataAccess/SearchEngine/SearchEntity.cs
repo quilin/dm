@@ -15,6 +15,11 @@ namespace DM.Services.DataAccess.SearchEngine
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Parent entity identifier
+        /// </summary>
+        public Guid ParentEntityId { get; set; }
+
+        /// <summary>
         /// Entity type
         /// </summary>
         public SearchEntityType EntityType { get; set; }

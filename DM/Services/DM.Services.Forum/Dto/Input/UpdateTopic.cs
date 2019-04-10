@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Forum.Dto
+namespace DM.Services.Forum.Dto.Input
 {
     /// <summary>
     /// DTO model for updating existing topic

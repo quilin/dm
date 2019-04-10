@@ -2,6 +2,7 @@ using System.Linq;
 using AutoMapper;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.Dto
 {
