@@ -1,3 +1,4 @@
+using System;
 using DM.Services.Forum.Dto.Input;
 using FluentAssertions;
 using FluentValidation;
@@ -26,9 +27,21 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         }
 
         [Fact]
-        public void NotThrowWhenTextIsOk()
+        public void ThrowValidationExceptionWhenTopicIdIsEmpty()
         {
             validator.Invoking(v => v.ValidateAndThrowAsync(new CreateComment {Text = "something"}).Wait())
+                .Should().Throw<ValidationException>()
+                .And.Errors.Should().ContainSingle(e => e.PropertyName == "TopicId");
+        }
+
+        [Fact]
+        public void NotThrowWhenAllOk()
+        {
+            validator.Invoking(v => v.ValidateAndThrowAsync(new CreateComment
+                {
+                    Text = "something",
+                    TopicId = Guid.NewGuid()
+                }).Wait())
                 .Should().NotThrow();
         }
     }

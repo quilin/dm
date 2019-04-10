@@ -38,7 +38,7 @@ namespace DM.Services.Forum.Tests.Authorization
         [InlineData(UserRole.RegularModerator | UserRole.Player)]
         public void ContainGuestAccessForNonGuestUsers(UserRole role)
         {
-            converter.Convert(role).Should().HaveFlag(UserRole.Guest);
+            converter.Convert(role).Should().HaveFlag(ForumAccessPolicy.Guest);
         }
     }
 }
