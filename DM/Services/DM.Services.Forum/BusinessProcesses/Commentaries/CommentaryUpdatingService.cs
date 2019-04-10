@@ -4,12 +4,12 @@ using DM.Services.Common.Dto;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
-using DbComment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Common.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
     public class CommentaryUpdatingService : ICommentaryUpdatingService
@@ -39,15 +39,15 @@ namespace DM.Services.Common.BusinessProcesses.Commentaries
         }
         
         /// <inheritdoc />
-        public async Task<Comment> Update(UpdateComment updateComment, EventType eventType)
+        public async Task<Comment> Update(UpdateComment updateComment)
         {
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
-            var updatedComment = await commentRepository.Update(updateComment.CommentId, new UpdateBuilder<DbComment>()
+            var updatedComment = await commentRepository.Update(updateComment.CommentId, new UpdateBuilder<ForumComment>()
                 .Field(f => f.Text, updateComment.Text)
                 .Field(f => f.LastUpdateDate, dateTimeProvider.Now));
-            await invokedEventPublisher.Publish(eventType, updateComment.CommentId);
+            await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
             return updatedComment;
         }
     }

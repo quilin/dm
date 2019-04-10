@@ -117,12 +117,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         #region Common navigations
 
         /// <summary>
-        /// User commentaries
-        /// </summary>
-        [InverseProperty(nameof(Comment.Author))]
-        public virtual ICollection<Comment> Comments { get; set; }
-
-        /// <summary>
         /// User likes
         /// </summary>
         [InverseProperty(nameof(Like.User))]
@@ -155,6 +149,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// </summary>
         [InverseProperty(nameof(ForumModerator.User))]
         public virtual ICollection<ForumModerator> ForumModerators { get; set; }
+
+        /// <summary>
+        /// User forum commentaries
+        /// </summary>
+        [InverseProperty(nameof(ForumComment.Author))]
+        public virtual ICollection<ForumComment> ForumComments { get; set; }
 
         #endregion
 
@@ -225,6 +225,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// </summary>
         [InverseProperty(nameof(PostAnticipation.Target))]
         public virtual ICollection<PostAnticipation> PostsRequired { get; set; }
+
+        /// <summary>
+        /// User game commentaries
+        /// </summary>
+        [InverseProperty(nameof(GameComment.Author))]
+        public virtual ICollection<GameComment> GameComments { get; set; }
 
         #endregion
 

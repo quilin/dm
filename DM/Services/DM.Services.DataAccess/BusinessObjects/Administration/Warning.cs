@@ -1,8 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
+using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Administration
@@ -55,9 +56,16 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         public virtual User Moderator { get; set; }
 
         /// <summary>
-        /// Warning causation commentary
+        /// Warning causation forum commentary
         /// </summary>
         [ForeignKey(nameof(EntityId))]
-        public virtual Comment Comment { get; set; }
+        public virtual ForumComment ForumComment { get; set; }
+        
+        /// <summary>
+        /// Warning causation game commentary
+        /// </summary>
+        /// <returns></returns>
+        [ForeignKey(nameof(EntityId))]
+        public virtual GameComment GameComment { get; set; }
     }
 }

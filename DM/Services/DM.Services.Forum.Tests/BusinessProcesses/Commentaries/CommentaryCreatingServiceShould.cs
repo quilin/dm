@@ -5,7 +5,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.BusinessProcesses.Topics;
@@ -26,9 +26,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
     {
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly ISetup<ICommentFactory, Comment> commentaryDalCreateSetup;
-        private readonly ISetup<Common.BusinessProcesses.Commentaries.ICommentRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
-        private readonly Mock<Common.BusinessProcesses.Commentaries.ICommentRepository> commentRepository;
+        private readonly ISetup<ICommentFactory, ForumComment> commentaryDalCreateSetup;
+        private readonly ISetup<ICommentRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
+        private readonly Mock<ICommentRepository> commentRepository;
         private readonly CommentCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
@@ -60,8 +60,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentaryDalCreateSetup = commentFactory
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
-            commentRepository = Mock<Common.BusinessProcesses.Commentaries.ICommentRepository>();
-            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<Comment>()));
+            commentRepository = Mock<ICommentRepository>();
+            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
@@ -83,7 +83,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var userId = Guid.NewGuid();
             currentUserSetup.Returns(new AuthenticatedUser {UserId = userId});
             var commentId = Guid.NewGuid();
-            var comment = new Comment {CommentId = commentId};
+            var comment = new ForumComment {ForumCommentId = commentId};
             commentaryDalCreateSetup.Returns(comment);
             var expected = new Common.Dto.Comment();
             commentaryCreateSetup.ReturnsAsync(expected);

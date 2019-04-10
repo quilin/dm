@@ -1,6 +1,6 @@
 using System;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto.Input;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
@@ -21,12 +21,12 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         }
         
         /// <inheritdoc />
-        public Comment Create(CreateComment createComment, Guid userId)
+        public ForumComment Create(CreateComment createComment, Guid userId)
         {
-            return new Comment
+            return new ForumComment
             {
-                CommentId = guidFactory.Create(),
-                EntityId = createComment.TopicId,
+                ForumCommentId = guidFactory.Create(),
+                ForumTopicId = createComment.TopicId,
                 UserId = userId,
                 CreateDate = dateTimeProvider.Now,
                 Text = createComment.Text,

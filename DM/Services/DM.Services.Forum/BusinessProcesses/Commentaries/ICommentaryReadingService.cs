@@ -18,5 +18,12 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         /// <param name="entityNumber">Number of entity that page must contain</param>
         /// <returns>Pair of comments list and paging data</returns>
         Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(Guid topicId, int entityNumber);
+
+        /// <summary>
+        /// Get topic comment by id
+        /// </summary>
+        /// <param name="commentId">Commentary identifier</param>
+        /// <returns>Found comment</returns>
+        Task<Comment> Get(Guid commentId);
     }
 }

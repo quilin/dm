@@ -185,8 +185,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// <summary>
         /// Commentaries
         /// </summary>
-        [InverseProperty(nameof(Comment.Game))]
-        public virtual ICollection<Comment> Comments { get; set; }
+        [InverseProperty(nameof(GameComment.Game))]
+        public virtual ICollection<GameComment> Comments { get; set; }
 
         /// <summary>
         /// Game preview picture

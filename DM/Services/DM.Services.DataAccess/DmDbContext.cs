@@ -47,7 +47,7 @@ namespace DM.Services.DataAccess
         /// <summary>
         /// Commentaries
         /// </summary>
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<ForumComment> Comments { get; set; }
 
         /// <summary>
         /// Likes

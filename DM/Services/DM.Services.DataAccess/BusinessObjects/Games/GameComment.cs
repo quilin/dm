@@ -3,29 +3,28 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Administration;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
-using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.DataAccess.BusinessObjects.Common
+namespace DM.Services.DataAccess.BusinessObjects.Games
 {
     /// <summary>
-    /// DAL model for commentary
+    /// DAL model for game discussions
     /// </summary>
-    [Table("Comments")]
-    public class Comment : IRemovable
+    [Table("GameComments")]
+    public class GameComment : IRemovable
     {
         /// <summary>
         /// Commentary identifier
         /// </summary>
         [Key]
-        public Guid CommentId { get; set; }
+        public Guid GameCommentId { get; set; }
 
         /// <summary>
         /// Parent entity identifier (e.g. forum topic, game, etc.)
         /// </summary>
-        public Guid EntityId { get; set; }
+        public Guid GameId { get; set; }
 
         /// <summary>
         /// Author identifier
@@ -53,13 +52,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Parent topic
         /// </summary>
-        [ForeignKey(nameof(EntityId))]
-        public virtual ForumTopic Topic { get; set; }
-
-        /// <summary>
-        /// Parent game
-        /// </summary>
-        [ForeignKey(nameof(EntityId))]
+        [ForeignKey(nameof(GameId))]
         public virtual Game Game { get; set; }
 
         /// <summary>
@@ -71,13 +64,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Likes
         /// </summary>
-        [InverseProperty(nameof(Like.Comment))]
+        [InverseProperty(nameof(Like.GameComment))]
         public virtual ICollection<Like> Likes { get; set; }
 
         /// <summary>
         /// Administrative warnings
         /// </summary>
-        [InverseProperty(nameof(Warning.Comment))]
+        [InverseProperty(nameof(Warning.GameComment))]
         public virtual ICollection<Warning> Warnings { get; set; }
     }
 }

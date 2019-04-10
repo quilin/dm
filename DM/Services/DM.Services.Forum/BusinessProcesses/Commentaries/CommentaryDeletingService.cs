@@ -4,11 +4,11 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.MessageQueuing.Publish;
 
-namespace DM.Services.Common.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
     public class CommentaryDeletingService : ICommentaryDeletingService
@@ -39,7 +39,7 @@ namespace DM.Services.Common.BusinessProcesses.Commentaries
         {
             var comment = await commentaryReadingService.Get(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Delete, comment);
-            await commentRepository.Update(commentId, new UpdateBuilder<Comment>()
+            await commentRepository.Update(commentId, new UpdateBuilder<ForumComment>()
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
                 .Field(c => c.IsRemoved, true));
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);

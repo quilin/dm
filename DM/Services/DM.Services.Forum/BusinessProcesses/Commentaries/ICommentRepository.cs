@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
-using DbComment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
+using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
@@ -26,5 +27,27 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         /// <param name="paging">Paging data</param>
         /// <returns></returns>
         Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging);
+
+        /// <summary>
+        /// Get single comment by its identifier
+        /// </summary>
+        /// <param name="commentId">Commentary identifier</param>
+        /// <returns>Found commentary</returns>
+        Task<Comment> Get(Guid commentId);
+
+        /// <summary>
+        /// Create comment from DAL
+        /// </summary>
+        /// <param name="forumComment">DAL model for comment</param>
+        /// <returns></returns>
+        Task<Comment> Create(ForumComment forumComment);
+
+        /// <summary>
+        /// Update existing commentary
+        /// </summary>
+        /// <param name="commentId">Commentary identifier</param>
+        /// <param name="update">Updated fields</param>
+        /// <returns></returns>
+        Task<Comment> Update(Guid commentId, UpdateBuilder<ForumComment> update);
     }
 }

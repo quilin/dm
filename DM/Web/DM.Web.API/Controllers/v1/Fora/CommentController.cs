@@ -7,7 +7,7 @@ using DM.Web.API.Services.Fora;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1.Common
+namespace DM.Web.API.Controllers.v1.Fora
 {
     /// <summary>
     /// Commentaries

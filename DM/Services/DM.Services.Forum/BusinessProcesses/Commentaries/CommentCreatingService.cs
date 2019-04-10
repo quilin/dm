@@ -20,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
         private readonly ICommentFactory commentFactory;
-        private readonly Services.Common.BusinessProcesses.Commentaries.ICommentRepository commentRepository;
+        private readonly ICommentRepository commentRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -30,7 +30,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ICommentFactory commentFactory,
-            Services.Common.BusinessProcesses.Commentaries.ICommentRepository commentRepository,
+            ICommentRepository commentRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
@@ -52,7 +52,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
 
             var comment = commentFactory.Create(createComment, identity.User.UserId);
             var createdComment = await commentRepository.Create(comment);
-            await invokedEventPublisher.Publish(EventType.NewForumComment, comment.CommentId);
+            await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
 
             return createdComment;
         }

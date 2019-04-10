@@ -35,7 +35,7 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         public override async Task Index(InvokedEvent invokedEvent)
         {
             var comment = await dbContext.Comments
-                .Where(c => c.CommentId == invokedEvent.EntityId)
+                .Where(c => c.ForumCommentId == invokedEvent.EntityId)
                 .Select(c => new {c.Text, c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId})
                 .FirstAsync();
             await indexingRepository.Index(new SearchEntity

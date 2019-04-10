@@ -11,8 +11,8 @@ namespace DM.Services.Common.Dto
         /// <inheritdoc />
         public CommentProfile()
         {
-            CreateMap<DataAccess.BusinessObjects.Common.Comment, Comment>()
-                .ForMember(d => d.Id, s => s.MapFrom(c => c.CommentId))
+            CreateMap<DataAccess.BusinessObjects.Fora.ForumComment, Comment>()
+                .ForMember(d => d.Id, s => s.MapFrom(c => c.ForumCommentId))
                 .ForMember(d => d.Likes, s => s.MapFrom(c => c.Likes.Select(l => l.User)));
         }
     }

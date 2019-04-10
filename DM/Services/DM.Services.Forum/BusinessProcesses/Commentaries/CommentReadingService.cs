@@ -50,5 +50,11 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
 
             return (comments, pagingData);
         }
+
+        /// <inheritdoc />
+        public Task<Comment> Get(Guid commentId)
+        {
+            return commentRepository.Get(commentId);
+        }
     }
 }
