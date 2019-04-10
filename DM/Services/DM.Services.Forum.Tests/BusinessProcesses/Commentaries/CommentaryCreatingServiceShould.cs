@@ -27,9 +27,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<ICommentFactory, Comment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
-        private readonly Mock<ICommentRepository> commentRepository;
-        private readonly CommentaryCreatingService service;
+        private readonly ISetup<Common.BusinessProcesses.Commentaries.ICommentRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
+        private readonly Mock<Common.BusinessProcesses.Commentaries.ICommentRepository> commentRepository;
+        private readonly CommentCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
         private readonly Mock<ICommentFactory> commentFactory;
@@ -60,7 +60,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentaryDalCreateSetup = commentFactory
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
-            commentRepository = Mock<ICommentRepository>();
+            commentRepository = Mock<Common.BusinessProcesses.Commentaries.ICommentRepository>();
             commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<Comment>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
@@ -68,7 +68,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
-            service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,
+            service = new CommentCreatingService(validator.Object, topicReadingService.Object,
                 intentionManager.Object, identityProvider.Object, commentFactory.Object,
                 commentRepository.Object, invokedEventPublisher.Object);
         }

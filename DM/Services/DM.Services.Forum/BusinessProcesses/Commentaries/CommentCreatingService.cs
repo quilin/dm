@@ -13,24 +13,24 @@ using FluentValidation;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
-    public class CommentaryCreatingService : ICommentaryCreatingService
+    public class CommentCreatingService : ICommentaryCreatingService
     {
         private readonly IValidator<CreateComment> validator;
         private readonly ITopicReadingService topicReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
         private readonly ICommentFactory commentFactory;
-        private readonly ICommentRepository commentRepository;
+        private readonly Services.Common.BusinessProcesses.Commentaries.ICommentRepository commentRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
-        public CommentaryCreatingService(
+        public CommentCreatingService(
             IValidator<CreateComment> validator,
             ITopicReadingService topicReadingService,
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ICommentFactory commentFactory,
-            ICommentRepository commentRepository,
+            Services.Common.BusinessProcesses.Commentaries.ICommentRepository commentRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;

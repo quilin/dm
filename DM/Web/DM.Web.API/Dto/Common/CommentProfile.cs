@@ -1,4 +1,5 @@
 using AutoMapper;
+using DM.Services.Common.Dto;
 using DM.Services.Forum.Dto.Input;
 
 namespace DM.Web.API.Dto.Common
@@ -15,6 +16,8 @@ namespace DM.Web.API.Dto.Common
                 .ForMember(d => d.Id, s => s.MapFrom(c => c.Id.ToString()));
 
             CreateMap<Comment, CreateComment>();
+
+            CreateMap<Comment, UpdateComment>();
         }
     }
 }

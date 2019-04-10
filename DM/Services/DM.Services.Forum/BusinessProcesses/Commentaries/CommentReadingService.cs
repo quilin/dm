@@ -12,7 +12,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
-    public class CommentaryReadingService : ICommentaryReadingService
+    public class CommentReadingService : ICommentaryReadingService
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly ICommentRepository commentRepository;
@@ -20,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         private readonly IIdentity identity;
 
         /// <inheritdoc />
-        public CommentaryReadingService(
+        public CommentReadingService(
             ITopicReadingService topicReadingService,
             IIdentityProvider identityProvider,
             ICommentRepository commentRepository,

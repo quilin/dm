@@ -37,10 +37,22 @@ namespace DM.Services.Core.Dto.Enums
         DeletedTopic = 104,
 
         /// <summary>
-        /// New commentary has been created
+        /// New commentary has been created on forum
         /// </summary>
-        [EventRoutingKey("new.comment")]
+        [EventRoutingKey("new.comment.forum")]
         NewForumComment = 201,
+        
+        /// <summary>
+        /// Forum commentary has been updated
+        /// </summary>
+        [EventRoutingKey("changed.comment.forum")]
+        ChangedForumComment = 202,
+
+        /// <summary>
+        /// Forum commentary has been deleted
+        /// </summary>
+        [EventRoutingKey("deleted.comment.forum")]
+        DeletedForumComment = 203,
 
         /// <summary>
         /// Topic has been liked

@@ -26,12 +26,5 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         /// <param name="paging">Paging data</param>
         /// <returns></returns>
         Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging);
-
-        /// <summary>
-        /// Create comment from DAL
-        /// </summary>
-        /// <param name="comment">DAL model for comment</param>
-        /// <returns></returns>
-        Task<Comment> Create(DbComment comment);
     }
 }

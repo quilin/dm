@@ -12,6 +12,8 @@ namespace DM.Services.Forum.Dto.Input
         {
             RuleFor(c => c.Text)
                 .NotEmpty();
+            RuleFor(c => c.TopicId)
+                .NotEmpty();
         }
     }
 }

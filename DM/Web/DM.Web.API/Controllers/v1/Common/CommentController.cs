@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using DM.Web.API.Services.Common;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,25 @@ namespace DM.Web.API.Controllers.v1.Common
     [Route("v1/comments")]
     public class CommentController : Controller
     {
+        private readonly ICommentApiService commentApiService;
+
+        /// <inheritdoc />
+        public CommentController(
+            ICommentApiService commentApiService)
+        {
+            this.commentApiService = commentApiService;
+        }
+
+        /// <summary>
+        /// Get comment
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        /// <response code="404">Some changed comment properties were invalid or passed id was not recognized</response>
+        [ProducesResponseType(typeof(Envelope<Comment>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 404)]
+        public Task<Envelope<Comment>> GetComment(Guid id) => commentApiService.Get(id);
+
         /// <summary>
         /// Update comment
         /// </summary>
@@ -32,7 +52,7 @@ namespace DM.Web.API.Controllers.v1.Common
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<Envelope<Comment>> PutComment(Guid id, [FromBody] Comment comment) =>
-            throw new NotImplementedException();
+            commentApiService.Update(id, comment);
 
         /// <summary>
         /// Delete comment
@@ -48,7 +68,7 @@ namespace DM.Web.API.Controllers.v1.Common
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task DeleteComment(Guid id) => throw new NotImplementedException();
+        public Task DeleteComment(Guid id) => commentApiService.Delete(id);
 
         /// <summary>
         /// Post new like
