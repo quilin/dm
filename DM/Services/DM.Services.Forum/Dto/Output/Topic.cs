@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 
 namespace DM.Services.Forum.Dto.Output
@@ -7,11 +8,9 @@ namespace DM.Services.Forum.Dto.Output
     /// <summary>
     /// Topic DTO model
     /// </summary>
-    public class Topic
+    public class Topic : ILikable
     {
-        /// <summary>
-        /// Topic identifier
-        /// </summary>
+        /// <inheritdoc />
         public Guid Id { get; set; }
 
         /// <summary>
@@ -69,9 +68,7 @@ namespace DM.Services.Forum.Dto.Output
         /// </summary>
         public DateTime LastActivityDate { get; set; }
 
-        /// <summary>
-        /// Likes
-        /// </summary>
+        /// <inheritdoc />
         public IEnumerable<GeneralUser> Likes { get; set; }
     }
 

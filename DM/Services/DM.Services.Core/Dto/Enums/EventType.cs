@@ -41,7 +41,7 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("new.comment.forum")]
         NewForumComment = 201,
-        
+
         /// <summary>
         /// Forum commentary has been updated
         /// </summary>
@@ -59,5 +59,11 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("liked.topic")]
         LikedTopic = 601,
+
+        /// <summary>
+        /// Forum commentary has been liked
+        /// </summary>
+        [EventRoutingKey("liked.comment.forum")]
+        LikedForumComment = 602,
     }
 }

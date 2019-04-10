@@ -2,11 +2,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Common.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
-using Comment = DM.Web.API.Dto.Common.Comment;
+using Comment = DM.Web.API.Dto.Fora.Comment;
 
 namespace DM.Web.API.Services.Fora
 {

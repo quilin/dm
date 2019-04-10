@@ -7,7 +7,7 @@ using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Topics;
-using Comment = DM.Services.Common.Dto.Comment;
+using Comment = DM.Services.Forum.Dto.Output.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {

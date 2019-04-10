@@ -31,5 +31,15 @@ namespace DM.Web.API.Services.Fora
 
         /// <inheritdoc />
         public Task DislikeTopic(Guid topicId) => likeService.DislikeTopic(topicId);
+
+        /// <inheritdoc />
+        public async Task<Envelope<User>> LikeComment(Guid commentId)
+        {
+            var likedByUser = await likeService.LikeComment(commentId);
+            return new Envelope<User>(mapper.Map<User>(likedByUser));
+        }
+
+        /// <inheritdoc />
+        public Task DislikeComment(Guid commentId) => likeService.DislikeComment(commentId);
     }
 }

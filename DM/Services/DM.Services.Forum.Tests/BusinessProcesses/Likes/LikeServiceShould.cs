@@ -10,6 +10,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;
+using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.BusinessProcesses.Likes;
 using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto.Output;
@@ -48,8 +49,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             factory = Mock<ILikeFactory>();
             likeRepository = Mock<ILikeRepository>();
             publisher = Mock<IInvokedEventPublisher>();
-            service = new LikeService(topicReadingService.Object, intentionManager.Object,
-                identityProvider.Object, factory.Object, likeRepository.Object, publisher.Object);
+            service = new LikeService(topicReadingService.Object, Mock<ICommentaryReadingService>().Object,
+                intentionManager.Object, identityProvider.Object, factory.Object,
+                likeRepository.Object, publisher.Object);
         }
 
         [Fact]

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
+using DM.Web.API.Dto.Fora;
 
 namespace DM.Web.API.Services.Fora
 {

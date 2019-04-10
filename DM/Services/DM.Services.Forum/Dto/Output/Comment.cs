@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Common.Dto
+namespace DM.Services.Forum.Dto.Output
 {
     /// <summary>
     /// DTO model for comment
     /// </summary>
-    public class Comment
+    public class Comment : ILikable
     {
-        /// <summary>
-        /// Id
-        /// </summary>
+        /// <inheritdoc />
         public Guid Id { get; set; }
 
         /// <summary>
@@ -34,9 +33,7 @@ namespace DM.Services.Common.Dto
         /// </summary>
         public GeneralUser Author { get; set; }
 
-        /// <summary>
-        /// Users who liked this comment
-        /// </summary>
+        /// <inheritdoc />
         public IEnumerable<GeneralUser> Likes { get; set; }
     }
 }

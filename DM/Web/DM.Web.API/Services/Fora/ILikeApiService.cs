@@ -23,5 +23,19 @@ namespace DM.Web.API.Services.Fora
         /// <param name="topicId">Topic identifier</param>
         /// <returns></returns>
         Task DislikeTopic(Guid topicId);
+
+        /// <summary>
+        /// Like the commentary
+        /// </summary>
+        /// <param name="commentId">Commentary identifier</param>
+        /// <returns>Envelope for user who just liked the commentary</returns>
+        Task<Envelope<User>> LikeComment(Guid commentId);
+
+        /// <summary>
+        /// Remove user's like from commentary
+        /// </summary>
+        /// <param name="commentId">Commentary identifier</param>
+        /// <returns></returns>
+        Task DislikeComment(Guid commentId);
     }
 }

@@ -1,8 +1,7 @@
 using AutoMapper;
-using DM.Services.Common.Dto;
 using DM.Services.Forum.Dto.Input;
 
-namespace DM.Web.API.Dto.Common
+namespace DM.Web.API.Dto.Fora
 {
     /// <summary>
     /// Mapping profile from Service DTO to API DTO for commentaries
@@ -12,7 +11,7 @@ namespace DM.Web.API.Dto.Common
         /// <inheritdoc />
         public CommentProfile()
         {
-            CreateMap<DM.Services.Common.Dto.Comment, Comment>()
+            CreateMap<DM.Services.Forum.Dto.Output.Comment, Comment>()
                 .ForMember(d => d.Id, s => s.MapFrom(c => c.Id.ToString()));
 
             CreateMap<Comment, CreateComment>();

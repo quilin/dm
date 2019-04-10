@@ -22,5 +22,19 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         /// <param name="topicId">Topic identifier</param>
         /// <returns></returns>
         Task DislikeTopic(Guid topicId);
+
+        /// <summary>
+        /// Create new like from current user to selected comment
+        /// </summary>
+        /// <param name="commentId">Comment identifier</param>
+        /// <returns>User who liked the comment</returns>
+        Task<GeneralUser> LikeComment(Guid commentId);
+
+        /// <summary>
+        /// Remove existing like from current user to selected comment
+        /// </summary>
+        /// <param name="commentId">Comment identifier</param>
+        /// <returns></returns>
+        Task DislikeComment(Guid commentId);
     }
 }

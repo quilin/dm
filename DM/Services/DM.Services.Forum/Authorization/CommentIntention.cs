@@ -1,4 +1,4 @@
-namespace DM.Services.Common.Authorization
+namespace DM.Services.Forum.Authorization
 {
     /// <summary>
     /// List of forum comment actions that requires authorization
@@ -13,6 +13,11 @@ namespace DM.Services.Common.Authorization
         /// <summary>
         /// Remove commentary
         /// </summary>
-        Delete = 2
+        Delete = 2,
+
+        /// <summary>
+        /// Like commentary
+        /// </summary>
+        Like = 3
     }
 }

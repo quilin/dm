@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Common.Authorization;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Forum.Authorization;
 using DM.Services.MessageQueuing.Publish;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries

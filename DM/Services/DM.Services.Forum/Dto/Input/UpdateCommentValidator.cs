@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace DM.Services.Common.Dto
+namespace DM.Services.Forum.Dto.Input
 {
     /// <summary>
     /// Validator for commentary updating DTO model

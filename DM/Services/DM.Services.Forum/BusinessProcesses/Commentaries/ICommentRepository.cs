@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries
 {

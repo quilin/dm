@@ -27,7 +27,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<ICommentFactory, ForumComment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
+        private readonly ISetup<ICommentRepository, Task<Comment>> commentaryCreateSetup;
         private readonly Mock<ICommentRepository> commentRepository;
         private readonly CommentCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
@@ -85,7 +85,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var commentId = Guid.NewGuid();
             var comment = new ForumComment {ForumCommentId = commentId};
             commentaryDalCreateSetup.Returns(comment);
-            var expected = new Common.Dto.Comment();
+            var expected = new Comment();
             commentaryCreateSetup.ReturnsAsync(expected);
 
             var actual = await service.Create(createComment);

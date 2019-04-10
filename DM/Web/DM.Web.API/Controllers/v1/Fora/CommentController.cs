@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
+using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Fora;
 using DM.Web.Core.Authentication;
@@ -16,12 +16,15 @@ namespace DM.Web.API.Controllers.v1.Fora
     public class CommentController : Controller
     {
         private readonly ICommentApiService commentApiService;
+        private readonly ILikeApiService likeApiService;
 
         /// <inheritdoc />
         public CommentController(
-            ICommentApiService commentApiService)
+            ICommentApiService commentApiService,
+            ILikeApiService likeApiService)
         {
             this.commentApiService = commentApiService;
+            this.likeApiService = likeApiService;
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostLike(Guid id) => throw new NotImplementedException();
+        public Task<Envelope<User>> PostLike(Guid id) => likeApiService.LikeComment(id);
 
         /// <summary>
         /// Delete like
@@ -104,6 +107,6 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteLike(Guid id) => throw new NotImplementedException();
+        public Task DeleteLike(Guid id) => likeApiService.DislikeComment(id);
     }
 }

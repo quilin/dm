@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Web.API.Dto.Common;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;

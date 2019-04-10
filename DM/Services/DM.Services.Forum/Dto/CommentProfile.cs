@@ -1,7 +1,8 @@
 using System.Linq;
 using AutoMapper;
+using DM.Services.Forum.Dto.Output;
 
-namespace DM.Services.Common.Dto
+namespace DM.Services.Forum.Dto
 {
     /// <summary>
     /// Profile for comment mapping
