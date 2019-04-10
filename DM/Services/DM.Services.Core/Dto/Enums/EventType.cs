@@ -57,13 +57,13 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Topic has been liked
         /// </summary>
-        [EventRoutingKey("liked.topic")]
+        [EventRoutingKey("new.like.topic")]
         LikedTopic = 601,
 
         /// <summary>
         /// Forum commentary has been liked
         /// </summary>
-        [EventRoutingKey("liked.comment.forum")]
-        LikedForumComment = 602,
+        [EventRoutingKey("new.like.comment.forum")]
+        LikedForumComment = 602
     }
 }
