@@ -29,20 +29,28 @@ namespace DM.Web.API.Controllers.v1.Users
         /// Register new user
         /// </summary>
         /// <param name="registration">New user credentials information</param>
-        /// <response code="201"></response>
-        /// <response code="400"></response>
-        [HttpPost]
-        [ProducesResponseType(200)]
+        /// <response code="201">User has been registered and expects confirmation by e-mail</response>
+        /// <response code="400">Some of registration properties were invalid</response>
+        [HttpPost(Name = nameof(Register))]
+        [ProducesResponseType(201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
-        public Task Register([FromBody] Registration registration) => registrationApiService.Register(registration);
+        public async Task<IActionResult> Register([FromBody] Registration registration)
+        {
+            await registrationApiService.Register(registration);
+            return CreatedAtRoute(nameof(UserController.GetUser), new {login = registration.Login}, null);
+        }
 
         /// <summary>
         /// Activate registered user
         /// </summary>
         /// <param name="token">Activation token</param>
-        /// <returns></returns>
-        [HttpPut("activate/{token}")]
+        /// <response code="200">User has been activated and logged in</response>
+        /// <response code="400">Token is invalid</response>
+        /// <response code="410">Token is expired</response>
+        [HttpPut("{token}", Name = nameof(Activate))]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
-        public Task<Envelope<User>> Activate(Guid token) => activationApiService.Activate(token);
+        [ProducesResponseType(typeof(GeneralError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> Activate(Guid token) => Ok(await activationApiService.Activate(token));
     }
 }

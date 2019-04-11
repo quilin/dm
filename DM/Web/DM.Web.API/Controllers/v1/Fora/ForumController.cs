@@ -35,7 +35,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="200"></response>
         [HttpGet(Name = nameof(GetFora))]
         [ProducesResponseType(typeof(ListEnvelope<Forum>), 200)]
-        public Task<ListEnvelope<Forum>> GetFora() => forumApiService.Get();
+        public async Task<IActionResult> GetFora() => Ok(await forumApiService.Get());
 
         /// <summary>
         /// Get certain forum
@@ -46,7 +46,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}", Name = nameof(GetForum))]
         [ProducesResponseType(typeof(Envelope<Forum>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Forum>> GetForum(string id) => forumApiService.Get(id);
+        public async Task<IActionResult> GetForum(string id) => Ok(await forumApiService.Get(id));
 
         /// <summary>
         /// Get forum moderators
@@ -57,7 +57,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}/moderators", Name = nameof(GetModerators))]
         [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<User>> GetModerators(string id) => moderatorsApiService.GetModerators(id);
+        public async Task<IActionResult> GetModerators(string id) => Ok(await moderatorsApiService.GetModerators(id));
 
         /// <summary>
         /// Get list of forum topics
@@ -72,8 +72,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<Topic>> GetTopics(string id, [FromQuery] TopicFilters f, [FromQuery] int n = 1) =>
-            topicApiService.Get(id, f, n);
+        public async Task<IActionResult> GetTopics(string id, [FromQuery] TopicFilters f, [FromQuery] int n = 1) =>
+            Ok(await topicApiService.Get(id, f, n));
 
         /// <summary>
         /// Post new topic
@@ -92,6 +92,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> PostTopic(string id, [FromBody] Topic topic) => topicApiService.Create(id, topic);
+        public async Task<IActionResult> PostTopic(string id, [FromBody] Topic topic)
+        {
+            var result = await topicApiService.Create(id, topic);
+            return CreatedAtRoute(nameof(TopicController.GetTopic), new {id = result.Resource.Id}, result);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}", Name = nameof(GetForumComment))]
         [ProducesResponseType(typeof(Envelope<Comment>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> GetForumComment(Guid id) => commentApiService.Get(id);
+        public async Task<IActionResult> GetForumComment(Guid id) => Ok(await commentApiService.Get(id));
 
         /// <summary>
         /// Update comment
@@ -55,8 +55,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> PutForumComment(Guid id, [FromBody] Comment comment) =>
-            commentApiService.Update(id, comment);
+        public async Task<IActionResult> PutForumComment(Guid id, [FromBody] Comment comment) =>
+            Ok(await commentApiService.Update(id, comment));
 
         /// <summary>
         /// Delete comment
@@ -72,7 +72,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task DeleteForumComment(Guid id) => commentApiService.Delete(id);
+        public async Task<IActionResult> DeleteForumComment(Guid id)
+        {
+            await commentApiService.Delete(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Post new like
@@ -90,7 +94,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostForumCommentLike(Guid id) => likeApiService.LikeComment(id);
+        public async Task<IActionResult> PostForumCommentLike(Guid id)
+        {
+            var result = await likeApiService.LikeComment(id);
+            return CreatedAtRoute(nameof(GetForumComment), new {id}, result);
+        }
 
         /// <summary>
         /// Delete like
@@ -108,6 +116,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteForumCommentLike(Guid id) => likeApiService.DislikeComment(id);
+        public async Task<IActionResult> DeleteForumCommentLike(Guid id)
+        {
+            await likeApiService.DislikeComment(id);
+            return NoContent();
+        }
     }
 }

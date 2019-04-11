@@ -39,7 +39,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}", Name = nameof(GetTopic))]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> GetTopic(Guid id) => topicApiService.Get(id);
+        public async Task<IActionResult> GetTopic(Guid id) => Ok(await topicApiService.Get(id));
 
         /// <summary>
         /// Put topic changes
@@ -58,7 +58,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Topic>> PutTopic(Guid id, [FromBody] Topic topic) => topicApiService.Update(id, topic);
+        public async Task<IActionResult> PutTopic(Guid id, [FromBody] Topic topic) =>
+            Ok(await topicApiService.Update(id, topic));
 
         /// <summary>
         /// Delete certain topic
@@ -74,7 +75,12 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task DeleteTopic(Guid id) => topicApiService.Delete(id);
+        public async Task<IActionResult> DeleteTopic(Guid id)
+        {
+            await topicApiService.Delete(id);
+            return NoContent();
+        }
+
 
         /// <summary>
         /// Post new like
@@ -92,7 +98,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostTopicLike(Guid id) => likeApiService.LikeTopic(id);
+        public async Task<IActionResult> PostTopicLike(Guid id) =>
+            CreatedAtRoute(nameof(GetTopic), new {id}, await likeApiService.LikeTopic(id));
 
         /// <summary>
         /// Delete like
@@ -110,7 +117,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteTopicLike(Guid id) => likeApiService.DislikeTopic(id);
+        public async Task<IActionResult> DeleteTopicLike(Guid id)
+        {
+            await likeApiService.DislikeTopic(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Get list of comments
@@ -122,8 +133,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<Comment>> GetForumComments(Guid id, [FromQuery] int n = 1) =>
-            commentApiService.Get(id, n);
+        public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] int n = 1) =>
+            Ok(await commentApiService.Get(id, n));
 
         /// <summary>
         /// Post new comment
@@ -142,7 +153,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> PostForumComment(Guid id, [FromBody] Comment comment) =>
-            commentApiService.Create(id, comment);
+        public async Task<IActionResult> PostForumComment(Guid id, [FromBody] Comment comment)
+        {
+            var result = await commentApiService.Create(id, comment);
+            return CreatedAtRoute(nameof(CommentController.GetForumComment), new {id = result.Resource.Id}, result);
+        }
     }
 }

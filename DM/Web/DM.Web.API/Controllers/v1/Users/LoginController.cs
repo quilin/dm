@@ -30,12 +30,12 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <response code="200"></response>
         /// <response code="400">User not found or password is incorrect</response>
         /// <response code="403">User is inactive or banned</response>
-        [HttpPut]
+        [HttpPost]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        public Task<Envelope<User>> Login([FromBody] LoginCredentials credentials) =>
-            loginApiService.Login(credentials, HttpContext);
+        public async Task<IActionResult> Login([FromBody] LoginCredentials credentials) =>
+            Ok(await loginApiService.Login(credentials, HttpContext));
 
         /// <summary>
         /// Logout as current user
@@ -46,7 +46,11 @@ namespace DM.Web.API.Controllers.v1.Users
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
-        public Task Logout() => loginApiService.Logout(HttpContext);
+        public async Task<IActionResult> Logout()
+        {
+            await loginApiService.Logout(HttpContext);
+            return NoContent();
+        }
 
         /// <summary>
         /// Logout from every device
@@ -57,6 +61,10 @@ namespace DM.Web.API.Controllers.v1.Users
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
-        public Task LogoutAll() => loginApiService.LogoutAll(HttpContext);
+        public async Task<IActionResult> LogoutAll()
+        {
+            await loginApiService.LogoutAll(HttpContext);
+            return NoContent();
+        }
     }
 }
