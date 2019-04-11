@@ -36,7 +36,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="id"></param>
         /// <response code="200"></response>
         /// <response code="404">No topic was found for passed id</response>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = nameof(GetTopic))]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         public Task<Envelope<Topic>> GetTopic(Guid id) => topicApiService.Get(id);
@@ -51,7 +51,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this topic</response>
         /// <response code="404">No topic was found for passed id</response>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = nameof(PutTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -68,7 +68,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to remove the topic</response>
         /// <response code="404">No topic was found for passed id</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = nameof(DeleteTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
@@ -85,14 +85,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="403">User is not allowed to like the topic</response>
         /// <response code="404">No topic was found for passed id</response>
         /// <response code="409">User already liked this topic</response>
-        [HttpPost("{id}/likes")]
+        [HttpPost("{id}/likes", Name = nameof(PostTopicLike))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostLike(Guid id) => likeApiService.LikeTopic(id);
+        public Task<Envelope<User>> PostTopicLike(Guid id) => likeApiService.LikeTopic(id);
 
         /// <summary>
         /// Delete like
@@ -103,14 +103,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="403">User is not allowed to remove like from this topic</response>
         /// <response code="404">No topic was found for passed id</response>
         /// <response code="409">User has no like for this topic</response>
-        [HttpDelete("{id}/likes")]
+        [HttpDelete("{id}/likes", Name = nameof(DeleteTopicLike))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteLike(Guid id) => likeApiService.DislikeTopic(id);
+        public Task DeleteTopicLike(Guid id) => likeApiService.DislikeTopic(id);
 
         /// <summary>
         /// Get list of comments
@@ -119,10 +119,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="n">Entity number</param>
         /// <response code="200"></response>
         /// <response code="404">No topic was found for passed id</response>
-        [HttpGet("{id}/comments")]
+        [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<ListEnvelope<Comment>> GetComments(Guid id, [FromQuery] int n = 1) => commentApiService.Get(id, n);
+        public Task<ListEnvelope<Comment>> GetForumComments(Guid id, [FromQuery] int n = 1) =>
+            commentApiService.Get(id, n);
 
         /// <summary>
         /// Post new comment
@@ -134,14 +135,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to comment this topic</response>
         /// <response code="404">No topic was found for passed id</response>
-        [HttpPost("{id}/comments")]
+        [HttpPost("{id}/comments", Name = nameof(PostForumComment))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Comment>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> PostComment(Guid id, [FromBody] Comment comment) =>
+        public Task<Envelope<Comment>> PostForumComment(Guid id, [FromBody] Comment comment) =>
             commentApiService.Create(id, comment);
     }
 }

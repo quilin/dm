@@ -13,7 +13,7 @@ namespace DM.Web.Core.Authentication
         public AuthenticationRequiredAttribute() : base(typeof(AuthenticationRequiredFilter))
         {
         }
-        
+
         private class AuthenticationRequiredFilter : IActionFilter
         {
             private readonly IIdentityProvider identityProvider;
@@ -23,7 +23,7 @@ namespace DM.Web.Core.Authentication
             {
                 this.identityProvider = identityProvider;
             }
-            
+
             public void OnActionExecuting(ActionExecutingContext context)
             {
                 if (!identityProvider.Current.User.IsAuthenticated)

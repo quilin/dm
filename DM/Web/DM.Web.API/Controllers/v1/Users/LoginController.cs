@@ -30,7 +30,7 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <response code="200"></response>
         /// <response code="400">User not found or password is incorrect</response>
         /// <response code="403">User is inactive or banned</response>
-        [HttpPost]
+        [HttpPut]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 403)]

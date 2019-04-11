@@ -33,9 +33,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="id"></param>
         /// <response code="200"></response>
         /// <response code="404">Some changed comment properties were invalid or passed id was not recognized</response>
+        [HttpGet("{id}", Name = nameof(GetForumComment))]
         [ProducesResponseType(typeof(Envelope<Comment>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> GetComment(Guid id) => commentApiService.Get(id);
+        public Task<Envelope<Comment>> GetForumComment(Guid id) => commentApiService.Get(id);
 
         /// <summary>
         /// Update comment
@@ -47,14 +48,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to change this comment</response>
         /// <response code="404">Comment was not found with passed id</response>
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = nameof(PutForumComment))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Comment>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task<Envelope<Comment>> PutComment(Guid id, [FromBody] Comment comment) =>
+        public Task<Envelope<Comment>> PutForumComment(Guid id, [FromBody] Comment comment) =>
             commentApiService.Update(id, comment);
 
         /// <summary>
@@ -65,13 +66,13 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to change this comment</response>
         /// <response code="404">Comment was not found with passed id</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = nameof(DeleteForumComment))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public Task DeleteComment(Guid id) => commentApiService.Delete(id);
+        public Task DeleteForumComment(Guid id) => commentApiService.Delete(id);
 
         /// <summary>
         /// Post new like
@@ -82,14 +83,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="403">User is not allowed to like the comment</response>
         /// <response code="404">No available comment was found with passed id</response>
         /// <response code="409">User already liked this comment</response>
-        [HttpPost("{id}/likes")]
+        [HttpPost("{id}/likes", Name = nameof(PostForumCommentLike))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task<Envelope<User>> PostLike(Guid id) => likeApiService.LikeComment(id);
+        public Task<Envelope<User>> PostForumCommentLike(Guid id) => likeApiService.LikeComment(id);
 
         /// <summary>
         /// Delete like
@@ -100,13 +101,13 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="403">User is not allowed to remove like from this comment</response>
         /// <response code="404">No available comment was found with passed id</response>
         /// <response code="409">User has no like for this comment</response>
-        [HttpDelete("{id}/likes")]
+        [HttpDelete("{id}/likes", Name = nameof(DeleteForumCommentLike))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
-        public Task DeleteLike(Guid id) => likeApiService.DislikeComment(id);
+        public Task DeleteForumCommentLike(Guid id) => likeApiService.DislikeComment(id);
     }
 }
