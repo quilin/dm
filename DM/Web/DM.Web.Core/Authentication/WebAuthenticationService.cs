@@ -10,17 +10,14 @@ namespace DM.Web.Core.Authentication
     /// <inheritdoc />
     public class WebAuthenticationService : IWebAuthenticationService
     {
-        private readonly ICredentialsStorage credentialsStorage;
         private readonly IAuthenticationService authenticationService;
         private readonly IIdentitySetter identitySetter;
 
         /// <inheritdoc />
         public WebAuthenticationService(
-            ICredentialsStorage credentialsStorage,
             IAuthenticationService authenticationService,
             IIdentitySetter identitySetter)
         {
-            this.credentialsStorage = credentialsStorage;
             this.authenticationService = authenticationService;
             this.identitySetter = identitySetter;
         }
@@ -34,51 +31,23 @@ namespace DM.Web.Core.Authentication
                         loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe);
                 case TokenCredentials tokenCredentials:
                     return await authenticationService.Authenticate(tokenCredentials.Token);
+                case UnconditionalCredentials unconditionalCredentials:
+                    return await authenticationService.Authenticate(unconditionalCredentials.UserId);
                 default:
                     return Identity.Guest();
             }
         }
 
-        private async Task StoreAuthentication(HttpContext httpContext, IIdentity identity)
-        {
-            if (identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated)
-            {
-                await credentialsStorage.Load(httpContext, identity);
-            }
-
-            identitySetter.Current = identity;
-        }
+        /// <inheritdoc />
+        public async Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext) =>
+            identitySetter.Current = await GetAuthenticationResult(credentials);
 
         /// <inheritdoc />
-        public async Task<IIdentity> Authenticate(LoginCredentials credentials, HttpContext httpContext)
-        {
-            var authenticationResult = await GetAuthenticationResult(credentials);
-            await StoreAuthentication(httpContext, authenticationResult);
-            return authenticationResult;
-        }
+        public async Task Logout(HttpContext httpContext) =>
+            identitySetter.Current = await authenticationService.Logout();
 
         /// <inheritdoc />
-        public async Task<IIdentity> Authenticate(HttpContext httpContext)
-        {
-            var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
-            var authenticationResult = await GetAuthenticationResult(tokenCredentials);
-            await StoreAuthentication(httpContext, authenticationResult);
-            return authenticationResult;
-        }
-
-        /// <inheritdoc />
-        public async Task Logout(HttpContext httpContext)
-        {
-            await authenticationService.Logout();
-            await credentialsStorage.Unload(httpContext);
-        }
-
-        /// <inheritdoc />
-        public async Task<IIdentity> LogoutAll(HttpContext httpContext)
-        {
-            var authenticationResult = await authenticationService.LogoutAll();
-            await StoreAuthentication(httpContext, authenticationResult);
-            return authenticationResult;
-        }
+        public async Task<IIdentity> LogoutAll(HttpContext httpContext) =>
+            identitySetter.Current = await authenticationService.LogoutAll();
     }
 }

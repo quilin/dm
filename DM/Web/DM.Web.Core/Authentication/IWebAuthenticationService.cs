@@ -11,19 +11,12 @@ namespace DM.Web.Core.Authentication
     public interface IWebAuthenticationService
     {
         /// <summary>
-        /// Authenticate via DM authentication token
+        /// Authenticate
         /// </summary>
+        /// <param name="credentials">Credentials</param>
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
-        Task<IIdentity> Authenticate(HttpContext httpContext);
-
-        /// <summary>
-        /// Authenticate via login-password
-        /// </summary>
-        /// <param name="credentials">Login credentials</param>
-        /// <param name="httpContext">HTTP context</param>
-        /// <returns></returns>
-        Task<IIdentity> Authenticate(LoginCredentials credentials, HttpContext httpContext);
+        Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext);
 
         /// <summary>
         /// Logout as current user
