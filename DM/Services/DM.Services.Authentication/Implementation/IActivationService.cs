@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 
 namespace DM.Services.Authentication.Implementation
 {
@@ -13,6 +14,6 @@ namespace DM.Services.Authentication.Implementation
         /// </summary>
         /// <param name="tokenId">Activation token identifier</param>
         /// <returns></returns>
-        Task Activate(Guid tokenId);
+        Task<IIdentity> Activate(Guid tokenId);
     }
 }

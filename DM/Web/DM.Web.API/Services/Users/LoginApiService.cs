@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -18,29 +17,25 @@ namespace DM.Web.API.Services.Users
     public class LoginApiService : ILoginApiService
     {
         private readonly IWebAuthenticationService authenticationService;
-        private readonly IIdentityProvider identityProvider;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public LoginApiService(
             IWebAuthenticationService authenticationService,
-            IIdentityProvider identityProvider,
             IMapper mapper)
         {
             this.authenticationService = authenticationService;
-            this.identityProvider = identityProvider;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
         public async Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext)
         {
-            await authenticationService.Authenticate(credentials, httpContext);
-            var authenticationResult = identityProvider.Current;
-            switch (authenticationResult.Error)
+            var identity = await authenticationService.Authenticate(credentials, httpContext);
+            switch (identity.Error)
             {
                 case AuthenticationError.NoError:
-                    return new Envelope<User>(mapper.Map<User>(authenticationResult.User));
+                    return new Envelope<User>(mapper.Map<User>(identity.User));
                 case AuthenticationError.WrongLogin:
                     throw new HttpBadRequestException(new Dictionary<string, string>
                     {
@@ -55,7 +50,7 @@ namespace DM.Web.API.Services.Users
                 case AuthenticationError.Inactive:
                 case AuthenticationError.Removed:
                 case AuthenticationError.Forbidden:
-                    var userState = authenticationResult.Error.ToString().ToLower();
+                    var userState = identity.Error.ToString().ToLower();
                     throw new HttpException(HttpStatusCode.Forbidden,
                         $"User is {userState}. Address the technical support for more details");
                 default:
