@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 
@@ -25,10 +26,17 @@ namespace DM.Services.Authentication.Implementation
         Task<IIdentity> Authenticate(string authToken);
 
         /// <summary>
+        /// Authenticate unconditionally
+        /// </summary>
+        /// <param name="userId">User identifier</param>
+        /// <returns>Authentication identity</returns>
+        Task<IIdentity> Authenticate(Guid userId);
+
+        /// <summary>
         /// Logout as a current user
         /// </summary>
-        /// <returns></returns>
-        Task Logout();
+        /// <returns>Guest identity</returns>
+        Task<IIdentity> Logout();
 
         /// <summary>
         /// Logout from all devices except this

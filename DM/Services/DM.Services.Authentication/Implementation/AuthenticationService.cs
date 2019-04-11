@@ -111,10 +111,20 @@ namespace DM.Services.Authentication.Implementation
         }
 
         /// <inheritdoc />
-        public async Task Logout()
+        public async Task<IIdentity> Authenticate(Guid userId)
+        {
+            var user = await repository.FindUser(userId);
+            var session = sessionFactory.Create(false);
+            var settings = await repository.FindUserSettings(userId);
+            return await CreateAuthenticationResult(user, session, settings);
+        }
+
+        /// <inheritdoc />
+        public async Task<IIdentity> Logout()
         {
             var identity = identityProvider.Current;
             await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
+            return Identity.Guest();
         }
 
         /// <inheritdoc />
