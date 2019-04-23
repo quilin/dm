@@ -110,13 +110,5 @@ namespace DM.Services.Authentication.Repositories
                 Update<UserSessions>().Set(s => s.Sessions, new List<Session>()),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
         }
-
-        /// <inheritdoc />
-        public Task AddUser(User user, Token token)
-        {
-            dbContext.Users.Add(user);
-            dbContext.Tokens.Add(token);
-            return dbContext.SaveChangesAsync();
-        }
     }
 }

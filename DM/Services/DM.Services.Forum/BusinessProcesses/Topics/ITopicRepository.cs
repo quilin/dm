@@ -48,9 +48,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         /// <summary>
         /// Update existing topic
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="updateBuilder"></param>
         /// <returns>DTO model of updated topic</returns>
-        Task<Topic> Update(Guid id, UpdateBuilder<ForumTopic> updateBuilder);
+        Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder);
     }
 }

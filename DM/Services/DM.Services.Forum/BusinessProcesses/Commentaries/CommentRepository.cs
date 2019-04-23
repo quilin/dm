@@ -66,9 +66,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         }
 
         /// <inheritdoc />
-        public async Task<Comment> Update(Guid commentId, UpdateBuilder<ForumComment> update)
+        public async Task<Comment> Update(UpdateBuilder<ForumComment> update)
         {
-            await update.Update(commentId, dbContext);
+            var commentId = update.Update(dbContext);
+            await dbContext.SaveChangesAsync();
             return await dbContext.Comments
                 .Where(c => c.ForumCommentId == commentId)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)

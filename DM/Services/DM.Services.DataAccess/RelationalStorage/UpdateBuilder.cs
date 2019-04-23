@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -14,11 +13,13 @@ namespace DM.Services.DataAccess.RelationalStorage
     /// <typeparam name="TEntity"></typeparam>
     public class UpdateBuilder<TEntity> where TEntity : class, new()
     {
+        private readonly Guid id;
         private readonly IList<(Expression<Func<TEntity, object>>, object)> fields;
 
         /// <inheritdoc />
-        public UpdateBuilder()
+        public UpdateBuilder(Guid id)
         {
+            this.id = id;
             fields = new List<(Expression<Func<TEntity, object>>, object)>();
         }
 
@@ -38,7 +39,7 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// Update entity
         /// </summary>
         /// <returns></returns>
-        public Task Update(Guid id, DbContext dbContext)
+        public Guid Update(DbContext dbContext)
         {
             var entity = new TEntity();
             var type = entity.GetType();
@@ -50,7 +51,7 @@ namespace DM.Services.DataAccess.RelationalStorage
                 dbContext.Entry(entity).Property(field).IsModified = true;
             }
 
-            return dbContext.SaveChangesAsync();
+            return id;
         }
 
         private static void SetPropertyValue(TEntity target,

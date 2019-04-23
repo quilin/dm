@@ -82,11 +82,12 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         }
 
         /// <inheritdoc />
-        public async Task<Topic> Update(Guid id, UpdateBuilder<ForumTopic> updateBuilder)
+        public async Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder)
         {
-            await updateBuilder.Update(id, dbContext);
+            var topicId = updateBuilder.Update(dbContext);
+            await dbContext.SaveChangesAsync();
             return await dbContext.ForumTopics
-                .Where(t => t.ForumTopicId == id)
+                .Where(t => t.ForumTopicId == topicId)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }

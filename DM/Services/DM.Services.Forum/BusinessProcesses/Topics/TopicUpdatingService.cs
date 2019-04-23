@@ -52,7 +52,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
             var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
 
-            var changes = new UpdateBuilder<ForumTopic>();
+            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
             if (hasAdministrativeChanges)
             {
                 await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
@@ -77,7 +77,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
                     .Field(t => t.Text, updateTopic.Text);
             }
 
-            var topic = await topicRepository.Update(updateTopic.TopicId, changes);
+            var topic = await topicRepository.Update(changes);
             await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
 
             return topic;

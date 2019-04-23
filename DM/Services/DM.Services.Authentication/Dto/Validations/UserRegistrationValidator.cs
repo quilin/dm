@@ -1,3 +1,4 @@
+using DM.Services.Authentication.Repositories;
 using FluentValidation;
 
 namespace DM.Services.Authentication.Dto.Validations
@@ -8,17 +9,20 @@ namespace DM.Services.Authentication.Dto.Validations
     public class UserRegistrationValidator : AbstractValidator<UserRegistration>
     {
         /// <inheritdoc />
-        public UserRegistrationValidator()
+        public UserRegistrationValidator(
+            IRegistrationRepository registrationRepository)
         {
             RuleFor(r => r.Login)
                 .NotEmpty()
                 .MinimumLength(2)
-                .MaximumLength(60);
+                .MaximumLength(60)
+                .MustAsync(registrationRepository.LoginFree);
 
             RuleFor(r => r.Email)
                 .NotEmpty()
                 .MaximumLength(100)
-                .EmailAddress();
+                .EmailAddress()
+                .MustAsync(registrationRepository.EmailFree);
 
             RuleFor(r => r.Password)
                 .NotEmpty()

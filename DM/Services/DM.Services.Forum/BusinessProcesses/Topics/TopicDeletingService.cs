@@ -41,7 +41,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             var topic = await topicReadingService.GetTopic(topicId);
             await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
 
-            await topicRepository.Update(topicId, new UpdateBuilder<ForumTopic>().Field(t => t.IsRemoved, true));
+            await topicRepository.Update(new UpdateBuilder<ForumTopic>(topicId).Field(t => t.IsRemoved, true));
             await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message);
             await invokedEventPublisher.Publish(EventType.DeletedTopic, topicId);
         }

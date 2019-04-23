@@ -45,9 +45,8 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         /// <summary>
         /// Update existing commentary
         /// </summary>
-        /// <param name="commentId">Commentary identifier</param>
         /// <param name="update">Updated fields</param>
         /// <returns></returns>
-        Task<Comment> Update(Guid commentId, UpdateBuilder<ForumComment> update);
+        Task<Comment> Update(UpdateBuilder<ForumComment> update);
     }
 }

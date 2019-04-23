@@ -36,8 +36,6 @@ namespace DM.Web.Core.Middleware
             var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
             await authenticationService.Authenticate(tokenCredentials, httpContext);
 
-            await next(httpContext);
-
             var identity = identityProvider.Current;
             if (identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated)
             {
@@ -47,6 +45,8 @@ namespace DM.Web.Core.Middleware
             {
                 await credentialsStorage.Unload(httpContext);
             }
+
+            await next(httpContext);
         }
     }
 }
