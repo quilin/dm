@@ -80,6 +80,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             var topicId = Guid.NewGuid();
             topicReading.ReturnsAsync(new Topic
             {
+                Id = topicId,
                 Likes = new List<GeneralUser>
                 {
                     new GeneralUser {UserId = Guid.NewGuid()},
@@ -136,6 +137,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             var userId = Guid.NewGuid();
             topicReading.ReturnsAsync(new Topic
             {
+                Id = topicId,
                 Likes = new List<GeneralUser>
                 {
                     new GeneralUser {UserId = userId},

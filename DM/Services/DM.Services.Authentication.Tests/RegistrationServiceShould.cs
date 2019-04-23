@@ -78,6 +78,8 @@ namespace DM.Services.Authentication.Tests
             var userId = Guid.NewGuid();
             var user = new User {UserId = userId};
             createUserSetup.Returns(user);
+            var token = new Token();
+            createTokenSetup.Returns(token);
 
             await registrationService.Register(new UserRegistration());
             

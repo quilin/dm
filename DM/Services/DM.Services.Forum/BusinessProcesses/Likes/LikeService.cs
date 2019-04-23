@@ -73,7 +73,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
 
             var like = likeFactory.Create(entity.Id, currentUser.UserId);
             await likeRepository.Add(like);
-            await invokedEventPublisher.Publish(eventType, entity.Id);
+            await invokedEventPublisher.Publish(eventType, like.LikeId);
             return currentUser;
         }
 
