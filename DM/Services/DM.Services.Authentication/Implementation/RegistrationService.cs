@@ -15,6 +15,7 @@ namespace DM.Services.Authentication.Implementation
         private readonly IValidator<UserRegistration> validator;
         private readonly ISecurityManager securityManager;
         private readonly IUserFactory userFactory;
+        private readonly IRegistrationTokenFactory registrationTokenFactory;
         private readonly IAuthenticationRepository repository;
         private readonly IInvokedEventPublisher publisher;
 
@@ -23,12 +24,14 @@ namespace DM.Services.Authentication.Implementation
             IValidator<UserRegistration> validator,
             ISecurityManager securityManager,
             IUserFactory userFactory,
+            IRegistrationTokenFactory registrationTokenFactory,
             IAuthenticationRepository repository,
             IInvokedEventPublisher publisher)
         {
             this.validator = validator;
             this.securityManager = securityManager;
             this.userFactory = userFactory;
+            this.registrationTokenFactory = registrationTokenFactory;
             this.repository = repository;
             this.publisher = publisher;
         }
@@ -40,7 +43,8 @@ namespace DM.Services.Authentication.Implementation
 
             var (hash, salt) = securityManager.GeneratePassword(registration.Password);
             var user = userFactory.Create(registration, salt, hash);
-            await repository.AddUser(user);
+            var token = registrationTokenFactory.Create(user.UserId);
+            await repository.AddUser(user, token);
 
             await publisher.Publish(EventType.NewUser, user.UserId);
         }

@@ -112,9 +112,10 @@ namespace DM.Services.Authentication.Repositories
         }
 
         /// <inheritdoc />
-        public Task AddUser(User user)
+        public Task AddUser(User user, Token token)
         {
             dbContext.Users.Add(user);
+            dbContext.Tokens.Add(token);
             return dbContext.SaveChangesAsync();
         }
     }

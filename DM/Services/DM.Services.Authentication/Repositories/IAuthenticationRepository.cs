@@ -74,7 +74,8 @@ namespace DM.Services.Authentication.Repositories
         /// Create new user
         /// </summary>
         /// <param name="user">User DAL</param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        Task AddUser(User user);
+        Task AddUser(User user, Token token);
     }
 }

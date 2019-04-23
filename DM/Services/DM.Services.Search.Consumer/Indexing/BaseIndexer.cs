@@ -13,7 +13,7 @@ namespace DM.Services.Search.Consumer.Indexing
         protected abstract EventType EventType { get; }
 
         /// <inheritdoc />
-        public bool CanIndex(InvokedEvent invokedEvent) => invokedEvent.Type == EventType;
+        public bool CanIndex(EventType eventType) => eventType == EventType;
 
         /// <inheritdoc />
         public abstract Task Index(InvokedEvent invokedEvent);

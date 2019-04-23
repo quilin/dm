@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Search", "Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Search.Consumer", "Services\DM.Services.Search.Consumer\DM.Services.Search.Consumer.csproj", "{BC7D35D2-6F84-410C-87E5-F196AE8C4536}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Registration.Consumer", "Services\DM.Services.Registration.Consumer\DM.Services.Registration.Consumer.csproj", "{12D02022-1142-458F-AFE2-F39A400B2C05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Mail.Consumer", "Services\DM.Services.Mail.Consumer\DM.Services.Mail.Consumer.csproj", "{12D02022-1142-458F-AFE2-F39A400B2C05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.MessageQueuing.Tests", "Services\DM.Services.MessageQueuing.Tests\DM.Services.MessageQueuing.Tests.csproj", "{61EDA942-CFBE-41C9-B9D8-AB40EE6E3EEE}"
 EndProject

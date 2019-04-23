@@ -23,6 +23,7 @@ namespace DM.Services.Authentication.Tests
         private readonly RegistrationService registrationService;
         private readonly ISetup<ISecurityManager, (string Hash, string Salt)> createPasswordSetup;
         private readonly ISetup<IUserFactory, User> createUserSetup;
+        private readonly ISetup<IRegistrationTokenFactory, Token> createTokenSetup;
         private readonly Mock<IAuthenticationRepository> authRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
 
@@ -38,16 +39,19 @@ namespace DM.Services.Authentication.Tests
             var userFactory = Mock<IUserFactory>();
             createUserSetup = userFactory.Setup(f => f
                 .Create(It.IsAny<UserRegistration>(), It.IsAny<string>(), It.IsAny<string>()));
+            var tokenFactory = Mock<IRegistrationTokenFactory>();
+            createTokenSetup = tokenFactory.Setup(f => f.Create(It.IsAny<Guid>()));
+
             authRepository = Mock<IAuthenticationRepository>();
             authRepository
-                .Setup(r => r.AddUser(It.IsAny<User>()))
+                .Setup(r => r.AddUser(It.IsAny<User>(), It.IsAny<Token>()))
                 .Returns(Task.CompletedTask);
             publisher = Mock<IInvokedEventPublisher>();
             publisher
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
             registrationService = new RegistrationService(validator.Object,
-                securityManager.Object, userFactory.Object,
+                securityManager.Object, userFactory.Object, tokenFactory.Object,
                 authRepository.Object, publisher.Object);
         }
 
@@ -57,10 +61,12 @@ namespace DM.Services.Authentication.Tests
             createPasswordSetup.Returns(("hash", "salt"));
             var user = new User();
             createUserSetup.Returns(user);
+            var token = new Token();
+            createTokenSetup.Returns(token);
 
             await registrationService.Register(new UserRegistration());
 
-            authRepository.Verify(r => r.AddUser(user), Times.Once);
+            authRepository.Verify(r => r.AddUser(user, token), Times.Once);
             authRepository.VerifyNoOtherCalls();
         }
 

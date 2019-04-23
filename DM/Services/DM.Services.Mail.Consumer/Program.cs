@@ -5,7 +5,7 @@ using DM.Services.MessageQueuing.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace DM.Services.Registration.Consumer
+namespace DM.Services.Mail.Consumer
 {
     class Program
     {

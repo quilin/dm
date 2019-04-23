@@ -5,6 +5,7 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RootNamespace>DM.Services.Mail.Consumer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

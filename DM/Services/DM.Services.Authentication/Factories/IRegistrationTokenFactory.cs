@@ -1,7 +1,7 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Registration.Consumer
+namespace DM.Services.Authentication.Factories
 {
     /// <summary>
     /// Factory for registration tokens

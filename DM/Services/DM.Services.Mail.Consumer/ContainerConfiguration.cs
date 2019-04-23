@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.Registration.Consumer
+namespace DM.Services.Mail.Consumer
 {
     /// <summary>
     /// Configures container for search engine MQ consumer

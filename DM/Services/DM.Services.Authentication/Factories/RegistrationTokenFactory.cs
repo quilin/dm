@@ -2,7 +2,7 @@ using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Registration.Consumer
+namespace DM.Services.Authentication.Factories
 {
     /// <inheritdoc />
     public class RegistrationTokenFactory : IRegistrationTokenFactory
