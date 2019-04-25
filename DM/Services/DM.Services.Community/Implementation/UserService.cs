@@ -25,12 +25,13 @@ namespace DM.Services.Community.Implementation
         }
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<GeneralUser> users, PagingData paging)> Get(int entityNumber, bool withInactive)
+        public async Task<(IEnumerable<GeneralUser> users, PagingResult paging)> Get(
+            PagingQuery query, bool withInactive)
         {
-            var totalUsersCount = await repository.CountUsers(withInactive);
-            var paging = PagingData.Create(totalUsersCount, entityNumber, identity.Settings.TopicsPerPage);
+            var totalCount = await repository.CountUsers(withInactive);
+            var paging = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
             var users = await repository.GetUsers(paging, withInactive);
-            return (users, paging);
+            return (users, paging.Result);
         }
 
         /// <inheritdoc />

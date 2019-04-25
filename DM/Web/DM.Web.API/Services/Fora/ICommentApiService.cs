@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 
@@ -14,9 +15,9 @@ namespace DM.Web.API.Services.Fora
         /// Get topics commentaries
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
-        /// <param name="entityNumber">Entity number</param>
+        /// <param name="query">Paging query</param>
         /// <returns>Envelope of commentaries list</returns>
-        Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber);
+        Task<ListEnvelope<Comment>> Get(Guid topicId, PagingQuery query);
 
         /// <summary>
         /// Create new comment

@@ -6,6 +6,7 @@ using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using PagingQuery = DM.Services.Core.Dto.PagingQuery;
 using Topic = DM.Web.API.Dto.Fora.Topic;
 
 namespace DM.Web.API.Services.Fora
@@ -35,11 +36,11 @@ namespace DM.Web.API.Services.Fora
         }
 
         /// <inheritdoc />
-        public async Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber)
+        public async Task<ListEnvelope<Topic>> Get(string forumId, TopicsQuery query)
         {
-            var (topics, paging) = filters.Attached
+            var (topics, paging) = query.Attached
                 ? (await topicReadingService.GetAttachedTopics(forumId), null)
-                : await topicReadingService.GetTopicsList(forumId, entityNumber);
+                : await topicReadingService.GetTopicsList(forumId, mapper.Map<PagingQuery>(query));
             return new ListEnvelope<Topic>(topics.Select(mapper.Map<Topic>),
                 paging == null ? null : new Paging(paging));
         }

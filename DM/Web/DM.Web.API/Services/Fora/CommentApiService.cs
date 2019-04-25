@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
@@ -34,9 +35,9 @@ namespace DM.Web.API.Services.Fora
         }
 
         /// <inheritdoc />
-        public async Task<ListEnvelope<Comment>> Get(Guid topicId, int entityNumber)
+        public async Task<ListEnvelope<Comment>> Get(Guid topicId, PagingQuery query)
         {
-            var (comments, paging) = await readingService.GetCommentsList(topicId, entityNumber);
+            var (comments, paging) = await readingService.GetCommentsList(topicId, query);
             return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
         }
 

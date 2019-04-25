@@ -43,7 +43,7 @@ namespace DM.Web.API.Controllers.v1.Common
                     .Cast<UserRole>()
                     .Where(r => currentUserRole.HasFlag(r));
             var (entities, total) = await repository.Search(query, 0, 10, userRoles, Guid.Empty);
-            return new ListEnvelope<object>(entities, new Paging(PagingData.Create(total, 1, 10)));
+            return new ListEnvelope<object>(entities, new Paging(PagingResult.Create(total, 1, 10)));
         }
     }
 }

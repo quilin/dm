@@ -3,46 +3,37 @@ using System;
 namespace DM.Services.Core.Dto
 {
     /// <summary>
-    /// DTO model for paged data
+    /// Paging data for repositories
     /// </summary>
     public class PagingData
     {
-        /// <summary>
-        /// Total pages of certain size across the filtered entities
-        /// </summary>
-        public int TotalPagesCount { get; private set; }
+        /// <inheritdoc />
+        public PagingData(PagingQuery query, int defaultPageSize, int totalCount)
+        {
+            var pageSize = Math.Max(query.Size ?? defaultPageSize, 1);
+            var entityNumber = query.Number.HasValue || !query.Skip.HasValue
+                ? query.Number ?? 1
+                : query.Skip.Value + 1;
+            Result = PagingResult.Create(totalCount, entityNumber, pageSize);
+            Skip = query.Number.HasValue || !query.Skip.HasValue
+                ? (Result.CurrentPage - 1) * Result.PageSize
+                : query.Skip.Value;
+            Take = pageSize;
+        }
 
         /// <summary>
-        /// Current page number
+        /// Skip previous entities
         /// </summary>
-        public int CurrentPage { get; private set; }
+        public int Skip { get; }
 
         /// <summary>
         /// Page size
         /// </summary>
-        public int PageSize { get; private set; }
+        public int Take { get; }
 
         /// <summary>
-        /// Selected entity number
+        /// Paging result
         /// </summary>
-        public int EntityNumber { get; private set; }
-
-        /// <summary>
-        /// Create paging data
-        /// </summary>
-        /// <param name="totalEntitiesCount">Total entities count</param>
-        /// <param name="entityNumber">Selected entity number</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns></returns>
-        public static PagingData Create(int totalEntitiesCount, int entityNumber, int pageSize)
-        {
-            return new PagingData
-            {
-                TotalPagesCount = (int)Math.Ceiling((decimal)totalEntitiesCount / pageSize),
-                CurrentPage = Math.Max(1, (int)Math.Ceiling((decimal)entityNumber/ pageSize)),
-                PageSize = pageSize,
-                EntityNumber = Math.Min(Math.Max(1, entityNumber), totalEntitiesCount)
-            };
-        }
+        public PagingResult Result { get; }
     }
 }

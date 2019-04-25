@@ -14,10 +14,9 @@ namespace DM.Web.API.Services.Fora
         /// Get forum topics
         /// </summary>
         /// <param name="forumId">Forum identifier</param>
-        /// <param name="filters">Search filters</param>
-        /// <param name="entityNumber">Entity number</param>
+        /// <param name="query">Search query</param>
         /// <returns>Envelope of topics list</returns>
-        Task<ListEnvelope<Topic>> Get(string forumId, TopicFilters filters, int entityNumber);
+        Task<ListEnvelope<Topic>> Get(string forumId, TopicsQuery query);
 
         /// <summary>
         /// Get topic

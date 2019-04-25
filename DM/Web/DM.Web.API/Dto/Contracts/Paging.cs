@@ -8,12 +8,12 @@ namespace DM.Web.API.Dto.Contracts
     public class Paging
     {
         /// <inheritdoc />
-        public Paging(PagingData pagingData)
+        public Paging(PagingResult pagingResult)
         {
-            Pages = pagingData.TotalPagesCount;
-            Current = pagingData.CurrentPage;
-            Size = pagingData.PageSize;
-            Number = pagingData.EntityNumber;
+            Pages = pagingResult.TotalPagesCount;
+            Current = pagingResult.CurrentPage;
+            Size = pagingResult.PageSize;
+            Number = pagingResult.EntityNumber;
         }
 
         /// <summary>

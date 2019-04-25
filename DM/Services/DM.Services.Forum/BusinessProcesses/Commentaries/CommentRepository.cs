@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
@@ -40,6 +41,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             return await dbContext.Comments
                 .Where(c => !c.IsRemoved && c.ForumTopicId == topicId)
                 .OrderBy(c => c.CreateDate)
+                .Page(paging)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }

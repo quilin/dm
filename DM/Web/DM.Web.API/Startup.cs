@@ -126,6 +126,11 @@ namespace DM.Web.API
                     c.RoutePrefix = string.Empty;
                     c.DocumentTitle = "DM.API";
                 })
+                .UseCors(b => b
+                    .WithExposedHeaders("X-Dm-Auth-Token")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin())
                 .UseMvc();
         }
     }

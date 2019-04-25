@@ -13,10 +13,10 @@ namespace DM.Services.Community.Implementation
         /// <summary>
         /// Get community users list
         /// </summary>
-        /// <param name="entityNumber">Selected user number</param>
+        /// <param name="query">Paging query</param>
         /// <param name="withInactive">Search among inactive users</param>
         /// <returns>Pair of found users and paging data</returns>
-        Task<(IEnumerable<GeneralUser> users, PagingData paging)> Get(int entityNumber, bool withInactive);
+        Task<(IEnumerable<GeneralUser> users, PagingResult paging)> Get(PagingQuery query, bool withInactive);
 
         /// <summary>
         /// Get community user by login

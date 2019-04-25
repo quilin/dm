@@ -11,14 +11,17 @@ namespace DM.Web.Core.Authentication
     public class WebAuthenticationService : IWebAuthenticationService
     {
         private readonly IAuthenticationService authenticationService;
+        private readonly ICredentialsStorage credentialsStorage;
         private readonly IIdentitySetter identitySetter;
 
         /// <inheritdoc />
         public WebAuthenticationService(
             IAuthenticationService authenticationService,
+            ICredentialsStorage credentialsStorage,
             IIdentitySetter identitySetter)
         {
             this.authenticationService = authenticationService;
+            this.credentialsStorage = credentialsStorage;
             this.identitySetter = identitySetter;
         }
 
@@ -39,15 +42,33 @@ namespace DM.Web.Core.Authentication
         }
 
         /// <inheritdoc />
-        public async Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext) =>
-            identitySetter.Current = await GetAuthenticationResult(credentials);
+        public async Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext)
+        {
+            var identity = identitySetter.Current = await GetAuthenticationResult(credentials);
+            await TryLoadAuthenticationResult(httpContext, identity);
+            return identity;
+        }
 
         /// <inheritdoc />
-        public async Task Logout(HttpContext httpContext) =>
-            identitySetter.Current = await authenticationService.Logout();
+        public async Task Logout(HttpContext httpContext)
+        {
+            var identity = identitySetter.Current = await authenticationService.Logout();
+            await TryLoadAuthenticationResult(httpContext, identity);
+        }
 
         /// <inheritdoc />
-        public async Task<IIdentity> LogoutAll(HttpContext httpContext) =>
-            identitySetter.Current = await authenticationService.LogoutAll();
+        public async Task<IIdentity> LogoutAll(HttpContext httpContext)
+        {
+            var identity = identitySetter.Current = await authenticationService.LogoutAll();
+            await TryLoadAuthenticationResult(httpContext, identity);
+            return identity;
+        }
+
+        private Task TryLoadAuthenticationResult(HttpContext httpContext, IIdentity identity)
+        {
+            return identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated
+                ? credentialsStorage.Load(httpContext, identity)
+                : credentialsStorage.Unload(httpContext);
+        }
     }
 }

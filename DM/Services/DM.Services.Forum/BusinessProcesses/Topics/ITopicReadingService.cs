@@ -15,9 +15,9 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         /// Get topics page of certain forum by its title
         /// </summary>
         /// <param name="forumTitle">Forum title</param>
-        /// <param name="entityNumber">Number of entity that page must contain</param>
+        /// <param name="query">Paging query</param>
         /// <returns>Pair of topics list and paging data</returns>
-        Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(string forumTitle, int entityNumber);
+        Task<(IEnumerable<Topic> topics, PagingResult paging)> GetTopicsList(string forumTitle, PagingQuery query);
 
         /// <summary>
         /// Get attached topics of certain forum by its title

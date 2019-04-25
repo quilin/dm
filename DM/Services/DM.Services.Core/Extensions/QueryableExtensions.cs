@@ -9,15 +9,18 @@ namespace DM.Services.Core.Extensions
     public static class QueryableExtensions
     {
         /// <summary>
-        /// Skip and take for certain paging data
+        /// Skip and take
         /// </summary>
-        /// <param name="queryable">Query</param>
-        /// <param name="paging">Paging data</param>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Modified query</returns>
-        public static IQueryable<T> Page<T>(this IOrderedQueryable<T> queryable, PagingData paging) =>
-            paging == null
+        /// <param name="queryable"></param>
+        /// <param name="paging"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IQueryable<T> Page<T>(this IOrderedQueryable<T> queryable,
+            PagingData paging)
+        {
+            return paging == null
                 ? queryable
-                : queryable.Skip((paging.CurrentPage - 1) * paging.PageSize).Take(paging.PageSize);
+                : queryable.Skip(paging.Skip).Take(paging.Take);
+        }
     }
 }

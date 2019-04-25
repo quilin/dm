@@ -33,22 +33,21 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         }
         
         /// <inheritdoc />
-        public async Task<(IEnumerable<Comment> comments, PagingData paging)> GetCommentsList(
-            Guid topicId, int entityNumber)
+        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> GetCommentsList(
+            Guid topicId, PagingQuery query)
         {
             await topicReadingService.GetTopic(topicId);
 
-            var pageSize = identity.Settings.CommentsPerPage;
-            var commentsCount = await commentRepository.Count(topicId);
-            var pagingData = PagingData.Create(commentsCount, entityNumber, pageSize);
+            var totalCount = await commentRepository.Count(topicId);
+            var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
 
-            var comments = await commentRepository.Get(topicId, pagingData);
+            var comments = await commentRepository.Get(topicId, paging);
             if (identity.User.IsAuthenticated)
             {
                 await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
             }
 
-            return (comments, pagingData);
+            return (comments, paging.Result);
         }
 
         /// <inheritdoc />

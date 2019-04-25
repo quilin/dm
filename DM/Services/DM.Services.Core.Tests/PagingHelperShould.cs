@@ -14,7 +14,7 @@ namespace DM.Services.Core.Tests
         [InlineData(0, 10, 0)]
         public void CalculateTotalPagesCountOfGivenSize(int totalEntitiesCount, int pageSize, int expectedPagesCount)
         {
-            var actual = PagingData.Create(totalEntitiesCount, 1, pageSize);
+            var actual = PagingResult.Create(totalEntitiesCount, 1, pageSize);
             actual.TotalPagesCount.Should().Be(expectedPagesCount);
         }
 
@@ -26,7 +26,7 @@ namespace DM.Services.Core.Tests
         public void CalculateCurrentPageBasedOnGivenEntityNumberAndPageSize(int entityNumber,
             int pageSize, int expectedPageNumber)
         {
-            var actual = PagingData.Create(entityNumber + 1, entityNumber, pageSize);
+            var actual = PagingResult.Create(entityNumber + 1, entityNumber, pageSize);
             actual.CurrentPage.Should().Be(expectedPageNumber);
         }
 
@@ -38,7 +38,7 @@ namespace DM.Services.Core.Tests
         [InlineData(5)]
         public void GuaranteeCurrentPageIsAtLeastFirst(int entityNumber)
         {
-            var actual = PagingData.Create(100, entityNumber, 10);
+            var actual = PagingResult.Create(100, entityNumber, 10);
             actual.CurrentPage.Should().BeGreaterOrEqualTo(1);
         }
     }

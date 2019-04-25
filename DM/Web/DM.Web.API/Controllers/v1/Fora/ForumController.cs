@@ -40,7 +40,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <summary>
         /// Get certain forum
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Forum id</param>
         /// <response code="200"></response>
         /// <response code="404">No available forum with this id</response>
         [HttpGet("{id}", Name = nameof(GetForum))]
@@ -51,7 +51,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <summary>
         /// Get forum moderators
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Forum id</param>
         /// <response code="200"></response>
         /// <response code="404">No available forum with this id</response>
         [HttpGet("{id}/moderators", Name = nameof(GetModerators))]
@@ -62,9 +62,8 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <summary>
         /// Get list of forum topics
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="f">Filters</param>
-        /// <param name="n">Entity number</param>
+        /// <param name="id">Forum id</param>
+        /// <param name="q">Query</param>
         /// <response code="200"></response>
         /// <response code="400">Some properties of the passed search parameters were invalid</response>
         /// <response code="404">No available forum with this id</response>
@@ -72,14 +71,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public async Task<IActionResult> GetTopics(string id, [FromQuery] TopicFilters f, [FromQuery] int n = 1) =>
-            Ok(await topicApiService.Get(id, f, n));
+        public async Task<IActionResult> GetTopics(string id, [FromQuery] TopicsQuery q) =>
+            Ok(await topicApiService.Get(id, q));
 
         /// <summary>
         /// Post new topic
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="topic"></param>
+        /// <param name="id">Forum id</param>
+        /// <param name="topic">New topic</param>
         /// <response code="201"></response>
         /// <response code="400">Some of the passed topic properties were invalid</response>
         /// <response code="401">User must be authenticated</response>

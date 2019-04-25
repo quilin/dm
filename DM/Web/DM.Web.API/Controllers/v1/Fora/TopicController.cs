@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Users;
@@ -127,14 +128,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// Get list of comments
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="n">Entity number</param>
+        /// <param name="q"></param>
         /// <response code="200"></response>
         /// <response code="404">No topic was found for passed id</response>
         [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(GeneralError), 404)]
-        public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] int n = 1) =>
-            Ok(await commentApiService.Get(id, n));
+        public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] PagingQuery q) =>
+            Ok(await commentApiService.Get(id, q));
 
         /// <summary>
         /// Post new comment

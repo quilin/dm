@@ -40,20 +40,19 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         }
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<Topic> topics, PagingData paging)> GetTopicsList(
-            string forumTitle, int entityNumber)
+        public async Task<(IEnumerable<Topic> topics, PagingResult paging)> GetTopicsList(
+            string forumTitle, PagingQuery query)
         {
             var forum = await forumReadingService.GetForum(forumTitle);
 
-            var pageSize = identity.Settings.TopicsPerPage;
-            var topicsCount = await topicRepository.Count(forum.Id);
-            var pagingData = PagingData.Create(topicsCount, entityNumber, pageSize);
+            var totalCount = await topicRepository.Count(forum.Id);
+            var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
             var topics = (await topicRepository.Get(forum.Id, pagingData, false)).ToArray();
             await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
                 t => t.Id, t => t.UnreadCommentsCount);
 
-            return (topics, pagingData);
+            return (topics, pagingData.Result);
         }
 
         /// <inheritdoc />
