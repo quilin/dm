@@ -39,8 +39,9 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         /// Create comment from DAL
         /// </summary>
         /// <param name="forumComment">DAL model for comment</param>
+        /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
         /// <returns></returns>
-        Task<Comment> Create(ForumComment forumComment);
+        Task<Comment> Create(ForumComment forumComment, UpdateBuilder<ForumTopic> topicUpdate);
 
         /// <summary>
         /// Update existing commentary

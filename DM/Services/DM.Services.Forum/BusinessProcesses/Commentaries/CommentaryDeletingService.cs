@@ -39,9 +39,11 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         {
             var comment = await commentaryReadingService.Get(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Delete, comment);
+
             await commentRepository.Update(new UpdateBuilder<ForumComment>(commentId)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
                 .Field(c => c.IsRemoved, true));
+
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);
         }
     }

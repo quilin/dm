@@ -3,6 +3,8 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto.Input;
@@ -51,7 +53,8 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             await intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
             var comment = commentFactory.Create(createComment, identity.User.UserId);
-            var createdComment = await commentRepository.Create(comment);
+            var createdComment = await commentRepository.Create(comment,
+                new UpdateBuilder<ForumTopic>(topic.Id).Field(t => t.LastCommentId, comment.ForumCommentId));
             await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
 
             return createdComment;
