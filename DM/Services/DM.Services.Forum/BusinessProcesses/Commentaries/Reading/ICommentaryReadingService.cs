@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using Comment = DM.Services.Forum.Dto.Output.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 {
     /// <summary>
     /// Service for reading forum commentaries

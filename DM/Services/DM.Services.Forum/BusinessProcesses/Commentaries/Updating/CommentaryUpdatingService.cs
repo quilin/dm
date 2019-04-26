@@ -5,12 +5,13 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 {
     /// <inheritdoc />
     public class CommentaryUpdatingService : ICommentaryUpdatingService
@@ -19,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly ICommentRepository commentRepository;
+        private readonly IUpdatingCommentaryRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -28,14 +29,14 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
-            ICommentRepository commentRepository,
+            IUpdatingCommentaryRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
             this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;
             this.dateTimeProvider = dateTimeProvider;
-            this.commentRepository = commentRepository;
+            this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
         
@@ -45,7 +46,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
-            var updatedComment = await commentRepository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
+            var updatedComment = await repository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
                 .Field(f => f.Text, updateComment.Text)
                 .Field(f => f.LastUpdateDate, dateTimeProvider.Now));
             await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);

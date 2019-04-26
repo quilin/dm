@@ -6,8 +6,9 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.BusinessProcesses.Commentaries;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
@@ -27,9 +28,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<ICommentFactory, ForumComment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentRepository, Task<Comment>> commentaryCreateSetup;
-        private readonly Mock<ICommentRepository> commentRepository;
-        private readonly CommentCreatingService service;
+        private readonly ISetup<ICreatingCommentaryRepository, Task<Comment>> commentaryCreateSetup;
+        private readonly Mock<ICreatingCommentaryRepository> commentRepository;
+        private readonly CommentaryCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
         private readonly Mock<ICommentFactory> commentFactory;
@@ -60,15 +61,15 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentaryDalCreateSetup = commentFactory
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
-            commentRepository = Mock<ICommentRepository>();
-            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>()));
+            commentRepository = Mock<ICreatingCommentaryRepository>();
+            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>(), It.IsAny<UpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
-            service = new CommentCreatingService(validator.Object, topicReadingService.Object,
+            service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,
                 intentionManager.Object, identityProvider.Object, commentFactory.Object,
                 commentRepository.Object, invokedEventPublisher.Object);
         }
@@ -100,7 +101,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             commentFactory.Verify(f => f.Create(createComment, userId));
 
-            commentRepository.Verify(r => r.Create(comment), Times.Once);
+            commentRepository.Verify(r => r.Create(comment, It.IsAny<UpdateBuilder<ForumTopic>>()), Times.Once);
             commentRepository.VerifyNoOtherCalls();
 
             invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId), Times.Once);

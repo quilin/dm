@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
 {
     /// <summary>
     /// Service for deleting forum commentaries

@@ -12,38 +12,38 @@ using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class CommentCreatingService : ICommentaryCreatingService
+    public class CommentaryCreatingService : ICommentaryCreatingService
     {
         private readonly IValidator<CreateComment> validator;
         private readonly ITopicReadingService topicReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
         private readonly ICommentFactory commentFactory;
-        private readonly ICommentRepository commentRepository;
+        private readonly ICreatingCommentaryRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
-        public CommentCreatingService(
+        public CommentaryCreatingService(
             IValidator<CreateComment> validator,
             ITopicReadingService topicReadingService,
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ICommentFactory commentFactory,
-            ICommentRepository commentRepository,
+            ICreatingCommentaryRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
             this.topicReadingService = topicReadingService;
             this.intentionManager = intentionManager;
             this.commentFactory = commentFactory;
-            this.commentRepository = commentRepository;
+            this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
             identity = identityProvider.Current;
         }
-        
+
         /// <inheritdoc />
         public async Task<Comment> Create(CreateComment createComment)
         {
@@ -53,7 +53,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries
             await intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
             var comment = commentFactory.Create(createComment, identity.User.UserId);
-            var createdComment = await commentRepository.Create(comment,
+            var createdComment = await repository.Create(comment,
                 new UpdateBuilder<ForumTopic>(topic.Id).Field(t => t.LastCommentId, comment.ForumCommentId));
             await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
 

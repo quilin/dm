@@ -6,43 +6,53 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
+using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
 {
     /// <inheritdoc />
     public class CommentaryDeletingService : ICommentaryDeletingService
     {
-        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly ICommentRepository commentRepository;
+        private readonly IDeleteCommentaryRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
         public CommentaryDeletingService(
-            ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
-            ICommentRepository commentRepository,
+            IDeleteCommentaryRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
-            this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;
             this.dateTimeProvider = dateTimeProvider;
-            this.commentRepository = commentRepository;
+            this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
         
         /// <inheritdoc />
         public async Task Delete(Guid commentId)
         {
-            var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Delete, comment);
+            var comment = await repository.GetForDelete(commentId);
+            await intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Comment) comment);
 
-            await commentRepository.Update(new UpdateBuilder<ForumComment>(commentId)
+            UpdateBuilder<ForumTopic> updateTopic;
+            if (comment.IsLastCommentOfTopic)
+            {
+                updateTopic = new UpdateBuilder<ForumTopic>(comment.TopicId);
+                var previousCommentaryId = await repository.GetSecondLastCommentId(comment.TopicId);
+                updateTopic.Field(t => t.LastCommentId, previousCommentaryId);
+            }
+            else
+            {
+                updateTopic = UpdateBuilder<ForumTopic>.Empty();
+            }
+
+            await repository.Delete(new UpdateBuilder<ForumComment>(commentId)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
-                .Field(c => c.IsRemoved, true));
+                .Field(c => c.IsRemoved, true), updateTopic);
 
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);
         }

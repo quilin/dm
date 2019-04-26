@@ -10,7 +10,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.BusinessProcesses.Commentaries;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics;
 using DM.Services.MessageQueuing.Publish;
 
