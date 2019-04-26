@@ -6,6 +6,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries;
 using DM.Services.Forum.BusinessProcesses.Topics;
@@ -61,7 +62,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
             commentRepository = Mock<ICommentRepository>();
-            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>()));
+            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>(),
+                It.IsAny<UpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
@@ -100,7 +102,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             commentFactory.Verify(f => f.Create(createComment, userId));
 
-            commentRepository.Verify(r => r.Create(comment), Times.Once);
+            commentRepository.Verify(r => r.Create(comment, It.IsAny<UpdateBuilder<ForumTopic>>()), Times.Once);
             commentRepository.VerifyNoOtherCalls();
 
             invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId), Times.Once);
