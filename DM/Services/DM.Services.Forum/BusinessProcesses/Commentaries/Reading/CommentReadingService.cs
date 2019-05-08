@@ -6,7 +6,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using Comment = DM.Services.Forum.Dto.Output.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading

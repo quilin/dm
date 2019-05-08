@@ -3,7 +3,7 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto.Input;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
 {
     /// <inheritdoc />
     public class TopicFactory : ITopicFactory

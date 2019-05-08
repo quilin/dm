@@ -43,15 +43,6 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         }
 
         /// <inheritdoc />
-        public async Task<Dto.Output.Forum> GetForumWithCounters(string forumTitle)
-        {
-            var forum = await GetForum(forumTitle);
-            await unreadCountersRepository.FillParentCounters(new[] {forum}, identity.User.UserId,
-                f => f.Id, f => f.UnreadTopicsCount);
-            return forum;
-        }
-
-        /// <inheritdoc />
         public async Task<Dto.Output.Forum> GetForum(string forumTitle, bool onlyAvailable = true)
         {
             var forum = (await GetFora(onlyAvailable)).FirstOrDefault(f => f.Title == forumTitle);

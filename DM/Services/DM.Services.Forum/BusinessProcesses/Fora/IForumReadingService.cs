@@ -15,13 +15,6 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         Task<IEnumerable<Dto.Output.Forum>> GetForaList();
 
         /// <summary>
-        /// Get available forum by title with unread topics counters
-        /// </summary>
-        /// <param name="forumTitle">Forum title</param>
-        /// <returns></returns>
-        Task<Dto.Output.Forum> GetForumWithCounters(string forumTitle);
-
-        /// <summary>
         /// Get available forum by title with no counters
         /// </summary>
         /// <param name="forumTitle">Forum title</param>

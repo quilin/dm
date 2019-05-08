@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Forum.Dto.Output;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 {
     /// <summary>
     /// Service for reading forum topics

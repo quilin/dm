@@ -5,12 +5,13 @@ using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Fora;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 {
     /// <inheritdoc />
     public class TopicUpdatingService : ITopicUpdatingService
@@ -19,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         private readonly ITopicReadingService topicReadingService;
         private readonly IForumReadingService forumReadingService;
         private readonly IIntentionManager intentionManager;
-        private readonly ITopicRepository topicRepository;
+        private readonly ITopicUpdatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -28,14 +29,14 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             ITopicReadingService topicReadingService,
             IForumReadingService forumReadingService,
             IIntentionManager intentionManager,
-            ITopicRepository topicRepository,
+            ITopicUpdatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
             this.topicReadingService = topicReadingService;
             this.forumReadingService = forumReadingService;
             this.intentionManager = intentionManager;
-            this.topicRepository = topicRepository;
+            this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
         
@@ -52,7 +53,11 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
             var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
 
-            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
+            await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
+            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId)
+                .Field(t => t.Title, updateTopic.Title.Trim())
+                .Field(t => t.Text, updateTopic.Text.Trim());
+
             if (hasAdministrativeChanges)
             {
                 await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
@@ -68,16 +73,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
                 }
             }
 
-            if (!string.IsNullOrEmpty(updateTopic.Title) && updateTopic.Title != oldTopic.Title ||
-                !string.IsNullOrEmpty(updateTopic.Text) && updateTopic.Text != oldTopic.Text)
-            {
-                await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
-                changes
-                    .Field(t => t.Title, updateTopic.Title)
-                    .Field(t => t.Text, updateTopic.Text);
-            }
-
-            var topic = await topicRepository.Update(changes);
+            var topic = await repository.Update(changes);
             await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
 
             return topic;

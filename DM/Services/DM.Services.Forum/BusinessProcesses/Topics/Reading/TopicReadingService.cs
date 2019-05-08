@@ -13,14 +13,14 @@ using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.Dto.Output;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 {
     /// <inheritdoc />
     public class TopicReadingService : ITopicReadingService
     {
         private readonly IForumReadingService forumReadingService;
         private readonly IAccessPolicyConverter accessPolicyConverter;
-        private readonly ITopicRepository topicRepository;
+        private readonly ITopicReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
@@ -29,13 +29,13 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             IIdentityProvider identityProvider,
             IForumReadingService forumReadingService,
             IAccessPolicyConverter accessPolicyConverter,
-            ITopicRepository topicRepository,
+            ITopicReadingRepository repository,
             IUnreadCountersRepository unreadCountersRepository)
         {
             identity = identityProvider.Current;
             this.forumReadingService = forumReadingService;
             this.accessPolicyConverter = accessPolicyConverter;
-            this.topicRepository = topicRepository;
+            this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
         }
 
@@ -45,10 +45,10 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         {
             var forum = await forumReadingService.GetForum(forumTitle);
 
-            var totalCount = await topicRepository.Count(forum.Id);
+            var totalCount = await repository.Count(forum.Id);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
-            var topics = (await topicRepository.Get(forum.Id, pagingData, false)).ToArray();
+            var topics = (await repository.Get(forum.Id, pagingData, false)).ToArray();
             await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
                 t => t.Id, t => t.UnreadCommentsCount);
 
@@ -59,7 +59,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         public async Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle)
         {
             var forum = await forumReadingService.GetForum(forumTitle);
-            var topics = (await topicRepository.Get(forum.Id, null, true)).ToArray();
+            var topics = (await repository.Get(forum.Id, null, true)).ToArray();
             await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
                 t => t.Id, t => t.UnreadCommentsCount);
             return topics;
@@ -69,7 +69,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         public async Task<Topic> GetTopic(Guid topicId)
         {
             var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
-            var topic = await topicRepository.Get(topicId, accessPolicy);
+            var topic = await repository.Get(topicId, accessPolicy);
             if (topic == null)
             {
                 throw new HttpException(HttpStatusCode.NotFound, "Topic not found");

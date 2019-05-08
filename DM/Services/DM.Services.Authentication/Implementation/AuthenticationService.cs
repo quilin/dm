@@ -58,6 +58,7 @@ namespace DM.Services.Authentication.Implementation
                 case true when user.AccessPolicy.HasFlag(AccessPolicy.FullBan):
                     return Identity.Fail(AuthenticationError.Banned);
                 case true when !securityManager.ComparePasswords(password, user.Salt, user.PasswordHash):
+                    // todo: brute force protection
                     return Identity.Fail(AuthenticationError.WrongPassword);
 
                 default:

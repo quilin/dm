@@ -7,7 +7,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
 using DM.Tests.Core;
 using FluentAssertions;
@@ -21,7 +21,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
     {
         private readonly TopicReadingService service;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly Mock<ITopicRepository> topicRepository;
+        private readonly Mock<ITopicReadingRepository> topicRepository;
         private readonly Mock<IAccessPolicyConverter> accessPolicyConverter;
 
         public TopicReadingServiceShould()
@@ -30,7 +30,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
             var identity = Mock<IIdentity>();
             identityProvider.Setup(p => p.Current).Returns(identity.Object);
             currentUserSetup = identity.Setup(i => i.User);
-            topicRepository = Mock<ITopicRepository>();
+            topicRepository = Mock<ITopicReadingRepository>();
             accessPolicyConverter = Mock<IAccessPolicyConverter>();
             service = new TopicReadingService(identityProvider.Object,
                 Mock<IForumReadingService>().Object, accessPolicyConverter.Object,

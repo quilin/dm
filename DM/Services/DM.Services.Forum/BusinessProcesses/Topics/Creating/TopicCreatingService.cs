@@ -12,7 +12,7 @@ using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
 {
     /// <inheritdoc />
     public class TopicCreatingService : ITopicCreatingService
@@ -21,7 +21,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         private readonly IForumReadingService forumReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly ITopicFactory topicFactory;
-        private readonly ITopicRepository topicRepository;
+        private readonly ITopicCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
         private readonly IIdentity identity;
@@ -33,7 +33,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ITopicFactory topicFactory,
-            ITopicRepository topicRepository,
+            ITopicCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
@@ -41,7 +41,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             this.forumReadingService = forumReadingService;
             this.intentionManager = intentionManager;
             this.topicFactory = topicFactory;
-            this.topicRepository = topicRepository;
+            this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
             identity = identityProvider.Current;
@@ -55,7 +55,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
             var forum = await forumReadingService.GetForum(createTopic.ForumTitle);
             await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
 
-            var topic = await topicRepository.Create(topicFactory.Create(forum.Id, identity.User.UserId, createTopic));
+            var topicToCreate = topicFactory.Create(forum.Id, identity.User.UserId, createTopic);
+            var topic = await repository.Create(topicToCreate);
 
             await Task.WhenAll(
                 invokedEventPublisher.Publish(EventType.NewTopic, topic.Id),

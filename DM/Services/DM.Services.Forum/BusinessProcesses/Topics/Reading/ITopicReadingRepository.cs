@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto.Output;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 {
     /// <summary>
     /// Forum topics storage
     /// </summary>
-    public interface ITopicRepository
+    public interface ITopicReadingRepository
     {
         /// <summary>
         /// Get number of forum topics
@@ -37,19 +35,5 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         /// <param name="accessPolicy">Forum access policy</param>
         /// <returns></returns>
         Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy);
-
-        /// <summary>
-        /// Create new topic
-        /// </summary>
-        /// <param name="forumTopic">DAL model</param>
-        /// <returns>DTO model of created topic</returns>
-        Task<Topic> Create(ForumTopic forumTopic);
-
-        /// <summary>
-        /// Update existing topic
-        /// </summary>
-        /// <param name="updateBuilder"></param>
-        /// <returns>DTO model of updated topic</returns>
-        Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder);
     }
 }

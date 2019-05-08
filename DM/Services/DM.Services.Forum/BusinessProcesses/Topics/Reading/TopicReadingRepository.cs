@@ -8,20 +8,18 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 {
     /// <inheritdoc />
-    internal class TopicRepository : ITopicRepository
+    internal class TopicReadingRepository : ITopicReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
-        public TopicRepository(
+        public TopicReadingRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {
@@ -68,28 +66,6 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
                             (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
                 .ProjectTo<Topic>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task<Topic> Create(ForumTopic forumTopic)
-        {
-            dbContext.ForumTopics.Add(forumTopic);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.ForumTopics
-                .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
-                .ProjectTo<Topic>(mapper.ConfigurationProvider)
-                .FirstAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder)
-        {
-            var topicId = updateBuilder.Update(dbContext);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.ForumTopics
-                .Where(t => t.ForumTopicId == topicId)
-                .ProjectTo<Topic>(mapper.ConfigurationProvider)
-                .FirstAsync();
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics
+namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
 {
     /// <summary>
     /// Service to delete topics
