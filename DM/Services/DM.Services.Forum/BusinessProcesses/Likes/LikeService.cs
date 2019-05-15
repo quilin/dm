@@ -11,7 +11,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.MessageQueuing.Publish;
 
 namespace DM.Services.Forum.BusinessProcesses.Likes

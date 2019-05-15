@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
+        <PackageReference Include="Autofac" Version="4.9.2" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+        <PackageReference Include="Polly" Version="7.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+      <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj" />
+      <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
+    </ItemGroup>
+
+</Project>

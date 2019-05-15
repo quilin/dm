@@ -4,6 +4,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Common;
+using DM.Services.Forum.Tests.Dsl;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
@@ -33,13 +34,23 @@ namespace DM.Services.Forum.Tests.Authorization
                     ForumAccessPolicy.NannyModerator);
             
             var actual = await resolver.IsAllowed(
-                new AuthenticatedUser {Role = UserRole.Administrator},
+                Create.User().WithRole(UserRole.Administrator).Please(),
                 ForumIntention.CreateTopic,
                 new Dto.Output.Forum
             {
                 CreateTopicPolicy = ForumAccessPolicy.Guest | ForumAccessPolicy.SeniorModerator
             });
             actual.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ForbidCreateTopicWhenUserNotAuthenticated()
+        {
+            (await resolver.IsAllowed(
+                    Create.User().Please(),
+                    ForumIntention.CreateTopic,
+                    new Dto.Output.Forum()))
+                .Should().BeFalse();
         }
 
         [Fact]
@@ -53,7 +64,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     ForumAccessPolicy.Administrator);
             
             var actual = await resolver.IsAllowed(
-                new AuthenticatedUser {Role = UserRole.Administrator | UserRole.Player},
+                Create.User().WithRole(UserRole.Administrator | UserRole.Player).Please(),
                 ForumIntention.CreateTopic,
                 new Dto.Output.Forum
                 {
@@ -66,11 +77,7 @@ namespace DM.Services.Forum.Tests.Authorization
         public async Task ForbidTopicAdministrationWhenUserNotAdministratorOrLocalModerator()
         {
             var actual = await resolver.IsAllowed(
-                new AuthenticatedUser
-                {
-                    Role = UserRole.Player | UserRole.RegularModerator,
-                    UserId = Guid.NewGuid()
-                },
+                Create.User().WithRole(UserRole.Player | UserRole.RegularModerator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
                 {
@@ -83,11 +90,7 @@ namespace DM.Services.Forum.Tests.Authorization
         public async Task AllowTopicAdministrationWhenUserAdministrator()
         {
             var actual = await resolver.IsAllowed(
-                new AuthenticatedUser
-                {
-                    Role = UserRole.NannyModerator | UserRole.Administrator,
-                    UserId = Guid.NewGuid()
-                },
+                Create.User().WithRole(UserRole.NannyModerator | UserRole.Administrator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
                 {
@@ -101,11 +104,7 @@ namespace DM.Services.Forum.Tests.Authorization
         {
             var userId = Guid.NewGuid();
             var actual = await resolver.IsAllowed(
-                new AuthenticatedUser
-                {
-                    Role = UserRole.NannyModerator | UserRole.SeniorModerator,
-                    UserId = userId
-                },
+                Create.User().WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
                 {

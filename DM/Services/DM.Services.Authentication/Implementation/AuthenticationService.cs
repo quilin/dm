@@ -58,6 +58,7 @@ namespace DM.Services.Authentication.Implementation
                 case true when user.AccessPolicy.HasFlag(AccessPolicy.FullBan):
                     return Identity.Fail(AuthenticationError.Banned);
                 case true when !securityManager.ComparePasswords(password, user.Salt, user.PasswordHash):
+                    // todo: brute force protection
                     return Identity.Fail(AuthenticationError.WrongPassword);
 
                 default:
@@ -102,7 +103,7 @@ namespace DM.Services.Authentication.Implementation
 
             var sessionRefreshDelta = TimeSpan.FromMinutes(20);
             if (!session.IsPersistent &&
-                session.ExpirationDate - sessionRefreshDelta < dateTimeProvider.Now)
+                session.ExpirationDate < dateTimeProvider.Later(sessionRefreshDelta))
             {
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
             }

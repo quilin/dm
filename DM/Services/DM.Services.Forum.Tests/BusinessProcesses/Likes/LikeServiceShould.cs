@@ -12,8 +12,9 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Likes;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
+using DM.Services.Forum.Tests.Dsl;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
 using FluentAssertions;
@@ -67,7 +68,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                     new GeneralUser {UserId = Guid.NewGuid()}
                 }
             });
-            currentUser.Returns(new AuthenticatedUser {UserId = userId});
+            currentUser.Returns(Create.User(userId).Please);
 
             service.Invoking(s => s.LikeTopic(topicId).Wait())
                 .Should().Throw<HttpException>()
@@ -87,7 +88,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                     new GeneralUser {UserId = Guid.NewGuid()}
                 }
             });
-            var user = new AuthenticatedUser {UserId = Guid.NewGuid()};
+            var user = Create.User().Please();
             currentUser.Returns(user);
 
             var likeId = Guid.NewGuid();
@@ -123,7 +124,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                     new GeneralUser {UserId = Guid.NewGuid()}
                 }
             });
-            currentUser.Returns(new AuthenticatedUser {UserId = Guid.NewGuid()});
+            currentUser.Returns(Create.User().Please);
 
             service.Invoking(s => s.DislikeTopic(topicId).Wait())
                 .Should().Throw<HttpException>()
@@ -144,7 +145,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                     new GeneralUser {UserId = Guid.NewGuid()}
                 }
             });
-            var user = new AuthenticatedUser {UserId = userId};
+            var user = Create.User(userId).Please();
             currentUser.Returns(user);
 
             likeRepository

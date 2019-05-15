@@ -1,7 +1,7 @@
 using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Creating;
 using DM.Services.Forum.Dto.Input;
 using DM.Tests.Core;
 using FluentAssertions;

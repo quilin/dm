@@ -19,7 +19,7 @@ namespace DM.Services.MessageQueuing
                 .InstancePerLifetimeScope();
             builder.Register<IConnectionFactory>(x => new ConnectionFactory())
                 .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
             builder.RegisterGeneric(typeof(EventProcessorAdapter<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
@@ -28,7 +28,7 @@ namespace DM.Services.MessageQueuing
                 .InstancePerDependency();
             builder.RegisterGeneric(typeof(MessageConsumer<>))
                 .AsImplementedInterfaces()
-                .InstancePerDependency();
+                .SingleInstance();
             base.Load(builder);
         }
     }

@@ -6,7 +6,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.BusinessProcesses.Topics;
+using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
