@@ -19,8 +19,8 @@ namespace DM.Services.Search.Consumer.Indexing
         /// <summary>
         /// Indexes event entity in search engine
         /// </summary>
-        /// <param name="invokedEvent">Event</param>
+        /// <param name="message">Event</param>
         /// <returns></returns>
-        Task Index(InvokedEvent invokedEvent);
+        Task Index(InvokedEvent message);
     }
 }

@@ -5,6 +5,7 @@ using DM.Services.Mail.Consumer.Processes;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
+using Microsoft.Extensions.Logging;
 
 namespace DM.Services.Mail.Consumer
 {
@@ -14,12 +15,15 @@ namespace DM.Services.Mail.Consumer
     public class CompositeMailProcessor : IMessageProcessor<InvokedEvent>
     {
         private readonly IEnumerable<IMailProcessor> processors;
+        private readonly ILogger<IMessageProcessor<InvokedEvent>> logger;
 
         /// <inheritdoc />
         public CompositeMailProcessor(
-            IEnumerable<IMailProcessor> processors)
+            IEnumerable<IMailProcessor> processors,
+            ILogger<IMessageProcessor<InvokedEvent>> logger)
         {
             this.processors = processors;
+            this.logger = logger;
         }
 
         /// <inheritdoc />
@@ -28,6 +32,8 @@ namespace DM.Services.Mail.Consumer
             await Task.WhenAll(processors
                 .Where(p => p.CanProcess(message.Type))
                 .Select(p => p.Process(message)));
+            logger.LogInformation("DM.Event {eventType} for entity {entityId} is handled",
+                message.Type, message.EntityId);
             return ProcessResult.Success;
         }
     }

@@ -43,24 +43,17 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
         public async Task<Topic> UpdateTopic(UpdateTopic updateTopic)
         {
             await validator.ValidateAndThrowAsync(updateTopic);
-
             var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId);
 
-            var topicMovesToAnotherForum = !string.IsNullOrEmpty(updateTopic.ForumTitle) &&
-                oldTopic.Forum.Title != updateTopic.ForumTitle;
-            var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
-            var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
-            var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
-
             var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
-            if (hasAdministrativeChanges)
+            if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
-                await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
                 changes
                     .Field(t => t.Closed, updateTopic.Closed)
                     .Field(t => t.Attached, updateTopic.Attached);
 
-                if (topicMovesToAnotherForum)
+                if (!string.IsNullOrEmpty(updateTopic.ForumTitle) &&
+                    oldTopic.Forum.Title != updateTopic.ForumTitle)
                 {
                     var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);
                     await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
@@ -68,10 +61,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics
                 }
             }
 
-            if (!string.IsNullOrEmpty(updateTopic.Title) && updateTopic.Title != oldTopic.Title ||
-                !string.IsNullOrEmpty(updateTopic.Text) && updateTopic.Text != oldTopic.Text)
+            if (await intentionManager.IsAllowed(TopicIntention.Edit, oldTopic))
             {
-                await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
                 changes
                     .Field(t => t.Title, updateTopic.Title)
                     .Field(t => t.Text, updateTopic.Text);

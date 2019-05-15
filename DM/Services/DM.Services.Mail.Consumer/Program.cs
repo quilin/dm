@@ -4,6 +4,9 @@ using DM.Services.MessageQueuing.Consume;
 using DM.Services.MessageQueuing.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Serilog;
+using Serilog.Events;
+using Serilog.Filters;
 
 namespace DM.Services.Mail.Consumer
 {
@@ -13,6 +16,21 @@ namespace DM.Services.Mail.Consumer
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
             Console.WriteLine("[🔧] Configuring service provider");
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "DM.Mail.Consumer")
+                .Enrich.WithProperty("Environment", "Test")
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+                    .WriteTo.Elasticsearch(
+                        "http://localhost:9200",
+                        "dm_logs-{0:yyyy.MM.dd}",
+                        inlineFields: true))
+                .WriteTo.Logger(lc => lc
+                    .Filter.ByExcluding(x => x.Level == LogEventLevel.Debug)
+                    .WriteTo.Console())
+                .CreateLogger();
             using (var serviceProvider = ContainerConfiguration.ConfigureProvider())
             {
                 Console.WriteLine("[🐣] Creating consumer...");

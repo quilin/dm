@@ -34,15 +34,15 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         protected override EventType EventType => EventType.NewForumComment;
 
         /// <inheritdoc />
-        public override async Task Index(InvokedEvent invokedEvent)
+        public override async Task Index(InvokedEvent message)
         {
             var comment = await dbContext.Comments
-                .Where(c => c.ForumCommentId == invokedEvent.EntityId)
+                .Where(c => c.ForumCommentId == message.EntityId)
                 .Select(c => new {c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId, c.Text})
                 .FirstAsync();
             await repository.Index(new SearchEntity
             {
-                Id = invokedEvent.EntityId,
+                Id = message.EntityId,
                 ParentEntityId = comment.ForumTopicId,
                 EntityType = SearchEntityType.ForumComment,
                 Text = parserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),

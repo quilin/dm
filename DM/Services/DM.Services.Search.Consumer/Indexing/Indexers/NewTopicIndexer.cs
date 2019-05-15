@@ -34,16 +34,16 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         protected override EventType EventType => EventType.NewTopic;
 
         /// <inheritdoc />
-        public override async Task Index(InvokedEvent invokedEvent)
+        public override async Task Index(InvokedEvent message)
         {
             var topic = await dbContext.ForumTopics
-                .Where(t => t.ForumTopicId == invokedEvent.EntityId)
+                .Where(t => t.ForumTopicId == message.EntityId)
                 .Select(t => new {t.Forum.ViewPolicy, t.Title, t.Text})
                 .FirstAsync();
             await repository.Index(new SearchEntity
             {
-                Id = invokedEvent.EntityId,
-                ParentEntityId = invokedEvent.EntityId,
+                Id = message.EntityId,
+                ParentEntityId = message.EntityId,
                 EntityType = SearchEntityType.Topic,
                 Title = topic.Title,
                 Text = parserProvider.CurrentCommon.Parse(topic.Text).ToHtml(),

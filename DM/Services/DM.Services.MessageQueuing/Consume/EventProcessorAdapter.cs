@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing.Processing;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -13,12 +14,15 @@ namespace DM.Services.MessageQueuing.Consume
         where TMessage : class
     {
         private readonly Func<IMessageProcessorWrapper<TMessage>> processorFactory;
+        private readonly ILogger<IMessageProcessorWrapper<TMessage>> logger;
 
         /// <inheritdoc />
         public EventProcessorAdapter(
-            Func<IMessageProcessorWrapper<TMessage>> processorFactory)
+            Func<IMessageProcessorWrapper<TMessage>> processorFactory,
+            ILogger<IMessageProcessorWrapper<TMessage>> logger)
         {
             this.processorFactory = processorFactory;
+            this.logger = logger;
         }
         
         /// <inheritdoc />
@@ -45,8 +49,9 @@ namespace DM.Services.MessageQueuing.Consume
                         break;
                 }
             }
-            catch
+            catch (Exception e)
             {
+                logger.LogError(e, e.Message);
                 channel.BasicNack(eventArgs.DeliveryTag, false, false);
             }
         }

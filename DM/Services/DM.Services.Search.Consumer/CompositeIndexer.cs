@@ -5,6 +5,7 @@ using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
 using DM.Services.Search.Consumer.Indexing;
+using Microsoft.Extensions.Logging;
 
 namespace DM.Services.Search.Consumer
 {
@@ -12,20 +13,25 @@ namespace DM.Services.Search.Consumer
     public class CompositeIndexer : IMessageProcessor<InvokedEvent>
     {
         private readonly IEnumerable<IIndexer> indexers;
+        private readonly ILogger<IMessageProcessor<InvokedEvent>> logger;
 
         /// <inheritdoc />
         public CompositeIndexer(
-            IEnumerable<IIndexer> indexers)
+            IEnumerable<IIndexer> indexers,
+            ILogger<IMessageProcessor<InvokedEvent>> logger)
         {
             this.indexers = indexers;
+            this.logger = logger;
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Process(InvokedEvent invokedEvent)
+        public async Task<ProcessResult> Process(InvokedEvent message)
         {
             await Task.WhenAll(indexers
-                .Where(i => i.CanIndex(invokedEvent.Type))
-                .Select(i => i.Index(invokedEvent)));
+                .Where(i => i.CanIndex(message.Type))
+                .Select(i => i.Index(message)));
+            logger.LogInformation("DM.Event {eventType} for entity {entityId} is indexed",
+                message.Type, message.EntityId);
             return ProcessResult.Success;
         }
     }
