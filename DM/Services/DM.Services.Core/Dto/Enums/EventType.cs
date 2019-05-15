@@ -19,6 +19,12 @@ namespace DM.Services.Core.Dto.Enums
         NewUser = 1,
 
         /// <summary>
+        /// User has been activated
+        /// </summary>
+        [EventRoutingKey("community.user.activated")]
+        ActivatedUser = 2,
+
+        /// <summary>
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("forum.topic.created")]

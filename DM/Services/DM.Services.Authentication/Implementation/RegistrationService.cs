@@ -61,7 +61,7 @@ namespace DM.Services.Authentication.Implementation
         /// <inheritdoc />
         public async Task<Guid> Activate(Guid tokenId)
         {
-            var userId = await repository.FindUserToActivate(tokenId, dateTimeProvider.Now - TimeSpan.FromDays(2));
+            var userId = await repository.FindUserToActivate(tokenId, dateTimeProvider.Ago(TimeSpan.FromDays(2)));
             if (userId == default)
             {
                 throw new HttpException(HttpStatusCode.Gone,
@@ -71,6 +71,8 @@ namespace DM.Services.Authentication.Implementation
             await repository.ActivateUser(
                 new UpdateBuilder<User>(userId).Field(u => u.Activated, true),
                 new UpdateBuilder<Token>(tokenId).Field(t => t.IsRemoved, true));
+
+            await publisher.Publish(EventType.ActivatedUser, userId);
             return userId;
         }
     }

@@ -103,7 +103,7 @@ namespace DM.Services.Authentication.Implementation
 
             var sessionRefreshDelta = TimeSpan.FromMinutes(20);
             if (!session.IsPersistent &&
-                session.ExpirationDate - sessionRefreshDelta < dateTimeProvider.Now)
+                session.ExpirationDate < dateTimeProvider.Later(sessionRefreshDelta))
             {
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
             }
