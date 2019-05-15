@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DM.Services.Authentication.Repositories;
 using FluentValidation;
 
@@ -26,6 +27,7 @@ namespace DM.Services.Authentication.Dto.Validations
 
             RuleFor(r => r.Password)
                 .NotEmpty().WithMessage("Password must not be empty")
+                .Must(new Regex("\\d|\\w|_|-").IsMatch)
                 .MinimumLength(6).WithMessage("Password must be at least 6 character long. It's for your own safety!");
         }
     }

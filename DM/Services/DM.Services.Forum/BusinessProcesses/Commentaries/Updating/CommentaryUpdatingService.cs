@@ -47,7 +47,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var updatedComment = await repository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
-                .Field(f => f.Text, updateComment.Text)
+                .Field(f => f.Text, updateComment.Text.Trim())
                 .Field(f => f.LastUpdateDate, dateTimeProvider.Now));
             await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
             return updatedComment;

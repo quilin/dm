@@ -27,7 +27,7 @@ namespace DM.Services.Mail.Sender
         public async Task Send(MailLetter letter)
         {
             await validator.ValidateAndThrowAsync(letter);
-            await publisher.Publish(letter, publishConfiguration, "mail.sending");
+            await publisher.Publish(letter, publishConfiguration, string.Empty);
         }
     }
 }

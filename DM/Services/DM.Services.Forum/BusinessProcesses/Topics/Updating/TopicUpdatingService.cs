@@ -65,8 +65,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             if (await intentionManager.IsAllowed(TopicIntention.Edit, oldTopic))
             {
                 changes
-                    .Field(t => t.Title, updateTopic.Title)
-                    .Field(t => t.Text, updateTopic.Text);
+                    .Field(t => t.Title, updateTopic.Title.Trim())
+                    .Field(t => t.Text, updateTopic.Text.Trim());
             }
 
             var topic = await repository.Update(changes);
