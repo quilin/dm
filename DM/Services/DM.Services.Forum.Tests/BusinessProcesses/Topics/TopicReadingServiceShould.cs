@@ -9,6 +9,7 @@ using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
+using DM.Services.Forum.Tests.Dsl;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
@@ -41,7 +42,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
         public void ThrowHttpExceptionWhenAvailableTopicNotFound()
         {
             var topicId = Guid.NewGuid();
-            currentUserSetup.Returns(new AuthenticatedUser());
+            currentUserSetup.Returns(Create.User().Please);
             accessPolicyConverter
                 .Setup(c => c.Convert(It.IsAny<UserRole>()))
                 .Returns(ForumAccessPolicy.SeniorModerator);

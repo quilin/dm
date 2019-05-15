@@ -3,10 +3,6 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <LangVersion>latest</LangVersion>
-        <RootNamespace>DM.Services.Search.Consumer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,13 +11,13 @@
         <PackageReference Include="Autofac" Version="4.9.2" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+        <PackageReference Include="Polly" Version="7.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
-        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
-        <ProjectReference Include="..\\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
-        <ProjectReference Include="..\DM.Services.Search\DM.Services.Search.csproj" />
+      <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+      <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj" />
+      <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
     </ItemGroup>
 
 </Project>

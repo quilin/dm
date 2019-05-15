@@ -20,7 +20,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Services\DM.Services.Authentication\DM.Services.Authentication.csproj" />
       <ProjectReference Include="..\..\Services\DM.Services.Core\DM.Services.Core.csproj" />
-      <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj" />
     </ItemGroup>
 
 </Project>

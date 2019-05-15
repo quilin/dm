@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Mail.Consumer.Processes.Registration
+namespace DM.Services.Registration.Consumer
 {
     /// <inheritdoc />
     public class RegistrationRepository : IRegistrationRepository

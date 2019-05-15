@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Mail.Consumer.Processes.Registration
+namespace DM.Services.Registration.Consumer
 {
     /// <summary>
     /// Repository for registration email sending

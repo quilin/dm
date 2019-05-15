@@ -12,6 +12,7 @@ using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
+using DM.Services.Forum.Tests.Dsl;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
 using FluentAssertions;
@@ -82,7 +83,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topic = new Topic();
             topicReadingSetup.ReturnsAsync(topic);
             var userId = Guid.NewGuid();
-            currentUserSetup.Returns(new AuthenticatedUser {UserId = userId});
+            currentUserSetup.Returns(Create.User(userId).Please);
             var commentId = Guid.NewGuid();
             var comment = new ForumComment {ForumCommentId = commentId};
             commentaryDalCreateSetup.Returns(comment);

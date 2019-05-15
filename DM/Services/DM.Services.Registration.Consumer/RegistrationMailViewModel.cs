@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Mail.Consumer.Processes.Registration
+namespace DM.Services.Registration.Consumer
 {
     /// <summary>
     /// View model for user activation email

@@ -15,55 +15,55 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// New user has been created
         /// </summary>
-        [EventRoutingKey("new.user")]
+        [EventRoutingKey("community.user.registered")]
         NewUser = 1,
 
         /// <summary>
         /// New topic has been created
         /// </summary>
-        [EventRoutingKey("new.topic")]
+        [EventRoutingKey("forum.topic.created")]
         NewTopic = 101,
 
         /// <summary>
         /// Topic text has been updated
         /// </summary>
-        [EventRoutingKey("changed.topic")]
+        [EventRoutingKey("forum.topic.changed")]
         ChangedTopic = 102,
 
         /// <summary>
         /// Topic has been deleted
         /// </summary>
-        [EventRoutingKey("deleted.topic")]
+        [EventRoutingKey("forum.topic.deleted")]
         DeletedTopic = 104,
 
         /// <summary>
         /// New commentary has been created on forum
         /// </summary>
-        [EventRoutingKey("new.comment.forum")]
+        [EventRoutingKey("forum.comment.created")]
         NewForumComment = 201,
 
         /// <summary>
         /// Forum commentary has been updated
         /// </summary>
-        [EventRoutingKey("changed.comment.forum")]
+        [EventRoutingKey("forum.comment.changed")]
         ChangedForumComment = 202,
 
         /// <summary>
         /// Forum commentary has been deleted
         /// </summary>
-        [EventRoutingKey("deleted.comment.forum")]
+        [EventRoutingKey("forum.comment.deleted")]
         DeletedForumComment = 203,
 
         /// <summary>
         /// Topic has been liked
         /// </summary>
-        [EventRoutingKey("new.like.topic")]
+        [EventRoutingKey("forum.topic.liked")]
         LikedTopic = 601,
 
         /// <summary>
         /// Forum commentary has been liked
         /// </summary>
-        [EventRoutingKey("new.like.comment.forum")]
+        [EventRoutingKey("forum.comment.liked")]
         LikedForumComment = 602
     }
 }
