@@ -8,7 +8,7 @@ using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <summary>
     /// Indexer for modified topic

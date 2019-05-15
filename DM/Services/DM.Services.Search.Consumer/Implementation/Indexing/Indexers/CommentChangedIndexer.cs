@@ -8,44 +8,42 @@ using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
-    /// <summary>
-    /// Indexer for new forum commentaries
-    /// </summary>
-    public class NewForumCommentIndexer : BaseIndexer
+    /// <inheritdoc />
+    public class CommentChangedIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
-        private readonly IBbParserProvider parserProvider;
-        private readonly IIndexingRepository repository;
+        private readonly IBbParserProvider bbParserProvider;
+        private readonly IIndexingRepository indexingRepository;
 
         /// <inheritdoc />
-        public NewForumCommentIndexer(
+        public CommentChangedIndexer(
             DmDbContext dbContext,
-            IBbParserProvider parserProvider,
-            IIndexingRepository repository)
+            IBbParserProvider bbParserProvider,
+            IIndexingRepository indexingRepository)
         {
             this.dbContext = dbContext;
-            this.parserProvider = parserProvider;
-            this.repository = repository;
+            this.bbParserProvider = bbParserProvider;
+            this.indexingRepository = indexingRepository;
         }
-
+    
         /// <inheritdoc />
-        protected override EventType EventType => EventType.NewForumComment;
+        protected override EventType EventType => EventType.ChangedForumComment;
 
         /// <inheritdoc />
         public override async Task Index(InvokedEvent message)
         {
             var comment = await dbContext.Comments
                 .Where(c => c.ForumCommentId == message.EntityId)
-                .Select(c => new {c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId, c.Text})
+                .Select(c => new {c.Text, c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId})
                 .FirstAsync();
-            await repository.Index(new SearchEntity
+            await indexingRepository.Index(new SearchEntity
             {
                 Id = message.EntityId,
                 ParentEntityId = comment.ForumTopicId,
                 EntityType = SearchEntityType.ForumComment,
-                Text = parserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
+                Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
                 AuthorizedRoles = comment.ViewPolicy.GetAuthorizedRoles()
             });
         }

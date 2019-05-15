@@ -27,13 +27,6 @@ namespace DM.Services.Notifications.Repositories
         Task<IEnumerable<Notification>> GetNotifications(Guid userId, PagingData pagingData);
 
         /// <summary>
-        /// Create new notification
-        /// </summary>
-        /// <param name="notification">Notification DAL model</param>
-        /// <returns></returns>
-        Task Create(Notification notification);
-
-        /// <summary>
         /// Mark single notification as read by user
         /// </summary>
         /// <param name="notificationId">Notification identifier</param>

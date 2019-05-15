@@ -22,4 +22,8 @@
       <ProjectReference Include="..\\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Implementation" />
+    </ItemGroup>
+
 </Project>

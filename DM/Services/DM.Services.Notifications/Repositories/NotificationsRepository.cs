@@ -36,9 +36,6 @@ namespace DM.Services.Notifications.Repositories
                 .ToListAsync();
 
         /// <inheritdoc />
-        public Task Create(Notification notification) => Collection.InsertOneAsync(notification);
-
-        /// <inheritdoc />
         public Task MarkAsRead(Guid notificationId, Guid userId) =>
             Collection.UpdateOneAsync(
                 Filter.Eq(n => n.NotificationId, notificationId) &

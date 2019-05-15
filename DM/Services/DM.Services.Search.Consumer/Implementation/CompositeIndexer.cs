@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
-using DM.Services.Search.Consumer.Indexing;
+using DM.Services.Search.Consumer.Implementation.Indexing;
 using Microsoft.Extensions.Logging;
 
-namespace DM.Services.Search.Consumer
+namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
     public class CompositeIndexer : IMessageProcessor<InvokedEvent>

@@ -5,7 +5,7 @@ using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
 
-namespace DM.Services.Registration.Consumer
+namespace DM.Services.Registration.Consumer.Implementation
 {
     /// <inheritdoc />
     public class RegistrationProcessor : IMessageProcessor<InvokedEvent>
