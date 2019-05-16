@@ -26,6 +26,7 @@ namespace DM.Services.MessageQueuing.Consume
         /// <inheritdoc />
         public void Consume(MessageConsumeConfiguration configuration)
         {
+            Ensure.Consume(channel, configuration);
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (_, args) => await eventProcessorAdapter.ProcessEvent(args, channel);
             channel.BasicConsume(consumer, configuration.QueueName);

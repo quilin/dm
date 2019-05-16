@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
 {
     /// <inheritdoc />
-    public class DeleteCommentaryRepository : IDeleteCommentaryRepository
+    public class CommentaryDeletingRepository : ICommentaryDeletingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public DeleteCommentaryRepository(
+        public CommentaryDeletingRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {

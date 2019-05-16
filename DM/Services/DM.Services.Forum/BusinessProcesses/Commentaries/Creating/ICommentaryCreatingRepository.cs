@@ -8,7 +8,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
     /// <summary>
     /// Creating commentaries storage
     /// </summary>
-    public interface ICreatingCommentaryRepository
+    public interface ICommentaryCreatingRepository
     {
         /// <summary>
         /// Create comment from DAL

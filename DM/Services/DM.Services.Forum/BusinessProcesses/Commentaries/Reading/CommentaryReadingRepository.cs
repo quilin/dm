@@ -14,13 +14,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 
 {
     /// <inheritdoc />
-    public class ReadingCommentRepository : IReadingCommentRepository
+    public class CommentaryReadingRepository : ICommentaryReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public ReadingCommentRepository(
+        public CommentaryReadingRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {

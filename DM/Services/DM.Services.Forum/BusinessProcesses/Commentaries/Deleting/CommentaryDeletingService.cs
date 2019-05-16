@@ -16,14 +16,14 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
     {
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IDeleteCommentaryRepository repository;
+        private readonly ICommentaryDeletingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
         public CommentaryDeletingService(
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
-            IDeleteCommentaryRepository repository,
+            ICommentaryDeletingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.intentionManager = intentionManager;

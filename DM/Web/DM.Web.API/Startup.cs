@@ -10,6 +10,7 @@ using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
+using DM.Services.Notifications.Configuration;
 using DM.Services.Search;
 using DM.Services.Search.Configuration;
 using DM.Web.API.Authentication;
@@ -67,6 +68,8 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<MessagePublishConfiguration>(
                     Configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .Configure<RealtimeNotificationsConsumeConfiguration>(
+                    Configuration.GetSection(nameof(RealtimeNotificationsConsumeConfiguration)).Bind)
                 .Configure<SearchEngineConfiguration>(
                     Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind);
 

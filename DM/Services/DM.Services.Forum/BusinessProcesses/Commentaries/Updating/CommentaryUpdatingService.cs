@@ -20,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IUpdatingCommentaryRepository repository;
+        private readonly ICommentaryUpdatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
-            IUpdatingCommentaryRepository repository,
+            ICommentaryUpdatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;

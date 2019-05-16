@@ -8,30 +8,31 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class UpdatingCommentaryRepository : IUpdatingCommentaryRepository
+    public class CommentaryCreatingRepository : ICommentaryCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public UpdatingCommentaryRepository(
+        public CommentaryCreatingRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
-        
+
         /// <inheritdoc />
-        public async Task<Comment> Update(UpdateBuilder<ForumComment> update)
+        public async Task<Comment> Create(ForumComment comment, UpdateBuilder<ForumTopic> topicUpdate)
         {
-            var commentId = update.Update(dbContext);
+            dbContext.Comments.Add(comment);
+            topicUpdate.Update(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
-                .Where(c => c.ForumCommentId == commentId)
+                .Where(c => c.ForumCommentId == comment.ForumCommentId)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }

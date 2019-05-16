@@ -15,7 +15,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
     public class CommentReadingService : ICommentaryReadingService
     {
         private readonly ITopicReadingService topicReadingService;
-        private readonly IReadingCommentRepository readingCommentRepository;
+        private readonly ICommentaryReadingRepository commentaryRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
@@ -23,11 +23,11 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         public CommentReadingService(
             ITopicReadingService topicReadingService,
             IIdentityProvider identityProvider,
-            IReadingCommentRepository readingCommentRepository,
+            ICommentaryReadingRepository commentaryRepository,
             IUnreadCountersRepository unreadCountersRepository)
         {
             this.topicReadingService = topicReadingService;
-            this.readingCommentRepository = readingCommentRepository;
+            this.commentaryRepository = commentaryRepository;
             this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
@@ -38,10 +38,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         {
             await topicReadingService.GetTopic(topicId);
 
-            var totalCount = await readingCommentRepository.Count(topicId);
+            var totalCount = await commentaryRepository.Count(topicId);
             var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
 
-            var comments = await readingCommentRepository.Get(topicId, paging);
+            var comments = await commentaryRepository.Get(topicId, paging);
             if (identity.User.IsAuthenticated)
             {
                 await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
@@ -53,7 +53,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         /// <inheritdoc />
         public Task<Comment> Get(Guid commentId)
         {
-            return readingCommentRepository.Get(commentId);
+            return commentaryRepository.Get(commentId);
         }
     }
 }

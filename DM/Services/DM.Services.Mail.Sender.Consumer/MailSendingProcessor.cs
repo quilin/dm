@@ -14,12 +14,14 @@ using Polly.Retry;
 
 namespace DM.Services.Mail.Sender.Consumer
 {
+    /// <inheritdoc />
     public class MailSendingProcessor : IMessageProcessor<MailLetter>
     {
         private readonly EmailConfiguration configuration;
         private readonly Lazy<IMailTransport> client;
         private readonly AsyncRetryPolicy retryPolicy;
 
+        /// <inheritdoc />
         public MailSendingProcessor(
             IOptions<EmailConfiguration> configuration)
         {
@@ -34,7 +36,8 @@ namespace DM.Services.Mail.Sender.Consumer
             });
             retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(5, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)));
         }
-        
+
+        /// <inheritdoc />
         public async Task<ProcessResult> Process(MailLetter message)
         {
             var policyResult = await retryPolicy.ExecuteAndCaptureAsync(() => client.Value.SendAsync(new MimeMessage

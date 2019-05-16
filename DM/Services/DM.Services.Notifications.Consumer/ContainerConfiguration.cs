@@ -3,11 +3,14 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
+using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.Mail.Sender.Consumer
+namespace DM.Services.Notifications.Consumer
 {
     /// <summary>
     /// Configures container for mail sender MQ consumer
@@ -15,7 +18,7 @@ namespace DM.Services.Mail.Sender.Consumer
     public static class ContainerConfiguration
     {
         /// <summary>
-        /// Configure service provider for the consumer
+        /// Configure service provider
         /// </summary>
         /// <returns></returns>
         public static AutofacServiceProvider ConfigureProvider()
@@ -27,9 +30,15 @@ namespace DM.Services.Mail.Sender.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .Configure<EmailConfiguration>(
-                    configuration.GetSection(nameof(EmailConfiguration)).Bind);
-            
+                .Configure<ConnectionStrings>(
+                    configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<MessageConsumeConfiguration>(
+                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
+                .Configure<MessagePublishConfiguration>(
+                    configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .AddDbContext<DmDbContext>(options =>
+                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
+
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<MessageQueuingModule>();

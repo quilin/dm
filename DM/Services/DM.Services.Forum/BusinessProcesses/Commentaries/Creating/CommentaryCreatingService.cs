@@ -22,7 +22,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
         private readonly ICommentFactory commentFactory;
-        private readonly ICreatingCommentaryRepository repository;
+        private readonly ICommentaryCreatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ICommentFactory commentFactory,
-            ICreatingCommentaryRepository repository,
+            ICommentaryCreatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;

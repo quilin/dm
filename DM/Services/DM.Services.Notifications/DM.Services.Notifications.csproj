@@ -8,11 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
       <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Implementation" />
     </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
     /// <summary>
     /// Deleting commentary storage
     /// </summary>
-    public interface IDeleteCommentaryRepository
+    public interface ICommentaryDeletingRepository
     {
         /// <summary>
         /// Get single comment to delete by its identifier

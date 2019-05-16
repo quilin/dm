@@ -32,6 +32,7 @@ namespace DM.Services.MessageQueuing.Publish
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
+                Ensure.Publish(channel, configuration);
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
                 channel.BasicPublish(configuration.ExchangeName, routingKey,
                     new BasicProperties
@@ -52,6 +53,7 @@ namespace DM.Services.MessageQueuing.Publish
             using (var connection = connectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
+                Ensure.Publish(channel, configuration);
                 var basicPublishBatch = channel.CreateBasicPublishBatch();
                 foreach (var message in messages)
                 {

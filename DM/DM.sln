@@ -47,9 +47,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Forum.Tests", "Services\DM.Services.Forum.Tests\DM.Services.Forum.Tests.csproj", "{909DF056-9C0D-4B2D-9BBB-1869D9AF2E2C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageQueuing", "MessageQueuing", "{28709B36-C22C-4EB9-906F-19CDCC769338}"
-ProjectSection(SolutionItems) = preProject
-	mq_definitions.json = mq_definitions.json
-EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{6DD9DA97-AAFF-46D4-9313-367998B98CF9}"
 EndProject

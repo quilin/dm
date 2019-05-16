@@ -29,8 +29,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<ICommentFactory, ForumComment> commentaryDalCreateSetup;
-        private readonly ISetup<ICreatingCommentaryRepository, Task<Comment>> commentaryCreateSetup;
-        private readonly Mock<ICreatingCommentaryRepository> commentRepository;
+        private readonly ISetup<ICommentaryCreatingRepository, Task<Comment>> commentaryCreateSetup;
+        private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly CommentaryCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
@@ -62,7 +62,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentaryDalCreateSetup = commentFactory
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
-            commentRepository = Mock<ICreatingCommentaryRepository>();
+            commentRepository = Mock<ICommentaryCreatingRepository>();
             commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>(), It.IsAny<UpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();

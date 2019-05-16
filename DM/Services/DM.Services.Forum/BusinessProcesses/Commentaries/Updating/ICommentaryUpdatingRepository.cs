@@ -8,7 +8,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
     /// <summary>
     /// Updating commentary storage
     /// </summary>
-    public interface IUpdatingCommentaryRepository
+    public interface ICommentaryUpdatingRepository
     {
         /// <summary>
         /// Update single commentary
