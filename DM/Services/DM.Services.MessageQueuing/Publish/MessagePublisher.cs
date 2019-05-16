@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,31 @@ namespace DM.Services.MessageQueuing.Publish
                     }, body);
                 return Task.CompletedTask;
             }
+        }
+
+        /// <inheritdoc />
+        public Task Publish<TMessage>(IEnumerable<TMessage> messages, MessagePublishConfiguration configuration,
+            string routingKey)
+            where TMessage : class
+        {
+            using (var connection = connectionFactory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                var basicPublishBatch = channel.CreateBasicPublishBatch();
+                foreach (var message in messages)
+                {
+                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                    basicPublishBatch.Add(configuration.ExchangeName, routingKey, false,
+                        new BasicProperties
+                        {
+                            Persistent = true,
+                            ContentType = MediaTypeNames.Application.Json,
+                            CorrelationId = correlationTokenProvider.Current.ToString()
+                        }, body);
+                }
+                basicPublishBatch.Publish();
+            }
+            return Task.CompletedTask;
         }
     }
 }

@@ -35,7 +35,7 @@
     {
       "name": "dm.mail.sending",
       "vhost": "/",
-      "type": "direct",
+      "type": "topic",
       "durable": true,
       "auto_delete": false,
       "internal": false,
@@ -66,7 +66,7 @@
       "vhost": "/",
       "destination": "dm.mail.sending",
       "destination_type": "queue",
-      "routing_key": "",
+      "routing_key": "#",
       "arguments": {}
     },
     {

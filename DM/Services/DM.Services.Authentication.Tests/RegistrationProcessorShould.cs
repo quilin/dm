@@ -4,7 +4,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Mail.Sender;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Dto;
-using DM.Services.Registration.Consumer;
+using DM.Services.Registration.Consumer.Implementation;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;

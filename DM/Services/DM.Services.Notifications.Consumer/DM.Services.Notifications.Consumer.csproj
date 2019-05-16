@@ -9,6 +9,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+      <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
+      <ProjectReference Include="..\DM.Services.Notifications\DM.Services.Notifications.csproj" />
     </ItemGroup>
 
 </Project>

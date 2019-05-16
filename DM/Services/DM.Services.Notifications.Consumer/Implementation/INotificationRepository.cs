@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Notifications;
 
-namespace DM.Services.Notifications.Consumer
+namespace DM.Services.Notifications.Consumer.Implementation
 {
     /// <summary>
     /// Notifications storage
@@ -11,8 +12,8 @@ namespace DM.Services.Notifications.Consumer
         /// <summary>
         /// Create new notification
         /// </summary>
-        /// <param name="notification">Notification DAL model</param>
+        /// <param name="notifications">Notification DAL models</param>
         /// <returns></returns>
-        Task Create(Notification notification);
+        Task Create(IEnumerable<Notification> notifications);
     }
 }
