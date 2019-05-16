@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <inheritdoc />
     public class CommentDeletedIndexer : BaseIndexer
@@ -20,9 +20,9 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         protected override EventType EventType => EventType.DeletedForumComment;
 
         /// <inheritdoc />
-        public override Task Index(InvokedEvent invokedEvent)
+        public override Task Index(InvokedEvent message)
         {
-            return indexingRepository.Delete(invokedEvent.EntityId);
+            return indexingRepository.Delete(message.EntityId);
         }
     }
 }

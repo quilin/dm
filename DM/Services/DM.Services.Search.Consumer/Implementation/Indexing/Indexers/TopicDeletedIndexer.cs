@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <summary>
     /// Indexer for removed topic
@@ -22,9 +22,9 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         protected override EventType EventType => EventType.DeletedTopic;
 
         /// <inheritdoc />
-        public override Task Index(InvokedEvent invokedEvent)
+        public override Task Index(InvokedEvent message)
         {
-            return repository.DeleteByParent(invokedEvent.EntityId);
+            return repository.DeleteByParent(message.EntityId);
         }
     }
 }

@@ -10,6 +10,9 @@ namespace DM.Services.Forum.Dto.Input
         /// <inheritdoc />
         public UpdateTopicValidator()
         {
+            RuleFor(t => t.TopicId)
+                .NotEmpty();
+
             RuleFor(t => t.Title)
                 .NotEmpty()
                 .MaximumLength(130);

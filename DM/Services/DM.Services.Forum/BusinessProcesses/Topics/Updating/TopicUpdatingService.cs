@@ -44,33 +44,29 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         public async Task<Topic> UpdateTopic(UpdateTopic updateTopic)
         {
             await validator.ValidateAndThrowAsync(updateTopic);
-
             var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId);
 
-            var topicMovesToAnotherForum = !string.IsNullOrEmpty(updateTopic.ForumTitle) &&
-                oldTopic.Forum.Title != updateTopic.ForumTitle;
-            var topicChangesClosing = updateTopic.Closed != oldTopic.Closed;
-            var topicChangesAttachment = updateTopic.Attached != oldTopic.Attached;
-            var hasAdministrativeChanges = topicMovesToAnotherForum || topicChangesClosing || topicChangesAttachment;
-
-            await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
-            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId)
-                .Field(t => t.Title, updateTopic.Title.Trim())
-                .Field(t => t.Text, updateTopic.Text.Trim());
-
-            if (hasAdministrativeChanges)
+            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
+            if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
-                await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, oldTopic.Forum);
                 changes
                     .Field(t => t.Closed, updateTopic.Closed)
                     .Field(t => t.Attached, updateTopic.Attached);
 
-                if (topicMovesToAnotherForum)
+                if (!string.IsNullOrEmpty(updateTopic.ForumTitle) &&
+                    oldTopic.Forum.Title != updateTopic.ForumTitle)
                 {
                     var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);
                     await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
                     changes.Field(t => t.ForumId, forum.Id);
                 }
+            }
+
+            if (await intentionManager.IsAllowed(TopicIntention.Edit, oldTopic))
+            {
+                changes
+                    .Field(t => t.Title, updateTopic.Title.Trim())
+                    .Field(t => t.Text, updateTopic.Text.Trim());
             }
 
             var topic = await repository.Update(changes);

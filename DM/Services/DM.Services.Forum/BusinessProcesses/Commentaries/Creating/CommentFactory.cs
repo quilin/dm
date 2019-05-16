@@ -29,7 +29,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
                 ForumTopicId = createComment.TopicId,
                 UserId = userId,
                 CreateDate = dateTimeProvider.Now,
-                Text = createComment.Text,
+                Text = createComment.Text.Trim(),
                 IsRemoved = false
             };
         }

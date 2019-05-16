@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 
-namespace DM.Services.Search.Consumer
+namespace DM.Services.Search.Consumer.Implementation
 {
     /// <summary>
     /// Wrapper over the ElasticSearch indexing mechanism

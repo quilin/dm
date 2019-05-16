@@ -29,8 +29,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
                 ForumTopicId = guidFactory.Create(),
                 CreateDate = dateTimeProvider.Now,
                 UserId = userId,
-                Title = createTopic.Title,
-                Text = createTopic.Text
+                Title = createTopic.Title.Trim(),
+                Text = createTopic.Text.Trim()
             };
         }
     }

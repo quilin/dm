@@ -8,19 +8,19 @@ using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <summary>
-    /// Indexer for new forum commentaries
+    /// Indexer for newly created topics
     /// </summary>
-    public class NewForumCommentIndexer : BaseIndexer
+    public class NewTopicIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;
         private readonly IIndexingRepository repository;
 
         /// <inheritdoc />
-        public NewForumCommentIndexer(
+        public NewTopicIndexer(
             DmDbContext dbContext,
             IBbParserProvider parserProvider,
             IIndexingRepository repository)
@@ -29,24 +29,25 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
             this.parserProvider = parserProvider;
             this.repository = repository;
         }
+        
+        /// <inheritdoc />
+        protected override EventType EventType => EventType.NewTopic;
 
         /// <inheritdoc />
-        protected override EventType EventType => EventType.NewForumComment;
-
-        /// <inheritdoc />
-        public override async Task Index(InvokedEvent invokedEvent)
+        public override async Task Index(InvokedEvent message)
         {
-            var comment = await dbContext.Comments
-                .Where(c => c.ForumCommentId == invokedEvent.EntityId)
-                .Select(c => new {c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId, c.Text})
+            var topic = await dbContext.ForumTopics
+                .Where(t => t.ForumTopicId == message.EntityId)
+                .Select(t => new {t.Forum.ViewPolicy, t.Title, t.Text})
                 .FirstAsync();
             await repository.Index(new SearchEntity
             {
-                Id = invokedEvent.EntityId,
-                ParentEntityId = comment.ForumTopicId,
-                EntityType = SearchEntityType.ForumComment,
-                Text = parserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
-                AuthorizedRoles = comment.ViewPolicy.GetAuthorizedRoles()
+                Id = message.EntityId,
+                ParentEntityId = message.EntityId,
+                EntityType = SearchEntityType.Topic,
+                Title = topic.Title,
+                Text = parserProvider.CurrentCommon.Parse(topic.Text).ToHtml(),
+                AuthorizedRoles = topic.ViewPolicy.GetAuthorizedRoles()
             });
         }
     }

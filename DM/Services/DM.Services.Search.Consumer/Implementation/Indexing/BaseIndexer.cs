@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Consumer.Indexing
+namespace DM.Services.Search.Consumer.Implementation.Indexing
 {
     /// <inheritdoc />
     public abstract class BaseIndexer : IIndexer
@@ -16,6 +16,6 @@ namespace DM.Services.Search.Consumer.Indexing
         public bool CanIndex(EventType eventType) => eventType == EventType;
 
         /// <inheritdoc />
-        public abstract Task Index(InvokedEvent invokedEvent);
+        public abstract Task Index(InvokedEvent message);
     }
 }

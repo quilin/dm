@@ -8,7 +8,7 @@ using DM.Services.MessageQueuing.Dto;
 using DM.Services.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Search.Consumer.Indexing.Indexers
+namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <inheritdoc />
     public class CommentChangedIndexer : BaseIndexer
@@ -32,15 +32,15 @@ namespace DM.Services.Search.Consumer.Indexing.Indexers
         protected override EventType EventType => EventType.ChangedForumComment;
 
         /// <inheritdoc />
-        public override async Task Index(InvokedEvent invokedEvent)
+        public override async Task Index(InvokedEvent message)
         {
             var comment = await dbContext.Comments
-                .Where(c => c.ForumCommentId == invokedEvent.EntityId)
+                .Where(c => c.ForumCommentId == message.EntityId)
                 .Select(c => new {c.Text, c.Topic.Forum.ViewPolicy, c.Topic.ForumTopicId})
                 .FirstAsync();
             await indexingRepository.Index(new SearchEntity
             {
-                Id = invokedEvent.EntityId,
+                Id = message.EntityId,
                 ParentEntityId = comment.ForumTopicId,
                 EntityType = SearchEntityType.ForumComment,
                 Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),

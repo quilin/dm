@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Dto;
 
-namespace DM.Services.Search.Consumer.Indexing
+namespace DM.Services.Search.Consumer.Implementation.Indexing
 {
     /// <summary>
     /// Certain indexer for search engine
@@ -19,8 +19,8 @@ namespace DM.Services.Search.Consumer.Indexing
         /// <summary>
         /// Indexes event entity in search engine
         /// </summary>
-        /// <param name="invokedEvent">Event</param>
+        /// <param name="message">Event</param>
         /// <returns></returns>
-        Task Index(InvokedEvent invokedEvent);
+        Task Index(InvokedEvent message);
     }
 }

@@ -8,7 +8,7 @@ using DM.Services.Search.Configuration;
 using Microsoft.Extensions.Options;
 using Nest;
 
-namespace DM.Services.Search.Consumer
+namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
     public class IndexingRepository : IIndexingRepository

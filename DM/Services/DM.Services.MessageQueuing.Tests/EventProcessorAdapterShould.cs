@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.MessageQueuing.Consume;
 using DM.Services.MessageQueuing.Processing;
 using DM.Tests.Core;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Language.Flow;
 using RabbitMQ.Client;
@@ -17,7 +18,7 @@ namespace DM.Services.MessageQueuing.Tests
     {
         private readonly Mock<IMessageProcessorWrapper<TestMessage>> processor;
         private readonly Mock<IModel> channel;
-        private ISetup<IMessageProcessorWrapper<TestMessage>, Task<ProcessResult>> processSetup;
+        private readonly ISetup<IMessageProcessorWrapper<TestMessage>, Task<ProcessResult>> processSetup;
         private readonly EventProcessorAdapter<TestMessage> processorAdapter;
 
         public EventProcessorAdapterShould()
@@ -30,7 +31,11 @@ namespace DM.Services.MessageQueuing.Tests
             processor = Mock<IMessageProcessorWrapper<TestMessage>>(MockBehavior.Loose);
             processSetup = processor.Setup(p => p.ProcessWithCorrelation(It.IsAny<TestMessage>(), It.IsAny<string>()));
 
-            processorAdapter = new EventProcessorAdapter<TestMessage>(() => processor.Object);
+            var logger = Mock<ILogger<IMessageProcessorWrapper<TestMessage>>>(MockBehavior.Loose);
+            logger.Setup(l => l.Log(
+                It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<object>(),
+                It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()));
+            processorAdapter = new EventProcessorAdapter<TestMessage>(() => processor.Object, logger.Object);
         }
 
         [Fact]
