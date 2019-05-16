@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DM.Services.Core.Implementation.CorrelationToken;
@@ -26,6 +27,9 @@ namespace DM.Services.MessageQueuing.Tests
             channel.Setup(c => c.BasicPublish(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<bool>(), It.IsAny<IBasicProperties>(), It.IsAny<byte[]>()));
             channel.Setup(c => c.Dispose());
+            channel.Setup(c => c.ExchangeDeclare(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                It.IsAny<IDictionary<string, object>>()));
             connectionFactory.Setup(f => f.CreateConnection()).Returns(connection.Object);
             connection.Setup(c => c.CreateModel()).Returns(channel.Object);
             connection.Setup(c => c.Dispose());
@@ -49,6 +53,7 @@ namespace DM.Services.MessageQueuing.Tests
                     p.CorrelationId == "ed45a797-bcfe-4750-a6ed-83af87954aa6"),
                 It.Is<byte[]>(b => Encoding.UTF8.GetString(b) == "{\"test\":1,\"thing\":\"2\"}")), Times.Once);
             channel.Verify(c => c.Dispose());
+            channel.Verify(c => c.ExchangeDeclare("exchange.name", "topic", true, false, null));
             channel.VerifyNoOtherCalls();
         }
     }

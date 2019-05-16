@@ -19,6 +19,11 @@ namespace DM.Services.MessageQueuing.Tests
             var connectionFactory = Mock<IConnectionFactory>();
             var connection = Mock<IConnection>();
             channel = Mock<IModel>();
+            channel.Setup(c => c.QueueDeclare(
+                It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                It.IsAny<IDictionary<string, object>>())).Returns((QueueDeclareOk) null);
+            channel.Setup(c => c.QueueBind(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>()));
             connectionFactory.Setup(f => f.CreateConnection()).Returns(connection.Object);
             connection.Setup(c => c.CreateModel()).Returns(channel.Object);
             connection.Setup(c => c.Close());
@@ -29,7 +34,14 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public void SubscribeToChannel()
         {
-            var configuration = new MessageConsumeConfiguration {QueueName = "queue.name"};
+            var queueArguments = new Dictionary<string, object>();
+            var configuration = new MessageConsumeConfiguration
+            {
+                QueueName = "queue.name",
+                RoutingKeys = new[] {"routing.key.1", "routing.key.2"},
+                ExchangeName = "exchange.name",
+                Arguments = queueArguments
+            };
             channel
                 .Setup(c => c.BasicConsume(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(),
                     It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<IDictionary<string, object>>(),
@@ -40,6 +52,9 @@ namespace DM.Services.MessageQueuing.Tests
             channel.Verify(c => c
                 .BasicConsume("queue.name", false, "", false, false, null,
                     It.IsAny<EventingBasicConsumer>()), Times.Once);
+            channel.Verify(c => c.QueueDeclare("queue.name", true, false, false, queueArguments), Times.Once);
+            channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.1", null), Times.Once);
+            channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.2", null), Times.Once);
             channel.VerifyNoOtherCalls();
         }
 
