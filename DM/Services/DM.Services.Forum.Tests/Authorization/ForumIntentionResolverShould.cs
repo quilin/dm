@@ -104,7 +104,7 @@ namespace DM.Services.Forum.Tests.Authorization
         {
             var userId = Guid.NewGuid();
             var actual = await resolver.IsAllowed(
-                Create.User().WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
+                Create.User(userId).WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
                 {

@@ -39,7 +39,7 @@ namespace DM.Services.MessageQueuing.Tests
 
             publisher.Verify(p => p.Publish(
                 It.Is<InvokedEvent>(e => e.EntityId == entityId && e.Type == EventType.ChangedTopic),
-                messagePublishConfiguration, "changed.topic"), Times.Once);
+                messagePublishConfiguration, "forum.topic.changed"), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

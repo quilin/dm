@@ -1,4 +1,3 @@
-using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
@@ -26,7 +25,9 @@ namespace DM.Services.Authentication.Factories
             {
                 Id = guidFactory.Create(),
                 IsPersistent = persistent,
-                ExpirationDate = dateTimeProvider.Later(TimeSpan.FromDays(persistent ? 30 : 1))
+                ExpirationDate = persistent
+                    ? dateTimeProvider.Now.AddMonths(1)
+                    : dateTimeProvider.Now.AddDays(1)
             };
         }
     }

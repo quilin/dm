@@ -178,7 +178,7 @@ namespace DM.Services.Authentication.Tests
                 .ReturnsAsync(session);
             dateTimeProvider
                 .Setup(p => p.Now)
-                .Returns(new DateTime(2018, 06, 11, 9, 50, 0));
+                .Returns(new DateTime(2018, 06, 11, 10, 10, 0));
 
             var actual = await service.Authenticate("token");
             actual.Error.Should().Be(AuthenticationError.NoError);

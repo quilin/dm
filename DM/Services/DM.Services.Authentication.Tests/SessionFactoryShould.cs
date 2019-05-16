@@ -12,7 +12,7 @@ namespace DM.Services.Authentication.Tests
     public class SessionFactoryShould : UnitTestBase
     {
         private readonly ISetup<IGuidFactory, Guid> createIdSetup;
-        private readonly ISetup<IDateTimeProvider, DateTime> currentMomentSetup;
+        private readonly ISetup<IDateTimeProvider, DateTime> currentMoment;
         private readonly SessionFactory sessionFactory;
 
         public SessionFactoryShould()
@@ -20,7 +20,7 @@ namespace DM.Services.Authentication.Tests
             var guidFactory = Mock<IGuidFactory>();
             createIdSetup = guidFactory.Setup(f => f.Create());
             var dateTimeProvider = Mock<IDateTimeProvider>();
-            currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
+            currentMoment = dateTimeProvider.Setup(p => p.Now);
             sessionFactory = new SessionFactory(guidFactory.Object, dateTimeProvider.Object);
         }
 
@@ -29,7 +29,7 @@ namespace DM.Services.Authentication.Tests
         {
             var sessionId = Guid.NewGuid();
             createIdSetup.Returns(sessionId);
-            currentMomentSetup.Returns(new DateTime(2017, 12, 5));
+            currentMoment.Returns(new DateTime(2017, 12, 5));
 
             var actual = sessionFactory.Create(true);
             actual.Should().BeEquivalentTo(new Session
@@ -45,14 +45,14 @@ namespace DM.Services.Authentication.Tests
         {
             var sessionId = Guid.NewGuid();
             createIdSetup.Returns(sessionId);
-            currentMomentSetup.Returns(new DateTime(2017, 7, 12));
+            currentMoment.Returns(new DateTime(2017, 7, 13));
 
             var actual = sessionFactory.Create(false);
             actual.Should().BeEquivalentTo(new Session
             {
                 Id = sessionId,
                 IsPersistent = false,
-                ExpirationDate = new DateTime(2017, 7, 13)
+                ExpirationDate = new DateTime(2017, 7, 14)
             });
         }
     }

@@ -7,11 +7,5 @@ namespace DM.Services.Core.Implementation
     {
         /// <inheritdoc />
         public DateTime Now => DateTime.UtcNow;
-
-        /// <inheritdoc />
-        public DateTime Ago(TimeSpan timeSpan) => Now - timeSpan;
-
-        /// <inheritdoc />
-        public DateTime Later(TimeSpan timeSpan) => Now + timeSpan;
     }
 }
