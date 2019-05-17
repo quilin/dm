@@ -28,6 +28,8 @@ namespace DM.Services.MessageQueuing.Configuration
         {
             channel.QueueDeclare(configuration.QueueName, true, configuration.Exclusive, false,
                 configuration.Arguments);
+            channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
+
             foreach (var routingKey in configuration.RoutingKeys)
             {
                 channel.QueueBind(configuration.QueueName, configuration.ExchangeName, routingKey);

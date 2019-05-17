@@ -16,4 +16,8 @@
       <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ServiceConfiguration" />
+    </ItemGroup>
+
 </Project>

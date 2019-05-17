@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using DM.Services.Core.Logging;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
-using Serilog.Events;
-using Serilog.Filters;
 
 namespace DM.Web.API
 {
@@ -17,21 +16,7 @@ namespace DM.Web.API
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "DM.API")
-                .Enrich.WithProperty("Environment", "Test")
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
-                    .WriteTo.Elasticsearch(
-                        "http://localhost:9200",
-                        "dm_logs-{0:yyyy.MM.dd}",
-                        inlineFields: true))
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByExcluding(x => x.Level == LogEventLevel.Debug)
-                    .WriteTo.Console())
-                .CreateLogger();
+            LoggingConfiguration.Register();
             CreateWebHostBuilder(args).Build().Run();
         }
 

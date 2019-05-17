@@ -56,7 +56,6 @@ namespace DM.Web.API
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false)
                 .Build();
-            var assemblies = GetAssemblies();
 
             services
                 .AddOptions()
@@ -94,7 +93,7 @@ namespace DM.Web.API
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(assemblies)
+            builder.RegisterAssemblyTypes(GetAssemblies())
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()
