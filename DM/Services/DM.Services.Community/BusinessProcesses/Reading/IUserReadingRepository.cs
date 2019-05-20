@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.Repositories
+namespace DM.Services.Community.BusinessProcesses.Reading
 {
     /// <summary>
     /// Community users storage
     /// </summary>
-    public interface IUserRepository
+    public interface IUserReadingRepository
     {
         /// <summary>
         /// Count community users by filter

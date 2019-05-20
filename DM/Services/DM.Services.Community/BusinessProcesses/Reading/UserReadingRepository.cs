@@ -10,16 +10,16 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.Repositories
+namespace DM.Services.Community.BusinessProcesses.Reading
 {
     /// <inheritdoc />
-    public class UserRepository : IUserRepository
+    public class UserReadingRepository : IUserReadingRepository
     {
         private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
-        public UserRepository(
+        public UserReadingRepository(
             DmDbContext dmDbContext,
             IDateTimeProvider dateTimeProvider)
         {

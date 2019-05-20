@@ -53,6 +53,7 @@ namespace DM.Services.MessageQueuing.Tests
                 .BasicConsume("queue.name", false, "", false, false, null,
                     It.IsAny<EventingBasicConsumer>()), Times.Once);
             channel.Verify(c => c.QueueDeclare("queue.name", true, false, false, queueArguments), Times.Once);
+            channel.Verify(c => c.ExchangeDeclare("exchange.name", "topic", true, false, null));
             channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.1", null), Times.Once);
             channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.2", null), Times.Once);
             channel.VerifyNoOtherCalls();

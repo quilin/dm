@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.Implementation
+namespace DM.Services.Community.BusinessProcesses.Reading
 {
     /// <summary>
     /// Community-related service
     /// </summary>
-    public interface IUserService
+    public interface IUserReadingService
     {
         /// <summary>
         /// Get community users list

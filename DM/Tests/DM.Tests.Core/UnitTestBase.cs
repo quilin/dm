@@ -9,11 +9,11 @@ namespace DM.Tests.Core
 
         protected UnitTestBase()
         {
-            repository = new MockRepository(MockBehavior.Strict);
+            repository = new MockRepository(MockBehavior.Loose);
         }
 
-        protected Mock<T> Mock<T>(MockBehavior behavior = MockBehavior.Strict) where T : class =>
-            repository.Create<T>();
+        protected Mock<T> Mock<T>(MockBehavior behavior = MockBehavior.Loose) where T : class =>
+            repository.Create<T>(behavior);
 
         public virtual void Dispose() => repository.Verify();
     }
