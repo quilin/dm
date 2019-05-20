@@ -1,4 +1,4 @@
-namespace DM.Services.Authentication.Dto
+namespace DM.Services.Community.Dto
 {
     /// <summary>
     /// DTO for new user registration

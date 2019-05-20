@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 
-namespace DM.Services.Authentication.Implementation
+namespace DM.Services.Community.BusinessProcesses.Activation
 {
     /// <summary>
     /// Service for user activation
@@ -13,7 +12,7 @@ namespace DM.Services.Authentication.Implementation
         /// Activate user by token identifier
         /// </summary>
         /// <param name="tokenId">Activation token identifier</param>
-        /// <returns></returns>
-        Task<IIdentity> Activate(Guid tokenId);
+        /// <returns>Activated user identifier</returns>
+        Task<Guid> Activate(Guid tokenId);
     }
 }

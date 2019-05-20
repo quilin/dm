@@ -1,5 +1,5 @@
 using AutoMapper;
-using DM.Services.Authentication.Dto;
+using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 using DM.Web.Core.Extensions.EnumExtensions;
 

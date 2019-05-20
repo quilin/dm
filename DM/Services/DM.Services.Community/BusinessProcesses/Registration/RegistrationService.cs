@@ -1,19 +1,11 @@
-using System;
-using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Factories;
 using DM.Services.Authentication.Implementation.Security;
-using DM.Services.Authentication.Repositories;
+using DM.Services.Community.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.Core.Exceptions;
-using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 
-namespace DM.Services.Authentication.Implementation
+namespace DM.Services.Community.BusinessProcesses.Registration
 {
     /// <inheritdoc />
     public class RegistrationService : IRegistrationService
@@ -24,7 +16,6 @@ namespace DM.Services.Authentication.Implementation
         private readonly IRegistrationTokenFactory registrationTokenFactory;
         private readonly IRegistrationRepository repository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
         public RegistrationService(
@@ -33,8 +24,7 @@ namespace DM.Services.Authentication.Implementation
             IUserFactory userFactory,
             IRegistrationTokenFactory registrationTokenFactory,
             IRegistrationRepository repository,
-            IInvokedEventPublisher publisher,
-            IDateTimeProvider dateTimeProvider)
+            IInvokedEventPublisher publisher)
         {
             this.validator = validator;
             this.securityManager = securityManager;
@@ -42,9 +32,8 @@ namespace DM.Services.Authentication.Implementation
             this.registrationTokenFactory = registrationTokenFactory;
             this.repository = repository;
             this.publisher = publisher;
-            this.dateTimeProvider = dateTimeProvider;
         }
-
+        
         /// <inheritdoc />
         public async Task Register(UserRegistration registration)
         {
@@ -56,24 +45,6 @@ namespace DM.Services.Authentication.Implementation
             await repository.AddUser(user, token);
 
             await publisher.Publish(EventType.NewUser, user.UserId);
-        }
-
-        /// <inheritdoc />
-        public async Task<Guid> Activate(Guid tokenId)
-        {
-            var userId = await repository.FindUserToActivate(tokenId, dateTimeProvider.Now - TimeSpan.FromDays(2));
-            if (userId == default)
-            {
-                throw new HttpException(HttpStatusCode.Gone,
-                    "Activation token is invalid! Address the technical support for further assistance");
-            }
-
-            await repository.ActivateUser(
-                new UpdateBuilder<User>(userId).Field(u => u.Activated, true),
-                new UpdateBuilder<Token>(tokenId).Field(t => t.IsRemoved, true));
-
-            await publisher.Publish(EventType.ActivatedUser, userId);
-            return userId;
         }
     }
 }

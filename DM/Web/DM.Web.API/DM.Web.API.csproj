@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Services\DM.Services.Common\DM.Services.Common.csproj" />
+      <ProjectReference Include="..\..\Services\DM.Services.Community\DM.Services.Community.csproj" />
       <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj" />
       <ProjectReference Include="..\..\Services\DM.Services.Notifications\DM.Services.Notifications.csproj" />
       <ProjectReference Include="..\..\Services\DM.Services.Search\DM.Services.Search.csproj" />

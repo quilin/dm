@@ -1,7 +1,7 @@
-using DM.Services.Authentication.Dto;
+using DM.Services.Community.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Authentication.Factories
+namespace DM.Services.Community.BusinessProcesses.Registration
 {
     /// <summary>
     /// Creates new user DAL models

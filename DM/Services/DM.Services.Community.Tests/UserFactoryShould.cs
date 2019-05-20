@@ -1,6 +1,6 @@
 using System;
-using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Factories;
+using DM.Services.Community.BusinessProcesses.Registration;
+using DM.Services.Community.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -9,7 +9,7 @@ using FluentAssertions;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Authentication.Tests
+namespace DM.Services.Community.Tests
 {
     public class UserFactoryShould : UnitTestBase
     {

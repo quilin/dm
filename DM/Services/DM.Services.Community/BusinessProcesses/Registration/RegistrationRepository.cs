@@ -1,13 +1,10 @@
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Services.DataAccess.RelationalStorage;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Authentication.Repositories
+namespace DM.Services.Community.BusinessProcesses.Registration
 {
     /// <inheritdoc />
     public class RegistrationRepository : IRegistrationRepository
@@ -34,22 +31,6 @@ namespace DM.Services.Authentication.Repositories
         {
             dbContext.Users.Add(user);
             dbContext.Tokens.Add(token);
-            return dbContext.SaveChangesAsync();
-        }
-
-        /// <inheritdoc />
-        public Task<Guid> FindUserToActivate(Guid tokenId, DateTime createdSince)
-        {
-            return dbContext.Tokens
-                .Where(t => t.TokenId == tokenId && t.CreateDate > createdSince)
-                .Select(t => t.UserId)
-                .FirstOrDefaultAsync();
-        }
-        /// <inheritdoc />
-        public Task ActivateUser(UpdateBuilder<User> updateUser, UpdateBuilder<Token> updateToken)
-        {
-            updateUser.Update(dbContext);
-            updateToken.Update(dbContext);
             return dbContext.SaveChangesAsync();
         }
     }

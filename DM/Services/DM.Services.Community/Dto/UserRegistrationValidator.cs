@@ -1,7 +1,7 @@
-using DM.Services.Authentication.Repositories;
+using DM.Services.Community.BusinessProcesses.Registration;
 using FluentValidation;
 
-namespace DM.Services.Authentication.Dto.Validations
+namespace DM.Services.Community.Dto
 {
     /// <summary>
     /// Validator for user registration DTO model

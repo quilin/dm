@@ -1,8 +1,7 @@
-using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
+using DM.Services.Community.Dto;
 
-namespace DM.Services.Authentication.Implementation
+namespace DM.Services.Community.BusinessProcesses.Registration
 {
     /// <summary>
     /// Service for user registration
@@ -15,12 +14,5 @@ namespace DM.Services.Authentication.Implementation
         /// <param name="registration">Registration info</param>
         /// <returns></returns>
         Task Register(UserRegistration registration);
-
-        /// <summary>
-        /// Activate registered user
-        /// </summary>
-        /// <param name="tokenId">Activation token</param>
-        /// <returns></returns>
-        Task<Guid> Activate(Guid tokenId);
     }
 }

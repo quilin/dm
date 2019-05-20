@@ -1,14 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Dto.Validations;
-using DM.Services.Authentication.Repositories;
+using DM.Services.Community.BusinessProcesses.Registration;
+using DM.Services.Community.Dto;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace DM.Services.Authentication.Tests
+namespace DM.Services.Community.Tests
 {
     public class RegistrationValidatorShould : UnitTestBase
     {
