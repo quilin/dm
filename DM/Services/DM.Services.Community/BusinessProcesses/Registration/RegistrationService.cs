@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Community.BusinessProcesses.Registration.Confirmation;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.MessageQueuing.Publish;
@@ -15,6 +16,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
         private readonly IUserFactory userFactory;
         private readonly IRegistrationTokenFactory registrationTokenFactory;
         private readonly IRegistrationRepository repository;
+        private readonly IRegistrationMailSender mailSender;
         private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
@@ -24,6 +26,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             IUserFactory userFactory,
             IRegistrationTokenFactory registrationTokenFactory,
             IRegistrationRepository repository,
+            IRegistrationMailSender mailSender,
             IInvokedEventPublisher publisher)
         {
             this.validator = validator;
@@ -31,6 +34,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             this.userFactory = userFactory;
             this.registrationTokenFactory = registrationTokenFactory;
             this.repository = repository;
+            this.mailSender = mailSender;
             this.publisher = publisher;
         }
         
@@ -42,7 +46,9 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             var (hash, salt) = securityManager.GeneratePassword(registration.Password);
             var user = userFactory.Create(registration, salt, hash);
             var token = registrationTokenFactory.Create(user.UserId);
+
             await repository.AddUser(user, token);
+            await mailSender.Send(user.Email, user.Login, token.TokenId);
 
             await publisher.Publish(EventType.NewUser, user.UserId);
         }

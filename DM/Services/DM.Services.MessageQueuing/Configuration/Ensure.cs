@@ -15,7 +15,7 @@ namespace DM.Services.MessageQueuing.Configuration
         /// <returns></returns>
         public static void Publish(IModel channel, MessagePublishConfiguration configuration)
         {
-            channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
+            channel.ExchangeDeclare(configuration.ExchangeName, ExchangeType.Topic, true);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace DM.Services.MessageQueuing.Configuration
         {
             channel.QueueDeclare(configuration.QueueName, true, configuration.Exclusive, false,
                 configuration.Arguments);
-            channel.ExchangeDeclare(configuration.ExchangeName, "topic", true);
+            channel.ExchangeDeclare(configuration.ExchangeName, ExchangeType.Topic, true);
 
             foreach (var routingKey in configuration.RoutingKeys)
             {

@@ -7,17 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="8.0.0" />
-      <PackageReference Include="BBCodeParser" Version="1.0.0" />
-      <PackageReference Include="MailKit" Version="2.1.4" />
-      <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
-      <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
-      <PackageReference Include="Serilog.Sinks.Console" Version="3.1.2-dev-00792" />
-      <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="ServiceConfiguration" />
+        <PackageReference Include="AutoMapper" Version="8.0.0"/>
+        <PackageReference Include="BBCodeParser" Version="1.0.0"/>
+        <PackageReference Include="MailKit" Version="2.1.4"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="2.1.1"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1"/>
+        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="7.1.0"/>
+        <PackageReference Include="Microsoft.AspnetCore.Http" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
     </ItemGroup>
 
 </Project>

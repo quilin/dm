@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Events;
 using Serilog.Filters;
 
 namespace DM.Services.Core.Logging
@@ -26,9 +25,6 @@ namespace DM.Services.Core.Logging
                         "http://localhost:9200",
                         "dm_logs-{0:yyyy.MM.dd}",
                         inlineFields: true))
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByExcluding(x => x.Level == LogEventLevel.Debug)
-                    .WriteTo.Console())
                 .CreateLogger();
         }
         

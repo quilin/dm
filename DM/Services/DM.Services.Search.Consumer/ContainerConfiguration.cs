@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
@@ -31,6 +32,7 @@ namespace DM.Services.Search.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
+                .AddDmLogging()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<MessageConsumeConfiguration>(
