@@ -6,13 +6,13 @@ using DM.Services.Forum.Dto.Input;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class CommentFactory : ICommentFactory
+    public class CommentaryFactory : ICommentaryFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
-        public CommentFactory(
+        public CommentaryFactory(
             IGuidFactory guidFactory,
             IDateTimeProvider dateTimeProvider)
         {

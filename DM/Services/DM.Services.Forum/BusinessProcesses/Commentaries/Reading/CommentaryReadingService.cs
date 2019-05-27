@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using Comment = DM.Services.Forum.Dto.Output.Comment;
@@ -12,7 +14,7 @@ using Comment = DM.Services.Forum.Dto.Output.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 {
     /// <inheritdoc />
-    public class CommentReadingService : ICommentaryReadingService
+    public class CommentaryReadingService : ICommentaryReadingService
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly ICommentaryReadingRepository commentaryRepository;
@@ -20,7 +22,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         private readonly IIdentity identity;
 
         /// <inheritdoc />
-        public CommentReadingService(
+        public CommentaryReadingService(
             ITopicReadingService topicReadingService,
             IIdentityProvider identityProvider,
             ICommentaryReadingRepository commentaryRepository,
@@ -31,7 +33,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
             this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
-        
+
         /// <inheritdoc />
         public async Task<(IEnumerable<Comment> comments, PagingResult paging)> GetCommentsList(
             Guid topicId, PagingQuery query)
@@ -51,9 +53,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         }
 
         /// <inheritdoc />
-        public Task<Comment> Get(Guid commentId)
+        public async Task<Comment> Get(Guid commentId)
         {
-            return commentaryRepository.Get(commentId);
+            return await commentaryRepository.Get(commentId) ??
+                throw new HttpException(HttpStatusCode.Gone, $"Comment {commentId} not found");
         }
     }
 }

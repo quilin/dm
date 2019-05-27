@@ -53,7 +53,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             service.Invoking(s => s.GetTopic(topicId).Wait())
                 .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                .And.StatusCode.Should().Be(HttpStatusCode.Gone);
 
             topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
             topicRepository.VerifyNoOtherCalls();

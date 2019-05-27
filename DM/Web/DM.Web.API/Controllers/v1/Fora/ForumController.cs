@@ -42,10 +42,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// </summary>
         /// <param name="id">Forum id</param>
         /// <response code="200"></response>
-        /// <response code="404">No available forum with this id</response>
+        /// <response code="410">Forum not found</response>
         [HttpGet("{id}", Name = nameof(GetForum))]
         [ProducesResponseType(typeof(Envelope<Forum>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetForum(string id) => Ok(await forumApiService.Get(id));
 
         /// <summary>
@@ -53,10 +53,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// </summary>
         /// <param name="id">Forum id</param>
         /// <response code="200"></response>
-        /// <response code="404">No available forum with this id</response>
+        /// <response code="410">Forum not found</response>
         [HttpGet("{id}/moderators", Name = nameof(GetModerators))]
         [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetModerators(string id) => Ok(await moderatorsApiService.GetModerators(id));
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="q">Query</param>
         /// <response code="200"></response>
         /// <response code="400">Some properties of the passed search parameters were invalid</response>
-        /// <response code="404">No available forum with this id</response>
+        /// <response code="410">Forum not found</response>
         [HttpGet("{id}/topics", Name = nameof(GetTopics))]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetTopics(string id, [FromQuery] TopicsQuery q) =>
             Ok(await topicApiService.Get(id, q));
 
@@ -83,14 +83,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="400">Some of the passed topic properties were invalid</response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to create topics in this forum</response>
-        /// <response code="404">No available forum with this id</response>
+        /// <response code="410">Forum not found</response>
         [HttpPost("{id}/topics", Name = nameof(PostTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Topic>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PostTopic(string id, [FromBody] Topic topic)
         {
             var result = await topicApiService.Create(id, topic);

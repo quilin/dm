@@ -72,7 +72,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             var topic = await repository.Get(topicId, accessPolicy);
             if (topic == null)
             {
-                throw new HttpException(HttpStatusCode.NotFound, "Topic not found");
+                throw new HttpException(HttpStatusCode.Gone, "Topic not found");
             }
 
             return topic;

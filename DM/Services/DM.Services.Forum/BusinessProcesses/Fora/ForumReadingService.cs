@@ -48,7 +48,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
             var forum = (await GetFora(onlyAvailable)).FirstOrDefault(f => f.Title == forumTitle);
             if (forum == null)
             {
-                throw new HttpException(HttpStatusCode.NotFound, $"Forum {forumTitle} not found");
+                throw new HttpException(HttpStatusCode.Gone, $"Forum {forumTitle} not found");
             }
 
             return forum;

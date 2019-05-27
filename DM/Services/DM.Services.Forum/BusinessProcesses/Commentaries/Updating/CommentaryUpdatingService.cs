@@ -39,12 +39,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
-        
+
         /// <inheritdoc />
         public async Task<Comment> Update(UpdateComment updateComment)
         {
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
+
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var updatedComment = await repository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
                 .Field(f => f.Text, updateComment.Text.Trim())

@@ -36,10 +36,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200"></response>
-        /// <response code="404">No topic was found for passed id</response>
+        /// <response code="410">Topic not found</response>
         [HttpGet("{id}", Name = nameof(GetTopic))]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetTopic(Guid id) => Ok(await topicApiService.Get(id));
 
         /// <summary>
@@ -51,14 +51,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="400">Some of topic changed properties were invalid or passed id was not recognized</response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this topic</response>
-        /// <response code="404">No topic was found for passed id</response>
+        /// <response code="410">Topic not found</response>
         [HttpPut("{id}", Name = nameof(PutTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PutTopic(Guid id, [FromBody] Topic topic) =>
             Ok(await topicApiService.Update(id, topic));
 
@@ -69,13 +69,13 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="200"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to remove the topic</response>
-        /// <response code="404">No topic was found for passed id</response>
+        /// <response code="410">Topic not found</response>
         [HttpDelete("{id}", Name = nameof(DeleteTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> DeleteTopic(Guid id)
         {
             await topicApiService.Delete(id);
@@ -90,15 +90,15 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="201"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to like the topic</response>
-        /// <response code="404">No topic was found for passed id</response>
         /// <response code="409">User already liked this topic</response>
+        /// <response code="410">Topic not found</response>
         [HttpPost("{id}/likes", Name = nameof(PostTopicLike))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PostTopicLike(Guid id) =>
             CreatedAtRoute(nameof(GetTopic), new {id}, await likeApiService.LikeTopic(id));
 
@@ -109,15 +109,15 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="204"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to remove like from this topic</response>
-        /// <response code="404">No topic was found for passed id</response>
         /// <response code="409">User has no like for this topic</response>
+        /// <response code="410">Topic not found</response>
         [HttpDelete("{id}/likes", Name = nameof(DeleteTopicLike))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
         [ProducesResponseType(typeof(GeneralError), 409)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> DeleteTopicLike(Guid id)
         {
             await likeApiService.DislikeTopic(id);
@@ -130,10 +130,10 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="id"></param>
         /// <param name="q"></param>
         /// <response code="200"></response>
-        /// <response code="404">No topic was found for passed id</response>
+        /// <response code="410">Topic not found</response>
         [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
         [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] PagingQuery q) =>
             Ok(await commentApiService.Get(id, q));
 
@@ -146,14 +146,14 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="400">Some of comment properties were invalid</response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to comment this topic</response>
-        /// <response code="404">No topic was found for passed id</response>
+        /// <response code="410">Topic not found</response>
         [HttpPost("{id}/comments", Name = nameof(PostForumComment))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Comment>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 404)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PostForumComment(Guid id, [FromBody] Comment comment)
         {
             var result = await commentApiService.Create(id, comment);

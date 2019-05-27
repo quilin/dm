@@ -21,7 +21,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly ITopicReadingService topicReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
-        private readonly ICommentFactory commentFactory;
+        private readonly ICommentaryFactory commentaryFactory;
         private readonly ICommentaryCreatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
@@ -31,14 +31,14 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             ITopicReadingService topicReadingService,
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
-            ICommentFactory commentFactory,
+            ICommentaryFactory commentaryFactory,
             ICommentaryCreatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
             this.topicReadingService = topicReadingService;
             this.intentionManager = intentionManager;
-            this.commentFactory = commentFactory;
+            this.commentaryFactory = commentaryFactory;
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
             identity = identityProvider.Current;
@@ -52,7 +52,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             var topic = await topicReadingService.GetTopic(createComment.TopicId);
             await intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
-            var comment = commentFactory.Create(createComment, identity.User.UserId);
+            var comment = commentaryFactory.Create(createComment, identity.User.UserId);
             var createdComment = await repository.Create(comment,
                 new UpdateBuilder<ForumTopic>(topic.Id).Field(t => t.LastCommentId, comment.ForumCommentId));
             await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);

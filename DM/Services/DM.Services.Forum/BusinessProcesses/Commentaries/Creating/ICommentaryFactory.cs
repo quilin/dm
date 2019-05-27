@@ -7,7 +7,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
     /// <summary>
     /// Factory for commentary DAL
     /// </summary>
-    public interface ICommentFactory
+    public interface ICommentaryFactory
     {
         /// <summary>
         /// Creates new commentary DAL from DTO and current user identifier

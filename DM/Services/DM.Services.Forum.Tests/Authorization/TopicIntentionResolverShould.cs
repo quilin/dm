@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
-using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.Dto.Output;
@@ -63,7 +62,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Edit,
                 new Topic
                 {
-                    Author = new GeneralUser{UserId = Guid.NewGuid()},
+                    Author = Create.User().Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {
@@ -82,7 +81,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Edit,
                 new Topic
                 {
-                    Author = new GeneralUser{UserId = userId},
+                    Author = Create.User(userId).Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {
@@ -101,7 +100,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Edit,
                 new Topic
                 {
-                    Author = new GeneralUser{UserId = Guid.NewGuid()},
+                    Author = Create.User().Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {
@@ -119,7 +118,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Edit,
                 new Topic
                 {
-                    Author = new GeneralUser {UserId = Guid.NewGuid()},
+                    Author = Create.User().Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {
@@ -138,7 +137,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Like,
                 new Topic
                 {
-                    Author = new GeneralUser{UserId = userId},
+                    Author = Create.User(userId).Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {
@@ -156,7 +155,7 @@ namespace DM.Services.Forum.Tests.Authorization
                 TopicIntention.Like,
                 new Topic
                 {
-                    Author = new GeneralUser{UserId = Guid.NewGuid()},
+                    Author = Create.User().Please(),
                     Closed = false,
                     Forum = new Dto.Output.Forum
                     {

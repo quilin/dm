@@ -14,7 +14,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
     {
         private readonly ISetup<IGuidFactory, Guid> newIdSetup;
         private readonly ISetup<IDateTimeProvider, DateTime> currentMomentSetup;
-        private readonly CommentFactory factory;
+        private readonly CommentaryFactory factory;
 
         public CommentFactoryShould()
         {
@@ -24,7 +24,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var dateTimeProvider = Mock<IDateTimeProvider>();
             currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
-            factory = new CommentFactory(guidFactory.Object, dateTimeProvider.Object);
+            factory = new CommentaryFactory(guidFactory.Object, dateTimeProvider.Object);
         }
 
         [Fact]

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
@@ -11,15 +11,15 @@ namespace DM.Services.Community.BusinessProcesses.Reading
     /// <inheritdoc />
     public class UserReadingService : IUserReadingService
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IUserReadingRepository readingRepository;
 
         /// <inheritdoc />
         public UserReadingService(
-            IIdentity identity,
+            IIdentityProvider identityProvider,
             IUserReadingRepository readingRepository)
         {
-            this.identity = identity;
+            this.identityProvider = identityProvider;
             this.readingRepository = readingRepository;
         }
 
@@ -28,7 +28,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             PagingQuery query, bool withInactive)
         {
             var totalCount = await readingRepository.CountUsers(withInactive);
-            var paging = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
+            var paging = new PagingData(query, identityProvider.Current.Settings.TopicsPerPage, totalCount);
             var users = await readingRepository.GetUsers(paging, withInactive);
             return (users, paging.Result);
         }
@@ -39,7 +39,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             var user = await readingRepository.GetUser(login);
             if (user == null)
             {
-                throw new HttpException(HttpStatusCode.NotFound, $"User {login} not found");
+                throw new HttpException(HttpStatusCode.Gone, $"User {login} not found");
             }
 
             return user;
@@ -51,7 +51,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             var profile = await readingRepository.GetProfile(login);
             if (profile == null)
             {
-                throw new HttpException(HttpStatusCode.NotFound, $"User {login} not found");
+                throw new HttpException(HttpStatusCode.Gone, $"User {login} not found");
             }
 
             return profile;
