@@ -67,12 +67,13 @@ namespace DM.Services.Community.Tests
         public async Task CreateUser()
         {
             var user = new User();
+            var token = new Token();
             createUserSetup.Returns(user);
-            createTokenSetup.Returns(new Token());
+            createTokenSetup.Returns(token);
 
             await registrationService.Register(new UserRegistration());
 
-            registrationRepository.Verify(r => r.AddUser(user, new Token()), Times.Once);
+            registrationRepository.Verify(r => r.AddUser(user, token), Times.Once);
             registrationRepository.VerifyNoOtherCalls();
         }
 
