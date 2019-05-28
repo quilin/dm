@@ -39,14 +39,19 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
-        
+
         /// <inheritdoc />
         public async Task<Topic> UpdateTopic(UpdateTopic updateTopic)
         {
             await validator.ValidateAndThrowAsync(updateTopic);
             var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId);
 
-            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
+            await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
+
+            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId)
+                .Field(t => t.Title, updateTopic.Title.Trim())
+                .Field(t => t.Text, updateTopic.Text.Trim());
+
             if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
                 changes
@@ -60,13 +65,6 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
                     await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
                     changes.Field(t => t.ForumId, forum.Id);
                 }
-            }
-
-            if (await intentionManager.IsAllowed(TopicIntention.Edit, oldTopic))
-            {
-                changes
-                    .Field(t => t.Title, updateTopic.Title.Trim())
-                    .Field(t => t.Text, updateTopic.Text.Trim());
             }
 
             var topic = await repository.Update(changes);

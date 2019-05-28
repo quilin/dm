@@ -114,15 +114,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid>("EntityId");
 
-                    b.Property<Guid?>("GameCommentId");
-
                     b.Property<Guid>("UserId");
 
                     b.HasKey("LikeId");
 
                     b.HasIndex("EntityId");
-
-                    b.HasIndex("GameCommentId");
 
                     b.HasIndex("UserId");
 

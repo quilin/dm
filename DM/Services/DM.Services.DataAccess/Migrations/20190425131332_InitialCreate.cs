@@ -869,30 +869,6 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Likes", x => x.LikeId);
                     table.ForeignKey(
-                        name: "FK_Likes_ForumComments_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "ForumComments",
-                        principalColumn: "ForumCommentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_ForumTopics_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "ForumTopics",
-                        principalColumn: "ForumTopicId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_Reviews_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Reviews",
-                        principalColumn: "ReviewId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_GameComments_GameCommentId",
-                        column: x => x.GameCommentId,
-                        principalTable: "GameComments",
-                        principalColumn: "GameCommentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",

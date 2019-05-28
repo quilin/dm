@@ -53,7 +53,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         }
 
         [Fact]
-        public async Task ThrowException_WhenNothingFound()
+        public void ThrowException_WhenNothingFound()
         {
             var commentId = Guid.NewGuid();
             getCommentSetup.ReturnsAsync((Comment) null);

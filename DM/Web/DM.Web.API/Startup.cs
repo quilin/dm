@@ -72,8 +72,9 @@ namespace DM.Web.API
                 .Configure<SearchEngineConfiguration>(
                     Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind);
 
+            var assemblies = GetAssemblies();
             services
-                .AddAutoMapper()
+                .AddAutoMapper(assemblies)
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
@@ -93,7 +94,7 @@ namespace DM.Web.API
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(GetAssemblies())
+            builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()
