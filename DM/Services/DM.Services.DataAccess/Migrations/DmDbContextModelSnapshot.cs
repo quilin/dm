@@ -854,14 +854,15 @@ namespace DM.Services.DataAccess.Migrations
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Review", "Review")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
                         .WithMany("Likes")
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Review", "Review")
                         .WithMany("Likes")
-                        .HasForeignKey("GameCommentId");
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
                         .WithMany("Likes")

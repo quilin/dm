@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    /// <summary>
+    /// Initial migration
+    /// </summary>
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -862,8 +864,7 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     LikeId = table.Column<Guid>(nullable: false),
                     EntityId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    GameCommentId = table.Column<Guid>(nullable: true)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1012,11 +1013,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "IX_Likes_EntityId",
                 table: "Likes",
                 column: "EntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Likes_GameCommentId",
-                table: "Likes",
-                column: "GameCommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_UserId",

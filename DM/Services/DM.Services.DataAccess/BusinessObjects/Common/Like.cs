@@ -56,6 +56,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Parent game commentary
         /// </summary>
+        [ForeignKey(nameof(EntityId))]
         public virtual GameComment GameComment { get; set; }
     }
 }

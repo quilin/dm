@@ -9,10 +9,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <inheritdoc />
     [DbContext(typeof(DmDbContext))]
-    [Migration("20190425131332_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190528225040_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,15 +119,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid>("EntityId");
 
-                    b.Property<Guid?>("GameCommentId");
-
                     b.Property<Guid>("UserId");
 
                     b.HasKey("LikeId");
 
                     b.HasIndex("EntityId");
-
-                    b.HasIndex("GameCommentId");
 
                     b.HasIndex("UserId");
 
@@ -864,14 +859,15 @@ namespace DM.Services.DataAccess.Migrations
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Review", "Review")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
                         .WithMany("Likes")
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Review", "Review")
                         .WithMany("Likes")
-                        .HasForeignKey("GameCommentId");
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
                         .WithMany("Likes")
