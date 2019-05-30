@@ -8,6 +8,7 @@ using DM.Services.Common.Extensions;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Common;
 
 namespace DM.Services.Forum.BusinessProcesses.Fora
@@ -40,6 +41,15 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
             await unreadCountersRepository.FillParentCounters(fora, identity.User.UserId,
                 f => f.Id, f => f.UnreadTopicsCount);
             return fora;
+        }
+
+        /// <inheritdoc />
+        public async Task<Dto.Output.Forum> GetSingleForum(string forumTitle)
+        {
+            var forum = await GetForum(forumTitle);
+            forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
+                identity.User.UserId, UnreadEntryType.Message, forum.Id))[forum.Id];
+            return forum;
         }
 
         /// <inheritdoc />

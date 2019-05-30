@@ -2,7 +2,9 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
+using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
@@ -23,6 +25,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly IIdentity identity;
         private readonly ICommentaryFactory commentaryFactory;
         private readonly ICommentaryCreatingRepository repository;
+        private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -33,6 +36,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             IIdentityProvider identityProvider,
             ICommentaryFactory commentaryFactory,
             ICommentaryCreatingRepository repository,
+            IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
@@ -40,6 +44,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             this.intentionManager = intentionManager;
             this.commentaryFactory = commentaryFactory;
             this.repository = repository;
+            this.countersRepository = countersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
             identity = identityProvider.Current;
         }
@@ -55,6 +60,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             var comment = commentaryFactory.Create(createComment, identity.User.UserId);
             var createdComment = await repository.Create(comment,
                 new UpdateBuilder<ForumTopic>(topic.Id).Field(t => t.LastCommentId, comment.ForumCommentId));
+            await countersRepository.Increment(topic.Id, UnreadEntryType.Message);
             await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
 
             return createdComment;

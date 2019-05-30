@@ -9,6 +9,7 @@ using DM.Services.Common.Extensions;
 using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.Dto.Output;
@@ -74,6 +75,9 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             {
                 throw new HttpException(HttpStatusCode.Gone, "Topic not found");
             }
+
+            topic.UnreadCommentsCount = (await unreadCountersRepository.SelectByEntities(
+                identity.User.UserId, UnreadEntryType.Message, topicId))[topicId];
 
             return topic;
         }

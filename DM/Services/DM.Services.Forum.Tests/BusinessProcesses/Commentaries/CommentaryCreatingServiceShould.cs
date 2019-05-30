@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
+using DM.Services.Common.Repositories;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
@@ -31,6 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ICommentaryFactory, ForumComment> commentaryDalCreateSetup;
         private readonly ISetup<ICommentaryCreatingRepository, Task<Comment>> commentaryCreateSetup;
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
+        private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
         private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
@@ -63,16 +66,22 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
             commentRepository = Mock<ICommentaryCreatingRepository>();
-            commentaryCreateSetup = commentRepository.Setup(r => r.Create(It.IsAny<ForumComment>(), It.IsAny<UpdateBuilder<ForumTopic>>()));
+            commentaryCreateSetup = commentRepository.Setup(r =>
+                r.Create(It.IsAny<ForumComment>(), It.IsAny<UpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
+            countersRepository = Mock<IUnreadCountersRepository>();
+            countersRepository
+                .Setup(r => r.Increment(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+                .Returns(Task.CompletedTask);
+
             service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,
                 intentionManager.Object, identityProvider.Object, commentFactory.Object,
-                commentRepository.Object, invokedEventPublisher.Object);
+                commentRepository.Object, countersRepository.Object, invokedEventPublisher.Object);
         }
 
         [Fact]
@@ -104,6 +113,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             commentRepository.Verify(r => r.Create(comment, It.IsAny<UpdateBuilder<ForumTopic>>()), Times.Once);
             commentRepository.VerifyNoOtherCalls();
+
+            countersRepository.Verify(r => r.Increment(topicId, UnreadEntryType.Message));
+            countersRepository.VerifyNoOtherCalls();
 
             invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId), Times.Once);
             invokedEventPublisher.VerifyNoOtherCalls();

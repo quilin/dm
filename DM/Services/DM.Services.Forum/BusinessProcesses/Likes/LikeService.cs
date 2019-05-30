@@ -89,7 +89,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         public async Task DislikeComment(Guid commentId)
         {
             var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.Like, comment);
+            await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             await Dislike(comment);
         }
 

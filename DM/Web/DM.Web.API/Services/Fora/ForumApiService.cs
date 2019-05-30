@@ -32,7 +32,7 @@ namespace DM.Web.API.Services.Fora
         /// <inheritdoc />
         public async Task<Envelope<Forum>> Get(string id)
         {
-            var forum = await forumService.GetForum(id);
+            var forum = await forumService.GetSingleForum(id);
             return new Envelope<Forum>(mapper.Map<Forum>(forum));
         }
     }

@@ -63,7 +63,9 @@ namespace DM.Web.API.Services.Fora
         /// <inheritdoc />
         public async Task<Envelope<Comment>> Update(Guid commentId, Comment comment)
         {
-            var updatedComment = await updatingService.Update(mapper.Map<UpdateComment>(comment));
+            var updateComment = mapper.Map<UpdateComment>(comment);
+            updateComment.CommentId = commentId;
+            var updatedComment = await updatingService.Update(updateComment);
             return new Envelope<Comment>(mapper.Map<Comment>(updatedComment));
         }
 

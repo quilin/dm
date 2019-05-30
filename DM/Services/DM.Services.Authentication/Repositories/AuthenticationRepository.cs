@@ -53,27 +53,28 @@ namespace DM.Services.Authentication.Repositories
         public async Task<Session> FindUserSession(Guid sessionId)
         {
             var userSessions = await Collection<UserSessions>()
-                .Find(Filter<UserSessions>().ElemMatch(u => u.Sessions, s => s.Id == sessionId))
+                .Find(Filter<UserSessions>()
+                    .ElemMatch(u => u.Sessions, s => s.Id == sessionId))
                 .FirstAsync();
-            return userSessions.Sessions.First();
+            return userSessions.Sessions.First(s => s.Id == sessionId);
         }
 
         /// <inheritdoc />
         public async Task<UserSettings> FindUserSettings(Guid userId)
         {
             return await Collection<DbUserSettings>()
-                       .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
-                       .Project(Select<DbUserSettings>().Expression(s => new UserSettings
-                       {
-                           Id = s.Id,
-                           ColorScheme = s.ColorScheme,
-                           PostsPerPage = s.Paging.PostsPerPage,
-                           CommentsPerPage = s.Paging.CommentsPerPage,
-                           MessagesPerPage = s.Paging.MessagesPerPage,
-                           TopicsPerPage = s.Paging.TopicsPerPage,
-                           NannyGreetingsMessage = s.NannyGreetingsMessage
-                       }))
-                       .FirstOrDefaultAsync() ?? UserSettings.Default;
+                .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
+                .Project(Select<DbUserSettings>().Expression(s => new UserSettings
+                {
+                    Id = s.Id,
+                    ColorScheme = s.ColorScheme,
+                    PostsPerPage = s.Paging.PostsPerPage,
+                    CommentsPerPage = s.Paging.CommentsPerPage,
+                    MessagesPerPage = s.Paging.MessagesPerPage,
+                    TopicsPerPage = s.Paging.TopicsPerPage,
+                    NannyGreetingsMessage = s.NannyGreetingsMessage
+                }))
+                .FirstOrDefaultAsync() ?? UserSettings.Default;
         }
 
         /// <inheritdoc />

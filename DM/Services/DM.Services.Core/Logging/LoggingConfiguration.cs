@@ -25,9 +25,11 @@ namespace DM.Services.Core.Logging
                         "http://localhost:9200",
                         "dm_logs-{0:yyyy.MM.dd}",
                         inlineFields: true))
+                .WriteTo.Logger(lc => lc
+                    .WriteTo.Console())
                 .CreateLogger();
         }
-        
+
         /// <summary>
         /// Register logger and add it to the service collection of the application
         /// </summary>
