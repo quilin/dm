@@ -43,7 +43,7 @@ namespace DM.Services.Mail.Sender.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .AddDmLogging()
+                .AddDmLogging("DM.MailSender")
                 .AddLogging(b => b.AddSerilog())
                 .Configure<MessageConsumeConfiguration>(
                     configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)

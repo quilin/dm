@@ -16,7 +16,7 @@ namespace DM.Web.API
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            LoggingConfiguration.Register();
+            LoggingConfiguration.Register("DM.API");
             CreateWebHostBuilder(args).Build().Run();
         }
 

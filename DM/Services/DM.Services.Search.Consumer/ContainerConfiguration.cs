@@ -32,7 +32,7 @@ namespace DM.Services.Search.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .AddDmLogging()
+                .AddDmLogging("DM.SearchEngine")
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<MessageConsumeConfiguration>(
