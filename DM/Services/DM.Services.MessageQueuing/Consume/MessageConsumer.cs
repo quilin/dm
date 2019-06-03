@@ -9,23 +9,25 @@ namespace DM.Services.MessageQueuing.Consume
     public class MessageConsumer<TMessage> : IDisposable, IMessageConsumer<TMessage>
         where TMessage : class
     {
+        private readonly IConnectionFactory connectionFactory;
         private readonly IEventProcessorAdapter<TMessage> eventProcessorAdapter;
-        private readonly IConnection connection;
-        private readonly IModel channel;
+        private IConnection connection;
+        private IModel channel;
 
         /// <inheritdoc />
         public MessageConsumer(
             IConnectionFactory connectionFactory,
             IEventProcessorAdapter<TMessage> eventProcessorAdapter)
         {
+            this.connectionFactory = connectionFactory;
             this.eventProcessorAdapter = eventProcessorAdapter;
-            connection = connectionFactory.CreateConnection();
-            channel = connection.CreateModel();
         }
 
         /// <inheritdoc />
         public void Consume(MessageConsumeConfiguration configuration)
         {
+            connection = connectionFactory.CreateConnection();
+            channel = connection.CreateModel();
             Ensure.Consume(channel, configuration);
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (_, args) => await eventProcessorAdapter.ProcessEvent(args, channel);
@@ -35,8 +37,8 @@ namespace DM.Services.MessageQueuing.Consume
         /// <inheritdoc />
         public void Dispose()
         {
-            channel.Close();
-            connection.Close();
+            channel?.Close();
+            connection?.Close();
         }
     }
 }

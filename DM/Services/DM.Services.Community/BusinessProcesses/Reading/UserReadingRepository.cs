@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
-using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
+using DM.Services.DataAccess.BusinessObjects.Users;
 using Microsoft.EntityFrameworkCore;
+using UserProfile = DM.Services.Community.Dto.UserProfile;
 
 namespace DM.Services.Community.BusinessProcesses.Reading
 {
@@ -30,37 +31,28 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         private static readonly TimeSpan ActivityRange = TimeSpan.FromDays(30);
 
         /// <inheritdoc />
-        public Task<int> CountUsers(bool withInactive)
-        {
-            var query = dmDbContext.Users.Where(u => !u.IsRemoved);
-            if (withInactive)
-            {
-                return query.CountAsync();
-            }
-
-            var activeRange = dateTimeProvider.Now - ActivityRange;
-            return query
-                .Where(u => u.LastVisitDate > activeRange)
-                .CountAsync();
-        }
+        public Task<int> CountUsers(bool withInactive) => GetQuery(withInactive).CountAsync();
 
         /// <inheritdoc />
-        public async Task<IEnumerable<GeneralUser>> GetUsers(PagingData paging, bool withInactive)
-        {
-            var query = dmDbContext.Users.Where(u => !u.IsRemoved);
-            if (!withInactive)
-            {
-                var activeRange = dateTimeProvider.Now - ActivityRange;
-                query = query.Where(u => u.LastVisitDate > activeRange);
-            }
-
-            return await query
+        public async Task<IEnumerable<GeneralUser>> GetUsers(PagingData paging, bool withInactive) =>
+            await GetQuery(withInactive)
                 .OrderBy(u => u.RatingDisabled)
                 .ThenByDescending(u => u.QualityRating)
                 .ThenBy(u => u.QuantityRating)
                 .Page(paging)
                 .ProjectTo<GeneralUser>()
                 .ToArrayAsync();
+
+        private IQueryable<User> GetQuery(bool withInactive)
+        {
+            var query = dmDbContext.Users.Where(u => !u.IsRemoved);
+            if (withInactive)
+            {
+                return query;
+            }
+
+            var activeRange = dateTimeProvider.Now - ActivityRange;
+            return query.Where(u => u.LastVisitDate > activeRange);
         }
 
         /// <inheritdoc />

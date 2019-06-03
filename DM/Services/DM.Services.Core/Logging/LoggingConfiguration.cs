@@ -12,12 +12,12 @@ namespace DM.Services.Core.Logging
         /// <summary>
         /// Create and register logger for the application
         /// </summary>
-        public static void Register()
+        public static void Register(string applicationName)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "DM.API")
+                .Enrich.WithProperty("Application", applicationName)
                 .Enrich.WithProperty("Environment", "Test")
                 .WriteTo.Logger(lc => lc
                     .Filter.ByExcluding(Matching.FromSource("Microsoft"))
@@ -33,9 +33,9 @@ namespace DM.Services.Core.Logging
         /// <summary>
         /// Register logger and add it to the service collection of the application
         /// </summary>
-        public static IServiceCollection AddDmLogging(this IServiceCollection services)
+        public static IServiceCollection AddDmLogging(this IServiceCollection services, string applicationName)
         {
-            Register();
+            Register(applicationName);
             return services.AddLogging(b => b.AddSerilog());
         }
     }
