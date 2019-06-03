@@ -1,25 +1,51 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div id="app" :class="['main', `theme_${theme}`]">
+    <div class="content">
+      <dm-header />
+      <div class="content-body">
+        <router-view />
+      </div>
     </div>
-    <router-view/>
+    <dm-footer />
   </div>
 </template>
-<style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
 
-#nav
-  padding 30px
-  a
-    font-weight bold
-    color #2c3e50
-    &.router-link-exact-active
-      color #42b983
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import DmFooter from '@/views/layout/Footer.vue';
+import DmHeader from '@/views/layout/Header.vue';
+
+@Component({
+  components: {
+    DmHeader,
+    DmFooter,
+  },
+})
+export default class DmApp extends Vue {
+  private theme : string = '';
+}
+</script>
+
+<style lang="stylus">
+@import '~@/styles/Fonts'
+@import '~@/styles/Variables'
+@import '~@/styles/Themes'
+
+html, body
+  height 100%
+  margin 0
+
+.main
+  position relative
+  height 100%
+  min-height 100%
+  min-width 1000px
+  max-width 1400px
+  overflow-y scroll
+
+.content
+  height 100%
+  theme(color, $text)
+  theme(background-color, $background)
+
 </style>
