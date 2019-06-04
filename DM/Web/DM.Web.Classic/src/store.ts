@@ -7,6 +7,8 @@ export default new Vuex.Store({
   state: {
     theme: 'modern',
     userTheme: 'modern',
+
+    user: null,
   },
   mutations: {
     toggleTheme(state): void {

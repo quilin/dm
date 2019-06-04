@@ -1,4 +1,4 @@
-export default class Forum {
-  public id: string;
-  public unreadTopicsCount: number;
+export default interface Forum {
+  id: string;
+  unreadTopicsCount: number;
 }

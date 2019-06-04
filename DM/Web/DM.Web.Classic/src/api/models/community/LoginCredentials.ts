@@ -1,5 +1,5 @@
-export default class LoginCredentials {
-  public login: string;
-  public password: string;
-  public rememberMe: bool;
+export default interface LoginCredentials {
+  login: string;
+  password: string;
+  rememberMe: boolean;
 }

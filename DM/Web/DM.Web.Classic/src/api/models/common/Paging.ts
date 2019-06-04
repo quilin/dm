@@ -1,6 +1,6 @@
-export default class Paging {
-  public pages: number;
-  public current: number;
-  public size: number;
-  public number: number;
+export default interface Paging {
+  pages: number;
+  current: number;
+  size: number;
+  number: number;
 }

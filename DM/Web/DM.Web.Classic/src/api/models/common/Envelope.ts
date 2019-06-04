@@ -1,3 +1,3 @@
-export default class Envelope<T> {
-  public resource: T;
+export default interface Envelope<T> {
+  resource: T;
 }
