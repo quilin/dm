@@ -37,9 +37,6 @@ export default class MenuBlock extends Vue {
     }
   }
 
-  private hasCookie(): boolean {
-  }
-
   private saveCookie(): void {
     this.setCookie(new Date(new Date().getFullYear() + 10, 1, 1));
   }
