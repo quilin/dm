@@ -8,5 +8,22 @@ $big = 8 * $gridStep
 $major = 16 * $gridStep
 $large = 32 * $gridStep
 
+/// layout
+$maxWidth = 1400px
+$minWidth = 1000px
+$headerHeight = 90px
+$footerHeight = 90px
+
+menuContainer()
+  margin 0 $big
+  width $gridStep * 61
+
+sidebarContainer()
+  width $gridStep * 75
+  @media (max-width: 1279px)
+    display none
+
 /// Animations
-$animationDuration = 0.2s
+$animationTime = .2s
+
+$fontSize = 14px

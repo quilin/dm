@@ -16,9 +16,23 @@ export default class DmFooter extends Vue {
 </script>
 
 <style scoped lang="stylus">
+@import '~@/styles/Variables'
+@import '~@/styles/Themes'
+
 .footer
-  height 40px
-  background transparent url('~@/assets/footer_bg.gif') left bottom repeat-x
-  margin-top -90px
+  position relative
+  box-sizing border-box
+  height $footerHeight
+  margin-top -(@height)
   padding-top 50px
+
+  &:before
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    background url('~@/assets/footer_bg.gif') left bottom repeat-x
+    theme(filter, colorPair(none, invert(87%)))
 </style>

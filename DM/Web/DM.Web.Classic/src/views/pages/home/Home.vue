@@ -1,3 +1,3 @@
 <template>
-  <div>Nothing to do here!</div>
+  <div>Hello, world!</div>
 </template>

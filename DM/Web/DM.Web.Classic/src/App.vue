@@ -1,17 +1,26 @@
 <template>
-  <div id="app" :class="['main', `theme_${theme}`]">
-    <div class="content">
-      <dm-header />
-      <div class="content-body">
-        <router-view />
+  <div id="app" :class="`theme_${currentTheme}`">
+    <div class="main">
+      <div class="content-container">
+        <div class="content-wrapper">
+          <dm-header />
+          <div class="content-body">
+            <router-view name="menu" />
+            <div class="content">
+              <router-view name="page" />
+            </div>
+            <router-view name="sidebar" />
+          </div>
+        </div>
+        <dm-footer />
       </div>
     </div>
-    <dm-footer />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 import DmFooter from '@/views/layout/Footer.vue';
 import DmHeader from '@/views/layout/Header.vue';
 
@@ -20,10 +29,11 @@ import DmHeader from '@/views/layout/Header.vue';
     DmHeader,
     DmFooter,
   },
+  computed: {
+    ...mapGetters(['currentTheme']),
+  },
 })
-export default class DmApp extends Vue {
-  private theme : string = '';
-}
+export default class DmApp extends Vue {}
 </script>
 
 <style lang="stylus">
@@ -31,21 +41,61 @@ export default class DmApp extends Vue {
 @import '~@/styles/Variables'
 @import '~@/styles/Themes'
 
-html, body
+html, body, #app
   height 100%
   margin 0
+  height 100%
+
+body
+  font-family PT Sans
+  font-size $fontSize
+  line-height 1.2
+  word-wrap break-word
 
 .main
-  position relative
   height 100%
   min-height 100%
-  min-width 1000px
-  max-width 1400px
   overflow-y scroll
-
-.content
-  height 100%
   theme(color, $text)
   theme(background-color, $background)
+
+.content-container
+  position relative
+  height 100%
+  &:before
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    background url('~@/assets/header_bg.gif') left top repeat-x
+    theme(filter, colorPair(none, invert(87%)))
+
+.content-wrapper
+  position relative
+  margin auto
+  min-height 100%
+  min-width $minWidth
+  max-width $maxWidth
+
+.content-body
+  display flex
+  padding-bottom $footerHeight
+
+.content-menu
+  menuContainer()
+
+.content-sidebar
+  sidebarContainer()
+
+.content
+  flex-grow 1
+
+a
+  theme(color, $activeText)
+  text-decoration none
+  &:hover
+    theme(color, $activeHoverText)
 
 </style>
