@@ -11,32 +11,14 @@
       </router-link>
     </div>
 
-    <div class="topicsList">
-      <div class="topicsList-header">Тема</div>
-      <div class="topicsList-header">Дата</div>
-      <div class="topicsList-header">Автор</div>
-      <div class="topicsList-header"><icon :font="IconType.CommentsNoUnread" /></div>
-      <div class="topicsList-header">Последнее сообщение</div>
-      <template v-if="topics" v-for="topic in topics">
-        <router-link :to="{name: 'topic', params: {id: topic.id}}" class="topicList-link">
-          {{topic.title}}
-          <div class="topicList-description" v-html="topic.description"></div>
-        </router-link>
-        <div>{{topic.created.substr(0, 10)}}</div>
-        <div>
-          <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
-        </div>
-        <div>{{topic.unreadCommentsCount}}</div>
-        <div>
-          <router-link
-            v-if="topic.lastComment"
-            :to="{name: 'user', params: {login: topic.author.login}}">
-            {{topic.lastComment.author.login}},
-            {{topic.lastComment.created.substr(0, 10)}}
-          </router-link>
-        </div>
-      </template>
+    <div class="list header">
+      <div>Тема</div>
+      <div>Дата</div>
+      <div>Автор</div>
+      <div><icon :font="IconType.CommentsNoUnread" /></div>
+      <div>Последнее сообщение</div>
     </div>
+    <forum-topic v-if="topics" v-for="topic in allTopics" :key="topic.id" :topic="topic" />
   </div>
 </template>
 
@@ -47,18 +29,33 @@ import { Action, Getter } from 'vuex-class';
 import IconType from '@/components/iconType';
 import { Topic } from '@/api/models/forum';
 import User from '@/api/models/community/user';
+import ForumTopic from './ForumTopic.vue';
 
 const namespace: string = 'forum';
 
-@Component({})
+@Component({
+  components: {
+    ForumTopic,
+  },
+})
 export default class Forum extends Vue {
   private IconType: typeof IconType = IconType;
 
   @Getter('moderators', { namespace })
   private moderators!: User[];
 
+  @Getter('attachedTopics', { namespace })
+  private attachedTopics!: Topic[];
+
   @Getter('topics', { namespace })
   private topics!: Topic[];
+
+  private get allTopics(): Topic[] {
+    if (this.attachedTopics === null || this.topics === null) {
+      return null;
+    }
+    return this.attachedTopics.concat(this.topics);
+  }
 
   @Action('selectForum', { namespace })
   private selectForum: any;
@@ -83,6 +80,8 @@ export default class Forum extends Vue {
 </script>
 
 <style scoped lang="stylus">
+@import '~@/views/pages/forum/Grid'
+
 .title
   pageTitle()
 
@@ -91,26 +90,10 @@ export default class Forum extends Vue {
   a
     text-transform initial
 
-.topicsList
-  display grid
+.list
+  grid()
   margin-top $medium
-  grid-template-columns \[title\] 40% \[date\] 11% \[author\] 14% \[count\] auto \[lastComment\] 26%
-  justify-items stretch
-  align-items stretch
-
+  theme(background-color, $blockBackground)
   & > *
-    padding $small $minor
-    border-bottom 1px solid
-    theme(border-bottom-color, $border)
-    &.topicsList-header
-      padding $minor
-      theme(background-color, $blockBackground)
-
-.topicList-link
-  display block
-  &:hover
-    theme(background-color, $blockHoverBackground)
-
-.topicList-description
-  secondary()
+    padding $minor
 </style>

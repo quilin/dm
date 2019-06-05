@@ -8,5 +8,6 @@ export default interface ForumState {
 
   news: Topic[];
   moderators: User[];
-  topics: ListEnvelope<Topic>;
+  attachedTopics: ListEnvelope<Topic> | null;
+  topics: ListEnvelope<Topic> | null;
 }

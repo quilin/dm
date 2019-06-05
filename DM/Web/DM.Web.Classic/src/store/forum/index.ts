@@ -10,7 +10,8 @@ const state: ForumState = {
   selectedForumId: null,
   news: [],
   moderators: [],
-  topics: {paging: null, resources: []},
+  attachedTopics: null,
+  topics: null,
 };
 
 const fora: Module<ForumState, RootState> = {

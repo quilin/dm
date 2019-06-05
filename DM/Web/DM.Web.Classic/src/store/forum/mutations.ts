@@ -19,8 +19,9 @@ const mutations: MutationTree<ForumState> = {
   updateModerators(state, payload: User[]) {
     state.moderators = payload;
   },
-  updateTopics(state, payload: ListEnvelope<Topic>) {
-    state.topics = payload;
+  updateTopics(state, payload: {attachedTopics: ListEnvelope<Topic>, topics: ListEnvelope<Topic>}) {
+    state.attachedTopics = payload.attachedTopics;
+    state.topics = payload.topics;
   },
 };
 

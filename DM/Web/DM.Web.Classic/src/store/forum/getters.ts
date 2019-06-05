@@ -14,8 +14,17 @@ const getters: GetterTree<ForumState, RootState> = {
   moderators(state): User[] {
     return state.moderators;
   },
-  topics(state): Topic[] {
-    return state.topics.resources;
+  attachedTopics(state): Topic[] | null {
+    if (state.attachedTopics === null) {
+      return null;
+    }
+    return state.attachedTopics!.resources;
+  },
+  topics(state): Topic[] | null {
+    if (state.topics === null) {
+      return null;
+    }
+    return state.topics!.resources;
   },
   selectedForum(state): string | null {
     return state.selectedForumId;
