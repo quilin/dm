@@ -78,7 +78,7 @@ export default class DmHeader extends Vue {
 
 .top-menu-link
   margin-right $medium + $small
-  font-size $medium
+  font-size $textFontSize
   letter-spacing 1px
   theme(color, $secondaryText)
   &:hover
