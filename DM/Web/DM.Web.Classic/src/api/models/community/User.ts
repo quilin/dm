@@ -1,4 +1,4 @@
-import Rating from '@/api/models/community/Rating';
+import Rating from '@/api/models/community/rating';
 
 export default interface User {
   login: string;

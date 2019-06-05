@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { mapActions } from 'vuex';
-import IconType from '@/components/IconType';
+import IconType from '@/components/iconType';
 
 @Component({
   methods: {
@@ -45,9 +45,6 @@ export default class DmHeader extends Vue {
 </script>
 
 <style scoped lang="stylus">
-@import '~@/styles/Variables.styl'
-@import '~@/styles/Themes.styl'
-
 .header
   display flex
   box-sizing border-box

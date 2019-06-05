@@ -21,8 +21,6 @@ export default class Icon extends Vue {
 </script>
 
 <style scoped lang="stylus">
-@import '~@/styles/Fonts'
-
 .icon
   icon()
 </style>

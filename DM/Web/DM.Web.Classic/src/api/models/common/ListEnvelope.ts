@@ -1,4 +1,4 @@
-import Paging from '@/api/models/common/Paging';
+import Paging from '@/api/models/common/paging';
 
 export default interface ListEnvelope<T> {
   resources: T[];

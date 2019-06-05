@@ -1,0 +1,65 @@
+<template>
+  <div>
+    <div class="news-header">Последние новости</div>
+    <loader v-if="!news" />
+    <div v-else-if="!news.length">
+      Ничего нового!
+    </div>
+    <template v-else>
+      <div v-for="article in news" :key="article.id">
+        <div class="article">
+          <div class="article-title">
+            <router-link :to="{name: 'topic', params: {id: article.id}}">
+              {{article.title}}
+            </router-link>
+          </div>
+          <div class="article-description" v-html="article.description"></div>
+          <div class="article-data">
+            <router-link :to="{name: 'user', params: {login: article.author.login}}">{{article.author.login}}</router-link>,
+            {{article.created}}
+            <icon v-if="!article.unreadCommentsCount" :font="IconType.CommentsNoUnread" />
+          </div>
+        </div>
+      </div>
+      <router-link :to="{name: 'forum', params: {id: 'Новости проекта'}}" class="news-rest">
+        К остальным новостям <icon :font="IconType.Forward" />
+      </router-link>
+    </template>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import IconType from '@/components/iconType';
+
+@Component({
+  computed: {
+    ...mapGetters(['news']),
+  },
+})
+export default class News extends Vue {
+  private IconType: typeof IconType = IconType;
+  private mounted(): void {
+    this.$store.dispatch('fetchNews');
+  }
+}
+</script>
+
+<style scoped lang="stylus">
+.news-header
+  header()
+
+.news-rest
+  font-weight bold
+
+.article
+  padding $small 0
+
+.article-title
+  margin-bottom $small
+  font-weight bold
+
+.article-data
+  theme(color, $secondaryText)
+</style>

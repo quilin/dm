@@ -3,7 +3,7 @@
     <div class="title" @click="toggle">
       <slot name="title" />
     </div>
-    <div v-if="show" class="list">
+    <div class="list">
       <slot />
     </div>
   </div>
@@ -51,19 +51,18 @@ export default class MenuBlock extends Vue {
 }
 </script>
 
-<style lang="stylus">
-@import '~@/styles/Fonts'
-@import '~@/styles/Themes'
-@import '~@/styles/Variables'
-
+<style scoped lang="stylus">
 .title
   header()
-  theme(color, $highlightText)
-  margin $gridStep * 5 0 $gridStep
   cursor pointer
   &:after
     icon()
     content ' '
   .hidden &:after
     content ' '
+
+.list
+  .hidden &
+    display none
+
 </style>

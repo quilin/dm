@@ -37,10 +37,6 @@ export default class DmApp extends Vue {}
 </script>
 
 <style lang="stylus">
-@import '~@/styles/Fonts'
-@import '~@/styles/Variables'
-@import '~@/styles/Themes'
-
 html, body, #app
   height 100%
   margin 0

@@ -1,6 +1,6 @@
-import User from '@/api/models/community/User';
-import Forum from '@/api/models/forum/Forum';
-import LastComment from '@/api/models/forum/LastComment';
+import User from '@/api/models/community/user';
+import Forum from '@/api/models/forum/forum';
+import LastComment from '@/api/models/forum/lastComment';
 
 export default interface Topic {
   id: string;

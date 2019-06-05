@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import DmState from './DmState';
+import forumModule from './forum';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+export default new Vuex.Store<DmState>({
   state: {
     theme: 'modern',
     userTheme: 'modern',
@@ -28,4 +30,7 @@ export default new Vuex.Store({
   getters: {
     currentTheme: (state) => state.theme,
   },
+  modules: {
+    forumModule,
+  }
 });

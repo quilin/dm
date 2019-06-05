@@ -1,4 +1,4 @@
-import User from '@/api/models/community/User';
+import User from '@/api/models/community/user';
 
 export default interface Comment {
   id: string;

@@ -14,6 +14,13 @@ icon()
   -webkit-font-smoothing antialiased
   user-select none
 
+pageTitle()
+  margin $medium 0
+  font-size $titleFontSize
+  theme(color, $highlightText)
+
 header()
+  margin $gridStep * 5 0 $gridStep
   font-weight bold
   text-transform uppercase
+  theme(color, $highlightText)

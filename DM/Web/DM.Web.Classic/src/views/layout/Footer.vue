@@ -16,9 +16,6 @@ export default class DmFooter extends Vue {
 </script>
 
 <style scoped lang="stylus">
-@import '~@/styles/Variables'
-@import '~@/styles/Themes'
-
 .footer
   position relative
   box-sizing border-box

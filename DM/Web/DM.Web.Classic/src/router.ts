@@ -18,5 +18,13 @@ export default new Router({
         page: () => import('./views/pages/home/Home.vue'),
       },
     },
+    {
+      path: '/forum/:id',
+      name: 'forum',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/forum/Forum.vue'),
+      },
+    },
   ],
 });
