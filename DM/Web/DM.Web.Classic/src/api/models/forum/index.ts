@@ -1,8 +1,16 @@
 import User from '@/api/models/community/user';
-import Forum from '@/api/models/forum/forum';
-import LastComment from '@/api/models/forum/lastComment';
 
-export default interface Topic {
+export interface Forum {
+  id: string;
+  unreadTopicsCount: number;
+}
+
+export interface LastComment {
+  created: string;
+  author: User;
+}
+
+export interface Topic {
   id: string;
   author: User;
   created: string;
@@ -14,5 +22,14 @@ export default interface Topic {
   commentsCount: number;
   unreadCommentsCount: number;
   forum: Forum;
+  likes: User[];
+}
+
+export interface Comment {
+  id: string;
+  author: User;
+  created: string;
+  updated: string | null;
+  text: string;
   likes: User[];
 }

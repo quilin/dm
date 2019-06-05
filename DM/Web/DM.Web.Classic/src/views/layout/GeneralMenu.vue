@@ -1,5 +1,5 @@
 <template>
-  <div class="content-menu">
+  <div>
     <menu-block v-if="true" token="MyGames">
       <template v-slot:title>Мои игры</template>
       Добавить условие про аутентификацию
@@ -18,7 +18,7 @@
     </menu-block>
     <menu-block token="Forum">
       <template v-slot:title>Форумы</template>
-      <div v-for="forum in fora" :key="forum.id" class="menu-item">
+      <div v-for="forum in fora" :key="forum.id" class="menu-item" :class="{ selected: forum.id === selectedForum }">
         <router-link :to="{name: 'forum', params: {id: forum.id}}">
           {{forum.id}}
           <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
@@ -30,8 +30,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mapActions, mapGetters } from 'vuex';
+import { Action, Getter } from 'vuex-class';
 
+import { Forum } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 import MenuBlock from './MenuBlock.vue';
 
@@ -39,15 +40,21 @@ import MenuBlock from './MenuBlock.vue';
   components: {
     MenuBlock,
   },
-  computed: {
-    ...mapGetters(['fora']),
-  },
 })
 export default class GeneralMenu extends Vue {
   private IconType: typeof IconType = IconType;
 
+  @Getter('fora', { namespace: 'forum' })
+  private fora!: Forum[];
+
+  @Getter('selectedForum', { namespace: 'forum' })
+  private selectedForum!: string | null;
+
+  @Action('fetchFora', { namespace: 'forum' })
+  private fetchFora: any;
+
   private mounted() {
-    this.$store.dispatch('fetchFora');
+    this.fetchFora();
   }
 }
 </script>
@@ -55,4 +62,6 @@ export default class GeneralMenu extends Vue {
 <style scoped lang="stylus">
 .menu-item
   margin $tiny 0
+  &.selected
+    font-weight bold
 </style>

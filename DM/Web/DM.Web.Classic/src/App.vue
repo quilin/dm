@@ -5,11 +5,16 @@
         <div class="content-wrapper">
           <dm-header />
           <div class="content-body">
-            <router-view name="menu" />
+            <div class="content-menu">
+              <router-view name="menu" />
+            </div>
             <div class="content">
               <router-view name="page" />
             </div>
-            <router-view name="sidebar" />
+            <div class="content-sidebar">
+              <router-view name="sidebar" />
+              Hello, world!
+            </div>
           </div>
         </div>
         <dm-footer />
@@ -77,7 +82,7 @@ body
 
 .content-body
   display flex
-  padding-bottom $footerHeight
+  padding-bottom $footerHeight + $big
 
 .content-menu
   menuContainer()

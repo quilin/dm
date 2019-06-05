@@ -19,7 +19,7 @@ export default new Router({
       },
     },
     {
-      path: '/forum/:id',
+      path: '/forum/:id/:page?',
       name: 'forum',
       components: {
         menu: GeneralMenu,

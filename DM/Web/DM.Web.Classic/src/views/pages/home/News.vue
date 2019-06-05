@@ -30,18 +30,23 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
+import { Action, Getter } from 'vuex-class';
+
+import { Topic } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 
-@Component({
-  computed: {
-    ...mapGetters(['news']),
-  },
-})
+@Component({})
 export default class News extends Vue {
   private IconType: typeof IconType = IconType;
+
+  @Getter('news', { namespace: 'forum' })
+  private news!: Topic[];
+
+  @Action('fetchNews', { namespace: 'forum' })
+  private fetchNews: any;
+
   private mounted(): void {
-    this.$store.dispatch('fetchNews');
+    this.fetchNews();
   }
 }
 </script>

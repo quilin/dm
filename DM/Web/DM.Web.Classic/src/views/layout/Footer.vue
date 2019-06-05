@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <div class="copyright">© DungeonMaster.ru, 2007 &ndash; {{ currentYear }}</div>
+    <div class="copyright">© dm.am, 2007 &ndash; {{ currentYear }}</div>
   </div>
 </template>
 
@@ -32,4 +32,9 @@ export default class DmFooter extends Vue {
     bottom 0
     background url('~@/assets/footer_bg.gif') left bottom repeat-x
     theme(filter, colorPair(none, invert(87%)))
+
+.copyright
+  position relative
+  text-align center
+  secondary()
 </style>

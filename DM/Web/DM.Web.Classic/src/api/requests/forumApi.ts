@@ -1,6 +1,6 @@
 import ListEnvelope from '@/api/models/common/listEnvelope';
-import Forum from '@/api/models/forum/forum';
-import Topic from '@/api/models/forum/topic';
+import User from '@/api/models/community/user';
+import { Forum, Topic } from '@/api/models/forum';
 import Api from '@/api';
 
 export default new class ForumApi {
@@ -11,5 +11,11 @@ export default new class ForumApi {
     return await Api.get('fora/Новости проекта/topics', {
       size: 3,
     });
+  }
+  public async getModerators(id: string): Promise<ListEnvelope<User>> {
+    return await Api.get(`fora/${id}/moderators`);
+  }
+  public async getTopics(id: string, page: number): Promise<ListEnvelope<Topic>> {
+    return await Api.get(`fora/${id}/topics`, { number: page });
   }
 }();
