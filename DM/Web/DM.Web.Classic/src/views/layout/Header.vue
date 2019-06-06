@@ -15,7 +15,7 @@
         </template>
       </div>
     </div>
-    <div class="top-menu">
+    <div class="top-menu content">
       <router-link class="top-menu-link" :to="{name: 'about'}">О проекте</router-link>
       <router-link class="top-menu-link" :to="{name: 'community'}">Сообщество</router-link>
       <router-link class="top-menu-link" :to="{name: 'fora'}">Форум</router-link>
@@ -72,8 +72,6 @@ export default class DmHeader extends Vue {
 
 .top-menu
   display flex
-  flex-grow 1
-  margin 0 $minor
   padding $medium + $small 0
 
 .top-menu-link

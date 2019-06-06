@@ -6,7 +6,7 @@
       {{topic.title}}
       <div class="description" v-html="topic.description"></div>
     </router-link>
-    <div>{{topic.created.substr(0, 10)}}</div>
+    <div>{{topic.created.substr(0, 10).split('-').reverse().join('.')}}</div>
     <div>
       <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
     </div>
@@ -16,7 +16,7 @@
         v-if="topic.lastComment"
         :to="{name: 'user', params: {login: topic.author.login}}">
         {{topic.lastComment.author.login}},
-        {{topic.lastComment.created.substr(0, 10)}}
+        <human-timespan :date="topic.lastComment.created" />
       </router-link>
     </div>
   </div>
@@ -42,9 +42,9 @@ export default class ForumTopic extends Vue {
 .row
   grid()
   &.closed
-    opacity .6
-      &.attached
-        opacity initial
+    opacity 0.7
+    &.attached
+      opacity initial
   & > *
     padding $minor
 

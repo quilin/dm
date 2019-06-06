@@ -92,6 +92,8 @@ body
 
 .content
   flex-grow 1
+  margin-left 0
+  margin-right $big
 
 a
   theme(color, $activeText)

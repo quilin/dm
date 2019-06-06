@@ -26,4 +26,8 @@
       <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Properties\launchSettings.json" />
+    </ItemGroup>
+
 </Project>

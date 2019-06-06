@@ -38,8 +38,12 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         public async Task<IEnumerable<Dto.Output.Forum>> GetForaList()
         {
             var fora = await GetFora();
-            await unreadCountersRepository.FillParentCounters(fora, identity.User.UserId,
-                f => f.Id, f => f.UnreadTopicsCount);
+            if (identity.User.IsAuthenticated)
+            {
+                await unreadCountersRepository.FillParentCounters(fora, identity.User.UserId,
+                    f => f.Id, f => f.UnreadTopicsCount);
+            }
+
             return fora;
         }
 
@@ -47,8 +51,12 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         public async Task<Dto.Output.Forum> GetSingleForum(string forumTitle)
         {
             var forum = await GetForum(forumTitle);
-            forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
-                identity.User.UserId, UnreadEntryType.Message, forum.Id))[forum.Id];
+            if (identity.User.IsAuthenticated)
+            {
+                forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
+                    identity.User.UserId, UnreadEntryType.Message, forum.Id))[forum.Id];
+            }
+
             return forum;
         }
 

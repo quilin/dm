@@ -50,7 +50,7 @@ export default class Forum extends Vue {
   @Getter('topics', { namespace })
   private topics!: Topic[];
 
-  private get allTopics(): Topic[] {
+  private get allTopics(): Topic[] | null {
     if (this.attachedTopics === null || this.topics === null) {
       return null;
     }
