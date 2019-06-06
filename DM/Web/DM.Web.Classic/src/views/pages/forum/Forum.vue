@@ -38,7 +38,7 @@ const namespace: string = 'forum';
     ForumTopic,
   },
 })
-export default class Forum extends Vue {
+export default class ForumPage extends Vue {
   private IconType: typeof IconType = IconType;
 
   @Getter('moderators', { namespace })
@@ -74,7 +74,7 @@ export default class Forum extends Vue {
 
   private fetchData(): void {
     this.selectForum({ id: this.$route.params.id });
-    this.fetchTopics({ id: this.$route.params.id, page: this.$route.params.page });
+    this.fetchTopics({ id: this.$route.params.id, n: this.$route.params.n });
   }
 }
 </script>

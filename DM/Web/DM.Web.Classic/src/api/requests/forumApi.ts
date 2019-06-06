@@ -15,7 +15,7 @@ export default new class ForumApi {
   public async getModerators(id: string): Promise<ListEnvelope<User>> {
     return await Api.get(`fora/${id}/moderators`);
   }
-  public async getTopics(id: string, attached: boolean, page: number): Promise<ListEnvelope<Topic>> {
-    return await Api.get(`fora/${id}/topics`, { number: page, attached });
+  public async getTopics(id: string, attached: boolean, n: number): Promise<ListEnvelope<Topic>> {
+    return await Api.get(`fora/${id}/topics`, { number: n, attached });
   }
 }();

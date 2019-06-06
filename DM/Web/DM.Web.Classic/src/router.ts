@@ -19,11 +19,19 @@ export default new Router({
       },
     },
     {
-      path: '/forum/:id/:page?',
+      path: '/forum/:id/:n?',
       name: 'forum',
       components: {
         menu: GeneralMenu,
         page: () => import('./views/pages/forum/Forum.vue'),
+      },
+    },
+    {
+      path: '/topic/:id/:n?',
+      name: 'topic',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/topic/Topic.vue'),
       },
     },
   ],
