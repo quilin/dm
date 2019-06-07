@@ -31,23 +31,23 @@ class Api {
   }
 
   public async get<T>(url: string, params?: any): Promise<T> {
-    return this.send(this.axios.get(url, { params }));
+    return this.send(() => this.axios.get(url, { params }));
   }
 
   public async post<T>(url: string, params: any): Promise<T> {
-    return this.send(this.axios.post(url, params));
+    return this.send(() => this.axios.post(url, params));
   }
 
   public async put<T>(url: string, params: any): Promise<T> {
-    return this.send(this.axios.put(url, params));
+    return this.send(() => this.axios.put(url, params));
   }
 
   public async delete(url: string): Promise<void> {
-    await this.send(this.axios.delete(url));
+    await this.send(() => this.axios.delete(url));
   }
 
-  private async send<T>(sender: Promise<AxiosResponse<T>>): Promise<T> {
-    const { data, headers } = await sender;
+  private async send<T>(sender: () => Promise<AxiosResponse<T>>): Promise<T> {
+    const { data, headers } = await sender();
     if ((tokenKey in headers)) {
       const token = headers[tokenKey];
       this.axios.defaults.headers.common[tokenKey] = token;
