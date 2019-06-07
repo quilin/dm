@@ -2,7 +2,7 @@
   <div>
     <menu-block v-if="user" token="MyGames">
       <template v-slot:title>Мои игры</template>
-      Добавить условие про аутентификацию
+      Все активные игры
     </menu-block>
     <menu-block v-else token="Active">
       <template v-slot:title>Активные игры</template>

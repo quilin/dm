@@ -50,8 +50,11 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
             var topics = (await repository.Get(forum.Id, pagingData, false)).ToArray();
-            await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
-                t => t.Id, t => t.UnreadCommentsCount);
+            if (identity.User.IsAuthenticated)
+            {
+                await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
+                    t => t.Id, t => t.UnreadCommentsCount);
+            }
 
             return (topics, pagingData.Result);
         }
@@ -61,8 +64,12 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
         {
             var forum = await forumReadingService.GetForum(forumTitle);
             var topics = (await repository.Get(forum.Id, null, true)).ToArray();
-            await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
-                t => t.Id, t => t.UnreadCommentsCount);
+            if (identity.User.IsAuthenticated)
+            {
+                await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
+                    t => t.Id, t => t.UnreadCommentsCount);
+            }
+
             return topics;
         }
 
@@ -76,8 +83,11 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
                 throw new HttpException(HttpStatusCode.Gone, "Topic not found");
             }
 
-            topic.UnreadCommentsCount = (await unreadCountersRepository.SelectByEntities(
-                identity.User.UserId, UnreadEntryType.Message, topicId))[topicId];
+            if (identity.User.IsAuthenticated)
+            {
+                topic.UnreadCommentsCount = (await unreadCountersRepository.SelectByEntities(
+                    identity.User.UserId, UnreadEntryType.Message, topicId))[topicId];
+            }
 
             return topic;
         }

@@ -12,6 +12,7 @@ export default new Vuex.Store<RootState>({
     userTheme: 'modern',
 
     user: null,
+    unreadConversations: 0,
   },
   mutations: {
     toggleTheme(state): void {
@@ -22,7 +23,7 @@ export default new Vuex.Store<RootState>({
         state.theme = 'night';
       }
     },
-    authenticate(state, user): void {
+    updateUser(state, user): void {
       state.user = user;
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
@@ -36,24 +37,25 @@ export default new Vuex.Store<RootState>({
       commit('toggleTheme');
     },
     authenticate({ commit }, user): void {
-      commit('authenticate', user);
+      commit('updateUser', user);
     },
     async signOut({ commit }): Promise<void> {
       await accountApi.signOut();
-      commit('authenticate', null);
+        commit('updateUser', null);
     },
     async fetchUser({ commit }): Promise<void> {
       const serializedUser = localStorage.getItem('user');
       if (serializedUser) {
-        commit('authenticate', JSON.parse(serializedUser));
+        commit('updateUser', JSON.parse(serializedUser));
         const { resource } = await accountApi.fetchUser();
-        commit('authenticate', resource);
+        commit('updateUser', resource);
       }
     },
   },
   getters: {
     currentTheme: (state) => state.theme,
     user: (state) => state.user,
+    unreadConversations: (state) => state.unreadConversations,
   },
   modules: {
     forum,

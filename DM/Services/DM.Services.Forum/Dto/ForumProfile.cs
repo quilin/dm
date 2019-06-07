@@ -11,6 +11,8 @@ namespace DM.Services.Forum.Dto
         /// <inheritdoc />
         public ForumProfile()
         {
+            CreateMap<Output.Forum, Output.Forum>();
+
             CreateMap<DataAccess.BusinessObjects.Fora.Forum, Output.Forum>()
                 .ForMember(d => d.Id, s => s.MapFrom(f => f.ForumId))
                 .ForMember(d => d.ModeratorIds,

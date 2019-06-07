@@ -31,33 +31,32 @@ class Api {
   }
 
   public async get<T>(url: string, params?: any): Promise<T> {
-    const { data } = await this.axios.get(url, params ? { params } : undefined);
-    return data as T;
+    return this.send(this.axios.get(url, { params }));
   }
 
   public async post<T>(url: string, params: any): Promise<T> {
-    const { data, headers } = await this.axios.post(url, params);
-    this.setAuthToken(headers[tokenKey]);
-    return data as T;
+    return this.send(this.axios.post(url, params));
   }
 
   public async put<T>(url: string, params: any): Promise<T> {
-    const { data } = await this.axios.put(url, params);
-    return data as T;
+    return this.send(this.axios.put(url, params));
   }
 
   public async delete(url: string): Promise<void> {
-    await this.axios.delete(url);
+    await this.send(this.axios.delete(url));
   }
 
-  private setAuthToken(token: string | undefined): void {
-    if (token) {
+  private async send<T>(sender: Promise<AxiosResponse<T>>): Promise<T> {
+    const { data, headers } = await sender;
+    if ((tokenKey in headers)) {
+      const token = headers[tokenKey];
       this.axios.defaults.headers.common[tokenKey] = token;
       localStorage.setItem(tokenKey, token);
     } else {
       delete this.axios.defaults.headers.common[tokenKey];
       localStorage.removeItem(tokenKey);
     }
+    return data as T;
   }
 }
 

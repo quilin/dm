@@ -35,9 +35,14 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
                 .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
                 .ToArrayAsync());
 
-            return accessPolicy.HasValue
-                ? forums.Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
-                : forums;
+            if (accessPolicy.HasValue)
+            {
+                forums = forums
+                    .Where(f => (f.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
+                    .ToArray();
+            }
+
+            return forums.Select(mapper.Map<Dto.Output.Forum, Dto.Output.Forum>);
         }
     }
 }

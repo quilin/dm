@@ -57,7 +57,7 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 100%
+  line-height 1
   word-wrap break-word
 
 .main

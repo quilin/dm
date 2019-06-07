@@ -14,7 +14,10 @@
       <router-link class="logo" :to="{name: 'home'}" />
       <div class="user-actions">
         <template v-if="user">
-          UnreadMessages
+          <a href="javascript:void(0)" :class="{ unread }">
+            <template v-if="unread">{{unread}} </template>
+            <icon :font="unread ? IconType.MessagesUnread : IconType.MessagesNoUnread" /> Сообщения
+          </a>
           |
           <a href="javascript:void(0)" @click="signOut">
             <icon :font="IconType.Logout" /> Выйти
@@ -62,6 +65,9 @@ export default class DmHeader extends Vue {
   @Getter('user')
   private user!: User | null;
 
+  @Getter('unreadConversations')
+  private unread!: number;
+
   @Action('toggleTheme')
   private toggleTheme: any;
 
@@ -88,6 +94,7 @@ export default class DmHeader extends Vue {
 
 .logo
   display block
+  margin-bottom $tiny
   height 26px /// image size
   background transparent url('~@/assets/logo.gif') no-repeat
   theme(filter, colorPair(none, invert(87%)))
@@ -95,6 +102,12 @@ export default class DmHeader extends Vue {
 .logo-text
   theme(color, $highlightText)
   margin-bottom $minor
+
+.unread
+  theme(color, $positiveText)
+  font-weight bold
+  &:hover
+    theme(color, $activeHoverText)
 
 .top-menu
   display flex

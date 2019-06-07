@@ -22,6 +22,8 @@ enum IconType {
   PostsNoUnread = 0xe064,
   CommentsUnread = 0xe05d,
   CommentsNoUnread = 0xe054,
+  MessagesUnread = 0xe011,
+  MessagesNoUnread = 0xe065,
 
   PostVotePositive = 0xe00d,
   PostVoteNeutral = 0xe05d,

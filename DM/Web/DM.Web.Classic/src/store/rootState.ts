@@ -5,4 +5,5 @@ export default interface RootState {
   userTheme: string;
 
   user: User | null;
+  unreadConversations: number;
 }
