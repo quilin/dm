@@ -1,16 +1,18 @@
-import ListEnvelope from '@/api/models/common/listEnvelope';
-import User from '@/api/models/community/user';
-import { Forum, Topic } from '@/api/models/forum';
+import { ListEnvelope } from '@/api/models/common';
+import { User } from '@/api/models/community';
+import { Forum, Topic, Comment } from '@/api/models/forum';
 
 export default interface ForumState {
   news: Topic[];
 
   fora: Forum[];
-  selectedForumId: string | null;
 
+  selectedForumId: string | null;
   moderators: User[];
   attachedTopics: ListEnvelope<Topic> | null;
   topics: ListEnvelope<Topic> | null;
 
-  topic: Topic;
+  selectedTopicId: string | null;
+  topic: Topic | null;
+  comments: ListEnvelope<Comment> | null;
 }

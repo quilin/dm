@@ -18,6 +18,44 @@ export default new Router({
         page: () => import('./views/pages/home/Home.vue'),
       },
     },
+
+    {
+      path: '/profile/:login',
+      name: 'user',
+      components: {
+        menu: GeneralMenu,
+      },
+    },
+    {
+      path: '/about',
+      name: 'about',
+      components: {
+        menu: GeneralMenu,
+      },
+    },
+    {
+      path: '/rules',
+      name: 'rules',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/rules/Rules.vue'),
+      },
+    },
+    {
+      path: '/community',
+      name: 'community',
+      components: {
+        menu: GeneralMenu,
+      },
+    },
+    {
+      path: '/fm',
+      name: 'chat',
+      components: {
+        menu: GeneralMenu,
+      },
+    },
+
     {
       path: '/forum/:id/:n?',
       name: 'forum',

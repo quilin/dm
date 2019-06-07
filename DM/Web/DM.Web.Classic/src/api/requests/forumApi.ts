@@ -1,6 +1,6 @@
-import ListEnvelope from '@/api/models/common/listEnvelope';
-import User from '@/api/models/community/user';
-import { Forum, Topic } from '@/api/models/forum';
+import { ListEnvelope, Envelope } from '@/api/models/common';
+import { User } from '@/api/models/community';
+import { Forum, Topic, Comment } from '@/api/models/forum';
 import Api from '@/api';
 
 export default new class ForumApi {
@@ -12,10 +12,18 @@ export default new class ForumApi {
       size: 3,
     });
   }
+
   public async getModerators(id: string): Promise<ListEnvelope<User>> {
     return await Api.get(`fora/${id}/moderators`);
   }
   public async getTopics(id: string, attached: boolean, n: number): Promise<ListEnvelope<Topic>> {
     return await Api.get(`fora/${id}/topics`, { number: n, attached });
+  }
+
+  public async getTopic(id: string): Promise<Envelope<Topic>> {
+    return await Api.get(`topics/${id}`);
+  }
+  public async getComments(id: string, n: number): Promise<ListEnvelope<Comment>> {
+    return await Api.get(`topics/${id}/comments`, { number: n });
   }
 }();

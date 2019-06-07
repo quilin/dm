@@ -1,4 +1,4 @@
-import User from '@/api/models/community/User';
+import { User } from '@/api/models/community';
 
 export default interface RootState {
   theme: string;

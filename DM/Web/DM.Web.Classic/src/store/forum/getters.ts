@@ -1,8 +1,9 @@
 import { GetterTree } from 'vuex';
 import ForumState from './forumState';
 import RootState from './../rootState';
-import User from '@/api/models/community/user';
-import { Forum, Topic } from '@/api/models/forum';
+import { Paging } from '@/api/models/common';
+import { User } from '@/api/models/community';
+import { Forum, Topic, Comment } from '@/api/models/forum';
 
 const getters: GetterTree<ForumState, RootState> = {
   fora(state): Forum[] {
@@ -11,23 +12,37 @@ const getters: GetterTree<ForumState, RootState> = {
   news(state): Topic[] {
     return state.news;
   },
+
+  selectedForum(state): string | null {
+    return state.selectedForumId;
+  },
+  selectedTopic(state): string | null {
+    return state.selectedTopicId;
+  },
+
   moderators(state): User[] {
     return state.moderators;
   },
   attachedTopics(state): Topic[] | null {
-    if (state.attachedTopics === null) {
-      return null;
-    }
-    return state.attachedTopics!.resources;
+    return state.attachedTopics && state.attachedTopics!.resources;
   },
   topics(state): Topic[] | null {
-    if (state.topics === null) {
-      return null;
-    }
-    return state.topics!.resources;
+    return state.topics && state.topics!.resources;
   },
-  selectedForum(state): string | null {
-    return state.selectedForumId;
+  topicsPaging(state): Paging | null {
+    return state.topics && state.topics!.paging;
+  },
+
+  topic(state): Topic | null {
+    return state.topic ||
+      state.topics &&
+      (state.topics!.resources.find((t: Topic) => t.id === state.selectedTopicId) || null);
+  },
+  comments(state): Comment[] | null {
+    return state.comments && state.comments!.resources;
+  },
+  commentsPaging(state): Paging | null {
+    return state.comments && state.comments!.paging;
   },
 };
 

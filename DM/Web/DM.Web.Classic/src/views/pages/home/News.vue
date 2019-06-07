@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="news-header">Последние новости</div>
+    <div class="content-title">Последние новости</div>
     <loader v-if="!news" />
     <div v-else-if="!news.length">
       Ничего нового!
@@ -52,9 +52,6 @@ export default class News extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.news-header
-  header()
-
 .news-rest
   font-weight bold
 

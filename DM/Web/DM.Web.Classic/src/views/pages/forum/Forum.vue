@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="title">{{$route.params.id}} | Форум</div>
+    <div class="page-title">{{$route.params.id}} | Форум</div>
     <div class="moderators">
       Модераторы:
       <router-link
@@ -11,14 +11,18 @@
       </router-link>
     </div>
 
-    <div class="list header">
+    <div class="list">
       <div>Тема</div>
       <div>Дата</div>
       <div>Автор</div>
       <div><icon :font="IconType.CommentsNoUnread" /></div>
       <div>Последнее сообщение</div>
     </div>
-    <forum-topic v-if="topics" v-for="topic in allTopics" :key="topic.id" :topic="topic" />
+    <loader v-if="!topics" class="topics-loader" />
+    <template v-else-if="topics.length">
+      <forum-topic v-for="topic in allTopics" :key="topic.id" :topic="topic" />
+    </template>
+    <div class="nothing" v-else>Еще не создано ни одной темы</div>
   </div>
 </template>
 
@@ -28,7 +32,7 @@ import { Action, Getter } from 'vuex-class';
 
 import IconType from '@/components/iconType';
 import { Topic } from '@/api/models/forum';
-import User from '@/api/models/community/user';
+import { User } from '@/api/models/community';
 import ForumTopic from './ForumTopic.vue';
 
 const namespace: string = 'forum';
@@ -60,6 +64,9 @@ export default class ForumPage extends Vue {
   @Action('selectForum', { namespace })
   private selectForum: any;
 
+  @Action('fetchModerators', { namespace })
+  private fetchModerators: any;
+
   @Action('fetchTopics', { namespace })
   private fetchTopics: any;
 
@@ -73,8 +80,10 @@ export default class ForumPage extends Vue {
   }
 
   private fetchData(): void {
-    this.selectForum({ id: this.$route.params.id });
-    this.fetchTopics({ id: this.$route.params.id, n: this.$route.params.n });
+    const id = this.$route.params.id;
+    this.selectForum(id);
+    this.fetchModerators(id);
+    this.fetchTopics({ id, n: this.$route.params.n });
   }
 }
 </script>
@@ -82,13 +91,11 @@ export default class ForumPage extends Vue {
 <style scoped lang="stylus">
 @import '~@/views/pages/forum/Grid'
 
-.title
-  pageTitle()
-
 .moderators
   header()
   a
     text-transform initial
+    font-weight initial
 
 .list
   grid()
@@ -96,4 +103,11 @@ export default class ForumPage extends Vue {
   theme(background-color, $blockBackground)
   & > *
     padding $minor
+
+.topics-loader
+  margin $medium auto
+
+.nothing
+  margin $medium
+  text-align center
 </style>

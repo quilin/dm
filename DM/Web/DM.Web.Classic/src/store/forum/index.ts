@@ -6,12 +6,18 @@ import ForumState from './forumState';
 import RootState from './../rootState';
 
 const state: ForumState = {
-  fora: [],
-  selectedForumId: null,
   news: [],
+
+  fora: [],
+
+  selectedForumId: null,
   moderators: [],
   attachedTopics: null,
   topics: null,
+
+  selectedTopicId: null,
+  topic: null,
+  comments: null,
 };
 
 const fora: Module<ForumState, RootState> = {

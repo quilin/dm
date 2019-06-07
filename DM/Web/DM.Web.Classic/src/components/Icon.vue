@@ -1,5 +1,5 @@
 <template>
-  <span :class="['icon', mod]" v-html="charCode"></span>
+  <span class="icon" v-html="charCode"></span>
 </template>
 
 <script lang="ts">
@@ -10,9 +10,6 @@ import IconType from './IconType';
 export default class Icon extends Vue {
   @Prop()
   private font!: IconType;
-
-  @Prop()
-  private mod!: string;
 
   private get charCode(): string {
     return `&#x${this.font.toString(16)};`;

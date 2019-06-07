@@ -1,4 +1,4 @@
-import User from '@/api/models/community/user';
+import { User } from '@/api/models/community';
 
 export interface Forum {
   id: string;

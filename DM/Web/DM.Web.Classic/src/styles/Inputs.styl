@@ -1,0 +1,34 @@
+input[type='text'],
+input[type='password'],
+textarea
+  position relative
+  margin 0
+  border 1px solid
+  theme(border-color, $border)
+  border-radius $minor
+  padding 3px $minor
+  font-family PT Sans
+  font-size $fontSize
+  background transparent
+  transition all $animationTime
+
+input[type='button']
+  padding ($minor + 1px) $small ($minor + 2px)
+  margin 0
+  min-width $gridStep * 25
+  outline none
+  border none
+  border-radius $minor
+  theme(background-color, $buttonBackground)
+  theme(color, $buttonText)
+  cursor pointer
+  font-family PT Sans
+  font-size $textFontSize
+  transition all $animationTime
+  &:hover
+    theme(background-color, $buttonHoverBackground)
+    theme(color, $buttonHoverText)
+  &[disabled]
+    theme(background-color, $buttonDisabledBackground)
+    theme(color, $buttonDisabledText)
+    cursor not-allowed

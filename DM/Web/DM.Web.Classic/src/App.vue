@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { mapGetters } from 'vuex';
+import { Action, Getter } from 'vuex-class';
 import DmFooter from '@/views/layout/Footer.vue';
 import DmHeader from '@/views/layout/Header.vue';
 
@@ -34,11 +34,18 @@ import DmHeader from '@/views/layout/Header.vue';
     DmHeader,
     DmFooter,
   },
-  computed: {
-    ...mapGetters(['currentTheme']),
-  },
 })
-export default class DmApp extends Vue {}
+export default class DmApp extends Vue {
+  @Getter('currentTheme')
+  private currentTheme!: string;
+
+  @Action('fetchUser')
+  private fetchUser: any;
+
+  private mounted(): void {
+    this.fetchUser();
+  }
+}
 </script>
 
 <style lang="stylus">
@@ -50,7 +57,7 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 1.2
+  line-height 100%
   word-wrap break-word
 
 .main
@@ -101,4 +108,12 @@ a
   &:hover
     theme(color, $activeHoverText)
 
+.page-title
+  pageTitle()
+
+.content-title
+  header()
+
+.content-minor-title
+  minorTitle()
 </style>

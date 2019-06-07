@@ -1,5 +1,6 @@
 using AutoMapper;
 using DM.Services.Forum.Dto.Input;
+using DM.Web.Core.Helpers;
 
 namespace DM.Web.API.Dto.Fora
 {
@@ -12,7 +13,9 @@ namespace DM.Web.API.Dto.Fora
         public CommentProfile()
         {
             CreateMap<DM.Services.Forum.Dto.Output.Comment, Comment>()
-                .ForMember(d => d.Id, s => s.MapFrom(c => c.Id.ToString()));
+                .ForMember(d => d.Id, s => s.MapFrom(c => c.Id.EncodeToReadable("")))
+                .ForMember(d => d.Created, s => s.MapFrom(c => c.CreateDate))
+                .ForMember(d => d.Updated, s => s.MapFrom(c => c.LastUpdateDate));
 
             CreateMap<Comment, CreateComment>();
 

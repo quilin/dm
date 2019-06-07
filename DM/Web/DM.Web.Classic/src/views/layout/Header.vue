@@ -2,45 +2,71 @@
   <div class="header">
     <div class="user-info">
       <div class="logo-text">
-        <template v-if="user"></template>
+        <template v-if="user">
+          Добро пожаловать,
+          <router-link :to="{name: 'user', params: {login: user.login}}">
+            <icon :font="IconType.UserSettings" />
+            {{user.login}}
+          </router-link>
+        </template>
         <template v-else>Форумные ролевые игры</template>
       </div>
       <router-link class="logo" :to="{name: 'home'}" />
       <div class="user-actions">
-        <template v-if="user"></template>
-        <template v-else>
-          <a href="#"><icon :font="IconType.User" /> Вход</a>
+        <template v-if="user">
+          UnreadMessages
           |
-          <a href="#">Регистрация</a>
+          <a href="javascript:void(0)" @click="signOut">
+            <icon :font="IconType.Logout" /> Выйти
+          </a>
+        </template>
+        <template v-else>
+          <a href="javascript:void(0)" @click="$modal.show('login')">
+            <icon :font="IconType.User" /> Вход
+          </a>
+          |
+          <a href="javascript:void(0)">Регистрация</a>
         </template>
       </div>
     </div>
     <div class="top-menu content">
       <router-link class="top-menu-link" :to="{name: 'about'}">О проекте</router-link>
       <router-link class="top-menu-link" :to="{name: 'community'}">Сообщество</router-link>
-      <router-link class="top-menu-link" :to="{name: 'fora'}">Форум</router-link>
       <router-link class="top-menu-link" :to="{name: 'rules'}">Правила</router-link>
       <router-link class="top-menu-link" :to="{name: 'chat'}">Чат</router-link>
+      <a href="#" class="top-menu-link"><icon :font="IconType.Search" />Поиск</a>
     </div>
     <div class="controls" @click="toggleTheme">
       Tumbler here!!!
     </div>
+
+    <login v-if="!user" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapActions } from 'vuex';
+import { Action, Getter } from 'vuex-class';
+import { User } from '@/api/models/community';
 import IconType from '@/components/iconType';
+import Login from './Login.vue';
 
 @Component({
-  methods: {
-    ...mapActions(['toggleTheme']),
+  components: {
+    Login,
   },
 })
 export default class DmHeader extends Vue {
   private IconType: typeof IconType = IconType;
-  private user: any = null;
+
+  @Getter('user')
+  private user!: User | null;
+
+  @Action('toggleTheme')
+  private toggleTheme: any;
+
+  @Action('signOut')
+  private signOut: any;
 }
 </script>
 
@@ -49,7 +75,7 @@ export default class DmHeader extends Vue {
   display flex
   box-sizing border-box
 
-  padding $small 0
+  padding $gridStep * 3 0
   height 90px /// image size
 
   background-position left top
@@ -79,10 +105,11 @@ export default class DmHeader extends Vue {
   font-size $textFontSize
   letter-spacing 1px
   theme(color, $secondaryText)
+  &.router-link-active
+    font-weight bold
   &:hover
     theme(color, $text)
 
 .controls
   sidebarContainer()
-
 </style>

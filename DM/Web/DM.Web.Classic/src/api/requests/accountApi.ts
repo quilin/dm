@@ -1,10 +1,12 @@
-import LoginCredentials from '@/api/models/community/loginCredentials';
-import Envelope from '@/api/models/common/envelope';
-import User from '@/api/models/community/user';
+import { Envelope, BadRequestError } from '@/api/models/common';
+import { LoginCredentials, User } from '@/api/models/community';
 import Api from '@/api';
 
-export default class AccountApi {
-  public async login(credentials: LoginCredentials): Promise<Envelope<User>> {
+export default new class AccountApi {
+  public async signIn(credentials: LoginCredentials): Promise<Envelope<User> | BadRequestError> {
     return await Api.post('account/login', credentials);
   }
-}
+  public async signOut(): Promise<void> {
+    await Api.delete('account/login');
+  }
+}();

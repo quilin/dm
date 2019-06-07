@@ -89,7 +89,15 @@ namespace DM.Services.Authentication.Implementation
             var fetchUser = repository.FindUser(userId);
             var fetchSession = repository.FindUserSession(sessionId);
             var fetchSettings = repository.FindUserSettings(userId);
-            await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
+
+            try
+            {
+                await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
+            }
+            catch
+            {
+                return Identity.Fail(AuthenticationError.ForgedToken);
+            }
 
             var user = await fetchUser;
             var session = await fetchSession;

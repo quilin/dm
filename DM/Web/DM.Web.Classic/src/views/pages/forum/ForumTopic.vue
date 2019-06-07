@@ -10,7 +10,7 @@
     <div>
       <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
     </div>
-    <div>{{topic.unreadCommentsCount}}</div>
+    <div>{{topic.commentsCount}}</div>
     <div>
       <router-link
         v-if="topic.lastComment"

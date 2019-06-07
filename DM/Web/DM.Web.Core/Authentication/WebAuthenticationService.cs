@@ -4,6 +4,7 @@ using DM.Services.Authentication.Implementation;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace DM.Web.Core.Authentication
 {
@@ -13,16 +14,19 @@ namespace DM.Web.Core.Authentication
         private readonly IAuthenticationService authenticationService;
         private readonly ICredentialsStorage credentialsStorage;
         private readonly IIdentitySetter identitySetter;
+        private readonly ILogger<WebAuthenticationService> logger;
 
         /// <inheritdoc />
         public WebAuthenticationService(
             IAuthenticationService authenticationService,
             ICredentialsStorage credentialsStorage,
-            IIdentitySetter identitySetter)
+            IIdentitySetter identitySetter,
+            ILogger<WebAuthenticationService> logger)
         {
             this.authenticationService = authenticationService;
             this.credentialsStorage = credentialsStorage;
             this.identitySetter = identitySetter;
+            this.logger = logger;
         }
 
         private async Task<IIdentity> GetAuthenticationResult(AuthCredentials credentials)
@@ -66,6 +70,11 @@ namespace DM.Web.Core.Authentication
 
         private Task TryLoadAuthenticationResult(HttpContext httpContext, IIdentity identity)
         {
+            if (identity.Error == AuthenticationError.ForgedToken)
+            {
+                logger.LogError($"Похоже, кто-то форжит токены аутентификации для юзера {identity.User.Login}");
+            }
+
             return identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated
                 ? credentialsStorage.Load(httpContext, identity)
                 : credentialsStorage.Unload(httpContext);

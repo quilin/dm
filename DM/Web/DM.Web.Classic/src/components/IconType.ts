@@ -29,6 +29,7 @@ enum IconType {
 
   List = 0xe01c,
 
+  UserSettings = 0xe05b,
   Logout = 0xe039,
   Home = 0xe05c,
 

@@ -1,12 +1,19 @@
 import axios, {
   AxiosRequestConfig,
   AxiosInstance,
+  AxiosResponse,
   Canceler,
 } from 'axios';
 
+const tokenKey: string = 'x-dm-auth-token';
+
 const configuration: AxiosRequestConfig = {
   baseURL: 'http://localhost:5000/v1',
-  headers: {},
+  headers: {
+    'Cache-Control': 'no-cache',
+    'Content-Type': 'application/json',
+    [tokenKey]: localStorage.getItem(tokenKey),
+  },
   responseType: 'json',
 };
 
@@ -23,7 +30,8 @@ class Api {
   }
 
   public async post<T>(url: string, params: any): Promise<T> {
-    const { data } = await this.axios.post(url, params);
+    const { data, headers } = await this.axios.post(url, params);
+    this.setAuthToken(headers[tokenKey]);
     return data as T;
   }
 
@@ -34,6 +42,16 @@ class Api {
 
   public async delete(url: string): Promise<void> {
     await this.axios.delete(url);
+  }
+
+  private setAuthToken(token: string | undefined): void {
+    if (token) {
+      this.axios.defaults.headers.common[tokenKey] = token;
+      localStorage.setItem(tokenKey, token);
+    } else {
+      delete this.axios.defaults.headers.common[tokenKey];
+      localStorage.removeItem(tokenKey);
+    }
   }
 }
 

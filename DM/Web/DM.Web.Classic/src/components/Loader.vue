@@ -14,10 +14,10 @@ export default class Loader extends Vue {
 
 <style scoped lang="stylus">
 .loader
-  width $gridStep * 10
+  width $medium
   height @width
   background-position center center
   background-repeat no-repeat
   background-size contain
-  theme(background-image, colorPair(url('~@/assets/loader.gif'), none))
+  background-image url('~@/assets/loader.gif')
 </style>
