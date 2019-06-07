@@ -36,7 +36,8 @@ const getters: GetterTree<ForumState, RootState> = {
   topic(state): Topic | null {
     return state.topic ||
       state.topics &&
-      (state.topics!.resources.find((t: Topic) => t.id === state.selectedTopicId) || null);
+      state.topics!.resources &&
+      (state.topics!.resources!.find((t: Topic) => t.id === state.selectedTopicId) || null);
   },
   comments(state): Comment[] | null {
     return state.comments && state.comments!.resources;

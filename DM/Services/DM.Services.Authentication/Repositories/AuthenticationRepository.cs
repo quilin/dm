@@ -55,8 +55,8 @@ namespace DM.Services.Authentication.Repositories
             var userSessions = await Collection<UserSessions>()
                 .Find(Filter<UserSessions>()
                     .ElemMatch(u => u.Sessions, s => s.Id == sessionId))
-                .FirstAsync();
-            return userSessions.Sessions.First(s => s.Id == sessionId);
+                .FirstOrDefaultAsync();
+            return userSessions?.Sessions.FirstOrDefault(s => s.Id == sessionId);
         }
 
         /// <inheritdoc />

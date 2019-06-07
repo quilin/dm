@@ -19,7 +19,7 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateModerators', resources);
   },
   async fetchTopics({ commit }, { id, n }): Promise<void> {
-    commit('updateTopics', { attachedTopics: null, topics: null });
+    commit('clearTopics');
     const [attachedTopics, topics] = await Promise.all([
     forumApi.getTopics(id, true, 1),
     forumApi.getTopics(id, false, n)]);

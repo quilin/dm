@@ -33,5 +33,11 @@ namespace DM.Web.API.Services.Users
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
         Task LogoutAll(HttpContext httpContext);
+
+        /// <summary>
+        /// Get current user
+        /// </summary>
+        /// <returns>Current user</returns>
+        Task<Envelope<User>> GetCurrent();
     }
 }

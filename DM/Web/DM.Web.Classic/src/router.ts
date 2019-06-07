@@ -57,12 +57,16 @@ export default new Router({
     },
 
     {
-      path: '/forum/:id/:n?',
-      name: 'forum',
+      path: '/forum/:id',
       components: {
         menu: GeneralMenu,
         page: () => import('./views/pages/forum/Forum.vue'),
       },
+      children: [{
+        path: ':n',
+        name: 'forum',
+        component: () => import('./views/pages/forum/TopicsList.vue'),
+      }],
     },
     {
       path: '/topic/:id/:n?',

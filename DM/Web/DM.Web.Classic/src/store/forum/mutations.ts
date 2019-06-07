@@ -23,6 +23,12 @@ const mutations: MutationTree<ForumState> = {
     state.attachedTopics = payload.attachedTopics;
     state.topics = payload.topics;
   },
+  clearTopics(state) {
+    state.attachedTopics = null;
+    if (state.topics) {
+      state.topics!.resources = null;
+    }
+  },
 
   updateSelectedTopic(state, payload: {topic: Topic, id: string}) {
     state.selectedTopicId = payload.id;

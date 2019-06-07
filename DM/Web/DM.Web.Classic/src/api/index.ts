@@ -7,13 +7,19 @@ import axios, {
 
 const tokenKey: string = 'x-dm-auth-token';
 
+const defautlHeaders: { [key: string]: string } = {
+  'Cache-Control': 'no-cache',
+  'Content-Type': 'application/json',
+};
+
+const storedToken = localStorage.getItem(tokenKey);
+if (storedToken) {
+  defautlHeaders[tokenKey] = storedToken!;
+}
+
 const configuration: AxiosRequestConfig = {
   baseURL: 'http://localhost:5000/v1',
-  headers: {
-    'Cache-Control': 'no-cache',
-    'Content-Type': 'application/json',
-    [tokenKey]: localStorage.getItem(tokenKey),
-  },
+  headers: defautlHeaders,
   responseType: 'json',
 };
 

@@ -19,8 +19,9 @@
     <menu-block token="Forum">
       <template v-slot:title>Форумы</template>
       <loader v-if="!fora.length" />
-      <div v-else v-for="forum in fora" :key="forum.id" class="menu-item" :class="{ selected: forum.id === selectedForum }">
-        <router-link :to="{name: 'forum', params: {id: forum.id}}">
+      <div v-else v-for="forum in fora" :key="forum.id" class="menu-item"
+        :class="{ selected: activeRoute && forum.id === selectedForum }">
+        <router-link :to="{name: 'forum', params: {id: forum.id, n: 1}}">
           {{forum.id}}
           <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
           <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>
@@ -55,6 +56,11 @@ export default class GeneralMenu extends Vue {
 
   @Getter('selectedForum', { namespace: 'forum' })
   private selectedForum!: string | null;
+
+  private get activeRoute(): boolean {
+    const name = this.$route.name;
+    return name === 'forum' || name === 'topic' || name === 'topics';
+  }
 
   @Action('fetchFora', { namespace: 'forum' })
   private fetchFora: any;

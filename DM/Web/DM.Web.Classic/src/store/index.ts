@@ -42,10 +42,12 @@ export default new Vuex.Store<RootState>({
       await accountApi.signOut();
       commit('authenticate', null);
     },
-    fetchUser({ commit }): void {
+    async fetchUser({ commit }): Promise<void> {
       const serializedUser = localStorage.getItem('user');
       if (serializedUser) {
         commit('authenticate', JSON.parse(serializedUser));
+        const { resource } = await accountApi.fetchUser();
+        commit('authenticate', resource);
       }
     },
   },

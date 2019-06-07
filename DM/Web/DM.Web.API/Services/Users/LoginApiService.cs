@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -17,14 +18,17 @@ namespace DM.Web.API.Services.Users
     public class LoginApiService : ILoginApiService
     {
         private readonly IWebAuthenticationService authenticationService;
+        private readonly IIdentityProvider identityProvider;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public LoginApiService(
             IWebAuthenticationService authenticationService,
+            IIdentityProvider identityProvider,
             IMapper mapper)
         {
             this.authenticationService = authenticationService;
+            this.identityProvider = identityProvider;
             this.mapper = mapper;
         }
 
@@ -63,5 +67,14 @@ namespace DM.Web.API.Services.Users
 
         /// <inheritdoc />
         public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutAll(httpContext);
+
+        /// <inheritdoc />
+        public Task<Envelope<User>> GetCurrent()
+        {
+            var currentUser = identityProvider.Current.User;
+            return Task.FromResult(new Envelope<User>(currentUser.IsAuthenticated
+                ? mapper.Map<User>(currentUser)
+                : null));
+        }
     }
 }

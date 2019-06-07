@@ -6,6 +6,7 @@ import Lightbox from '@/components/Lightbox.vue';
 import Icon from '@/components/Icon.vue';
 import Loader from '@/components/Loader.vue';
 import HumanTimespan from '@/components/HumanTimespan.vue';
+import Paging from '@/components/Paging.vue';
 
 import moment from 'moment';
 
@@ -17,6 +18,7 @@ Vue.component('lightbox', Lightbox);
 Vue.component('icon', Icon);
 Vue.component('loader', Loader);
 Vue.component('humanTimespan', HumanTimespan);
+Vue.component('paging', Paging);
 
 Vue.use(VModal);
 

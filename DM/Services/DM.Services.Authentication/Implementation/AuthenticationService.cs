@@ -90,18 +90,17 @@ namespace DM.Services.Authentication.Implementation
             var fetchSession = repository.FindUserSession(sessionId);
             var fetchSettings = repository.FindUserSettings(userId);
 
-            try
-            {
-                await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
-            }
-            catch
-            {
-                return Identity.Fail(AuthenticationError.ForgedToken);
-            }
+            await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
 
             var user = await fetchUser;
             var session = await fetchSession;
             var settings = await fetchSettings;
+
+            if (session == null)
+            {
+                return Identity.Fail(AuthenticationError.SessionExpired);
+            }
+
             if (!session.IsPersistent &&
                 session.ExpirationDate < dateTimeProvider.Now)
             {
