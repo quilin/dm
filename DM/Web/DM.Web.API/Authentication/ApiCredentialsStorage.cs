@@ -27,7 +27,7 @@ namespace DM.Web.API.Authentication
         /// <inheritdoc />
         public Task Load(HttpContext httpContext, IIdentity identity)
         {
-            httpContext.Response.Headers.Add(HttpAuthTokenHeader, identity.AuthenticationToken);
+            httpContext.Response.Headers[HttpAuthTokenHeader] = identity.AuthenticationToken;
             return Task.CompletedTask;
         }
 
