@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="page-title">{{$route.params.id}} | Форум</div>
+    <div class="page-title">{{selectedForum}} | Форум</div>
+
     <div class="moderators">
       Модераторы:
       <router-link
@@ -10,6 +11,7 @@
         {{moderator.login}}
       </router-link>
     </div>
+
     <router-view />
   </div>
 </template>
@@ -25,8 +27,14 @@ const namespace: string = 'forum';
 
 @Component({})
 export default class ForumPage extends Vue {
+  @Getter('selectedForum', { namespace })
+  private selectedForum!: string | null;
+
   @Getter('moderators', { namespace })
   private moderators!: User[];
+
+  @Getter('user')
+  private user!: User;
 
   @Action('selectForum', { namespace })
   private selectForum: any;

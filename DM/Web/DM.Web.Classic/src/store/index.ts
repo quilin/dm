@@ -41,7 +41,7 @@ export default new Vuex.Store<RootState>({
     },
     async signOut({ commit }): Promise<void> {
       await accountApi.signOut();
-        commit('updateUser', null);
+      commit('updateUser', null);
     },
     async fetchUser({ commit }): Promise<void> {
       const serializedUser = localStorage.getItem('user');

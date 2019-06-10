@@ -42,6 +42,7 @@ enum IconType {
   Blast = 0xe076,
   Hidden = 0xe043,
   Fair = 0xe038,
+  Game = 0xe080,
 }
 
 export default IconType;

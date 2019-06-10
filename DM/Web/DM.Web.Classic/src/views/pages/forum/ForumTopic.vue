@@ -5,6 +5,9 @@
       <icon v-if="topic.closed" :font="IconType.Closed" />
       {{topic.title}}
       <div class="description" v-html="topic.description"></div>
+      <div v-if="topic.unreadCommentsCount" class="unread">
+        <icon :font="IconType.CommentsUnread" />{{topic.unreadCommentsCount}}
+      </div>
     </router-link>
     <div>{{topic.created.substr(0, 10).split('-').reverse().join('.')}}</div>
     <div>
@@ -50,6 +53,7 @@ export default class ForumTopic extends Vue {
 
 .link
   display block
+  position relative
   &:hover
     theme(background-color, $blockHoverBackground)
   .attached &
@@ -57,4 +61,10 @@ export default class ForumTopic extends Vue {
 
 .description
   secondary()
+
+.unread
+  position absolute
+  right 100%
+  top $tiny
+  margin-right $minor
 </style>

@@ -26,7 +26,7 @@ const mutations: MutationTree<ForumState> = {
   clearTopics(state) {
     state.attachedTopics = null;
     if (state.topics) {
-      state.topics!.resources = null;
+      state.topics!.resources = [];
     }
   },
 
