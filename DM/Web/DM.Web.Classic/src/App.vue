@@ -60,6 +60,11 @@ body
   line-height 1
   word-wrap break-word
 
+.v--modal
+  theme(background-color, $background)
+.v--modal-overlay
+  theme(background-color, $overlayBackground)
+
 .main
   height 100%
   min-height 100%
@@ -105,6 +110,7 @@ body
 a
   theme(color, $activeText)
   text-decoration none
+  transition all $animationTime
   &:hover
     theme(color, $activeHoverText)
 

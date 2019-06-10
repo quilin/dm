@@ -76,5 +76,10 @@ export default new Router({
         page: () => import('./views/pages/topic/Topic.vue'),
       },
     },
+
+    {
+      path: '/creategame',
+      name: 'create-game',
+    },
   ],
 });

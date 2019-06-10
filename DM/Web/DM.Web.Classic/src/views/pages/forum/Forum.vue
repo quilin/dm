@@ -1,15 +1,21 @@
 <template>
   <div>
-    <div class="page-title">{{selectedForum}} | Форум</div>
+    <div class="forum-info">
+      <div class="page-title">{{selectedForum}} | Форум</div>
+      <a v-if="user" href="javascript:void(0)">Отметить всё прочитанным</a>
+    </div>
 
-    <div class="moderators">
-      Модераторы:
-      <router-link
-        v-if="moderators"
-        v-for="moderator in moderators" :key="moderator.login"
-        :to="{name: 'user', params: {login: moderator.login}}">
-        {{moderator.login}}
-      </router-link>
+    <div class="forum-info">
+      <div class="moderators">
+        Модераторы:
+        <router-link
+          v-if="moderators"
+          v-for="moderator in moderators" :key="moderator.login"
+          :to="{name: 'user', params: {login: moderator.login}}">
+          {{moderator.login}}
+        </router-link>
+      </div>
+      <create-topic v-if="canCreateTopic" />
     </div>
 
     <router-view />
@@ -23,9 +29,15 @@ import { Route } from 'vue-router';
 
 import { User } from '@/api/models/community';
 
+import CreateTopic from './CreateTopic.vue';
+
 const namespace: string = 'forum';
 
-@Component({})
+@Component({
+  components: {
+    CreateTopic,
+  },
+})
 export default class ForumPage extends Vue {
   @Getter('selectedForum', { namespace })
   private selectedForum!: string | null;
@@ -41,6 +53,13 @@ export default class ForumPage extends Vue {
 
   @Action('fetchModerators', { namespace })
   private fetchModerators: any;
+
+  private get canCreateTopic(): boolean {
+    return this.user &&
+      (this.selectedForum !== 'Новости проекта' ||
+       this.user.roles.some((r: string) =>
+        r === 'Admin' || r === 'SeniorModerator'));
+  }
 
   @Watch('$route')
   private onRouteChanged(newValue: Route, oldValue: Route): void {
@@ -62,8 +81,17 @@ export default class ForumPage extends Vue {
 </script>
 
 <style scoped lang="stylus">
+.forum-info
+  display grid
+  grid-template-columns auto auto
+  align-items baseline
+
+  & > *:nth-child(even)
+    justify-self end
+
 .moderators
   header()
+  margin $small 0
   a
     text-transform initial
     font-weight initial

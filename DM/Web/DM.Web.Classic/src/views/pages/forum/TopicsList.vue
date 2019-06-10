@@ -1,6 +1,5 @@
 <template>
   <div>
-    <forum-actions />
 
     <paging v-if="paging"
       :paging="paging"
@@ -32,14 +31,12 @@ import { Paging } from '@/api/models/common';
 import { Topic } from '@/api/models/forum';
 
 import ForumTopic from './ForumTopic.vue';
-import ForumActions from './ForumActions.vue';
 
 const namespace: string = 'forum';
 
 @Component({
   components: {
     ForumTopic,
-    ForumActions,
   },
 })
 export default class TopicsList extends Vue {

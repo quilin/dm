@@ -5,6 +5,7 @@ textarea
   margin 0
   border 1px solid
   theme(border-color, $border)
+  theme(color, $text)
   border-radius $minor
   padding 3px $minor
   font-family PT Sans
@@ -12,7 +13,8 @@ textarea
   background transparent
   transition all $animationTime
 
-input[type='button']
+input[type='button'],
+button
   padding ($minor + 1px) $small ($minor + 2px)
   margin 0
   min-width $gridStep * 25

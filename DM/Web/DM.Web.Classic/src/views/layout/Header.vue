@@ -33,11 +33,14 @@
       </div>
     </div>
     <div class="top-menu content">
-      <router-link class="top-menu-link" :to="{name: 'about'}">О проекте</router-link>
-      <router-link class="top-menu-link" :to="{name: 'community'}">Сообщество</router-link>
-      <router-link class="top-menu-link" :to="{name: 'rules'}">Правила</router-link>
-      <router-link class="top-menu-link" :to="{name: 'chat'}">Чат</router-link>
-      <a href="#" class="top-menu-link"><icon :font="IconType.Search" />Поиск</a>
+      <router-link class="link" :to="{name: 'about'}">О проекте</router-link>
+      <router-link class="link" :to="{name: 'community'}">Сообщество</router-link>
+      <router-link class="link" :to="{name: 'rules'}">Правила</router-link>
+      <router-link class="link" :to="{name: 'chat'}">Чат</router-link>
+      <router-link class="link create" :to="{name: 'create-game'}">
+        <icon :font="IconType.Add" />
+        Создать игру
+      </router-link>
     </div>
     <div class="controls" @click="toggleTheme">
       Tumbler here!!!
@@ -110,18 +113,26 @@ export default class DmHeader extends Vue {
     theme(color, $activeHoverText)
 
 .top-menu
-  display flex
   padding $medium + $small 0
 
-.top-menu-link
+.link
   margin-right $medium + $small
   font-size $textFontSize
   letter-spacing 1px
   theme(color, $secondaryText)
+  transition all $animationTime
   &.router-link-active
     font-weight bold
   &:hover
     theme(color, $text)
+  &.create
+    padding $minor + $tiny $small
+    border-radius $minor
+    border 1px solid
+    theme(border-color, $border)
+    theme(background, $blockBackground)
+    &:hover
+      theme(border-color, $secondaryText)
 
 .controls
   sidebarContainer()

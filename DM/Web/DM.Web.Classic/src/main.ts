@@ -7,6 +7,7 @@ import Icon from '@/components/Icon.vue';
 import Loader from '@/components/Loader.vue';
 import HumanTimespan from '@/components/HumanTimespan.vue';
 import Paging from '@/components/Paging.vue';
+import TextArea from '@/components/TextArea.vue';
 
 import moment from 'moment';
 
@@ -19,6 +20,7 @@ Vue.component('icon', Icon);
 Vue.component('loader', Loader);
 Vue.component('humanTimespan', HumanTimespan);
 Vue.component('paging', Paging);
+Vue.component('textArea', TextArea);
 
 Vue.use(VModal);
 

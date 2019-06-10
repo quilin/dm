@@ -29,6 +29,8 @@ enum IconType {
   PostVoteNeutral = 0xe05d,
   PostVoteNegative = 0xe01e,
 
+  Add = 0xe00d,
+
   List = 0xe01c,
 
   UserSettings = 0xe05b,
