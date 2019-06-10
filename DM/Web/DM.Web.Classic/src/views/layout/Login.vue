@@ -53,11 +53,13 @@ export default class Login extends Vue {
       this.authenticate(resource);
     } else {
       const requestError = signResult as BadRequestError;
-      alert(requestError);
+      console.log(requestError);
     }
   }
 }
 </script>
+
+<style lang="stylus">
 .login-remember
   grid-column 1 / span 2
 </style>

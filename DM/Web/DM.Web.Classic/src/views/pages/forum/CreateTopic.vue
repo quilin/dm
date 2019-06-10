@@ -14,7 +14,10 @@
         <text-area v-model="description" />
       </div>
       <template slot="controls">
-        <input type="button" @click="create" :disabled="formEmpty" value="Создать" />
+        <input type="button"
+          @click="createTopic"
+          :disabled="formEmpty"
+          value="Создать" />
         <a href="javascript:void(0)" @click="$modal.hide('create-topic')">Отменить</a>
       </template>
     </lightbox>
@@ -23,8 +26,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+import { Getter } from 'vuex-class';
+import forumApi from '@/api/requests/forumApi';
 import IconType from '@/components/iconType';
+
+const namespace = 'forum';
 
 @Component({})
 export default class CreateTopicComponent extends Vue {
@@ -33,12 +39,21 @@ export default class CreateTopicComponent extends Vue {
   private title: string = '';
   private description: string = '';
 
+  @Getter('selectedForum', { namespace })
+  private selectedForum!: string;
+
   private get formEmpty(): boolean {
     return this.title === '' && this.description === '';
   }
 
-  private async create(): Promise<void> {
-    const x = 10;
+  private async createTopic(): Promise<void> {
+    await forumApi.postTopic({
+      forum: {
+        id: this.selectedForum,
+      },
+      title: this.title,
+      description: this.description,
+    });
   }
 }
 </script>

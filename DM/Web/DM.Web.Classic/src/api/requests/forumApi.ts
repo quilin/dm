@@ -19,6 +19,9 @@ export default new class ForumApi {
   public async getTopics(id: string, attached: boolean, n: number): Promise<ListEnvelope<Topic>> {
     return await Api.get(`fora/${id}/topics`, { number: n, attached });
   }
+  public async postTopic(topic: Topic): Promise<Envelope<Topic>> | GeneralError {
+    return await Api.post(`fora/${topic.forum.id}/topics`, topic);
+  }
 
   public async getTopic(id: string): Promise<Envelope<Topic>> {
     return await Api.get(`topics/${id}`);

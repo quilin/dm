@@ -25,8 +25,11 @@ const actions: ActionTree<ForumState, RootState> = {
     forumApi.getTopics(id, false, n)]);
     commit('updateTopics', { attachedTopics, topics });
   },
-  async selectForum({ commit }, id): Promise<void> {
+  selectForum({ commit }, id): void {
     commit('updateSelectedForum', id);
+  },
+  async createTopic({ commit }, title, description): Promise<void> {
+    console.log(title, description);
   },
 
   async selectTopic({ commit }, id): Promise<void> {

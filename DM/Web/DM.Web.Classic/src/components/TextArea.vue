@@ -13,8 +13,8 @@ export default class TextArea extends Vue {
   @Prop()
   private text!: string
 
-  private textUpdate(): void {
-    this.$emit('input', this.text)
+  private textUpdate(evt): void {
+    this.$emit('input', evt.target.value)
   }
 }
 </script>
