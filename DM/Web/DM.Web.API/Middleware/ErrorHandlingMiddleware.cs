@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Implementation;
 using DM.Services.Core.Exceptions;
+using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Web.API.Dto.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -40,10 +41,12 @@ namespace DM.Web.API.Middleware
         /// <param name="httpContext">HTTP context</param>
         /// <param name="logger">Logger</param>
         /// <param name="identitySetter">Identity setter for Serilog issue fix</param>
+        /// <param name="correlationTokenProvider">Correlation token for support assistance</param>
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext httpContext,
             ILogger<ErrorHandlingMiddleware> logger,
-            IIdentitySetter identitySetter)
+            IIdentitySetter identitySetter,
+            ICorrelationTokenProvider correlationTokenProvider)
         {
             try
             {
@@ -80,7 +83,7 @@ namespace DM.Web.API.Middleware
                         break;
                     default:
                         statusCode = (int) HttpStatusCode.InternalServerError;
-                        error = new GeneralError("Server error. Address the administration for technical support.");
+                        error = new GeneralError($"Server error. Address the administration for technical support. Use the following token to help us identify your issue: {correlationTokenProvider.Current}");
                         logger.LogCritical(e, e.Message);
                         break;
                 }
