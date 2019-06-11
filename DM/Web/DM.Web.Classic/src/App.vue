@@ -75,6 +75,8 @@ body
 .content-container
   position relative
   height 100%
+  min-width $minWidth
+  max-width $maxWidth
   &:before
     content ''
     position absolute
@@ -89,8 +91,6 @@ body
   position relative
   margin auto
   min-height 100%
-  min-width $minWidth
-  max-width $maxWidth
 
 .content-body
   display flex
