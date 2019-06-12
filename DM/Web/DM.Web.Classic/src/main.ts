@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
+import Vuelidate from 'vuelidate';
 import App from './App.vue';
 
 import Lightbox from '@/components/Lightbox.vue';
@@ -14,6 +15,9 @@ import moment from 'moment';
 import router from './router';
 import store from './store';
 
+Vue.use(VModal);
+Vue.use(Vuelidate);
+
 Vue.config.productionTip = false;
 Vue.component('lightbox', Lightbox);
 Vue.component('icon', Icon);
@@ -21,8 +25,6 @@ Vue.component('loader', Loader);
 Vue.component('humanTimespan', HumanTimespan);
 Vue.component('paging', Paging);
 Vue.component('textArea', TextArea);
-
-Vue.use(VModal);
 
 moment.locale('ru');
 

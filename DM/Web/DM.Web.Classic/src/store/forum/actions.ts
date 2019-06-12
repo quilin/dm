@@ -5,7 +5,7 @@ import RootState from './../rootState';
 
 const actions: ActionTree<ForumState, RootState> = {
   async fetchFora({ commit }): Promise<void> {
-    const { resources } = await forumApi.get();
+    const { resources } = await forumApi.getFora();
     commit('updateFora', resources);
   },
   async fetchNews({ commit }): Promise<void> {
@@ -13,35 +13,49 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateNews', resources);
   },
 
-  async fetchModerators({ commit }, id): Promise<void> {
+  async fetchModerators({ commit }, { id }): Promise<void> {
     commit('updateModerators', []);
-    const { resources } = await forumApi.getModerators(id);
-    commit('updateModerators', resources);
+    const { data, error } = await forumApi.getModerators(id);
+    if (!error) {
+      commit('updateModerators', data!.resources);
+    }
   },
   async fetchTopics({ commit }, { id, n }): Promise<void> {
     commit('clearTopics');
     const [attachedTopics, topics] = await Promise.all([
-    forumApi.getTopics(id, true, 1),
-    forumApi.getTopics(id, false, n)]);
-    commit('updateTopics', { attachedTopics, topics });
+      forumApi.getTopics(id, true, 1),
+      forumApi.getTopics(id, false, n)]);
+    commit('updateTopics', {
+      attachedTopics: attachedTopics.data,
+      topics: topics.data,
+    });
   },
-  selectForum({ commit }, id): void {
+  async selectForum({ commit }, { id, router }): Promise<void> {
     commit('updateSelectedForum', id);
+    const { error } = await forumApi.getForum(id);
+    if (error !== null) {
+      router.push({ name: 'error', params: { code: 404 } });
+    }
   },
-  async createTopic({ commit }, title, description): Promise<void> {
-    console.log(title, description);
+  async createTopic({ commit }, { title, description }): Promise<void> {
+    const x = 10;
   },
 
-  async selectTopic({ commit }, id): Promise<void> {
+  async selectTopic({ commit }, { id }): Promise<void> {
     commit('updateSelectedTopic', { topic: null, id });
-    const { resource } = await forumApi.getTopic(id);
-    commit('updateSelectedTopic', { topic: resource, id });
-    commit('updateSelectedForum', resource.forum.id);
+    const { error, data } = await forumApi.getTopic(id);
+    if (!error) {
+      const resource = data!.resource;
+      commit('updateSelectedTopic', { topic: resource, id });
+      commit('updateSelectedForum', resource.forum.id);
+    }
   },
   async fetchComments({ commit }, { id, n }): Promise<void> {
     commit('updateComments', null);
-    const comments = await forumApi.getComments(id, n);
-    commit('updateComments', comments);
+    const { data, error } = await forumApi.getComments(id, n);
+    if (!error) {
+      commit('updateComments', data!.resources);
+    }
   },
 };
 

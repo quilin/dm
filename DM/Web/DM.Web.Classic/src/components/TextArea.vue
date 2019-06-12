@@ -11,10 +11,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component({})
 export default class TextArea extends Vue {
   @Prop()
-  private text!: string
+  private text!: string;
 
-  private textUpdate(evt): void {
-    this.$emit('input', evt.target.value)
+  private textUpdate(evt: any): void {
+    this.$emit('input', evt.target.value);
   }
 }
 </script>

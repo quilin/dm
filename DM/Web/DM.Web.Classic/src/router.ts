@@ -18,6 +18,14 @@ export default new Router({
         page: () => import('./views/pages/home/Home.vue'),
       },
     },
+    {
+      path: '/error/:code',
+      name: 'error',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/error/Error.vue'),
+      },
+    },
 
     {
       path: '/profile/:login',

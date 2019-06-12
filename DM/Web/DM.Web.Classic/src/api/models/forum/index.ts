@@ -11,18 +11,18 @@ export interface LastComment {
 }
 
 export interface Topic {
-  id: string;
-  author: User;
-  created: string;
+  id?: string;
+  author?: User;
+  created?: string;
   title: string;
-  description: string;
-  attached: boolean;
-  closed: boolean;
-  lastComment: LastComment | null;
-  commentsCount: number;
-  unreadCommentsCount: number;
+  description?: string;
+  attached?: boolean;
+  closed?: boolean;
+  lastComment?: LastComment | null;
+  commentsCount?: number;
+  unreadCommentsCount?: number;
   forum: Forum;
-  likes: User[];
+  likes?: User[];
 }
 
 export interface Comment {

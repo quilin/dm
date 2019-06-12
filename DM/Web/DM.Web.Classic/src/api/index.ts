@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   Canceler,
 } from 'axios';
-import GeneralError from '@/api/models/common';
+import { ApiResult } from '@/api/models/common';
 
 const tokenKey: string = 'x-dm-auth-token';
 
@@ -31,23 +31,23 @@ class Api {
     this.axios = axios.create(configuration);
   }
 
-  public async get<T>(url: string, params?: any): Promise<T | GeneralError> {
+  public async get<T>(url: string, params?: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.get(url, { params }));
   }
 
-  public async post<T>(url: string, params: any): Promise<T | GeneralError> {
+  public async post<T>(url: string, params: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.post(url, params));
   }
 
-  public async put<T>(url: string, params: any): Promise<T | GeneralError> {
+  public async put<T>(url: string, params: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.put(url, params));
   }
 
-  public async delete(url: string): Promise<void | GeneralError> {
-    await this.send(() => this.axios.delete(url));
+  public async delete<T>(url: string): Promise<ApiResult<T>> {
+    return await this.send(() => this.axios.delete(url));
   }
 
-  private async send<T>(sender: () => Promise<AxiosResponse<T>>): Promise<T | GeneralError> {
+  private async send<T>(sender: () => Promise<AxiosResponse<T>>): Promise<ApiResult<T>> {
     try {
       const { data, headers } = await sender();
       if ((tokenKey in headers)) {
@@ -58,9 +58,15 @@ class Api {
         delete this.axios.defaults.headers.common[tokenKey];
         localStorage.removeItem(tokenKey);
       }
-      return data as T;
+      return {
+        data: data as T,
+        error: null,
+      };
     } catch (err) {
-      return err.response.data.error;
+      return {
+        data: null,
+        error: err.response.data.error,
+      };
     }
   }
 }

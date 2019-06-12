@@ -21,3 +21,8 @@ export interface GeneralError {
 export interface BadRequestError extends GeneralError {
   invalidProperties: { [field: string]: string };
 }
+
+export interface ApiResult<T> {
+  data: T | null;
+  error: GeneralError | null;
+}

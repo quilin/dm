@@ -50,6 +50,7 @@ export default class CreateTopicComponent extends Vue {
     await forumApi.postTopic({
       forum: {
         id: this.selectedForum,
+        unreadTopicsCount: 0,
       },
       title: this.title,
       description: this.description,

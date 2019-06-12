@@ -2,64 +2,75 @@
   <lightbox name="login">
     <template slot="title">Вход</template>
     <div class="form">
-      <label class="field-label">Логин</label>
-      <div>
-        <input type="text" v-model="signInData.login" />
+      <div class="form-field" :class="{ error: $v.login.$error }">
+        <label class="form-field-label">Логин</label>
+        <input type="text" v-model.trim="$v.login.$model" />
+        <div v-if="$v.login.$error" class="form-field-error"></div>
       </div>
-      <label class="field-label">Пароль</label>
-      <div>
-        <input type="password" v-model="signInData.password" />
+      <div class="form-field" :class="{ error: $v.password.$error }">
+        <label class="form-field-label">Пароль</label>
+        <input type="password" v-model="$v.password.$model" />
+        <div v-if="$v.password.$error" class="form-field-error">$v.password.$error</div>
       </div>
-      <div class="login-remember">
+      <div class="form-field">
         <label>
-          <input type="checkbox" v-model="signInData.rememberMe" />
+          <input type="checkbox" v-model="rememberMe" />
           Запомнить меня
         </label>
       </div>
     </div>
     <template slot="controls">
-      <input type="button" @click="signIn" :disabled="formEmpty" value="Войти" />
+      <input type="button" @click="signIn" :disabled="$v.$error" value="Войти" />
       <a href="javascript:void(0)" @click="$modal.hide('login')">Отменить</a>
     </template>
   </lightbox>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Vue } from 'vue-property-decorator';
+import Component from 'vue-class-component';
+import { required } from 'vuelidate/lib/validators';
 import { Action, Getter } from 'vuex-class';
-import { Envelope, BadRequestError } from '@/api/models/common';
-import { LoginCredentials, User } from '@/api/models/community';
 import accountApi from '@/api/requests/accountApi';
 
-@Component({})
+@Component({
+  validations: {
+    login: {
+      required,
+    },
+    password: {
+      required,
+    },
+  },
+})
 export default class Login extends Vue {
-  private signInData: LoginCredentials = {
-    login: '',
-    password: '',
-    rememberMe: true,
-  };
+  private login: string = '';
+  private password: string = '';
+  private rememberMe: boolean = false;
 
-  private get formEmpty(): boolean {
-    return !this.signInData.login && !this.signInData.password;
-  }
+  private validations: any = {
+    login: {
+      required,
+    },
+    passwod: {
+      required,
+    },
+  };
 
   @Action('authenticate')
   private authenticate: any;
 
   private async signIn(): Promise<void> {
-    const signResult = await accountApi.signIn(this.signInData);
-    if ((signResult as Envelope<User>).resource) {
-      const { resource } = signResult as Envelope<User>;
-      this.authenticate(resource);
+    const { login, password, rememberMe } = this;
+    const { data, error } = await accountApi.signIn({ login, password, rememberMe });
+    if (error) {
+      alert(JSON.stringify(error));
     } else {
-      const requestError = signResult as BadRequestError;
-      console.log(requestError);
+      this.authenticate(data!.resource);
     }
   }
 }
 </script>
 
 <style lang="stylus">
-.login-remember
-  grid-column 1 / span 2
 </style>

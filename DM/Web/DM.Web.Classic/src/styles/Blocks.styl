@@ -7,12 +7,42 @@ block()
   font-size $textFontSize
 
 .form
-  display grid
-  grid-template-columns \[label\] $gridStep * 25 \[input\] auto
-  grid-row-gap $small
-  align-items start
-  justify-items stretch
   margin-top $medium
 
-.field-label
+.form-field
+  display flex
+  margin $small 0
+  & input
+    flex-shrink 0
+  &.error input
+    theme(border-color, $negativeBorder)
+    animation-name shake-error
+    animation-duration $animationTime * 3
+    animation-timing-function ease-in-out
+    &:focus
+      themeExtend(box-shadow, inset 0 0 $minor, $negativeBorder)
+
+.form-field-label
+  display inline-block
   margin-top $minor + $tiny
+  width $gridStep * 20
+  flex-shrink 0
+
+$shakeDelta = $small
+@keyframes shake-error
+  0%
+    transform translateX(0)
+  15%
+    transform translateX($shakeDelta)
+  30%
+    transform translateX(-($shakeDelta))
+  45%
+    transform translateX($shakeDelta)
+  60%
+    transform translateX(-($shakeDelta))
+  75%
+    transform translateX($shakeDelta)
+  90%
+    transform translateX(-($shakeDelta))
+  100%
+    transform translateX(0)

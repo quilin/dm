@@ -128,11 +128,9 @@ export default class DmHeader extends Vue {
   &.create
     padding $minor + $tiny $small
     border-radius $minor
-    border 1px solid
-    theme(border-color, $border)
     theme(background, $blockBackground)
     &:hover
-      theme(border-color, $secondaryText)
+      themeExtend(box-shadow, 0 0 $small $tiny, $text)
 
 .controls
   sidebarContainer()

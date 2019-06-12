@@ -47,8 +47,8 @@ export default new Vuex.Store<RootState>({
       const serializedUser = localStorage.getItem('user');
       if (serializedUser) {
         commit('updateUser', JSON.parse(serializedUser));
-        const { resource } = await accountApi.fetchUser();
-        commit('updateUser', resource);
+        const { data } = await accountApi.fetchUser();
+        commit('updateUser', data!.resource);
       }
     },
   },

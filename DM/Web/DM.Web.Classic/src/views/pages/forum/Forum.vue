@@ -74,8 +74,8 @@ export default class ForumPage extends Vue {
 
   private fetchData(): void {
     const id = this.$route.params.id;
-    this.selectForum(id);
-    this.fetchModerators(id);
+    this.selectForum({ id, router: this.$router });
+    this.fetchModerators({ id });
   }
 }
 </script>
