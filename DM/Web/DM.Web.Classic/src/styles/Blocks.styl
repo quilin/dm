@@ -17,7 +17,7 @@ block()
   &.error input
     theme(border-color, $negativeBorder)
     animation-name shake-error
-    animation-duration $animationTime * 3
+    animation-duration $animationTime
     animation-timing-function ease-in-out
     &:focus
       themeExtend(box-shadow, inset 0 0 $minor, $negativeBorder)
@@ -28,7 +28,7 @@ block()
   width $gridStep * 20
   flex-shrink 0
 
-$shakeDelta = $small
+$shakeDelta = $tiny
 @keyframes shake-error
   0%
     transform translateX(0)
