@@ -18,7 +18,7 @@ namespace DM.Services.Forum.Authorization
                 case TopicIntention.CreateComment when user.IsAuthenticated:
                     return Task.FromResult(!target.Closed);
                 case TopicIntention.Edit when user.IsAuthenticated:
-                    return Task.FromResult(target.Author.UserId == user.UserId ||
+                    return Task.FromResult(target.Author.UserId == user.UserId && !target.Closed ||
                                            target.Forum.ModeratorIds.Contains(user.UserId) ||
                                            user.Role.HasFlag(UserRole.Administrator));
                 case TopicIntention.Like when user.IsAuthenticated:
