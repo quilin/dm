@@ -1,0 +1,8 @@
+﻿@model DM.Web.Classic.Views.Fora.Topic.TopicViewModel[]
+@if (Model.Length > 0)
+{
+    foreach (var topic in Model)
+    {
+        @await Html.PartialAsync("~/Views/Fora/Topic/Topic.cshtml", topic)
+    }
+}

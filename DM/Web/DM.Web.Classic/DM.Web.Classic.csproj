@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.9.2"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.App"/>
+        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Services\DM.Services.Common\DM.Services.Common.csproj"/>
+        <ProjectReference Include="..\..\Services\DM.Services.Community\DM.Services.Community.csproj"/>
+        <ProjectReference Include="..\..\Services\DM.Services.DataAccess\DM.Services.DataAccess.csproj"/>
+        <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj"/>
+        <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391"/>
+    </ItemGroup>
+
+    <Target Name="PackageRestore" BeforeTargets="Build">
+        <Exec Command="dotnet restore"/>
+    </Target>
+    <Target Name="Bundling" AfterTargets="Build">
+        <Exec Command="dotnet bundle"/>
+    </Target>
+
+    <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Update="bundleconfig.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

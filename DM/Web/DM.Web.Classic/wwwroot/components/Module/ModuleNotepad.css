@@ -1,0 +1,7 @@
+.notepad-container {
+    overflow: hidden;
+    width: 500px;
+}
+.notepad-editLink {
+    float: right;
+}

@@ -1,3 +1,4 @@
+using DM.Services.Core.Exceptions;
 using FluentValidation;
 
 namespace DM.Services.Forum.Dto.Input
@@ -13,7 +14,7 @@ namespace DM.Services.Forum.Dto.Input
             RuleFor(c => c.CommentId)
                 .NotEmpty();
             RuleFor(c => c.Text)
-                .NotEmpty();
+                .NotEmpty().WithMessage(ValidationError.Empty);
         }
     }
 }

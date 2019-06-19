@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
@@ -17,6 +19,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly ICommentaryDeletingRepository repository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -24,11 +27,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
             ICommentaryDeletingRepository repository,
+            IUnreadCountersRepository unreadCountersRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.intentionManager = intentionManager;
             this.dateTimeProvider = dateTimeProvider;
             this.repository = repository;
+            this.unreadCountersRepository = unreadCountersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
         
@@ -53,6 +58,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             await repository.Delete(new UpdateBuilder<ForumComment>(commentId)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
                 .Field(c => c.IsRemoved, true), updateTopic);
+            await unreadCountersRepository.Decrement(commentId, UnreadEntryType.Message, comment.CreateDate);
 
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);
         }

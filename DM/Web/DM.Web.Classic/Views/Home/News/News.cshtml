@@ -1,0 +1,20 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using DM.Web.Classic.Extensions.UserExtensions
+@using DM.Web.Classic.ViewComponents.Shared.HumanDate
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.Home.News.NewsViewModel
+
+<div class="article-wrapper">
+    <div class="article-title">
+        @Html.ActionLink(Model.Title, "Index", "Topic", new RouteValueDictionary{{"topicId", Model.TopicId.EncodeToReadable(Model.Title)}, {"entityNumber", 1}}, null)
+    </div>
+    @Html.Raw(Model.Text)
+    <div class="article-data date">
+        @Html.UserLink(Model.Author),
+        @await Component.InvokeAsync(nameof(HumanizedDate), new {date = Model.CreateDate})
+        <a href="@Url.Action("LastUnread", "Topic", new RouteValueDictionary {{"topicIdEncoded", Model.TopicId.EncodeToReadable(Model.Title)}})">
+            @Html.UnreadCommentsIcon(Model.UnreadComments, false)
+        </a>
+    </div>
+</div>

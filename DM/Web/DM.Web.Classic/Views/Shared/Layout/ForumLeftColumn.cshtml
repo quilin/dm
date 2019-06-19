@@ -1,0 +1,3 @@
+﻿@using DM.Web.Classic.ViewComponents.LeftBar
+@model Guid
+@await Component.InvokeAsync(nameof(ForumList), new {forumId = Model})

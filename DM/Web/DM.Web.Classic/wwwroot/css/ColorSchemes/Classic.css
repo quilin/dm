@@ -1,0 +1,345 @@
+﻿/* .colorscheme_classic */
+
+/*MainText*/
+.colorscheme_classic html,
+.colorscheme_classic body {
+    color: #666;
+}
+.colorscheme_classic .foraList-item-description {
+    color: #666;
+}
+.colorscheme_classic .current-forum {
+    color: #666;
+}
+.colorscheme_classic a .icon-base-action {
+    color: #666;
+}
+.colorscheme_classic .current-module {
+    color: #666;
+}
+.colorscheme_classic .smartTextArea-control {
+    color: #666;
+}
+.colorscheme_classiccontrast a.dds-option-link {
+    color: #666;
+}
+
+/*SecondaryText*/
+.colorscheme_classic input[type='submit'][disabled],
+.colorscheme_classic input[type='button'][disabled] {
+    color: #999;
+}
+.colorscheme_classic .charactersList-name {
+    color: #999;
+}
+.colorscheme_classic .chat-message-date {
+    color: #999;
+}
+.colorscheme_classic .chat-message-author-offline a {
+    color: #999;
+}
+.colorscheme_classic .chat-placeholder {
+    color: #999;
+}
+.colorscheme_classic .comment-lastUpdateMessage {
+    color: #999;
+}
+.colorscheme_classic .comment-data {
+    color: #999;
+}
+.colorscheme_classic .communityList-groupTitle {
+    color: #999;
+}
+.colorscheme_classic .content-minorTitle {
+    color: #999;
+}
+.colorscheme_classic .date {
+    color: #999;
+}
+.colorscheme_classic .userPresence-negative {
+    color: #999;
+}
+.colorscheme_classic .characterStatus-registration,
+.colorscheme_classic .characterStatus-left {
+    color: #999;
+}
+.colorscheme_classic .notificaion-unread-separator {
+    color: #999;
+}
+.colorscheme_classic .content-userLink-badge-wrapper {
+    color: #999;
+}
+.colorscheme_classic .dice-result-item {
+    color: #999;
+}
+.colorscheme_classic .dds-option-additionalData {
+    color: #999;
+}
+.colorscheme_classic .footer-copyright {
+    color: #999;
+}
+.colorscheme_classic .topicList-item-description {
+    color: #999;
+}
+.colorscheme_classic .topMenu-link {
+    color: #999;
+}
+.colorscheme_classic .topMenu-link-create:hover {
+    border-color: #999;
+}
+.colorscheme_classic .header-stats-counter {
+    color: #999;
+}
+.colorscheme_classic .conversation-actions-link {
+    color: #999;
+}
+.colorscheme_classic .conversation-action.conversation-actions-disabled {
+    color: #999;
+}
+.colorscheme_classic .placeholder {
+    color: #999;
+}
+.colorscheme_classic .post-dice {
+    color: #999;
+}
+.colorscheme_classic .vote-post-data {
+    color: #999;
+}
+.colorscheme_classic .profile-field-label {
+    color: #999;
+}
+.colorscheme_classic .quote-author {
+    color: #999;
+}
+.colorscheme_classic .private-message-header {
+    color: #999;
+}
+.colorscheme_classic .vote-data {
+    color: #999;
+}
+.colorscheme_classic .charactersList-characterInfoTitle {
+    color: #999;
+}
+
+/*CommentText*/
+.colorscheme_classic .best-post-commentary {
+    color: #7b532b;
+}
+.colorscheme_classic .post-commentary {
+    color: #7b532b;
+}
+.colorscheme_classic .vote-post-commentary {
+    color: #7b532b;
+}
+
+/*MainLinks*/
+.colorscheme_classic a {
+    color: #506080;
+}
+.colorscheme_classic .comment-likes {
+    color: #506080;
+}
+/*FocusLinks*/
+.colorscheme_classic a:hover,
+.colorscheme_classic a:focus {
+    color: #3f78a8;
+}
+/*Clocks*/
+.colorscheme_classic .module-messageRequired {
+    color: #963;
+}
+
+/*Head1*/
+.colorscheme_classic .content-pageTitle {
+    color: #888;
+}
+.colorscheme_classic .content-mediumTitle {
+    color: #888;
+}
+.colorscheme_classic .logo-text {
+    color: #888;
+}
+.colorscheme_classic .info-head {
+    color: #888;
+}
+
+/*Everything Red*/
+.colorscheme_classic .content-noAccessMessage {
+    color: #933;
+}
+.colorscheme_classic .rating-negative {
+    color: #933;
+}
+.colorscheme_classic .characterStatus-dead,
+.colorscheme_classic .characterStatus-declined {
+    color: #933;
+}
+.colorscheme_classic .notification-marker {
+    color: #963;
+}
+.colorscheme_classic .field-validation-error {
+    color: #933;
+}
+.colorscheme_classic .moduleRooms-error-message {
+    color: #933;
+}
+.colorscheme_classic .profile-list-mark-inactive {
+    background-color: #933;
+}
+/*Everything Green*/
+.colorscheme_classic .chat-message-author-online a {
+    color: #008000;
+}
+.colorscheme_classic .rating-positive {
+    color: #008000;
+}
+.colorscheme_classic .userPresence-positive {
+    color: #008000;
+}
+.colorscheme_classic .characterStatus-active {
+    color: #008000;
+}
+.colorscheme_classic .content-userLink-badge {
+    color: #008000;
+}
+.colorscheme_classic .logo-new-messages {
+    color: #008000;
+}
+.colorscheme_classic .messages-success {
+    color: #008000;
+}
+.colorscheme_classic .module-new {
+    color: #008000;
+}
+.colorscheme_classic .profile-action-success {
+    color: #008000;
+}
+.colorscheme_classic .private-message {
+    color: #008000;
+}
+.colorscheme_classic .profile-list-mark-active {
+    background-color: #008000;
+}
+
+/*MessageBackgrd*/
+.colorscheme_classic .comment {
+    background-color: #f2f1f1;
+}
+.colorscheme_classic .conversations-message-wrapper:hover {
+    background-color: #f2f1f1;
+}
+.colorscheme_classic .foraList-item-link:hover {
+    background-color: #f2f1f1;
+}
+.colorscheme_classic .last-vote-wrapper {
+    background-color: #f2f1f1;
+}
+.colorscheme_classic .post-wrapper {
+    background-color: #f2f1f1;
+}
+.colorscheme_classic .post-wrapper.highlighted {
+    background-color: #b0c4de;
+}
+.colorscheme_classic .votes-post {
+    background-color: #f2f1f1;
+}
+/*NewMessageBg*/
+.colorscheme_classic .message-wrapper.js-message-selected {
+    background-color: #b0c4de;
+}
+.colorscheme_classic .chat-master-post {
+    background-color: #b0c4de;
+}
+
+/*Quote*/
+.colorscheme_classic .quote {
+    background-color: #e6e6e5;
+    border-left-color: #b0c4de;
+}
+/*Spoiler*/
+.colorscheme_classic .spoiler {
+    background-color: #f5f5dc;
+}
+
+/*Buttons*/
+.colorscheme_classic input[type='submit'],
+.colorscheme_classic input[type='button'] {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .conversations-message-unread {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic a:hover .icon-base-action {
+    color: #444;
+}
+.colorscheme_classic .conversation-action {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .paginator-link {
+    border-bottom-color: #444;
+    color: #444;
+}
+.colorscheme_classic .paginator-link:hover,
+.colorscheme_classic .paginator-link:focus {
+    border-bottom-color: #3f78a8;
+    color: #3f78a8;
+}
+.colorscheme_classic .paginator-fixed .paginator-link {
+    border-bottom-color: #fff;
+    color: #fff;
+}
+.colorscheme_classic a.profile-actions-link,
+.colorscheme_classic a.profile-actions-link:focus {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .profile-action-success {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .profile-picture-uploadForm-progressBar {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .picture-uploadForm-progressBar {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic .vote-sign-label.selected {
+    background-color: #eaeaea;
+    border-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic a.profile-actions-link {
+    background-color: #eaeaea;
+    color: #444;
+}
+.colorscheme_classic a.profile-actions-link .iconic.profile-actions-icon {
+    color: #444;
+    background-color: transparent;
+}
+.colorscheme_classic a.profile-actions-link:hover {
+    background-color: #444;
+    color: #eaeaea;
+}
+.colorscheme_classic a.profile-actions-link:hover .iconic.profile-actions-icon {
+    background-color: transparent;
+    color: #eaeaea;
+}
+.colorscheme_classic input[type='submit']:hover,
+.colorscheme_classic input[type='button']:hover {
+    background-color: #444444;
+    color: #eaeaea;
+}
+.colorscheme_classic .conversation-action:hover {
+    background-color: #444444;
+    color: #eaeaea;
+}
+.colorscheme_classic input[type='submit'][disabled],
+.colorscheme_classic input[type='button'][disabled] {
+    background-color: #f8f8f8;
+    color: #bbb;
+}

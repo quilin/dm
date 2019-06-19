@@ -1,3 +1,4 @@
+using DM.Services.Core.Exceptions;
 using FluentValidation;
 
 namespace DM.Services.Forum.Dto.Input
@@ -11,8 +12,8 @@ namespace DM.Services.Forum.Dto.Input
         public CreateTopicValidator()
         {
             RuleFor(t => t.Title)
-                .NotEmpty()
-                .MaximumLength(130);
+                .NotEmpty().WithMessage(ValidationError.Empty)
+                .MaximumLength(130).WithMessage(ValidationError.Long);
         }
     }
 }

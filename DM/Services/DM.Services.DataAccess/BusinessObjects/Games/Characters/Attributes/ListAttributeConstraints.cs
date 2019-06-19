@@ -29,6 +29,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
         /// <summary>
         /// Modifier for the value
         /// </summary>
-        public int Modifier { get; set; }
+        public int? Modifier { get; set; }
     }
 }

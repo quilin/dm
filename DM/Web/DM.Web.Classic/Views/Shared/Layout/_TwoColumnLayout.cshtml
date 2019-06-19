@@ -1,0 +1,19 @@
+@{
+    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
+}
+@section LeftColumn
+{
+    @RenderSection("LeftColumn")
+}
+@section RightColumn
+{
+    @await Html.PartialAsync("Layout/GeneralRightColumn")
+}
+@RenderBody()
+@section FooterScript
+{
+    @RenderSection("FooterScript", false)
+}
+@section Lightboxes {
+    @RenderSection("Lightboxes", false)
+}

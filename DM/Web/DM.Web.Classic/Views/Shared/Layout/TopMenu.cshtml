@@ -1,0 +1,5 @@
+﻿@model DM.Web.Classic.Views.Shared.Layout.TopMenuViewModel
+
+@Html.ActionLink("О проекте", "About", "Home", null, new { @class = "topMenu-link" })
+@Html.ActionLink("Сообщество", "Index", "Community", new { entityNumber = 1 }, new { @class = "topMenu-link" })
+@Html.ActionLink("Правила", "Rules", "Home", null, new { @class = "topMenu-link" })
