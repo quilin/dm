@@ -1,29 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DM.Web.Classic.Views.Home;
 using Microsoft.AspNetCore.Mvc;
-using DM.Web.Classic.Models;
 
 namespace DM.Web.Classic.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : DmControllerBase
     {
+        private readonly IHomeViewModelBuilder homeViewModelBuilder;
+        private readonly IAboutViewModelBuilder aboutViewModelBuilder;
+
+        public HomeController(
+            IHomeViewModelBuilder homeViewModelBuilder,
+            IAboutViewModelBuilder aboutViewModelBuilder
+        )
+        {
+            this.homeViewModelBuilder = homeViewModelBuilder;
+            this.aboutViewModelBuilder = aboutViewModelBuilder;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            var homeViewModel = homeViewModelBuilder.Build();
+            return View("Home", homeViewModel);
         }
 
-        public IActionResult Privacy()
+        public ActionResult About()
+        {
+            var aboutViewModel = aboutViewModelBuilder.Build();
+            return View(aboutViewModel);
+        }
+
+        public ActionResult Rules()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public ActionResult Donate()
         {
-            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+            return View();
         }
     }
 }
