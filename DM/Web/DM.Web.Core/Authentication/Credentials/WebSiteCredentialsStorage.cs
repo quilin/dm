@@ -11,9 +11,6 @@ namespace DM.Web.Core.Authentication.Credentials
     public class WebSiteCredentialsStorage : ICredentialsStorage
     {
         private const string HttpAuthorizationCookie = "__AUTH_cookie";
-        private const string LoginKey = "login";
-        private const string PasswordKey = "password";
-        private const string DoNotRememberKey = "doNotRemember";
 
         /// <inheritdoc />
         public Task<TokenCredentials> ExtractToken(HttpContext httpContext)
