@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.Implementation;
-using DM.Services.Common.Repositories;
+using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Authorization;

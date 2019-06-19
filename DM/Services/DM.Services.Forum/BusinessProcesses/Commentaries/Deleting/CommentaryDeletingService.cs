@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Common.Implementation;
+using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;

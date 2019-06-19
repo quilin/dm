@@ -5,7 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.Implementation;
+using DM.Services.Common.Authorization;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Web.API.Dto.Contracts;

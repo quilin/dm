@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DM.Services.Common.Implementation
+namespace DM.Services.Common.Authorization
 {
     /// <summary>
     /// Central authorization endpoint

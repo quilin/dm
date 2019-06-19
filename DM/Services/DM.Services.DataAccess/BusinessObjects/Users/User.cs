@@ -131,7 +131,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// User uploads
         /// </summary>
-        [InverseProperty(nameof(Upload.User))]
+        [InverseProperty(nameof(Upload.Owner))]
         public virtual ICollection<Upload> Uploads { get; set; }
 
         #endregion

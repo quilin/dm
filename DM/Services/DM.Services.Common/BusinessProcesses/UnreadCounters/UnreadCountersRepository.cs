@@ -7,7 +7,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.MongoIntegration;
 using MongoDB.Driver;
 
-namespace DM.Services.Common.Repositories
+namespace DM.Services.Common.BusinessProcesses.UnreadCounters
 {
     /// <inheritdoc cref="IUnreadCountersRepository" />
     public class UnreadCountersRepository : MongoCollectionRepository<UnreadCounter>, IUnreadCountersRepository

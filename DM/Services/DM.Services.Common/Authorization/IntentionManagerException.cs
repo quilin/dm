@@ -7,7 +7,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 
-namespace DM.Services.Common.Implementation
+namespace DM.Services.Common.Authorization
 {
     /// <summary>
     /// Specific exception when user tries to perform unauthorized action

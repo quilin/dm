@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.Implementation;
+using DM.Services.Common.Authorization;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 
-namespace DM.Services.Common.Implementation
+namespace DM.Services.Common.Authorization
 {
     /// <summary>
     /// Resolves if user is allowed to perform action of specific type upon object of specific type

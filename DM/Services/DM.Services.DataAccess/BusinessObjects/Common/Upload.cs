@@ -53,7 +53,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// Owner
         /// </summary>
         [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        public virtual User Owner { get; set; }
 
         /// <summary>
         /// User profile (for user profile picture)

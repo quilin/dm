@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Common;
 
-namespace DM.Services.Common.Repositories
+namespace DM.Services.Common.BusinessProcesses.UnreadCounters
 {
     /// <summary>
     /// Unread counters storage
