@@ -35,5 +35,8 @@ namespace DM.Web.API.Services.Fora
             var forum = await forumService.GetSingleForum(id);
             return new Envelope<Forum>(mapper.Map<Forum>(forum));
         }
+
+        /// <inheritdoc />
+        public Task MarkAsRead(string forumId) => forumService.MarkAsRead(forumId);
     }
 }

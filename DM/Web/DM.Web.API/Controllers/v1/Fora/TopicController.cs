@@ -159,5 +159,21 @@ namespace DM.Web.API.Controllers.v1.Fora
             var result = await commentApiService.Create(id, comment);
             return CreatedAtRoute(nameof(CommentController.GetForumComment), new {id = result.Resource.Id}, result);
         }
+
+        /// <summary>
+        /// Mark all forum comments as read
+        /// </summary>
+        /// <param name="id">Topic id</param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        [HttpDelete("{id}/comments/unread", Name = nameof(ReadTopicComments))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        public async Task<IActionResult> ReadTopicComments(Guid id)
+        {
+            await topicApiService.MarkAsRead(id);
+            return NoContent();
+        }
     }
 }

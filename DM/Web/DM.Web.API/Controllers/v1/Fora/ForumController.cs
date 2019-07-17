@@ -49,6 +49,22 @@ namespace DM.Web.API.Controllers.v1.Fora
         public async Task<IActionResult> GetForum(string id) => Ok(await forumApiService.Get(id));
 
         /// <summary>
+        /// Mark all forum comments as read
+        /// </summary>
+        /// <param name="id">Forum id</param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        [HttpDelete("{id}/comments/unread", Name = nameof(ReadForumComments))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        public async Task<IActionResult> ReadForumComments(string id)
+        {
+            await forumApiService.MarkAsRead(id);
+            return NoContent();
+        }
+
+        /// <summary>
         /// Get forum moderators
         /// </summary>
         /// <param name="id">Forum id</param>

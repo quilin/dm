@@ -21,5 +21,12 @@ namespace DM.Web.API.Services.Fora
         /// <param name="id">Forum id</param>
         /// <returns>Envelope with forum</returns>
         Task<Envelope<Forum>> Get(string id);
+
+        /// <summary>
+        /// Mark all forum comments as read
+        /// </summary>
+        /// <param name="forumId">Forum identifier</param>
+        /// <returns></returns>
+        Task MarkAsRead(string forumId);
     }
 }

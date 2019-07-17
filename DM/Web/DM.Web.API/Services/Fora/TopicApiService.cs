@@ -75,5 +75,8 @@ namespace DM.Web.API.Services.Fora
 
         /// <inheritdoc />
         public Task Delete(Guid topicId) => topicDeletingService.DeleteTopic(topicId);
+
+        /// <inheritdoc />
+        public Task MarkAsRead(Guid topicId) => topicReadingService.MarkAsRead(topicId);
     }
 }

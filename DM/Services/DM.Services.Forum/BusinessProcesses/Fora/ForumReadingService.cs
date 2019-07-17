@@ -72,6 +72,13 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
             return forum;
         }
 
+        /// <inheritdoc />
+        public async Task MarkAsRead(string forumTitle)
+        {
+            var forum = await GetForum(forumTitle);
+            await unreadCountersRepository.FlushAll(identity.User.UserId, UnreadEntryType.Message, forum.Id);
+        }
+
         private async Task<Dto.Output.Forum[]> GetFora(bool onlyAvailable = true)
         {
             var accessPolicy = onlyAvailable

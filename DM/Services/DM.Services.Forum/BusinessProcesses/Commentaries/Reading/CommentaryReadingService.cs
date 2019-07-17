@@ -4,10 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using Comment = DM.Services.Forum.Dto.Output.Comment;
 
@@ -18,19 +16,16 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly ICommentaryReadingRepository commentaryRepository;
-        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public CommentaryReadingService(
             ITopicReadingService topicReadingService,
             IIdentityProvider identityProvider,
-            ICommentaryReadingRepository commentaryRepository,
-            IUnreadCountersRepository unreadCountersRepository)
+            ICommentaryReadingRepository commentaryRepository)
         {
             this.topicReadingService = topicReadingService;
             this.commentaryRepository = commentaryRepository;
-            this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
 
@@ -44,10 +39,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
             var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
 
             var comments = await commentaryRepository.Get(topicId, paging);
-            if (identity.User.IsAuthenticated)
-            {
-                await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
-            }
 
             return (comments, paging.Result);
         }

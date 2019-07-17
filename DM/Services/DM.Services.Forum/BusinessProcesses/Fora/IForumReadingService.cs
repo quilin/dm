@@ -28,5 +28,12 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         /// <param name="onlyAvailable">Only search in forums that are available for display for current user</param>
         /// <returns></returns>
         Task<Dto.Output.Forum> GetForum(string forumTitle, bool onlyAvailable = true);
+
+        /// <summary>
+        /// Mark all forum commentaries as read
+        /// </summary>
+        /// <param name="forumTitle">Forum title</param>
+        /// <returns></returns>
+        Task MarkAsRead(string forumTitle);
     }
 }
