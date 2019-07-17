@@ -35,7 +35,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         }
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> GetCommentsList(
+        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(
             Guid topicId, PagingQuery query)
         {
             await topicReadingService.GetTopic(topicId);

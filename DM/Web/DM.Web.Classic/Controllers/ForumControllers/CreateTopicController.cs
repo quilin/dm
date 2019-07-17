@@ -1,4 +1,5 @@
-﻿using DM.Services.Forum.BusinessProcesses.Topics.Creating;
+﻿using System.Threading.Tasks;
+using DM.Services.Forum.BusinessProcesses.Topics.Creating;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Fora.CreateTopic;
@@ -19,7 +20,7 @@ namespace DM.Web.Classic.Controllers.ForumControllers
         }
 
         [HttpPost, ValidationRequired]
-        public ActionResult Create(CreateTopicForm createForm)
+        public async Task<IActionResult> Create(CreateTopicForm createForm)
         {
             var createTopic = new CreateTopic
             {
@@ -27,7 +28,7 @@ namespace DM.Web.Classic.Controllers.ForumControllers
                 Title = createForm.Title,
                 Text = createForm.Description
             };
-            var topic = topicCreatingService.CreateTopic(createTopic).Result;
+            var topic = await topicCreatingService.CreateTopic(createTopic);
             return RedirectToAction("LastUnread", "Topic",
                 new RouteValueDictionary{{"topicIdEncoded", topic.Id.EncodeToReadable(topic.Title)}});
         }

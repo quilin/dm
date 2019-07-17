@@ -1,4 +1,5 @@
-﻿using DM.Services.Authentication.Dto;
+﻿using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Community.BusinessProcesses.Registration;
 using DM.Services.Community.Dto;
@@ -36,20 +37,20 @@ namespace DM.Web.Classic.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
+        public IActionResult Register()
         {
             return View("Register", registrationFormBuilder.Build(Request));
         }
 
         [HttpPost, ValidationRequired]
-        public IActionResult Register(RegistrationForm registrationForm)
+        public async Task<IActionResult> Register(RegistrationForm registrationForm)
         {
-            registrationService.Register(new UserRegistration
+            await registrationService.Register(new UserRegistration
             {
                 Email = registrationForm.Email,
                 Login = registrationForm.Login,
-                Password = $"pwd_{registrationForm.Login.ToLower()}"
-            }).Wait();
+                Password = registrationForm.Password
+            });
             return new EmptyResult();
         }
 
@@ -60,16 +61,16 @@ namespace DM.Web.Classic.Controllers
         }
 
         [HttpPost]
-        public IActionResult LogIn(LoginForm loginForm)
+        public async Task<IActionResult> LogIn(LoginForm loginForm)
         {
-            var identity = webAuthenticationService.Authenticate(new LoginCredentials
+            var loggedIdentity = await webAuthenticationService.Authenticate(new LoginCredentials
             {
                 Login = loginForm.Login,
                 Password = loginForm.Password,
                 RememberMe = !loginForm.DoNotRemember
-            }, HttpContext).Result;
-            return identity.Error != AuthenticationError.NoError
-                ? AjaxFormError(identity.Error)
+            }, HttpContext);
+            return loggedIdentity.Error != AuthenticationError.NoError
+                ? AjaxFormError(loggedIdentity.Error)
                 : Content(loginForm.RedirectUrl);
         }
 

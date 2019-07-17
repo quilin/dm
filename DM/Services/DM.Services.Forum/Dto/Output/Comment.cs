@@ -12,6 +12,11 @@ namespace DM.Services.Forum.Dto.Output
     {
         /// <inheritdoc />
         public Guid Id { get; set; }
+        
+        /// <summary>
+        /// Parent topic identifier
+        /// </summary>
+        public Guid TopicId { get; set; }
 
         /// <summary>
         /// Date of creation

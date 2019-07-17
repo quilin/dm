@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DM.Web.Classic.Views.Topic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -24,9 +25,9 @@ namespace DM.Web.Classic.Controllers.ForumControllers
             });
         }
 
-        public ActionResult Index(Guid topicId, int entityNumber)
+        public async Task<IActionResult> Index(Guid topicId, int entityNumber)
         {
-            var topicCommentariesViewModel = topicViewModelBuilder.Build(topicId, entityNumber);
+            var topicCommentariesViewModel = await topicViewModelBuilder.Build(topicId, entityNumber);
             return View("Topic", topicCommentariesViewModel);
         }
     }

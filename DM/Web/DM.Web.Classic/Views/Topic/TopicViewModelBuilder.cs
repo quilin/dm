@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Parsing;
 using DM.Services.Forum.Authorization;
@@ -33,12 +34,12 @@ namespace DM.Web.Classic.Views.Topic
             this.bbParserProvider = bbParserProvider;
         }
 
-        public TopicViewModel Build(Guid topicId, int entityNumber)
+        public async Task<TopicViewModel> Build(Guid topicId, int entityNumber)
         {
             var topic = topicReadingService.GetTopic(topicId).Result;
 
-            var commentariesViewModel = commentariesViewModelBuilder.Build(topicId, entityNumber);
-            commentariesViewModel.CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, topic).Result;
+            var commentariesViewModel = await commentariesViewModelBuilder.Build(topicId, entityNumber);
+            commentariesViewModel.CanCreate = await intentionsManager.IsAllowed(TopicIntention.CreateComment, topic);
 
             return new TopicViewModel
             {

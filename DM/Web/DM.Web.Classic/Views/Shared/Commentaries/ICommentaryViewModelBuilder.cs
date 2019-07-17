@@ -1,9 +1,10 @@
-﻿using DM.Services.Forum.Dto.Output;
+﻿using System.Threading.Tasks;
+using DM.Services.Forum.Dto.Output;
 
 namespace DM.Web.Classic.Views.Shared.Commentaries
 {
     public interface ICommentaryViewModelBuilder
     {
-        CommentaryViewModel Build(Comment comment);
+        Task<CommentaryViewModel> Build(Comment comment);
     }
 }

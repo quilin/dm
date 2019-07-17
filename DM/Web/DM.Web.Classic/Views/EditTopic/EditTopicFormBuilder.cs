@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Parsing;
 using DM.Services.Forum.Authorization;
@@ -23,10 +24,10 @@ namespace DM.Web.Classic.Views.EditTopic
             this.bbParserProvider = bbParserProvider;
         }
 
-        public EditTopicForm Build(Guid topicId)
+        public async Task<EditTopicForm> Build(Guid topicId)
         {
-            var topic = topicReadingService.GetTopic(topicId).Result;
-            intentionsManager.ThrowIfForbidden(TopicIntention.Edit, topic);
+            var topic = await topicReadingService.GetTopic(topicId);
+            await intentionsManager.ThrowIfForbidden(TopicIntention.Edit, topic);
 
             var parser = bbParserProvider.CurrentCommon;
             return new EditTopicForm

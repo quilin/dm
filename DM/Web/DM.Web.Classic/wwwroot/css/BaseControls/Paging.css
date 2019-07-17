@@ -43,5 +43,5 @@
     transition: all .3s;
 }
 .content-pagedEntity-highlighted {
-    box-shadow: 0 0 10px 3px #cba;
+    box-shadow: 2px 2px 5px 0 #ddd;
 }

@@ -10,11 +10,11 @@ namespace DM.Services.Core.Dto
         /// <inheritdoc />
         public PagingData(PagingQuery query, int defaultPageSize, int totalCount)
         {
-            var pageSize = Math.Max(query.Size ?? defaultPageSize, 1);
+            var pageSize = Math.Max(query.Size ?? defaultPageSize, 0);
             var entityNumber = query.Number.HasValue || !query.Skip.HasValue
                 ? query.Number ?? 1
                 : query.Skip.Value + 1;
-            Result = PagingResult.Create(totalCount, entityNumber, pageSize);
+            Result = PagingResult.Create(totalCount, entityNumber, pageSize == 0 ? defaultPageSize : pageSize);
             Skip = query.Number.HasValue || !query.Skip.HasValue
                 ? (Result.CurrentPage - 1) * Result.PageSize
                 : query.Skip.Value;

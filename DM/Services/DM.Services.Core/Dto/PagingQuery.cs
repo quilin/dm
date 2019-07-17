@@ -19,5 +19,13 @@ namespace DM.Services.Core.Dto
         /// Page size
         /// </summary>
         public int? Size { get; set; }
+        
+        /// <summary>
+        /// Empty query to get paging information without fetching the data
+        /// </summary>
+        public static PagingQuery Empty => new PagingQuery
+        {
+            Size = 0
+        };
     }
 }

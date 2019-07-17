@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DM.Web.Classic.Views.EditTopic
 {
     public interface IEditTopicFormBuilder
     {
-        EditTopicForm Build(Guid topicId);
+        Task<EditTopicForm> Build(Guid topicId);
     }
 }

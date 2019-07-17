@@ -81,7 +81,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             getCommentsListSetup.ReturnsAsync(expected);
             currentUserSetup.Returns(Create.User().WithRole(UserRole.Guest).Please);
 
-            var (actualList, actualPaging) = await readingService.GetCommentsList(topicId, new PagingQuery());
+            var (actualList, actualPaging) = await readingService.Get(topicId, new PagingQuery());
             
             actualList.Should().BeEquivalentTo((IEnumerable<Comment>) expected);
             actualPaging.Should().NotBeNull();
@@ -98,7 +98,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             getCommentsListSetup.ReturnsAsync(expected);
             currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
 
-            await readingService.GetCommentsList(topicId, new PagingQuery());
+            await readingService.Get(topicId, new PagingQuery());
 
             unreadCountersRepository.Verify(r => r.Flush(userId, UnreadEntryType.Message, topicId), Times.Once);
             unreadCountersRepository.VerifyNoOtherCalls();

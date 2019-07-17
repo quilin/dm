@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -41,16 +43,23 @@ namespace DM.Web.Classic.Views.Fora
             identity = identityProvider.Current;
         }
 
-        public ForumViewModel Build(Forum forum, int entityNumber)
+        public async Task<ForumViewModel> Build(Forum forum, int entityNumber)
         {
-            var canCreateTopic = intentionsManager.IsAllowed(ForumIntention.CreateTopic, forum).Result;
-            var (topics, paging) = topicReadingService.GetTopicsList(forum.Title, new PagingQuery
+            var canCreateTopicTask = intentionsManager.IsAllowed(ForumIntention.CreateTopic, forum);
+            var topicsTask = topicReadingService.GetTopicsList(forum.Title, new PagingQuery
             {
                 Number = entityNumber,
                 Size = identity.Settings.TopicsPerPage
-            }).Result;
-            var attachedTopics = topicReadingService.GetAttachedTopics(forum.Title).Result;
-            var moderators = moderatorsReadingService.GetModerators(forum.Title).Result;
+            });
+            var attachedTopicsTask = topicReadingService.GetAttachedTopics(forum.Title);
+            var moderatorsTask = moderatorsReadingService.GetModerators(forum.Title);
+
+            await Task.WhenAll(canCreateTopicTask, topicsTask, attachedTopicsTask, moderatorsTask);
+            
+            var (topics, paging) = await topicsTask;
+            var attachedTopics = await attachedTopicsTask;
+            var moderators = await moderatorsTask;
+            var canCreateTopic = await canCreateTopicTask;
 
             return new ForumViewModel
             {
@@ -71,15 +80,15 @@ namespace DM.Web.Classic.Views.Fora
             };
         }
 
-        public TopicViewModel[] BuildList(Forum forum, int entityNumber)
+        public async Task<IEnumerable<TopicViewModel>> BuildList(Forum forum, int entityNumber)
         {
-            var (topics, _) = topicReadingService.GetTopicsList(forum.Title, new PagingQuery
+            var (topics, _) = await topicReadingService.GetTopicsList(forum.Title, new PagingQuery
             {
                 Number = entityNumber,
                 Size = identity.Settings.TopicsPerPage
-            }).Result;
+            });
 
-            return topics.Select(topicViewModelBuilder.Build).ToArray();
+            return topics.Select(topicViewModelBuilder.Build);
         }
     }
 }

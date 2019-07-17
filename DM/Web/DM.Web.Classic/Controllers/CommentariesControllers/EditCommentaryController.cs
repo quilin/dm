@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
@@ -34,24 +35,24 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         }
 
         [HttpGet]
-        public ActionResult Edit(Guid commentaryId)
+        public async Task<IActionResult> Edit(Guid commentaryId)
         {
-            var comment = commentaryReadingService.Get(commentaryId).Result;
-            intentionsManager.ThrowIfForbidden(CommentIntention.Edit, comment);
+            var comment = await commentaryReadingService.Get(commentaryId);
+            await intentionsManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var editCommentaryForm = editCommentaryFormBuilder.Build(comment);
             return PartialView("Commentaries/EditCommentary", editCommentaryForm);
         }
 
         [HttpPost, ValidationRequired]
-        public ActionResult Edit(EditCommentaryForm editCommentaryForm)
+        public async Task<IActionResult> Edit(EditCommentaryForm editCommentaryForm)
         {
             var updateComment = new UpdateComment
             {
                 CommentId = editCommentaryForm.CommentaryId,
                 Text = editCommentaryForm.Text
             };
-            var comment = commentaryUpdatingService.Update(updateComment).Result;
-            var commentaryViewModel = commentaryViewModelBuilder.Build(comment);
+            var comment = await commentaryUpdatingService.Update(updateComment);
+            var commentaryViewModel = await commentaryViewModelBuilder.Build(comment);
             return PartialView("Commentaries/Commentary", commentaryViewModel);
         }
     }

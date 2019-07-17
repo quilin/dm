@@ -1,4 +1,5 @@
-﻿using DM.Services.Forum.BusinessProcesses.Fora;
+﻿using System.Threading.Tasks;
+using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.Fora;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace DM.Web.Classic.Controllers.ForumControllers
             this.forumViewModelBuilder = forumViewModelBuilder;
         }
 
-        public ActionResult Index(string forumTitle, int entityNumber, string category)
+        public async Task<IActionResult> Index(string forumTitle, int entityNumber, string category)
         {
             if (string.IsNullOrEmpty(forumTitle))
             {
@@ -28,15 +29,15 @@ namespace DM.Web.Classic.Controllers.ForumControllers
                     : RedirectToActionPermanent("Index", "Forum", new RouteValueDictionary {{"forumTitle", category}});
             }
 
-            var forum = forumReadingService.GetSingleForum(forumTitle).Result;
+            var forum = await forumReadingService.GetSingleForum(forumTitle);
 
             if (!Request.IsAjaxRequest())
             {
-                var forumViewModel = forumViewModelBuilder.Build(forum, entityNumber);
+                var forumViewModel = await forumViewModelBuilder.Build(forum, entityNumber);
                 return View("~/Views/Fora/Forum.cshtml", forumViewModel);
             }
 
-            var topicViewModels = forumViewModelBuilder.BuildList(forum, entityNumber);
+            var topicViewModels = await forumViewModelBuilder.BuildList(forum, entityNumber);
             return View("~/Views/Fora/ForumTopicsList.cshtml", topicViewModels);
         }
     }

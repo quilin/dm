@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -28,26 +29,26 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             identity = identityProvider.Current;
         }
 
-        public CommentaryViewModel Build(Comment comment)
+        public async Task<CommentaryViewModel> Build(Comment comment)
         {
             return new CommentaryViewModel
-                       {
-                           CommentaryId = comment.Id,
-                           CreateDate = comment.CreateDate,
-                           LastUpdateDate = comment.LastUpdateDate,
-                           Author = userViewModelBuilder.Build(comment.Author),
-                           Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
-                           LikesCount = comment.Likes.Count(),
+            {
+                CommentaryId = comment.Id,
+                CreateDate = comment.CreateDate,
+                LastUpdateDate = comment.LastUpdateDate,
+                Author = userViewModelBuilder.Build(comment.Author),
+                Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
+                LikesCount = comment.Likes.Count(),
 
-                           CanEdit = intentionsManager.IsAllowed(CommentIntention.Edit, comment).Result,
-                           CanRemove = intentionsManager.IsAllowed(CommentIntention.Delete, comment).Result,
+                CanEdit = await intentionsManager.IsAllowed(CommentIntention.Edit, comment),
+                CanRemove = await intentionsManager.IsAllowed(CommentIntention.Delete, comment),
 
-                           CanLike = intentionsManager.IsAllowed(CommentIntention.Like, comment).Result,
-                           HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
+                CanLike = await intentionsManager.IsAllowed(CommentIntention.Like, comment),
+                HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
 
 //                           CanWarn = intentionsManager.IsAllowed(WarningIntention.Create, userService.Read(comment.UserId)),
 //                           WarningsList = warningsListViewModelBuilder.Build(comment.CommentId)
-                       };
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Views.EditTopic;
@@ -22,14 +23,14 @@ namespace DM.Web.Classic.Controllers.ForumControllers
         }
 
         [HttpGet]
-        public ActionResult Edit(Guid topicId)
+        public async Task<IActionResult> Edit(Guid topicId)
         {
-            var editTopicForm = editTopicFormBuilder.Build(topicId);
+            var editTopicForm = await editTopicFormBuilder.Build(topicId);
             return View(editTopicForm);
         }
 
         [HttpPost]
-        public ActionResult Edit(EditTopicForm form)
+        public async Task<IActionResult> Edit(EditTopicForm form)
         {
             var updateTopic = new UpdateTopic
             {
@@ -37,7 +38,7 @@ namespace DM.Web.Classic.Controllers.ForumControllers
                 Title = form.Title,
                 Text = form.Text
             };
-            var topic = topicUpdatingService.UpdateTopic(updateTopic).Result;
+            var topic = await topicUpdatingService.UpdateTopic(updateTopic);
             return RedirectToAction("LastUnread", "Topic", new RouteValueDictionary
             {
                 {"topicIdEncoded", topic.Id.EncodeToReadable(topic.Title)}

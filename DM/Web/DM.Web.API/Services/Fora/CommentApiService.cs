@@ -40,7 +40,7 @@ namespace DM.Web.API.Services.Fora
         /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid topicId, PagingQuery query)
         {
-            var (comments, paging) = await readingService.GetCommentsList(topicId, query);
+            var (comments, paging) = await readingService.Get(topicId, query);
             return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
         }
 

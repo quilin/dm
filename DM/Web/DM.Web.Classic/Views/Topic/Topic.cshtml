@@ -5,7 +5,7 @@
 @using Microsoft.AspNetCore.Routing
 @model DM.Web.Classic.Views.Topic.TopicViewModel
 @{
-    ViewBag.Title = string.Format("{0} | {1} | Форум", Model.Title, Model.ForumTitle);
+    ViewBag.Title = $"{Model.Title} | {Model.ForumTitle} | Форум";
     Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
 }
 @section LeftColumn

@@ -17,7 +17,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         /// <param name="topicId">Topic identifier</param>
         /// <param name="query">Paging query</param>
         /// <returns>Pair of comments list and paging data</returns>
-        Task<(IEnumerable<Comment> comments, PagingResult paging)> GetCommentsList(Guid topicId, PagingQuery query);
+        Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid topicId, PagingQuery query);
 
         /// <summary>
         /// Get topic comment by id

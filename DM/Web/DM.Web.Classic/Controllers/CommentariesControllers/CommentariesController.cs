@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Likes;
 using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.Shared.Commentaries;
@@ -10,54 +16,62 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
     public class CommentariesController : DmControllerBase
     {
         private readonly ICommentaryDeletingService commentaryDeletingService;
+        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly ILikeService likeService;
+        private readonly IIdentity identity;
         private readonly ICommentariesViewModelBuilder commentariesViewModelBuilder;
 
         public CommentariesController(
             ICommentaryDeletingService commentaryDeletingService,
+            ICommentaryReadingService commentaryReadingService,
             ILikeService likeService,
+            IIdentityProvider identityProvider,
             ICommentariesViewModelBuilder commentariesViewModelBuilder)
         {
             this.commentaryDeletingService = commentaryDeletingService;
+            this.commentaryReadingService = commentaryReadingService;
             this.likeService = likeService;
+            identity = identityProvider.Current;
             this.commentariesViewModelBuilder = commentariesViewModelBuilder;
         }
         
-        public ActionResult Index(Guid entityId, int entityNumber)
+        public async Task<IActionResult> Index(Guid entityId, int entityNumber)
         {
             if (Request.IsAjaxRequest())
             {
-                var commentaries = commentariesViewModelBuilder.BuildList(entityId, entityNumber);
+                var commentaries = await commentariesViewModelBuilder.BuildList(entityId, entityNumber);
                 return PartialView("Commentaries/CommentariesList", commentaries);
             }
-            var commentariesViewModel = commentariesViewModelBuilder.Build(entityId, entityNumber);
+            var commentariesViewModel = await commentariesViewModelBuilder.Build(entityId, entityNumber);
             return PartialView("Commentaries/Commentaries", commentariesViewModel);
         }
 
         [HttpPost]
-        public int Remove(Guid commentaryId)
+        public async Task<int> Remove(Guid commentaryId)
         {
-            commentaryDeletingService.Delete(commentaryId).Wait();
-            return 1;
+            await commentaryDeletingService.Delete(commentaryId);
+            var comment = await commentaryReadingService.Get(commentaryId);
+            var (_, paging) = await commentaryReadingService.Get(comment.TopicId, PagingQuery.Empty);
+            return paging.TotalPagesCount;
         }
 
         [HttpPost]
-        public ActionResult ToggleLike(Guid commentaryId)
+        public async Task<IActionResult> ToggleLike(Guid commentaryId)
         {
-            bool created;
-            try
+            var comment = await commentaryReadingService.Get(commentaryId);
+            var userLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId);
+            if (userLiked)
             {
-                likeService.LikeComment(commentaryId).Wait();
-                created = true;
+                await likeService.DislikeComment(commentaryId);
             }
-            catch
+            else
             {
-                likeService.DislikeComment(commentaryId).Wait();
-                created = false;
+                await likeService.LikeComment(commentaryId);
             }
             return Json(new
             {
-                likesCount = 1, created
+                likesCount = comment.Likes.Count() + (userLiked ? -1 : 1),
+                created = !userLiked
             });
         }
     }

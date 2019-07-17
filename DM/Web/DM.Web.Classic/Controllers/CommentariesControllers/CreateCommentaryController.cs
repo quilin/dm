@@ -1,4 +1,7 @@
-﻿using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
+﻿using System.Threading.Tasks;
+using DM.Services.Core.Dto;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Shared.Commentaries;
@@ -9,23 +12,27 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
     public class CreateCommentaryController : DmControllerBase
     {
         private readonly ICommentaryCreatingService commentaryCreatingService;
+        private readonly ICommentaryReadingService commentaryReadingService;
 
         public CreateCommentaryController(
-            ICommentaryCreatingService commentaryCreatingService)
+            ICommentaryCreatingService commentaryCreatingService,
+            ICommentaryReadingService commentaryReadingService)
         {
             this.commentaryCreatingService = commentaryCreatingService;
+            this.commentaryReadingService = commentaryReadingService;
         }
 
         [HttpPost, ValidationRequired]
-        public int Create(CreateCommentaryForm createCommentaryForm)
+        public async Task<int> Create(CreateCommentaryForm createCommentaryForm)
         {
             var createComment = new CreateComment
             {
                 TopicId = createCommentaryForm.EntityId,
                 Text = createCommentaryForm.Text
             };
-            commentaryCreatingService.Create(createComment).Wait();
-            return 1;
+            await commentaryCreatingService.Create(createComment);
+            var (_, paging) = await commentaryReadingService.Get(createCommentaryForm.EntityId, PagingQuery.Empty);
+            return paging.TotalPagesCount;
         }
     }
 }
