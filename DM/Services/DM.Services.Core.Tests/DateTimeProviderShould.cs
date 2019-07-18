@@ -12,7 +12,6 @@ namespace DM.Services.Core.Tests
         {
             var actual = new DateTimeProvider().Now;
             actual.Should().BeCloseTo(DateTime.UtcNow);
-            actual.Kind.Should().Be(DateTimeKind.Utc);
         }
     }
 }

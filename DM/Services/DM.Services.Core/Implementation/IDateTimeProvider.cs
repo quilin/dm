@@ -10,6 +10,6 @@ namespace DM.Services.Core.Implementation
         /// <summary>
         /// Current moment in UTC
         /// </summary>
-        DateTime Now { get; }
+        DateTimeOffset Now { get; }
     }
 }

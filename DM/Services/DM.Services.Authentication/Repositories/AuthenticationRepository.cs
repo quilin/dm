@@ -86,12 +86,12 @@ namespace DM.Services.Authentication.Repositories
         }
 
         /// <inheritdoc />
-        public Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate)
+        public Task RefreshSession(Guid userId, Guid sessionId, DateTimeOffset expirationDate)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId) &
                 Filter<UserSessions>().ElemMatch(u => u.Sessions, s => s.Id == sessionId),
-                Update<UserSessions>().Set(u => u.Sessions[-1].ExpirationDate, expirationDate));
+                Update<UserSessions>().Set(u => u.Sessions[-1].ExpirationDate, expirationDate.UtcDateTime));
         }
 
         /// <inheritdoc />

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DM.Services.DataAccess.MongoIntegration;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Fora
 {
@@ -18,11 +19,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// <summary>
         /// Moment from
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
         /// Moment to
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime EndDate { get; set; }
 
         /// <summary>

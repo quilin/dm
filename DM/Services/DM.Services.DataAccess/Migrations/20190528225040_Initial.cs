@@ -108,8 +108,8 @@ namespace DM.Services.DataAccess.Migrations
                     UserId = table.Column<Guid>(nullable: false),
                     Login = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    RegistrationDate = table.Column<DateTime>(nullable: false),
-                    LastVisitDate = table.Column<DateTime>(nullable: true),
+                    RegistrationDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastVisitDate = table.Column<DateTimeOffset>(nullable: true),
                     TimezoneId = table.Column<string>(nullable: true),
                     Role = table.Column<int>(nullable: false),
                     AccessPolicy = table.Column<int>(nullable: false),
@@ -154,8 +154,8 @@ namespace DM.Services.DataAccess.Migrations
                     BanId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     ModeratorId = table.Column<Guid>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
+                    StartDate = table.Column<DateTimeOffset>(nullable: false),
+                    EndDate = table.Column<DateTimeOffset>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
                     AccessRestrictionPolicy = table.Column<int>(nullable: false),
                     IsVoluntary = table.Column<bool>(nullable: false),
@@ -210,7 +210,7 @@ namespace DM.Services.DataAccess.Migrations
                     MessageId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     ConversationId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false)
                 },
@@ -236,8 +236,8 @@ namespace DM.Services.DataAccess.Migrations
                 columns: table => new
                 {
                     ModuleId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    ReleaseDate = table.Column<DateTime>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    ReleaseDate = table.Column<DateTimeOffset>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     MasterId = table.Column<Guid>(nullable: false),
                     AssistantId = table.Column<Guid>(nullable: true),
@@ -288,7 +288,7 @@ namespace DM.Services.DataAccess.Migrations
                     ReportId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     TargetId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     ReportText = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     AnswerAuthorId = table.Column<Guid>(nullable: true),
@@ -323,7 +323,7 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     ReviewId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     IsApproved = table.Column<bool>(nullable: false)
                 },
@@ -344,7 +344,7 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     TokenId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     IsRemoved = table.Column<bool>(nullable: false)
                 },
@@ -419,8 +419,8 @@ namespace DM.Services.DataAccess.Migrations
                     GameId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Race = table.Column<string>(nullable: true),
                     Class = table.Column<string>(nullable: true),
@@ -458,8 +458,8 @@ namespace DM.Services.DataAccess.Migrations
                     GameCommentId = table.Column<Guid>(nullable: false),
                     GameId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false)
                 },
@@ -645,8 +645,8 @@ namespace DM.Services.DataAccess.Migrations
                     RoomId = table.Column<Guid>(nullable: false),
                     CharacterId = table.Column<Guid>(nullable: true),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     Commentary = table.Column<string>(nullable: true),
                     MasterMessage = table.Column<string>(nullable: true),
@@ -683,7 +683,7 @@ namespace DM.Services.DataAccess.Migrations
                     UserId = table.Column<Guid>(nullable: false),
                     TargetId = table.Column<Guid>(nullable: false),
                     RoomId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false)
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -713,7 +713,7 @@ namespace DM.Services.DataAccess.Migrations
                 columns: table => new
                 {
                     UploadId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     EntityId = table.Column<Guid>(nullable: true),
                     UserId = table.Column<Guid>(nullable: false),
                     VirtualPath = table.Column<string>(nullable: true),
@@ -764,7 +764,7 @@ namespace DM.Services.DataAccess.Migrations
                     GameId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     TargetUserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     SignValue = table.Column<short>(nullable: false)
                 },
@@ -804,7 +804,7 @@ namespace DM.Services.DataAccess.Migrations
                     ForumTopicId = table.Column<Guid>(nullable: false),
                     ForumId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     Attached = table.Column<bool>(nullable: false),
@@ -836,8 +836,8 @@ namespace DM.Services.DataAccess.Migrations
                     ForumCommentId = table.Column<Guid>(nullable: false),
                     ForumTopicId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     IsRemoved = table.Column<bool>(nullable: false)
                 },
@@ -885,7 +885,7 @@ namespace DM.Services.DataAccess.Migrations
                     UserId = table.Column<Guid>(nullable: false),
                     ModeratorId = table.Column<Guid>(nullable: false),
                     EntityId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTime>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
                     IsRemoved = table.Column<bool>(nullable: false)

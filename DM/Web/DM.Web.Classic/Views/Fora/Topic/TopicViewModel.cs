@@ -6,7 +6,7 @@ namespace DM.Web.Classic.Views.Fora.Topic
     public class TopicViewModel
     {
         public Guid ForumTopicId { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         public UserViewModel Author { get; set; }
         public string Title { get; set; }
@@ -14,7 +14,7 @@ namespace DM.Web.Classic.Views.Fora.Topic
         public int CommentsCount { get; set; }
         public int UnreadCommentsCount { get; set; }
         
-        public DateTime? LastCommentDate { get; set; }
+        public DateTimeOffset? LastCommentDate { get; set; }
         public string LastCommentAuthor { get; set; }
 
         public bool Attached { get; set; }

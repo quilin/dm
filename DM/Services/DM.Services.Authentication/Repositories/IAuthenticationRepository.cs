@@ -53,7 +53,7 @@ namespace DM.Services.Authentication.Repositories
         /// <param name="sessionId">Authentication session id</param>
         /// <param name="expirationDate">New expiration date</param>
         /// <returns></returns>
-        Task RefreshSession(Guid userId, Guid sessionId, DateTime expirationDate);
+        Task RefreshSession(Guid userId, Guid sessionId, DateTimeOffset expirationDate);
 
         /// <summary>
         /// Append new session to user authentication sessions

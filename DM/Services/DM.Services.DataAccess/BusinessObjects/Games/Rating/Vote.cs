@@ -42,7 +42,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Rating
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Vote reason

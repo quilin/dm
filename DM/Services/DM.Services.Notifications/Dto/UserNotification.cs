@@ -15,7 +15,7 @@ namespace DM.Services.Notifications.Dto
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Notification metadata

@@ -6,7 +6,7 @@ namespace DM.Web.Classic.Extensions.HumanDate
 {
     public static class DateFormatExtensions
     {
-        public static string Format(this DateTime dateTime, ITimezoneInfoProvider provider, bool withTime)
+        public static string Format(this DateTimeOffset dateTime, ITimezoneInfoProvider provider, bool withTime)
         {
             var format = withTime
                 ? "dd.MM.yyyy HH:mm"

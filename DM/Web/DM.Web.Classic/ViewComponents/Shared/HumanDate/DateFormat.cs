@@ -16,7 +16,7 @@ namespace DM.Web.Classic.ViewComponents.Shared.HumanDate
             this.timezoneInfoProvider = timezoneInfoProvider;
         }
         
-        public async Task<IViewComponentResult> InvokeAsync(DateTime date, bool? withTime)
+        public async Task<IViewComponentResult> InvokeAsync(DateTimeOffset date, bool? withTime)
         {
             return await Task.Run(() =>
                 new ContentViewComponentResult(date.Format(timezoneInfoProvider, withTime ?? false)));

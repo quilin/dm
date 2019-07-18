@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Users;
+using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Users
@@ -61,7 +62,9 @@ namespace DM.Web.API.Controllers.v1.Users
         /// </summary>
         /// <response code="200"></response>
         [HttpGet("", Name = nameof(GetCurrent))]
+        [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
         public async Task<IActionResult> GetCurrent() => Ok(await loginApiService.GetCurrent());
     }
 }

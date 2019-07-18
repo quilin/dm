@@ -33,7 +33,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Moderation message

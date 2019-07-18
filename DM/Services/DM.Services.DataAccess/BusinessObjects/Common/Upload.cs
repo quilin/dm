@@ -24,7 +24,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Linked entity identifier

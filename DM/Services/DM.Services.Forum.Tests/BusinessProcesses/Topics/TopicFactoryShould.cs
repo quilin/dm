@@ -13,7 +13,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
     public class TopicFactoryShould : UnitTestBase
     {
         private readonly ISetup<IGuidFactory, Guid> idSetup;
-        private readonly ISetup<IDateTimeProvider, DateTime> currentMomentSetup;
+        private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
         private readonly TopicFactory factory;
 
         public TopicFactoryShould()

@@ -4,11 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
-using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
@@ -28,7 +26,6 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ICommentaryReadingRepository, Task<Comment>> getCommentSetup;
         private readonly ISetup<ICommentaryReadingRepository, Task<int>> countCommentsSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
         private readonly CommentaryReadingService readingService;
 
         public CommentaryReadingServiceShould()
@@ -47,9 +44,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             getCommentSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>()));
             countCommentsSetup = commentaryRepository.Setup(r => r.Count(It.IsAny<Guid>()));
 
-            unreadCountersRepository = Mock<IUnreadCountersRepository>();
             readingService = new CommentaryReadingService(topicReadingService.Object, identityProvider.Object,
-                commentaryRepository.Object, unreadCountersRepository.Object);
+                commentaryRepository.Object);
         }
 
         [Fact]
@@ -85,23 +81,6 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             
             actualList.Should().BeEquivalentTo((IEnumerable<Comment>) expected);
             actualPaging.Should().NotBeNull();
-        }
-
-        [Fact]
-        public async Task FlushUnread_WhenUserAuthenticated()
-        {
-            var topicId = Guid.NewGuid();
-            var expected = new[] {new Comment(), new Comment()};
-            var userId = Guid.NewGuid();
-            readingTopicSetup.ReturnsAsync(new Topic{Id = topicId});
-            countCommentsSetup.ReturnsAsync(20);
-            getCommentsListSetup.ReturnsAsync(expected);
-            currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
-
-            await readingService.Get(topicId, new PagingQuery());
-
-            unreadCountersRepository.Verify(r => r.Flush(userId, UnreadEntryType.Message, topicId), Times.Once);
-            unreadCountersRepository.VerifyNoOtherCalls();
         }
     }
 }

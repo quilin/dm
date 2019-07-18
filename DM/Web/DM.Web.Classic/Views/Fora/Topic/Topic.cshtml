@@ -8,7 +8,11 @@
 
 <div class="topicG-34 topicList-item @(Model.Closed ? "topicList-item-closed" : string.Empty) @(Model.Attached ? "topicList-item-attached" : string.Empty)">
     <div class="topicG-row">
-        <a href="@Url.Action("LastUnread", "Topic", new RouteValueDictionary {{"topicIdEncoded", Model.ForumTopicId.EncodeToReadable(Model.Title)}})" class="topicG-col-1 topicG-span-14 topicList-item-link @(Model.Attached ? "topicList-item-link-attached" : string.Empty)" style="display: block;">
+        <a href="@Url.Action("Index", "Topic", new RouteValueDictionary
+                 {
+                     {"topicId", Model.ForumTopicId.EncodeToReadable(Model.Title)},
+                     {"entityNumber", Model.CommentsCount == Model.UnreadCommentsCount ? 1 : Model.CommentsCount - Model.UnreadCommentsCount}
+                 })" class="topicG-col-1 topicG-span-14 topicList-item-link @(Model.Attached ? "topicList-item-link-attached" : string.Empty)" style="display: block;">
             <div class="topicG-contentWrapper">
                 @if (Model.UnreadCommentsCount > 0)
                 {

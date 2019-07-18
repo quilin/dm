@@ -15,7 +15,7 @@ namespace DM.Services.Community.Dto
         /// <summary>
         /// Date of user registration
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
         /// <summary>
         /// User-defined status

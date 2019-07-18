@@ -24,7 +24,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Authorised action type

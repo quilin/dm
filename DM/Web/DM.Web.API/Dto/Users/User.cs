@@ -31,7 +31,7 @@ namespace DM.Web.API.Dto.Users
         /// <summary>
         /// Last seen online moment
         /// </summary>
-        public DateTime? Online { get; set; }
+        public DateTimeOffset? Online { get; set; }
     }
 
     /// <summary>

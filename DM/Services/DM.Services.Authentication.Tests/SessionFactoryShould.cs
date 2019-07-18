@@ -12,7 +12,7 @@ namespace DM.Services.Authentication.Tests
     public class SessionFactoryShould : UnitTestBase
     {
         private readonly ISetup<IGuidFactory, Guid> createIdSetup;
-        private readonly ISetup<IDateTimeProvider, DateTime> currentMoment;
+        private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMoment;
         private readonly SessionFactory sessionFactory;
 
         public SessionFactoryShould()

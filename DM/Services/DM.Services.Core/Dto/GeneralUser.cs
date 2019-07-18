@@ -21,7 +21,7 @@ namespace DM.Services.Core.Dto
         public AccessPolicy AccessPolicy { get; set; }
 
         /// <inheritdoc />
-        public DateTime? LastVisitDate { get; set; }
+        public DateTimeOffset? LastVisitDate { get; set; }
 
         /// <summary>
         /// URL of current profile picture

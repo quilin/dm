@@ -58,7 +58,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             await repository.Delete(new UpdateBuilder<ForumComment>(commentId)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
                 .Field(c => c.IsRemoved, true), updateTopic);
-            await unreadCountersRepository.Decrement(commentId, UnreadEntryType.Message, comment.CreateDate);
+            await unreadCountersRepository.Decrement(comment.TopicId, UnreadEntryType.Message, comment.CreateDate);
 
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);
         }

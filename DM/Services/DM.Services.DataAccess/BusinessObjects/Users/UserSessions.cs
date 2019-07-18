@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DM.Services.DataAccess.MongoIntegration;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users
 {
@@ -34,6 +35,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Expiration moment
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime ExpirationDate { get; set; }
 
         /// <summary>

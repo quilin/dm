@@ -38,10 +38,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Registration moment
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        public DateTimeOffset RegistrationDate { get; set; }
 
         /// <inheritdoc />
-        public DateTime? LastVisitDate { get; set; }
+        public DateTimeOffset? LastVisitDate { get; set; }
 
         /// <summary>
         /// Timezone identifier (OS-specific)

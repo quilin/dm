@@ -21,7 +21,7 @@ namespace DM.Services.Community.BusinessProcesses.Activation
         }
         
         /// <inheritdoc />
-        public Task<Guid> FindUserToActivate(Guid tokenId, DateTime createdSince)
+        public Task<Guid> FindUserToActivate(Guid tokenId, DateTimeOffset createdSince)
         {
             return dbContext.Tokens
                 .Where(t => t.TokenId == tokenId && t.CreateDate > createdSince)

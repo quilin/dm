@@ -27,7 +27,6 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<ForumController>("forum/{forumTitle}/{entityNumber}", c => c.Index(null, 0, null), new Dictionary<string, object>{{"forumTitle", null}, {"entityNumber", 1}});
 
             routes.MapAction<EditTopicController>("topic/{topicId}/edit", c => c.Edit(Guid.Empty));
-            routes.MapAction<TopicController>("topic/{topicIdEncoded}", c => c.LastUnread(null));
             routes.MapAction<TopicController>("topic/{topicId}/{entityNumber}", c => c.Index(Guid.Empty, 0));
             #endregion
 

@@ -16,7 +16,7 @@ namespace DM.Web.Classic.ViewComponents.Shared.HumanDate
             this.timezoneInfoProvider = timezoneInfoProvider;
         }
         
-        public async Task<IViewComponentResult> InvokeAsync(DateTime date)
+        public async Task<IViewComponentResult> InvokeAsync(DateTimeOffset date)
         {
             return await Task.Run(() => new ContentViewComponentResult(date.FormatForChat(timezoneInfoProvider)));
         }

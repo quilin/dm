@@ -30,7 +30,7 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
                 EntityId = entityId,
                 ParentId = parentId,
                 EntryType = entryType,
-                LastRead = dateTimeProvider.Now,
+                LastRead = dateTimeProvider.Now.UtcDateTime,
                 Counter = 0
             });
         }
@@ -45,12 +45,11 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         }
 
         /// <inheritdoc />
-        public Task Decrement(Guid entityId, UnreadEntryType entryType, DateTime createDate)
+        public Task Decrement(Guid entityId, UnreadEntryType entryType, DateTimeOffset createDate)
         {
-            return Collection.UpdateManyAsync(
-                Filter.Eq(c => c.EntityId, entityId) &
+            return Collection.UpdateManyAsync(Filter.Eq(c => c.EntityId, entityId) &
                 Filter.Eq(c => c.EntryType, entryType) &
-                Filter.Lt(c => c.LastRead, createDate),
+                Filter.Lt(c => c.LastRead, createDate.UtcDateTime),
                 Update.Inc(c => c.Counter, -1));
         }
 
@@ -133,7 +132,7 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
                         EntityId = entityId,
                         ParentId = counter.ParentId,
                         EntryType = entryType,
-                        LastRead = dateTimeProvider.Now,
+                        LastRead = dateTimeProvider.Now.UtcDateTime,
                         Counter = 0
                     },
                     new UpdateOptions {IsUpsert = true});
@@ -146,7 +145,7 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
                     Filter.Eq(c => c.ParentId, parentId) &
                     Filter.Eq(c => c.EntryType, entryType))
                 .ToListAsync();
-            var rightNow = dateTimeProvider.Now;
+            var rightNow = dateTimeProvider.Now.UtcDateTime;
 
             await Collection.BulkWriteAsync(entityIds
                 .Select(id => new ReplaceOneModel<UnreadCounter>(

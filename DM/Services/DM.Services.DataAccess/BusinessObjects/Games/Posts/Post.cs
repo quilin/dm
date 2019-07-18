@@ -40,12 +40,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Last update moment
         /// </summary>
-        public DateTime? LastUpdateDate { get; set; }
+        public DateTimeOffset? LastUpdateDate { get; set; }
 
         /// <summary>
         /// Post text

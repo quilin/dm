@@ -16,7 +16,7 @@ namespace DM.Web.Classic.ViewComponents.Shared.HumanDate
             this.timezoneInfoProvider = timezoneInfoProvider;
         }
         
-        public async Task<IViewComponentResult> InvokeAsync(DateTime? date, bool? withTooltip, string emptyValue)
+        public async Task<IViewComponentResult> InvokeAsync(DateTimeOffset? date, bool? withTooltip, string emptyValue)
         {
             return await Task.Run(() => string.IsNullOrEmpty(emptyValue) && date.HasValue
                 ? new HtmlContentViewComponentResult(date.Value.HumanDate(timezoneInfoProvider, withTooltip ?? true))

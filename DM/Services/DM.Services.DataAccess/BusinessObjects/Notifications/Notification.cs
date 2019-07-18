@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DM.Services.DataAccess.MongoIntegration;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Notifications
 {
@@ -18,6 +19,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Notifications
         /// <summary>
         /// Creation moment
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CreateDate { get; set; }
 
         /// <summary>

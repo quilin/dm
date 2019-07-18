@@ -16,7 +16,7 @@ namespace DM.Services.Community.BusinessProcesses.Activation
         /// <param name="tokenId">Token identifier</param>
         /// <param name="createdSince">Created since</param>
         /// <returns></returns>
-        Task<Guid> FindUserToActivate(Guid tokenId, DateTime createdSince);
+        Task<Guid> FindUserToActivate(Guid tokenId, DateTimeOffset createdSince);
 
         /// <summary>
         /// Update user and its token

@@ -31,7 +31,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Text

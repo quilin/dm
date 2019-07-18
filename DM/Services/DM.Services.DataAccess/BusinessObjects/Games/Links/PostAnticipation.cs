@@ -36,7 +36,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Waiting user

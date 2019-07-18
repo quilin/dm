@@ -1,5 +1,6 @@
 using System;
 using DM.Services.DataAccess.MongoIntegration;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
 {
@@ -22,6 +23,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// <summary>
         /// Creation moment
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CreateDate { get; set; }
 
         /// <summary>

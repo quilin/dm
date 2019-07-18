@@ -29,8 +29,10 @@ namespace DM.Web.Classic.Controllers.ForumControllers
                 Text = createForm.Description
             };
             var topic = await topicCreatingService.CreateTopic(createTopic);
-            return RedirectToAction("LastUnread", "Topic",
-                new RouteValueDictionary{{"topicIdEncoded", topic.Id.EncodeToReadable(topic.Title)}});
+            return RedirectToAction("Index", "Topic", new RouteValueDictionary
+            {
+                ["topicId"] = topic.Id.EncodeToReadable(topic.Title)
+            });
         }
     }
 }

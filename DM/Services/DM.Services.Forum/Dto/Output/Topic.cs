@@ -31,7 +31,7 @@ namespace DM.Services.Forum.Dto.Output
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Author
@@ -66,7 +66,7 @@ namespace DM.Services.Forum.Dto.Output
         /// <summary>
         /// Last commentary creation moment or (if none) topic creation moment
         /// </summary>
-        public DateTime LastActivityDate { get; set; }
+        public DateTimeOffset LastActivityDate { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<GeneralUser> Likes { get; set; }
@@ -85,6 +85,6 @@ namespace DM.Services.Forum.Dto.Output
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
     }
 }

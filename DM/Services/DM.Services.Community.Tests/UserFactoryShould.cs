@@ -14,7 +14,7 @@ namespace DM.Services.Community.Tests
     public class UserFactoryShould : UnitTestBase
     {
         private readonly ISetup<IGuidFactory, Guid> idCreateSetup;
-        private readonly ISetup<IDateTimeProvider, DateTime> currentMomentSetup;
+        private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
         private readonly UserFactory factory;
 
         public UserFactoryShould()

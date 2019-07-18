@@ -39,9 +39,9 @@ namespace DM.Web.Classic.Controllers.ForumControllers
                 Text = form.Text
             };
             var topic = await topicUpdatingService.UpdateTopic(updateTopic);
-            return RedirectToAction("LastUnread", "Topic", new RouteValueDictionary
+            return RedirectToAction("Index", "Topic", new RouteValueDictionary
             {
-                {"topicIdEncoded", topic.Id.EncodeToReadable(topic.Title)}
+                ["topicId"] = topic.Id.EncodeToReadable(topic.Title)
             });
         }
     }

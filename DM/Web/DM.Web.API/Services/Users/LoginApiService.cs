@@ -69,12 +69,7 @@ namespace DM.Web.API.Services.Users
         public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutAll(httpContext);
 
         /// <inheritdoc />
-        public Task<Envelope<User>> GetCurrent()
-        {
-            var currentUser = identityProvider.Current.User;
-            return Task.FromResult(new Envelope<User>(currentUser.IsAuthenticated
-                ? mapper.Map<User>(currentUser)
-                : null));
-        }
+        public Task<Envelope<User>> GetCurrent() =>
+            Task.FromResult(new Envelope<User>(mapper.Map<User>(identityProvider.Current.User)));
     }
 }

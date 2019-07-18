@@ -21,12 +21,12 @@ namespace DM.Services.Forum.Dto.Output
         /// <summary>
         /// Date of creation
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Date of last update
         /// </summary>
-        public DateTime? LastUpdateDate { get; set; }
+        public DateTimeOffset? LastUpdateDate { get; set; }
 
         /// <summary>
         /// Text

@@ -28,12 +28,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         /// <summary>
         /// Moment from
         /// </summary>
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
         /// Moment to
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         /// <summary>
         /// Moderator commentary for the ban

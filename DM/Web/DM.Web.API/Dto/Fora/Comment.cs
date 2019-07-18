@@ -22,12 +22,12 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime Created { get; set; }
+        public DateTimeOffset Created { get; set; }
 
         /// <summary>
         /// Last update moment
         /// </summary>
-        public DateTime? Updated { get; set; }
+        public DateTimeOffset? Updated { get; set; }
 
         /// <summary>
         /// Text

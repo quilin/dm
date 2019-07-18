@@ -28,12 +28,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
         /// Release moment (first time the game started requirement)
         /// </summary>
-        public DateTime? ReleaseDate { get; set; }
+        public DateTimeOffset? ReleaseDate { get; set; }
 
         /// <summary>
         /// Status

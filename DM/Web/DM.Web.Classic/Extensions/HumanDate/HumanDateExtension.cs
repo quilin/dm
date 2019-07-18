@@ -8,7 +8,7 @@ namespace DM.Web.Classic.Extensions.HumanDate
 {
     public static class HumanDateExtension
     {
-        public static IHtmlContent HumanDate(this DateTime dateTime, ITimezoneInfoProvider provider, bool withTooltip)
+        public static IHtmlContent HumanDate(this DateTimeOffset dateTime, ITimezoneInfoProvider provider, bool withTooltip)
         {
             var humanDate = dateTime.HumanFormat(provider);
             var formatDate = dateTime.Format(provider, true);
@@ -35,24 +35,24 @@ namespace DM.Web.Classic.Extensions.HumanDate
             return wrapperTag;
         }
 
-        public static IHtmlContent HumanDate(this DateTime? dateTime, ITimezoneInfoProvider provider, string emptyValue)
+        public static IHtmlContent HumanDate(this DateTimeOffset? dateTime, ITimezoneInfoProvider provider, string emptyValue)
         {
             return dateTime.HasValue
                 ? HumanDate(dateTime.Value, provider, true)
                 : new HtmlString(emptyValue);
         }
 
-        private static string HumanFormat(this DateTime dateTime, ITimezoneInfoProvider provider)
+        private static string HumanFormat(this DateTimeOffset dateTime, ITimezoneInfoProvider provider)
         {
             return dateTime.Humanize(DateTime.UtcNow, provider.Delta);
         }
 
-        public static string FormatForChat(this DateTime dateTime, ITimezoneInfoProvider provider)
+        public static string FormatForChat(this DateTimeOffset dateTime, ITimezoneInfoProvider provider)
         {
             return dateTime.Add(provider.Delta).ToString("dd.MM HH:mm", CultureInfo.InvariantCulture);
         }
 
-        private static string Humanize(this DateTime dateTime, DateTime currentDateTime, TimeSpan timezoneOffset)
+        private static string Humanize(this DateTimeOffset dateTime, DateTimeOffset currentDateTime, TimeSpan timezoneOffset)
         {
             var offset = currentDateTime - dateTime;
 
@@ -95,7 +95,7 @@ namespace DM.Web.Classic.Extensions.HumanDate
             return "меньше чем через час";
         }
 
-        private static string PastHumanize(DateTime dateTime, DateTime currentDateTime, TimeSpan timezoneOffset,
+        private static string PastHumanize(DateTimeOffset dateTime, DateTimeOffset currentDateTime, TimeSpan timezoneOffset,
             TimeSpan offset)
         {
             if (offset.TotalSeconds < 30)

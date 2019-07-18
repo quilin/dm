@@ -31,7 +31,7 @@ namespace DM.Services.Core.Dto
         /// <summary>
         /// Last time user performed any action on any site
         /// </summary>
-        DateTime? LastVisitDate { get; }
+        DateTimeOffset? LastVisitDate { get; }
 
         /// <summary>
         /// Rating participation flag

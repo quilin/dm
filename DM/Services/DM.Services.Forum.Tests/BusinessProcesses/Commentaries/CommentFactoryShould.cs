@@ -13,7 +13,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
     public class CommentFactoryShould : UnitTestBase
     {
         private readonly ISetup<IGuidFactory, Guid> newIdSetup;
-        private readonly ISetup<IDateTimeProvider, DateTime> currentMomentSetup;
+        private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
         private readonly CommentaryFactory factory;
 
         public CommentFactoryShould()

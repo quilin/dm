@@ -6,6 +6,6 @@ namespace DM.Services.Core.Implementation
     public class DateTimeProvider : IDateTimeProvider
     {
         /// <inheritdoc />
-        public DateTime Now => DateTime.UtcNow;
+        public DateTimeOffset Now => DateTimeOffset.UtcNow;
     }
 }

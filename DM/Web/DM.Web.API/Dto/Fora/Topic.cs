@@ -22,7 +22,7 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime Created { get; set; }
+        public DateTimeOffset Created { get; set; }
 
         /// <summary>
         /// Title
@@ -78,7 +78,7 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Creation moment
         /// </summary>
-        public DateTime Created { get; set; }
+        public DateTimeOffset Created { get; set; }
 
         /// <summary>
         /// Author

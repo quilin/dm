@@ -31,6 +31,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Last read moment
         /// </summary>
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime LastRead { get; set; }
 
         /// <summary>

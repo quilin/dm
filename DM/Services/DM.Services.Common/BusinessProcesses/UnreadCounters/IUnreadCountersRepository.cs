@@ -34,7 +34,7 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         /// <param name="entryType">Entry type</param>
         /// <param name="createDate">Given time</param>
         /// <returns></returns>
-        Task Decrement(Guid entityId, UnreadEntryType entryType, DateTime createDate);
+        Task Decrement(Guid entityId, UnreadEntryType entryType, DateTimeOffset createDate);
 
         /// <summary>
         /// Remove counter for everyone
