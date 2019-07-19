@@ -28,4 +28,20 @@ namespace DM.Services.Common.Authorization
         /// <returns>Whether subject is allowed to perform action upon object</returns>
         Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention, TTarget target);
     }
+
+    /// <summary>
+    /// Resolves if user is allowed to perform action of specific type
+    /// </summary>
+    /// <typeparam name="TIntention">Action type</typeparam>
+    public interface IIntentionResolver<in TIntention> : IIntentionResolver
+        where TIntention : struct
+    {
+        /// <summary>
+        /// Tells if the user is allowed to perform certain action
+        /// </summary>
+        /// <param name="user">Action subject</param>
+        /// <param name="intention">Action</param>
+        /// <returns>Whether subject is allowed to perform action upon object</returns>
+        Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention);
+    }
 }

@@ -16,14 +16,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
     /// <summary>
     /// DAL model for game
     /// </summary>
-    [Table("Modules")]
+    [Table("Games")]
     public class Game : IRemovable
     {
         /// <summary>
         /// Game identifier
         /// </summary>
         [Key]
-        public Guid ModuleId { get; set; }
+        public Guid GameId { get; set; }
 
         /// <summary>
         /// Creation moment

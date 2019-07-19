@@ -20,7 +20,13 @@ namespace DM.Services.Common.Authorization
         {
         }
 
-        private static string GenerateMessage(IUser user, Enum intention, object target)
+        /// <inheritdoc />
+        public IntentionManagerException(IUser user, Enum intention)
+            : base(HttpStatusCode.Forbidden, GenerateMessage(user, intention))
+        {
+        }
+
+        private static string GenerateMessage(IUser user, Enum intention, object target = null)
         {
             var userDisplayName = user == AuthenticatedUser.Guest
                 ? user.Role.ToString()

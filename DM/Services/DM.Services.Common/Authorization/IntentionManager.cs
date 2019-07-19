@@ -22,6 +22,16 @@ namespace DM.Services.Common.Authorization
         }
 
         /// <inheritdoc />
+        public async Task<bool> IsAllowed<TIntention>(TIntention intention) where TIntention : struct
+        {
+            var matchingResolver = resolvers
+                .OfType<IIntentionResolver<TIntention>>()
+                .FirstOrDefault();
+            return matchingResolver != null &&
+                await matchingResolver.IsAllowed(identityProvider.Current.User, intention);
+        }
+
+        /// <inheritdoc />
         public async Task<bool> IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target)
             where TIntention : struct
             where TTarget : class
@@ -31,6 +41,15 @@ namespace DM.Services.Common.Authorization
                 .FirstOrDefault();
             return matchingResolver != null &&
                    await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
+        }
+
+        /// <inheritdoc />
+        public async Task ThrowIfForbidden<TIntention>(TIntention intention) where TIntention : struct
+        {
+            if (!await IsAllowed(intention))
+            {
+                throw new IntentionManagerException(identityProvider.Current.User, GetIntentionEnum(intention));
+            }
         }
 
         /// <inheritdoc />

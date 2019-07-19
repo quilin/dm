@@ -70,6 +70,12 @@ namespace DM.Services.Core.Dto.Enums
         /// Forum commentary has been liked
         /// </summary>
         [EventRoutingKey("forum.comment.liked")]
-        LikedForumComment = 602
+        LikedForumComment = 602,
+
+        /// <summary>
+        /// New game has been created
+        /// </summary>
+        [EventRoutingKey("game.module.created")]
+        NewGame = 301,
     }
 }

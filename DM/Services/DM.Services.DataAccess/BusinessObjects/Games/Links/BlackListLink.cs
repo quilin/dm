@@ -8,7 +8,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     /// <summary>
     /// DAL model or blacklist link
     /// </summary>
-    [Table("ModuleBlackListLinks")]
+    [Table("BlackListLinks")]
     public class BlackListLink
     {
         /// <summary>

@@ -232,10 +232,10 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Modules",
+                name: "Games",
                 columns: table => new
                 {
-                    ModuleId = table.Column<Guid>(nullable: false),
+                    GameId = table.Column<Guid>(nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     ReleaseDate = table.Column<DateTimeOffset>(nullable: true),
                     Status = table.Column<int>(nullable: false),
@@ -260,21 +260,21 @@ namespace DM.Services.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Modules", x => x.ModuleId);
+                    table.PrimaryKey("PK_Games", x => x.GameId);
                     table.ForeignKey(
-                        name: "FK_Modules_Users_AssistantId",
+                        name: "FK_Games_Users_AssistantId",
                         column: x => x.AssistantId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Modules_Users_MasterId",
+                        name: "FK_Games_Users_MasterId",
                         column: x => x.MasterId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Modules_Users_NannyId",
+                        name: "FK_Games_Users_NannyId",
                         column: x => x.NannyId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -438,10 +438,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Characters", x => x.CharacterId);
                     table.ForeignKey(
-                        name: "FK_Characters_Modules_GameId",
+                        name: "FK_Characters_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Characters_Users_UserId",
@@ -467,10 +467,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_GameComments", x => x.GameCommentId);
                     table.ForeignKey(
-                        name: "FK_GameComments_Modules_GameId",
+                        name: "FK_GameComments_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GameComments_Users_UserId",
@@ -492,10 +492,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_GameTags", x => x.GameTagId);
                     table.ForeignKey(
-                        name: "FK_GameTags_Modules_GameId",
+                        name: "FK_GameTags_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GameTags_Tags_TagId",
