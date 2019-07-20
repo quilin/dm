@@ -506,7 +506,7 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModuleBlackListLinks",
+                name: "BlackListLinks",
                 columns: table => new
                 {
                     BlackListLinkId = table.Column<Guid>(nullable: false),
@@ -515,15 +515,15 @@ namespace DM.Services.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModuleBlackListLinks", x => x.BlackListLinkId);
+                    table.PrimaryKey("PK_BlackListLinks", x => x.BlackListLinkId);
                     table.ForeignKey(
-                        name: "FK_ModuleBlackListLinks_Modules_GameId",
+                        name: "FK_BlackListLinks_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ModuleBlackListLinks_Users_UserId",
+                        name: "FK_BlackListLinks_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -542,10 +542,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Readers", x => x.ReaderId);
                     table.ForeignKey(
-                        name: "FK_Readers_Modules_GameId",
+                        name: "FK_Readers_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Readers_Users_UserId",
@@ -573,10 +573,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Rooms", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_Rooms_Modules_GameId",
+                        name: "FK_Rooms_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Rooms_Rooms_NextRoomId",
@@ -730,10 +730,10 @@ namespace DM.Services.DataAccess.Migrations
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Uploads_Modules_EntityId",
+                        name: "FK_Uploads_Games_EntityId",
                         column: x => x.EntityId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Uploads_Posts_EntityId",
@@ -772,10 +772,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Votes", x => x.VoteId);
                     table.ForeignKey(
-                        name: "FK_Votes_Modules_GameId",
+                        name: "FK_Votes_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Modules",
-                        principalColumn: "ModuleId",
+                        principalTable: "Games",
+                        principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Votes_Posts_PostId",
@@ -1030,28 +1030,28 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModuleBlackListLinks_GameId",
-                table: "ModuleBlackListLinks",
+                name: "IX_BlackListLinks_GameId",
+                table: "BlackListLinks",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModuleBlackListLinks_UserId",
-                table: "ModuleBlackListLinks",
+                name: "IX_BlackListLinks_UserId",
+                table: "BlackListLinks",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_AssistantId",
-                table: "Modules",
+                name: "IX_Games_AssistantId",
+                table: "Games",
                 column: "AssistantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_MasterId",
-                table: "Modules",
+                name: "IX_Games_MasterId",
+                table: "Games",
                 column: "MasterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Modules_NannyId",
-                table: "Modules",
+                name: "IX_Games_NannyId",
+                table: "Games",
                 column: "NannyId");
 
             migrationBuilder.CreateIndex(
@@ -1247,7 +1247,7 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "ModuleBlackListLinks");
+                name: "BlackListLinks");
 
             migrationBuilder.DropTable(
                 name: "PostWaitNotifications");
@@ -1301,7 +1301,7 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Modules");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Users");
