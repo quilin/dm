@@ -12,7 +12,7 @@ namespace DM.Services.Forum.Dto.Input
         public UpdateTopicValidator()
         {
             RuleFor(t => t.TopicId)
-                .NotEmpty();
+                .NotEmpty().WithMessage(ValidationError.Empty);
 
             RuleFor(t => t.Title)
                 .NotEmpty().WithMessage(ValidationError.Empty)

@@ -31,7 +31,7 @@ namespace DM.Services.Game.Dto.Input
 
             When(g => !string.IsNullOrEmpty(g.AssistantLogin), () =>
                 RuleFor(g => g.AssistantLogin)
-                    .MustAsync(userRepository.UserExists));
+                    .MustAsync(userRepository.UserExists).WithMessage(ValidationError.Invalid));
         }
     }
 }
