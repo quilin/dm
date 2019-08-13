@@ -20,6 +20,14 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         Task Create(Guid entityId, Guid parentId, UnreadEntryType entryType);
 
         /// <summary>
+        /// Create a counter for the entity without parent
+        /// </summary>
+        /// <param name="entityId">Entity id</param>
+        /// <param name="entryType">Entry type</param>
+        /// <returns></returns>
+        Task Create(Guid entityId, UnreadEntryType entryType);
+
+        /// <summary>
         /// Increment counter of the entity for every user
         /// </summary>
         /// <param name="entityId">Entity Id</param>

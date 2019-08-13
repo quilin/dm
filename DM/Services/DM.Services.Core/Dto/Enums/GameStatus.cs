@@ -28,7 +28,7 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Game is not yet published
         /// </summary>
-        Registration = 4,
+        Draft = 4,
 
         /// <summary>
         /// Game has started
@@ -36,13 +36,13 @@ namespace DM.Services.Core.Dto.Enums
         Active = 5,
 
         /// <summary>
-        /// GM is newbie so the game requires premoderation
+        /// GM is newbie so the game requires moderation, no moderator is assigned yet
         /// </summary>
         RequiresModeration = 6,
 
         /// <summary>
-        /// Game is on premoderation and awaits moderator
+        /// Game is on moderation and awaits moderator
         /// </summary>
-        Premoderation = 7
+        Moderation = 7
     }
 }

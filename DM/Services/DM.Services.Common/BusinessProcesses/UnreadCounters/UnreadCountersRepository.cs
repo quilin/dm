@@ -36,6 +36,9 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         }
 
         /// <inheritdoc />
+        public Task Create(Guid entityId, UnreadEntryType entryType) => Create(entityId, entityId, entryType);
+
+        /// <inheritdoc />
         public Task Increment(Guid entityId, UnreadEntryType entryType)
         {
             return Collection.UpdateManyAsync(
