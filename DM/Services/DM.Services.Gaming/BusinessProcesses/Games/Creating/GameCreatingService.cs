@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -6,6 +7,7 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -20,7 +22,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IValidator<CreateGame> validator;
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
-        private readonly IGameFactory factory;
+        private readonly IGameFactory gameFactory;
+        private readonly IRoomFactory roomFactory;
         private readonly IGameCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher publisher;
@@ -30,7 +33,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IValidator<CreateGame> validator,
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
-            IGameFactory factory,
+            IGameFactory gameFactory,
+            IRoomFactory roomFactory,
             IGameCreatingRepository repository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher publisher)
@@ -38,7 +42,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.validator = validator;
             this.intentionManager = intentionManager;
             identity = identityProvider.Current;
-            this.factory = factory;
+            this.gameFactory = gameFactory;
+            this.roomFactory = roomFactory;
             this.repository = repository;
             this.countersRepository = countersRepository;
             this.publisher = publisher;
@@ -55,10 +60,20 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 : createGame.Draft
                     ? GameStatus.Draft
                     : GameStatus.Requirement;
-            var (assistantExists, assistantId) = await repository.FindUserId(createGame.AssistantLogin);
-            var (game, room, tags) = factory.Create(createGame, identity.User.UserId,
-                assistantExists ? assistantId : (Guid?) null, initialStatus);
-            var createdGame = await repository.Create(game, room, tags);
+
+            Guid? assistantId = null;
+            if (!string.IsNullOrEmpty(createGame.AssistantLogin))
+            {
+                var (assistantExists, foundAssistantId) = await repository.FindUserId(createGame.AssistantLogin);
+                if (assistantExists)
+                {
+                    assistantId = foundAssistantId;
+                }
+            }
+
+            var game = gameFactory.Create(createGame, identity.User.UserId, assistantId, initialStatus);
+            var room = roomFactory.Create(game.GameId);
+            var createdGame = await repository.Create(game, room, Enumerable.Empty<GameTag>());
 
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);
