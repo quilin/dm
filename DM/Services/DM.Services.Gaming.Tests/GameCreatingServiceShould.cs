@@ -8,7 +8,6 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
 using DM.Services.Gaming.Dto.Input;
@@ -22,6 +21,7 @@ using Moq.Language.Flow;
 using Xunit;
 using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 using Room = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
+using GameTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 
 namespace DM.Services.Gaming.Tests
 {

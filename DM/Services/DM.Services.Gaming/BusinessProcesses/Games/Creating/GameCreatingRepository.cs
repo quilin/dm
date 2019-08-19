@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
-using Room = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
+using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
+using DbGame = DM.Services.DataAccess.BusinessObjects.Games.Game;
+using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
@@ -28,8 +29,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         }
         
         /// <inheritdoc />
-        public async Task<GameExtended> Create(DataAccess.BusinessObjects.Games.Game game, Room room,
-            IEnumerable<GameTag> tags)
+        public async Task<GameExtended> Create(DbGame game, DbRoom room,
+            IEnumerable<DbTag> tags)
         {
             await Task.WhenAll(
                 dbContext.Games.AddAsync(game),

@@ -13,6 +13,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
     public interface IGameReadingService
     {
         /// <summary>
+        /// Get available game tags
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<GameTag>> GetTags();
+
+        /// <summary>
         /// Get games page
         /// </summary>
         /// <param name="query">Paging query</param>

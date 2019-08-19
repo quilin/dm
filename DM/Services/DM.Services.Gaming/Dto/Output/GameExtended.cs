@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// <summary>
         /// Game tags
         /// </summary>
-        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<GameTag> Tags { get; set; }
 
         /// <summary>
         /// Game public information

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.Gaming.Dto.Output;
 using DbGame = DM.Services.DataAccess.BusinessObjects.Games.Game;
 using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
+using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
@@ -20,7 +20,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         /// <param name="room">Room DAL</param>
         /// <param name="tags">Game tag DALs</param>
         /// <returns></returns>
-        Task<GameExtended> Create(DbGame game, DbRoom room, IEnumerable<GameTag> tags);
+        Task<GameExtended> Create(DbGame game, DbRoom room, IEnumerable<DbTag> tags);
 
         /// <summary>
         /// Try find user by login

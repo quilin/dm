@@ -37,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Game>> Get(PagingData pagingData, GameStatus? status)
+        public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status)
         {
             return await dbContext.Games
                 .Where(g => !g.IsRemoved)
@@ -50,12 +50,20 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public Task<GameExtended> Get(Guid gameId)
+        public Task<GameExtended> GetGame(Guid gameId)
         {
             return dbContext.Games
                 .Where(g => !g.IsRemoved && g.GameId == gameId)
                 .ProjectTo<GameExtended>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<GameTag>> GetTags()
+        {
+            return await dbContext.Tags
+                .ProjectTo<GameTag>()
+                .ToArrayAsync();
         }
     }
 }

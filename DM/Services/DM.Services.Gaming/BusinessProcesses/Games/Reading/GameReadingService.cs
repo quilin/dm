@@ -8,6 +8,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.Dto.Output;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
 {
@@ -15,31 +16,43 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
     public class GameReadingService : IGameReadingService
     {
         private readonly IGameReadingRepository repository;
+        private readonly IMemoryCache cache;
         private readonly IIdentity identity;
+
+        private const string TagListCacheKey = nameof(TagListCacheKey);
 
         /// <inheritdoc />
         public GameReadingService(
             IGameReadingRepository repository,
-            IIdentityProvider identityProvider)
+            IIdentityProvider identityProvider,
+            IMemoryCache cache)
         {
             this.repository = repository;
+            this.cache = cache;
             identity = identityProvider.Current;
         }
-        
+
+        /// <inheritdoc />
+        public Task<IEnumerable<GameTag>> GetTags()
+        {
+            return cache.GetOrCreateAsync(TagListCacheKey, _ =>
+                repository.GetTags());
+        }
+
         /// <inheritdoc />
         public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query, GameStatus? status)
         {
             var totalCount = await repository.Count(status);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
-            var games = await repository.Get(pagingData, status);
+            var games = await repository.GetGames(pagingData, status);
             return (games, pagingData.Result);
         }
 
         /// <inheritdoc />
         public async Task<GameExtended> GetGame(Guid gameId)
         {
-            var game = await repository.Get(gameId);
+            var game = await repository.GetGame(gameId);
             if (game == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Game not found");

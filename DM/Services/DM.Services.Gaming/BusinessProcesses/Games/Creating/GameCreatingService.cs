@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -7,12 +8,13 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
+using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
@@ -21,6 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
     {
         private readonly IValidator<CreateGame> validator;
         private readonly IIntentionManager intentionManager;
+        private readonly IGameReadingService readingService;
         private readonly IIdentity identity;
         private readonly IGameFactory gameFactory;
         private readonly IRoomFactory roomFactory;
@@ -33,6 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         public GameCreatingService(
             IValidator<CreateGame> validator,
             IIntentionManager intentionManager,
+            IGameReadingService readingService,
             IIdentityProvider identityProvider,
             IGameFactory gameFactory,
             IRoomFactory roomFactory,
@@ -43,6 +47,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
+            this.readingService = readingService;
             identity = identityProvider.Current;
             this.gameFactory = gameFactory;
             this.roomFactory = roomFactory;
@@ -76,8 +81,19 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 
             var game = gameFactory.Create(createGame, identity.User.UserId, assistantId, initialStatus);
             var room = roomFactory.Create(game.GameId);
-            var tags = createGame.Tags?.Select(tagId => gameTagFactory.Create(game.GameId, tagId)) ??
-                       Enumerable.Empty<GameTag>();
+            IEnumerable<DbTag> tags;
+            if (createGame.Tags != null && createGame.Tags.Any())
+            {
+                var availableTags = (await readingService.GetTags()).Select(t => t.Id).ToHashSet();
+                tags = createGame.Tags
+                    .Where(t => availableTags.Contains(t))
+                    .Select(t => gameTagFactory.Create(game.GameId, t));
+            }
+            else
+            {
+                tags = Enumerable.Empty<DbTag>();
+            }
+
             var createdGame = await repository.Create(game, room, tags);
 
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);

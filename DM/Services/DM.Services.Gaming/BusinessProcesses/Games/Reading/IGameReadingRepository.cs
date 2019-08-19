@@ -25,13 +25,19 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <param name="pagingData">Paging data</param>
         /// <param name="status">Status filter</param>
         /// <returns></returns>
-        Task<IEnumerable<Game>> Get(PagingData pagingData, GameStatus? status);
+        Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status);
 
         /// <summary>
         /// Get single game
         /// </summary>
         /// <param name="gameId">Game identifier</param>
         /// <returns></returns>
-        Task<GameExtended> Get(Guid gameId);
+        Task<GameExtended> GetGame(Guid gameId);
+
+        /// <summary>
+        /// Get list of available tags
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<GameTag>> GetTags();
     }
 }
