@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Gaming.Dto.Input
@@ -61,16 +63,21 @@ namespace DM.Services.Gaming.Dto.Input
         /// Only GM and post author can see dice roll result
         /// </summary>
         public bool HideDiceResult { get; set; }
-        
+
         /// <summary>
         /// Everyone can read each others private messages
         /// </summary>
         public bool ShowPrivateMessages { get; set; }
-        
+
         /// <summary>
         /// Commentaries access mode
         /// </summary>
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
+
+        /// <summary>
+        /// Game tag identifiers
+        /// </summary>
+        public IEnumerable<Guid> Tags { get; set; }
 
         /// <summary>
         /// Create game as a draft

@@ -24,6 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IIdentity identity;
         private readonly IGameFactory gameFactory;
         private readonly IRoomFactory roomFactory;
+        private readonly IGameTagFactory gameTagFactory;
         private readonly IGameCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher publisher;
@@ -35,6 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IIdentityProvider identityProvider,
             IGameFactory gameFactory,
             IRoomFactory roomFactory,
+            IGameTagFactory gameTagFactory,
             IGameCreatingRepository repository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher publisher)
@@ -44,6 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             identity = identityProvider.Current;
             this.gameFactory = gameFactory;
             this.roomFactory = roomFactory;
+            this.gameTagFactory = gameTagFactory;
             this.repository = repository;
             this.countersRepository = countersRepository;
             this.publisher = publisher;
@@ -73,7 +76,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 
             var game = gameFactory.Create(createGame, identity.User.UserId, assistantId, initialStatus);
             var room = roomFactory.Create(game.GameId);
-            var createdGame = await repository.Create(game, room, Enumerable.Empty<GameTag>());
+            var tags = createGame.Tags?.Select(tagId => gameTagFactory.Create(game.GameId, tagId)) ??
+                       Enumerable.Empty<GameTag>();
+            var createdGame = await repository.Create(game, room, tags);
 
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);

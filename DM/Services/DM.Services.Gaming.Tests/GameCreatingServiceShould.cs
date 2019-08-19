@@ -33,7 +33,6 @@ namespace DM.Services.Gaming.Tests
         private readonly ISetup<IGameCreatingRepository, Task<GameExtended>> saveGameSetup;
         private readonly Mock<IGameCreatingRepository> gameRepository;
         private readonly Mock<IGameFactory> gameFactory;
-        private readonly Mock<IRoomFactory> roomFactory;
         private readonly Mock<IIntentionManager> intentionManager;
         private readonly Mock<IInvokedEventPublisher> publisher;
         private readonly GameCreatingService service;
@@ -61,8 +60,10 @@ namespace DM.Services.Gaming.Tests
                 .Setup(f => f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), It.IsAny<Guid?>(),
                     It.IsAny<GameStatus>()));
 
-            roomFactory = Mock<IRoomFactory>();
+            var roomFactory = Mock<IRoomFactory>();
             createRoomSetup = roomFactory.Setup(r => r.Create(It.IsAny<Guid>()));
+
+            var gameTagFactory = Mock<IGameTagFactory>();
 
             gameRepository = Mock<IGameCreatingRepository>();
             saveGameSetup = gameRepository
@@ -84,6 +85,7 @@ namespace DM.Services.Gaming.Tests
                 identityProvider.Object,
                 gameFactory.Object,
                 roomFactory.Object,
+                gameTagFactory.Object,
                 gameRepository.Object,
                 countersRepository.Object,
                 publisher.Object);

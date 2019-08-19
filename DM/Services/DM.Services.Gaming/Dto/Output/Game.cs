@@ -63,5 +63,20 @@ namespace DM.Services.Gaming.Dto.Output
         /// Commentaries access mode
         /// </summary>
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
+
+        /// <summary>
+        /// Number of unread game posts
+        /// </summary>
+        public int UnreadPostsCount { get; set; }
+
+        /// <summary>
+        /// Number of unread game commentaries
+        /// </summary>
+        public int UnreadCommentsCount { get; set; }
+
+        /// <summary>
+        /// Number of unread characters in game
+        /// </summary>
+        public int UnreadCharactersCount { get; set; }
     }
 }

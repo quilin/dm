@@ -20,4 +20,9 @@
       <PackageReference Include="FluentValidation" Version="8.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="BusinessProcesses\Attributes" />
+      <Folder Include="BusinessProcesses\Characters" />
+    </ItemGroup>
+
 </Project>
