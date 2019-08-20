@@ -19,12 +19,12 @@ namespace DM.Services.Core.Logging
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Application", applicationName)
                 .Enrich.WithProperty("Environment", "Test")
-                .WriteTo.Logger(lc => lc
-                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
-                    .WriteTo.Elasticsearch(
-                        "http://localhost:9200",
-                        "dm_logs-{0:yyyy.MM.dd}",
-                        inlineFields: true))
+//                .WriteTo.Logger(lc => lc
+//                    .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+//                    .WriteTo.Elasticsearch(
+//                        "http://localhost:9200",
+//                        "dm_logs-{0:yyyy.MM.dd}",
+//                        inlineFields: true))
                 .WriteTo.Logger(lc => lc
                     .WriteTo.Console())
                 .CreateLogger();

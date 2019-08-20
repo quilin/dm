@@ -8,7 +8,7 @@ namespace DM.Services.Authentication.Implementation.UserIdentity
     /// </summary>
     public class IdentityProvider : IIdentitySetter, IIdentityProvider
     {
-        private IIdentity identity;
+        private IIdentity identity = Identity.Guest();
 
         /// <inheritdoc cref="IdentityProvider" />
         public IIdentity Current
@@ -17,8 +17,7 @@ namespace DM.Services.Authentication.Implementation.UserIdentity
             set
             {
                 identity = value;
-                var userName = identity.User.IsAuthenticated ? identity.User.Login : "Guest";
-                LogContext.PushProperty("User", userName);
+                LogContext.PushProperty("User", identity.User.Login);
             }
         }
 

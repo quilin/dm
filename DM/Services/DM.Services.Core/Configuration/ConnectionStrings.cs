@@ -8,21 +8,26 @@ namespace DM.Services.Core.Configuration
         /// <summary>
         /// RDB connection string
         /// </summary>
-        public string DmDbContext { get; set; }
+        public string Rdb { get; set; }
 
         /// <summary>
         /// Mongo connection string
         /// </summary>
-        public string DmMongoClient { get; set; }
+        public string Mongo { get; set; }
 
         /// <summary>
         /// Mongo in-memory connection string
         /// </summary>
-        public string DmCacheClient { get; set; }
+        public string Cache { get; set; }
 
         /// <summary>
         /// Search engine connection string
         /// </summary>
-        public string DmSearchEngine { get; set; }
+        public string SearchEngine { get; set; }
+
+        /// <summary>
+        /// Message queue connection string
+        /// </summary>
+        public string MessageQueue { get; set; }
     }
 }

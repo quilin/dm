@@ -78,7 +78,7 @@ namespace DM.Web.API
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))));
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
             services
                 .AddSwaggerGen(c =>

@@ -1,7 +1,10 @@
+using System;
 using System.Reflection;
 using Autofac;
+using DM.Services.Core.Configuration;
 using DM.Services.MessageQueuing.Consume;
 using DM.Services.MessageQueuing.Processing;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using Module = Autofac.Module;
 
@@ -17,7 +20,10 @@ namespace DM.Services.MessageQueuing
                 .Where(t => t.IsClass)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.Register<IConnectionFactory>(x => new ConnectionFactory())
+            builder.Register<IConnectionFactory>(x => new ConnectionFactory
+                {
+                    Endpoint = new AmqpTcpEndpoint(new Uri(x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue))
+                })
                 .AsImplementedInterfaces()
                 .SingleInstance();
             builder.RegisterGeneric(typeof(EventProcessorAdapter<>))
