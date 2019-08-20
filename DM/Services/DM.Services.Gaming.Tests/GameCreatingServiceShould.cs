@@ -10,6 +10,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
+using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -27,6 +28,7 @@ namespace DM.Services.Gaming.Tests
 {
     public class GameCreatingServiceShould : UnitTestBase
     {
+        private readonly ISetup<IGameReadingService, Task<IEnumerable<Dto.Output.GameTag>>> tagReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<IGameFactory, Game> createGameSetup;
         private readonly ISetup<IRoomFactory, Room> createRoomSetup;
@@ -44,6 +46,9 @@ namespace DM.Services.Gaming.Tests
             validator
                 .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<CreateGame>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ValidationResult());
+
+            var readingService = Mock<IGameReadingService>();
+            tagReadingSetup = readingService.Setup(s => s.GetTags());
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
@@ -82,6 +87,7 @@ namespace DM.Services.Gaming.Tests
 
             service = new GameCreatingService(validator.Object,
                 intentionManager.Object,
+                readingService.Object,
                 identityProvider.Object,
                 gameFactory.Object,
                 roomFactory.Object,
