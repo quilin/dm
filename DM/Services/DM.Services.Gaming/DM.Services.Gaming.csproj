@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <LangVersion>latest</LangVersion>
+        <AssemblyName>DM.Services.Gaming</AssemblyName>
+        <RootNamespace>DM.Services.Gaming</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DM.Services.Common\DM.Services.Common.csproj" />
+      <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+      <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+      <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="8.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="BusinessProcesses\Attributes" />
+      <Folder Include="BusinessProcesses\Characters" />
+    </ItemGroup>
+
+</Project>

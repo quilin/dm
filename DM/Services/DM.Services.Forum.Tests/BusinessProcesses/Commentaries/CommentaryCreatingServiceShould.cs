@@ -89,7 +89,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         {
             var topicId = Guid.NewGuid();
             var createComment = new CreateComment {TopicId = topicId};
-            var topic = new Topic();
+            var topic = new Topic {Id = topicId};
             topicReadingSetup.ReturnsAsync(topic);
             var userId = Guid.NewGuid();
             currentUserSetup.Returns(Create.User(userId).Please);

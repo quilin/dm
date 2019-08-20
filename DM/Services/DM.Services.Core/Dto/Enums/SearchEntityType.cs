@@ -18,6 +18,11 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Forum commentary
         /// </summary>
-        ForumComment = 2
+        ForumComment = 2,
+
+        /// <summary>
+        /// Game
+        /// </summary>
+        Game = 3
     }
 }

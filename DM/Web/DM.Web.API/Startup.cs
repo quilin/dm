@@ -22,6 +22,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace DM.Web.API
@@ -91,6 +93,12 @@ namespace DM.Web.API
                     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));
                 })
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
+                .AddJsonOptions(config =>
+                {
+                    config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    config.SerializerSettings.Converters.Insert(0, new StringEnumConverter());
+                    config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var builder = new ContainerBuilder();

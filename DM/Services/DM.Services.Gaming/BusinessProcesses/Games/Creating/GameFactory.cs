@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Games;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
-using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 using DM.Services.Gaming.Dto.Input;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
@@ -26,13 +22,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         }
 
         /// <inheritdoc />
-        public (Game game, Room room, IEnumerable<GameTag> tags) Create(CreateGame createGame,
+        public Game Create(CreateGame createGame,
             Guid userId, Guid? assistantId, GameStatus initialStatus)
         {
-            var gameId = guidFactory.Create();
-            var game = new Game
+            return new Game
             {
-                GameId = gameId,
+                GameId = guidFactory.Create(),
                 CreateDate = dateTimeProvider.Now,
                 Status = initialStatus,
                 MasterId = userId,
@@ -50,18 +45,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 ShowPrivateMessages = createGame.ShowPrivateMessages,
                 CommentariesAccessMode = createGame.CommentariesAccessMode
             };
-
-            var room = new Room
-            {
-                RoomId = guidFactory.Create(),
-                GameId = gameId,
-                Type = RoomType.Default,
-                AccessType = RoomAccessType.Open,
-                Title = "Основная комната"
-            };
-
-            // TODO: game tags
-            return (game, room, Enumerable.Empty<GameTag>());
         }
     }
 }
