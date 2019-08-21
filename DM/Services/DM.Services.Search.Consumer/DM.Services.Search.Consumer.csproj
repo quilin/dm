@@ -24,4 +24,10 @@
         <ProjectReference Include="..\DM.Services.Search\DM.Services.Search.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

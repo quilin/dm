@@ -28,7 +28,6 @@ namespace DM.Services.Gaming.Tests
 {
     public class GameCreatingServiceShould : UnitTestBase
     {
-        private readonly ISetup<IGameReadingService, Task<IEnumerable<Dto.Output.GameTag>>> tagReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<IGameFactory, Game> createGameSetup;
         private readonly ISetup<IRoomFactory, Room> createRoomSetup;
@@ -48,7 +47,7 @@ namespace DM.Services.Gaming.Tests
                 .ReturnsAsync(new ValidationResult());
 
             var readingService = Mock<IGameReadingService>();
-            tagReadingSetup = readingService.Setup(s => s.GetTags());
+            readingService.Setup(s => s.GetTags());
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager

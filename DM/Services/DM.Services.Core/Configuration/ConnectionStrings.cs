@@ -29,5 +29,10 @@ namespace DM.Services.Core.Configuration
         /// Message queue connection string
         /// </summary>
         public string MessageQueue { get; set; }
+
+        /// <summary>
+        /// Logging storage connection string
+        /// </summary>
+        public string Logs { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -19,20 +19,28 @@ namespace DM.Services.Search.Consumer
     /// </summary>
     public static class ContainerConfiguration
     {
+        private static Assembly[] GetAssemblies()
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
+            return referencedAssemblies
+                .Union(new[] {currentAssembly})
+                .Union(referencedAssemblies.SelectMany(a => a.GetReferencedAssemblies().Select(Assembly.Load)))
+                .Where(a => a.FullName.StartsWith("DM."))
+                .Distinct()
+                .ToArray();
+        }
+
         /// <summary>
         /// Create service provider for search engine MQ consumer
         /// </summary>
         /// <returns>Service provider</returns>
         public static AutofacServiceProvider ConfigureProvider()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false)
-                .Build();
+            var configuration = ConfigurationFactory.Default;
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .AddDmLogging("DM.SearchEngine")
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<MessageConsumeConfiguration>(
@@ -40,15 +48,14 @@ namespace DM.Services.Search.Consumer
                 .Configure<SearchEngineConfiguration>(
                     configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
+                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))))
+                .AddDmLogging("DM.SearchEngine");
 
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<MessageQueuingModule>();
             builder.RegisterModule<SearchEngineModule>();
-            builder.RegisterAssemblyTypes(
-                    Assembly.GetExecutingAssembly(),
-                    Assembly.Load("DM.Services.Core"))
+            builder.RegisterAssemblyTypes(GetAssemblies())
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()

@@ -1,8 +1,9 @@
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
@@ -17,16 +18,24 @@ namespace DM.Services.Notifications.Consumer
     /// </summary>
     public static class ContainerConfiguration
     {
+        private static Assembly[] GetAssemblies()
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
+            return referencedAssemblies
+                .Union(new[] {currentAssembly})
+                .Union(referencedAssemblies.SelectMany(a => a.GetReferencedAssemblies().Select(Assembly.Load)))
+                .Where(a => a.FullName.StartsWith("DM."))
+                .Distinct()
+                .ToArray();
+        }
         /// <summary>
         /// Configure service provider
         /// </summary>
         /// <returns></returns>
         public static AutofacServiceProvider ConfigureProvider()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false)
-                .Build();
+            var configuration = ConfigurationFactory.Default;
 
             var services = new ServiceCollection()
                 .AddOptions()
@@ -37,14 +46,13 @@ namespace DM.Services.Notifications.Consumer
                 .Configure<MessagePublishConfiguration>(
                     configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))));
+                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))))
+                .AddDmLogging("DM.Notifications");
 
             var builder = new ContainerBuilder();
 
             builder.RegisterModule<MessageQueuingModule>();
-            builder.RegisterAssemblyTypes(
-                    Assembly.GetExecutingAssembly(),
-                    Assembly.Load("DM.Services.Core"))
+            builder.RegisterAssemblyTypes(GetAssemblies())
                 .Where(t => t.IsClass)
                 .AsSelf()
                 .AsImplementedInterfaces()

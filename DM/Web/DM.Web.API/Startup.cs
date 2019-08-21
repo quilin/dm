@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.MessageQueuing;
@@ -54,10 +55,7 @@ namespace DM.Web.API
         /// <returns>Service provider</returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false)
-                .Build();
+            Configuration = ConfigurationFactory.Default;
 
             services
                 .AddOptions()
@@ -72,7 +70,8 @@ namespace DM.Web.API
                 .Configure<RealtimeNotificationsConsumeConfiguration>(
                     Configuration.GetSection(nameof(RealtimeNotificationsConsumeConfiguration)).Bind)
                 .Configure<SearchEngineConfiguration>(
-                    Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind);
+                    Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
+                .AddDmLogging("DM.API");
 
             var assemblies = GetAssemblies();
             services

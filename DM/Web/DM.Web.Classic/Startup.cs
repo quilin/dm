@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.MessageQueuing;
@@ -43,10 +43,7 @@ namespace DM.Web.Classic
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .Build();
+            Configuration = ConfigurationFactory.Default;
 
             services
                 .AddOptions()
@@ -57,7 +54,8 @@ namespace DM.Web.Classic
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<MessagePublishConfiguration>(
-                    Configuration.GetSection(nameof(MessagePublishConfiguration)).Bind);
+                    Configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .AddDmLogging("DM.Classic");
             var assemblies = GetAssemblies();
 
             services.Configure<CookiePolicyOptions>(options =>

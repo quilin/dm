@@ -1,5 +1,4 @@
-﻿using DM.Services.Core.Logging;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
@@ -9,7 +8,6 @@ namespace DM.Web.Classic
     {
         public static void Main(string[] args)
         {
-            LoggingConfiguration.Register("DM.Classic");
             CreateWebHostBuilder(args).Build().Run();
         }
 

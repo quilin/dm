@@ -1,4 +1,3 @@
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -9,7 +8,6 @@ using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace DM.Services.Mail.Sender.Consumer
 {
@@ -29,26 +27,24 @@ namespace DM.Services.Mail.Sender.Consumer
                 .Distinct()
                 .ToArray();
         }
-        
+
         /// <summary>
         /// Configure service provider for the consumer
         /// </summary>
         /// <returns></returns>
         public static AutofacServiceProvider ConfigureProvider()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false)
-                .Build();
+            var configuration = ConfigurationFactory.Default;
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .AddDmLogging("DM.MailSender")
-                .AddLogging(b => b.AddSerilog())
                 .Configure<MessageConsumeConfiguration>(
                     configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
                 .Configure<EmailConfiguration>(
-                    configuration.GetSection(nameof(EmailConfiguration)).Bind);
+                    configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<ConnectionStrings>(
+                    configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .AddDmLogging("DM.MailSender");
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<MessageQueuingModule>();

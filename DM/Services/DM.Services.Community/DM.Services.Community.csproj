@@ -13,5 +13,4 @@
         <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj"/>
         <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj"/>
     </ItemGroup>
-
 </Project>
