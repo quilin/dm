@@ -13,7 +13,7 @@ namespace DM.Services.Core.Configuration
             new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true)
-                .AddEnvironmentVariables()
+                .AddEnvironmentVariables("DM_")
                 .Build());
 
         /// <summary>
