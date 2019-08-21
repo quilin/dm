@@ -12,10 +12,19 @@ namespace DM.Services.Core.Logging
     public static class LoggingConfiguration
     {
         /// <summary>
-        /// Create and register logger for the application
+        /// Register logger and add it to the service collection of the application
         /// </summary>
-        private static void Register(string applicationName, ConnectionStrings connectionStrings)
+        public static IServiceCollection AddDmLogging(this IServiceCollection services,
+            string applicationName, IConfigurationRoot configuration = null)
         {
+            if (configuration == null)
+            {
+                configuration = ConfigurationFactory.Default;
+            }
+
+            var connectionStrings = new ConnectionStrings();
+            configuration.GetSection(nameof(ConnectionStrings)).Bind(connectionStrings);
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
@@ -30,21 +39,7 @@ namespace DM.Services.Core.Logging
                 .WriteTo.Logger(lc => lc
                     .WriteTo.Console())
                 .CreateLogger();
-        }
 
-        /// <summary>
-        /// Register logger and add it to the service collection of the application
-        /// </summary>
-        public static IServiceCollection AddDmLogging(this IServiceCollection services,
-            string applicationName, IConfigurationRoot configuration = null)
-        {
-            if (configuration == null)
-            {
-                configuration = ConfigurationFactory.Default;
-            }
-            var connectionStrings = new ConnectionStrings();
-            configuration.GetSection(nameof(ConnectionStrings)).Bind(connectionStrings);
-            Register(applicationName, connectionStrings);
             return services.AddLogging(b => b.AddSerilog());
         }
     }
