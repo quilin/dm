@@ -34,7 +34,7 @@ namespace DM.Services.Core.Logging
                     .Filter.ByExcluding(Matching.FromSource("Microsoft"))
                     .WriteTo.Elasticsearch(
                         connectionStrings.Logs,
-                        "dm_logs-{0:yyyy.MM.dd}",
+                        "dm_logstash-{0:yyyy.MM.dd}",
                         inlineFields: true))
                 .WriteTo.Logger(lc => lc
                     .WriteTo.Console())

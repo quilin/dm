@@ -48,7 +48,7 @@ namespace DM.Services.Search.Consumer
                 .Configure<SearchEngineConfiguration>(
                     configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))))
+                    options.UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))))
                 .AddDmLogging("DM.SearchEngine");
 
             var builder = new ContainerBuilder();
