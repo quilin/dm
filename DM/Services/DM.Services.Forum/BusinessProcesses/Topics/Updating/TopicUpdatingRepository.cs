@@ -26,9 +26,9 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         }
 
         /// <inheritdoc />
-        public async Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder)
+        public async Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder)
         {
-            var topicId = updateBuilder.Update(dbContext);
+            var topicId = updateBuilder.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.ForumTopics
                 .Where(t => t.ForumTopicId == topicId)

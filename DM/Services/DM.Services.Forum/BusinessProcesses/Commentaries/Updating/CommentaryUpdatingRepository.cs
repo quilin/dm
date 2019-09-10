@@ -26,9 +26,9 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         }
         
         /// <inheritdoc />
-        public async Task<Comment> Update(UpdateBuilder<ForumComment> update)
+        public async Task<Comment> Update(IUpdateBuilder<ForumComment> update)
         {
-            var commentId = update.Update(dbContext);
+            var commentId = update.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
                 .Where(c => c.ForumCommentId == commentId)

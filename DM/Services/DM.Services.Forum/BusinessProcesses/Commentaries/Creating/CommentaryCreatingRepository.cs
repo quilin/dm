@@ -26,10 +26,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         }
 
         /// <inheritdoc />
-        public async Task<Comment> Create(ForumComment comment, UpdateBuilder<ForumTopic> topicUpdate)
+        public async Task<Comment> Create(ForumComment comment, IUpdateBuilder<ForumTopic> topicUpdate)
         {
             dbContext.Comments.Add(comment);
-            topicUpdate.Update(dbContext);
+            topicUpdate.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
                 .Where(c => c.ForumCommentId == comment.ForumCommentId)

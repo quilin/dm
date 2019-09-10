@@ -24,6 +24,6 @@ namespace DM.Services.Community.BusinessProcesses.Activation
         /// <param name="updateUser">User update</param>
         /// <param name="updateToken">Token update</param>
         /// <returns></returns>
-        Task ActivateUser(UpdateBuilder<User> updateUser, UpdateBuilder<Token> updateToken);
+        Task ActivateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<Token> updateToken);
     }
 }

@@ -43,16 +43,11 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             var comment = await repository.GetForDelete(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Comment) comment);
 
-            UpdateBuilder<ForumTopic> updateTopic;
+            var updateTopic = new UpdateBuilder<ForumTopic>(comment.TopicId);
             if (comment.IsLastCommentOfTopic)
             {
-                updateTopic = new UpdateBuilder<ForumTopic>(comment.TopicId);
                 var previousCommentaryId = await repository.GetSecondLastCommentId(comment.TopicId);
                 updateTopic.Field(t => t.LastCommentId, previousCommentaryId);
-            }
-            else
-            {
-                updateTopic = UpdateBuilder<ForumTopic>.Empty();
             }
 
             await repository.Delete(new UpdateBuilder<ForumComment>(commentId)

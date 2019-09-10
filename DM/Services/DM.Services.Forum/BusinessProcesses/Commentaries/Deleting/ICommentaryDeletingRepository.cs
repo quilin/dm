@@ -31,6 +31,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         /// <param name="update">Updated fields</param>
         /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
         /// <returns></returns>
-        Task Delete(UpdateBuilder<ForumComment> update, UpdateBuilder<ForumTopic> topicUpdate);
+        Task Delete(IUpdateBuilder<ForumComment> update, IUpdateBuilder<ForumTopic> topicUpdate);
     }
 }

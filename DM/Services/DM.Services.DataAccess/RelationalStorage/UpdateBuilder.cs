@@ -7,15 +7,12 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DM.Services.DataAccess.RelationalStorage
 {
-    /// <summary>
-    /// Builder for atomic update operation
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public class UpdateBuilder<TEntity> where TEntity : class, new()
+    /// <inheritdoc />
+    public class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
+        where TEntity : class, new()
     {
         private readonly Guid id;
         private readonly IList<(Expression<Func<TEntity, object>>, object)> fields;
-        private readonly bool empty;
 
         /// <inheritdoc />
         public UpdateBuilder(Guid id)
@@ -24,33 +21,17 @@ namespace DM.Services.DataAccess.RelationalStorage
             fields = new List<(Expression<Func<TEntity, object>>, object)>();
         }
 
-        private UpdateBuilder()
+        /// <inheritdoc />
+        public IUpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
         {
-            empty = true;
-        }
-
-        /// <summary>
-        /// Add field update operation
-        /// </summary>
-        /// <param name="field">Field lambda</param>
-        /// <param name="value">Field value</param>
-        /// <returns></returns>
-        public UpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
-        {
-            if (!empty)
-            {
-                fields.Add((field, value));
-            }
+            fields.Add((field, value));
             return this;
         }
 
-        /// <summary>
-        /// Update entity
-        /// </summary>
-        /// <returns></returns>
-        public Guid Update(DbContext dbContext)
+        /// <inheritdoc />
+        public Guid AttachTo(DbContext dbContext)
         {
-            if (empty || !fields.Any())
+            if (!fields.Any())
             {
                 return id;
             }
@@ -87,11 +68,5 @@ namespace DM.Services.DataAccess.RelationalStorage
             var property = (PropertyInfo) memberExpression.Member;
             property.SetValue(target, value);
         }
-        
-        /// <summary>
-        /// Creates builder with no entities
-        /// </summary>
-        /// <returns></returns>
-        public static UpdateBuilder<TEntity> Empty() => new UpdateBuilder<TEntity>();
     }
 }
