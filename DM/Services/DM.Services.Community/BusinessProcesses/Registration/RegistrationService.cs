@@ -47,8 +47,8 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             var user = userFactory.Create(registration, salt, hash);
             var token = registrationTokenFactory.Create(user.UserId);
 
-            await repository.AddUser(user, token);
             await mailSender.Send(user.Email, user.Login, token.TokenId);
+            await repository.AddUser(user, token);
 
             await publisher.Publish(EventType.NewUser, user.UserId);
         }

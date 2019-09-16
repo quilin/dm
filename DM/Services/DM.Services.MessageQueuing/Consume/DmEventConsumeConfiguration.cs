@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using DM.Services.MessageQueuing.Configuration;
 
-namespace DM.Services.Notifications.Configuration
+namespace DM.Services.MessageQueuing.Consume
 {
     /// <summary>
-    /// Configuration for realtime notifications consumer
+    /// Consumer configuration of dm event messages
     /// </summary>
-    public class RealtimeNotificationsConsumeConfiguration : IMessageConsumeConfiguration
+    public class DmEventConsumeConfiguration : IMessageConsumeConfiguration
     {
         /// <inheritdoc />
         public string QueueName { get; set; }

@@ -8,9 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj"/>
-        <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj"/>
-        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj"/>
-        <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj"/>
+        <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
+        <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+        <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="BusinessProcesses\Registration\Confirmation\RegistrationLetter.cshtml" />
+      <Content Include="Views\RegistrationLetter.cshtml">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <None Remove="Views\Emails\ConfirmAccount\RegistrationLetter.cshtml" />
+      <None Remove="Views\Emails\_ViewStart.cshtml" />
+      <None Remove="Views\Shared\EmailLayout.cshtml" />
     </ItemGroup>
 </Project>

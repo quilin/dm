@@ -29,15 +29,16 @@ namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
         public async Task Send(string email, string login, Guid token)
         {
             var confirmationLinkUri = new Uri(new Uri(integrationSettings.WebUrl), $"activate/{token}");
+            var emailBody = renderer.Render("RegistrationLetter", new RegistrationConfirmationViewModel
+            {
+                Login = login,
+                ConfirmationLinkUrl = confirmationLinkUri.ToString()
+            });
             await mailSender.Send(new MailLetter
             {
                 Address = email,
                 Subject = $"Добро пожаловать на DM.AM, {login}!",
-                Body = await renderer.Render("RegistrationLetter", new RegistrationConfirmationViewModel
-                {
-                    Login = login,
-                    ConfirmationLinkUrl = confirmationLinkUri.ToString()
-                })
+                Body = await emailBody
             });
         }
     }

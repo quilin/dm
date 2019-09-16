@@ -15,18 +15,12 @@ namespace DM.Services.DataAccess.RelationalStorage
     {
         private readonly Guid id;
         private readonly IList<(Expression<Func<TEntity, object>>, object)> fields;
-        private readonly bool empty;
 
         /// <inheritdoc />
         public UpdateBuilder(Guid id)
         {
             this.id = id;
             fields = new List<(Expression<Func<TEntity, object>>, object)>();
-        }
-
-        private UpdateBuilder()
-        {
-            empty = true;
         }
 
         /// <summary>
@@ -37,10 +31,7 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// <returns></returns>
         public UpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
         {
-            if (!empty)
-            {
-                fields.Add((field, value));
-            }
+            fields.Add((field, value));
             return this;
         }
 
@@ -50,7 +41,7 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// <returns></returns>
         public Guid Update(DbContext dbContext)
         {
-            if (empty || !fields.Any())
+            if (!fields.Any())
             {
                 return id;
             }
@@ -87,11 +78,5 @@ namespace DM.Services.DataAccess.RelationalStorage
             var property = (PropertyInfo) memberExpression.Member;
             property.SetValue(target, value);
         }
-        
-        /// <summary>
-        /// Creates builder with no entities
-        /// </summary>
-        /// <returns></returns>
-        public static UpdateBuilder<TEntity> Empty() => new UpdateBuilder<TEntity>();
     }
 }

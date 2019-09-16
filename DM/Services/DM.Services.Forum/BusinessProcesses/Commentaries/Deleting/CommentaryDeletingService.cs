@@ -43,21 +43,17 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             var comment = await repository.GetForDelete(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Comment) comment);
 
-            UpdateBuilder<ForumTopic> updateTopic;
+            var updateTopic = new UpdateBuilder<ForumTopic>(comment.TopicId);
             if (comment.IsLastCommentOfTopic)
             {
-                updateTopic = new UpdateBuilder<ForumTopic>(comment.TopicId);
                 var previousCommentaryId = await repository.GetSecondLastCommentId(comment.TopicId);
-                updateTopic.Field(t => t.LastCommentId, previousCommentaryId);
-            }
-            else
-            {
-                updateTopic = UpdateBuilder<ForumTopic>.Empty();
+                updateTopic = updateTopic.Field(t => t.LastCommentId, previousCommentaryId);
             }
 
-            await repository.Delete(new UpdateBuilder<ForumComment>(commentId)
+            var updateBuilder = new UpdateBuilder<ForumComment>(commentId)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now)
-                .Field(c => c.IsRemoved, true), updateTopic);
+                .Field(c => c.IsRemoved, true);
+            await repository.Delete(updateBuilder, updateTopic);
             await unreadCountersRepository.Decrement(comment.TopicId, UnreadEntryType.Message, comment.CreateDate);
 
             await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);

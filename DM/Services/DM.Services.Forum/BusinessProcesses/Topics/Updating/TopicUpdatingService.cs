@@ -48,9 +48,16 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 
             await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
-            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId)
-                .Field(t => t.Title, updateTopic.Title.Trim())
-                .Field(t => t.Text, updateTopic.Text.Trim());
+            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
+            if (!string.IsNullOrEmpty(updateTopic.Title))
+            {
+                changes = changes.Field(t => t.Title, updateTopic.Title.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(updateTopic.Text))
+            {
+                changes = changes.Field(t => t.Text, updateTopic.Text.Trim());
+            }
 
             if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {

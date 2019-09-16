@@ -7,6 +7,7 @@ using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
+using DM.Services.MessageQueuing.Consume;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,10 +42,10 @@ namespace DM.Services.Notifications.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<MessageConsumeConfiguration>(
-                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
-                .Configure<MessagePublishConfiguration>(
-                    configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .Configure<DmEventConsumeConfiguration>(
+                    configuration.GetSection(nameof(DmEventConsumeConfiguration)).Bind)
+                .Configure<IMessagePublishConfiguration>(
+                    configuration.GetSection(nameof(IMessagePublishConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(nameof(DmDbContext))))
                 .AddDmLogging("DM.Notifications");

@@ -102,14 +102,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var actual = await service.Create(createComment);
             actual.Should().Be(expected);
 
-            validator.Verify(v => v.ValidateAsync(
-                It.Is<ValidationContext<CreateComment>>(c => c.InstanceToValidate == createComment),
-                It.IsAny<CancellationToken>()), Times.Once);
-
             topicReadingService.Verify(s => s.GetTopic(topicId), Times.Once);
             topicReadingService.VerifyNoOtherCalls();
-
-            commentFactory.Verify(f => f.Create(createComment, userId));
 
             commentRepository.Verify(r => r.Create(comment, It.IsAny<UpdateBuilder<ForumTopic>>()), Times.Once);
             commentRepository.VerifyNoOtherCalls();

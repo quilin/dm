@@ -43,8 +43,8 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<MessageConsumeConfiguration>(
-                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
+                .Configure<IMessageConsumeConfiguration>(
+                    configuration.GetSection(nameof(IMessageConsumeConfiguration)).Bind)
                 .Configure<SearchEngineConfiguration>(
                     configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>

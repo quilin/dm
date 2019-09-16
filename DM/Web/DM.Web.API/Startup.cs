@@ -65,8 +65,8 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<MessagePublishConfiguration>(
-                    Configuration.GetSection(nameof(MessagePublishConfiguration)).Bind)
+                .Configure<IMessagePublishConfiguration>(
+                    Configuration.GetSection(nameof(IMessagePublishConfiguration)).Bind)
                 .Configure<RealtimeNotificationsConsumeConfiguration>(
                     Configuration.GetSection(nameof(RealtimeNotificationsConsumeConfiguration)).Bind)
                 .Configure<SearchEngineConfiguration>(

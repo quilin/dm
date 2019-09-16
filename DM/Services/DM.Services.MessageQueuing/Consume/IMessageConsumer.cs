@@ -13,6 +13,6 @@ namespace DM.Services.MessageQueuing.Consume
         /// Start consuming
         /// </summary>
         /// <param name="configuration">MQ configuration</param>
-        void Consume(MessageConsumeConfiguration configuration);
+        void Consume(IMessageConsumeConfiguration configuration);
     }
 }

@@ -15,17 +15,17 @@ namespace DM.Services.MessageQueuing.Tests
     {
         private readonly InvokedEventPublisher publisherWrapper;
         private readonly Mock<IMessagePublisher> publisher;
-        private readonly MessagePublishConfiguration messagePublishConfiguration;
+        private readonly DmEventPublishConfiguration messagePublishConfiguration;
 
         public InvokedEventPublisherShould()
         {
             publisher = Mock<IMessagePublisher>();
             publisher
                 .Setup(p => p.Publish(
-                    It.IsAny<InvokedEvent>(), It.IsAny<MessagePublishConfiguration>(), It.IsAny<string>()))
+                    It.IsAny<InvokedEvent>(), It.IsAny<IMessagePublishConfiguration>(), It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
-            var options = Mock<IOptions<MessagePublishConfiguration>>();
-            messagePublishConfiguration = new MessagePublishConfiguration();
+            var options = Mock<IOptions<DmEventPublishConfiguration>>();
+            messagePublishConfiguration = new DmEventPublishConfiguration();
             options.Setup(o => o.Value).Returns(messagePublishConfiguration);
             publisherWrapper = new InvokedEventPublisher(publisher.Object, options.Object);
         }
