@@ -3,11 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DM.Services.Core.Rendering
 {
-    /// <inheritdoc cref="ITemplateRendererPool" />
-    public class TemplateRendererPool : ITemplateRendererPool, IDisposable
+    /// <inheritdoc cref="IRenderApplicationPool" />
+    internal class RenderApplicationPool : IRenderApplicationPool, IDisposable
     {
         private bool isDisposed;
 
@@ -15,16 +16,16 @@ namespace DM.Services.Core.Rendering
             new ConcurrentDictionary<string, TemplateRenderApplication>();
 
         /// <inheritdoc />
-        public Task<string> Render<TModel>(string templatePath, TModel model)
+        public Task<ServiceProvider> GetApplication<TModel>()
         {
             if (isDisposed)
             {
-                throw new ObjectDisposedException(nameof(TemplateRendererPool));
+                throw new ObjectDisposedException(nameof(RenderApplicationPool));
             }
 
             var assembly = typeof(TModel).Assembly;
             TemplateRenderApplication application;
-
+            
             lock (pool)
             {
                 if (!pool.TryGetValue(assembly.FullName, out application))
@@ -33,7 +34,7 @@ namespace DM.Services.Core.Rendering
                 }
             }
 
-            return application.Render(templatePath, model);
+            return Task.FromResult(application.ServiceProvider);
         }
 
         /// <inheritdoc />

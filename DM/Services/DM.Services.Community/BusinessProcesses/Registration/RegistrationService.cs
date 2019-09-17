@@ -37,7 +37,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             this.mailSender = mailSender;
             this.publisher = publisher;
         }
-        
+
         /// <inheritdoc />
         public async Task Register(UserRegistration registration)
         {
@@ -47,9 +47,8 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             var user = userFactory.Create(registration, salt, hash);
             var token = registrationTokenFactory.Create(user.UserId);
 
-            await mailSender.Send(user.Email, user.Login, token.TokenId);
             await repository.AddUser(user, token);
-
+            await mailSender.Send(user.Email, user.Login, token.TokenId);
             await publisher.Publish(EventType.NewUser, user.UserId);
         }
     }

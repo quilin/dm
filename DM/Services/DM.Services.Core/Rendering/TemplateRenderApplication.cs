@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -15,16 +14,20 @@ namespace DM.Services.Core.Rendering
     /// <summary>
     /// The MVC application to compile and render Razor templates
     /// </summary>
-    public class TemplateRenderApplication : IDisposable
+    internal class TemplateRenderApplication : IDisposable
     {
         private bool isDisposed;
-        private readonly ServiceProvider serviceProvider;
-        
+
         /// <inheritdoc />
         public TemplateRenderApplication(Assembly assembly)
         {
-            serviceProvider = CreateServiceProvider(assembly);
+            ServiceProvider = CreateServiceProvider(assembly);
         }
+
+        /// <summary>
+        /// Get service provider
+        /// </summary>
+        public ServiceProvider ServiceProvider { get; }
 
         private static ServiceProvider CreateServiceProvider(Assembly assembly)
         {
@@ -46,23 +49,6 @@ namespace DM.Services.Core.Rendering
             return services.BuildServiceProvider();
         }
 
-        /// <summary>
-        /// Render template against model
-        /// </summary>
-        /// <param name="templatePath">Template path</param>
-        /// <param name="model">Model</param>
-        /// <typeparam name="TModel">Model type</typeparam>
-        /// <returns>Rendered template</returns>
-        public async Task<string> Render<TModel>(string templatePath, TModel model)
-        {
-            var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var renderer = scope.ServiceProvider.GetRequiredService<ITemplateRenderer>();
-                return await renderer.Render(templatePath, model).ConfigureAwait(false);
-            }
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
@@ -72,7 +58,7 @@ namespace DM.Services.Core.Rendering
             }
 
             isDisposed = true;
-            serviceProvider.Dispose();
+            ServiceProvider.Dispose();
         }
     }
 }

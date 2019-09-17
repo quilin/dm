@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Routing;
 namespace DM.Services.Core.Rendering
 {
     /// <inheritdoc />
-    public class TemplateRenderer : ITemplateRenderer
+    internal class TemplateRenderer : ITemplateRenderer
     {
         private readonly IRazorViewEngine viewEngine;
         private readonly IServiceProvider serviceProvider;
