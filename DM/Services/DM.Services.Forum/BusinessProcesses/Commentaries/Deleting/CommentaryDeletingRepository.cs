@@ -36,9 +36,9 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         }
 
         /// <inheritdoc />
-        public Task Delete(UpdateBuilder<ForumComment> update, UpdateBuilder<ForumTopic> topicUpdate)
+        public Task Delete(IUpdateBuilder<ForumComment> update, IUpdateBuilder<ForumTopic> topicUpdate)
         {
-            update.Update(dbContext);
+            update.AttachTo(dbContext);
             return dbContext.SaveChangesAsync();
         }
 

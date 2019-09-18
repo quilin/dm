@@ -7,11 +7,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DM.Services.DataAccess.RelationalStorage
 {
-    /// <summary>
-    /// Builder for atomic update operation
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public class UpdateBuilder<TEntity> where TEntity : class, new()
+    /// <inheritdoc />
+    internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
+        where TEntity : class, new()
     {
         private readonly Guid id;
         private readonly IList<(Expression<Func<TEntity, object>>, object)> fields;
@@ -23,13 +21,8 @@ namespace DM.Services.DataAccess.RelationalStorage
             fields = new List<(Expression<Func<TEntity, object>>, object)>();
         }
 
-        /// <summary>
-        /// Add field update operation
-        /// </summary>
-        /// <param name="field">Field lambda</param>
-        /// <param name="value">Field value</param>
-        /// <returns></returns>
-        public UpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
+        /// <inheritdoc />
+        public IUpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
         {
             fields.Add((field, value));
             return this;
@@ -39,7 +32,7 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// Update entity
         /// </summary>
         /// <returns></returns>
-        public Guid Update(DbContext dbContext)
+        public Guid AttachTo(DbContext dbContext)
         {
             if (!fields.Any())
             {
@@ -48,7 +41,13 @@ namespace DM.Services.DataAccess.RelationalStorage
 
             var entity = new TEntity();
             var type = entity.GetType();
-            type.GetProperty($"{type.Name}Id").SetValue(entity, id);
+            var propertyInfo = type.GetProperty($"{type.Name}Id");
+            if (propertyInfo == null)
+            {
+                throw new UpdateBuilderException($"No key property was found for entity {type.Name}");
+            }
+            
+            propertyInfo.SetValue(entity, id);
             dbContext.Set<TEntity>().Attach(entity);
             foreach (var (field, value) in fields)
             {

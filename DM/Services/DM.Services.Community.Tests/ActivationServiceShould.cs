@@ -22,6 +22,8 @@ namespace DM.Services.Community.Tests
         private readonly ISetup<IActivationRepository, Task<Guid>> findUserSetup;
         private readonly Mock<IActivationRepository> activationRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
+        private readonly Mock<IUpdateBuilder<Token>> tokenUpdateBuilder;
 
         public ActivationServiceShould()
         {
@@ -29,7 +31,7 @@ namespace DM.Services.Community.Tests
             findUserSetup = activationRepository
                 .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
             activationRepository
-                .Setup(r => r.ActivateUser(It.IsAny<UpdateBuilder<User>>(), It.IsAny<UpdateBuilder<Token>>()))
+                .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
                 .Returns(Task.CompletedTask);
 
             var dateTimeProvider = Mock<IDateTimeProvider>();
@@ -40,7 +42,17 @@ namespace DM.Services.Community.Tests
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
-            activationService = new ActivationService(dateTimeProvider.Object,
+            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+            userUpdateBuilder = MockUpdateBuilder<User>();
+            tokenUpdateBuilder = MockUpdateBuilder<Token>();
+            updateBuilderFactory
+                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
+                .Returns(userUpdateBuilder.Object);
+            updateBuilderFactory
+                .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
+                .Returns(tokenUpdateBuilder.Object);
+
+            activationService = new ActivationService(dateTimeProvider.Object, updateBuilderFactory.Object,
                 activationRepository.Object, publisher.Object);
         }
 
@@ -83,12 +95,10 @@ namespace DM.Services.Community.Tests
 
             await activationService.Activate(tokenId);
 
-            // TODO: Get to verify the updating operations
-//            activationRepository.Verify(r => r.ActivateUser(
-//                It.Is<UpdateBuilder<User>>(x => x.Equals(new UpdateBuilder<User>(userId)
-//                    .Field(u => u.Activated, true))),
-//                It.Is<UpdateBuilder<Token>>(x => x.Equals(new UpdateBuilder<Token>(tokenId)
-//                    .Field(t => t.IsRemoved, true)))), Times.Once);
+            activationRepository.Verify(r =>
+                r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object), Times.Once);
+            userUpdateBuilder.Verify(b => b.Field(u => u.Activated, true));
+            tokenUpdateBuilder.Verify(b => b.Field(t => t.IsRemoved, true));
         }
 
         [Fact]

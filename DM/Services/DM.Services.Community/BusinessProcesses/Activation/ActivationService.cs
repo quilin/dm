@@ -14,16 +14,19 @@ namespace DM.Services.Community.BusinessProcesses.Activation
     public class ActivationService : IActivationService
     {
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IActivationRepository repository;
         private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
         public ActivationService(
             IDateTimeProvider dateTimeProvider,
+            IUpdateBuilderFactory updateBuilderFactory,
             IActivationRepository repository,
             IInvokedEventPublisher publisher)
         {
             this.dateTimeProvider = dateTimeProvider;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.publisher = publisher;
         }
@@ -39,8 +42,8 @@ namespace DM.Services.Community.BusinessProcesses.Activation
             }
 
             await repository.ActivateUser(
-                new UpdateBuilder<User>(userId).Field(u => u.Activated, true),
-                new UpdateBuilder<Token>(tokenId).Field(t => t.IsRemoved, true));
+                updateBuilderFactory.Create<User>(userId).Field(u => u.Activated, true),
+                updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true));
 
             await publisher.Publish(EventType.ActivatedUser, userId);
             return userId;

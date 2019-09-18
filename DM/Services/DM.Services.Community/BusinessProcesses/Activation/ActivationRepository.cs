@@ -29,10 +29,10 @@ namespace DM.Services.Community.BusinessProcesses.Activation
                 .FirstOrDefaultAsync();
         }
         /// <inheritdoc />
-        public Task ActivateUser(UpdateBuilder<User> updateUser, UpdateBuilder<Token> updateToken)
+        public Task ActivateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<Token> updateToken)
         {
-            updateUser.Update(dbContext);
-            updateToken.Update(dbContext);
+            updateUser.AttachTo(dbContext);
+            updateToken.AttachTo(dbContext);
             return dbContext.SaveChangesAsync();
         }
     }

@@ -20,6 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         private readonly ITopicReadingService topicReadingService;
         private readonly IForumReadingService forumReadingService;
         private readonly IIntentionManager intentionManager;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ITopicUpdatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
@@ -29,6 +30,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             ITopicReadingService topicReadingService,
             IForumReadingService forumReadingService,
             IIntentionManager intentionManager,
+            IUpdateBuilderFactory updateBuilderFactory,
             ITopicUpdatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
@@ -36,6 +38,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             this.topicReadingService = topicReadingService;
             this.forumReadingService = forumReadingService;
             this.intentionManager = intentionManager;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
@@ -48,22 +51,28 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 
             await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
-            var changes = new UpdateBuilder<ForumTopic>(updateTopic.TopicId);
-            if (!string.IsNullOrEmpty(updateTopic.Title))
+            var changes = updateBuilderFactory.Create<ForumTopic>(updateTopic.TopicId);
+            if (!string.IsNullOrWhiteSpace(updateTopic.Title))
             {
                 changes = changes.Field(t => t.Title, updateTopic.Title.Trim());
             }
 
-            if (!string.IsNullOrEmpty(updateTopic.Text))
+            if (!string.IsNullOrWhiteSpace(updateTopic.Text))
             {
                 changes = changes.Field(t => t.Text, updateTopic.Text.Trim());
             }
 
             if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
-                changes
-                    .Field(t => t.Closed, updateTopic.Closed)
-                    .Field(t => t.Attached, updateTopic.Attached);
+                if (updateTopic.Closed.HasValue)
+                {
+                    changes = changes.Field(t => t.Closed, updateTopic.Closed.Value);
+                }
+
+                if (updateTopic.Attached.HasValue)
+                {
+                    changes = changes.Field(t => t.Attached, updateTopic.Attached.Value);
+                }
 
                 if (!string.IsNullOrEmpty(updateTopic.ForumTitle) &&
                     oldTopic.Forum.Title != updateTopic.ForumTitle)

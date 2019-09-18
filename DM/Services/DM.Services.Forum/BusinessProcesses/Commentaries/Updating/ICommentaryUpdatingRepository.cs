@@ -15,6 +15,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         /// </summary>
         /// <param name="update">Update commentary</param>
         /// <returns></returns>
-        Task<Comment> Update(UpdateBuilder<ForumComment> update);
+        Task<Comment> Update(IUpdateBuilder<ForumComment> update);
     }
 }
