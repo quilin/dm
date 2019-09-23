@@ -24,6 +24,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IIdentity identity;
         private readonly ICommentaryFactory commentaryFactory;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
@@ -35,6 +36,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
             ICommentaryFactory commentaryFactory,
+            IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryCreatingRepository repository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher invokedEventPublisher)
@@ -43,6 +45,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             this.topicReadingService = topicReadingService;
             this.intentionManager = intentionManager;
             this.commentaryFactory = commentaryFactory;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.countersRepository = countersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
@@ -58,8 +61,9 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             await intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
             var comment = commentaryFactory.Create(createComment, identity.User.UserId);
-            var createdComment = await repository.Create(comment,
-                new UpdateBuilder<ForumTopic>(topic.Id).Field(t => t.LastCommentId, comment.ForumCommentId));
+            var topicUpdate = updateBuilderFactory.Create<ForumTopic>(topic.Id)
+                .Field(t => t.LastCommentId, comment.ForumCommentId);
+            var createdComment = await repository.Create(comment, topicUpdate);
             await countersRepository.Increment(topic.Id, UnreadEntryType.Message);
             await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
 

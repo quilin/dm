@@ -12,12 +12,12 @@ namespace DM.Services.MessageQueuing.Publish
     public class InvokedEventPublisher : IInvokedEventPublisher
     {
         private readonly IMessagePublisher messagePublisher;
-        private readonly MessagePublishConfiguration configuration;
+        private readonly IMessagePublishConfiguration configuration;
 
         /// <inheritdoc />
         public InvokedEventPublisher(
             IMessagePublisher messagePublisher,
-            IOptions<MessagePublishConfiguration> configuration)
+            IOptions<DmEventPublishConfiguration> configuration)
         {
             this.messagePublisher = messagePublisher;
             this.configuration = configuration.Value;
@@ -38,7 +38,7 @@ namespace DM.Services.MessageQueuing.Publish
             var type = eventType.GetType();
             var name = Enum.GetName(type, eventType);
             var field = type.GetField(name);
-            var attribute = (EventRoutingKeyAttribute)Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
+            var attribute = (EventRoutingKeyAttribute) Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
             return attribute.RoutingKey;
         }
     }

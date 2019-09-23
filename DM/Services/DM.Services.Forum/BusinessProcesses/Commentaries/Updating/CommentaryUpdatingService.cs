@@ -20,6 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryUpdatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
@@ -29,6 +30,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
+            IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryUpdatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
@@ -36,6 +38,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;
             this.dateTimeProvider = dateTimeProvider;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
@@ -47,9 +50,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
 
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
-            var updatedComment = await repository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
+            var updateBuilder = updateBuilderFactory.Create<ForumComment>(updateComment.CommentId)
                 .Field(f => f.Text, updateComment.Text.Trim())
-                .Field(f => f.LastUpdateDate, dateTimeProvider.Now));
+                .Field(f => f.LastUpdateDate, dateTimeProvider.Now);
+            var updatedComment = await repository.Update(updateBuilder);
             await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
             return updatedComment;
         }

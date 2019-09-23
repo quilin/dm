@@ -17,11 +17,11 @@ namespace DM.Tests.Core
         protected Mock<T> Mock<T>(MockBehavior behavior = MockBehavior.Loose) where T : class =>
             repository.Create<T>(behavior);
 
-        protected Mock<IUpdateBuilder<TEntity>> MockUpdateBuilder<TEntity>() where TEntity : class, new()
+        protected Mock<IUpdateBuilder<TEntity>> MockUpdateBuilder<TEntity>(MockBehavior behavior = MockBehavior.Loose)
+            where TEntity : class, new()
         {
-            var mock = Mock<IUpdateBuilder<TEntity>>();
-            mock
-                .Setup(u => u.Field(It.IsAny<Expression<Func<TEntity, object>>>(), It.IsAny<object>()))
+            var mock = Mock<IUpdateBuilder<TEntity>>(behavior);
+            mock.Setup(m => m.Field(It.IsAny<Expression<Func<TEntity, object>>>(), It.IsAny<object>()))
                 .Returns(mock.Object);
             return mock;
         }

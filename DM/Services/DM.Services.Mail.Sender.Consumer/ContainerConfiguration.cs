@@ -5,7 +5,6 @@ using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Logging;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,8 +37,8 @@ namespace DM.Services.Mail.Sender.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .Configure<MessageConsumeConfiguration>(
-                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
+                .Configure<MailSenderConsumeConfiguration>(
+                    configuration.GetSection(nameof(MailSenderConsumeConfiguration)).Bind)
                 .Configure<EmailConfiguration>(
                     configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<ConnectionStrings>(

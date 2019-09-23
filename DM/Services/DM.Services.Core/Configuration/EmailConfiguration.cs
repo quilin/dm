@@ -31,6 +31,11 @@ namespace DM.Services.Core.Configuration
         public string FromAddress { get; set; }
 
         /// <summary>
+        /// Display name for emails sender
+        /// </summary>
+        public string FromDisplayName { get; set; }
+
+        /// <summary>
         /// Send emails with reply to address
         /// </summary>
         public string ReplyToAddress { get; set; }

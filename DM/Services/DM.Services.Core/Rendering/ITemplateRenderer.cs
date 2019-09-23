@@ -3,17 +3,17 @@ using System.Threading.Tasks;
 namespace DM.Services.Core.Rendering
 {
     /// <summary>
-    /// Renderer for Razor templates
+    /// Razor template renderer
     /// </summary>
     public interface ITemplateRenderer
     {
         /// <summary>
-        /// 
+        /// Render template against model
         /// </summary>
-        /// <param name="templateName"></param>
-        /// <param name="model"></param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <returns></returns>
-        Task<string> Render<TModel>(string templateName, TModel model);
+        /// <param name="templatePath">Template path</param>
+        /// <param name="model">Model</param>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <returns>Rendered template</returns>
+        Task<string> Render<TModel>(string templatePath, TModel model);
     }
 }

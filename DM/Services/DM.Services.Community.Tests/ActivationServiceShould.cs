@@ -31,7 +31,7 @@ namespace DM.Services.Community.Tests
             findUserSetup = activationRepository
                 .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
             activationRepository
-                .Setup(r => r.ActivateUser(It.IsAny<UpdateBuilder<User>>(), It.IsAny<UpdateBuilder<Token>>()))
+                .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
                 .Returns(Task.CompletedTask);
 
             var dateTimeProvider = Mock<IDateTimeProvider>();

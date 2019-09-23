@@ -7,7 +7,7 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace DM.Services.Community.Tests
+namespace DM.Services.Community.Tests.BusinessProcesses
 {
     public class RegistrationValidatorShould : UnitTestBase
     {

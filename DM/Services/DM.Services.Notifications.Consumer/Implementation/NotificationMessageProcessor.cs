@@ -17,14 +17,14 @@ namespace DM.Services.Notifications.Consumer.Implementation
     {
         private readonly IEnumerable<INotificationGenerator> generators;
         private readonly INotificationRepository repository;
-        private readonly MessagePublishConfiguration publishConfiguration;
+        private readonly IMessagePublishConfiguration publishConfiguration;
         private readonly IMessagePublisher publisher;
 
         /// <inheritdoc />
         public NotificationMessageProcessor(
             IEnumerable<INotificationGenerator> generators,
             INotificationRepository repository,
-            IOptions<MessagePublishConfiguration> publishConfiguration,
+            IOptions<DmEventPublishConfiguration> publishConfiguration,
             IMessagePublisher publisher)
         {
             this.generators = generators;

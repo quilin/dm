@@ -20,7 +20,7 @@ namespace DM.Services.DataAccess.RelationalStorage
         IUpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value);
 
         /// <summary>
-        /// Update entity
+        /// Attach update to db context
         /// </summary>
         /// <returns>Identifier</returns>
         Guid AttachTo(DbContext dbContext);

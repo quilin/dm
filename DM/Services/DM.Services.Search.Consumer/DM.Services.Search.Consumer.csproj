@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -20,7 +20,7 @@
     <ItemGroup>
         <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
         <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
-        <ProjectReference Include="..\\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
+        <ProjectReference Include="..\DM.Services.MessageQueuing\DM.Services.MessageQueuing.csproj" />
         <ProjectReference Include="..\DM.Services.Search\DM.Services.Search.csproj" />
     </ItemGroup>
 
@@ -28,6 +28,13 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.json">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System;
 namespace DM.Services.DataAccess.RelationalStorage
 {
     /// <summary>
-    /// Update builder factory for stateful builder
+    /// Since builder is stateful pattern we need the factory to protect the state to be used in multiple places
     /// </summary>
     public interface IUpdateBuilderFactory
     {

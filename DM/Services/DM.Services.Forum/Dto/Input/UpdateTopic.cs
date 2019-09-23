@@ -30,11 +30,11 @@ namespace DM.Services.Forum.Dto.Input
         /// <summary>
         /// Is attached
         /// </summary>
-        public bool Attached { get; set; }
+        public bool? Attached { get; set; }
 
         /// <summary>
         /// Is closed
         /// </summary>
-        public bool Closed { get; set; }
+        public bool? Closed { get; set; }
     }
 }

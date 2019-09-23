@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace DM.Services.DataAccess.RelationalStorage
 {
     /// <inheritdoc />
-    public class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
+    internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
         where TEntity : class, new()
     {
         private readonly Guid id;
@@ -38,7 +38,13 @@ namespace DM.Services.DataAccess.RelationalStorage
 
             var entity = new TEntity();
             var type = entity.GetType();
-            type.GetProperty($"{type.Name}Id").SetValue(entity, id);
+            var propertyInfo = type.GetProperty($"{type.Name}Id");
+            if (propertyInfo == null)
+            {
+                throw new UpdateBuilderException($"No key property was found for entity {type.Name}");
+            }
+            
+            propertyInfo.SetValue(entity, id);
             dbContext.Set<TEntity>().Attach(entity);
             foreach (var (field, value) in fields)
             {
