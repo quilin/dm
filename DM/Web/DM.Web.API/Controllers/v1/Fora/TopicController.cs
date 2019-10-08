@@ -66,7 +66,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// Delete certain topic
         /// </summary>
         /// <param name="id"></param>
-        /// <response code="200"></response>
+        /// <response code="204"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to remove the topic</response>
         /// <response code="410">Topic not found</response>
@@ -132,7 +132,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="200"></response>
         /// <response code="410">Topic not found</response>
         [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
-        [ProducesResponseType(typeof(ListEnvelope<Topic>), 200)]
+        [ProducesResponseType(typeof(ListEnvelope<Comment>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] PagingQuery q) =>
             Ok(await commentApiService.Get(id, q));
