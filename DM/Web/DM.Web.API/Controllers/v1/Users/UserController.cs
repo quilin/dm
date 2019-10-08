@@ -15,7 +15,7 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <response code="200"></response>
         [HttpGet("")]
         public Task<IActionResult> GetUsers([FromQuery] UsersQuery query) => throw new NotImplementedException();
-        
+
         /// <summary>
         /// Get certain user details
         /// </summary>
@@ -23,7 +23,7 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <response code="200"></response>
         [HttpGet("{login}", Name = nameof(GetUser))]
         public Task<IActionResult> GetUser(string login) => throw new NotImplementedException();
-        
+
         /// <summary>
         /// Post user profile picture
         /// </summary>
