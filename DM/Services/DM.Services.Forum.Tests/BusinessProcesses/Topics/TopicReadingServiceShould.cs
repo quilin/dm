@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
@@ -24,6 +27,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly Mock<ITopicReadingRepository> topicRepository;
         private readonly Mock<IAccessPolicyConverter> accessPolicyConverter;
+        private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
 
         public TopicReadingServiceShould()
         {
@@ -33,9 +37,10 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
             currentUserSetup = identity.Setup(i => i.User);
             topicRepository = Mock<ITopicReadingRepository>();
             accessPolicyConverter = Mock<IAccessPolicyConverter>();
+            unreadCountersRepository = Mock<IUnreadCountersRepository>();
             service = new TopicReadingService(identityProvider.Object,
                 Mock<IForumReadingService>().Object, accessPolicyConverter.Object,
-                topicRepository.Object, Mock<IUnreadCountersRepository>().Object);
+                topicRepository.Object, unreadCountersRepository.Object);
         }
 
         [Fact]
@@ -57,6 +62,49 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
             topicRepository.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ReturnFoundTopic()
+        {
+            var topicId = Guid.NewGuid();
+            var expected = new Topic();
+            topicRepository
+                .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+                .ReturnsAsync(expected);
+            accessPolicyConverter
+                .Setup(c => c.Convert(It.IsAny<UserRole>()))
+                .Returns(ForumAccessPolicy.Player);
+            currentUserSetup.Returns(Create.User().Please);
+
+            var actual = await service.GetTopic(topicId);
+
+            actual.Should().Be(expected);
+            topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player), Times.Once);
+        }
+
+        [Fact]
+        public async Task FillUnreadCountersWhenUserAuthenticated()
+        {
+            var topicId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
+            var expected = new Topic();
+            topicRepository
+                .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+                .ReturnsAsync(expected);
+            accessPolicyConverter
+                .Setup(c => c.Convert(It.IsAny<UserRole>()))
+                .Returns(ForumAccessPolicy.Player);
+            currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
+            unreadCountersRepository
+                .Setup(r => r.SelectByEntities(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid[]>()))
+                .ReturnsAsync(new Dictionary<Guid, int>{[topicId] = 22});
+
+            var actual = await service.GetTopic(topicId);
+
+            actual.Should().Be(expected);
+            actual.UnreadCommentsCount.Should().Be(22);
+            unreadCountersRepository.Verify(r => r.SelectByEntities(userId, UnreadEntryType.Message, topicId), Times.Once);
         }
     }
 }

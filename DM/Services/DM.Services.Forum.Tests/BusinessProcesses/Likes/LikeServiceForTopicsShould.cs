@@ -24,7 +24,7 @@ using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
 {
-    public class LikeServiceShould : UnitTestBase
+    public class LikeServiceForTopicsShould : UnitTestBase
     {
         private readonly LikeService service;
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReading;
@@ -33,7 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
         private readonly Mock<ILikeRepository> likeRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
 
-        public LikeServiceShould()
+        public LikeServiceForTopicsShould()
         {
             var topicReadingService = Mock<ITopicReadingService>();
             topicReading = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
