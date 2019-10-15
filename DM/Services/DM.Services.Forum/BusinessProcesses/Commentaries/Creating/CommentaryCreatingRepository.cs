@@ -5,8 +5,8 @@ using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
@@ -26,14 +26,14 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         }
 
         /// <inheritdoc />
-        public async Task<Comment> Create(ForumComment comment, IUpdateBuilder<ForumTopic> topicUpdate)
+        public async Task<Dto.Output.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate)
         {
             dbContext.Comments.Add(comment);
             topicUpdate.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
-                .Where(c => c.ForumCommentId == comment.ForumCommentId)
-                .ProjectTo<Comment>(mapper.ConfigurationProvider)
+                .Where(c => c.CommentId == comment.CommentId)
+                .ProjectTo<Dto.Output.Comment>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
     }

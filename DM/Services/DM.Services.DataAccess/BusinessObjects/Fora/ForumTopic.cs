@@ -80,13 +80,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// Last commentary
         /// </summary>
         [ForeignKey(nameof(LastCommentId))]
-        public virtual ForumComment LastForumComment { get; set; }
+        public virtual Comment LastComment { get; set; }
 
         /// <summary>
         /// Commenaries
         /// </summary>
-        [InverseProperty(nameof(ForumComment.Topic))]
-        public virtual ICollection<ForumComment> Comments { get; set; }
+        [InverseProperty(nameof(Comment.Topic))]
+        public virtual ICollection<Comment> Comments { get; set; }
 
         /// <summary>
         /// Likes

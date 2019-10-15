@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <summary>
-    /// Initial migration
-    /// </summary>
+    /// <inheritdoc />
     public partial class Initial : Migration
     {
         /// <inheritdoc />
@@ -204,34 +202,6 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    MessageId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    ConversationId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
-                    Text = table.Column<string>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.MessageId);
-                    table.ForeignKey(
-                        name: "FK_Messages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "ConversationId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Games",
                 columns: table => new
                 {
@@ -279,6 +249,34 @@ namespace DM.Services.DataAccess.Migrations
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    MessageId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ConversationId = table.Column<Guid>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    Text = table.Column<string>(nullable: true),
+                    IsRemoved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.MessageId);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "ConversationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -412,6 +410,31 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlackListLinks",
+                columns: table => new
+                {
+                    BlackListLinkId = table.Column<Guid>(nullable: false),
+                    GameId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlackListLinks", x => x.BlackListLinkId);
+                    table.ForeignKey(
+                        name: "FK_BlackListLinks_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BlackListLinks_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Characters",
                 columns: table => new
                 {
@@ -452,35 +475,6 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameComments",
-                columns: table => new
-                {
-                    GameCommentId = table.Column<Guid>(nullable: false),
-                    GameId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
-                    LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
-                    Text = table.Column<string>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameComments", x => x.GameCommentId);
-                    table.ForeignKey(
-                        name: "FK_GameComments_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GameComments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "GameTags",
                 columns: table => new
                 {
@@ -502,31 +496,6 @@ namespace DM.Services.DataAccess.Migrations
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "TagId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BlackListLinks",
-                columns: table => new
-                {
-                    BlackListLinkId = table.Column<Guid>(nullable: false),
-                    GameId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BlackListLinks", x => x.BlackListLinkId);
-                    table.ForeignKey(
-                        name: "FK_BlackListLinks_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BlackListLinks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -830,11 +799,11 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ForumComments",
+                name: "Comments",
                 columns: table => new
                 {
-                    ForumCommentId = table.Column<Guid>(nullable: false),
-                    ForumTopicId = table.Column<Guid>(nullable: false),
+                    CommentId = table.Column<Guid>(nullable: false),
+                    EntityId = table.Column<Guid>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(nullable: false),
                     LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
@@ -843,15 +812,21 @@ namespace DM.Services.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ForumComments", x => x.ForumCommentId);
+                    table.PrimaryKey("PK_Comments", x => x.CommentId);
                     table.ForeignKey(
-                        name: "FK_ForumComments_ForumTopics_ForumTopicId",
-                        column: x => x.ForumTopicId,
+                        name: "FK_Comments_ForumTopics_EntityId",
+                        column: x => x.EntityId,
                         principalTable: "ForumTopics",
                         principalColumn: "ForumTopicId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ForumComments_Users_UserId",
+                        name: "FK_Comments_Games_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -869,6 +844,24 @@ namespace DM.Services.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Likes", x => x.LikeId);
+                    table.ForeignKey(
+                        name: "FK_Likes_Comments_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "Comments",
+                        principalColumn: "CommentId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_ForumTopics_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "ForumTopics",
+                        principalColumn: "ForumTopicId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_Reviews_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "Reviews",
+                        principalColumn: "ReviewId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
@@ -894,16 +887,10 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Warnings", x => x.WarningId);
                     table.ForeignKey(
-                        name: "FK_Warnings_ForumComments_EntityId",
+                        name: "FK_Warnings_Comments_EntityId",
                         column: x => x.EntityId,
-                        principalTable: "ForumComments",
-                        principalColumn: "ForumCommentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Warnings_GameComments_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "GameComments",
-                        principalColumn: "GameCommentId",
+                        principalTable: "Comments",
+                        principalColumn: "CommentId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Warnings_Users_ModeratorId",
@@ -927,6 +914,16 @@ namespace DM.Services.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Bans_UserId",
                 table: "Bans",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlackListLinks_GameId",
+                table: "BlackListLinks",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlackListLinks_UserId",
+                table: "BlackListLinks",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -955,13 +952,13 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ForumComments_ForumTopicId",
-                table: "ForumComments",
-                column: "ForumTopicId");
+                name: "IX_Comments_EntityId",
+                table: "Comments",
+                column: "EntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ForumComments_UserId",
-                table: "ForumComments",
+                name: "IX_Comments_UserId",
+                table: "Comments",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -990,14 +987,19 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameComments_GameId",
-                table: "GameComments",
-                column: "GameId");
+                name: "IX_Games_AssistantId",
+                table: "Games",
+                column: "AssistantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameComments_UserId",
-                table: "GameComments",
-                column: "UserId");
+                name: "IX_Games_MasterId",
+                table: "Games",
+                column: "MasterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_NannyId",
+                table: "Games",
+                column: "NannyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameTags_GameId",
@@ -1028,31 +1030,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "IX_Messages_UserId",
                 table: "Messages",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BlackListLinks_GameId",
-                table: "BlackListLinks",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BlackListLinks_UserId",
-                table: "BlackListLinks",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Games_AssistantId",
-                table: "Games",
-                column: "AssistantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Games_MasterId",
-                table: "Games",
-                column: "MasterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Games_NannyId",
-                table: "Games",
-                column: "NannyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_CharacterId",
@@ -1202,11 +1179,11 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ForumTopics_ForumComments_LastCommentId",
+                name: "FK_ForumTopics_Comments_LastCommentId",
                 table: "ForumTopics",
                 column: "LastCommentId",
-                principalTable: "ForumComments",
-                principalColumn: "ForumCommentId",
+                principalTable: "Comments",
+                principalColumn: "CommentId",
                 onDelete: ReferentialAction.Restrict);
         }
 
@@ -1214,19 +1191,38 @@ namespace DM.Services.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ForumComments_Users_UserId",
-                table: "ForumComments");
+                name: "FK_Comments_Users_UserId",
+                table: "Comments");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_ForumTopics_Users_UserId",
                 table: "ForumTopics");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_ForumComments_ForumTopics_ForumTopicId",
-                table: "ForumComments");
+                name: "FK_Games_Users_AssistantId",
+                table: "Games");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Games_Users_MasterId",
+                table: "Games");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Games_Users_NannyId",
+                table: "Games");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_Games_EntityId",
+                table: "Comments");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_ForumTopics_EntityId",
+                table: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Bans");
+
+            migrationBuilder.DropTable(
+                name: "BlackListLinks");
 
             migrationBuilder.DropTable(
                 name: "CharacterAttributes");
@@ -1245,9 +1241,6 @@ namespace DM.Services.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Messages");
-
-            migrationBuilder.DropTable(
-                name: "BlackListLinks");
 
             migrationBuilder.DropTable(
                 name: "PostWaitNotifications");
@@ -1289,9 +1282,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "GameComments");
-
-            migrationBuilder.DropTable(
                 name: "TagGroups");
 
             migrationBuilder.DropTable(
@@ -1301,10 +1291,10 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "ForumTopics");
@@ -1313,7 +1303,7 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Fora");
 
             migrationBuilder.DropTable(
-                name: "ForumComments");
+                name: "Comments");
         }
     }
 }

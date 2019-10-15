@@ -30,13 +30,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 
         /// <inheritdoc />
         public Task<int> Count(Guid topicId) => dbContext.Comments
-            .CountAsync(c => !c.IsRemoved && c.ForumTopicId == topicId);
+            .CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
 
         /// <inheritdoc />
         public async Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging)
         {
             return await dbContext.Comments
-                .Where(c => !c.IsRemoved && c.ForumTopicId == topicId)
+                .Where(c => !c.IsRemoved && c.EntityId == topicId)
                 .OrderBy(c => c.CreateDate)
                 .Page(paging)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)
@@ -47,7 +47,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         public Task<Comment> Get(Guid commentId)
         {
             return dbContext.Comments
-                .Where(c => !c.IsRemoved && c.ForumCommentId == commentId)
+                .Where(c => !c.IsRemoved && c.CommentId == commentId)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }

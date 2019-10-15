@@ -22,6 +22,7 @@ using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 {
@@ -29,8 +30,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
     {
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly ISetup<ICommentaryFactory, ForumComment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentaryCreatingRepository, Task<Comment>> commentaryCreateSetup;
+        private readonly ISetup<ICommentaryFactory, Comment> commentaryDalCreateSetup;
+        private readonly ISetup<ICommentaryCreatingRepository, Task<Dto.Output.Comment>> commentaryCreateSetup;
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
@@ -66,7 +67,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             commentRepository = Mock<ICommentaryCreatingRepository>();
             commentaryCreateSetup = commentRepository.Setup(r =>
-                r.Create(It.IsAny<ForumComment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
+                r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
@@ -96,8 +97,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             currentUserSetup.Returns(new AuthenticatedUser());
             var topic = new Topic();
             topicReadingSetup.ReturnsAsync(topic);
-            commentaryDalCreateSetup.Returns(new ForumComment());
-            commentaryCreateSetup.ReturnsAsync(new Comment());
+            commentaryDalCreateSetup.Returns(new Comment());
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
 
             await service.Create(new CreateComment());
 
@@ -111,9 +112,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topic = new Topic();
             topicReadingSetup.ReturnsAsync(topic);
             var commentId = Guid.NewGuid();
-            var forumComment = new ForumComment {ForumCommentId = commentId};
+            var forumComment = new Comment {CommentId = commentId};
             commentaryDalCreateSetup.Returns(forumComment);
-            var expected = new Comment();
+            var expected = new Dto.Output.Comment();
             commentaryCreateSetup.ReturnsAsync(expected);
 
             var actual = await service.Create(new CreateComment());
@@ -130,8 +131,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topicId = Guid.NewGuid();
             var topic = new Topic {Id = topicId};
             topicReadingSetup.ReturnsAsync(topic);
-            commentaryDalCreateSetup.Returns(new ForumComment());
-            commentaryCreateSetup.ReturnsAsync(new Comment());
+            commentaryDalCreateSetup.Returns(new Comment());
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
 
             await service.Create(new CreateComment());
 
@@ -147,8 +148,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topic = new Topic {Id = topicId};
             topicReadingSetup.ReturnsAsync(topic);
             var commentId = Guid.NewGuid();
-            commentaryDalCreateSetup.Returns(new ForumComment {ForumCommentId = commentId});
-            commentaryCreateSetup.ReturnsAsync(new Comment());
+            commentaryDalCreateSetup.Returns(new Comment {CommentId = commentId});
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
 
             await service.Create(new CreateComment());
 

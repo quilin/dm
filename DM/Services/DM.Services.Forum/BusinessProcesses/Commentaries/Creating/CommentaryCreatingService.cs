@@ -10,9 +10,9 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
-using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
+using Comment = DM.Services.Forum.Dto.Output.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
@@ -62,10 +62,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 
             var comment = commentaryFactory.Create(createComment, identity.User.UserId);
             var topicUpdate = updateBuilderFactory.Create<ForumTopic>(topic.Id)
-                .Field(t => t.LastCommentId, comment.ForumCommentId);
+                .Field(t => t.LastCommentId, comment.CommentId);
             var createdComment = await repository.Create(comment, topicUpdate);
             await countersRepository.Increment(topic.Id, UnreadEntryType.Message);
-            await invokedEventPublisher.Publish(EventType.NewForumComment, comment.ForumCommentId);
+            await invokedEventPublisher.Publish(EventType.NewForumComment, comment.CommentId);
 
             return createdComment;
         }
