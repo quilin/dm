@@ -19,7 +19,7 @@ namespace DM.Services.Community.Tests
     public class ActivationServiceShould : UnitTestBase
     {
         private readonly ActivationService activationService;
-        private readonly ISetup<IActivationRepository, Task<Guid>> findUserSetup;
+        private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
         private readonly Mock<IActivationRepository> activationRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
         private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
