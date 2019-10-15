@@ -105,6 +105,27 @@ namespace DM.Services.Authentication.Tests
         }
 
         [Fact]
+        public async Task FailWhenInvalidSessionFound()
+        {
+            tokenDecryptSetup.ReturnsAsync(
+                "{\"userId\": \"7932d1d9-0a1a-4e16-b53f-5c213a2fc097\"," +
+                " \"sessionId\": \"6f9e570c-1dca-4cca-be93-d7418b85959e\"}");
+            
+            authenticationRepository
+                .Setup(r => r.FindUser(It.IsAny<Guid>()))
+                .ReturnsAsync(new AuthenticatedUser());
+            authenticationRepository
+                .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+                .ReturnsAsync(new UserSettings());
+            authenticationRepository
+                .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+                .ReturnsAsync((Session) null);
+            
+            var actual = await service.Authenticate("token");
+            actual.Error.Should().Be(AuthenticationError.SessionExpired);
+        }
+
+        [Fact]
         public async Task SucceedAndRefreshSessionWhenNonPersistentSessionAboutToExpire()
         {
             var userId = Guid.Parse("7932d1d9-0a1a-4e16-b53f-5c213a2fc097");
