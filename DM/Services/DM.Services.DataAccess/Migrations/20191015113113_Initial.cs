@@ -814,12 +814,6 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.CommentId);
                     table.ForeignKey(
-                        name: "FK_Comments_ForumTopics_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "ForumTopics",
-                        principalColumn: "ForumTopicId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Comments_Games_EntityId",
                         column: x => x.EntityId,
                         principalTable: "Games",
@@ -844,24 +838,6 @@ namespace DM.Services.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Likes", x => x.LikeId);
-                    table.ForeignKey(
-                        name: "FK_Likes_Comments_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Comments",
-                        principalColumn: "CommentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_ForumTopics_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "ForumTopics",
-                        principalColumn: "ForumTopicId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_Reviews_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Reviews",
-                        principalColumn: "ReviewId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
@@ -1209,14 +1185,6 @@ namespace DM.Services.DataAccess.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Games_Users_NannyId",
                 table: "Games");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Games_EntityId",
-                table: "Comments");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_ForumTopics_EntityId",
-                table: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Bans");
