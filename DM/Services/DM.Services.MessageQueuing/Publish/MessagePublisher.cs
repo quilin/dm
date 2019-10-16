@@ -26,7 +26,7 @@ namespace DM.Services.MessageQueuing.Publish
         }
 
         /// <inheritdoc />
-        public Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration, string routingKey)
+        public Task Publish<TMessage>(TMessage message, IMessagePublishConfiguration configuration, string routingKey)
             where TMessage : class
         {
             using (var connection = connectionFactory.CreateConnection())
@@ -46,7 +46,7 @@ namespace DM.Services.MessageQueuing.Publish
         }
 
         /// <inheritdoc />
-        public Task Publish<TMessage>(IEnumerable<TMessage> messages, MessagePublishConfiguration configuration,
+        public Task Publish<TMessage>(IEnumerable<TMessage> messages, IMessagePublishConfiguration configuration,
             string routingKey)
             where TMessage : class
         {

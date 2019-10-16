@@ -14,7 +14,6 @@ using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
-using DM.Services.Forum.Tests.Dsl;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
 using FluentAssertions;
@@ -23,6 +22,7 @@ using FluentValidation.Results;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 {
@@ -30,19 +30,19 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
     {
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly ISetup<ICommentaryFactory, ForumComment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentaryCreatingRepository, Task<Comment>> commentaryCreateSetup;
+        private readonly ISetup<ICommentaryFactory, Comment> commentaryDalCreateSetup;
+        private readonly ISetup<ICommentaryCreatingRepository, Task<Dto.Output.Comment>> commentaryCreateSetup;
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
-        private readonly Mock<IValidator<CreateComment>> validator;
         private readonly Mock<ITopicReadingService> topicReadingService;
-        private readonly Mock<ICommentaryFactory> commentFactory;
         private readonly Mock<IInvokedEventPublisher> invokedEventPublisher;
+        private readonly Mock<IIntentionManager> intentionManager;
+        private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
 
         public CommentaryCreatingServiceShould()
         {
-            validator = Mock<IValidator<CreateComment>>();
+            var validator = Mock<IValidator<CreateComment>>();
             validator
                 .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<CreateComment>>(),
                     It.IsAny<CancellationToken>()))
@@ -51,7 +51,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             topicReadingService = Mock<ITopicReadingService>();
             topicReadingSetup = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
-            var intentionManager = Mock<IIntentionManager>();
+            intentionManager = Mock<IIntentionManager>();
             intentionManager
                 .Setup(m => m.ThrowIfForbidden(It.IsAny<TopicIntention>(), It.IsAny<Topic>()))
                 .Returns(Task.CompletedTask);
@@ -61,13 +61,13 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             identityProvider.Setup(p => p.Current).Returns(identity.Object);
             currentUserSetup = identity.Setup(i => i.User);
 
-            commentFactory = Mock<ICommentaryFactory>();
+            var commentFactory = Mock<ICommentaryFactory>();
             commentaryDalCreateSetup = commentFactory
                 .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
             commentRepository = Mock<ICommentaryCreatingRepository>();
             commentaryCreateSetup = commentRepository.Setup(r =>
-                r.Create(It.IsAny<ForumComment>(), It.IsAny<UpdateBuilder<ForumTopic>>()));
+                r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
             invokedEventPublisher = Mock<IInvokedEventPublisher>();
             invokedEventPublisher
@@ -79,45 +79,81 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Setup(r => r.Increment(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
                 .Returns(Task.CompletedTask);
 
+            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+            updateBuilder = MockUpdateBuilder<ForumTopic>();
+            updateBuilderFactory
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
+                .Returns(updateBuilder.Object);
+
             service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,
                 intentionManager.Object, identityProvider.Object, commentFactory.Object,
-                commentRepository.Object, countersRepository.Object, invokedEventPublisher.Object);
+                updateBuilderFactory.Object, commentRepository.Object, countersRepository.Object,
+                invokedEventPublisher.Object);
         }
 
         [Fact]
-        public async Task CreateNewCommentary()
+        public async Task AuthorizeCreateCommentaryAction()
         {
-            var topicId = Guid.NewGuid();
-            var createComment = new CreateComment {TopicId = topicId};
-            var topic = new Topic {Id = topicId};
+            currentUserSetup.Returns(new AuthenticatedUser());
+            var topic = new Topic();
             topicReadingSetup.ReturnsAsync(topic);
-            var userId = Guid.NewGuid();
-            currentUserSetup.Returns(Create.User(userId).Please);
+            commentaryDalCreateSetup.Returns(new Comment());
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
+
+            await service.Create(new CreateComment());
+
+            intentionManager.Verify(m => m.ThrowIfForbidden(TopicIntention.CreateComment, topic));
+        }
+
+        [Fact]
+        public async Task SaveNewCommentAndUpdateDenormalizedColumn()
+        {
+            currentUserSetup.Returns(new AuthenticatedUser());
+            var topic = new Topic();
+            topicReadingSetup.ReturnsAsync(topic);
             var commentId = Guid.NewGuid();
-            var comment = new ForumComment {ForumCommentId = commentId};
-            commentaryDalCreateSetup.Returns(comment);
-            var expected = new Comment();
+            var forumComment = new Comment {CommentId = commentId};
+            commentaryDalCreateSetup.Returns(forumComment);
+            var expected = new Dto.Output.Comment();
             commentaryCreateSetup.ReturnsAsync(expected);
 
-            var actual = await service.Create(createComment);
+            var actual = await service.Create(new CreateComment());
+
             actual.Should().Be(expected);
+            commentRepository.Verify(r => r.Create(forumComment, updateBuilder.Object), Times.Once);
+            updateBuilder.Verify(b => b.Field(t => t.LastCommentId, commentId));
+        }
 
-            validator.Verify(v => v.ValidateAsync(
-                It.Is<ValidationContext<CreateComment>>(c => c.InstanceToValidate == createComment),
-                It.IsAny<CancellationToken>()), Times.Once);
+        [Fact]
+        public async Task IncrementUnreadCounter()
+        {
+            currentUserSetup.Returns(new AuthenticatedUser());
+            var topicId = Guid.NewGuid();
+            var topic = new Topic {Id = topicId};
+            topicReadingSetup.ReturnsAsync(topic);
+            commentaryDalCreateSetup.Returns(new Comment());
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
 
-            topicReadingService.Verify(s => s.GetTopic(topicId), Times.Once);
-            topicReadingService.VerifyNoOtherCalls();
+            await service.Create(new CreateComment());
 
-            commentFactory.Verify(f => f.Create(createComment, userId));
-
-            commentRepository.Verify(r => r.Create(comment, It.IsAny<UpdateBuilder<ForumTopic>>()), Times.Once);
-            commentRepository.VerifyNoOtherCalls();
-
-            countersRepository.Verify(r => r.Increment(topicId, UnreadEntryType.Message));
+            countersRepository.Verify(r => r.Increment(topicId, UnreadEntryType.Message), Times.Once);
             countersRepository.VerifyNoOtherCalls();
+        }
 
-            invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId), Times.Once);
+        [Fact]
+        public async Task PublishEvent()
+        {
+            currentUserSetup.Returns(new AuthenticatedUser());
+            var topicId = Guid.NewGuid();
+            var topic = new Topic {Id = topicId};
+            topicReadingSetup.ReturnsAsync(topic);
+            var commentId = Guid.NewGuid();
+            commentaryDalCreateSetup.Returns(new Comment {CommentId = commentId});
+            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
+
+            await service.Create(new CreateComment());
+
+            invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId));
             invokedEventPublisher.VerifyNoOtherCalls();
         }
     }

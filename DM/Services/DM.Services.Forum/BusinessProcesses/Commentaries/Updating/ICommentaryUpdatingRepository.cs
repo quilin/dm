@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Dto.Output;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 {
@@ -15,6 +14,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         /// </summary>
         /// <param name="update">Update commentary</param>
         /// <returns></returns>
-        Task<Comment> Update(UpdateBuilder<ForumComment> update);
+        Task<Dto.Output.Comment> Update(IUpdateBuilder<Comment> update);
     }
 }

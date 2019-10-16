@@ -14,9 +14,10 @@ namespace DM.Services.Forum.Dto.Input
             RuleFor(t => t.TopicId)
                 .NotEmpty().WithMessage(ValidationError.Empty);
 
-            RuleFor(t => t.Title)
-                .NotEmpty().WithMessage(ValidationError.Empty)
-                .MaximumLength(130).WithMessage(ValidationError.Long);
+            When(t => t.Title != null, () =>
+                RuleFor(t => t.Title)
+                    .NotEmpty().WithMessage(ValidationError.Empty)
+                    .MaximumLength(130).WithMessage(ValidationError.Long));
         }
     }
 }

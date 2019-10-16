@@ -21,18 +21,19 @@ namespace DM.Services.Community.BusinessProcesses.Activation
         }
         
         /// <inheritdoc />
-        public Task<Guid> FindUserToActivate(Guid tokenId, DateTimeOffset createdSince)
+        public async Task<Guid?> FindUserToActivate(Guid tokenId, DateTimeOffset createdSince)
         {
-            return dbContext.Tokens
+            return (await dbContext.Tokens
                 .Where(t => t.TokenId == tokenId && t.CreateDate > createdSince)
-                .Select(t => t.UserId)
-                .FirstOrDefaultAsync();
+                .Select(t => new {t.UserId})
+                .FirstOrDefaultAsync())?.UserId;
         }
+
         /// <inheritdoc />
-        public Task ActivateUser(UpdateBuilder<User> updateUser, UpdateBuilder<Token> updateToken)
+        public Task ActivateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<Token> updateToken)
         {
-            updateUser.Update(dbContext);
-            updateToken.Update(dbContext);
+            updateUser.AttachTo(dbContext);
+            updateToken.AttachTo(dbContext);
             return dbContext.SaveChangesAsync();
         }
     }

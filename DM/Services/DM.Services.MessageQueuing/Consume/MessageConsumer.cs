@@ -24,7 +24,7 @@ namespace DM.Services.MessageQueuing.Consume
         }
 
         /// <inheritdoc />
-        public void Consume(MessageConsumeConfiguration configuration)
+        public void Consume(IMessageConsumeConfiguration configuration)
         {
             connection = connectionFactory.CreateConnection();
             channel = connection.CreateModel();

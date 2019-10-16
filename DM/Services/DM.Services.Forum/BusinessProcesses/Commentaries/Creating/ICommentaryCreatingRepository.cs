@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Dto.Output;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
@@ -16,6 +16,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         /// <param name="comment">DAL model for comment</param>
         /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
         /// <returns></returns>
-        Task<Comment> Create(ForumComment comment, UpdateBuilder<ForumTopic> topicUpdate);
+        Task<Dto.Output.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate);
     }
 }

@@ -19,9 +19,11 @@ namespace DM.Services.Community.Tests
     public class ActivationServiceShould : UnitTestBase
     {
         private readonly ActivationService activationService;
-        private readonly ISetup<IActivationRepository, Task<Guid>> findUserSetup;
+        private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
         private readonly Mock<IActivationRepository> activationRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
+        private readonly Mock<IUpdateBuilder<Token>> tokenUpdateBuilder;
 
         public ActivationServiceShould()
         {
@@ -29,7 +31,7 @@ namespace DM.Services.Community.Tests
             findUserSetup = activationRepository
                 .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
             activationRepository
-                .Setup(r => r.ActivateUser(It.IsAny<UpdateBuilder<User>>(), It.IsAny<UpdateBuilder<Token>>()))
+                .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
                 .Returns(Task.CompletedTask);
 
             var dateTimeProvider = Mock<IDateTimeProvider>();
@@ -40,7 +42,18 @@ namespace DM.Services.Community.Tests
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
+            userUpdateBuilder = MockUpdateBuilder<User>();
+            tokenUpdateBuilder = MockUpdateBuilder<Token>();
+            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+            updateBuilderFactory
+                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
+                .Returns(userUpdateBuilder.Object);
+            updateBuilderFactory
+                .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
+                .Returns(tokenUpdateBuilder.Object);
+
             activationService = new ActivationService(dateTimeProvider.Object,
+                updateBuilderFactory.Object,
                 activationRepository.Object, publisher.Object);
         }
 
@@ -56,9 +69,9 @@ namespace DM.Services.Community.Tests
         [Fact]
         public void ThrowGoneException_WhenTokenInvalid()
         {
-            findUserSetup.ReturnsAsync(Guid.Empty);
+            findUserSetup.ReturnsAsync((Guid?) null);
             activationService
-                .Invoking(s => s.Activate(Guid.NewGuid()).GetAwaiter().GetResult())
+                .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
                 .Should().Throw<HttpException>()
                 .And.StatusCode.Should().Be(HttpStatusCode.Gone);
         }
@@ -83,12 +96,9 @@ namespace DM.Services.Community.Tests
 
             await activationService.Activate(tokenId);
 
-            // TODO: Get to verify the updating operations
-//            activationRepository.Verify(r => r.ActivateUser(
-//                It.Is<UpdateBuilder<User>>(x => x.Equals(new UpdateBuilder<User>(userId)
-//                    .Field(u => u.Activated, true))),
-//                It.Is<UpdateBuilder<Token>>(x => x.Equals(new UpdateBuilder<Token>(tokenId)
-//                    .Field(t => t.IsRemoved, true)))), Times.Once);
+            activationRepository.Verify(r => r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object));
+            userUpdateBuilder.Verify(b => b.Field(u => u.Activated, true));
+            tokenUpdateBuilder.Verify(b => b.Field(t => t.IsRemoved, true));
         }
 
         [Fact]

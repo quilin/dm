@@ -22,7 +22,7 @@ namespace DM.Services.Mail.Sender
             this.publishConfiguration = publishConfiguration.Value;
             this.publisher = publisher;
         }
-        
+
         /// <inheritdoc />
         public async Task Send(MailLetter letter)
         {

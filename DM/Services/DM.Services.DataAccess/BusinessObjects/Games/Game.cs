@@ -185,13 +185,19 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// <summary>
         /// Commentaries
         /// </summary>
-        [InverseProperty(nameof(GameComment.Game))]
-        public virtual ICollection<GameComment> Comments { get; set; }
+        [InverseProperty(nameof(Comment.Game))]
+        public virtual ICollection<Comment> Comments { get; set; }
 
         /// <summary>
         /// Game preview picture
         /// </summary>
         [InverseProperty(nameof(Upload.Game))]
         public virtual ICollection<Upload> Pictures { get; set; }
+
+        /// <summary>
+        /// Game authorization tokens
+        /// </summary>
+        [InverseProperty(nameof(Token.EntityId))]
+        public virtual ICollection<Token> Tokens { get; set; }
     }
 }

@@ -2,14 +2,13 @@ using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.Dto.Input;
-using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 {
@@ -20,6 +19,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryUpdatingRepository repository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
@@ -29,6 +29,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IDateTimeProvider dateTimeProvider,
+            IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryUpdatingRepository repository,
             IInvokedEventPublisher invokedEventPublisher)
         {
@@ -36,20 +37,22 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;
             this.dateTimeProvider = dateTimeProvider;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
 
         /// <inheritdoc />
-        public async Task<Comment> Update(UpdateComment updateComment)
+        public async Task<Dto.Output.Comment> Update(UpdateComment updateComment)
         {
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
 
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
-            var updatedComment = await repository.Update(new UpdateBuilder<ForumComment>(updateComment.CommentId)
+            var updateBuilder = updateBuilderFactory.Create<Comment>(updateComment.CommentId)
                 .Field(f => f.Text, updateComment.Text.Trim())
-                .Field(f => f.LastUpdateDate, dateTimeProvider.Now));
+                .Field(f => f.LastUpdateDate, dateTimeProvider.Now);
+            var updatedComment = await repository.Update(updateBuilder);
             await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
             return updatedComment;
         }

@@ -3,11 +3,11 @@ namespace DM.Services.MessageQueuing.Configuration
     /// <summary>
     /// Publisher configuration
     /// </summary>
-    public class MessagePublishConfiguration
+    public interface IMessagePublishConfiguration
     {
         /// <summary>
         /// Exchange to publish to
         /// </summary>
-        public string ExchangeName { get; set; }
+        string ExchangeName { get; set; }
     }
 }

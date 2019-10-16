@@ -1,5 +1,5 @@
 using System;
-using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.Dto.Input;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
@@ -15,6 +15,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         /// <param name="createComment">New commentary DTO model</param>
         /// <param name="userId">Current user identifier</param>
         /// <returns>Commentary DAL model</returns>
-        ForumComment Create(CreateComment createComment, Guid userId);
+        Comment Create(CreateComment createComment, Guid userId);
     }
 }

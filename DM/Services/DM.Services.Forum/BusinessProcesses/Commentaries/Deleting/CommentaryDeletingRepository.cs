@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto.Internal;
@@ -30,15 +31,16 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         public Task<CommentToDelete> GetForDelete(Guid commentId)
         {
             return dbContext.Comments
-                .Where(c => !c.IsRemoved && c.ForumCommentId == commentId)
+                .Where(c => !c.IsRemoved && c.CommentId == commentId)
                 .ProjectTo<CommentToDelete>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
 
         /// <inheritdoc />
-        public Task Delete(UpdateBuilder<ForumComment> update, UpdateBuilder<ForumTopic> topicUpdate)
+        public Task Delete(IUpdateBuilder<Comment> update, IUpdateBuilder<ForumTopic> topicUpdate)
         {
-            update.Update(dbContext);
+            update.AttachTo(dbContext);
+            topicUpdate.AttachTo(dbContext);
             return dbContext.SaveChangesAsync();
         }
 
@@ -46,10 +48,10 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         public async Task<Guid?> GetSecondLastCommentId(Guid topicId)
         {
             var result = await dbContext.Comments
-                .Where(c => !c.IsRemoved && c.ForumTopicId == topicId)
+                .Where(c => !c.IsRemoved && c.EntityId == topicId)
                 .OrderByDescending(c => c.CreateDate)
                 .Skip(1)
-                .Select(c => c.ForumCommentId)
+                .Select(c => c.CommentId)
                 .FirstOrDefaultAsync();
             return result == default ? (Guid?) null : result;
         }

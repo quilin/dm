@@ -15,6 +15,6 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         /// </summary>
         /// <param name="updateBuilder"></param>
         /// <returns>DTO model of updated topic</returns>
-        Task<Topic> Update(UpdateBuilder<ForumTopic> updateBuilder);
+        Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder);
     }
 }

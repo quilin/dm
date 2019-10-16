@@ -12,7 +12,7 @@ namespace DM.Web.API.Controllers.v1.Fora
     /// <summary>
     /// Commentaries
     /// </summary>
-    [Route("v1/comments")]
+    [Route("v1/forum/comments")]
     public class CommentController : Controller
     {
         private readonly ICommentApiService commentApiService;

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Dto.Internal;
@@ -31,6 +32,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         /// <param name="update">Updated fields</param>
         /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
         /// <returns></returns>
-        Task Delete(UpdateBuilder<ForumComment> update, UpdateBuilder<ForumTopic> topicUpdate);
+        Task Delete(IUpdateBuilder<Comment> update, IUpdateBuilder<ForumTopic> topicUpdate);
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DM.Services.Core.Implementation.CorrelationToken;
-using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
 using Moq;
@@ -41,7 +40,7 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public async Task PublishSerializedMessage()
         {
-            var messagePublishConfiguration = new MessagePublishConfiguration {ExchangeName = "exchange.name"};
+            var messagePublishConfiguration = new DmEventPublishConfiguration {ExchangeName = "exchange.name"};
             getTokenSetup.Returns(Guid.Parse("ed45a797-bcfe-4750-a6ed-83af87954aa6"));
 
             await publisher.Publish(new {test = 1, thing = "2"}, messagePublishConfiguration, "routing.key");

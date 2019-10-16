@@ -14,16 +14,19 @@ namespace DM.Services.Community.BusinessProcesses.Activation
     public class ActivationService : IActivationService
     {
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IActivationRepository repository;
         private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
         public ActivationService(
             IDateTimeProvider dateTimeProvider,
+            IUpdateBuilderFactory updateBuilderFactory,
             IActivationRepository repository,
             IInvokedEventPublisher publisher)
         {
             this.dateTimeProvider = dateTimeProvider;
+            this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.publisher = publisher;
         }
@@ -32,18 +35,18 @@ namespace DM.Services.Community.BusinessProcesses.Activation
         public async Task<Guid> Activate(Guid tokenId)
         {
             var userId = await repository.FindUserToActivate(tokenId, dateTimeProvider.Now - TimeSpan.FromDays(2));
-            if (userId == default)
+            if (!userId.HasValue)
             {
                 throw new HttpException(HttpStatusCode.Gone,
                     "Activation token is invalid! Address the technical support for further assistance");
             }
 
-            await repository.ActivateUser(
-                new UpdateBuilder<User>(userId).Field(u => u.Activated, true),
-                new UpdateBuilder<Token>(tokenId).Field(t => t.IsRemoved, true));
+            var updateUser = updateBuilderFactory.Create<User>(userId.Value).Field(u => u.Activated, true);
+            var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
+            await repository.ActivateUser(updateUser, updateToken);
 
-            await publisher.Publish(EventType.ActivatedUser, userId);
-            return userId;
+            await publisher.Publish(EventType.ActivatedUser, userId.Value);
+            return userId.Value;
         }
     }
 }

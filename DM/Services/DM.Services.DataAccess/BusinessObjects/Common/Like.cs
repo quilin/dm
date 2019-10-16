@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Common
@@ -36,10 +35,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public virtual User User { get; set; }
 
         /// <summary>
-        /// Parent forum commentary
+        /// Parent commentary
         /// </summary>
         [ForeignKey(nameof(EntityId))]
-        public virtual ForumComment ForumComment { get; set; }
+        public virtual Comment Comment { get; set; }
 
         /// <summary>
         /// Parent topic
@@ -52,11 +51,5 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// </summary>
         [ForeignKey(nameof(EntityId))]
         public virtual Review Review { get; set; }
-        
-        /// <summary>
-        /// Parent game commentary
-        /// </summary>
-        [ForeignKey(nameof(EntityId))]
-        public virtual GameComment GameComment { get; set; }
     }
 }

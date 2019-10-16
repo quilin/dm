@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
+using DM.Services.DataAccess.BusinessObjects.Games;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users
 {
@@ -22,6 +23,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public Guid UserId { get; set; }
 
         /// <summary>
+        /// Related entity identifier
+        /// </summary>
+        public Guid EntityId { get; set; }
+
+        /// <summary>
         /// Creation moment
         /// </summary>
         public DateTimeOffset CreateDate { get; set; }
@@ -39,5 +45,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// </summary>
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
+
+        /// <summary>
+        /// Related game
+        /// </summary>
+        [ForeignKey(nameof(EntityId))]
+        public virtual Game Game { get; set; }
     }
 }

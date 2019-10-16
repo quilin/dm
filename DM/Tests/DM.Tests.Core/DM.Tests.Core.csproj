@@ -6,7 +6,12 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.2" />
       <PackageReference Include="Moq" Version="4.10.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Services\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>
