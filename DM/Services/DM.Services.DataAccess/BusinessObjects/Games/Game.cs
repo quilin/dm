@@ -197,7 +197,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// <summary>
         /// Game authorization tokens
         /// </summary>
-        [InverseProperty(nameof(Token.EntityId))]
+        [InverseProperty(nameof(Token.Game))]
         public virtual ICollection<Token> Tokens { get; set; }
     }
 }

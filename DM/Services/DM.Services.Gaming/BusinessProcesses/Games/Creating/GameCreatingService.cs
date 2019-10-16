@@ -9,6 +9,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
@@ -31,6 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IGameTagFactory gameTagFactory;
         private readonly IAssistantAssignmentTokenFactory assignmentTokenFactory;
         private readonly IGameCreatingRepository repository;
+        private readonly IUserRepository userRepository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher publisher;
 
@@ -45,6 +47,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IGameTagFactory gameTagFactory,
             IAssistantAssignmentTokenFactory assignmentTokenFactory,
             IGameCreatingRepository repository,
+            IUserRepository userRepository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher publisher)
         {
@@ -57,6 +60,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.gameTagFactory = gameTagFactory;
             this.assignmentTokenFactory = assignmentTokenFactory;
             this.repository = repository;
+            this.userRepository = userRepository;
             this.countersRepository = countersRepository;
             this.publisher = publisher;
         }
@@ -95,7 +99,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             Token assistantAssignmentToken = null;
             if (!string.IsNullOrEmpty(createGame.AssistantLogin))
             {
-                var (assistantExists, foundAssistantId) = await repository.FindUserId(createGame.AssistantLogin);
+                var (assistantExists, foundAssistantId) = await userRepository.FindUserId(createGame.AssistantLogin);
                 if (assistantExists)
                 {
                     assistantAssignmentToken = assignmentTokenFactory.Create(foundAssistantId, game.GameId);

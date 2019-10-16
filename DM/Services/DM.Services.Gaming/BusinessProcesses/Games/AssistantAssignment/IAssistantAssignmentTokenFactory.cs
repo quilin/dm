@@ -1,7 +1,7 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
+namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
     /// <summary>
     /// Factory for assistant assignment token

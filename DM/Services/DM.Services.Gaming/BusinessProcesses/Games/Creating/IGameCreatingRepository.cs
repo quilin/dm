@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -24,11 +23,5 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         /// <returns></returns>
         Task<GameExtended> Create(DbGame game, DbRoom room, IEnumerable<DbTag> tags, Token assistantAssignmentToken);
 
-        /// <summary>
-        /// Try find user by login
-        /// </summary>
-        /// <param name="login">User login</param>
-        /// <returns>Pair of existence flag and user identifier</returns>
-        Task<(bool exists, Guid userId)> FindUserId(string login);
     }
 }

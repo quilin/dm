@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
@@ -15,6 +17,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
             DmDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        /// <inheritdoc />
+        public async Task<(bool exists, Guid userId)> FindUserId(string login)
+        {
+            var foundUserId = await dbContext.Users
+                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+            return (foundUserId != default, foundUserId);
         }
 
         /// <inheritdoc />

@@ -8,6 +8,16 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Create new game
         /// </summary>
-        Create = 0
+        Create = 0,
+
+        /// <summary>
+        /// Read game details
+        /// </summary>
+        Read = 1,
+
+        /// <summary>
+        /// Edit game
+        /// </summary>
+        Edit = 2
     }
 }

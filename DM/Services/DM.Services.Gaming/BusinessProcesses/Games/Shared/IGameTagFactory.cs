@@ -1,7 +1,7 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 
-namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
+namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
 {
     /// <summary>
     /// Creates DAL model for game tag

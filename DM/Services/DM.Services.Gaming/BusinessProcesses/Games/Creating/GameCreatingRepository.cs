@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,16 +42,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 .Where(g => g.GameId == game.GameId)
                 .ProjectTo<GameExtended>(mapper.ConfigurationProvider)
                 .FirstAsync();
-        }
-
-        /// <inheritdoc />
-        public async Task<(bool exists, Guid userId)> FindUserId(string login)
-        {
-            var foundUserId = await dbContext.Users
-                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
-                .Select(u => u.UserId)
-                .FirstOrDefaultAsync();
-            return (foundUserId != default, foundUserId);
         }
     }
 }
