@@ -193,5 +193,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// </summary>
         [InverseProperty(nameof(Upload.Game))]
         public virtual ICollection<Upload> Pictures { get; set; }
+
+        /// <summary>
+        /// Game authorization tokens
+        /// </summary>
+        [InverseProperty(nameof(Token.EntityId))]
+        public virtual ICollection<Token> Tokens { get; set; }
     }
 }
