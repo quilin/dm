@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Activation;
 using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
@@ -43,6 +44,46 @@ namespace DM.Services.Community.Tests.Integration
                     .Should().BeNull();
                 (await activationRepository.FindUserToActivate(tokenId1, DateTimeOffset.Now.AddDays(1)))
                     .Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task ActivateUser()
+        {
+            var userId = Guid.NewGuid();
+            var tokenId = Guid.NewGuid();
+            using (var rdb = GetRdb(nameof(ActivateUser)))
+            {
+                rdb.Users.Add(new User
+                {
+                    UserId = userId,
+                    Login = "login",
+                    Email = "some@email.ru",
+                    Activated = false,
+                    IsRemoved = false
+                });
+                rdb.Tokens.Add(new Token
+                {
+                    TokenId = tokenId,
+                    Type = TokenType.Registration,
+                    UserId = userId,
+                    IsRemoved = false,
+                    CreateDate = DateTimeOffset.Now
+                });
+                await rdb.SaveChangesAsync();
+            }
+
+            using (var rdb = GetRdb(nameof(ActivateUser)))
+            {
+                var activationRepository = new ActivationRepository(rdb);
+                var userUpdate = new UpdateBuilderFactory().Create<User>(userId)
+                    .Field(u => u.Activated, true);
+                var tokenUpdate = new UpdateBuilderFactory().Create<Token>(tokenId)
+                    .Field(t => t.IsRemoved, true);
+                await activationRepository.ActivateUser(userUpdate, tokenUpdate);
+
+                (await rdb.Tokens.FindAsync(tokenId)).IsRemoved.Should().BeTrue();
+                (await rdb.Users.FindAsync(userId)).Activated.Should().BeTrue();
             }
         }
     }

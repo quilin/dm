@@ -69,9 +69,9 @@ namespace DM.Services.Community.Tests
         [Fact]
         public void ThrowGoneException_WhenTokenInvalid()
         {
-            findUserSetup.ReturnsAsync(Guid.Empty);
+            findUserSetup.ReturnsAsync((Guid?) null);
             activationService
-                .Invoking(s => s.Activate(Guid.NewGuid()).GetAwaiter().GetResult())
+                .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
                 .Should().Throw<HttpException>()
                 .And.StatusCode.Should().Be(HttpStatusCode.Gone);
         }

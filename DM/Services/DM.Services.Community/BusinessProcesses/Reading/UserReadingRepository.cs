@@ -45,14 +45,16 @@ namespace DM.Services.Community.BusinessProcesses.Reading
 
         private IQueryable<User> GetQuery(bool withInactive)
         {
-            var query = dmDbContext.Users.Where(u => !u.IsRemoved);
+            var query = dmDbContext.Users.Where(u => !u.IsRemoved && u.Activated);
             if (withInactive)
             {
                 return query;
             }
 
             var activeRange = dateTimeProvider.Now - ActivityRange;
-            return query.Where(u => u.LastVisitDate > activeRange);
+            return query.Where(u =>
+                u.LastVisitDate.HasValue &&
+                u.LastVisitDate > activeRange);
         }
 
         /// <inheritdoc />
@@ -60,7 +62,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         {
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
-                .Where(u => !u.IsRemoved && u.Login.ToLower() == lowerLogin)
+                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
                 .ProjectTo<GeneralUser>()
                 .FirstOrDefaultAsync();
         }
@@ -70,7 +72,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         {
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
-                .Where(u => !u.IsRemoved && u.Login.ToLower() == lowerLogin)
+                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
                 .ProjectTo<UserProfile>()
                 .FirstOrDefaultAsync();
         }
