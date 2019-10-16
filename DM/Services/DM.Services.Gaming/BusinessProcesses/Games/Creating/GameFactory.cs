@@ -22,16 +22,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         }
 
         /// <inheritdoc />
-        public Game Create(CreateGame createGame,
-            Guid userId, Guid? assistantId, GameStatus initialStatus)
+        public Game Create(CreateGame createGame, Guid masterId, GameStatus initialStatus)
         {
             return new Game
             {
                 GameId = guidFactory.Create(),
                 CreateDate = dateTimeProvider.Now,
                 Status = initialStatus,
-                MasterId = userId,
-                AssistantId = assistantId,
+                MasterId = masterId,
+                AssistantId = null,
                 Title = createGame.Title,
                 SystemName = createGame.SystemName,
                 SettingName = createGame.SettingName,
