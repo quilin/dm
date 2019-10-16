@@ -23,7 +23,10 @@ namespace DM.Services.Common.Dto
                         .FirstOrDefault()));
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(d => d.AccessRestrictionPolicies, s => s.MapFrom(
-                    u => u.BansReceived.Where(b => !b.IsRemoved).Select(b => b.AccessRestrictionPolicy).ToList()));
+                    u => u.BansReceived
+                        .Where(b => !b.IsRemoved)
+                        .Select(b => b.AccessRestrictionPolicy)
+                        .ToList()));
         }
     }
 }

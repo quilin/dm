@@ -31,11 +31,6 @@ namespace DM.Services.DataAccess
         public DbSet<User> Users { get; set; }
 
         /// <summary>
-        /// User profiles
-        /// </summary>
-        public DbSet<UserProfile> Profiles { get; set; }
-
-        /// <summary>
         /// User authorization tokens
         /// </summary>
         public DbSet<Token> Tokens { get; set; }

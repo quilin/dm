@@ -47,7 +47,7 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <response code="200"></response>
         /// <response code="410">User not found</response>
         [HttpGet("{login}/profile", Name = nameof(GetProfile))]
-        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(Envelope<UserProfile>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
         public Task<IActionResult> GetProfile(string login) => throw new NotImplementedException();
 

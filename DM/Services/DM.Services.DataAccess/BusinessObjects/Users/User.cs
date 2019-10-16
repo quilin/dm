@@ -92,13 +92,42 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <inheritdoc />
         public bool IsRemoved { get; set; }
 
-        #region Profile navigations
+        /// <summary>
+        /// Custom status
+        /// </summary>
+        public string Status { get; set; }
 
         /// <summary>
-        /// Profile
+        /// Real name
         /// </summary>
-        [InverseProperty(nameof(UserProfile.User))]
-        public virtual UserProfile Profile { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Real location
+        /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// ICQ number
+        /// </summary>
+        public string Icq { get; set; }
+
+        /// <summary>
+        /// Skype name
+        /// </summary>
+        public string Skype { get; set; }
+
+        /// <summary>
+        /// Email display flag
+        /// </summary>
+        public bool ShowEmail { get; set; }
+
+        /// <summary>
+        /// Full user information
+        /// </summary>
+        public string Info { get; set; }
+
+        #region Profile navigations
 
         /// <summary>
         /// Profile picture (should only be one active)
