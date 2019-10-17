@@ -38,10 +38,23 @@ namespace DM.Services.Gaming.Authorization
             switch (intention)
             {
                 case GameIntention.Read:
-                    return Task.FromResult(user.Role.HasFlag(UserRole.Administrator | UserRole.SeniorModerator) ||
-                                           user.UserId == target.Master.UserId ||
-                                           user.UserId == target.Assistant?.UserId ||
-                                           !HiddenStates.Contains(target.Status));
+                    return Task.FromResult(
+                        user.Role.HasFlag(UserRole.Administrator) ||
+                        user.Role.HasFlag(UserRole.SeniorModerator) ||
+                        user.UserId == target.Master.UserId ||
+                        user.UserId == target.Assistant?.UserId ||
+                        !HiddenStates.Contains(target.Status));
+                case GameIntention.Edit:
+                    return Task.FromResult(
+                        user.Role.HasFlag(UserRole.Administrator) ||
+                        user.Role.HasFlag(UserRole.SeniorModerator) ||
+                        user.UserId == target.Master.UserId ||
+                        user.UserId == target.Assistant?.UserId);
+                case GameIntention.Delete:
+                    return Task.FromResult(
+                        user.Role.HasFlag(UserRole.Administrator) ||
+                        user.Role.HasFlag(UserRole.SeniorModerator) ||
+                        user.UserId == target.Master.UserId);
                 default:
                     return Task.FromResult(false);
             }

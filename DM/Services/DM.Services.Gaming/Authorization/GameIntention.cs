@@ -18,6 +18,11 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Edit game
         /// </summary>
-        Edit = 2
+        Edit = 2,
+
+        /// <summary>
+        /// Remove game
+        /// </summary>
+        Delete = 3
     }
 }
