@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Parsing;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.Dto.Output;
 using DM.Web.Classic.Views.Shared.User;
 
 namespace DM.Web.Classic.Views.Shared.Commentaries

@@ -11,7 +11,7 @@ namespace DM.Services.Gaming.Authorization
     /// <inheritdoc cref="IIntentionResolver" />
     public class GameIntentionResolver :
         IIntentionResolver<GameIntention>,
-        IIntentionResolver<GameIntention, GameExtended>
+        IIntentionResolver<GameIntention, Game>
     {
         /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention)
@@ -33,7 +33,7 @@ namespace DM.Services.Gaming.Authorization
         };
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention, GameExtended target)
+        public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention, Game target)
         {
             if (intention != GameIntention.Read && !user.IsAuthenticated)
             {

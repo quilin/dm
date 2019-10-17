@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Forum.Dto.Output
+namespace DM.Services.Common.Dto
 {
     /// <summary>
     /// DTO model for comment
@@ -14,9 +13,9 @@ namespace DM.Services.Forum.Dto.Output
         public Guid Id { get; set; }
         
         /// <summary>
-        /// Parent topic identifier
+        /// Parent entity identifier
         /// </summary>
-        public Guid TopicId { get; set; }
+        public Guid EntityId { get; set; }
 
         /// <summary>
         /// Date of creation

@@ -21,7 +21,7 @@ namespace DM.Services.Authentication.Implementation
         private readonly IAuthenticationRepository repository;
         private readonly ISessionFactory sessionFactory;
         private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IIdentityProvider identityProvider;
+        private readonly IIdentity identity;
 
         private const string UserIdKey = "userId";
         private const string SessionIdKey = "sessionId";
@@ -40,7 +40,7 @@ namespace DM.Services.Authentication.Implementation
             this.repository = repository;
             this.sessionFactory = sessionFactory;
             this.dateTimeProvider = dateTimeProvider;
-            this.identityProvider = identityProvider;
+            identity = identityProvider.Current;
         }
 
         /// <inheritdoc />
@@ -130,7 +130,6 @@ namespace DM.Services.Authentication.Implementation
         /// <inheritdoc />
         public async Task<IIdentity> Logout()
         {
-            var identity = identityProvider.Current;
             await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
             return Identity.Guest();
         }
@@ -138,7 +137,6 @@ namespace DM.Services.Authentication.Implementation
         /// <inheritdoc />
         public async Task<IIdentity> LogoutAll()
         {
-            var identity = identityProvider.Current;
             await repository.RemoveSessions(identity.User.UserId);
 
             var session = sessionFactory.Create(identity.Session.IsPersistent);

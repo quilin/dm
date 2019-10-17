@@ -14,6 +14,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         /// </summary>
         /// <param name="update">Update commentary</param>
         /// <returns></returns>
-        Task<Dto.Output.Comment> Update(IUpdateBuilder<Comment> update);
+        Task<Services.Common.Dto.Comment> Update(IUpdateBuilder<Comment> update);
     }
 }

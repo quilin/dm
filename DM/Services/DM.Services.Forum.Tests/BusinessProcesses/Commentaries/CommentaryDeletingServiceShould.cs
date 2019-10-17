@@ -33,7 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         {
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Dto.Output.Comment>()))
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()))
                 .Returns(Task.CompletedTask);
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
@@ -66,7 +66,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await service.Delete(commentId);
 
-            intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Delete, (Dto.Output.Comment) comment));
+            intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Delete, (Common.Dto.Comment) comment));
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         {
             var commentId = Guid.NewGuid();
             var topicId = Guid.NewGuid();
-            var comment = new CommentToDelete {IsLastCommentOfTopic = true, TopicId = topicId};
+            var comment = new CommentToDelete {IsLastCommentOfTopic = true, EntityId = topicId};
             getCommentSetup.ReturnsAsync(comment);
 
             var secondLastCommentId = Guid.NewGuid();
@@ -111,7 +111,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topicId = Guid.NewGuid();
             var comment = new CommentToDelete
             {
-                TopicId = topicId,
+                EntityId = topicId,
                 CreateDate = new DateTimeOffset(2019, 01, 14, 10, 13, 11, TimeSpan.Zero)
             };
             getCommentSetup.ReturnsAsync(comment);

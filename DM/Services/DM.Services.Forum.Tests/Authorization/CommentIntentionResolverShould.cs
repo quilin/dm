@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
-using DM.Services.Forum.Dto.Output;
 using DM.Services.Forum.Tests.Dsl;
 using FluentAssertions;
 using Xunit;

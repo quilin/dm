@@ -25,13 +25,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         }
         
         /// <inheritdoc />
-        public async Task<Dto.Output.Comment> Update(IUpdateBuilder<Comment> update)
+        public async Task<Services.Common.Dto.Comment> Update(IUpdateBuilder<Comment> update)
         {
             var commentId = update.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
                 .Where(c => c.CommentId == commentId)
-                .ProjectTo<Dto.Output.Comment>(mapper.ConfigurationProvider)
+                .ProjectTo<Services.Common.Dto.Comment>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
     }

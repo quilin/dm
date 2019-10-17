@@ -1,5 +1,5 @@
+using DM.Services.Common.Dto;
 using DM.Services.Core.Parsing;
-using DM.Services.Forum.Dto.Output;
 
 namespace DM.Web.Classic.Views.Shared.Commentaries
 {

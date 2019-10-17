@@ -43,7 +43,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         }
 
         /// <inheritdoc />
-        public async Task<Dto.Output.Comment> Update(UpdateComment updateComment)
+        public async Task<Services.Common.Dto.Comment> Update(UpdateComment updateComment)
         {
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);

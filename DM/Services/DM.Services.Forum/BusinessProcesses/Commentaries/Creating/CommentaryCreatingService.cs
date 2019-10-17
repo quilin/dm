@@ -12,7 +12,7 @@ using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
-using Comment = DM.Services.Forum.Dto.Output.Comment;
+using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {

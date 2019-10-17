@@ -42,17 +42,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query, GameStatus? status)
         {
-            var totalCount = await repository.Count(status);
+            var totalCount = await repository.Count(status, identity.User.UserId);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
-            var games = await repository.GetGames(pagingData, status);
+            var games = await repository.GetGames(pagingData, status, identity.User.UserId);
             return (games, pagingData.Result);
         }
 
         /// <inheritdoc />
         public async Task<GameExtended> GetGame(Guid gameId)
         {
-            var game = await repository.GetGame(gameId);
+            var game = await repository.GetGameDetails(gameId, identity.User.UserId);
             if (game == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Game not found");

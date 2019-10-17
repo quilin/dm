@@ -16,6 +16,6 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         /// <param name="comment">DAL model for comment</param>
         /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
         /// <returns></returns>
-        Task<Dto.Output.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate);
+        Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate);
     }
 }

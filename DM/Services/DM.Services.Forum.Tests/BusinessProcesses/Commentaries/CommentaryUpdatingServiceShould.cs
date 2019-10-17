@@ -23,12 +23,12 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 {
     public class CommentaryUpdatingServiceShould : UnitTestBase
     {
-        private readonly ISetup<ICommentaryReadingService, Task<Dto.Output.Comment>> getCommentSetup;
+        private readonly ISetup<ICommentaryReadingService, Task<Common.Dto.Comment>> getCommentSetup;
         private readonly Mock<IIntentionManager> intentionManager;
         private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
         private readonly Mock<IUpdateBuilder<Comment>> commentUpdateBuilder;
         private readonly Mock<ICommentaryUpdatingRepository> commentRepository;
-        private readonly ISetup<ICommentaryUpdatingRepository, Task<Dto.Output.Comment>> updateCommentSetup;
+        private readonly ISetup<ICommentaryUpdatingRepository, Task<Common.Dto.Comment>> updateCommentSetup;
         private readonly Mock<IInvokedEventPublisher> eventPublisher;
         private readonly CommentaryUpdatingService service;
 
@@ -45,7 +45,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Dto.Output.Comment>()))
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()))
                 .Returns(Task.CompletedTask);
 
             var dateTimeProvider = Mock<IDateTimeProvider>();
@@ -79,9 +79,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         public async Task AuthorizeUpdateAction()
         {
             var commentId = Guid.NewGuid();
-            var comment = new Dto.Output.Comment();
+            var comment = new Common.Dto.Comment();
             getCommentSetup.ReturnsAsync(comment);
-            var updatedComment = new Dto.Output.Comment();
+            var updatedComment = new Common.Dto.Comment();
             updateCommentSetup.ReturnsAsync(updatedComment);
 
             await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty});
@@ -93,9 +93,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         public async Task SaveWithUpdatedTextAndModifiedDate()
         {
             var commentId = Guid.NewGuid();
-            var comment = new Dto.Output.Comment();
+            var comment = new Common.Dto.Comment();
             getCommentSetup.ReturnsAsync(comment);
-            var expected = new Dto.Output.Comment();
+            var expected = new Common.Dto.Comment();
             updateCommentSetup.ReturnsAsync(expected);
             var rightNow = new DateTimeOffset(2019, 01, 12, 10, 00, 00, TimeSpan.Zero);
             currentMomentSetup.Returns(rightNow);
@@ -112,9 +112,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         public async Task PublishEvent()
         {
             var commentId = Guid.NewGuid();
-            var comment = new Dto.Output.Comment();
+            var comment = new Common.Dto.Comment();
             getCommentSetup.ReturnsAsync(comment);
-            var updatedComment = new Dto.Output.Comment();
+            var updatedComment = new Common.Dto.Comment();
             updateCommentSetup.ReturnsAsync(updatedComment);
 
             await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty});

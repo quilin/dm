@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
@@ -11,7 +12,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
     /// <inheritdoc />
     public class UserReadingService : IUserReadingService
     {
-        private readonly IIdentityProvider identityProvider;
+        private readonly IIdentity identity;
         private readonly IUserReadingRepository readingRepository;
 
         /// <inheritdoc />
@@ -19,7 +20,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             IIdentityProvider identityProvider,
             IUserReadingRepository readingRepository)
         {
-            this.identityProvider = identityProvider;
+            identity = identityProvider.Current;
             this.readingRepository = readingRepository;
         }
 
@@ -28,7 +29,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             PagingQuery query, bool withInactive)
         {
             var totalCount = await readingRepository.CountUsers(withInactive);
-            var paging = new PagingData(query, identityProvider.Current.Settings.TopicsPerPage, totalCount);
+            var paging = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
             var users = await readingRepository.GetUsers(paging, withInactive);
             return (users, paging.Result);
         }

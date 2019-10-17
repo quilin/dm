@@ -31,7 +31,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
         private readonly ISetup<ICommentaryFactory, Comment> commentaryDalCreateSetup;
-        private readonly ISetup<ICommentaryCreatingRepository, Task<Dto.Output.Comment>> commentaryCreateSetup;
+        private readonly ISetup<ICommentaryCreatingRepository, Task<Common.Dto.Comment>> commentaryCreateSetup;
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
@@ -98,7 +98,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topic = new Topic();
             topicReadingSetup.ReturnsAsync(topic);
             commentaryDalCreateSetup.Returns(new Comment());
-            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
+            commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
             await service.Create(new CreateComment());
 
@@ -114,7 +114,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var commentId = Guid.NewGuid();
             var forumComment = new Comment {CommentId = commentId};
             commentaryDalCreateSetup.Returns(forumComment);
-            var expected = new Dto.Output.Comment();
+            var expected = new Common.Dto.Comment();
             commentaryCreateSetup.ReturnsAsync(expected);
 
             var actual = await service.Create(new CreateComment());
@@ -132,7 +132,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topic = new Topic {Id = topicId};
             topicReadingSetup.ReturnsAsync(topic);
             commentaryDalCreateSetup.Returns(new Comment());
-            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
+            commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
             await service.Create(new CreateComment());
 
@@ -149,7 +149,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             topicReadingSetup.ReturnsAsync(topic);
             var commentId = Guid.NewGuid();
             commentaryDalCreateSetup.Returns(new Comment {CommentId = commentId});
-            commentaryCreateSetup.ReturnsAsync(new Dto.Output.Comment());
+            commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
             await service.Create(new CreateComment());
 

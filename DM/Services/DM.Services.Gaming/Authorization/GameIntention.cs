@@ -59,5 +59,10 @@ namespace DM.Services.Gaming.Authorization
         /// Close the game
         /// </summary>
         SetStatusClosed = 10,
+
+        /// <summary>
+        /// Read game commentaries
+        /// </summary>
+        ReadComments = 11,
     }
 }

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.Authorization
 {

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -18,7 +19,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         private readonly IGameReadingService gameReadingService;
         private readonly IGameIntentionConverter intentionConverter;
         private readonly IIntentionManager intentionManager;
-        private readonly IIdentityProvider identityProvider;
+        private readonly IIdentity identity;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IGameUpdatingRepository repository;
@@ -38,7 +39,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             this.gameReadingService = gameReadingService;
             this.intentionConverter = intentionConverter;
             this.intentionManager = intentionManager;
-            this.identityProvider = identityProvider;
+            identity = identityProvider.Current;
             this.updateBuilderFactory = updateBuilderFactory;
             this.dateTimeProvider = dateTimeProvider;
             this.repository = repository;
@@ -61,7 +62,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
 
             if (gameStatus == GameStatus.Moderation) // when we go to moderation the actor becomes nanny
             {
-                changes = changes.Field(g => g.NannyId, identityProvider.Current.User.UserId);
+                changes = changes.Field(g => g.NannyId, identity.User.UserId);
             }
             else if (game.Status == GameStatus.Moderation) // when we go from moderation the nanny is no more
             {

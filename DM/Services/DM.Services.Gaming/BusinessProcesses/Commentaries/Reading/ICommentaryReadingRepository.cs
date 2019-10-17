@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
     /// <summary>
     /// Forum comments storage
@@ -12,19 +12,19 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
     public interface ICommentaryReadingRepository
     {
         /// <summary>
-        /// Count comments of the topic
+        /// Count comments of the game
         /// </summary>
-        /// <param name="topicId">Topic id</param>
-        /// <returns>Number of topic comments</returns>
-        Task<int> Count(Guid topicId);
+        /// <param name="gameId">Game identifier</param>
+        /// <returns>Number of game comments</returns>
+        Task<int> Count(Guid gameId);
 
         /// <summary>
-        /// Get comments list of the topic
+        /// Get comments list of the game
         /// </summary>
-        /// <param name="topicId">Topic id</param>
+        /// <param name="gameId">Game identifier</param>
         /// <param name="paging">Paging data</param>
         /// <returns></returns>
-        Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging);
+        Task<IEnumerable<Comment>> Get(Guid gameId, PagingData paging);
 
         /// <summary>
         /// Get single comment by its identifier

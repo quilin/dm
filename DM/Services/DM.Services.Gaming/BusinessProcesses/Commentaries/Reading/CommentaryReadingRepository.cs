@@ -10,7 +10,7 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 
 {
     /// <inheritdoc />
@@ -29,14 +29,14 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         }
 
         /// <inheritdoc />
-        public Task<int> Count(Guid topicId) => dbContext.Comments
-            .CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
+        public Task<int> Count(Guid gameId) => dbContext.Comments
+            .CountAsync(c => !c.IsRemoved && c.EntityId == gameId);
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging)
+        public async Task<IEnumerable<Comment>> Get(Guid gameId, PagingData paging)
         {
             return await dbContext.Comments
-                .Where(c => !c.IsRemoved && c.EntityId == topicId)
+                .Where(c => !c.IsRemoved && c.EntityId == gameId)
                 .OrderBy(c => c.CreateDate)
                 .Page(paging)
                 .ProjectTo<Comment>(mapper.ConfigurationProvider)

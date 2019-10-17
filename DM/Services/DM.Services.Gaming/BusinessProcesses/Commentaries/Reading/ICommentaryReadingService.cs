@@ -1,23 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
-using Comment = DM.Services.Common.Dto.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
     /// <summary>
-    /// Service for reading forum commentaries
+    /// Service for reading game commentaries
     /// </summary>
     public interface ICommentaryReadingService
     {
         /// <summary>
-        /// Get list of topic comments by topic id
+        /// Get list of game comments by game id
         /// </summary>
-        /// <param name="topicId">Topic identifier</param>
+        /// <param name="gameId">Game identifier</param>
         /// <param name="query">Paging query</param>
         /// <returns>Pair of comments list and paging data</returns>
-        Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid topicId, PagingQuery query);
+        Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid gameId, PagingQuery query);
 
         /// <summary>
         /// Get topic comment by id

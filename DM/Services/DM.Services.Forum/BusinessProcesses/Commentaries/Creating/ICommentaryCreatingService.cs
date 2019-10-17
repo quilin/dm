@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using DM.Services.Common.Dto;
 using DM.Services.Forum.Dto.Input;
-using DM.Services.Forum.Dto.Output;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {

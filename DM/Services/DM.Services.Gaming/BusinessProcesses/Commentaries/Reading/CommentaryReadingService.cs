@@ -4,41 +4,36 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using DM.Services.Forum.BusinessProcesses.Topics.Reading;
-using Comment = DM.Services.Common.Dto.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
     /// <inheritdoc />
     public class CommentaryReadingService : ICommentaryReadingService
     {
-        private readonly ITopicReadingService topicReadingService;
         private readonly ICommentaryReadingRepository commentaryRepository;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public CommentaryReadingService(
-            ITopicReadingService topicReadingService,
-            IIdentityProvider identityProvider,
-            ICommentaryReadingRepository commentaryRepository)
+            ICommentaryReadingRepository commentaryRepository,
+            IIdentityProvider identityProvider)
         {
-            this.topicReadingService = topicReadingService;
             this.commentaryRepository = commentaryRepository;
             identity = identityProvider.Current;
         }
-
+        
         /// <inheritdoc />
-        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(
-            Guid topicId, PagingQuery query)
+        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid gameId, PagingQuery query)
         {
-            await topicReadingService.GetTopic(topicId);
-
-            var totalCount = await commentaryRepository.Count(topicId);
+            
+            
+            var totalCount = await commentaryRepository.Count(gameId);
             var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
 
-            var comments = await commentaryRepository.Get(topicId, paging);
+            var comments = await commentaryRepository.Get(gameId, paging);
 
             return (comments, paging.Result);
         }

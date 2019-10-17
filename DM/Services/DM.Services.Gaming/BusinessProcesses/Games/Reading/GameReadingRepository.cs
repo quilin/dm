@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -27,20 +28,23 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
             this.mapper = mapper;
         }
 
+        private static Expression<Func<DataAccess.BusinessObjects.Games.Game, bool>> AccessFilter(Guid userId) =>
+            g => !g.IsRemoved && g.BlackList.All(b => b.UserId != userId);
+
         /// <inheritdoc />
-        public Task<int> Count(GameStatus? status)
+        public Task<int> Count(GameStatus? status, Guid userId)
         {
             return dbContext.Games
-                .Where(g => !g.IsRemoved)
+                .Where(AccessFilter(userId))
                 .Where(g => !status.HasValue || g.Status == status.Value)
                 .CountAsync();
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status)
+        public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId)
         {
             return await dbContext.Games
-                .Where(g => !g.IsRemoved)
+                .Where(AccessFilter(userId))
                 .Where(g => !status.HasValue || g.Status == status.Value)
                 .OrderBy(g => g.ReleaseDate ?? g.CreateDate)
                 .Skip(pagingData.Skip)
@@ -50,11 +54,22 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public Task<GameExtended> GetGame(Guid gameId)
+        public Task<GameExtended> GetGameDetails(Guid gameId, Guid userId)
         {
             return dbContext.Games
-                .Where(g => !g.IsRemoved && g.GameId == gameId)
+                .Where(AccessFilter(userId))
+                .Where(g => g.GameId == gameId)
                 .ProjectTo<GameExtended>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <inheritdoc />
+        public Task<Game> GetGame(Guid gameId, Guid userId)
+        {
+            return dbContext.Games
+                .Where(AccessFilter(userId))
+                .Where(g => g.GameId == gameId)
+                .ProjectTo<Game>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
 

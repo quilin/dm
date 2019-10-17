@@ -16,23 +16,34 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// Count games that match the query
         /// </summary>
         /// <param name="status">Status filter</param>
+        /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<int> Count(GameStatus? status);
+        Task<int> Count(GameStatus? status, Guid userId);
 
         /// <summary>
         /// Get list of matching games on certain page
         /// </summary>
         /// <param name="pagingData">Paging data</param>
         /// <param name="status">Status filter</param>
+        /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status);
+        Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId);
 
         /// <summary>
-        /// Get single game
+        /// Get single game model
         /// </summary>
         /// <param name="gameId">Game identifier</param>
+        /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<GameExtended> GetGame(Guid gameId);
+        Task<Game> GetGame(Guid gameId, Guid userId);
+
+        /// <summary>
+        /// Get single game full info
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task<GameExtended> GetGameDetails(Guid gameId, Guid userId);
 
         /// <summary>
         /// Get list of available tags

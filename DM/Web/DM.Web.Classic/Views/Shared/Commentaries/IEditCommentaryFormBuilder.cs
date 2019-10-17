@@ -1,4 +1,4 @@
-﻿using DM.Services.Forum.Dto.Output;
+﻿using DM.Services.Common.Dto;
 
 namespace DM.Web.Classic.Views.Shared.Commentaries
 {
