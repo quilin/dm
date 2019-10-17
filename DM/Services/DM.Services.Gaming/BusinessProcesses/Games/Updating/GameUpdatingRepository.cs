@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Output;
 using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
@@ -26,10 +25,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         }
         
         /// <inheritdoc />
-        public async Task<GameExtended> Update(IUpdateBuilder<Game> updateGame, Token assistantAssignmentToken)
+        public async Task<GameExtended> Update(IUpdateBuilder<Game> updateGame)
         {
             var gameId = updateGame.AttachTo(dbContext);
-            dbContext.Tokens.Add(assistantAssignmentToken);
             await dbContext.SaveChangesAsync();
 
             return dbContext.Games

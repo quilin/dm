@@ -14,6 +14,11 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser PendingAssistant { get; set; }
 
         /// <summary>
+        /// Game premoderation moderator
+        /// </summary>
+        public GeneralUser Nanny { get; set; }
+
+        /// <summary>
         /// Game tags
         /// </summary>
         public IEnumerable<GameTag> Tags { get; set; }

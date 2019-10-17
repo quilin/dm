@@ -40,11 +40,6 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser Assistant { get; set; }
 
         /// <summary>
-        /// Game premoderation moderator
-        /// </summary>
-        public GeneralUser Nanny { get; set; }
-
-        /// <summary>
         /// Game title
         /// </summary>
         public string Title { get; set; }

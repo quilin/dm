@@ -183,7 +183,7 @@ namespace DM.Services.Gaming.Tests
         {
             currentUserSetup.Returns(new AuthenticatedUser());
             var gameId = Guid.NewGuid();
-            var game = new Game{GameId = gameId};
+            var game = new Game {GameId = gameId};
             var room = new Room();
             createGameSetup.Returns(game);
             createRoomSetup.Returns(room);
