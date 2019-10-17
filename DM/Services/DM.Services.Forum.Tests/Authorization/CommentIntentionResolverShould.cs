@@ -50,5 +50,31 @@ namespace DM.Services.Forum.Tests.Authorization
             var actual = await resolver.IsAllowed(author, intention, new Comment {Author = Create.User().Please()});
             actual.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task NotAllowLikeForGuest()
+        {
+            var user = Create.User().WithRole(UserRole.Guest).Please();
+            var actual = await resolver.IsAllowed(user, CommentIntention.Like, new Comment());
+            actual.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task NotAllowLikeOwnComments()
+        {
+            var userId = Guid.NewGuid();
+            var user = Create.User(userId).WithRole(UserRole.Player).Please();
+            var actual = await resolver.IsAllowed(user, CommentIntention.Like, new Comment {Author = user});
+            actual.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task AllowToLikeOthersComments()
+        {
+            var user = Create.User().WithRole(UserRole.Player).Please();
+            var actual = await resolver.IsAllowed(user, CommentIntention.Like,
+                new Comment {Author = Create.User().Please()});
+            actual.Should().BeTrue();
+        }
     }
 }

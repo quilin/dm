@@ -7,7 +7,6 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
@@ -26,11 +25,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IValidator<CreateGame> validator;
         private readonly IIntentionManager intentionManager;
         private readonly IGameReadingService readingService;
+        private readonly IAssignmentService assignmentService;
         private readonly IIdentity identity;
         private readonly IGameFactory gameFactory;
         private readonly IRoomFactory roomFactory;
         private readonly IGameTagFactory gameTagFactory;
-        private readonly IAssistantAssignmentTokenFactory assignmentTokenFactory;
         private readonly IGameCreatingRepository repository;
         private readonly IUserRepository userRepository;
         private readonly IUnreadCountersRepository countersRepository;
@@ -41,11 +40,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IValidator<CreateGame> validator,
             IIntentionManager intentionManager,
             IGameReadingService readingService,
+            IAssignmentService assignmentService,
             IIdentityProvider identityProvider,
             IGameFactory gameFactory,
             IRoomFactory roomFactory,
             IGameTagFactory gameTagFactory,
-            IAssistantAssignmentTokenFactory assignmentTokenFactory,
             IGameCreatingRepository repository,
             IUserRepository userRepository,
             IUnreadCountersRepository countersRepository,
@@ -54,11 +53,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.validator = validator;
             this.intentionManager = intentionManager;
             this.readingService = readingService;
+            this.assignmentService = assignmentService;
             identity = identityProvider.Current;
             this.gameFactory = gameFactory;
             this.roomFactory = roomFactory;
             this.gameTagFactory = gameTagFactory;
-            this.assignmentTokenFactory = assignmentTokenFactory;
             this.repository = repository;
             this.userRepository = userRepository;
             this.countersRepository = countersRepository;
@@ -96,17 +95,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             }
 
             // initiate assistant assignment
-            Token assistantAssignmentToken = null;
             if (!string.IsNullOrEmpty(createGame.AssistantLogin))
             {
                 var (assistantExists, foundAssistantId) = await userRepository.FindUserId(createGame.AssistantLogin);
                 if (assistantExists)
                 {
-                    assistantAssignmentToken = assignmentTokenFactory.Create(foundAssistantId, game.GameId);
+                    await assignmentService.CreateAssignment(game.GameId, foundAssistantId);
                 }
             }
 
-            var createdGame = await repository.Create(game, room, tags, assistantAssignmentToken);
+            var createdGame = await repository.Create(game, room, tags);
 
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);

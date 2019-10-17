@@ -35,7 +35,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         }
 
         [Fact]
-        public async Task ThrowGoneWhenUserNotFound()
+        public void ThrowGoneWhenUserNotFound()
         {
             readingRepository
                 .Setup(r => r.GetUser(It.IsAny<string>()))

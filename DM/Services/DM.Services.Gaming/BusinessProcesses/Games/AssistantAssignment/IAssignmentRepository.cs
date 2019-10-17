@@ -36,10 +36,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
         Task<IEnumerable<Guid>> FindAssignments(Guid gameId);
 
         /// <summary>
-        /// Invalidate tokens
+        /// Invalidate pending and create new assignment token
         /// </summary>
-        /// <param name="updateTokens"></param>
+        /// <param name="updates"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        Task Invalidate(IEnumerable<IUpdateBuilder<Token>> updateTokens);
+        Task InvalidateAndCreate(IEnumerable<IUpdateBuilder<Token>> updates, Token token);
     }
 }

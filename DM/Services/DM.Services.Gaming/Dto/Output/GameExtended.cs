@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DM.Services.Core.Dto;
 
 namespace DM.Services.Gaming.Dto.Output
 {
@@ -7,6 +8,11 @@ namespace DM.Services.Gaming.Dto.Output
     /// </summary>
     public class GameExtended : Game
     {
+        /// <summary>
+        /// Pending assistant if any
+        /// </summary>
+        public GeneralUser PendingAssistant { get; set; }
+
         /// <summary>
         /// Game tags
         /// </summary>

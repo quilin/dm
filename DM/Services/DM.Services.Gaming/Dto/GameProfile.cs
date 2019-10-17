@@ -18,7 +18,11 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId));
             CreateMap<DbGame, GameExtended>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
-                .ForMember(d => d.Tags, s => s.MapFrom(g => g.GameTags.Select(t => t.Tag)));
+                .ForMember(d => d.Tags, s => s.MapFrom(g => g.GameTags.Select(t => t.Tag)))
+                .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
+                    .Where(t => !t.IsRemoved)
+                    .Select(t => t.User)
+                    .FirstOrDefault()));
             CreateMap<DbGameTag, GameTag>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.TagId))
                 .ForMember(d => d.GroupTitle, s => s.MapFrom(g => g.TagGroup.Title));

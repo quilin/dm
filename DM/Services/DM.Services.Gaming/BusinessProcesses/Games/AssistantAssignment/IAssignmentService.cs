@@ -9,6 +9,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
     public interface IAssignmentService
     {
         /// <summary>
+        /// Create new assignment request
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task CreateAssignment(Guid gameId, Guid userId);
+        
+        /// <summary>
         /// User accepts the request and becomes the game assistant
         /// </summary>
         /// <returns></returns>
@@ -20,12 +28,5 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
         /// <param name="tokenId"></param>
         /// <returns></returns>
         Task RejectAssignment(Guid tokenId);
-
-        /// <summary>
-        /// Game master cancels pending assignment requests
-        /// </summary>
-        /// <param name="gameId"></param>
-        /// <returns></returns>
-        Task CancelAssignments(Guid gameId);
     }
 }

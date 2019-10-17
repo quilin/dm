@@ -55,13 +55,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
         }
 
         /// <inheritdoc />
-        public Task Invalidate(IEnumerable<IUpdateBuilder<Token>> updateTokens)
+        public Task InvalidateAndCreate(IEnumerable<IUpdateBuilder<Token>> updates, Token token)
         {
-            foreach (var updateToken in updateTokens)
+            foreach (var updateBuilder in updates)
             {
-                updateToken.AttachTo(dbContext);
+                updateBuilder.AttachTo(dbContext);
             }
 
+            dbContext.Tokens.Add(token);
             return dbContext.SaveChangesAsync();
         }
     }

@@ -50,7 +50,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 
             await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var updateBuilder = updateBuilderFactory.Create<Comment>(updateComment.CommentId)
-                .Field(f => f.Text, updateComment.Text.Trim())
+                .MaybeField(f => f.Text, updateComment.Text?.Trim())
                 .Field(f => f.LastUpdateDate, dateTimeProvider.Now);
             var updatedComment = await repository.Update(updateBuilder);
             await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);

@@ -3,10 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.MessageQueuing.Publish;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
@@ -14,18 +16,34 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
     public class AssignmentService : IAssignmentService
     {
         private readonly IIdentityProvider identityProvider;
+        private readonly IAssistantAssignmentTokenFactory tokenFactory;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IAssignmentRepository repository;
+        private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
         public AssignmentService(
             IIdentityProvider identityProvider,
+            IAssistantAssignmentTokenFactory tokenFactory,
             IUpdateBuilderFactory updateBuilderFactory,
-            IAssignmentRepository repository)
+            IAssignmentRepository repository,
+            IInvokedEventPublisher publisher)
         {
             this.identityProvider = identityProvider;
+            this.tokenFactory = tokenFactory;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
+            this.publisher = publisher;
+        }
+
+        /// <inheritdoc />
+        public async Task CreateAssignment(Guid gameId, Guid userId)
+        {
+            var updates = (await repository.FindAssignments(gameId))
+                .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));
+            var token = tokenFactory.Create(userId, gameId);
+            await repository.InvalidateAndCreate(updates, token);
+            await publisher.Publish(EventType.AssignmentRequestCreated, token.TokenId);
         }
 
         /// <inheritdoc />
@@ -46,20 +64,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 
             var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
             var updateGame = updateBuilderFactory.Create<Game>(gameId.Value);
+            var eventType = EventType.AssignmentRequestRejected;
             if (accept)
             {
-                updateGame.Field(g => g.AssistantId, userId);
+                updateGame = updateGame.Field(g => g.AssistantId, userId);
+                eventType = EventType.AssignmentRequestAccepted;
             }
 
             await repository.AssignAssistant(updateGame, updateToken);
-        }
-
-        /// <inheritdoc />
-        public async Task CancelAssignments(Guid gameId)
-        {
-            var updates = (await repository.FindAssignments(gameId))
-                .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));
-            await repository.Invalidate(updates);
+            await publisher.Publish(eventType, tokenId);
         }
     }
 }

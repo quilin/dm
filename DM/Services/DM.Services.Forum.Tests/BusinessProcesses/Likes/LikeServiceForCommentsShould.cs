@@ -21,6 +21,7 @@ using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Comment = DM.Services.Forum.Dto.Output.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
 {

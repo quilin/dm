@@ -52,8 +52,8 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
             var changes = updateBuilderFactory.Create<ForumTopic>(updateTopic.TopicId)
-                .MaybeField(t => t.Title, updateTopic.Title.Trim())
-                .MaybeField(t => t.Text, updateTopic.Text.Trim());
+                .MaybeField(t => t.Title, updateTopic.Title?.Trim())
+                .MaybeField(t => t.Text, updateTopic.Text?.Trim());
 
             if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
