@@ -166,10 +166,12 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <param name="id">Topic id</param>
         /// <response code="204"></response>
         /// <response code="401">User must be authenticated</response>
+        /// <response code="410">Topic not found</response>
         [HttpDelete("{id}/comments/unread", Name = nameof(ReadTopicComments))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> ReadTopicComments(Guid id)
         {
             await topicApiService.MarkAsRead(id);

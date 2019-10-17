@@ -20,9 +20,16 @@ namespace DM.Services.MessageQueuing
                 .Where(t => t.IsClass)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.Register<IConnectionFactory>(x => new ConnectionFactory
+            builder.Register<IConnectionFactory>(x =>
                 {
-                    Endpoint = new AmqpTcpEndpoint(new Uri(x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue))
+                    var mqConfiguration = x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue;
+                    return new ConnectionFactory
+                    {
+                        Endpoint = new AmqpTcpEndpoint(new Uri(mqConfiguration.Endpoint)),
+                        UserName = mqConfiguration.UserName,
+                        Password = mqConfiguration.Password,
+                        VirtualHost = mqConfiguration.VirtualHost
+                    };
                 })
                 .AsImplementedInterfaces()
                 .SingleInstance();

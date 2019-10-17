@@ -92,13 +92,42 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <inheritdoc />
         public bool IsRemoved { get; set; }
 
-        #region Profile navigations
+        /// <summary>
+        /// Custom status
+        /// </summary>
+        public string Status { get; set; }
 
         /// <summary>
-        /// Profile
+        /// Real name
         /// </summary>
-        [InverseProperty(nameof(UserProfile.User))]
-        public virtual UserProfile Profile { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Real location
+        /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// ICQ number
+        /// </summary>
+        public string Icq { get; set; }
+
+        /// <summary>
+        /// Skype name
+        /// </summary>
+        public string Skype { get; set; }
+
+        /// <summary>
+        /// Email display flag
+        /// </summary>
+        public bool ShowEmail { get; set; }
+
+        /// <summary>
+        /// Full user information
+        /// </summary>
+        public string Info { get; set; }
+
+        #region Profile navigations
 
         /// <summary>
         /// Profile picture (should only be one active)
@@ -115,6 +144,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         #endregion
 
         #region Common navigations
+
+        /// <summary>
+        /// User commentaries
+        /// </summary>
+        [InverseProperty(nameof(Comment.Author))]
+        public virtual ICollection<Comment> Comments { get; set; }
 
         /// <summary>
         /// User likes
@@ -149,12 +184,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// </summary>
         [InverseProperty(nameof(ForumModerator.User))]
         public virtual ICollection<ForumModerator> ForumModerators { get; set; }
-
-        /// <summary>
-        /// User forum commentaries
-        /// </summary>
-        [InverseProperty(nameof(ForumComment.Author))]
-        public virtual ICollection<ForumComment> ForumComments { get; set; }
 
         #endregion
 
@@ -225,12 +254,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// </summary>
         [InverseProperty(nameof(PostAnticipation.Target))]
         public virtual ICollection<PostAnticipation> PostsRequired { get; set; }
-
-        /// <summary>
-        /// User game commentaries
-        /// </summary>
-        [InverseProperty(nameof(GameComment.Author))]
-        public virtual ICollection<GameComment> GameComments { get; set; }
 
         #endregion
 

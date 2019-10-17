@@ -1,9 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
-using DM.Services.DataAccess.BusinessObjects.Fora;
-using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Administration
@@ -25,6 +24,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
 
         /// <inheritdoc />
         public Guid ModeratorId { get; set; }
+
         /// <summary>
         /// Warning causation entity identifier (e.g. topic, comment, etc.)
         /// </summary>
@@ -39,6 +39,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         /// Moderation message
         /// </summary>
         public string Text { get; set; }
+
         /// <summary>
         /// Warning points based on the violation
         /// </summary>
@@ -59,13 +60,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         /// Warning causation forum commentary
         /// </summary>
         [ForeignKey(nameof(EntityId))]
-        public virtual ForumComment ForumComment { get; set; }
-        
-        /// <summary>
-        /// Warning causation game commentary
-        /// </summary>
-        /// <returns></returns>
-        [ForeignKey(nameof(EntityId))]
-        public virtual GameComment GameComment { get; set; }
+        public virtual Comment Comment { get; set; }
     }
 }

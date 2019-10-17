@@ -13,6 +13,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Password restoration
         /// </summary>
-        PasswordRestoration = 1
+        PasswordRestoration = 1,
+
+        /// <summary>
+        /// Game assistant assignment
+        /// </summary>
+        AssistantAssignment = 2
     }
 }

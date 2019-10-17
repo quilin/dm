@@ -8,9 +8,12 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -38,6 +41,8 @@ namespace DM.Services.Gaming.Tests
         private readonly Mock<IInvokedEventPublisher> publisher;
         private readonly GameCreatingService service;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
+        private readonly ISetup<IAssistantAssignmentTokenFactory, Token> createTokenSetup;
+        private readonly Mock<IUserRepository> userRepository;
 
         public GameCreatingServiceShould()
         {
@@ -61,18 +66,22 @@ namespace DM.Services.Gaming.Tests
 
             gameFactory = Mock<IGameFactory>();
             createGameSetup = gameFactory
-                .Setup(f => f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), It.IsAny<Guid?>(),
-                    It.IsAny<GameStatus>()));
+                .Setup(f => f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), It.IsAny<GameStatus>()));
 
             var roomFactory = Mock<IRoomFactory>();
             createRoomSetup = roomFactory.Setup(r => r.Create(It.IsAny<Guid>()));
 
             var gameTagFactory = Mock<IGameTagFactory>();
 
+            var tokenFactory = Mock<IAssistantAssignmentTokenFactory>();
+            createTokenSetup = tokenFactory.Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()));
+
+            userRepository = Mock<IUserRepository>();
+
             gameRepository = Mock<IGameCreatingRepository>();
             saveGameSetup = gameRepository
                 .Setup(r => r.Create(It.IsAny<Game>(), It.IsAny<Room>(),
-                    It.IsAny<IEnumerable<GameTag>>()));
+                    It.IsAny<IEnumerable<GameTag>>(), It.IsAny<Token>()));
 
             countersRepository = Mock<IUnreadCountersRepository>();
             countersRepository
@@ -91,7 +100,9 @@ namespace DM.Services.Gaming.Tests
                 gameFactory.Object,
                 roomFactory.Object,
                 gameTagFactory.Object,
+                tokenFactory.Object,
                 gameRepository.Object,
+                userRepository.Object,
                 countersRepository.Object,
                 publisher.Object);
         }
@@ -122,7 +133,7 @@ namespace DM.Services.Gaming.Tests
 
             var createGame = new CreateGame();
             await service.Create(createGame);
-            gameFactory.Verify(f => f.Create(createGame, userId, It.IsAny<Guid?>(), GameStatus.RequiresModeration));
+            gameFactory.Verify(f => f.Create(createGame, userId, GameStatus.RequiresModeration));
         }
 
         [Theory]
@@ -144,7 +155,7 @@ namespace DM.Services.Gaming.Tests
                 Draft = draft
             };
             await service.Create(createGame);
-            gameFactory.Verify(f => f.Create(createGame, userId, It.IsAny<Guid?>(), status));
+            gameFactory.Verify(f => f.Create(createGame, userId, status));
         }
 
         [Fact]
@@ -156,34 +167,37 @@ namespace DM.Services.Gaming.Tests
             createGameSetup.Returns(game);
             createRoomSetup.Returns(room);
             saveGameSetup.ReturnsAsync(new GameExtended());
-            gameRepository
+            userRepository
                 .Setup(r => r.FindUserId(It.IsAny<string>()))
                 .ReturnsAsync((false, Guid.Empty));
 
             var createGame = new CreateGame {AssistantLogin = "assistant boi"};
             await service.Create(createGame);
 
-            gameRepository.Verify(r => r.FindUserId("assistant boi"));
+            userRepository.Verify(r => r.FindUserId("assistant boi"));
         }
 
         [Fact]
-        public async Task CreateGameWithAssistantIdWhenFound()
+        public async Task CreateGameWithAssistantTokenWhenFound()
         {
             currentUserSetup.Returns(new AuthenticatedUser());
             var game = new Game();
             var room = new Room();
+            var token = new Token();
             createGameSetup.Returns(game);
             createRoomSetup.Returns(room);
+            createTokenSetup.Returns(token);
             saveGameSetup.ReturnsAsync(new GameExtended());
             var assistantId = Guid.NewGuid();
-            gameRepository
+            userRepository
                 .Setup(r => r.FindUserId(It.IsAny<string>()))
                 .ReturnsAsync((true, assistantId));
 
             await service.Create(new CreateGame {AssistantLogin = "assistant boi"});
 
+            gameRepository.Verify(r => r.Create(It.IsAny<Game>(), It.IsAny<Room>(), It.IsAny<IEnumerable<GameTag>>(), token));
             gameFactory.Verify(f =>
-                f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), assistantId, It.IsAny<GameStatus>()));
+                f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), It.IsAny<GameStatus>()));
         }
 
         [Fact]
@@ -198,7 +212,7 @@ namespace DM.Services.Gaming.Tests
 
             await service.Create(new CreateGame());
 
-            gameRepository.Verify(r => r.Create(game, room, It.IsAny<IEnumerable<GameTag>>()), Times.Once);
+            gameRepository.Verify(r => r.Create(game, room, It.IsAny<IEnumerable<GameTag>>(), It.IsAny<Token>()), Times.Once);
             gameRepository.VerifyNoOtherCalls();
         }
 

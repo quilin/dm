@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +7,11 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -28,7 +30,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IGameFactory gameFactory;
         private readonly IRoomFactory roomFactory;
         private readonly IGameTagFactory gameTagFactory;
+        private readonly IAssistantAssignmentTokenFactory assignmentTokenFactory;
         private readonly IGameCreatingRepository repository;
+        private readonly IUserRepository userRepository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher publisher;
 
@@ -41,7 +45,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IGameFactory gameFactory,
             IRoomFactory roomFactory,
             IGameTagFactory gameTagFactory,
+            IAssistantAssignmentTokenFactory assignmentTokenFactory,
             IGameCreatingRepository repository,
+            IUserRepository userRepository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher publisher)
         {
@@ -52,7 +58,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.gameFactory = gameFactory;
             this.roomFactory = roomFactory;
             this.gameTagFactory = gameTagFactory;
+            this.assignmentTokenFactory = assignmentTokenFactory;
             this.repository = repository;
+            this.userRepository = userRepository;
             this.countersRepository = countersRepository;
             this.publisher = publisher;
         }
@@ -63,24 +71,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             await validator.ValidateAndThrowAsync(createGame);
             await intentionManager.ThrowIfForbidden(GameIntention.Create);
 
+            // resolve game initial status
             var initialStatus = identity.User.QuantityRating < 100
                 ? GameStatus.RequiresModeration
                 : createGame.Draft
                     ? GameStatus.Draft
                     : GameStatus.Requirement;
 
-            Guid? assistantId = null;
-            if (!string.IsNullOrEmpty(createGame.AssistantLogin))
-            {
-                var (assistantExists, foundAssistantId) = await repository.FindUserId(createGame.AssistantLogin);
-                if (assistantExists)
-                {
-                    assistantId = foundAssistantId;
-                }
-            }
-
-            var game = gameFactory.Create(createGame, identity.User.UserId, assistantId, initialStatus);
+            // create base DAL entities
+            var game = gameFactory.Create(createGame, identity.User.UserId, initialStatus);
             var room = roomFactory.Create(game.GameId);
+
             IEnumerable<DbTag> tags;
             if (createGame.Tags != null && createGame.Tags.Any())
             {
@@ -94,7 +95,18 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 tags = Enumerable.Empty<DbTag>();
             }
 
-            var createdGame = await repository.Create(game, room, tags);
+            // initiate assistant assignment
+            Token assistantAssignmentToken = null;
+            if (!string.IsNullOrEmpty(createGame.AssistantLogin))
+            {
+                var (assistantExists, foundAssistantId) = await userRepository.FindUserId(createGame.AssistantLogin);
+                if (assistantExists)
+                {
+                    assistantAssignmentToken = assignmentTokenFactory.Create(foundAssistantId, game.GameId);
+                }
+            }
+
+            var createdGame = await repository.Create(game, room, tags, assistantAssignmentToken);
 
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);

@@ -31,11 +31,6 @@ namespace DM.Services.DataAccess
         public DbSet<User> Users { get; set; }
 
         /// <summary>
-        /// User profiles
-        /// </summary>
-        public DbSet<UserProfile> Profiles { get; set; }
-
-        /// <summary>
         /// User authorization tokens
         /// </summary>
         public DbSet<Token> Tokens { get; set; }
@@ -47,7 +42,7 @@ namespace DM.Services.DataAccess
         /// <summary>
         /// Commentaries
         /// </summary>
-        public DbSet<ForumComment> Comments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         /// <summary>
         /// Likes

@@ -46,7 +46,7 @@ namespace DM.Services.Authentication.Repositories
             return dbContext.Users
                 .Where(u => u.UserId == userId)
                 .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
 
         /// <inheritdoc />

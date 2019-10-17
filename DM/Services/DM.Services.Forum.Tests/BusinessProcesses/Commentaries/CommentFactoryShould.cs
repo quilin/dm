@@ -1,6 +1,6 @@
 using System;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.Dto.Input;
 using DM.Tests.Core;
@@ -44,10 +44,10 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             currentMomentSetup.Returns(rightNow);
 
             var actual = factory.Create(createComment, userId);
-            actual.Should().BeEquivalentTo(new ForumComment
+            actual.Should().BeEquivalentTo(new Comment
             {
-                ForumCommentId = commentId,
-                ForumTopicId = topicId,
+                CommentId = commentId,
+                EntityId = topicId,
                 CreateDate = rightNow,
                 UserId = userId,
                 LastUpdateDate = null,

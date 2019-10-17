@@ -9,12 +9,12 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Forum.Dto.Internal;
-using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 {
@@ -27,23 +27,23 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly Mock<IInvokedEventPublisher> eventPublisher;
         private readonly CommentaryDeletingService service;
         private readonly ISetup<ICommentaryDeletingRepository, Task<CommentToDelete>> getCommentSetup;
-        private readonly Mock<IUpdateBuilder<ForumComment>> commentUpdateBuilder;
+        private readonly Mock<IUpdateBuilder<Comment>> commentUpdateBuilder;
 
         public CommentaryDeletingServiceShould()
         {
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Comment>()))
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Dto.Output.Comment>()))
                 .Returns(Task.CompletedTask);
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             topicUpdateBuilder = MockUpdateBuilder<ForumTopic>();
-            commentUpdateBuilder = MockUpdateBuilder<ForumComment>();
+            commentUpdateBuilder = MockUpdateBuilder<Comment>();
             updateBuilderFactory
                 .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
                 .Returns(topicUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<ForumComment>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
                 .Returns(commentUpdateBuilder.Object);
 
             commentaryRepository = Mock<ICommentaryDeletingRepository>();
@@ -66,7 +66,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await service.Delete(commentId);
 
-            intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Delete, (Comment) comment));
+            intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Delete, (Dto.Output.Comment) comment));
         }
 
         [Fact]

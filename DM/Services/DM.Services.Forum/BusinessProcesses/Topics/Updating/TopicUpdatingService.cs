@@ -51,30 +51,17 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 
             await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
-            var changes = updateBuilderFactory.Create<ForumTopic>(updateTopic.TopicId);
-            if (!string.IsNullOrWhiteSpace(updateTopic.Title))
-            {
-                changes = changes.Field(t => t.Title, updateTopic.Title.Trim());
-            }
-
-            if (!string.IsNullOrWhiteSpace(updateTopic.Text))
-            {
-                changes = changes.Field(t => t.Text, updateTopic.Text.Trim());
-            }
+            var changes = updateBuilderFactory.Create<ForumTopic>(updateTopic.TopicId)
+                .MaybeField(t => t.Title, updateTopic.Title.Trim())
+                .MaybeField(t => t.Text, updateTopic.Text.Trim());
 
             if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
-                if (updateTopic.Closed.HasValue)
-                {
-                    changes = changes.Field(t => t.Closed, updateTopic.Closed.Value);
-                }
+                changes
+                    .MaybeField(t => t.Closed, updateTopic.Closed)
+                    .MaybeField(t => t.Attached, updateTopic.Attached);
 
-                if (updateTopic.Attached.HasValue)
-                {
-                    changes = changes.Field(t => t.Attached, updateTopic.Attached.Value);
-                }
-
-                if (!string.IsNullOrEmpty(updateTopic.ForumTitle) &&
+                if (updateTopic.ForumTitle != default &&
                     oldTopic.Forum.Title != updateTopic.ForumTitle)
                 {
                     var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);

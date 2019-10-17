@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 {
@@ -26,13 +25,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         }
         
         /// <inheritdoc />
-        public async Task<Comment> Update(IUpdateBuilder<ForumComment> update)
+        public async Task<Dto.Output.Comment> Update(IUpdateBuilder<Comment> update)
         {
             var commentId = update.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
             return await dbContext.Comments
-                .Where(c => c.ForumCommentId == commentId)
-                .ProjectTo<Comment>(mapper.ConfigurationProvider)
+                .Where(c => c.CommentId == commentId)
+                .ProjectTo<Dto.Output.Comment>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
     }

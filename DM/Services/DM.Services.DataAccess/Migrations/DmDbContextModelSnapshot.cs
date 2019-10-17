@@ -6,9 +6,16 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [DbContext(typeof(DmDbContext))]
     partial class DmDbContextModelSnapshot : ModelSnapshot
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -26,7 +33,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<DateTimeOffset>("EndDate");
 
                     b.Property<bool>("IsRemoved");
 
@@ -34,7 +41,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid>("ModeratorId");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTimeOffset>("StartDate");
 
                     b.Property<Guid>("UserId");
 
@@ -58,7 +65,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<string>("ReportText");
 
@@ -82,7 +89,7 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("WarningId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("EntityId");
 
@@ -105,6 +112,32 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Warnings");
+                });
+
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.Comment", b =>
+                {
+                    b.Property<Guid>("CommentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("CreateDate");
+
+                    b.Property<Guid>("EntityId");
+
+                    b.Property<bool>("IsRemoved");
+
+                    b.Property<DateTimeOffset?>("LastUpdateDate");
+
+                    b.Property<string>("Text");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("EntityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.Like", b =>
@@ -130,7 +163,7 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("ReviewId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<bool>("IsApproved");
 
@@ -178,7 +211,7 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("UploadId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid?>("EntityId");
 
@@ -219,32 +252,6 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("Fora");
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Fora.ForumComment", b =>
-                {
-                    b.Property<Guid>("ForumCommentId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<Guid>("ForumTopicId");
-
-                    b.Property<bool>("IsRemoved");
-
-                    b.Property<DateTime?>("LastUpdateDate");
-
-                    b.Property<string>("Text");
-
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("ForumCommentId");
-
-                    b.HasIndex("ForumTopicId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ForumComments");
-                });
-
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Fora.ForumModerator", b =>
                 {
                     b.Property<Guid>("ForumModeratorId")
@@ -272,7 +279,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<bool>("Closed");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("ForumId");
 
@@ -328,7 +335,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Class");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("GameId");
 
@@ -338,7 +345,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<bool>("IsRemoved");
 
-                    b.Property<DateTime?>("LastUpdateDate");
+                    b.Property<DateTimeOffset?>("LastUpdateDate");
 
                     b.Property<string>("Name");
 
@@ -365,7 +372,7 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Game", b =>
                 {
-                    b.Property<Guid>("ModuleId")
+                    b.Property<Guid>("GameId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid?>("AssistantId");
@@ -374,7 +381,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<int>("CommentariesAccessMode");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<bool>("DisableAlignment");
 
@@ -398,7 +405,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Notepad");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<DateTimeOffset?>("ReleaseDate");
 
                     b.Property<string>("SettingName");
 
@@ -410,7 +417,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Title");
 
-                    b.HasKey("ModuleId");
+                    b.HasKey("GameId");
 
                     b.HasIndex("AssistantId");
 
@@ -418,33 +425,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.HasIndex("NannyId");
 
-                    b.ToTable("Modules");
-                });
-
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.GameComment", b =>
-                {
-                    b.Property<Guid>("GameCommentId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<Guid>("GameId");
-
-                    b.Property<bool>("IsRemoved");
-
-                    b.Property<DateTime?>("LastUpdateDate");
-
-                    b.Property<string>("Text");
-
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("GameCommentId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("GameComments");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.BlackListLink", b =>
@@ -462,7 +443,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ModuleBlackListLinks");
+                    b.ToTable("BlackListLinks");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.CharacterRoomLink", b =>
@@ -506,7 +487,7 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("PostAnticipationId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("RoomId");
 
@@ -552,11 +533,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Commentary");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<bool>("IsRemoved");
 
-                    b.Property<DateTime?>("LastUpdateDate");
+                    b.Property<DateTimeOffset?>("LastUpdateDate");
 
                     b.Property<string>("MasterMessage");
 
@@ -615,7 +596,7 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("VoteId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<Guid>("GameId");
 
@@ -659,7 +640,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid>("ConversationId");
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
 
                     b.Property<bool>("IsRemoved");
 
@@ -701,7 +682,9 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("TokenId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreateDate");
+                    b.Property<DateTimeOffset>("CreateDate");
+
+                    b.Property<Guid>("EntityId");
 
                     b.Property<bool>("IsRemoved");
 
@@ -710,6 +693,8 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("UserId");
 
                     b.HasKey("TokenId");
+
+                    b.HasIndex("EntityId");
 
                     b.HasIndex("UserId");
 
@@ -729,13 +714,21 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<string>("Icq");
+
+                    b.Property<string>("Info");
+
                     b.Property<bool>("IsRemoved");
 
-                    b.Property<DateTime?>("LastVisitDate");
+                    b.Property<DateTimeOffset?>("LastVisitDate");
+
+                    b.Property<string>("Location");
 
                     b.Property<string>("Login");
 
                     b.Property<Guid?>("MergeRequested");
+
+                    b.Property<string>("Name");
 
                     b.Property<string>("PasswordHash");
 
@@ -745,33 +738,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<bool>("RatingDisabled");
 
-                    b.Property<DateTime>("RegistrationDate");
+                    b.Property<DateTimeOffset>("RegistrationDate");
 
                     b.Property<int>("Role");
 
                     b.Property<string>("Salt");
-
-                    b.Property<string>("TimezoneId");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Users.UserProfile", b =>
-                {
-                    b.Property<Guid>("UserProfileId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Icq");
-
-                    b.Property<string>("Info");
-
-                    b.Property<bool>("IsRemoved");
-
-                    b.Property<string>("Location");
-
-                    b.Property<string>("Name");
 
                     b.Property<bool>("ShowEmail");
 
@@ -779,14 +750,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("Status");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<string>("TimezoneId");
 
-                    b.HasKey("UserProfileId");
+                    b.HasKey("UserId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserDatas");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Administration.Ban", b =>
@@ -821,12 +789,7 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Administration.Warning", b =>
                 {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumComment", "ForumComment")
-                        .WithMany("Warnings")
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Comment", "Comment")
                         .WithMany("Warnings")
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -842,19 +805,32 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.Comment", b =>
+                {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumTopic", "Topic")
+                        .WithMany("Comments")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
+                        .WithMany("Comments")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Author")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.Like", b =>
                 {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumComment", "ForumComment")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Comment", "Comment")
                         .WithMany("Likes")
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumTopic", "Topic")
-                        .WithMany("Likes")
-                        .HasForeignKey("EntityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.GameComment", "GameComment")
                         .WithMany("Likes")
                         .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -904,21 +880,8 @@ namespace DM.Services.DataAccess.Migrations
                         .WithMany("ProfilePictures")
                         .HasForeignKey("EntityId");
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Owner")
                         .WithMany("Uploads")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Fora.ForumComment", b =>
-                {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumTopic", "Topic")
-                        .WithMany("Comments")
-                        .HasForeignKey("ForumTopicId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Author")
-                        .WithMany("ForumComments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -943,7 +906,7 @@ namespace DM.Services.DataAccess.Migrations
                         .HasForeignKey("ForumId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Fora.ForumComment", "LastForumComment")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Comment", "LastComment")
                         .WithMany()
                         .HasForeignKey("LastCommentId");
 
@@ -988,19 +951,6 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Nanny")
                         .WithMany("GamesAsNanny")
                         .HasForeignKey("NannyId");
-                });
-
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.GameComment", b =>
-                {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
-                        .WithMany("Comments")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Author")
-                        .WithMany("GameComments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.BlackListLink", b =>
@@ -1157,17 +1107,14 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Users.Token", b =>
                 {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
                         .WithMany("Tokens")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Users.UserProfile", b =>
-                {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
-                        .WithOne("Profile")
-                        .HasForeignKey("DM.Services.DataAccess.BusinessObjects.Users.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

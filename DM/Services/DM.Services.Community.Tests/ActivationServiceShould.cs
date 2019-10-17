@@ -19,7 +19,7 @@ namespace DM.Services.Community.Tests
     public class ActivationServiceShould : UnitTestBase
     {
         private readonly ActivationService activationService;
-        private readonly ISetup<IActivationRepository, Task<Guid>> findUserSetup;
+        private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
         private readonly Mock<IActivationRepository> activationRepository;
         private readonly Mock<IInvokedEventPublisher> publisher;
         private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
@@ -69,9 +69,9 @@ namespace DM.Services.Community.Tests
         [Fact]
         public void ThrowGoneException_WhenTokenInvalid()
         {
-            findUserSetup.ReturnsAsync(Guid.Empty);
+            findUserSetup.ReturnsAsync((Guid?) null);
             activationService
-                .Invoking(s => s.Activate(Guid.NewGuid()).GetAwaiter().GetResult())
+                .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
                 .Should().Throw<HttpException>()
                 .And.StatusCode.Should().Be(HttpStatusCode.Gone);
         }

@@ -17,7 +17,9 @@ namespace DM.Services.Authentication.Tests
 {
     public class AuthenticationServiceLoginShould : UnitTestBase
     {
-        private readonly ISetup<IAuthenticationRepository, Task<(bool Success, AuthenticatedUser User)>> userSearchSetup;
+        private readonly ISetup<IAuthenticationRepository, Task<(bool Success, AuthenticatedUser User)>>
+            userSearchSetup;
+
         private readonly AuthenticationService service;
         private readonly Mock<IAuthenticationRepository> authenticationRepository;
         private readonly Mock<ISecurityManager> securityManager;
@@ -36,12 +38,6 @@ namespace DM.Services.Authentication.Tests
                 authenticationRepository.Object, sessionFactory.Object, null, null);
         }
 
-        public override void Dispose()
-        {
-            authenticationRepository.Verify(r => r.TryFindUser(Username), Times.Once);
-            authenticationRepository.VerifyNoOtherCalls();
-        }
-
         [Fact]
         public async Task FailIfNoUserFoundByLogin()
         {
@@ -54,7 +50,7 @@ namespace DM.Services.Authentication.Tests
         [Fact]
         public async Task FailIfInactiveUserFound()
         {
-            var user = new AuthenticatedUser{Activated = false};
+            var user = new AuthenticatedUser {Activated = false};
             userSearchSetup.ReturnsAsync((true, user));
             var actual = await service.Authenticate(Username, "qwerty", false);
 
@@ -68,7 +64,7 @@ namespace DM.Services.Authentication.Tests
         [Fact]
         public async Task FailIfRemovedUserFound()
         {
-            var user = new AuthenticatedUser{Activated = true, IsRemoved = true};
+            var user = new AuthenticatedUser {Activated = true, IsRemoved = true};
             userSearchSetup.ReturnsAsync((true, user));
             var actual = await service.Authenticate(Username, "qwerty", false);
 
@@ -113,7 +109,7 @@ namespace DM.Services.Authentication.Tests
             securityManager
                 .Setup(m => m.ComparePasswords(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(false);
-            
+
             var actual = await service.Authenticate(Username, "qwerty", false);
 
             actual.Error.Should().Be(AuthenticationError.WrongPassword);
@@ -167,6 +163,37 @@ namespace DM.Services.Authentication.Tests
             securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
             sessionFactory.Verify(f => f.Create(true));
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
+            authenticationRepository.Verify(r => r.AddSession(userId, session), Times.Once);
+        }
+
+        [Fact]
+        public async Task LoginUnconditionally()
+        {
+            var userId = Guid.NewGuid();
+            var user = new AuthenticatedUser{UserId = userId};
+            var session = new Session();
+            var userSettings = new UserSettings();
+            authenticationRepository
+                .Setup(r => r.FindUser(It.IsAny<Guid>()))
+                .ReturnsAsync(user);
+            sessionFactory
+                .Setup(f => f.Create(It.IsAny<bool>()))
+                .Returns(session);
+            authenticationRepository
+                .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+                .ReturnsAsync(userSettings);
+            cryptoService
+                .Setup(s => s.Encrypt(It.IsAny<string>()))
+                .ReturnsAsync("token");
+            authenticationRepository
+                .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
+                .Returns(Task.CompletedTask);
+
+            var actual = await service.Authenticate(userId);
+
+            actual.Error.Should().Be(AuthenticationError.NoError);
+            actual.AuthenticationToken.Should().Be("token");
+
             authenticationRepository.Verify(r => r.AddSession(userId, session), Times.Once);
         }
     }

@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Administration;
-using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
+using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.DataAccess.BusinessObjects.Fora
+namespace DM.Services.DataAccess.BusinessObjects.Common
 {
     /// <summary>
     /// DAL model for commentary
     /// </summary>
-    [Table("ForumComments")]
-    public class ForumComment : IRemovable
+    [Table("Comments")]
+    public class Comment : IRemovable
     {
         /// <summary>
         /// Commentary identifier
         /// </summary>
         [Key]
-        public Guid ForumCommentId { get; set; }
+        public Guid CommentId { get; set; }
 
         /// <summary>
         /// Forum topic identifier
         /// </summary>
-        public Guid ForumTopicId { get; set; }
+        public Guid EntityId { get; set; }
 
         /// <summary>
         /// Author identifier
@@ -52,8 +53,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// <summary>
         /// Parent topic
         /// </summary>
-        [ForeignKey(nameof(ForumTopicId))]
+        [ForeignKey(nameof(EntityId))]
         public virtual ForumTopic Topic { get; set; }
+        
+        /// <summary>
+        /// Parent game
+        /// </summary>
+        [ForeignKey(nameof(EntityId))]
+        public virtual Game Game { get; set; }
 
         /// <summary>
         /// Author
@@ -64,13 +71,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// <summary>
         /// Likes
         /// </summary>
-        [InverseProperty(nameof(Like.ForumComment))]
+        [InverseProperty(nameof(Like.Comment))]
         public virtual ICollection<Like> Likes { get; set; }
 
         /// <summary>
         /// Administrative warnings
         /// </summary>
-        [InverseProperty(nameof(Warning.ForumComment))]
+        [InverseProperty(nameof(Warning.Comment))]
         public virtual ICollection<Warning> Warnings { get; set; }
     }
 }
