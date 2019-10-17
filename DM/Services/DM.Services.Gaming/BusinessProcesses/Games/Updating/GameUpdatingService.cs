@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
@@ -9,6 +10,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
+using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 
@@ -26,6 +28,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IUserRepository userRepository;
         private readonly IGameUpdatingRepository updatingRepository;
+        private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
         public GameUpdatingService(
@@ -37,7 +40,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             IGameStateTransition gameStateTransition,
             IUpdateBuilderFactory updateBuilderFactory,
             IUserRepository userRepository,
-            IGameUpdatingRepository updatingRepository)
+            IGameUpdatingRepository updatingRepository,
+            IInvokedEventPublisher publisher)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
@@ -48,6 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             this.updateBuilderFactory = updateBuilderFactory;
             this.userRepository = userRepository;
             this.updatingRepository = updatingRepository;
+            this.publisher = publisher;
         }
 
         /// <inheritdoc />
@@ -97,7 +102,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 }
             }
 
-            return await updatingRepository.Update(changes);
+            var result = await updatingRepository.Update(changes);
+            await publisher.Publish(EventType.ChangedGame, game.Id);
+            return result;
         }
     }
 }

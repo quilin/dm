@@ -63,7 +63,8 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Topic has been liked
         /// </summary>
-        [EventRoutingKey("forum.topic.liked")] LikedTopic = 601,
+        [EventRoutingKey("forum.topic.liked")]
+        LikedTopic = 601,
 
         /// <summary>
         /// Forum commentary has been liked
@@ -76,6 +77,18 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("game.module.created")]
         NewGame = 301,
+
+        /// <summary>
+        /// Game has been updated
+        /// </summary>
+        [EventRoutingKey("game.module.changed")]
+        ChangedGame = 302,
+
+        /// <summary>
+        /// Game has been deleted
+        /// </summary>
+        [EventRoutingKey("game.module.deleted")]
+        DeletedGame = 303,
 
         /// <summary>
         /// Assistant assignment request created and pending
