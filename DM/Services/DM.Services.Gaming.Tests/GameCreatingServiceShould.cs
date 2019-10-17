@@ -10,6 +10,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
@@ -41,6 +42,7 @@ namespace DM.Services.Gaming.Tests
         private readonly GameCreatingService service;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly ISetup<IAssistantAssignmentTokenFactory, Token> createTokenSetup;
+        private readonly Mock<IUserRepository> userRepository;
 
         public GameCreatingServiceShould()
         {
@@ -74,6 +76,8 @@ namespace DM.Services.Gaming.Tests
             var tokenFactory = Mock<IAssistantAssignmentTokenFactory>();
             createTokenSetup = tokenFactory.Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()));
 
+            userRepository = Mock<IUserRepository>();
+
             gameRepository = Mock<IGameCreatingRepository>();
             saveGameSetup = gameRepository
                 .Setup(r => r.Create(It.IsAny<Game>(), It.IsAny<Room>(),
@@ -98,6 +102,7 @@ namespace DM.Services.Gaming.Tests
                 gameTagFactory.Object,
                 tokenFactory.Object,
                 gameRepository.Object,
+                userRepository.Object,
                 countersRepository.Object,
                 publisher.Object);
         }
@@ -162,14 +167,14 @@ namespace DM.Services.Gaming.Tests
             createGameSetup.Returns(game);
             createRoomSetup.Returns(room);
             saveGameSetup.ReturnsAsync(new GameExtended());
-            gameRepository
+            userRepository
                 .Setup(r => r.FindUserId(It.IsAny<string>()))
                 .ReturnsAsync((false, Guid.Empty));
 
             var createGame = new CreateGame {AssistantLogin = "assistant boi"};
             await service.Create(createGame);
 
-            gameRepository.Verify(r => r.FindUserId("assistant boi"));
+            userRepository.Verify(r => r.FindUserId("assistant boi"));
         }
 
         [Fact]
@@ -184,7 +189,7 @@ namespace DM.Services.Gaming.Tests
             createTokenSetup.Returns(token);
             saveGameSetup.ReturnsAsync(new GameExtended());
             var assistantId = Guid.NewGuid();
-            gameRepository
+            userRepository
                 .Setup(r => r.FindUserId(It.IsAny<string>()))
                 .ReturnsAsync((true, assistantId));
 
