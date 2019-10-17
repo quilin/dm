@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.RelationalStorage;
@@ -21,10 +20,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
     {
         private readonly IValidator<UpdateGame> validator;
         private readonly IIntentionManager intentionManager;
-        private readonly IIdentityProvider identityProvider;
         private readonly IGameReadingService gameReadingService;
         private readonly IAssignmentService assignmentService;
-        private readonly IGameStateTransition gameStateTransition;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IUserRepository userRepository;
         private readonly IGameUpdatingRepository updatingRepository;
@@ -34,10 +31,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         public GameUpdatingService(
             IValidator<UpdateGame> validator,
             IIntentionManager intentionManager,
-            IIdentityProvider identityProvider,
             IGameReadingService gameReadingService,
             IAssignmentService assignmentService,
-            IGameStateTransition gameStateTransition,
             IUpdateBuilderFactory updateBuilderFactory,
             IUserRepository userRepository,
             IGameUpdatingRepository updatingRepository,
@@ -45,10 +40,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
-            this.identityProvider = identityProvider;
             this.gameReadingService = gameReadingService;
             this.assignmentService = assignmentService;
-            this.gameStateTransition = gameStateTransition;
             this.updateBuilderFactory = updateBuilderFactory;
             this.userRepository = userRepository;
             this.updatingRepository = updatingRepository;
@@ -75,20 +68,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 .MaybeField(c => c.ShowPrivateMessages, updateGame.ShowPrivateMessages)
                 .MaybeField(c => c.CommentariesAccessMode, updateGame.CommentariesAccessMode)
                 .MaybeField(c => c.DisableAlignment, updateGame.DisableAlignment);
-
-            if (updateGame.Status.HasValue && updateGame.Status.Value != game.Status)
-            {
-                var (success, assignNanny) = gameStateTransition.TryChange(game, updateGame.Status.Value);
-                if (success)
-                {
-                    changes = changes.Field(c => c.Status, updateGame.Status.Value);
-                    if (assignNanny.HasValue)
-                    {
-                        var nannyId = assignNanny.Value ? identityProvider.Current.User.UserId : (Guid?) null;
-                        changes = changes.Field(c => c.NannyId, nannyId);
-                    }
-                }
-            }
 
             var oldAssistant = game.Assistant ?? game.PendingAssistant;
             if (updateGame.AssistantLogin != default &&

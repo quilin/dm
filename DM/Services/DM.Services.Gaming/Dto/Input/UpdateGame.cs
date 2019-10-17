@@ -83,10 +83,5 @@ namespace DM.Services.Gaming.Dto.Input
         /// Game tag identifiers
         /// </summary>
         public IEnumerable<Guid> Tags { get; set; }
-
-        /// <summary>
-        /// Game status
-        /// </summary>
-        public GameStatus? Status { get; set; }
     }
 }

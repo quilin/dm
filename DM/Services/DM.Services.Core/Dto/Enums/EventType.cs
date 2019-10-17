@@ -91,6 +91,48 @@ namespace DM.Services.Core.Dto.Enums
         DeletedGame = 303,
 
         /// <summary>
+        /// Game is on moderation
+        /// </summary>
+        [EventRoutingKey("game.module.status.moderation")]
+        StatusGameModeration = 321,
+
+        /// <summary>
+        /// Game is draft
+        /// </summary>
+        [EventRoutingKey("game.module.status.draft")]
+        StatusGameDraft = 322,
+
+        /// <summary>
+        /// Game is released
+        /// </summary>
+        [EventRoutingKey("game.module.status.requirement")]
+        StatusGameRequirement = 323,
+
+        /// <summary>
+        /// Game has started
+        /// </summary>
+        [EventRoutingKey("game.module.status.active")]
+        StatusGameActive = 324,
+
+        /// <summary>
+        /// Game is frozen
+        /// </summary>
+        [EventRoutingKey("game.module.status.frozen")]
+        StatusGameFrozen = 325,
+
+        /// <summary>
+        /// Game is finished
+        /// </summary>
+        [EventRoutingKey("game.module.status.finished")]
+        StatusGameFinished = 326,
+
+        /// <summary>
+        /// Game is closed
+        /// </summary>
+        [EventRoutingKey("game.module.status.closed")]
+        StatusGameClosed = 327,
+
+        /// <summary>
         /// Assistant assignment request created and pending
         /// </summary>
         [EventRoutingKey("game.module.assignment.created")]
