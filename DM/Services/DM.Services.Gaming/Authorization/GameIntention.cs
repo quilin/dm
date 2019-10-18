@@ -64,5 +64,10 @@ namespace DM.Services.Gaming.Authorization
         /// Read game commentaries
         /// </summary>
         ReadComments = 11,
+
+        /// <summary>
+        /// Post game commentaries
+        /// </summary>
+        CreateComment = 12
     }
 }

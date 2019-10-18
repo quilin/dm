@@ -31,6 +31,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// </summary>
         /// <param name="gameId">Game identifier</param>
         /// <returns></returns>
-        Task<GameExtended> GetGame(Guid gameId);
+        Task<Game> GetGame(Guid gameId);
+
+        /// <summary>
+        /// Get game details by identifier
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <returns></returns>
+        Task<GameExtended> GetGameDetails(Guid gameId);
     }
 }

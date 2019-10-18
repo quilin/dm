@@ -49,7 +49,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         /// <inheritdoc />
         public async Task<GameExtended> UpdateStatus(Guid gameId, GameStatus gameStatus)
         {
-            var game = await gameReadingService.GetGame(gameId);
+            var game = await gameReadingService.GetGameDetails(gameId);
             if (game.Status == gameStatus)
             {
                 return game;

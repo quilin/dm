@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         public async Task<GameExtended> Update(UpdateGame updateGame)
         {
             await validator.ValidateAndThrowAsync(updateGame);
-            var game = await gameReadingService.GetGame(updateGame.GameId);
+            var game = await gameReadingService.GetGameDetails(updateGame.GameId);
             await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var changes = updateBuilderFactory.Create<Game>(game.Id)

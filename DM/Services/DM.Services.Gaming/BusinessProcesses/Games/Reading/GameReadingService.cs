@@ -50,7 +50,19 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public async Task<GameExtended> GetGame(Guid gameId)
+        public async Task<Game> GetGame(Guid gameId)
+        {
+            var game = await repository.GetGame(gameId, identity.User.UserId);
+            if (game == null)
+            {
+                throw new HttpException(HttpStatusCode.Gone, "Game not found");
+            }
+
+            return game;
+        }
+
+        /// <inheritdoc />
+        public async Task<GameExtended> GetGameDetails(Guid gameId)
         {
             var game = await repository.GetGameDetails(gameId, identity.User.UserId);
             if (game == null)

@@ -15,10 +15,12 @@ namespace DM.Services.Gaming.Dto
         public GameProfile()
         {
             CreateMap<DbGame, Game>()
-                .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId));
+                .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
+                .ForMember(d => d.UserParticipates, s => s.MapFrom<GameParticipationResolver>());
 
             CreateMap<DbGame, GameExtended>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
+                .ForMember(d => d.UserParticipates, s => s.MapFrom<GameParticipationResolver>())
                 .ForMember(d => d.Tags, s => s.MapFrom(g => g.GameTags.Select(t => t.Tag)))
                 .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
                     .Where(t => !t.IsRemoved)

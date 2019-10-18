@@ -65,6 +65,11 @@ namespace DM.Services.Gaming.Dto.Output
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
 
         /// <summary>
+        /// User participation flag
+        /// </summary>
+        public bool UserParticipates { get; set; }
+
+        /// <summary>
         /// Number of unread game posts
         /// </summary>
         public int UnreadPostsCount { get; set; }
