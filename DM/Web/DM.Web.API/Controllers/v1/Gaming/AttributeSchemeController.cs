@@ -11,6 +11,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// <summary>
     /// Attribute scheme API controller
     /// </summary>
+    [Route("v1/schemas")]
     public class AttributeSchemeController : Controller
     {
         /// <summary>
@@ -29,12 +30,12 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="400">Some of scheme parameters were invalid</response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to create attribute schemes</response>
-        [HttpPost("{id}/posts", Name = nameof(PostPost))]
+        [HttpPost(Name = nameof(PostSchema))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Post>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
-        public Task<IActionResult> PostPost([FromBody] AttributeScheme scheme) => throw new NotImplementedException();
+        public Task<IActionResult> PostSchema([FromBody] AttributeScheme scheme) => throw new NotImplementedException();
     }
 }

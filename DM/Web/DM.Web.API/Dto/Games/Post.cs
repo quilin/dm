@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
 {

@@ -1,6 +1,6 @@
 using System;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
 {
