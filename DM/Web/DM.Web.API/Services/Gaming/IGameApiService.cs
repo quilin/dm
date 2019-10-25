@@ -29,7 +29,22 @@ namespace DM.Web.API.Services.Gaming
         /// Create new game
         /// </summary>
         /// <param name="game">Game API model</param>
-        /// <returns>Enveloper for created game</returns>
+        /// <returns>Envelope for created game</returns>
         Task<Envelope<Game>> Create(Game game);
+
+        /// <summary>
+        /// Update existing game
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="game">Game API model</param>
+        /// <returns>Envelope for updated game</returns>
+        Task<Envelope<Game>> Update(Guid gameId, Game game);
+
+        /// <summary>
+        /// Delete existing game
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <returns></returns>
+        Task Delete(Guid gameId);
     }
 }

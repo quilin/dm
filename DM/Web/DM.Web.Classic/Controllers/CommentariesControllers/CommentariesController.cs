@@ -51,7 +51,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         {
             await commentaryDeletingService.Delete(commentaryId);
             var comment = await commentaryReadingService.Get(commentaryId);
-            var (_, paging) = await commentaryReadingService.Get(comment.TopicId, PagingQuery.Empty);
+            var (_, paging) = await commentaryReadingService.Get(comment.EntityId, PagingQuery.Empty);
             return paging.TotalPagesCount;
         }
 

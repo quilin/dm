@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
+using DM.Services.Gaming.BusinessProcesses.Games.Deleting;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.BusinessProcesses.Games.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
@@ -16,16 +18,22 @@ namespace DM.Web.API.Services.Gaming
     {
         private readonly IGameReadingService readingService;
         private readonly IGameCreatingService creatingService;
+        private readonly IGameUpdatingService updatingService;
+        private readonly IGameDeletingService deletingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public GameApiService(
             IGameReadingService readingService,
             IGameCreatingService creatingService,
+            IGameUpdatingService updatingService,
+            IGameDeletingService deletingService,
             IMapper mapper)
         {
             this.readingService = readingService;
             this.creatingService = creatingService;
+            this.updatingService = updatingService;
+            this.deletingService = deletingService;
             this.mapper = mapper;
         }
 
@@ -50,5 +58,17 @@ namespace DM.Web.API.Services.Gaming
             var createdGame = await creatingService.Create(createGame);
             return new Envelope<Game>(mapper.Map<Game>(createdGame));
         }
+
+        /// <inheritdoc />
+        public async Task<Envelope<Game>> Update(Guid gameId, Game game)
+        {
+            var updateGame = mapper.Map<UpdateGame>(game);
+            updateGame.GameId = gameId;
+            var updatedGame = await updatingService.Update(updateGame);
+            return new Envelope<Game>(mapper.Map<Game>(updatedGame));
+        }
+
+        /// <inheritdoc />
+        public Task Delete(Guid gameId) => deletingService.DeleteGame(gameId);
     }
 }

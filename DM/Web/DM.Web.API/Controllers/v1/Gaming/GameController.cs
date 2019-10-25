@@ -83,7 +83,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PutGame(Guid id, [FromBody] Game game) => throw new NotImplementedException();
+        public async Task<IActionResult> PutGame(Guid id, [FromBody] Game game) =>
+            Ok(await gameApiService.Update(id, game));
 
         /// <summary>
         /// Delete certain game
@@ -98,7 +99,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeleteGame(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> DeleteGame(Guid id)
+        {
+            await gameApiService.Delete(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Get list of comments
