@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
@@ -18,14 +19,17 @@ namespace DM.Services.Community.BusinessProcesses.Reading
     {
         private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IMapper mapper;
 
         /// <inheritdoc />
         public UserReadingRepository(
             DmDbContext dmDbContext,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
             this.dateTimeProvider = dateTimeProvider;
+            this.mapper = mapper;
         }
 
         private static readonly TimeSpan ActivityRange = TimeSpan.FromDays(30);
@@ -40,7 +44,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
                 .ThenByDescending(u => u.QualityRating)
                 .ThenBy(u => u.QuantityRating)
                 .Page(paging)
-                .ProjectTo<GeneralUser>()
+                .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
         private IQueryable<User> GetQuery(bool withInactive)
@@ -63,7 +67,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
                 .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
-                .ProjectTo<GeneralUser>()
+                .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
 
@@ -73,7 +77,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
                 .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
-                .ProjectTo<UserProfile>()
+                .ProjectTo<UserProfile>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
     }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Gaming.Dto;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.Authorization
@@ -41,7 +42,7 @@ namespace DM.Services.Gaming.Authorization
             }
 
             var userIsHighAuthority = user.Role.HasFlag(UserRole.Administrator) ||
-                                      user.Role.HasFlag(UserRole.SeniorModerator);
+                user.Role.HasFlag(UserRole.SeniorModerator);
             var userIsNanny = userIsHighAuthority || user.Role.HasFlag(UserRole.NannyModerator);
             var userIsOwner = target.Master.UserId == user.UserId || target.Assistant?.UserId == user.UserId;
             var userIsGameModerator = target.Nanny?.UserId == user.UserId;
@@ -50,7 +51,7 @@ namespace DM.Services.Gaming.Authorization
             {
                 case GameIntention.Read:
                     return Task.FromResult(userIsHighAuthority || userIsOwner ||
-                                           !HiddenStates.Contains(target.Status));
+                        !HiddenStates.Contains(target.Status));
                 case GameIntention.Edit:
                     return Task.FromResult(userIsHighAuthority || userIsOwner);
                 case GameIntention.Delete: // only the master itself is allowed to remove the game
@@ -76,11 +77,11 @@ namespace DM.Services.Gaming.Authorization
 
                 case GameIntention.ReadComments:
                     return Task.FromResult(target.CommentariesAccessMode != CommentariesAccessMode.Private ||
-                                           target.UserParticipates);
-                
+                        target.UserParticipates(user.UserId));
+
                 case GameIntention.CreateComment:
                     return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
-                                           target.UserParticipates);
+                        target.UserParticipates(user.UserId));
                 default:
                     return Task.FromResult(false);
             }

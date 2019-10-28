@@ -76,7 +76,7 @@ namespace DM.Services.Community.Tests.Integration
 
                 var dateTimeProvider = Mock<IDateTimeProvider>();
                 dateTimeProvider.Setup(p => p.Now).Returns(rightNow);
-                var readingRepository = new UserReadingRepository(rdb, dateTimeProvider.Object);
+                var readingRepository = new UserReadingRepository(rdb, dateTimeProvider.Object, GetMapper());
 
                 var actual = await readingRepository.CountUsers(withInactive);
                 actual.Should().Be(expected);

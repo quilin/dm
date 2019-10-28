@@ -17,7 +17,8 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.Id.EncodeToReadable(g.Title)))
                 .ForMember(d => d.System, s => s.MapFrom(g => g.SystemName))
                 .ForMember(d => d.Setting, s => s.MapFrom(g => g.SettingName))
-                .ForMember(d => d.Released, s => s.MapFrom(g => g.ReleaseDate ?? g.CreateDate));
+                .ForMember(d => d.Released, s => s.MapFrom(g => g.ReleaseDate ?? g.CreateDate))
+                .ForMember(d => d.Participation, s => s.MapFrom<GameParticipationResolver>());
 
             CreateMap<DM.Services.Gaming.Dto.Output.GameExtended, Game>()
                 .ForMember(d => d.PrivacySettings, s => s.MapFrom(g => g))

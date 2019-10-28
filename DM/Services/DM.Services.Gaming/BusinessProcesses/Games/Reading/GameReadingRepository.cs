@@ -32,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public Task<int> Count(GameStatus? status, Guid userId)
         {
             return dbContext.Games
-                .Where(g => AccessibilityFilters.GameAccessible(userId).Compile().Invoke(g))
+                .Where(AccessibilityFilters.GameAccessible(userId))
                 .Where(g => !status.HasValue || g.Status == status.Value)
                 .CountAsync();
         }

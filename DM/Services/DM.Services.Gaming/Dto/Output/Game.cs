@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 
@@ -45,6 +46,16 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser Nanny { get; set; }
 
         /// <summary>
+        /// Pending assistant if any
+        /// </summary>
+        public GeneralUser PendingAssistant { get; set; }
+
+        /// <summary>
+        /// User participation flag
+        /// </summary>
+        public IEnumerable<Guid> ActiveCharacterUserIds { get; set; }
+
+        /// <summary>
         /// Game title
         /// </summary>
         public string Title { get; set; }
@@ -63,11 +74,6 @@ namespace DM.Services.Gaming.Dto.Output
         /// Commentaries access mode
         /// </summary>
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
-
-        /// <summary>
-        /// User participation flag
-        /// </summary>
-        public bool UserParticipates { get; set; }
 
         /// <summary>
         /// Number of unread game posts

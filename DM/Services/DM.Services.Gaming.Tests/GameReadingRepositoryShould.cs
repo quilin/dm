@@ -7,6 +7,7 @@ using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.Dto;
 using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
@@ -114,9 +115,9 @@ namespace DM.Services.Gaming.Tests
                     myUserId);
                 var gamesIndex = games.ToDictionary(g => g.Id);
 
-                gamesIndex[gameId2].UserParticipates.Should().BeFalse();
+                gamesIndex[gameId2].UserParticipates(myUserId).Should().BeFalse();
                 gamesIndex.Remove(gameId2);
-                gamesIndex.Values.Select(v => v.UserParticipates).Should().AllBeEquivalentTo(true);
+                gamesIndex.Values.Select(v => v.UserParticipates(myUserId)).Should().AllBeEquivalentTo(true);
             }
         }
     }

@@ -18,7 +18,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Shared
         /// <returns></returns>
         public static Expression<Func<Game, bool>> GameAccessible(Guid userId) => game =>
             !game.IsRemoved &&
-            game.BlackList.All(b => b.UserId != userId) &&
+            !(game.BlackList != null && game.BlackList.Any(b => b.UserId == userId)) &&
             (
                 game.MasterId == userId ||
                 game.AssistantId == userId ||

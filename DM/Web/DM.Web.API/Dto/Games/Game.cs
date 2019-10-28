@@ -56,6 +56,16 @@ namespace DM.Web.API.Dto.Games
         public User Nanny { get; set; }
 
         /// <summary>
+        /// Game master's pending assistant
+        /// </summary>
+        public User PendingAssistant { get; set; }
+
+        /// <summary>
+        /// Requesting user participates in game
+        /// </summary>
+        public bool Participation { get; set; }
+
+        /// <summary>
         /// Game tags
         /// </summary>
         public IEnumerable<string> Tags { get; set; }
