@@ -1,6 +1,7 @@
 using AutoMapper;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Gaming.Dto.Input;
+using DM.Services.Gaming.Dto.Output;
 using DM.Web.Core.Helpers;
 
 namespace DM.Web.API.Dto.Games
@@ -14,17 +15,18 @@ namespace DM.Web.API.Dto.Games
         public GameProfile()
         {
             CreateMap<DM.Services.Gaming.Dto.Output.Game, Game>()
+                .Include<GameExtended, Game>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.Id.EncodeToReadable(g.Title)))
                 .ForMember(d => d.System, s => s.MapFrom(g => g.SystemName))
                 .ForMember(d => d.Setting, s => s.MapFrom(g => g.SettingName))
                 .ForMember(d => d.Released, s => s.MapFrom(g => g.ReleaseDate ?? g.CreateDate))
                 .ForMember(d => d.Participation, s => s.MapFrom<GameParticipationResolver>());
 
-            CreateMap<DM.Services.Gaming.Dto.Output.GameExtended, Game>()
+            CreateMap<GameExtended, Game>()
                 .ForMember(d => d.PrivacySettings, s => s.MapFrom(g => g))
                 .ForMember(d => d.Notes, s => s.MapFrom(g => g.Notepad));
 
-            CreateMap<DM.Services.Gaming.Dto.Output.GameExtended, GamePrivacySettings>()
+            CreateMap<GameExtended, GamePrivacySettings>()
                 .ForMember(d => d.ViewTemper, s => s.MapFrom(g => !g.HideTemper))
                 .ForMember(d => d.ViewStory, s => s.MapFrom(g => !g.HideStory))
                 .ForMember(d => d.ViewSkills, s => s.MapFrom(g => !g.HideSkills))

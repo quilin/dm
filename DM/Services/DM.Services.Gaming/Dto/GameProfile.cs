@@ -17,6 +17,7 @@ namespace DM.Services.Gaming.Dto
         public GameProfile()
         {
             CreateMap<DbGame, Game>()
+                .Include<DbGame, GameExtended>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
                 .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
                     .Where(t => !t.IsRemoved && t.Type == TokenType.AssistantAssignment)
