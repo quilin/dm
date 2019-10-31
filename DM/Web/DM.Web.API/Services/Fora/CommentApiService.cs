@@ -9,7 +9,7 @@ using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
-using Comment = DM.Web.API.Dto.Fora.Comment;
+using Comment = DM.Web.API.Dto.Shared.Comment;
 
 namespace DM.Web.API.Services.Fora
 {

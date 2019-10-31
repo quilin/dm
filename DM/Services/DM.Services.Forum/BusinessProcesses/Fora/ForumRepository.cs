@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Core.Caching;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Forum.BusinessProcesses.Fora
 {
@@ -14,23 +14,23 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
     internal class ForumRepository : IForumRepository
     {
         private readonly DmDbContext dmDbContext;
-        private readonly IMemoryCache memoryCache;
+        private readonly ICache cache;
         private readonly IMapper mapper;
 
         public ForumRepository(
             DmDbContext dmDbContext,
-            IMemoryCache memoryCache,
+            ICache cache,
             IMapper mapper)
         {
             this.dmDbContext = dmDbContext;
-            this.memoryCache = memoryCache;
+            this.cache = cache;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
         {
-            var forums = await memoryCache.GetOrCreateAsync("Fora", _ => dmDbContext.Fora
+            var forums = await cache.GetOrCreate("Fora", () => dmDbContext.Fora
                 .OrderBy(f => f.Order)
                 .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
                 .ToArrayAsync());
@@ -42,7 +42,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
                     .ToArray();
             }
 
-            return forums.Select(mapper.Map<Dto.Output.Forum, Dto.Output.Forum>);
+            return forums.Select(mapper.Map<Dto.Output.Forum>);
         }
     }
 }

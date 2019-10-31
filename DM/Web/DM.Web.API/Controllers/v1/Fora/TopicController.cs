@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Fora;
+using DM.Web.API.Dto.Shared;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Fora;
 using DM.Web.Core.Authentication;

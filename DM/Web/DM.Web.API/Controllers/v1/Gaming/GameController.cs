@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
-using DM.Web.API.Dto.Fora;
 using DM.Web.API.Dto.Games;
+using DM.Web.API.Dto.Shared;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Gaming;
 using DM.Web.Core.Authentication;
@@ -18,12 +18,18 @@ namespace DM.Web.API.Controllers.v1.Gaming
     public class GameController : Controller
     {
         private readonly IGameApiService gameApiService;
+        private readonly ICommentApiService commentApiService;
+        private readonly IReaderApiService readerApiService;
 
         /// <inheritdoc />
         public GameController(
-            IGameApiService gameApiService)
+            IGameApiService gameApiService,
+            ICommentApiService commentApiService,
+            IReaderApiService readerApiService)
         {
             this.gameApiService = gameApiService;
+            this.commentApiService = commentApiService;
+            this.readerApiService = readerApiService;
         }
 
         /// <summary>
@@ -115,8 +121,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [HttpGet("{id}/comments", Name = nameof(GetGameComments))]
         [ProducesResponseType(typeof(ListEnvelope<Comment>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetGameComments(Guid id, [FromQuery] PagingQuery q) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> GetGameComments(Guid id, [FromQuery] PagingQuery q) =>
+            Ok(await commentApiService.Get(id, q));
 
         /// <summary>
         /// Post new game
@@ -135,8 +141,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostGameComment(Guid id, [FromBody] Comment comment) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> PostGameComment(Guid id, [FromBody] Comment comment)
+        {
+            var result = await commentApiService.Create(id, comment);
+            return CreatedAtRoute(nameof(CommentController.GetGameComment), new {id = result.Resource.Id}, result);
+        }
 
         /// <summary>
         /// Get list of game readers
@@ -147,7 +156,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [HttpGet("{id}/readers", Name = nameof(GetReaders))]
         [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetReaders(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetReaders(Guid id) => Ok(await readerApiService.Get(id));
 
         /// <summary>
         /// Subscribe to the game as a reader
@@ -165,7 +174,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 409)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostReader(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> PostReader(Guid id) =>
+            CreatedAtRoute(nameof(GetGame), new {id}, await readerApiService.Subscribe(id));
 
         /// <summary>
         /// Unsubscribe from the game as a reader
@@ -183,7 +193,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 409)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeleteReader(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> DeleteReader(Guid id)
+        {
+            await readerApiService.Unsubscribe(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Get list of game characters

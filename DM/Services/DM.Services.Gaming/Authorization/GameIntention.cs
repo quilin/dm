@@ -68,6 +68,11 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Post game commentaries
         /// </summary>
-        CreateComment = 12
+        CreateComment = 12,
+
+        /// <summary>
+        /// Subscribe to a game
+        /// </summary>
+        Subscribe = 13
     }
 }

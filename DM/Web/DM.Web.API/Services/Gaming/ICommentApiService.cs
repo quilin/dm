@@ -4,28 +4,28 @@ using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Shared;
 
-namespace DM.Web.API.Services.Fora
+namespace DM.Web.API.Services.Gaming
 {
     /// <summary>
-    /// API service for forum commentaries
+    /// API service for game commentaries
     /// </summary>
     public interface ICommentApiService
     {
         /// <summary>
-        /// Get topics commentaries
+        /// Get game commentaries
         /// </summary>
-        /// <param name="topicId">Topic identifier</param>
+        /// <param name="gameId">Game identifier</param>
         /// <param name="query">Paging query</param>
         /// <returns>Envelope of commentaries list</returns>
-        Task<ListEnvelope<Comment>> Get(Guid topicId, PagingQuery query);
+        Task<ListEnvelope<Comment>> Get(Guid gameId, PagingQuery query);
 
         /// <summary>
         /// Create new comment
         /// </summary>
-        /// <param name="topicId">Topic identifier</param>
+        /// <param name="gameId">Game identifier</param>
         /// <param name="comment">Comment model</param>
         /// <returns>Envelope of created comment</returns>
-        Task<Envelope<Comment>> Create(Guid topicId, Comment comment);
+        Task<Envelope<Comment>> Create(Guid gameId, Comment comment);
 
         /// <summary>
         /// Get comment by identifier

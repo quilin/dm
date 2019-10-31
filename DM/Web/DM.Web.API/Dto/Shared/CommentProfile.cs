@@ -2,7 +2,7 @@ using AutoMapper;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Core.Helpers;
 
-namespace DM.Web.API.Dto.Fora
+namespace DM.Web.API.Dto.Shared
 {
     /// <summary>
     /// Mapping profile from Service DTO to API DTO for commentaries

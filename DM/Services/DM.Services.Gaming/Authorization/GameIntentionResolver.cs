@@ -21,6 +21,10 @@ namespace DM.Services.Gaming.Authorization
             {
                 case GameIntention.Create when user.IsAuthenticated:
                     return Task.FromResult(true);
+
+                case GameIntention.Subscribe when user.IsAuthenticated:
+                    return Task.FromResult(true);
+
                 default:
                     return Task.FromResult(false);
             }
@@ -82,6 +86,7 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.CreateComment:
                     return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
                         target.UserParticipates(user.UserId));
+
                 default:
                     return Task.FromResult(false);
             }
