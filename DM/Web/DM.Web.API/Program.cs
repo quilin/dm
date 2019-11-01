@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
@@ -23,10 +24,18 @@ namespace DM.Web.API
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var webHostBuilder = WebHost.CreateDefaultBuilder(args)
                 .UseLibuv()
                 .UseSerilog()
                 .UseStartup<Startup>();
+
+            // For heroku deployment, where only available port is defined in runtime by the environment variable
+            var predefinedPort = Environment.GetEnvironmentVariable("PORT");
+            return string.IsNullOrEmpty(predefinedPort)
+                ? webHostBuilder
+                : webHostBuilder.UseUrls($"http://*:{predefinedPort}");
+        }
     }
 }
