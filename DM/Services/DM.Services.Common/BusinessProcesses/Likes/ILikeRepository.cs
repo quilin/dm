@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Common;
 
-namespace DM.Services.Forum.BusinessProcesses.Likes
+namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <summary>
     /// Storage for topic likes

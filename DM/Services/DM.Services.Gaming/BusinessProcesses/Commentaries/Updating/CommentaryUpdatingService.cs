@@ -4,13 +4,13 @@ using DM.Services.Common.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Forum.Authorization;
-using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
+using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Updating
 {
     /// <inheritdoc />
     public class CommentaryUpdatingService : ICommentaryUpdatingService

@@ -1,7 +1,7 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Common;
 
-namespace DM.Services.Forum.BusinessProcesses.Likes
+namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <summary>
     /// Creates like DAL models

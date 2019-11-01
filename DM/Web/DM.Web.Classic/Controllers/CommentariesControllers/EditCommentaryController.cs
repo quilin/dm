@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.Dto;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
-using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Shared.Commentaries;
 using Microsoft.AspNetCore.Mvc;

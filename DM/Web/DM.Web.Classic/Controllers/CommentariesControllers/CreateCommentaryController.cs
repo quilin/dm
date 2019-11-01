@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
-using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Shared.Commentaries;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         {
             var createComment = new CreateComment
             {
-                TopicId = createCommentaryForm.EntityId,
+                EntityId = createCommentaryForm.EntityId,
                 Text = createCommentaryForm.Text
             };
             await commentaryCreatingService.Create(createComment);

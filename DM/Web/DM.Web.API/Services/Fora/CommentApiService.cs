@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
-using DM.Services.Forum.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using Comment = DM.Web.API.Dto.Shared.Comment;
 
@@ -48,7 +48,7 @@ namespace DM.Web.API.Services.Fora
         public async Task<Envelope<Comment>> Create(Guid topicId, Comment comment)
         {
             var createComment = mapper.Map<CreateComment>(comment);
-            createComment.TopicId = topicId;
+            createComment.EntityId = topicId;
             var createdComment = await creatingService.Create(createComment);
             return new Envelope<Comment>(mapper.Map<Comment>(createdComment));
         }

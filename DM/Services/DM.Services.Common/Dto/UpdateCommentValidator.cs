@@ -1,7 +1,7 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Forum.Dto.Input
+namespace DM.Services.Common.Dto
 {
     /// <summary>
     /// Validator for commentary updating DTO model

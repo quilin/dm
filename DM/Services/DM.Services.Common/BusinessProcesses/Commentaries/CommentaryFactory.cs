@@ -1,9 +1,9 @@
 using System;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.Dto.Input;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
+namespace DM.Services.Common.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
     public class CommentaryFactory : ICommentaryFactory
@@ -26,7 +26,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             return new Comment
             {
                 CommentId = guidFactory.Create(),
-                EntityId = createComment.TopicId,
+                EntityId = createComment.EntityId,
                 UserId = userId,
                 CreateDate = dateTimeProvider.Now,
                 Text = createComment.Text.Trim(),

@@ -1,7 +1,7 @@
 using System;
+using DM.Services.Common.BusinessProcesses.Likes;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.BusinessProcesses.Likes;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq.Language.Flow;

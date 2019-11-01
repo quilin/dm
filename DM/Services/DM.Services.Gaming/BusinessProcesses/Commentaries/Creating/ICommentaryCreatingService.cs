@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
+namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
 {
     /// <summary>
     /// Service to create new commentaries on forum

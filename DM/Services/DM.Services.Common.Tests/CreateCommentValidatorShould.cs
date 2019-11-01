@@ -1,10 +1,10 @@
 using System;
-using DM.Services.Forum.Dto.Input;
+using DM.Services.Common.Dto;
 using FluentAssertions;
 using FluentValidation;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
+namespace DM.Services.Common.Tests
 {
     public class CreateCommentValidatorShould
     {
@@ -40,7 +40,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             validator.Invoking(v => v.ValidateAndThrowAsync(new CreateComment
                 {
                     Text = "something",
-                    TopicId = Guid.NewGuid()
+                    EntityId = Guid.NewGuid()
                 }).Wait())
                 .Should().NotThrow();
         }

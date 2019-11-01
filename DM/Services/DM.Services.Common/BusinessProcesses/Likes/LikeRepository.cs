@@ -4,7 +4,7 @@ using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Likes
+namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <inheritdoc />
     public class LikeRepository : ILikeRepository

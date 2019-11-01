@@ -133,6 +133,30 @@ namespace DM.Services.Core.Dto.Enums
         StatusGameClosed = 327,
 
         /// <summary>
+        /// New commentary has been created on game
+        /// </summary>
+        [EventRoutingKey("game.comment.created")]
+        NewGameComment = 331,
+        
+        /// <summary>
+        /// Game commentary has been updated
+        /// </summary>
+        [EventRoutingKey("game.comment.changed")]
+        ChangedGameComment = 332,
+        
+        /// <summary>
+        /// Forum commentary has been deleted
+        /// </summary>
+        [EventRoutingKey("game.comment.deleted")]
+        DeletedGameComment = 333,
+
+        /// <summary>
+        /// Game commentary has been liked
+        /// </summary>
+        [EventRoutingKey("game.comment.liked")]
+        LikedGameComment = 601,
+
+        /// <summary>
         /// Assistant assignment request created and pending
         /// </summary>
         [EventRoutingKey("game.module.assignment.created")]

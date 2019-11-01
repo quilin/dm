@@ -1,14 +1,14 @@
 using System;
+using DM.Services.Common.BusinessProcesses.Commentaries;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
-using DM.Services.Forum.Dto.Input;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq.Language.Flow;
 using Xunit;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
+namespace DM.Services.Common.Tests
 {
     public class CommentFactoryShould : UnitTestBase
     {
@@ -33,7 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var topicId = Guid.NewGuid();
             var createComment = new CreateComment
             {
-                TopicId = topicId,
+                EntityId = topicId,
                 Text = "text of commentary"
             };
             var userId = Guid.NewGuid();

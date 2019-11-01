@@ -5,25 +5,22 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.Likes;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.Forum.Authorization;
-using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
-using DM.Services.Forum.BusinessProcesses.Topics.Reading;
+using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 using DM.Services.MessageQueuing.Publish;
 
-namespace DM.Services.Forum.BusinessProcesses.Likes
+namespace DM.Services.Gaming.BusinessProcesses.Likes
 {
     /// <summary>
     /// Forum like service
     /// </summary>
     public class LikeService : LikeServiceBase, ILikeService
     {
-        private readonly ITopicReadingService topicReadingService;
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;
 
         /// <inheritdoc />
         public LikeService(
-            ITopicReadingService topicReadingService,
             ICommentaryReadingService commentaryReadingService,
             IIntentionManager intentionManager,
             IIdentityProvider identityProvider,
@@ -32,17 +29,8 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
             IInvokedEventPublisher invokedEventPublisher)
             : base(identityProvider, likeFactory, likeRepository, invokedEventPublisher)
         {
-            this.topicReadingService = topicReadingService;
             this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;
-        }
-
-        /// <inheritdoc />
-        public async Task<GeneralUser> LikeTopic(Guid topicId)
-        {
-            var topic = await topicReadingService.GetTopic(topicId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
-            return await Like(topic, EventType.LikedTopic);
         }
 
         /// <inheritdoc />
@@ -51,14 +39,6 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
             var comment = await commentaryReadingService.Get(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             return await Like(comment, EventType.LikedForumComment);
-        }
-
-        /// <inheritdoc />
-        public async Task DislikeTopic(Guid topicId)
-        {
-            var topic = await topicReadingService.GetTopic(topicId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
-            await Dislike(topic);
         }
 
         /// <inheritdoc />

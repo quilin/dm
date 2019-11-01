@@ -2,7 +2,7 @@ using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Common;
 
-namespace DM.Services.Forum.BusinessProcesses.Likes
+namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <inheritdoc />
     public class LikeFactory : ILikeFactory

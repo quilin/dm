@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Forum.Dto.Input
+namespace DM.Services.Common.Dto
 {
     /// <summary>
     /// DTO model for new commentary in topic
@@ -10,7 +10,7 @@ namespace DM.Services.Forum.Dto.Input
         /// <summary>
         /// Topic identifier
         /// </summary>
-        public Guid TopicId { get; set; }
+        public Guid EntityId { get; set; }
 
         /// <summary>
         /// Commentary text

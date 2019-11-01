@@ -2,10 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
+using DM.Services.Gaming.BusinessProcesses.Commentaries.Creating;
+using DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
+using DM.Services.Gaming.BusinessProcesses.Commentaries.Updating;
 using DM.Web.API.Dto.Contracts;
-using DM.Web.API.Dto.Shared;
+using Comment = DM.Web.API.Dto.Shared.Comment;
 
 namespace DM.Web.API.Services.Gaming
 {
@@ -13,14 +17,23 @@ namespace DM.Web.API.Services.Gaming
     public class CommentApiService : ICommentApiService
     {
         private readonly ICommentaryReadingService readingService;
+        private readonly ICommentaryCreatingService creatingService;
+        private readonly ICommentaryUpdatingService updatingService;
+        private readonly ICommentaryDeletingService deletingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public CommentApiService(
             ICommentaryReadingService readingService,
+            ICommentaryCreatingService creatingService,
+            ICommentaryUpdatingService updatingService,
+            ICommentaryDeletingService deletingService,
             IMapper mapper)
         {
             this.readingService = readingService;
+            this.creatingService = creatingService;
+            this.updatingService = updatingService;
+            this.deletingService = deletingService;
             this.mapper = mapper;
         }
         
@@ -32,9 +45,12 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
-        public Task<Envelope<Comment>> Create(Guid gameId, Comment comment)
+        public async Task<Envelope<Comment>> Create(Guid gameId, Comment comment)
         {
-            throw new NotImplementedException();
+            var createComment = mapper.Map<CreateComment>(comment);
+            createComment.EntityId = gameId;
+            var createdComment = await creatingService.Create(createComment);
+            return new Envelope<Comment>(mapper.Map<Comment>(createdComment));
         }
 
         /// <inheritdoc />
@@ -45,15 +61,15 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
-        public Task<Envelope<Comment>> Update(Guid commentId, Comment comment)
+        public async Task<Envelope<Comment>> Update(Guid commentId, Comment comment)
         {
-            throw new NotImplementedException();
+            var updateComment = mapper.Map<UpdateComment>(comment);
+            updateComment.CommentId = commentId;
+            var updatedComment = await updatingService.Update(updateComment);
+            return new Envelope<Comment>(mapper.Map<Comment>(updatedComment));
         }
 
         /// <inheritdoc />
-        public Task Delete(Guid commentId)
-        {
-            throw new NotImplementedException();
-        }
+        public Task Delete(Guid commentId) => deletingService.Delete(commentId);
     }
 }

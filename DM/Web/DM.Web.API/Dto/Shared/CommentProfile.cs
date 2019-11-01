@@ -1,5 +1,5 @@
 using AutoMapper;
-using DM.Services.Forum.Dto.Input;
+using DM.Services.Common.Dto;
 using DM.Web.Core.Helpers;
 
 namespace DM.Web.API.Dto.Shared
@@ -18,7 +18,6 @@ namespace DM.Web.API.Dto.Shared
                 .ForMember(d => d.Updated, s => s.MapFrom(c => c.LastUpdateDate));
 
             CreateMap<Comment, CreateComment>();
-
             CreateMap<Comment, UpdateComment>();
         }
     }

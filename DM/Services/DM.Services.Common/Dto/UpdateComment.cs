@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Forum.Dto.Input
+namespace DM.Services.Common.Dto
 {
     /// <summary>
     /// DTO model for updating existing forum comment

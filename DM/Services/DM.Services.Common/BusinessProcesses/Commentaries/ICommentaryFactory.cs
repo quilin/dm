@@ -1,8 +1,8 @@
 using System;
-using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Services.Forum.Dto.Input;
+using DM.Services.Common.Dto;
+using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
+namespace DM.Services.Common.BusinessProcesses.Commentaries
 {
     /// <summary>
     /// Factory for commentary DAL

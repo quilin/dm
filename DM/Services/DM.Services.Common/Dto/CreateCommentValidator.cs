@@ -1,7 +1,7 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Forum.Dto.Input
+namespace DM.Services.Common.Dto
 {
     /// <summary>
     /// Validator for commentary creation DTO model
@@ -13,7 +13,7 @@ namespace DM.Services.Forum.Dto.Input
         {
             RuleFor(c => c.Text)
                 .NotEmpty().WithMessage(ValidationError.Empty);
-            RuleFor(c => c.TopicId)
+            RuleFor(c => c.EntityId)
                 .NotEmpty();
         }
     }
