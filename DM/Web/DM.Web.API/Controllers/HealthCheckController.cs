@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DM.Web.API.Controllers
 {
     /// <inheritdoc />
+    [ApiExplorerSettings(GroupName = "Service", IgnoreApi = true)]
     public class HealthCheckController : Controller
     {
         /// <summary>

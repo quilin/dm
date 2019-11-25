@@ -22,7 +22,11 @@ namespace DM.Web.API.Swagger
         public static void ConfigureUi(this SwaggerUIOptions options)
         {
             options.EnableValidator(null); // disable validator for encoded Guids
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "DM.API V1");
+            options.SwaggerEndpoint("/swagger/Account/swagger.json", "DM.API Account");
+            options.SwaggerEndpoint("/swagger/Common/swagger.json", "DM.API Common");
+            options.SwaggerEndpoint("/swagger/Forum/swagger.json", "DM.API Forum");
+            options.SwaggerEndpoint("/swagger/Game/swagger.json", "DM.API Game");
+            options.SwaggerEndpoint("/swagger/Community/swagger.json", "DM.API Community");
             options.RoutePrefix = string.Empty;
             options.DocumentTitle = "DM.API";
         }
@@ -33,7 +37,11 @@ namespace DM.Web.API.Swagger
         /// <param name="options"></param>
         public static void ConfigureGen(this SwaggerGenOptions options)
         {
-            options.SwaggerDoc("v1", new Info {Title = "DM.API", Version = "v1"});
+            options.SwaggerDoc("Account", new Info {Title = "DM.API Account", Version = "v1"});
+            options.SwaggerDoc("Common", new Info {Title = "DM.API Common", Version = "v1"});
+            options.SwaggerDoc("Forum", new Info {Title = "DM.API Forum", Version = "v1"});
+            options.SwaggerDoc("Game", new Info {Title = "DM.API Game", Version = "v1"});
+            options.SwaggerDoc("Community", new Info {Title = "DM.API Community", Version = "v1"});
             options.DescribeAllParametersInCamelCase();
             options.DescribeAllEnumsAsStrings();
             options.OperationFilter<AuthenticationSwaggerFilter>();
