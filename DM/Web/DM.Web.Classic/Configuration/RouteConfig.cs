@@ -25,9 +25,17 @@ namespace DM.Web.Classic.Configuration
             
             #region ForumRoutes
             routes.MapAction<ForumController>("forum/{forumTitle}/{entityNumber}", c => c.Index(null, 0, null), new Dictionary<string, object>{{"forumTitle", null}, {"entityNumber", 1}});
+            routes.MapAction<ForumController>("readallmessages", c => c.MarkAllAsRead(null));
 
             routes.MapAction<EditTopicController>("topic/{topicId}/edit", c => c.Edit(Guid.Empty));
+            routes.MapAction<TopicController>("topic/{topicIdEncoded}", c => c.LastUnread(null));
             routes.MapAction<TopicController>("topic/{topicId}/{entityNumber}", c => c.Index(Guid.Empty, 0));
+            routes.MapAction<TopicController>("closetopic", c => c.CloseTopic(Guid.Empty));
+            routes.MapAction<TopicController>("reopentopic", c => c.OpenTopic(Guid.Empty));
+            routes.MapAction<TopicController>("attachtopic", c => c.AttachTopic(Guid.Empty));
+            routes.MapAction<TopicController>("detachtopic", c => c.DetachTopic(Guid.Empty));
+            routes.MapAction<TopicController>("removetopic", c => c.RemoveTopic(Guid.Empty));
+            routes.MapAction<TopicController>("movetopic", c => c.MoveTopic(Guid.Empty, null));
             #endregion
 
             #region CommunityRoutes

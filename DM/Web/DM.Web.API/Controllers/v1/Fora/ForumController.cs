@@ -16,16 +16,19 @@ namespace DM.Web.API.Controllers.v1.Fora
     {
         private readonly IForumApiService forumApiService;
         private readonly ITopicApiService topicApiService;
+        private readonly ICommentApiService commentApiService;
         private readonly IModeratorsApiService moderatorsApiService;
 
         /// <inheritdoc />
         public ForumController(
             IForumApiService forumApiService,
             ITopicApiService topicApiService,
+            ICommentApiService commentApiService,
             IModeratorsApiService moderatorsApiService)
         {
             this.forumApiService = forumApiService;
             this.topicApiService = topicApiService;
+            this.commentApiService = commentApiService;
             this.moderatorsApiService = moderatorsApiService;
         }
 
@@ -62,7 +65,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> ReadForumComments(string id)
         {
-            await forumApiService.MarkAsRead(id);
+            await commentApiService.MarkAsRead(id);
             return NoContent();
         }
 

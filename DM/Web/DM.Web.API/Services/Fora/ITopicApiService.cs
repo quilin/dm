@@ -47,12 +47,5 @@ namespace DM.Web.API.Services.Fora
         /// <param name="topicId">Topic identifier</param>
         /// <returns></returns>
         Task Delete(Guid topicId);
-
-        /// <summary>
-        /// Mark all topic comments as read
-        /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <returns></returns>
-        Task MarkAsRead(Guid topicId);
     }
 }

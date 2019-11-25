@@ -175,7 +175,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> ReadTopicComments(Guid id)
         {
-            await topicApiService.MarkAsRead(id);
+            await commentApiService.MarkAsRead(id);
             return NoContent();
         }
     }

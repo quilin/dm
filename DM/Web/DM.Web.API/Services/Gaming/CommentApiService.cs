@@ -71,5 +71,8 @@ namespace DM.Web.API.Services.Gaming
 
         /// <inheritdoc />
         public Task Delete(Guid commentId) => deletingService.Delete(commentId);
+
+        /// <inheritdoc />
+        public Task MarkAsRead(Guid gameId) => readingService.MarkAsRead(gameId);
     }
 }

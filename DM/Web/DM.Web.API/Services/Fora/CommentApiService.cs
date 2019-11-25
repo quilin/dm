@@ -71,5 +71,11 @@ namespace DM.Web.API.Services.Fora
 
         /// <inheritdoc />
         public Task Delete(Guid commentId) => deletingService.Delete(commentId);
+
+        /// <inheritdoc />
+        public Task MarkAsRead(Guid topicId) => readingService.MarkAsRead(topicId);
+
+        /// <inheritdoc />
+        public Task MarkAsRead(string forumId) => readingService.MarkAsRead(forumId);
     }
 }

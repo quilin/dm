@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.Fora;
@@ -10,13 +11,16 @@ namespace DM.Web.Classic.Controllers.ForumControllers
     public class ForumController : DmControllerBase
     {
         private readonly IForumReadingService forumReadingService;
+        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IForumViewModelBuilder forumViewModelBuilder;
 
         public ForumController(
             IForumReadingService forumReadingService,
+            ICommentaryReadingService commentaryReadingService,
             IForumViewModelBuilder forumViewModelBuilder)
         {
             this.forumReadingService = forumReadingService;
+            this.commentaryReadingService = commentaryReadingService;
             this.forumViewModelBuilder = forumViewModelBuilder;
         }
 
@@ -39,6 +43,13 @@ namespace DM.Web.Classic.Controllers.ForumControllers
 
             var topicViewModels = await forumViewModelBuilder.BuildList(forum, entityNumber);
             return View("~/Views/Fora/ForumTopicsList.cshtml", topicViewModels);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAllAsRead(string forumTitle)
+        {
+            await commentaryReadingService.MarkAsRead(forumTitle);
+            return NoContent();
         }
     }
 }

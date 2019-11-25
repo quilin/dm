@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
-using DM.Services.Common.Dto;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
@@ -19,6 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         private readonly IIntentionManager intentionManager;
         private readonly IGameReadingService gameReadingService;
         private readonly ICommentaryReadingRepository commentaryRepository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
@@ -26,11 +29,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
             IIntentionManager intentionManager,
             IGameReadingService gameReadingService,
             ICommentaryReadingRepository commentaryRepository,
+            IUnreadCountersRepository unreadCountersRepository,
             IIdentityProvider identityProvider)
         {
             this.intentionManager = intentionManager;
             this.gameReadingService = gameReadingService;
             this.commentaryRepository = commentaryRepository;
+            this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
         
@@ -53,6 +58,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         {
             return await commentaryRepository.Get(commentId) ??
                 throw new HttpException(HttpStatusCode.Gone, $"Comment {commentId} not found");
+        }
+
+        /// <inheritdoc />
+        public async Task MarkAsRead(Guid gameId)
+        {
+            var game = await gameReadingService.GetGame(gameId);
+            await intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
+            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, gameId);
         }
     }
 }

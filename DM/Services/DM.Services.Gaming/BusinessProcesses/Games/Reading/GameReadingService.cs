@@ -35,12 +35,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public Task<IEnumerable<GameTag>> GetTags()
         {
-            return cache.GetOrCreateAsync(TagListCacheKey, _ =>
-                repository.GetTags());
+            return cache.GetOrCreateAsync(TagListCacheKey, e =>
+            {
+                e.SlidingExpiration = TimeSpan.FromDays(1);
+                return repository.GetTags();
+            });
         }
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query, GameStatus? status)
+        public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query,
+            GameStatus? status)
         {
             var totalCount = await repository.Count(status, identity.User.UserId);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);

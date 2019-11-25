@@ -32,7 +32,7 @@ namespace DM.Web.Classic.Views.Topic
                 CanEdit = intentionsManager.IsAllowed(TopicIntention.Edit, topic).Result,
                 CanRemove = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
                 CanMove = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                Forums = forumReadingService.GetForaList().Result.ToDictionary(f => f.Title, f => (object) f.Id)
+                Forums = forumReadingService.GetForaList().Result.ToDictionary(f => f.Title, f => (object) f.Title)
             };
         }
     }

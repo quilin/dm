@@ -91,9 +91,5 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 
             return topic;
         }
-
-        /// <inheritdoc />
-        public Task MarkAsRead(Guid topicId) =>
-            unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
     }
 }

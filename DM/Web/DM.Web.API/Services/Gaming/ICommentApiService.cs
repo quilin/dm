@@ -48,5 +48,12 @@ namespace DM.Web.API.Services.Gaming
         /// <param name="commentId">Comment identifier</param>
         /// <returns></returns>
         Task Delete(Guid commentId);
+
+        /// <summary>
+        /// Mark all game comments as read
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <returns></returns>
+        Task MarkAsRead(Guid gameId);
     }
 }

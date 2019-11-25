@@ -13,6 +13,11 @@ namespace DM.Services.Core.Dto
         public int TotalPagesCount { get; private set; }
 
         /// <summary>
+        /// Total entities count of certain type across the filtered entities
+        /// </summary>
+        public int TotalEntitiesCount { get; private set; }
+
+        /// <summary>
         /// Current page number
         /// </summary>
         public int CurrentPage { get; private set; }
@@ -38,8 +43,9 @@ namespace DM.Services.Core.Dto
         {
             return new PagingResult
             {
-                TotalPagesCount = (int)Math.Ceiling((decimal)totalEntitiesCount / pageSize),
-                CurrentPage = Math.Max(1, (int)Math.Ceiling((decimal)entityNumber/ pageSize)),
+                TotalPagesCount = (int) Math.Ceiling((decimal) totalEntitiesCount / pageSize),
+                TotalEntitiesCount = totalEntitiesCount,
+                CurrentPage = Math.Max(1, (int) Math.Ceiling((decimal) entityNumber / pageSize)),
                 PageSize = pageSize,
                 EntityNumber = Math.Min(Math.Max(1, entityNumber), totalEntitiesCount)
             };

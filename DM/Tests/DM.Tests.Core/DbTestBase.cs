@@ -12,7 +12,7 @@ namespace DM.Tests.Core
 {
     public abstract class DbTestBase : UnitTestBase
     {
-        protected IMapper GetMapper()
+        protected static IMapper GetMapper()
         {
             var currentAssembly = Assembly.GetExecutingAssembly();
             var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();

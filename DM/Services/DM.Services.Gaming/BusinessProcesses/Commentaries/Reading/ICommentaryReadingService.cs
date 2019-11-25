@@ -20,10 +20,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid gameId, PagingQuery query);
 
         /// <summary>
-        /// Get topic comment by id
+        /// Get game comment by id
         /// </summary>
         /// <param name="commentId">Commentary identifier</param>
         /// <returns>Found comment</returns>
         Task<Comment> Get(Guid commentId);
+
+        /// <summary>
+        /// Mark game comments as read
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <returns></returns>
+        Task MarkAsRead(Guid gameId);
     }
 }

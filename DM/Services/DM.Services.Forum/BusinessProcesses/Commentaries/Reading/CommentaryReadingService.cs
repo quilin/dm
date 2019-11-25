@@ -4,8 +4,11 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using Comment = DM.Services.Common.Dto.Comment;
 
@@ -15,16 +18,22 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
     public class CommentaryReadingService : ICommentaryReadingService
     {
         private readonly ITopicReadingService topicReadingService;
+        private readonly IForumReadingService forumReadingService;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly ICommentaryReadingRepository commentaryRepository;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public CommentaryReadingService(
             ITopicReadingService topicReadingService,
+            IForumReadingService forumReadingService,
             IIdentityProvider identityProvider,
+            IUnreadCountersRepository unreadCountersRepository,
             ICommentaryReadingRepository commentaryRepository)
         {
             this.topicReadingService = topicReadingService;
+            this.forumReadingService = forumReadingService;
+            this.unreadCountersRepository = unreadCountersRepository;
             this.commentaryRepository = commentaryRepository;
             identity = identityProvider.Current;
         }
@@ -48,6 +57,20 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         {
             return await commentaryRepository.Get(commentId) ??
                 throw new HttpException(HttpStatusCode.Gone, $"Comment {commentId} not found");
+        }
+
+        /// <inheritdoc />
+        public async Task MarkAsRead(Guid topicId)
+        {
+            await topicReadingService.GetTopic(topicId);
+            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
+        }
+
+        /// <inheritdoc />
+        public async Task MarkAsRead(string forumTitle)
+        {
+            var forum = await forumReadingService.GetForum(forumTitle);
+            await unreadCountersRepository.FlushAll(identity.User.UserId, UnreadEntryType.Message, forum.Id);
         }
     }
 }

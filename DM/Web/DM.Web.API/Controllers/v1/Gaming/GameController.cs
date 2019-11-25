@@ -20,16 +20,19 @@ namespace DM.Web.API.Controllers.v1.Gaming
         private readonly IGameApiService gameApiService;
         private readonly ICommentApiService commentApiService;
         private readonly IReaderApiService readerApiService;
+        private readonly ICharacterApiService characterApiService;
 
         /// <inheritdoc />
         public GameController(
             IGameApiService gameApiService,
             ICommentApiService commentApiService,
-            IReaderApiService readerApiService)
+            IReaderApiService readerApiService,
+            ICharacterApiService characterApiService)
         {
             this.gameApiService = gameApiService;
             this.commentApiService = commentApiService;
             this.readerApiService = readerApiService;
+            this.characterApiService = characterApiService;
         }
 
         /// <summary>
@@ -148,6 +151,25 @@ namespace DM.Web.API.Controllers.v1.Gaming
         }
 
         /// <summary>
+        /// Mark all game comments as read
+        /// </summary>
+        /// <param name="id">Game id</param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="401">User is not authorized to read comments in this game</response>
+        /// <response code="410">Game not found</response>
+        [HttpDelete("{id}/comments/unread", Name = nameof(ReadGameComments))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> ReadGameComments(Guid id)
+        {
+            await commentApiService.MarkAsRead(id);
+            return NoContent();
+        }
+
+        /// <summary>
         /// Get list of game readers
         /// </summary>
         /// <param name="id"></param>
@@ -208,7 +230,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [HttpGet("{id}/characters", Name = nameof(GetCharacters))]
         [ProducesResponseType(typeof(ListEnvelope<Character>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetCharacters(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetCharacters(Guid id) => Ok(await characterApiService.GetAll(id));
 
         /// <summary>
         /// Post new character
@@ -227,7 +249,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostCharacter(Guid id, Character character) => throw new NotImplementedException();
+        public async Task<IActionResult> PostCharacter(Guid id, Character character)
+        {
+            var result = await characterApiService.Create(id, character);
+            return CreatedAtRoute(nameof(CharacterController.GetCharacter), new {id = result.Resource.Id}, result);
+        }
 
         /// <summary>
         /// Get list of game rooms

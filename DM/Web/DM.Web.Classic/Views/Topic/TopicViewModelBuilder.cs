@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Parsing;
 using DM.Services.Forum.Authorization;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Web.Classic.Views.Shared.Commentaries;
 using DM.Web.Classic.Views.Shared.User;
@@ -12,6 +13,7 @@ namespace DM.Web.Classic.Views.Topic
     public class TopicViewModelBuilder : ITopicViewModelBuilder
     {
         private readonly ITopicReadingService topicReadingService;
+        private readonly ICommentaryReadingService commentaryReadingService;
         private readonly ICommentariesViewModelBuilder commentariesViewModelBuilder;
         private readonly IIntentionManager intentionsManager;
         private readonly IUserViewModelBuilder userViewModelBuilder;
@@ -20,6 +22,7 @@ namespace DM.Web.Classic.Views.Topic
 
         public TopicViewModelBuilder(
             ITopicReadingService topicReadingService,
+            ICommentaryReadingService commentaryReadingService,
             ICommentariesViewModelBuilder commentariesViewModelBuilder,
             IIntentionManager intentionsManager,
             IUserViewModelBuilder userViewModelBuilder,
@@ -27,6 +30,7 @@ namespace DM.Web.Classic.Views.Topic
             IBbParserProvider bbParserProvider)
         {
             this.topicReadingService = topicReadingService;
+            this.commentaryReadingService = commentaryReadingService;
             this.commentariesViewModelBuilder = commentariesViewModelBuilder;
             this.intentionsManager = intentionsManager;
             this.userViewModelBuilder = userViewModelBuilder;
@@ -40,7 +44,7 @@ namespace DM.Web.Classic.Views.Topic
 
             var commentariesViewModel = await commentariesViewModelBuilder.Build(topicId, entityNumber);
             commentariesViewModel.CanCreate = await intentionsManager.IsAllowed(TopicIntention.CreateComment, topic);
-            await topicReadingService.MarkAsRead(topicId);
+            await commentaryReadingService.MarkAsRead(topicId);
 
             return new TopicViewModel
             {

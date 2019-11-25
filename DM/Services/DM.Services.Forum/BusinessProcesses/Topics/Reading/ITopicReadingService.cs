@@ -32,12 +32,5 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
         /// <param name="topicId">Topic identifier</param>
         /// <returns></returns>
         Task<Topic> GetTopic(Guid topicId);
-
-        /// <summary>
-        /// Mark topic commentaries as read
-        /// </summary>
-        /// <param name="topicId">Topic identifier</param>
-        /// <returns></returns>
-        Task MarkAsRead(Guid topicId);
     }
 }

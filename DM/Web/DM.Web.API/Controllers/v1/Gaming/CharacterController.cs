@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
+using DM.Web.API.Services.Gaming;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,15 @@ namespace DM.Web.API.Controllers.v1.Gaming
     [Route("v1/characters")]
     public class CharacterController : Controller
     {
+        private readonly ICharacterApiService characterApiService;
+
+        /// <inheritdoc />
+        public CharacterController(
+            ICharacterApiService characterApiService)
+        {
+            this.characterApiService = characterApiService;
+        }
+
         /// <summary>
         /// Get certain character
         /// </summary>
@@ -21,7 +31,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="410">Character not found</response>
         [HttpGet("{id}", Name = nameof(GetCharacter))]
         [ProducesResponseType(typeof(Envelope<Character>), 200)]
-        public Task<IActionResult> GetCharacter(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetCharacter(Guid id) => Ok(await characterApiService.Get(id));
 
         /// <summary>
         /// Put character changes
@@ -40,8 +50,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PutCharacter(Guid id, [FromBody] Character character) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> PutCharacter(Guid id, [FromBody] Character character) =>
+            Ok(await characterApiService.Update(id, character));
 
         /// <summary>
         /// Delete certain character
@@ -57,6 +67,10 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeleteCharacter(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> DeleteCharacter(Guid id)
+        {
+            await characterApiService.Delete(id);
+            return NoContent();
+        }
     }
 }

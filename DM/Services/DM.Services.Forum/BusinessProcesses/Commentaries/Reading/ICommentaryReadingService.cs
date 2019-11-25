@@ -25,5 +25,19 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         /// <param name="commentId">Commentary identifier</param>
         /// <returns>Found comment</returns>
         Task<Comment> Get(Guid commentId);
+
+        /// <summary>
+        /// Mark all topic comments as read
+        /// </summary>
+        /// <param name="topicId">Topic identifier</param>
+        /// <returns></returns>
+        Task MarkAsRead(Guid topicId);
+
+        /// <summary>
+        /// Mark all forum comments as read
+        /// </summary>
+        /// <param name="forumTitle">Forum title</param>
+        /// <returns></returns>
+        Task MarkAsRead(string forumTitle);
     }
 }
