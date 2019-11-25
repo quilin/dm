@@ -12,6 +12,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// Attribute scheme API controller
     /// </summary>
     [Route("v1/schemas")]
+    [ApiExplorerSettings(GroupName = "Game")]
     public class AttributeSchemeController : Controller
     {
         /// <summary>

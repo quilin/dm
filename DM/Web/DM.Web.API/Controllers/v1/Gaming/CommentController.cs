@@ -13,6 +13,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// Commentaries
     /// </summary>
     [Route("v1/games/comments")]
+    [ApiExplorerSettings(GroupName = "Game")]
     public class CommentController : Controller
     {
         private readonly ICommentApiService commentApiService;

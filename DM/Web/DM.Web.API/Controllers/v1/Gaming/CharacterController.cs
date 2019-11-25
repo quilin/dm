@@ -12,6 +12,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// Game API controller
     /// </summary>
     [Route("v1/characters")]
+    [ApiExplorerSettings(GroupName = "Game")]
     public class CharacterController : Controller
     {
         private readonly ICharacterApiService characterApiService;

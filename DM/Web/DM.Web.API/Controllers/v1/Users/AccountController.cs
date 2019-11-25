@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Web.API.Controllers.v1.Community;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Users;
@@ -12,6 +13,7 @@ namespace DM.Web.API.Controllers.v1.Users
     /// Account
     /// </summary>
     [Route("v1/account")]
+    [ApiExplorerSettings(GroupName = "Account")]
     public class AccountController : Controller
     {
         private readonly IRegistrationApiService registrationApiService;

@@ -12,6 +12,7 @@ namespace DM.Web.API.Controllers.v1.Fora
     /// Fora
     /// </summary>
     [Route("v1/fora")]
+    [ApiExplorerSettings(GroupName = "Forum")]
     public class ForumController : Controller
     {
         private readonly IForumApiService forumApiService;

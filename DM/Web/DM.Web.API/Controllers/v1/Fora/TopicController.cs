@@ -15,6 +15,7 @@ namespace DM.Web.API.Controllers.v1.Fora
     /// Topics
     /// </summary>
     [Route("v1/topics")]
+    [ApiExplorerSettings(GroupName = "Forum")]
     public class TopicController : Controller
     {
         private readonly ITopicApiService topicApiService;

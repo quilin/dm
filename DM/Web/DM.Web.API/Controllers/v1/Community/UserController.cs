@@ -5,10 +5,11 @@ using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1.Users
+namespace DM.Web.API.Controllers.v1.Community
 {
     /// <inheritdoc />
     [Route("v1/users")]
+    [ApiExplorerSettings(GroupName = "Community")]
     public class UserController : Controller
     {
         private readonly IUserApiService userApiService;

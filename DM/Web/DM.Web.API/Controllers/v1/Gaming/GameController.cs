@@ -15,6 +15,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// Game API controller
     /// </summary>
     [Route("v1/games")]
+    [ApiExplorerSettings(GroupName = "Game")]
     public class GameController : Controller
     {
         private readonly IGameApiService gameApiService;

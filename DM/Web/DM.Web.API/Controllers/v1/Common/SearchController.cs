@@ -14,6 +14,7 @@ namespace DM.Web.API.Controllers.v1.Common
     /// Search
     /// </summary>
     [Route("v1/search")]
+    [ApiExplorerSettings(GroupName = "Common")]
     public class SearchController : Controller
     {
         private readonly ISearchEngineRepository repository;

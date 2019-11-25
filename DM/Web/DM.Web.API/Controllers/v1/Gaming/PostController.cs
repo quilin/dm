@@ -11,6 +11,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
     /// Post API controller
     /// </summary>
     [Route("v1/posts")]
+    [ApiExplorerSettings(GroupName = "Game")]
     public class PostController : Controller
     {
         /// <summary>

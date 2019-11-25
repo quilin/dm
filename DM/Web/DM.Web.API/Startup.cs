@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -15,8 +14,8 @@ using DM.Services.MessageQueuing.Publish;
 using DM.Services.Notifications.Configuration;
 using DM.Services.Search;
 using DM.Services.Search.Configuration;
-using DM.Web.API.Authentication;
 using DM.Web.API.Middleware;
+using DM.Web.API.Swagger;
 using DM.Web.Core.Binders;
 using DM.Web.Core.Middleware;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +25,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace DM.Web.API
 {
@@ -85,16 +83,11 @@ namespace DM.Web.API
                     .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
             services
-                .AddSwaggerGen(c =>
+                .AddSwaggerGen(c => c.ConfigureGen())
+                .AddMvc(config =>
                 {
-                    c.SwaggerDoc("v1", new Info {Title = "DM.API", Version = "v1"});
-                    c.DescribeAllParametersInCamelCase();
-                    c.DescribeAllEnumsAsStrings();
-                    c.OperationFilter<AuthenticationSwaggerFilter>();
-                    var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-                    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));
+                    config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider());
                 })
-                .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .AddJsonOptions(config =>
                 {
                     config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
@@ -133,12 +126,7 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseSwagger()
-                .UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DM.API V1");
-                    c.RoutePrefix = string.Empty;
-                    c.DocumentTitle = "DM.API";
-                })
+                .UseSwaggerUI(c => c.ConfigureUi())
                 .UseCors(b => b
                     .WithExposedHeaders("X-Dm-Auth-Token")
                     .AllowAnyHeader()

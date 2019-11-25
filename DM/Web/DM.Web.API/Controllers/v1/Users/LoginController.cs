@@ -12,6 +12,7 @@ namespace DM.Web.API.Controllers.v1.Users
     /// Login
     /// </summary>
     [Route("v1/account/login")]
+    [ApiExplorerSettings(GroupName = "Account")]
     public class LoginController : Controller
     {
         private readonly ILoginApiService loginApiService;
