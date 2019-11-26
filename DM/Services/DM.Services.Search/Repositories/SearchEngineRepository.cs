@@ -34,10 +34,11 @@ namespace DM.Services.Search.Repositories
                     (q.Match(mt => mt.Field(f => f.Text)
                          .Query(query)
                          .Fuzziness(SearchFuzziness)
-                         .Boost(5)) ||
+                         .Boost(1)) ||
                      q.Match(mt => mt.Field(f => f.Title)
                          .Query(query)
-                         .Fuzziness(SearchFuzziness))) &&
+                         .Fuzziness(SearchFuzziness)
+                         .Boost(3))) &&
                     (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles.Cast<int>()).Boost(0)) ||
                      q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0)) ||
                      !q.Terms(t => t.Field(f => f.UnauthorizedUsers).Terms(userId).Boost(0))))
