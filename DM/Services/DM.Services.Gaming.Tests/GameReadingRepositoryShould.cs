@@ -115,9 +115,9 @@ namespace DM.Services.Gaming.Tests
                     myUserId);
                 var gamesIndex = games.ToDictionary(g => g.Id);
 
-                gamesIndex[gameId2].UserParticipates(myUserId).Should().BeFalse();
+                gamesIndex[gameId2].Participation(myUserId).Should().Be(GameParticipation.None);
                 gamesIndex.Remove(gameId2);
-                gamesIndex.Values.Select(v => v.UserParticipates(myUserId)).Should().AllBeEquivalentTo(true);
+                gamesIndex.Values.Select(v => v.Participation(myUserId)).Should().NotContain(GameParticipation.None);
             }
         }
     }
