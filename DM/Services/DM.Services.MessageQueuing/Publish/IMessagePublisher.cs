@@ -23,13 +23,11 @@ namespace DM.Services.MessageQueuing.Publish
         /// <summary>
         /// Publish messages batch
         /// </summary>
-        /// <param name="messages">Messages</param>
+        /// <param name="messages">Messages and routing keys</param>
         /// <param name="configuration">Publish configuration</param>
-        /// <param name="routingKey">Routing key</param>
         /// <typeparam name="TMessage">Message</typeparam>
         /// <returns></returns>
-        Task Publish<TMessage>(IEnumerable<TMessage> messages, IMessagePublishConfiguration configuration,
-            string routingKey)
+        Task Publish<TMessage>(IEnumerable<(TMessage, string)> messages, IMessagePublishConfiguration configuration)
             where TMessage : class;
     }
 }

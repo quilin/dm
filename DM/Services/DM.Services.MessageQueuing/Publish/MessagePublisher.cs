@@ -46,8 +46,8 @@ namespace DM.Services.MessageQueuing.Publish
         }
 
         /// <inheritdoc />
-        public Task Publish<TMessage>(IEnumerable<TMessage> messages, IMessagePublishConfiguration configuration,
-            string routingKey)
+        public Task Publish<TMessage>(IEnumerable<(TMessage message, string routingKey)> messages,
+            IMessagePublishConfiguration configuration)
             where TMessage : class
         {
             using (var connection = connectionFactory.CreateConnection())
@@ -55,7 +55,7 @@ namespace DM.Services.MessageQueuing.Publish
             {
                 Ensure.Publish(channel, configuration);
                 var basicPublishBatch = channel.CreateBasicPublishBatch();
-                foreach (var message in messages)
+                foreach (var (message, routingKey) in messages)
                 {
                     var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
                     basicPublishBatch.Add(configuration.ExchangeName, routingKey, false,
@@ -66,8 +66,10 @@ namespace DM.Services.MessageQueuing.Publish
                             CorrelationId = correlationTokenProvider.Current.ToString()
                         }, body);
                 }
+
                 basicPublishBatch.Publish();
             }
+
             return Task.CompletedTask;
         }
     }

@@ -15,6 +15,11 @@ namespace DM.Services.Gaming.Dto.Input
         public Guid GameId { get; set; }
 
         /// <summary>
+        /// Game status
+        /// </summary>
+        public GameStatus? Status { get; set; }
+
+        /// <summary>
         /// Game title
         /// </summary>
         public string Title { get; set; }

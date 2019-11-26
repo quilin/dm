@@ -12,7 +12,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         public GameIntentionConverterException(GameStatus gameStatus)
             : base($"Game intention for status {gameStatus} is not defined")
         {
-            
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
@@ -31,6 +33,16 @@ namespace DM.Services.MessageQueuing.Publish
                 Type = type,
                 EntityId = entityId
             }, configuration, GetRoutingKey(type));
+        }
+
+        /// <inheritdoc />
+        public Task Publish(IEnumerable<EventType> types, Guid entityId)
+        {
+            return messagePublisher.Publish(types.Select(type => (new InvokedEvent
+            {
+                Type = type,
+                EntityId = entityId
+            }, GetRoutingKey(type))), configuration);
         }
 
         private static string GetRoutingKey(EventType eventType)

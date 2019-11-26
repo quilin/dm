@@ -1,5 +1,6 @@
 using System.Linq;
 using AutoMapper;
+using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
 
@@ -19,6 +20,10 @@ namespace DM.Services.Gaming.Dto
                     .Where(p => !p.IsRemoved)
                     .Select(p => p.VirtualPath)
                     .FirstOrDefault()));
+
+            CreateMap<DbCharacter, CharacterToUpdate>()
+                .ForMember(d => d.GameMasterId, s => s.MapFrom(c => c.Game.MasterId))
+                .ForMember(d => d.GameAssistantId, s => s.MapFrom(c => c.Game.AssistantId));
         }
     }
 }

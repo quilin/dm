@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
@@ -24,8 +28,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         private readonly IAssignmentService assignmentService;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IUserRepository userRepository;
+        private readonly IDateTimeProvider dateTimeProvider;
         private readonly IGameUpdatingRepository updatingRepository;
+        private readonly IGameIntentionConverter intentionConverter;
         private readonly IInvokedEventPublisher publisher;
+        private readonly IIdentity identity;
 
         /// <inheritdoc />
         public GameUpdatingService(
@@ -35,8 +42,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             IAssignmentService assignmentService,
             IUpdateBuilderFactory updateBuilderFactory,
             IUserRepository userRepository,
+            IDateTimeProvider dateTimeProvider,
             IGameUpdatingRepository updatingRepository,
-            IInvokedEventPublisher publisher)
+            IGameIntentionConverter intentionConverter,
+            IInvokedEventPublisher publisher,
+            IIdentityProvider identityProvider)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
@@ -44,8 +54,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             this.assignmentService = assignmentService;
             this.updateBuilderFactory = updateBuilderFactory;
             this.userRepository = userRepository;
+            this.dateTimeProvider = dateTimeProvider;
             this.updatingRepository = updatingRepository;
+            this.intentionConverter = intentionConverter;
             this.publisher = publisher;
+            identity = identityProvider.Current;
         }
 
         /// <inheritdoc />
@@ -81,8 +94,33 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 }
             }
 
+            var invokedEvents = new List<EventType> {EventType.ChangedGame};
+            if (updateGame.Status.HasValue && updateGame.Status != game.Status)
+            {
+                var (intention, eventType) = intentionConverter.Convert(updateGame.Status.Value);
+                if (await intentionManager.IsAllowed(intention, game))
+                {
+                    changes.Field(g => g.Status, updateGame.Status.Value);
+                    invokedEvents.Add(eventType);
+                    
+                    if (updateGame.Status == GameStatus.Moderation) // when we go to moderation the actor becomes nanny
+                    {
+                        changes = changes.Field(g => g.NannyId, identity.User.UserId);
+                    }
+                    else if (game.Status == GameStatus.Moderation) // when we go from moderation the nanny is no more
+                    {
+                        changes = changes.Field(g => g.NannyId, null);
+                    }
+
+                    if (!game.ReleaseDate.HasValue && updateGame.Status == GameStatus.Requirement)
+                    {
+                        changes = changes.Field(g => g.ReleaseDate, dateTimeProvider.Now);
+                    }
+                }
+            }
+
             var result = await updatingRepository.Update(changes);
-            await publisher.Publish(EventType.ChangedGame, game.Id);
+            await publisher.Publish(invokedEvents, game.Id);
             return result;
         }
     }
