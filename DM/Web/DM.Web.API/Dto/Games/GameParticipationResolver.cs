@@ -24,10 +24,10 @@ namespace DM.Web.API.Dto.Games
 
         /// <inheritdoc />
         public bool Resolve(ServiceGame source, Game destination, bool destMember, ResolutionContext context) =>
-            source.UserParticipates(identity.User.UserId);
+            source.Participation(identity.User.UserId) != GameParticipation.None;
 
         /// <inheritdoc />
         public bool Resolve(GameExtended source, Game destination, bool destMember, ResolutionContext context) =>
-            source.UserParticipates(identity.User.UserId);
+            source.Participation(identity.User.UserId) != GameParticipation.None;
     }
 }

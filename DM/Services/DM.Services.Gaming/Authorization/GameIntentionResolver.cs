@@ -48,16 +48,15 @@ namespace DM.Services.Gaming.Authorization
             var userIsHighAuthority = user.Role.HasFlag(UserRole.Administrator) ||
                 user.Role.HasFlag(UserRole.SeniorModerator);
             var userIsNanny = userIsHighAuthority || user.Role.HasFlag(UserRole.NannyModerator);
-            var userIsOwner = target.Master.UserId == user.UserId || target.Assistant?.UserId == user.UserId;
-            var userIsGameModerator = target.Nanny?.UserId == user.UserId;
+            var participation = target.Participation(user.UserId);
 
             switch (intention)
             {
                 case GameIntention.Read:
-                    return Task.FromResult(userIsHighAuthority || userIsOwner ||
+                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
                         !HiddenStates.Contains(target.Status));
                 case GameIntention.Edit:
-                    return Task.FromResult(userIsHighAuthority || userIsOwner);
+                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority));
                 case GameIntention.Delete: // only the master itself is allowed to remove the game
                     return Task.FromResult(userIsHighAuthority || user.UserId == target.Master.UserId);
 
@@ -66,7 +65,7 @@ namespace DM.Services.Gaming.Authorization
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation:
-                    return Task.FromResult(userIsGameModerator);
+                    return Task.FromResult(participation.HasFlag(GameParticipation.Moderator));
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft:
@@ -77,15 +76,15 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.SetStatusFrozen when target.Status == GameStatus.Active:
                 case GameIntention.SetStatusFinished when target.Status == GameStatus.Active:
                 case GameIntention.SetStatusClosed when target.Status == GameStatus.Active:
-                    return Task.FromResult(userIsOwner);
+                    return Task.FromResult(participation.HasFlag(GameParticipation.Authority));
 
                 case GameIntention.ReadComments:
                     return Task.FromResult(target.CommentariesAccessMode != CommentariesAccessMode.Private ||
-                        target.UserParticipates(user.UserId));
+                        target.Participation(user.UserId) != GameParticipation.None);
 
                 case GameIntention.CreateComment:
                     return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
-                        target.UserParticipates(user.UserId));
+                        target.Participation(user.UserId) != GameParticipation.None);
 
                 default:
                     return Task.FromResult(false);

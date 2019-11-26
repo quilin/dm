@@ -14,13 +14,36 @@ namespace DM.Services.Gaming.Dto
         /// </summary>
         /// <param name="game">Mapped game</param>
         /// <param name="userId">User identifier</param>
-        /// <returns></returns>
-        public static bool UserParticipates(this Game game, Guid userId)
+        /// <returns>Game participation type</returns>
+        public static GameParticipation Participation(this Game game, Guid userId)
         {
-            return game.Master.UserId == userId || game.Assistant?.UserId == userId ||
-                game.PendingAssistant?.UserId == userId ||
-                game.Nanny?.UserId == userId ||
-                game.ActiveCharacterUserIds.Any(authorId => authorId == userId);
+            var participation = GameParticipation.None;
+            if (game.Master.UserId == userId)
+            {
+                participation |= GameParticipation.Owner | GameParticipation.Authority;
+            }
+
+            if (game.Assistant.UserId == userId)
+            {
+                participation |= GameParticipation.Authority;
+            }
+
+            if (game.PendingAssistant?.UserId == userId)
+            {
+                participation |= GameParticipation.PendingAssistant;
+            }
+
+            if (game.Nanny?.UserId == userId)
+            {
+                participation |= GameParticipation.Moderator;
+            }
+
+            if (game.ActiveCharacterUserIds.Contains(userId))
+            {
+                participation |= GameParticipation.Player;
+            }
+
+            return participation;
         }
     }
 }

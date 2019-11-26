@@ -86,8 +86,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             {
                 var availableTags = (await readingService.GetTags()).Select(t => t.Id).ToHashSet();
                 tags = createGame.Tags
-                    .Where(t => availableTags.Contains(t))
-                    .Select(t => gameTagFactory.Create(game.GameId, t));
+                    .Where(availableTags.Contains)
+                    .Select(tagId => gameTagFactory.Create(game.GameId, tagId));
             }
             else
             {

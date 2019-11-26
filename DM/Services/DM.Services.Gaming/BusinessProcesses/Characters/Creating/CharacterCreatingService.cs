@@ -2,9 +2,12 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.Dto;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -20,6 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
         private readonly IIntentionManager intentionManager;
         private readonly ICharacterFactory factory;
         private readonly ICharacterCreatingRepository creatingRepository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
         private readonly IIdentity identity;
 
@@ -30,6 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             IIntentionManager intentionManager,
             ICharacterFactory factory,
             ICharacterCreatingRepository creatingRepository,
+            IUnreadCountersRepository unreadCountersRepository,
             IInvokedEventPublisher publisher,
             IIdentityProvider identityProvider)
         {
@@ -38,6 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             this.intentionManager = intentionManager;
             this.factory = factory;
             this.creatingRepository = creatingRepository;
+            this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
             identity = identityProvider.Current;
         }
@@ -50,11 +56,21 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             await intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
 
             var currentUserId = identity.User.UserId;
-            var initialStatus = game.Master.UserId == currentUserId || game.Assistant?.UserId == currentUserId
+            var gameParticipation = game.Participation(currentUserId);
+
+            // Master and assistant characters should be created in Active status
+            var initialStatus = gameParticipation.HasFlag(GameParticipation.Authority)
                 ? CharacterStatus.Active
                 : CharacterStatus.Registration;
+
+            // Only master and assistant are allowed to create NPCs
+            createCharacter.IsNpc = createCharacter.IsNpc && gameParticipation.HasFlag(GameParticipation.Authority);
+
+            // TODO: Character attributes
             var character = factory.Create(createCharacter, currentUserId, initialStatus);
             var createdCharacter = await creatingRepository.Create(character);
+
+            await unreadCountersRepository.Increment(createCharacter.GameId, UnreadEntryType.Character);
             await publisher.Publish(EventType.NewCharacter, createdCharacter.Id);
 
             return createdCharacter;
