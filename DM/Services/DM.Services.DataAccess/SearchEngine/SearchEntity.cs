@@ -43,5 +43,10 @@ namespace DM.Services.DataAccess.SearchEngine
         /// Authorized user ids list
         /// </summary>
         public IEnumerable<Guid> AuthorizedUsers { get; set; }
+
+        /// <summary>
+        /// Unauthorized user ids list
+        /// </summary>
+        public IEnumerable<Guid> UnauthorizedUsers { get; set; }
     }
 }

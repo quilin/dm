@@ -28,7 +28,8 @@ namespace DM.Services.Search.Repositories
             IEnumerable<UserRole> roles, Guid userId)
         {
             var searchResponse = await client.SearchAsync<SearchEntity>(s => s
-                .Source(sf => sf.Excludes(e => e.Fields(f => f.AuthorizedRoles, f => f.AuthorizedUsers)))
+                .Source(sf => sf.Excludes(e => e.Fields(
+                    f => f.AuthorizedRoles, f => f.AuthorizedUsers, f => f.UnauthorizedUsers)))
                 .Query(q =>
                     (q.Match(mt => mt.Field(f => f.Text)
                          .Query(query)
@@ -38,7 +39,8 @@ namespace DM.Services.Search.Repositories
                          .Query(query)
                          .Fuzziness(SearchFuzziness))) &&
                     (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles.Cast<int>()).Boost(0)) ||
-                     q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0))))
+                     q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0)) ||
+                     !q.Terms(t => t.Field(f => f.UnauthorizedUsers).Terms(userId).Boost(0))))
                 .Sort(so => so.Descending(SortSpecialField.Score))
                 .Highlight(h => h
                     .Fields(
