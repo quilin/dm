@@ -67,7 +67,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
         /// <summary>
         /// Old-school-D&amp;D stuff
         /// </summary>
-        public Alignment Alignment { get; set; }
+        public Alignment? Alignment { get; set; }
 
         /// <summary>
         /// Appearance

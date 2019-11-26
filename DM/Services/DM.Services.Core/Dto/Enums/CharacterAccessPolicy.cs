@@ -16,7 +16,7 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// GM may edit character information
         /// </summary>
-        EditAllowed = 1 << 0,
+        EditAllowed = 1,
 
         /// <summary>
         /// GM may edit character post texts

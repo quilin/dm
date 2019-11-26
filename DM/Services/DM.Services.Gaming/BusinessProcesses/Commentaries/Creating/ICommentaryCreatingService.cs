@@ -4,7 +4,7 @@ using DM.Services.Common.Dto;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
 {
     /// <summary>
-    /// Service to create new commentaries on forum
+    /// Service to create new commentaries in game
     /// </summary>
     public interface ICommentaryCreatingService
     {

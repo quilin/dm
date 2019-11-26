@@ -22,11 +22,11 @@ namespace DM.Web.API.Swagger
         public static void ConfigureUi(this SwaggerUIOptions options)
         {
             options.EnableValidator(null); // disable validator for encoded Guids
-            options.SwaggerEndpoint("/swagger/Account/swagger.json", "DM.API Account");
-            options.SwaggerEndpoint("/swagger/Common/swagger.json", "DM.API Common");
-            options.SwaggerEndpoint("/swagger/Forum/swagger.json", "DM.API Forum");
-            options.SwaggerEndpoint("/swagger/Game/swagger.json", "DM.API Game");
-            options.SwaggerEndpoint("/swagger/Community/swagger.json", "DM.API Community");
+            options.SwaggerEndpoint("/swagger/Account/swagger.json", "Account");
+            options.SwaggerEndpoint("/swagger/Common/swagger.json", "Common");
+            options.SwaggerEndpoint("/swagger/Forum/swagger.json", "Forum");
+            options.SwaggerEndpoint("/swagger/Game/swagger.json", "Game");
+            options.SwaggerEndpoint("/swagger/Community/swagger.json", "Community");
             options.RoutePrefix = string.Empty;
             options.DocumentTitle = "DM.API";
         }
@@ -45,6 +45,7 @@ namespace DM.Web.API.Swagger
             options.DescribeAllParametersInCamelCase();
             options.DescribeAllEnumsAsStrings();
             options.OperationFilter<AuthenticationSwaggerFilter>();
+
             var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));
         }

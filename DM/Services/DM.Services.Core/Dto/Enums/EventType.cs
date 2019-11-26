@@ -40,7 +40,13 @@ namespace DM.Services.Core.Dto.Enums
         /// Topic has been deleted
         /// </summary>
         [EventRoutingKey("forum.topic.deleted")]
-        DeletedTopic = 104,
+        DeletedTopic = 103,
+
+        /// <summary>
+        /// Topic has been liked
+        /// </summary>
+        [EventRoutingKey("forum.topic.liked")]
+        LikedTopic = 104,
 
         /// <summary>
         /// New commentary has been created on forum
@@ -61,16 +67,10 @@ namespace DM.Services.Core.Dto.Enums
         DeletedForumComment = 203,
 
         /// <summary>
-        /// Topic has been liked
-        /// </summary>
-        [EventRoutingKey("forum.topic.liked")]
-        LikedTopic = 601,
-
-        /// <summary>
         /// Forum commentary has been liked
         /// </summary>
         [EventRoutingKey("forum.comment.liked")]
-        LikedForumComment = 602,
+        LikedForumComment = 204,
 
         /// <summary>
         /// New game has been created
@@ -137,13 +137,13 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("game.comment.created")]
         NewGameComment = 331,
-        
+
         /// <summary>
         /// Game commentary has been updated
         /// </summary>
         [EventRoutingKey("game.comment.changed")]
         ChangedGameComment = 332,
-        
+
         /// <summary>
         /// Forum commentary has been deleted
         /// </summary>
@@ -154,7 +154,7 @@ namespace DM.Services.Core.Dto.Enums
         /// Game commentary has been liked
         /// </summary>
         [EventRoutingKey("game.comment.liked")]
-        LikedGameComment = 601,
+        LikedGameComment = 334,
 
         /// <summary>
         /// Assistant assignment request created and pending
@@ -172,6 +172,24 @@ namespace DM.Services.Core.Dto.Enums
         /// Assistant assignment request has been rejected
         /// </summary>
         [EventRoutingKey("game.module.assignment.rejected")]
-        AssignmentRequestRejected = 353
+        AssignmentRequestRejected = 353,
+
+        /// <summary>
+        /// New character has been created
+        /// </summary>
+        [EventRoutingKey("game.character.created")]
+        NewCharacter = 361,
+
+        /// <summary>
+        /// Character has been updated
+        /// </summary>
+        [EventRoutingKey("game.character.updated")]
+        ChangedCharacter = 362,
+
+        /// <summary>
+        /// Character has been deleted
+        /// </summary>
+        [EventRoutingKey("game.character.deleted")]
+        DeletedCharacter = 363,
     }
 }

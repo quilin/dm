@@ -21,7 +21,7 @@ namespace DM.Web.Classic.Views.Shared.User
                 Login = user.Login,
                 IsOnline = user.LastVisitDate.HasValue,
                 Rating = userRatingFactory.Create(user),
-                ProfilePictureUrl = user.ProfilePictureUrl,
+                ProfilePictureUrl = user.PictureUrl,
 
                 IsAdministrator = user.Role.HasFlag(UserRole.Administrator),
                 IsModerator = user.Role.HasFlag(UserRole.RegularModerator) || user.Role.HasFlag(UserRole.SeniorModerator)

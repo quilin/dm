@@ -26,7 +26,7 @@ namespace DM.Services.Core.Dto
         /// <summary>
         /// URL of current profile picture
         /// </summary>
-        public string ProfilePictureUrl { get; set; }
+        public string PictureUrl { get; set; }
 
         /// <inheritdoc />
         public bool RatingDisabled { get; set; }

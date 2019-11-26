@@ -53,7 +53,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Updating
                 .MaybeField(f => f.Text, updateComment.Text?.Trim())
                 .Field(f => f.LastUpdateDate, dateTimeProvider.Now);
             var updatedComment = await repository.Update(updateBuilder);
-            await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
+            await invokedEventPublisher.Publish(EventType.ChangedGameComment, updateComment.CommentId);
             return updatedComment;
         }
     }

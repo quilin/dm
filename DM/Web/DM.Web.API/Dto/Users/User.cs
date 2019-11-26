@@ -21,7 +21,7 @@ namespace DM.Web.API.Dto.Users
         /// <summary>
         /// Profile picture URL
         /// </summary>
-        public string ProfilePictureUrl { get; set; }
+        public string PictureUrl { get; set; }
 
         /// <summary>
         /// Rating

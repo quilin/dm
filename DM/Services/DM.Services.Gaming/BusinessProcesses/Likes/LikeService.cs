@@ -38,7 +38,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
         {
             var comment = await commentaryReadingService.Get(commentId);
             await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
-            return await Like(comment, EventType.LikedForumComment);
+            return await Like(comment, EventType.LikedGameComment);
         }
 
         /// <inheritdoc />

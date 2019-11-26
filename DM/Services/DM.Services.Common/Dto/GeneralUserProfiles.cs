@@ -16,7 +16,7 @@ namespace DM.Services.Common.Dto
         {
             CreateMap<User, GeneralUser>()
                 .ForMember(
-                    d => d.ProfilePictureUrl,
+                    d => d.PictureUrl,
                     s => s.MapFrom(u => u.ProfilePictures
                         .Where(p => !p.IsRemoved)
                         .Select(p => p.VirtualPath)
