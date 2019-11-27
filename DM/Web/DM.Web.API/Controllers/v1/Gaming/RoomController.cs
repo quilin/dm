@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
+using DM.Web.API.Services.Gaming;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,18 @@ namespace DM.Web.API.Controllers.v1.Gaming
     [ApiExplorerSettings(GroupName = "Game")]
     public class RoomController : Controller
     {
+        private readonly IRoomApiService roomApiService;
+        private readonly IPostApiService postApiService;
+
+        /// <inheritdoc />
+        public RoomController(
+            IRoomApiService roomApiService,
+            IPostApiService postApiService)
+        {
+            this.roomApiService = roomApiService;
+            this.postApiService = postApiService;
+        }
+
         /// <summary>
         /// Get certain room
         /// </summary>
@@ -23,13 +36,13 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="410">Room not found</response>
         [HttpGet("{id}", Name = nameof(GetRoom))]
         [ProducesResponseType(typeof(Envelope<Room>), 200)]
-        public Task<IActionResult> GetRoom(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetRoom(Guid id) => Ok(await roomApiService.Get(id));
 
         /// <summary>
         /// Put room changes
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="character"></param>
+        /// <param name="room"></param>
         /// <response code="200"></response>
         /// <response code="400">Some of room changed properties were invalid or passed id was not recognized</response>
         /// <response code="401">User must be authenticated</response>
@@ -42,8 +55,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PutRoom(Guid id, [FromBody] Character character) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> PutRoom(Guid id, [FromBody] Room room) =>
+            Ok(await roomApiService.Update(id, room));
 
         /// <summary>
         /// Delete certain room
@@ -59,7 +72,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeleteRoom(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> DeleteRoom(Guid id)
+        {
+            await roomApiService.Delete(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Get list of posts
@@ -71,7 +88,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [HttpGet("{id}/posts", Name = nameof(GetPosts))]
         [ProducesResponseType(typeof(ListEnvelope<Post>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetPosts(Guid id, [FromBody] PagingQuery q) => throw new NotImplementedException();
+        public async Task<IActionResult> GetPosts(Guid id, [FromBody] PagingQuery q) =>
+            Ok(await postApiService.Get(id, q));
 
         /// <summary>
         /// Post new post
@@ -90,6 +108,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostPost(Guid id, [FromBody] Post post) => throw new NotImplementedException();
+        public async Task<IActionResult> PostPost(Guid id, [FromBody] Post post)
+        {
+            var result = await postApiService.Create(id, post);
+            return CreatedAtRoute(nameof(PostController.GetPost),
+                new {id = result.Resource.Id}, result);
+        }
     }
 }

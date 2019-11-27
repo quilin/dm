@@ -22,18 +22,21 @@ namespace DM.Web.API.Controllers.v1.Gaming
         private readonly ICommentApiService commentApiService;
         private readonly IReaderApiService readerApiService;
         private readonly ICharacterApiService characterApiService;
+        private readonly IRoomApiService roomApiService;
 
         /// <inheritdoc />
         public GameController(
             IGameApiService gameApiService,
             ICommentApiService commentApiService,
             IReaderApiService readerApiService,
-            ICharacterApiService characterApiService)
+            ICharacterApiService characterApiService,
+            IRoomApiService roomApiService)
         {
             this.gameApiService = gameApiService;
             this.commentApiService = commentApiService;
             this.readerApiService = readerApiService;
             this.characterApiService = characterApiService;
+            this.roomApiService = roomApiService;
         }
 
         /// <summary>
@@ -253,7 +256,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> PostCharacter(Guid id, Character character)
         {
             var result = await characterApiService.Create(id, character);
-            return CreatedAtRoute(nameof(CharacterController.GetCharacter), new {id = result.Resource.Id}, result);
+            return CreatedAtRoute(nameof(CharacterController.GetCharacter),
+                new {id = result.Resource.Id}, result);
         }
 
         /// <summary>
@@ -265,7 +269,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [HttpGet("{id}/rooms", Name = nameof(GetRooms))]
         [ProducesResponseType(typeof(ListEnvelope<Room>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetRooms(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetRooms(Guid id) => Ok(await roomApiService.GetAll(id));
 
         /// <summary>
         /// Post new character
@@ -284,6 +288,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostRoom(Guid id, Room room) => throw new NotImplementedException();
+        public async Task<IActionResult> PostRoom(Guid id, Room room)
+        {
+            var result = await roomApiService.Create(id, room);
+            return CreatedAtRoute(nameof(RoomController.GetRoom),
+                new {id = result.Resource.Id}, result);
+        }
     }
 }

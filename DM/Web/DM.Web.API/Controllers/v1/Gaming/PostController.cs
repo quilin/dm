@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
+using DM.Web.API.Services.Gaming;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,15 @@ namespace DM.Web.API.Controllers.v1.Gaming
     [ApiExplorerSettings(GroupName = "Game")]
     public class PostController : Controller
     {
+        private readonly IPostApiService postApiService;
+
+        /// <inheritdoc />
+        public PostController(
+            IPostApiService postApiService)
+        {
+            this.postApiService = postApiService;
+        }
+
         /// <summary>
         /// Get certain post
         /// </summary>
@@ -22,7 +32,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="410">Post not found</response>
         [HttpGet("{id}", Name = nameof(GetPost))]
         [ProducesResponseType(typeof(Envelope<Post>), 200)]
-        public Task<IActionResult> GetPost(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetPost(Guid id) => Ok(await postApiService.Get(id));
 
         /// <summary>
         /// Put post changes
@@ -41,8 +51,8 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PutPost(Guid id, [FromBody] Post post) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> PutPost(Guid id, [FromBody] Post post) =>
+            Ok(await postApiService.Update(id, post));
 
         /// <summary>
         /// Delete certain post
@@ -58,7 +68,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeletePost(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> DeletePost(Guid id)
+        {
+            await postApiService.Delete(id);
+            return NoContent();
+        }
 
         /// <summary>
         /// Get post rating votes
