@@ -4,6 +4,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
 using DM.Services.Authentication.Implementation;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -34,8 +35,10 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository = Mock<IAuthenticationRepository>();
             userSearchSetup = authenticationRepository.Setup(r => r.TryFindUser(It.IsAny<string>()));
             sessionFactory = Mock<ISessionFactory>();
+            var identityProvider = Mock<IIdentityProvider>();
+            identityProvider.Setup(p => p.Current).Returns(Identity.Guest);
             service = new AuthenticationService(securityManager.Object, cryptoService.Object,
-                authenticationRepository.Object, sessionFactory.Object, null, null);
+                authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object);
         }
 
         [Fact]

@@ -31,7 +31,7 @@ namespace DM.Services.Common.Tests
         {
             validator.Invoking(v => v.ValidateAndThrowAsync(new CreateComment {Text = "something"}).Wait())
                 .Should().Throw<ValidationException>()
-                .And.Errors.Should().ContainSingle(e => e.PropertyName == "TopicId");
+                .And.Errors.Should().ContainSingle(e => e.PropertyName == "EntityId");
         }
 
         [Fact]

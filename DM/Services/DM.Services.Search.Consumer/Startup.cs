@@ -8,14 +8,16 @@ using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Consume;
 using DM.Services.MessageQueuing.Dto;
+using DM.Services.MessageQueuing.Publish;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Search.Consumer
 {
@@ -48,8 +50,8 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<DmEventConsumeConfiguration>(
-                    configuration.GetSection(nameof(DmEventConsumeConfiguration)).Bind)
+                .Configure<MessageConsumeConfiguration>(
+                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
 
             services
@@ -85,15 +87,29 @@ namespace DM.Services.Search.Consumer
         /// </summary>
         /// <param name="applicationBuilder"></param>
         /// <param name="consumer"></param>
-        /// <param name="configuration"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IMessageConsumer<InvokedEvent> consumer,
-            IOptions<DmEventConsumeConfiguration> configuration)
+            IMessageConsumer<InvokedEvent> consumer)
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
             Console.WriteLine("[🔧] Configuring service provider");
-            consumer.Consume(configuration.Value);
-            Console.WriteLine($"[👂] Consumer is listening to {configuration.Value.QueueName} queue");
+
+            var configuration = new MessageConsumeConfiguration
+            {
+                ExchangeName = InvokedEventsTransport.ExchangeName,
+                RoutingKeys = new[]
+                {
+                    "forum.comment.changed",
+                    "forum.comment.created",
+                    "forum.comment.deleted",
+                    "forum.topic.changed",
+                    "forum.topic.created",
+                    "forum.topic.deleted"
+                },
+                QueueName = "dm.search-engine"
+            };
+            consumer.Consume(configuration);
+
+            Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");
 
             applicationBuilder
                 .UseHsts()

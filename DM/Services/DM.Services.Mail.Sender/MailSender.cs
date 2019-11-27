@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
+using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
-using Microsoft.Extensions.Options;
 
 namespace DM.Services.Mail.Sender
 {
@@ -9,17 +9,14 @@ namespace DM.Services.Mail.Sender
     public class MailSender : IMailSender
     {
         private readonly IValidator<MailLetter> validator;
-        private readonly MailMessagePublishConfiguration publishConfiguration;
         private readonly IMessagePublisher publisher;
 
         /// <inheritdoc />
         public MailSender(
             IValidator<MailLetter> validator,
-            IOptions<MailMessagePublishConfiguration> publishConfiguration,
             IMessagePublisher publisher)
         {
             this.validator = validator;
-            this.publishConfiguration = publishConfiguration.Value;
             this.publisher = publisher;
         }
 
@@ -27,7 +24,10 @@ namespace DM.Services.Mail.Sender
         public async Task Send(MailLetter letter)
         {
             await validator.ValidateAndThrowAsync(letter);
-            await publisher.Publish(letter, publishConfiguration, string.Empty);
+            await publisher.Publish(letter, new MessagePublishConfiguration
+            {
+                ExchangeName = "dm.mail.sending"
+            }, string.Empty);
         }
     }
 }

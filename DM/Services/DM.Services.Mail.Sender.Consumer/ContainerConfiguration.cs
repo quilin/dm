@@ -37,8 +37,6 @@ namespace DM.Services.Mail.Sender.Consumer
 
             var services = new ServiceCollection()
                 .AddOptions()
-                .Configure<MailSenderConsumeConfiguration>(
-                    configuration.GetSection(nameof(MailSenderConsumeConfiguration)).Bind)
                 .Configure<EmailConfiguration>(
                     configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<ConnectionStrings>(

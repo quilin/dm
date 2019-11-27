@@ -23,11 +23,10 @@ namespace DM.Services.Search
             builder.Register(x =>
                 {
                     var connectionStrings = x.Resolve<IOptions<ConnectionStrings>>().Value;
-                    var searchEngineConfiguration = x.Resolve<IOptions<SearchEngineConfiguration>>().Value;
                     return new ConnectionSettings(new Uri(connectionStrings.SearchEngine))
                         .DefaultMappingFor<SearchEntity>(m => m
-                            .IndexName(searchEngineConfiguration.IndexName)
-                            .TypeName(searchEngineConfiguration.TypeName));
+                            .IndexName(SearchEngineConfiguration.IndexName)
+                            .TypeName(SearchEngineConfiguration.TypeName));
                 })
                 .SingleInstance();
             builder.Register(x => new ElasticClient(x.Resolve<ConnectionSettings>()))

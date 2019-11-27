@@ -6,7 +6,6 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
 using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Dto;
-using Microsoft.Extensions.Options;
 
 namespace DM.Services.MessageQueuing.Publish
 {
@@ -14,15 +13,14 @@ namespace DM.Services.MessageQueuing.Publish
     public class InvokedEventPublisher : IInvokedEventPublisher
     {
         private readonly IMessagePublisher messagePublisher;
-        private readonly IMessagePublishConfiguration configuration;
+        private readonly MessagePublishConfiguration configuration;
 
         /// <inheritdoc />
         public InvokedEventPublisher(
-            IMessagePublisher messagePublisher,
-            IOptions<DmEventPublishConfiguration> configuration)
+            IMessagePublisher messagePublisher)
         {
             this.messagePublisher = messagePublisher;
-            this.configuration = configuration.Value;
+            configuration = new MessagePublishConfiguration {ExchangeName = InvokedEventsTransport.ExchangeName};
         }
 
         /// <inheritdoc />
@@ -47,11 +45,10 @@ namespace DM.Services.MessageQueuing.Publish
 
         private static string GetRoutingKey(EventType eventType)
         {
-            var type = eventType.GetType();
-            var name = Enum.GetName(type, eventType);
-            var field = type.GetField(name);
-            var attribute = (EventRoutingKeyAttribute) Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
-            return attribute.RoutingKey;
+            var field = eventType.GetType().GetField(Enum.GetName(eventType.GetType(), eventType));
+            var attribute = Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
+            var eventRoutingKeyAttribute = (EventRoutingKeyAttribute) attribute;
+            return eventRoutingKeyAttribute.RoutingKey;
         }
     }
 }

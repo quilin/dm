@@ -13,7 +13,7 @@ namespace DM.Services.MessageQueuing.Configuration
         /// <param name="channel">MQ connection channel</param>
         /// <param name="configuration">Configuration</param>
         /// <returns></returns>
-        public static void Publish(IModel channel, IMessagePublishConfiguration configuration)
+        public static void Publish(IModel channel, MessagePublishConfiguration configuration)
         {
             channel.ExchangeDeclare(configuration.ExchangeName, ExchangeType.Topic, true);
         }
@@ -24,7 +24,7 @@ namespace DM.Services.MessageQueuing.Configuration
         /// <param name="channel">MQ connection channel</param>
         /// <param name="configuration">Configuration</param>
         /// <returns></returns>
-        public static void Consume(IModel channel, IMessageConsumeConfiguration configuration)
+        public static void Consume(IModel channel, MessageConsumeConfiguration configuration)
         {
             channel.QueueDeclare(configuration.QueueName, true, configuration.Exclusive, false,
                 configuration.Arguments);

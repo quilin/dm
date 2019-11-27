@@ -9,7 +9,6 @@ using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Configuration;
 using DM.Web.Classic.Configuration;
 using DM.Web.Classic.Middleware;
 using DM.Web.Core.Binders;
@@ -53,8 +52,6 @@ namespace DM.Web.Classic
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<IMessagePublishConfiguration>(
-                    Configuration.GetSection(nameof(IMessagePublishConfiguration)).Bind)
                 .AddDmLogging("DM.Classic");
             var assemblies = GetAssemblies();
 

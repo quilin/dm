@@ -8,7 +8,6 @@ using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
 using DM.Services.MessageQueuing.Publish;
 using DM.Services.Notifications.Consumer.Implementation.Notifiers;
-using Microsoft.Extensions.Options;
 
 namespace DM.Services.Notifications.Consumer.Implementation
 {
@@ -17,22 +16,19 @@ namespace DM.Services.Notifications.Consumer.Implementation
     {
         private readonly IEnumerable<INotificationGenerator> generators;
         private readonly INotificationRepository repository;
-        private readonly IMessagePublishConfiguration publishConfiguration;
         private readonly IMessagePublisher publisher;
 
         /// <inheritdoc />
         public NotificationMessageProcessor(
             IEnumerable<INotificationGenerator> generators,
             INotificationRepository repository,
-            IOptions<DmEventPublishConfiguration> publishConfiguration,
             IMessagePublisher publisher)
         {
             this.generators = generators;
             this.repository = repository;
-            this.publishConfiguration = publishConfiguration.Value;
             this.publisher = publisher;
         }
-        
+
         /// <inheritdoc />
         public async Task<ProcessResult> Process(InvokedEvent message)
         {
@@ -42,7 +38,10 @@ namespace DM.Services.Notifications.Consumer.Implementation
                 .ToArray();
 
             await repository.Create(notifications.Select(n => n.notification));
-            await publisher.Publish(notifications.Select(n => n.userNotification), publishConfiguration, string.Empty);
+            await publisher.Publish(notifications.Select(n => n.userNotification), new MessagePublishConfiguration
+            {
+                ExchangeName = "dm.notifications.sent"
+            }, string.Empty);
 
             return ProcessResult.Success;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Reading;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
@@ -14,9 +15,9 @@ namespace DM.Services.Community.Tests.Integration
         [Theory]
         [InlineData(false, 2)]
         [InlineData(true, 4)]
-        public async Task CountUsers(bool withInactive, int expected)
+        public async Task CountAndSelectUsers(bool withInactive, int expected)
         {
-            using (var rdb = GetRdb($"{nameof(CountUsers)}_{withInactive}"))
+            using (var rdb = GetRdb($"{nameof(CountAndSelectUsers)}_{withInactive}"))
             {
                 var rightNow = new DateTimeOffset(2019, 05, 11, 5, 2, 1, TimeSpan.Zero);
                 var activeUser1 = new User
@@ -78,8 +79,35 @@ namespace DM.Services.Community.Tests.Integration
                 dateTimeProvider.Setup(p => p.Now).Returns(rightNow);
                 var readingRepository = new UserReadingRepository(rdb, dateTimeProvider.Object, GetMapper());
 
-                var actual = await readingRepository.CountUsers(withInactive);
-                actual.Should().Be(expected);
+                var actualCount = await readingRepository.CountUsers(withInactive);
+                actualCount.Should().Be(expected);
+                
+                var pagingData = new PagingData(new PagingQuery{Size = 1000, Skip = 0}, 1000, actualCount);
+                var actualList = await readingRepository.GetUsers(pagingData, withInactive);
+                actualList.Should().HaveCount(actualCount);
+            }
+        }
+
+        [Theory]
+        [InlineData("someuser", true)]
+        [InlineData("SOmEusER", true)]
+        [InlineData("notuser", false)]
+        public async Task GetUserWithMatchingLogin(string searchedLogin, bool expectedSuccess)
+        {
+            using (var rdb = GetRdb(nameof(GetUserWithMatchingLogin)))
+            {
+                rdb.Users.Add(new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Activated = true,
+                    IsRemoved = false,
+                    Login = "SomeUser"
+                });
+                await rdb.SaveChangesAsync();
+
+                var readingRepository = new UserReadingRepository(rdb, new DateTimeProvider(), GetMapper());
+                (await readingRepository.GetUser(searchedLogin) != null).Should().Be(expectedSuccess);
+                (await readingRepository.GetProfile(searchedLogin) != null).Should().Be(expectedSuccess);
             }
         }
     }

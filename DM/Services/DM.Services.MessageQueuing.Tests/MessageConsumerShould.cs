@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Consume;
 using DM.Tests.Core;
 using Moq;
@@ -34,7 +35,7 @@ namespace DM.Services.MessageQueuing.Tests
         public void SubscribeToChannel()
         {
             var queueArguments = new Dictionary<string, object>();
-            var configuration = new DmEventConsumeConfiguration
+            var configuration = new MessageConsumeConfiguration
             {
                 QueueName = "queue.name",
                 RoutingKeys = new[] {"routing.key.1", "routing.key.2"},

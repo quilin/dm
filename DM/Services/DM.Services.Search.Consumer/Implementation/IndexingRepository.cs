@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Configuration;
-using Microsoft.Extensions.Options;
 using Nest;
 
 namespace DM.Services.Search.Consumer.Implementation
@@ -14,15 +13,12 @@ namespace DM.Services.Search.Consumer.Implementation
     public class IndexingRepository : IIndexingRepository
     {
         private readonly IElasticClient client;
-        private readonly SearchEngineConfiguration configuration;
 
         /// <inheritdoc />
         public IndexingRepository(
-            IElasticClient client,
-            IOptions<SearchEngineConfiguration> options)
+            IElasticClient client)
         {
             this.client = client;
-            configuration = options.Value;
         }
 
         /// <inheritdoc />
@@ -69,12 +65,12 @@ namespace DM.Services.Search.Consumer.Implementation
 
         private async Task DeclareIndex()
         {
-            if ((await client.IndexExistsAsync(configuration.IndexName)).Exists)
+            if ((await client.IndexExistsAsync(SearchEngineConfiguration.IndexName)).Exists)
             {
                 return;
             }
 
-            await client.CreateIndexAsync(configuration.IndexName, i => i
+            await client.CreateIndexAsync(SearchEngineConfiguration.IndexName, i => i
                 .Settings(s => s
                     .Analysis(a => a
                         .Analyzers(an => an

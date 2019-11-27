@@ -6,8 +6,6 @@ using DM.Services.Core.Configuration;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Consume;
-using DM.Services.Search.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,10 +41,6 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<DmEventConsumeConfiguration>(
-                    configuration.GetSection(nameof(DmEventConsumeConfiguration)).Bind)
-                .Configure<SearchEngineConfiguration>(
-                    configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDbContext<DmDbContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))))
                 .AddDmLogging("DM.SearchEngine");

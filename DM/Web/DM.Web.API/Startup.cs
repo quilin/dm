@@ -8,12 +8,8 @@ using DM.Services.Core.Configuration;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
-using DM.Services.Mail.Sender;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Publish;
-using DM.Services.Notifications.Configuration;
 using DM.Services.Search;
-using DM.Services.Search.Configuration;
 using DM.Web.API.Middleware;
 using DM.Web.API.Swagger;
 using DM.Web.Core.Binders;
@@ -64,14 +60,6 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<DmEventPublishConfiguration>(
-                    Configuration.GetSection(nameof(DmEventPublishConfiguration)).Bind)
-                .Configure<MailMessagePublishConfiguration>(
-                    Configuration.GetSection(nameof(MailMessagePublishConfiguration)).Bind)
-                .Configure<RealtimeNotificationsConsumeConfiguration>(
-                    Configuration.GetSection(nameof(RealtimeNotificationsConsumeConfiguration)).Bind)
-                .Configure<SearchEngineConfiguration>(
-                    Configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             var assemblies = GetAssemblies();

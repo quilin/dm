@@ -17,7 +17,7 @@ namespace DM.Services.MessageQueuing.Publish
         /// <param name="routingKey">Routing key</param>
         /// <typeparam name="TMessage">Message</typeparam>
         /// <returns></returns>
-        Task Publish<TMessage>(TMessage message, IMessagePublishConfiguration configuration, string routingKey)
+        Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration, string routingKey)
             where TMessage : class;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace DM.Services.MessageQueuing.Publish
         /// <typeparam name="TMessage">Message</typeparam>
         /// <returns></returns>
         Task Publish<TMessage>(IEnumerable<(TMessage message, string routingKey)> messages,
-            IMessagePublishConfiguration configuration)
+            MessagePublishConfiguration configuration)
             where TMessage : class;
     }
 }

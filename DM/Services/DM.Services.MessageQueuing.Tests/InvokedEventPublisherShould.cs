@@ -5,7 +5,6 @@ using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Publish;
 using DM.Tests.Core;
-using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -15,19 +14,15 @@ namespace DM.Services.MessageQueuing.Tests
     {
         private readonly InvokedEventPublisher publisherWrapper;
         private readonly Mock<IMessagePublisher> publisher;
-        private readonly DmEventPublishConfiguration messagePublishConfiguration;
 
         public InvokedEventPublisherShould()
         {
             publisher = Mock<IMessagePublisher>();
             publisher
                 .Setup(p => p.Publish(
-                    It.IsAny<InvokedEvent>(), It.IsAny<IMessagePublishConfiguration>(), It.IsAny<string>()))
+                    It.IsAny<InvokedEvent>(), It.IsAny<MessagePublishConfiguration>(), It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
-            var options = Mock<IOptions<DmEventPublishConfiguration>>();
-            messagePublishConfiguration = new DmEventPublishConfiguration();
-            options.Setup(o => o.Value).Returns(messagePublishConfiguration);
-            publisherWrapper = new InvokedEventPublisher(publisher.Object, options.Object);
+            publisherWrapper = new InvokedEventPublisher(publisher.Object);
         }
 
         [Fact]
@@ -38,8 +33,10 @@ namespace DM.Services.MessageQueuing.Tests
             await publisherWrapper.Publish(EventType.ChangedTopic, entityId);
 
             publisher.Verify(p => p.Publish(
-                It.Is<InvokedEvent>(e => e.EntityId == entityId && e.Type == EventType.ChangedTopic),
-                messagePublishConfiguration, "forum.topic.changed"), Times.Once);
+                    It.Is<InvokedEvent>(e => e.EntityId == entityId && e.Type == EventType.ChangedTopic),
+                    It.Is<MessagePublishConfiguration>(c => c.ExchangeName == "dm.events"),
+                    "forum.topic.changed"),
+                Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }
