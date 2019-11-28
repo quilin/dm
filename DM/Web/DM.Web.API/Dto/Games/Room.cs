@@ -13,6 +13,11 @@ namespace DM.Web.API.Dto.Games
         public string Id { get; set; }
 
         /// <summary>
+        /// Previous room identifier
+        /// </summary>
+        public string PreviousRoomId { get; set; }
+
+        /// <summary>
         /// Room title
         /// </summary>
         public string Title { get; set; }
@@ -20,12 +25,12 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Room access type
         /// </summary>
-        public RoomAccessType Access { get; set; }
+        public RoomAccessType? Access { get; set; }
 
         /// <summary>
         /// Room content type
         /// </summary>
-        public RoomType Type { get; set; }
+        public RoomType? Type { get; set; }
 
         /// <summary>
         /// Number of unread posts

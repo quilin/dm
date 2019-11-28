@@ -32,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public Task<int> Count(GameStatus? status, Guid userId)
         {
             return dbContext.Games
-                .Where(AccessibilityFilters.GameAccessible(userId))
+                .Where(AccessibilityFilters.GameAvailable(userId))
                 .Where(g => !status.HasValue || g.Status == status.Value)
                 .CountAsync();
         }
@@ -41,7 +41,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId)
         {
             return await dbContext.Games
-                .Where(AccessibilityFilters.GameAccessible(userId))
+                .Where(AccessibilityFilters.GameAvailable(userId))
                 .Where(g => !status.HasValue || g.Status == status.Value)
                 .OrderBy(g => g.ReleaseDate ?? g.CreateDate)
                 .Skip(pagingData.Skip)
@@ -54,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public Task<GameExtended> GetGameDetails(Guid gameId, Guid userId)
         {
             return dbContext.Games
-                .Where(AccessibilityFilters.GameAccessible(userId))
+                .Where(AccessibilityFilters.GameAvailable(userId))
                 .Where(g => g.GameId == gameId)
                 .ProjectTo<GameExtended>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -64,7 +64,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public Task<Game> GetGame(Guid gameId, Guid userId)
         {
             return dbContext.Games
-                .Where(AccessibilityFilters.GameAccessible(userId))
+                .Where(AccessibilityFilters.GameAvailable(userId))
                 .Where(g => g.GameId == gameId)
                 .ProjectTo<Game>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();

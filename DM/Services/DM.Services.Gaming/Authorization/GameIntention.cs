@@ -78,6 +78,11 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Create game character
         /// </summary>
-        CreateCharacter = 14
+        CreateCharacter = 14,
+
+        /// <summary>
+        /// Administrate game rooms
+        /// </summary>
+        AdministrateRooms = 15
     }
 }

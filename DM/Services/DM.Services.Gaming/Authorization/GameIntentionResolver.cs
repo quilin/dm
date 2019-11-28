@@ -55,9 +55,13 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.Read:
                     return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
                         !HiddenStates.Contains(target.Status));
-                case GameIntention.Edit:
+
+                case GameIntention.Edit when user.IsAuthenticated:
+                case GameIntention.AdministrateRooms when user.IsAuthenticated:
                     return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority));
-                case GameIntention.Delete: // only the master itself is allowed to remove the game
+                
+                // only the master itself is allowed to remove the game
+                case GameIntention.Delete when user.IsAuthenticated:
                     return Task.FromResult(userIsHighAuthority || user.UserId == target.Master.UserId);
 
                 case GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration:
@@ -82,9 +86,13 @@ namespace DM.Services.Gaming.Authorization
                     return Task.FromResult(target.CommentariesAccessMode != CommentariesAccessMode.Private ||
                         target.Participation(user.UserId) != GameParticipation.None);
 
-                case GameIntention.CreateComment:
+                case GameIntention.CreateComment when user.IsAuthenticated:
                     return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
                         target.Participation(user.UserId) != GameParticipation.None);
+                
+                case GameIntention.CreateCharacter when user.IsAuthenticated:
+                    return Task.FromResult(
+                        target.Status == GameStatus.Requirement || target.Status == GameStatus.Active);
 
                 default:
                     return Task.FromResult(false);

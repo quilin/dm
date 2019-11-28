@@ -1,4 +1,6 @@
+using System;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
+using DM.Services.Gaming.Dto.Input;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 {
@@ -10,9 +12,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
         /// <summary>
         /// Create room out of DTO model
         /// </summary>
-        /// <param name="game">Parent game</param>
-        /// <param name="title">Room title</param>
+        /// <param name="createRoom">DTO model</param>
         /// <returns></returns>
-        Room Create(Dto.Output.Game game, string title);
+        Room CreateFirst(CreateRoom createRoom);
+
+        /// <summary>
+        /// Create new room after given room
+        /// </summary>
+        /// <param name="createRoom">DTO for creating</param>
+        /// <param name="lastRoomId">Last room identifier</param>
+        /// <param name="lastRoomOrderNumber">Last room order number</param>
+        /// <returns></returns>
+        Room CreateAfter(CreateRoom createRoom, Guid lastRoomId, double lastRoomOrderNumber);
     }
 }

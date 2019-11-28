@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Games;
+using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
+using Room = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 
 namespace DM.Services.Gaming.BusinessProcesses.Shared
 {
@@ -16,7 +17,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Shared
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static Expression<Func<Game, bool>> GameAccessible(Guid userId) => game =>
+        public static Expression<Func<Game, bool>> GameAvailable(Guid userId) => game =>
             !game.IsRemoved &&
             !(game.BlackList != null && game.BlackList.Any(b => b.UserId == userId)) &&
             (
@@ -27,5 +28,18 @@ namespace DM.Services.Gaming.BusinessProcesses.Shared
                 game.Status != GameStatus.RequiresModeration ||
                 game.Status != GameStatus.Moderation
             );
+        
+        /// <summary>
+        /// Room is 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public static Expression<Func<Room, bool>> RoomAvailable(Guid userId) => room =>
+            !room.IsRemoved &&
+            GameAvailable(userId).Compile().Invoke(room.Game) &&
+                room.AccessType == RoomAccessType.Open ||
+                room.AccessType == RoomAccessType.Secret && (
+                    room.Game.MasterId == userId || room.Game.AssistantId == userId ||
+                    room.CharacterLinks.Any(l => l.Character.UserId == userId));
     }
 }
