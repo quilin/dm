@@ -19,6 +19,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         private readonly IRoomReadingService readingService;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
+        private readonly IRoomOrderPull roomOrderPull;
         private readonly IRoomUpdatingRepository repository;
 
         /// <inheritdoc />
@@ -27,12 +28,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
             IRoomReadingService readingService,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
+            IRoomOrderPull roomOrderPull,
             IRoomUpdatingRepository repository)
         {
             this.validator = validator;
             this.readingService = readingService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
+            this.roomOrderPull = roomOrderPull;
             this.repository = repository;
         }
 
@@ -72,7 +75,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 
         private async Task<Room> InsertAfter(Room room, Room afterRoom, IUpdateBuilder<DbRoom> updateRoom)
         {
-            var (updateOldPreviousRoom, updateOldNextRoom) = await Pull(room);
+            var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
             var updateNewPreviousRoom = updateBuilderFactory.Create<DbRoom>(afterRoom.Id)
                 .Field(r => r.NextRoomId, room.Id);
             var updateNewNextRoom = afterRoom.NextRoomId.HasValue
@@ -81,7 +84,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
                 : null;
             updateRoom
                 .Field(r => r.PreviousRoomId, afterRoom.Id)
-                .MaybeField(r => r.NextRoomId, afterRoom.NextRoomId)
+                .Field(r => r.NextRoomId, afterRoom.NextRoomId)
                 .Field(r => r.OrderNumber, afterRoom.NextRoomOrderNumber.HasValue
                     ? (afterRoom.NextRoomOrderNumber + afterRoom.OrderNumber) / 2
                     : afterRoom.OrderNumber + 1);
@@ -92,7 +95,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 
         private async Task<Room> InsertFirst(Room room, IUpdateBuilder<DbRoom> updateRoom)
         {
-            var (updateOldPreviousRoom, updateOldNextRoom) = await Pull(room);
+            var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
             var firstRoomInfo = await repository.GetFirstRoomInfo(room.Game.Id);
             var updateNewNextRoom = updateBuilderFactory.Create<DbRoom>(firstRoomInfo.RoomId)
                 .Field(r => r.PreviousRoomId, room.Id);
@@ -101,22 +104,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
                 .Field(r => r.OrderNumber, firstRoomInfo.OrderNumber - 1);
 
             return await repository.Update(updateRoom, updateOldNextRoom, updateOldPreviousRoom, updateNewNextRoom);
-        }
-
-        private async Task<(IUpdateBuilder<DbRoom> updateOldPrevious, IUpdateBuilder<DbRoom> updateOldNext)> Pull(
-            Room room)
-        {
-            var roomOldNeighbours = await repository.GetNeighbours(room.Id);
-
-            var updateOldPreviousRoom = roomOldNeighbours.PreviousRoom == null
-                ? null
-                : updateBuilderFactory.Create<DbRoom>(roomOldNeighbours.PreviousRoom.RoomId)
-                    .Field(r => r.NextRoomId, room.NextRoomId);
-            var updateOldNextRoom = roomOldNeighbours.NextRoom == null
-                ? null
-                : updateBuilderFactory.Create<DbRoom>(roomOldNeighbours.NextRoom.RoomId)
-                    .Field(r => r.PreviousRoomId, room.PreviousRoomId);
-            return (updateOldPreviousRoom, updateOldNextRoom);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
         private readonly IRoomReadingService roomReadingService;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
+        private readonly IRoomOrderPull roomOrderPull;
         private readonly IRoomUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
 
@@ -25,12 +26,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             IRoomReadingService roomReadingService,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
+            IRoomOrderPull roomOrderPull,
             IRoomUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository)
         {
             this.roomReadingService = roomReadingService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
+            this.roomOrderPull = roomOrderPull;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
         }
@@ -42,15 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
 
             var updateRoom = updateBuilderFactory.Create<DbRoom>(roomId).Field(r => r.IsRemoved, true);
-            var updateOldPreviousRoom = room.PreviousRoomId.HasValue
-                ? updateBuilderFactory.Create<DbRoom>(room.PreviousRoomId.Value)
-                    .Field(r => r.NextRoomId, room.NextRoomId)
-                : null;
-            var updateOldNextRoom = room.NextRoomId.HasValue
-                ? updateBuilderFactory.Create<DbRoom>(room.NextRoomId.Value)
-                    .Field(r => r.PreviousRoomId, room.PreviousRoomId)
-                : null;
-
+            var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
             await repository.Update(updateRoom, updateOldNextRoom, updateOldPreviousRoom);
             await unreadCountersRepository.Delete(roomId, UnreadEntryType.Message);
         }
