@@ -45,7 +45,15 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="200"></response>
         [HttpGet(Name = nameof(GetGames))]
         [ProducesResponseType(typeof(ListEnvelope<Game>), 200)]
-        public async Task<IActionResult> GetGames(GamesQuery q) => Ok(await gameApiService.Get(q));
+        public async Task<IActionResult> GetGames([FromQuery] GamesQuery q) => Ok(await gameApiService.Get(q));
+
+        /// <summary>
+        /// Get list of all game tags
+        /// </summary>
+        /// <response code="200"></response>
+        [HttpGet("tags")]
+        [ProducesResponseType(typeof(ListEnvelope<Tag>), 200)]
+        public async Task<IActionResult> GetTags() => Ok(await gameApiService.GetTags());
 
         /// <summary>
         /// Get certain game
@@ -55,7 +63,19 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="410">Game not found</response>
         [HttpGet("{id}", Name = nameof(GetGame))]
         [ProducesResponseType(typeof(Envelope<Game>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetGame(Guid id) => Ok(await gameApiService.Get(id));
+
+        /// <summary>
+        /// Get certain game details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        /// <response code="410">Game not found</response>
+        [HttpGet("{id}/details", Name = nameof(GetGameDetails))]
+        [ProducesResponseType(typeof(Envelope<Game>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> GetGameDetails(Guid id) => Ok(await gameApiService.GetDetails(id));
 
         /// <summary>
         /// Post new game
@@ -76,7 +96,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> PostGame([FromBody] Game game)
         {
             var result = await gameApiService.Create(game);
-            return CreatedAtRoute(nameof(GetGame), new {id = result.Resource.Id}, result);
+            return CreatedAtRoute(nameof(GetGameDetails), new {id = result.Resource.Id}, result);
         }
 
         /// <summary>
@@ -89,7 +109,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this game</response>
         /// <response code="410">Game not found</response>
-        [HttpPut("{id}", Name = nameof(PutGame))]
+        [HttpPut("{id}/details", Name = nameof(PutGame))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Game>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -132,7 +152,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
             Ok(await commentApiService.Get(id, q));
 
         /// <summary>
-        /// Post new game
+        /// Post new game comment
         /// </summary>
         /// <param name="id"></param>
         /// <param name="comment"></param>
@@ -253,7 +273,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public async Task<IActionResult> PostCharacter(Guid id, Character character)
+        public async Task<IActionResult> PostCharacter(Guid id, [FromBody] Character character)
         {
             var result = await characterApiService.Create(id, character);
             return CreatedAtRoute(nameof(CharacterController.GetCharacter),
@@ -288,7 +308,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public async Task<IActionResult> PostRoom(Guid id, Room room)
+        public async Task<IActionResult> PostRoom(Guid id, [FromBody] Room room)
         {
             var result = await roomApiService.Create(id, room);
             return CreatedAtRoute(nameof(RoomController.GetRoom),

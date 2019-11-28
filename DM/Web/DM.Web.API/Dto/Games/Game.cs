@@ -68,7 +68,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Game tags
         /// </summary>
-        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<Tag> Tags { get; set; }
 
         /// <summary>
         /// Game information

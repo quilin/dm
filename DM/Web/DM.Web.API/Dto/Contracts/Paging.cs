@@ -14,6 +14,7 @@ namespace DM.Web.API.Dto.Contracts
             Current = pagingResult.CurrentPage;
             Size = pagingResult.PageSize;
             Number = pagingResult.EntityNumber;
+            Total = pagingResult.TotalEntitiesCount;
         }
 
         /// <summary>
@@ -35,5 +36,10 @@ namespace DM.Web.API.Dto.Contracts
         /// Entity number
         /// </summary>
         public int Number { get; }
+
+        /// <summary>
+        /// Total entity count
+        /// </summary>
+        public int Total { get; }
     }
 }

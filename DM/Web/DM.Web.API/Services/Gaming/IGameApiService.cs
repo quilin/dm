@@ -26,6 +26,13 @@ namespace DM.Web.API.Services.Gaming
         Task<Envelope<Game>> Get(Guid gameId);
 
         /// <summary>
+        /// Get certain game details
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <returns></returns>
+        Task<Envelope<Game>> GetDetails(Guid gameId);
+
+        /// <summary>
         /// Create new game
         /// </summary>
         /// <param name="game">Game API model</param>
@@ -46,5 +53,11 @@ namespace DM.Web.API.Services.Gaming
         /// <param name="gameId">Game identifier</param>
         /// <returns></returns>
         Task Delete(Guid gameId);
+
+        /// <summary>
+        /// Get all available game tags
+        /// </summary>
+        /// <returns></returns>
+        Task<ListEnvelope<Tag>> GetTags();
     }
 }

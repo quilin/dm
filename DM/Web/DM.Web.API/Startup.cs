@@ -79,6 +79,8 @@ namespace DM.Web.API
                 .AddJsonOptions(config =>
                 {
                     config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    config.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    config.SerializerSettings.DateFormatString = "O";
                     config.SerializerSettings.Converters.Insert(0, new StringEnumConverter());
                     config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 })

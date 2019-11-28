@@ -16,7 +16,7 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Authenticated user with no privileges
         /// </summary>
-        Player = 1 << 0,
+        Player = 1,
 
         /// <summary>
         /// Developer / Owner

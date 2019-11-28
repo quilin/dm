@@ -37,21 +37,23 @@ namespace DM.Services.Common.Extensions
         /// <param name="userId">Reading user identifier</param>
         /// <param name="getId">Entity identifier mapper</param>
         /// <param name="counterField">Expression of the field to fill counter in</param>
+        /// <param name="entryType">Unread entry type</param>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
         public static Task FillEntityCounters<TEntity>(this IUnreadCountersRepository repository,
             ICollection<TEntity> entities, Guid userId,
-            Func<TEntity, Guid> getId, Expression<Func<TEntity, int>> counterField) =>
-            FillCounters(entities, userId, getId, repository.SelectByEntities, counterField);
+            Func<TEntity, Guid> getId, Expression<Func<TEntity, int>> counterField,
+            UnreadEntryType entryType = UnreadEntryType.Message) =>
+            FillCounters(entities, userId, getId, repository.SelectByEntities, counterField, entryType);
 
         private static async Task FillCounters<TEntity>(ICollection<TEntity> entities, Guid userId,
             Func<TEntity, Guid> getId, Func<Guid, UnreadEntryType, Guid[], Task<IDictionary<Guid, int>>> getCounters,
-            Expression<Func<TEntity, int>> counterField)
+            Expression<Func<TEntity, int>> counterField, UnreadEntryType entryType = UnreadEntryType.Message)
         {
             if (counterField.Body is MemberExpression memberExpression &&
                 memberExpression.Member is PropertyInfo property)
             {
-                var counters = await getCounters(userId, UnreadEntryType.Message, entities.Select(getId).ToArray());
+                var counters = await getCounters(userId, entryType, entities.Select(getId).ToArray());
                 foreach (var entity in entities)
                 {
                     property.SetValue(entity, counters[getId(entity)]);

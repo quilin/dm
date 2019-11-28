@@ -52,6 +52,13 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
+        public async Task<Envelope<Game>> GetDetails(Guid gameId)
+        {
+            var game = await readingService.GetGameDetails(gameId);
+            return new Envelope<Game>(mapper.Map<Game>(game));
+        }
+
+        /// <inheritdoc />
         public async Task<Envelope<Game>> Create(Game game)
         {
             var createGame = mapper.Map<CreateGame>(game);
@@ -70,5 +77,12 @@ namespace DM.Web.API.Services.Gaming
 
         /// <inheritdoc />
         public Task Delete(Guid gameId) => deletingService.DeleteGame(gameId);
+
+        /// <inheritdoc />
+        public async Task<ListEnvelope<Tag>> GetTags()
+        {
+            var tags = await readingService.GetTags();
+            return new ListEnvelope<Tag>(tags.Select(mapper.Map<Tag>));
+        }
     }
 }

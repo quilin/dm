@@ -23,7 +23,7 @@ namespace DM.Services.Gaming.Dto
                 participation |= GameParticipation.Owner | GameParticipation.Authority;
             }
 
-            if (game.Assistant.UserId == userId)
+            if (game.Assistant?.UserId == userId)
             {
                 participation |= GameParticipation.Authority;
             }

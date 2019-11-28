@@ -10,7 +10,8 @@ namespace DM.Web.API.Dto.Games
     /// <summary>
     /// Resolver for current user participation
     /// </summary>
-    public class GameParticipationResolver : IValueResolver<ServiceGame, Game, bool>,
+    public class GameParticipationResolver :
+        IValueResolver<ServiceGame, Game, bool>,
         IValueResolver<GameExtended, Game, bool>
     {
         private readonly IIdentity identity;

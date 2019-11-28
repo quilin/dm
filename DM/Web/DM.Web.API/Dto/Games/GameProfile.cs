@@ -35,12 +35,29 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.ViewDice, s => s.MapFrom(g => !g.HideDiceResult))
                 .ForMember(d => d.CommentariesAccess, s => s.MapFrom(g => g.CommentariesAccessMode));
 
+            CreateMap<GameTag, Tag>()
+                .ForMember(d => d.Id, s => s.MapFrom(t => t.Id.EncodeToReadable(t.Title)))
+                .ForMember(d => d.Category, s => s.MapFrom(t => t.GroupTitle));
+
             CreateMap<Game, CreateGame>()
                 .ForMember(g => g.SystemName, s => s.MapFrom(g => g.System))
                 .ForMember(g => g.SettingName, s => s.MapFrom(g => g.Setting))
                 .ForMember(g => g.Info, s => s.MapFrom(g => g.Info))
                 .ForMember(g => g.AssistantLogin, s => s.MapFrom(g => g.Assistant.Login))
                 .ForMember(g => g.Draft, s => s.MapFrom(g => g.Status == GameStatus.Draft))
+                .ForMember(g => g.HideTemper, s => s.MapFrom(g => !g.PrivacySettings.ViewTemper))
+                .ForMember(g => g.HideStory, s => s.MapFrom(g => !g.PrivacySettings.ViewStory))
+                .ForMember(g => g.HideSkills, s => s.MapFrom(g => !g.PrivacySettings.ViewSkills))
+                .ForMember(g => g.HideInventory, s => s.MapFrom(g => !g.PrivacySettings.ViewInventory))
+                .ForMember(g => g.HideDiceResult, s => s.MapFrom(g => !g.PrivacySettings.ViewDice))
+                .ForMember(g => g.ShowPrivateMessages, s => s.MapFrom(g => g.PrivacySettings.ViewPrivates))
+                .ForMember(g => g.CommentariesAccessMode, s => s.MapFrom(g => g.PrivacySettings.CommentariesAccess));
+
+            CreateMap<Game, UpdateGame>()
+                .ForMember(g => g.SystemName, s => s.MapFrom(g => g.System))
+                .ForMember(g => g.SettingName, s => s.MapFrom(g => g.Setting))
+                .ForMember(g => g.Info, s => s.MapFrom(g => g.Info))
+                .ForMember(g => g.AssistantLogin, s => s.MapFrom(g => g.Assistant.Login))
                 .ForMember(g => g.HideTemper, s => s.MapFrom(g => !g.PrivacySettings.ViewTemper))
                 .ForMember(g => g.HideStory, s => s.MapFrom(g => !g.PrivacySettings.ViewStory))
                 .ForMember(g => g.HideSkills, s => s.MapFrom(g => !g.PrivacySettings.ViewSkills))

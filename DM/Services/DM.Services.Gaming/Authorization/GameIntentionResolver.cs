@@ -40,7 +40,7 @@ namespace DM.Services.Gaming.Authorization
         /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention, Game target)
         {
-            if (intention != GameIntention.Read && !user.IsAuthenticated)
+            if (intention != GameIntention.Read && intention != GameIntention.ReadComments && !user.IsAuthenticated)
             {
                 return Task.FromResult(false);
             }
@@ -59,21 +59,22 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.Edit when user.IsAuthenticated:
                 case GameIntention.AdministrateRooms when user.IsAuthenticated:
                     return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority));
-                
+
                 // only the master itself is allowed to remove the game
                 case GameIntention.Delete when user.IsAuthenticated:
                     return Task.FromResult(userIsHighAuthority || user.UserId == target.Master.UserId);
 
                 case GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration:
-                    return Task.FromResult(userIsNanny);
+                    return Task.FromResult(userIsHighAuthority || userIsNanny);
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation:
-                    return Task.FromResult(participation.HasFlag(GameParticipation.Moderator));
+                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator));
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Active:
+                case GameIntention.SetStatusActive when target.Status == GameStatus.Requirement:
                 case GameIntention.SetStatusActive when target.Status == GameStatus.Frozen:
                 case GameIntention.SetStatusActive when target.Status == GameStatus.Finished:
                 case GameIntention.SetStatusActive when target.Status == GameStatus.Closed:
@@ -89,7 +90,7 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.CreateComment when user.IsAuthenticated:
                     return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
                         target.Participation(user.UserId) != GameParticipation.None);
-                
+
                 case GameIntention.CreateCharacter when user.IsAuthenticated:
                     return Task.FromResult(
                         target.Status == GameStatus.Requirement || target.Status == GameStatus.Active);
