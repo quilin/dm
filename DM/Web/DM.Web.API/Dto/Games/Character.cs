@@ -21,7 +21,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Character status
         /// </summary>
-        public CharacterStatus Status { get; set; }
+        public CharacterStatus? Status { get; set; }
 
         /// <summary>
         /// Character name
