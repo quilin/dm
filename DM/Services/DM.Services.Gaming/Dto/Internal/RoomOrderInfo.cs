@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.Dto.Internal
         /// <summary>
         /// Room identifier
         /// </summary>
-        public Guid RoomId { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Room order number

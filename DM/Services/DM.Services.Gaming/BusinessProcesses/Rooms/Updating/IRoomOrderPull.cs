@@ -1,5 +1,5 @@
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Gaming.Dto.Output;
+using DM.Services.Gaming.Dto.Internal;
 using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
@@ -14,6 +14,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         /// </summary>
         /// <param name="room">Room</param>
         /// <returns></returns>
-        (IUpdateBuilder<DbRoom> updateOldPrevious, IUpdateBuilder<DbRoom> updateOldNext) GetPullChanges(Room room);
+        (IUpdateBuilder<DbRoom> updateOldPrevious, IUpdateBuilder<DbRoom> updateOldNext) GetPullChanges(
+            RoomToUpdate room);
     }
 }

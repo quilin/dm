@@ -14,11 +14,6 @@ namespace DM.Services.Gaming.Dto.Output
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Room parent game
-        /// </summary>
-        public Game Game { get; set; }
-
-        /// <summary>
         /// Room title
         /// </summary>
         public string Title { get; set; }
@@ -47,20 +42,5 @@ namespace DM.Services.Gaming.Dto.Output
         /// Previous room identifier
         /// </summary>
         public Guid? PreviousRoomId { get; set; }
-
-        /// <summary>
-        /// Previous room order number
-        /// </summary>
-        public int? PreviousRoomOrderNumber { get; set; }
-
-        /// <summary>
-        /// Next room identifier
-        /// </summary>
-        public Guid? NextRoomId { get; set; }
-
-        /// <summary>
-        /// Next room order number
-        /// </summary>
-        public int? NextRoomOrderNumber { get; set; }
     }
 }

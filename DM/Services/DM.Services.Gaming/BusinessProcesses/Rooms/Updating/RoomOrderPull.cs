@@ -1,5 +1,6 @@
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Gaming.Dto.Internal;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 {
@@ -16,17 +17,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         }
 
         /// <inheritdoc />
-        public (IUpdateBuilder<Room> updateOldPrevious, IUpdateBuilder<Room> updateOldNext)
-            GetPullChanges(Dto.Output.Room room)
+        public (IUpdateBuilder<Room> updateOldPrevious, IUpdateBuilder<Room> updateOldNext) GetPullChanges(
+            RoomToUpdate room)
         {
-            var updateOldPreviousRoom = room.PreviousRoomId.HasValue
-                ? updateBuilderFactory.Create<Room>(room.PreviousRoomId.Value)
-                    .Field(r => r.NextRoomId, room.NextRoomId)
-                : null;
-            var updateOldNextRoom = room.NextRoomId.HasValue
-                ? updateBuilderFactory.Create<Room>(room.NextRoomId.Value)
-                    .Field(r => r.PreviousRoomId, room.PreviousRoomId)
-                : null;
+            var updateOldPreviousRoom = room.PreviousRoom == null
+                ? null
+                : updateBuilderFactory.Create<Room>(room.PreviousRoom.Id)
+                    .Field(r => r.NextRoomId, room.NextRoom?.Id);
+            var updateOldNextRoom = room.NextRoom == null
+                ? null
+                : updateBuilderFactory.Create<Room>(room.NextRoom.Id)
+                    .Field(r => r.PreviousRoomId, room.PreviousRoom?.Id);
             return (updateOldPreviousRoom, updateOldNextRoom);
         }
     }

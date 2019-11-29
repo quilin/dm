@@ -13,6 +13,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
     public interface IRoomUpdatingRepository
     {
         /// <summary>
+        /// Get room for update
+        /// </summary>
+        /// <param name="roomId">Room identifier</param>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId);
+
+        /// <summary>
         /// Get room neighbours
         /// </summary>
         /// <param name="roomId"></param>

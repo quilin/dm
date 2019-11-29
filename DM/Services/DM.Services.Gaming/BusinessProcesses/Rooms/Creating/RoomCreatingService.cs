@@ -53,10 +53,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 
             var roomToCreate = lastRoom == null
                 ? roomFactory.CreateFirst(createRoom)
-                : roomFactory.CreateAfter(createRoom, lastRoom.RoomId, lastRoom.OrderNumber);
+                : roomFactory.CreateAfter(createRoom, lastRoom.Id, lastRoom.OrderNumber);
             var updateLastRoom = lastRoom == null
                 ? null
-                : updateBuilderFactory.Create<DbRoom>(lastRoom.RoomId).Field(r => r.NextRoomId, roomToCreate.RoomId);
+                : updateBuilderFactory.Create<DbRoom>(lastRoom.Id).Field(r => r.NextRoomId, roomToCreate.RoomId);
 
             var room = await repository.Create(roomToCreate, updateLastRoom);
             await unreadCountersRepository.Create(room.Id, game.Id, UnreadEntryType.Message);

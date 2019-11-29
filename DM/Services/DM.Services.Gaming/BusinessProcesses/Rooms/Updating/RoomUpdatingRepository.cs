@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Gaming.BusinessProcesses.Shared;
 using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+        }
+
+        /// <inheritdoc />
+        public Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId)
+        {
+            return dbContext.Rooms
+                .Where(r => r.RoomId == roomId)
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .ProjectTo<RoomToUpdate>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
         }
 
         /// <inheritdoc />

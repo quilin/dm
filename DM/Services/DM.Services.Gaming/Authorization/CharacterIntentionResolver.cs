@@ -15,23 +15,24 @@ namespace DM.Services.Gaming.Authorization
         {
             var characterOwned = target.UserId == user.UserId;
             var gameOwned = target.GameMasterId == user.UserId || target.GameAssistantId == user.UserId;
+            var gameActive = target.GameStatus == GameStatus.Active || target.GameStatus == GameStatus.Requirement;
 
             switch (intention)
             {
                 case CharacterIntention.Edit when characterOwned:
-                    return Task.FromResult(true);
+                    return Task.FromResult(gameActive);
                 case CharacterIntention.Edit when gameOwned:
                     return Task.FromResult(target.IsNpc ||
                                            target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed));
                 case CharacterIntention.EditPrivacySettings when characterOwned:
-                    return Task.FromResult(true);
+                    return Task.FromResult(gameActive);
                 case CharacterIntention.EditMasterSettings when gameOwned:
                     return Task.FromResult(true);
                 case CharacterIntention.Delete when characterOwned:
-                    return Task.FromResult(true);
+                    return Task.FromResult(gameActive);
                 case CharacterIntention.Accept when gameOwned:
                     return Task.FromResult(target.Status == CharacterStatus.Registration ||
-                                                 target.Status == CharacterStatus.Declined);
+                                           target.Status == CharacterStatus.Declined);
                 case CharacterIntention.Decline when gameOwned:
                     return Task.FromResult(target.Status == CharacterStatus.Registration);
                 case CharacterIntention.Kill when gameOwned:
