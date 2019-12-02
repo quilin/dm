@@ -12,12 +12,14 @@ namespace DM.Services.DataAccess.RelationalStorage
         where TEntity : class, new()
     {
         private readonly Guid id;
+        private readonly bool toDelete;
         private readonly IList<Action<TEntity, DbContext>> updateActions;
 
         /// <inheritdoc />
-        public UpdateBuilder(Guid id)
+        public UpdateBuilder(Guid id, bool toDelete = false)
         {
             this.id = id;
+            this.toDelete = toDelete;
             updateActions = new List<Action<TEntity, DbContext>>();
         }
 
@@ -35,11 +37,6 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// <inheritdoc />
         public Guid AttachTo(DbContext dbContext)
         {
-            if (!updateActions.Any())
-            {
-                return id;
-            }
-
             var entity = new TEntity();
             var type = entity.GetType();
             var propertyInfo = type.GetProperty($"{type.Name}Id");
@@ -47,8 +44,21 @@ namespace DM.Services.DataAccess.RelationalStorage
             {
                 throw new UpdateBuilderException($"No key property was found for entity {type.Name}");
             }
-            
+
             propertyInfo.SetValue(entity, id);
+
+            if (toDelete)
+            {
+                dbContext.Set<TEntity>().Attach(entity);
+                dbContext.Entry(entity).State = EntityState.Deleted;
+                return id;
+            }
+
+            if (!updateActions.Any())
+            {
+                return id;
+            }
+
             dbContext.Set<TEntity>().Attach(entity);
             foreach (var updateAction in updateActions)
             {

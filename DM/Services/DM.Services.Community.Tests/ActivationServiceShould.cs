@@ -46,10 +46,10 @@ namespace DM.Services.Community.Tests
             tokenUpdateBuilder = MockUpdateBuilder<Token>();
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             updateBuilderFactory
-                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<User>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(userUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<Token>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(tokenUpdateBuilder.Object);
 
             activationService = new ActivationService(dateTimeProvider.Object,

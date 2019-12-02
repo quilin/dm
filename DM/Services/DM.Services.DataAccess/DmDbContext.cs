@@ -115,7 +115,7 @@ namespace DM.Services.DataAccess
         /// <summary>
         /// Characters in rooms
         /// </summary>
-        public DbSet<ParticipantRoomLink> CharacterRoomLinks { get; set; }
+        public DbSet<ParticipantRoomLink> ParticipantRoomLinks { get; set; }
 
         /// <summary>
         /// Characters

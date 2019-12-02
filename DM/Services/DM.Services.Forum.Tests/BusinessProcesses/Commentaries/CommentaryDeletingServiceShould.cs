@@ -40,10 +40,10 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             topicUpdateBuilder = MockUpdateBuilder<ForumTopic>();
             commentUpdateBuilder = MockUpdateBuilder<Comment>();
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(topicUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<Comment>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(commentUpdateBuilder.Object);
 
             commentaryRepository = Mock<ICommentaryDeletingRepository>();

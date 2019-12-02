@@ -83,7 +83,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             updateBuilder = MockUpdateBuilder<ForumTopic>();
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(updateBuilder.Object);
 
             service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,

@@ -80,7 +80,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// Character access links
         /// </summary>
         [InverseProperty(nameof(ParticipantRoomLink.Room))]
-        public virtual ICollection<ParticipantRoomLink> CharacterLinks { get; set; }
+        public virtual ICollection<ParticipantRoomLink> ParticipantLinks { get; set; }
 
         /// <summary>
         /// Posts

@@ -1,11 +1,8 @@
-using System;
-
 namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
     /// Access policy to room
     /// </summary>
-    [Flags]
     public enum RoomAccessPolicy
     {
         /// <summary>
@@ -16,11 +13,11 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Read only access
         /// </summary>
-        Read = 1,
+        ReadOnly = 1,
 
         /// <summary>
         /// Can write posts access
         /// </summary>
-        Write = 1 << 1
+        Full = 2
     }
 }

@@ -112,6 +112,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="400">Some of claim parameters were invalid</response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to create claims in this room</response>
+        /// <response code="409">Claim already exists</response>
         /// <response code="410">Room not found</response>
         [HttpPost("{id}/claims", Name = nameof(PostClaim))]
         [AuthenticationRequired]
@@ -119,6 +120,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 409)]
         [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PostClaim(Guid id, [FromBody] RoomClaim claim)
         {

@@ -11,8 +11,9 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// Create blank instance of update builder
         /// </summary>
         /// <param name="id">Entity identifier</param>
+        /// <param name="toDelete">Delete entity</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Blank instance of update builder</returns>
-        IUpdateBuilder<TEntity> Create<TEntity>(Guid id) where TEntity : class, new();
+        IUpdateBuilder<TEntity> Create<TEntity>(Guid id, bool toDelete = false) where TEntity : class, new();
     }
 }

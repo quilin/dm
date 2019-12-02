@@ -191,5 +191,59 @@ namespace DM.Services.Core.Dto.Enums
         /// </summary>
         [EventRoutingKey("game.character.deleted")]
         DeletedCharacter = 363,
+
+        /// <summary>
+        /// Character has been declined
+        /// </summary>
+        [EventRoutingKey("game.character.status.declined")]
+        StatusCharacterDeclined = 371,
+
+        /// <summary>
+        /// Character has been accepted
+        /// </summary>
+        [EventRoutingKey("game.character.status.accepted")]
+        StatusCharacterAccepted = 372,
+
+        /// <summary>
+        /// Character has been killed
+        /// </summary>
+        [EventRoutingKey("game.character.status.died")]
+        StatusCharacterDied = 373,
+
+        /// <summary>
+        /// Character has been resurrected
+        /// </summary>
+        [EventRoutingKey("game.character.status.resurrected")]
+        StatusCharacterResurrected = 374,
+
+        /// <summary>
+        /// Character has left the game
+        /// </summary>
+        [EventRoutingKey("game.character.status.left")]
+        StatusCharacterLeft = 375,
+
+        /// <summary>
+        /// Character has returned to the game
+        /// </summary>
+        [EventRoutingKey("game.character.status.returned")]
+        StatusCharacterReturned = 376,
+
+        /// <summary>
+        /// New room has been created
+        /// </summary>
+        [EventRoutingKey("game.room.created")]
+        NewRoom = 381,
+
+        /// <summary>
+        /// Room has been updated
+        /// </summary>
+        [EventRoutingKey("game.room.updated")]
+        ChangedRoom = 382,
+
+        /// <summary>
+        /// Room has been deleted
+        /// </summary>
+        [EventRoutingKey("game.room.deleted")]
+        DeletedRoom = 383
     }
 }

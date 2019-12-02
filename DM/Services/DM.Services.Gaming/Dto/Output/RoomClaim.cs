@@ -1,22 +1,28 @@
+using System;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Web.API.Dto.Users;
 
-namespace DM.Web.API.Dto.Games
+namespace DM.Services.Gaming.Dto.Output
 {
     /// <summary>
-    /// API DTO model for room claim
+    /// DTO model for room claim
     /// </summary>
     public class RoomClaim
     {
         /// <summary>
-        /// Claim identifier
+        /// Identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Room identifier
+        /// </summary>
+        public Guid RoomId { get; set; }
 
         /// <summary>
         /// Access policy
         /// </summary>
-        public RoomAccessPolicy AccessPolicy { get; set; }
+        public RoomAccessPolicy Policy { get; set; }
 
         /// <summary>
         /// Character
@@ -26,6 +32,6 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Reader or character author
         /// </summary>
-        public User User { get; set; }
+        public GeneralUser User { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
             updateBuilder = MockUpdateBuilder<ForumTopic>();
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(updateBuilder.Object);
 
             updatingRepository = Mock<ITopicUpdatingRepository>();

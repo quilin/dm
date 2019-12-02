@@ -40,6 +40,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Shared
                 room.AccessType == RoomAccessType.Open ||
                 room.AccessType == RoomAccessType.Secret && (
                     room.Game.MasterId == userId || room.Game.AssistantId == userId ||
-                    room.CharacterLinks.Any(l => l.Character.UserId == userId));
+                    room.ParticipantLinks.Any(l => l.Character.UserId == userId));
     }
 }

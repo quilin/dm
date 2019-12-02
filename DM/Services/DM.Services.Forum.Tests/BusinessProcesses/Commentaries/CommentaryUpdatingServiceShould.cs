@@ -54,7 +54,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             commentUpdateBuilder = MockUpdateBuilder<Comment>();
             updateBuilderFactory
-                .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
+                .Setup(f => f.Create<Comment>(It.IsAny<Guid>(), It.IsAny<bool>()))
                 .Returns(commentUpdateBuilder.Object);
 
             commentRepository = Mock<ICommentaryUpdatingRepository>();
