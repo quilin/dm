@@ -17,14 +17,17 @@ namespace DM.Web.API.Controllers.v1.Gaming
     public class RoomController : Controller
     {
         private readonly IRoomApiService roomApiService;
+        private readonly IRoomClaimApiService claimApiService;
         private readonly IPostApiService postApiService;
 
         /// <inheritdoc />
         public RoomController(
             IRoomApiService roomApiService,
+            IRoomClaimApiService claimApiService,
             IPostApiService postApiService)
         {
             this.roomApiService = roomApiService;
+            this.claimApiService = claimApiService;
             this.postApiService = postApiService;
         }
 
@@ -77,6 +80,93 @@ namespace DM.Web.API.Controllers.v1.Gaming
             await roomApiService.Delete(id);
             return NoContent();
         }
+
+        /// <summary>
+        /// Get list of room claims
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        /// <response code="410">Room not found</response>
+        [HttpGet("{id}/claims", Name = nameof(GetClaims))]
+        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> GetClaims(Guid id) => Ok(await claimApiService.GetAll(id));
+
+        /// <summary>
+        /// Get room claim
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        /// <response code="410">Claim not found</response>
+        [HttpGet("rooms/claims/{id}", Name = nameof(GetClaim))]
+        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> GetClaim(Guid id) => Ok(await claimApiService.Get(id));
+
+        /// <summary>
+        /// Post new room claim
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="claim"></param>
+        /// <response code="201"></response>
+        /// <response code="400">Some of claim parameters were invalid</response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to create claims in this room</response>
+        /// <response code="410">Room not found</response>
+        [HttpPost("{id}/claims", Name = nameof(PostClaim))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<RoomClaim>), 201)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> PostClaim(Guid id, [FromBody] RoomClaim claim)
+        {
+            var result = await claimApiService.Create(id, claim);
+            return CreatedAtRoute(nameof(GetClaim),
+                new {id = result.Resource.Id}, result);
+        }
+
+        /// <summary>
+        /// Update room claim
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="claim"></param>
+        /// <response code="200"></response>
+        /// <response code="400">Some of claim parameters were invalid</response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to update this claim</response>
+        /// <response code="410">Claim not found</response>
+        [HttpPut("rooms/claims/{id}", Name = nameof(UpdateClaim))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<RoomClaim>), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> UpdateClaim(Guid id, [FromBody] RoomClaim claim) =>
+            Ok(await claimApiService.Update(id, claim));
+
+        /// <summary>
+        /// Delete room claim
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to delete this claim</response>
+        /// <response code="410">Claim not found</response>
+        [HttpDelete("rooms/claims/{id}", Name = nameof(DeleteClaim))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> DeleteClaim(Guid id)
+        {
+            await claimApiService.Delete(id);
+            return NoContent();
+        }
+            
 
         /// <summary>
         /// Get list of posts
