@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -38,5 +39,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         /// </summary>
         [ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
+
+        /// <summary>
+        /// Room links
+        /// </summary>
+        [InverseProperty(nameof(ParticipantRoomLink.Reader))]
+        public virtual ICollection<ParticipantRoomLink> RoomLinks { get; set; }
     }
 }

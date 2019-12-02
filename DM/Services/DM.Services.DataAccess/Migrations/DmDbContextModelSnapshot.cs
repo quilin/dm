@@ -439,24 +439,6 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("BlackListLinks");
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.CharacterRoomLink", b =>
-                {
-                    b.Property<Guid>("CharacterRoomLinkId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CharacterId");
-
-                    b.Property<Guid>("RoomId");
-
-                    b.HasKey("CharacterRoomLinkId");
-
-                    b.HasIndex("CharacterId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("CharacterRoomLinks");
-                });
-
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag", b =>
                 {
                     b.Property<Guid>("GameTagId")
@@ -473,6 +455,26 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("GameTags");
+                });
+
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.ParticipantRoomLink", b =>
+                {
+                    b.Property<Guid>("ParticipantRoomLinkId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ParticipantId");
+
+                    b.Property<int>("Policy");
+
+                    b.Property<Guid>("RoomId");
+
+                    b.HasKey("ParticipantRoomLinkId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("ParticipantRoomLinks");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PostAnticipation", b =>
@@ -959,19 +961,6 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.CharacterRoomLink", b =>
-                {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
-                        .WithMany("RoomLinks")
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
-                        .WithMany("CharacterLinks")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag", b =>
                 {
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
@@ -982,6 +971,24 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Tag", "Tag")
                         .WithMany("GameTags")
                         .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.ParticipantRoomLink", b =>
+                {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
+                        .WithMany("RoomLinks")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Links.Reader", "Reader")
+                        .WithMany("RoomLinks")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
+                        .WithMany("CharacterLinks")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

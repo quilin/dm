@@ -79,8 +79,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// <summary>
         /// Character access links
         /// </summary>
-        [InverseProperty(nameof(CharacterRoomLink.Room))]
-        public virtual ICollection<CharacterRoomLink> CharacterLinks { get; set; }
+        [InverseProperty(nameof(ParticipantRoomLink.Room))]
+        public virtual ICollection<ParticipantRoomLink> CharacterLinks { get; set; }
 
         /// <summary>
         /// Posts

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
 using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 
@@ -9,19 +10,19 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     /// <summary>
     /// DAL model for character room link
     /// </summary>
-    [Table("CharacterRoomLinks")]
-    public class CharacterRoomLink
+    [Table("ParticipantRoomLinks")]
+    public class ParticipantRoomLink
     {
         /// <summary>
         /// Link identifier
         /// </summary>
         [Key]
-        public Guid CharacterRoomLinkId { get; set; }
+        public Guid ParticipantRoomLinkId { get; set; }
 
         /// <summary>
-        /// Character identifier
+        /// Participant identifier
         /// </summary>
-        public Guid CharacterId { get; set; }
+        public Guid ParticipantId { get; set; }
 
         /// <summary>
         /// Room identifier
@@ -29,10 +30,21 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         public Guid RoomId { get; set; }
 
         /// <summary>
+        /// Access policy
+        /// </summary>
+        public RoomAccessPolicy Policy { get; set; }
+
+        /// <summary>
         /// Character
         /// </summary>
-        [ForeignKey(nameof(CharacterId))]
+        [ForeignKey(nameof(ParticipantId))]
         public virtual Character Character { get; set; }
+
+        /// <summary>
+        /// Reader
+        /// </summary>
+        [ForeignKey(nameof(ParticipantId))]
+        public virtual Reader Reader { get; set; }
 
         /// <summary>
         /// Room
