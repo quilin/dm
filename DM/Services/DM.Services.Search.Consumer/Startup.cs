@@ -4,6 +4,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
@@ -74,8 +75,8 @@ namespace DM.Services.Search.Consumer
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterModule<MessageQueuingModule>();
-            builder.RegisterModule<SearchEngineModule>();
+            builder.RegisterModuleOnce<MessageQueuingModule>();
+            builder.RegisterModuleOnce<SearchEngineModule>();
             builder.Populate(services);
 
             var container = builder.Build();
