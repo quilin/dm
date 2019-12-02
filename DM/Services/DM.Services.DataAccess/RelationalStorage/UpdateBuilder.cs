@@ -12,26 +12,30 @@ namespace DM.Services.DataAccess.RelationalStorage
         where TEntity : class, new()
     {
         private readonly Guid id;
-        private readonly IList<(Expression<Func<TEntity, object>>, object)> fields;
+        private readonly IList<Action<TEntity, DbContext>> updateActions;
 
         /// <inheritdoc />
         public UpdateBuilder(Guid id)
         {
             this.id = id;
-            fields = new List<(Expression<Func<TEntity, object>>, object)>();
+            updateActions = new List<Action<TEntity, DbContext>>();
         }
 
         /// <inheritdoc />
-        public IUpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value)
+        public IUpdateBuilder<TEntity> Field<TValue>(Expression<Func<TEntity, TValue>> field, TValue value)
         {
-            fields.Add((field, value));
+            updateActions.Add((entity, dbContext) =>
+            {
+                SetPropertyValue(entity, field, value);
+                dbContext.Entry(entity).Property(field).IsModified = true;
+            });
             return this;
         }
 
         /// <inheritdoc />
         public Guid AttachTo(DbContext dbContext)
         {
-            if (!fields.Any())
+            if (!updateActions.Any())
             {
                 return id;
             }
@@ -46,17 +50,16 @@ namespace DM.Services.DataAccess.RelationalStorage
             
             propertyInfo.SetValue(entity, id);
             dbContext.Set<TEntity>().Attach(entity);
-            foreach (var (field, value) in fields)
+            foreach (var updateAction in updateActions)
             {
-                SetPropertyValue(entity, field, value);
-                dbContext.Entry(entity).Property(field).IsModified = true;
+                updateAction.Invoke(entity, dbContext);
             }
 
             return id;
         }
 
-        private static void SetPropertyValue(TEntity target,
-            Expression<Func<TEntity, object>> memberLambda, object value)
+        private static void SetPropertyValue<TValue>(TEntity target,
+            Expression<Func<TEntity, TValue>> memberLambda, TValue value)
         {
             MemberExpression memberExpression;
             switch (memberLambda.Body)

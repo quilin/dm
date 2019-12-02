@@ -16,8 +16,9 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// </summary>
         /// <param name="field">Field lambda</param>
         /// <param name="value">Field value</param>
+        /// <typeparam name="TValue">Field value type</typeparam>
         /// <returns>Builder itself for chaining</returns>
-        IUpdateBuilder<TEntity> Field(Expression<Func<TEntity, object>> field, object value);
+        IUpdateBuilder<TEntity> Field<TValue>(Expression<Func<TEntity, TValue>> field, TValue value);
 
         /// <summary>
         /// Attach update to db context
