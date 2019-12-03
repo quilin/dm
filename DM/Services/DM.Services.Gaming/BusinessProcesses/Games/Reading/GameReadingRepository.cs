@@ -98,7 +98,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public async Task<IEnumerable<GameTag>> GetTags()
         {
             return await dbContext.Tags
-                .ProjectTo<GameTag>()
+                .ProjectTo<GameTag>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
     }
