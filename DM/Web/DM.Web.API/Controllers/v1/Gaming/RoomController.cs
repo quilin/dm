@@ -93,17 +93,6 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> GetClaims(Guid id) => Ok(await claimApiService.GetAll(id));
 
         /// <summary>
-        /// Get room claim
-        /// </summary>
-        /// <param name="id"></param>
-        /// <response code="200"></response>
-        /// <response code="410">Claim not found</response>
-        [HttpGet("rooms/claims/{id}", Name = nameof(GetClaim))]
-        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 410)]
-        public async Task<IActionResult> GetClaim(Guid id) => Ok(await claimApiService.Get(id));
-
-        /// <summary>
         /// Post new room claim
         /// </summary>
         /// <param name="id"></param>
@@ -130,6 +119,17 @@ namespace DM.Web.API.Controllers.v1.Gaming
         }
 
         /// <summary>
+        /// Get room claim
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200"></response>
+        /// <response code="410">Claim not found</response>
+        [HttpGet("claims/{id}", Name = nameof(GetClaim))]
+        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> GetClaim(Guid id) => Ok(await claimApiService.Get(id));
+
+        /// <summary>
         /// Update room claim
         /// </summary>
         /// <param name="id"></param>
@@ -139,7 +139,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to update this claim</response>
         /// <response code="410">Claim not found</response>
-        [HttpPut("rooms/claims/{id}", Name = nameof(UpdateClaim))]
+        [HttpPut("claims/{id}", Name = nameof(UpdateClaim))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<RoomClaim>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -157,7 +157,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to delete this claim</response>
         /// <response code="410">Claim not found</response>
-        [HttpDelete("rooms/claims/{id}", Name = nameof(DeleteClaim))]
+        [HttpDelete("claims/{id}", Name = nameof(DeleteClaim))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]
