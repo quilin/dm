@@ -14,6 +14,11 @@ namespace DM.Services.Gaming.Dto.Output
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Game identifier
+        /// </summary>
+        public Guid GameId { get; set; }
+
+        /// <summary>
         /// Room title
         /// </summary>
         public string Title { get; set; }
@@ -42,5 +47,10 @@ namespace DM.Services.Gaming.Dto.Output
         /// Previous room identifier
         /// </summary>
         public Guid? PreviousRoomId { get; set; }
+
+        /// <summary>
+        /// Default room name
+        /// </summary>
+        public const string DefaultRoomName = "Основная комната";
     }
 }
