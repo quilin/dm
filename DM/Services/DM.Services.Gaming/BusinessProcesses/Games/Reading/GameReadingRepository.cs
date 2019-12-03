@@ -51,6 +51,30 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<Game>> GetOwn(Guid userId)
+        {
+            return await dbContext.Games
+                .Where(AccessibilityFilters.GameAvailable(userId))
+                .Where(g => g.Characters.Any(c =>
+                        !c.IsRemoved && c.Status == CharacterStatus.Active && c.UserId == userId) ||
+                    g.Readers.Any(r => r.UserId == userId) ||
+                    g.MasterId == userId || g.AssistantId == userId || g.NannyId == userId)
+                .ProjectTo<Game>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<IDictionary<Guid, IEnumerable<Guid>>> GetAvailableRoomIds(IEnumerable<Guid> gameIds, Guid userId)
+        {
+            return await dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .Where(r => gameIds.Contains(r.GameId))
+                .Select(r => new {r.RoomId, r.GameId})
+                .GroupBy(r => r.GameId)
+                .ToDictionaryAsync(g => g.Key, g => g.Select(r => r.RoomId));
+        }
+
+        /// <inheritdoc />
         public Task<GameExtended> GetGameDetails(Guid gameId, Guid userId)
         {
             return dbContext.Games

@@ -45,6 +45,13 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
+        public async Task<ListEnvelope<Game>> GetOwn()
+        {
+            var games = await readingService.GetOwnGames();
+            return new ListEnvelope<Game>(games.Select(mapper.Map<Game>));
+        }
+
+        /// <inheritdoc />
         public async Task<Envelope<Game>> Get(Guid gameId)
         {
             var game = await readingService.GetGame(gameId);

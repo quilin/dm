@@ -23,7 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
             return new ParticipantRoomLink
             {
                 ParticipantRoomLinkId = guidFactory.Create(),
-                Policy = roomClaim.AccessPolicy,
+                Policy = roomClaim.Policy,
                 RoomId = roomClaim.RoomId,
                 ParticipantId = participantId
             };

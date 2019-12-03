@@ -48,6 +48,17 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> GetGames([FromQuery] GamesQuery q) => Ok(await gameApiService.Get(q));
 
         /// <summary>
+        /// Get list of user own games
+        /// </summary>
+        /// <response code="200"></response>
+        /// <response code="401">User must be authenticated</response>
+        [HttpGet("own", Name = nameof(GetOwnGames))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(ListEnvelope<Game>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        public async Task<IActionResult> GetOwnGames() => Ok(await gameApiService.GetOwn());
+
+        /// <summary>
         /// Get list of all game tags
         /// </summary>
         /// <response code="200"></response>

@@ -30,6 +30,19 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId);
 
         /// <summary>
+        /// Get list of user owned active games
+        /// </summary>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task<IEnumerable<Game>> GetOwn(Guid userId);
+
+        /// <summary>
+        /// Get available room identifiers grouped by game ids
+        /// </summary>
+        /// <returns></returns>
+        Task<IDictionary<Guid, IEnumerable<Guid>>> GetAvailableRoomIds(IEnumerable<Guid> gameIds, Guid userId);
+
+        /// <summary>
         /// Get single game model
         /// </summary>
         /// <param name="gameId">Game identifier</param>

@@ -13,7 +13,7 @@ namespace DM.Services.Gaming.Dto.Input
             RuleFor(c => c.ClaimId)
                 .NotEmpty().WithMessage(ValidationError.Empty);
 
-            RuleFor(c => c.AccessPolicy)
+            RuleFor(c => c.Policy)
                 .Must(c => c != RoomAccessPolicy.NoAccess).WithMessage(ValidationError.Invalid);
         }
     }

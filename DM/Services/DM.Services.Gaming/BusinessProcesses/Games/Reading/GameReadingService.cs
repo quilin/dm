@@ -55,6 +55,33 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<Game>> GetOwnGames()
+        {
+            var currentUserId = identity.User.UserId;
+            var games = (await repository.GetOwn(currentUserId)).ToArray();
+
+            await unreadCountersRepository.FillEntityCounters(
+                games, currentUserId, g => g.Id, g => g.UnreadCommentsCount);
+            await unreadCountersRepository.FillEntityCounters(
+                games, currentUserId, g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
+
+            var gameRooms = await repository.GetAvailableRoomIds(games.Select(g => g.Id), currentUserId);
+            var allRoomIds = gameRooms.SelectMany(r => r.Value).ToArray();
+            var unreadPostCounters = await unreadCountersRepository.SelectByEntities(
+                currentUserId, UnreadEntryType.Message, allRoomIds);
+            foreach (var game in games)
+            {
+                if (gameRooms.TryGetValue(game.Id, out var roomIds))
+                {
+                    game.UnreadPostsCount = roomIds.Sum(id =>
+                        unreadPostCounters.TryGetValue(id, out var count) ? count : 0);
+                }
+            }
+
+            return games;
+        }
+
+        /// <inheritdoc />
         public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query,
             GameStatus? status)
         {

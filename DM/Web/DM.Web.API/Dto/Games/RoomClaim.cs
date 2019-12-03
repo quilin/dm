@@ -1,3 +1,4 @@
+using System;
 using DM.Services.Core.Dto.Enums;
 using DM.Web.API.Dto.Users;
 
@@ -11,12 +12,12 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Claim identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Access policy
         /// </summary>
-        public RoomAccessPolicy AccessPolicy { get; set; }
+        public RoomAccessPolicy Policy { get; set; }
 
         /// <summary>
         /// Character

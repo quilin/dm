@@ -19,6 +19,12 @@ namespace DM.Web.API.Services.Gaming
         Task<ListEnvelope<Game>> Get(GamesQuery gamesQuery);
 
         /// <summary>
+        /// Get user owned games
+        /// </summary>
+        /// <returns></returns>
+        Task<ListEnvelope<Game>> GetOwn();
+
+        /// <summary>
         /// Get certain game
         /// </summary>
         /// <param name="gameId">Game identifier</param>

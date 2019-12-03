@@ -54,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
             var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
             await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
 
-            if (oldClaim.User != null && updateRoomClaim.AccessPolicy == RoomAccessPolicy.Full)
+            if (oldClaim.User != null && updateRoomClaim.Policy == RoomAccessPolicy.Full)
             {
                 throw new HttpBadRequestException(new Dictionary<string, string>
                 {
@@ -63,7 +63,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
             }
 
             var updateBuilder = updateBuilderFactory.Create<ParticipantRoomLink>(updateRoomClaim.ClaimId)
-                .Field(c => c.Policy, updateRoomClaim.AccessPolicy);
+                .Field(c => c.Policy, updateRoomClaim.Policy);
             return await repository.Update(updateBuilder);
         }
     }

@@ -12,7 +12,7 @@ namespace DM.Services.Gaming.Dto.Input
         public CreateRoomClaimValidator(
             IUserRepository userRepository)
         {
-            RuleFor(c => c.AccessPolicy)
+            RuleFor(c => c.Policy)
                 .Must(p => p != RoomAccessPolicy.NoAccess).WithMessage(ValidationError.Invalid);
 
             When(c => c.CharacterId.HasValue, () =>
@@ -24,7 +24,7 @@ namespace DM.Services.Gaming.Dto.Input
                 RuleFor(c => c.ReaderLogin)
                     .NotEmpty().WithMessage(ValidationError.Empty)
                     .MustAsync(userRepository.UserExists).WithMessage(ValidationError.Invalid);
-                RuleFor(c => c.AccessPolicy)
+                RuleFor(c => c.Policy)
                     .Must(c => c == RoomAccessPolicy.ReadOnly).WithMessage(ValidationError.Invalid);
             });
         }

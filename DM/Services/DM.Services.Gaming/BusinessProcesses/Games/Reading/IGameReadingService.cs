@@ -19,6 +19,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         Task<IEnumerable<GameTag>> GetTags();
 
         /// <summary>
+        /// Get user games
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Game>> GetOwnGames();
+
+        /// <summary>
         /// Get games page
         /// </summary>
         /// <param name="query">Paging query</param>

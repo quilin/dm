@@ -26,6 +26,6 @@ namespace DM.Services.Gaming.Dto.Input
         /// <summary>
         /// Access policy
         /// </summary>
-        public RoomAccessPolicy AccessPolicy { get; set; }
+        public RoomAccessPolicy Policy { get; set; }
     }
 }
