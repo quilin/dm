@@ -1,0 +1,50 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using DM.Web.Classic.Extensions.UserExtensions
+@using DM.Web.Core.Extensions.EnumExtensions
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.GamesList.GamesListItem.GamesListItemViewModel
+<div class="modulesG-34 modulesList-item-wrapper">
+    <div class="modulesG-row">
+        <div class="modulesG-col-1 modulesG-span-2"><div class="modulesG-contentWrapper grid-number">@Model.Number</div></div>
+        <div class="modulesG-col-3 modulesG-span-10">
+            <div class="modulesG-contentWrapper">
+                @Html.ActionLink(Model.Title, "Index", "Game", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.Title)}}, null)
+                <span class="notification-unread">
+                    <a href="@Url.Action("GetFirstUnreadPostInModule", "Post", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.Title)}})">@Html.UnreadPostsIcon(Model.UnreadCountPosts, false)</a>
+                    <span class="notificaion-unread-separator">|</span>
+                    <a href="@Url.Action("Index", "GameCommentaries", new RouteValueDictionary {{"moduleId", Model.GameId}})">@Html.UnreadCommentsIcon(Model.UnreadCountComments, false)</a>
+                </span>
+            </div>
+        </div>
+        <div class="modulesG-col-13 modulesG-span-6">
+            <div class="modulesG-contentWrapper">@Html.UserLink(Model.Master)</div>
+        </div>
+        <div class="modulesG-col-19 modulesG-span-13">
+            <div class="modulesG-contentWrapper">
+                @if (Model.Tags != null)
+                {
+                    var counter = 0;
+                    foreach (var tag in Model.Tags)
+                    {
+                        @(counter++ == 0 ? string.Empty : ",")
+                        @Html.ActionLink(tag.Title, "Tags", "GamesList",
+                            new RouteValueDictionary
+                            {
+                                {"tagId", tag.Id.EncodeToReadable(tag.Title)},
+                                { "pageNumber", null}
+                            },
+                            tag.Id == Model.SearchedTagId
+                                ? new Dictionary<string, object>{{"style", "font-weight:bold"}}
+                                : null)
+                    }
+                }
+            </div>
+        </div>
+        <div class="modulesG-col-32 modulesG-span-3">
+            <div class="modulesG-contentWrapper">
+                @Model.Status.GetDescription()
+            </div>
+        </div>
+    </div>
+</div>

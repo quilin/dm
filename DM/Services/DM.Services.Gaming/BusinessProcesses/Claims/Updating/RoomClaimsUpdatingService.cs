@@ -50,7 +50,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         public async Task<RoomClaim> Update(UpdateRoomClaim updateRoomClaim)
         {
             await validator.ValidateAndThrowAsync(updateRoomClaim);
-            var oldClaim = await readingRepository.Get(updateRoomClaim.ClaimId, identity.User.UserId);
+            var oldClaim = await readingRepository.GetClaim(updateRoomClaim.ClaimId, identity.User.UserId);
             var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
             await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
 

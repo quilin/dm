@@ -1,0 +1,65 @@
+﻿@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.GamesList.GamesListViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
+}
+@section LeftColumn
+{
+    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+}
+
+<h1 class="content-pageTitle">@Model.PageTitle</h1>
+
+<div id="Paginator" class="paginator"></div>
+<div class="paginator-fixed-wrapper">
+    <div id="PaginatorHover" class="paginator-fixed"></div>
+</div>
+<div class="modulesG-34 modulesList-header">
+    <div class="modulesG-row">
+        <div class="modulesG-col-1 modulesG-span-2">
+            <div class="modulesG-contentWrapper grid-number">#</div>
+        </div>
+        <div class="modulesG-col-3 modulesG-span-10">
+            <div class="modulesG-contentWrapper">Название</div>
+        </div>
+        <div class="modulesG-col-13 modulesG-span-6">
+            <div class="modulesG-contentWrapper">Мастер</div>
+        </div>
+        <div class="modulesG-col-19 modulesG-span-13">
+            <div class="modulesG-contentWrapper">Теги</div>
+        </div>
+        <div class="modulesG-col-32 modulesG-span-3">
+            <div class="modulesG-contentWrapper">Статус</div>
+        </div>
+    </div>
+</div>
+<div id="Container">
+    @await Html.PartialAsync("GamesList", Model.Games)
+</div>
+
+@section FooterScript
+{
+    <script>
+        @{
+            var routeValues = new RouteValueDictionary { {"entityNumber", "__pn__"} };
+            if (Model.Status.HasValue)
+            {
+                routeValues.Add("status", Model.Status.Value);
+            }
+            if (Model.TagId.HasValue)
+            {
+                routeValues.Add("tagId", Model.TagId.Value.EncodeToReadable(Model.TagTitle));
+            }
+        }
+        var forumControl = new DM.PagedListControl({
+            totalPages: @Model.TotalPagesCount,
+            currentPage: @Model.CurrentPage,
+            pageSize: @Model.PageSize,
+            entityNumber: @Model.EntityNumber,
+            pageUrlTemplate: "@Url.Action(Model.Status.HasValue ? "Index" : "Tags", routeValues)"
+        });
+        DM.Ready();
+    </script>
+}

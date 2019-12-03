@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 
@@ -98,5 +99,10 @@ namespace DM.Services.Gaming.Dto.Output
         /// GM access policy
         /// </summary>
         public CharacterAccessPolicy AccessPolicy { get; set; }
+
+        /// <summary>
+        /// Character attribute
+        /// </summary>
+        public IEnumerable<CharacterAttribute> Attributes { get; set; }
     }
 }

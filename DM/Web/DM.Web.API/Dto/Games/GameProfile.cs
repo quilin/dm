@@ -14,6 +14,8 @@ namespace DM.Web.API.Dto.Games
         /// <inheritdoc />
         public GameProfile()
         {
+            CreateMap<GamesQuery, DM.Services.Gaming.Dto.Input.GamesQuery>();
+
             CreateMap<DM.Services.Gaming.Dto.Output.Game, Game>()
                 .Include<GameExtended, Game>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.Id.EncodeToReadable(g.Title)))

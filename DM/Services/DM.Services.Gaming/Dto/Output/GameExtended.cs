@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace DM.Services.Gaming.Dto.Output
 {
     /// <summary>
@@ -7,11 +5,6 @@ namespace DM.Services.Gaming.Dto.Output
     /// </summary>
     public class GameExtended : Game
     {
-        /// <summary>
-        /// Game tags
-        /// </summary>
-        public IEnumerable<GameTag> Tags { get; set; }
-
         /// <summary>
         /// Game public information
         /// </summary>
@@ -46,6 +39,11 @@ namespace DM.Services.Gaming.Dto.Output
         /// Only GM and post author can see dice roll result
         /// </summary>
         public bool HideDiceResult { get; set; }
+
+        /// <summary>
+        /// Disable character alignment
+        /// </summary>
+        public bool DisableAlignment { get; set; }
 
         /// <summary>
         /// Any user can read private messages within posts

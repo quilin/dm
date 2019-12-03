@@ -9,10 +9,10 @@ using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Common.Extensions;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -82,14 +82,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query,
-            GameStatus? status)
+        public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(GamesQuery query)
         {
             var currentUserId = identity.User.UserId;
-            var totalCount = await repository.Count(status, currentUserId);
+            var totalCount = await repository.Count(query, currentUserId);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
 
-            var games = (await repository.GetGames(pagingData, status, currentUserId)).ToArray();
+            var games = (await repository.GetGames(pagingData, query, currentUserId)).ToArray();
             await unreadCountersRepository.FillEntityCounters(games, currentUserId,
                 g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
 

@@ -1,0 +1,18 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.GameActions.GameRooms.RoomLinkViewModel
+<li class="leftMenu-list-item moduleRooms-roomItem">
+    -
+    @if (Model.Disabled)
+    {
+        <strong>@Model.Title @Html.UnreadPostsIcon(Model.UnreadCount, true)</strong>
+    }
+    else
+    {
+        <a href="@Url.Action("LastUnread", "Post", new RouteValueDictionary {{"roomIdEncoded", Model.RoomId.EncodeToReadable(Model.Title)}})">
+            @Model.Title
+            @Html.UnreadPostsIcon(Model.UnreadCount, true)
+        </a>
+    }
+</li>

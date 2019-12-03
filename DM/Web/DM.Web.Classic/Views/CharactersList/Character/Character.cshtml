@@ -1,0 +1,60 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@model DM.Web.Classic.Views.CharactersList.Character.CharacterViewModel
+<div class="charactersList-characterWrapper" id="CharacterWrapper_@(Model.CharacterId)" data-character-id="@Model.CharacterId">
+    <div class="charactersList-characterPreview" id="CharacterPreview_@(Model.CharacterId)">
+        @await Html.PartialAsync("~/Views/CharactersList/Character/CharacterPreview.cshtml", Model)
+    </div>
+    <div class="charactersList-characterInfo" id="CharacterInfo_@(Model.CharacterId)">
+        @Html.DisplayFor(m => m.Attributes)
+
+        @if (!string.IsNullOrEmpty(Model.Appearance))
+        {
+            <div class="charactersList-characterInfoTitle">Внешность</div>
+            <div class="charactersList-characterInfo-text">@Html.Raw(Model.Appearance)</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Temper) && Model.DisplayTemper)
+        {
+            <div class="charactersList-characterInfoTitle">
+                Характер
+                @if (Model.TemperHidden)
+                {
+                    @IconFont.Render(IconType.Spoiler)
+                }
+            </div>
+            <div class="charactersList-characterInfo-text">@Html.Raw(Model.Temper)</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Story) && Model.DisplayStory)
+        {
+            <div class="charactersList-characterInfoTitle">
+                История
+                @if (Model.StoryHidden)
+                {
+                    @IconFont.Render(IconType.Spoiler)
+                }
+            </div>
+            <div class="charactersList-characterInfo-text">@Html.Raw(Model.Story)</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Skills) && Model.DisplaySkills)
+        {
+            <div class="charactersList-characterInfoTitle">
+                Навыки
+                @if (Model.SkillsHidden)
+                {
+                    @IconFont.Render(IconType.Spoiler)
+                }
+            </div>
+            <div class="charactersList-characterInfo-text">@Html.Raw(Model.Skills)</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Inventory) && Model.DisplayInventory)
+        {
+            <div class="charactersList-characterInfoTitle">
+                Инвентарь
+                @if (Model.InventoryHidden)
+                {
+                    @IconFont.Render(IconType.Spoiler)
+                }
+            </div>
+            <div class="charactersList-characterInfo-text">@Html.Raw(Model.Inventory)</div>
+        }
+    </div>
+</div>

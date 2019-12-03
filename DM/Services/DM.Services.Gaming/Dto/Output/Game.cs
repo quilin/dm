@@ -26,6 +26,11 @@ namespace DM.Services.Gaming.Dto.Output
         public GameStatus Status { get; set; }
 
         /// <summary>
+        /// Game tags
+        /// </summary>
+        public IEnumerable<GameTag> Tags { get; set; }
+
+        /// <summary>
         /// Date the game was first released
         /// </summary>
         public DateTimeOffset? ReleaseDate { get; set; }

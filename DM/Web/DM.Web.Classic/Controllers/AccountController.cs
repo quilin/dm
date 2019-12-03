@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Community.BusinessProcesses.Registration;
@@ -72,6 +73,17 @@ namespace DM.Web.Classic.Controllers
             return loggedIdentity.Error != AuthenticationError.NoError
                 ? AjaxFormError(loggedIdentity.Error)
                 : Content(loginForm.RedirectUrl);
+        }
+
+        public async Task<IActionResult> LogInAs(Guid userId)
+        {
+            var loggedIdentity = await webAuthenticationService.Authenticate(new UnconditionalCredentials
+            {
+                UserId = userId
+            }, HttpContext);
+            return loggedIdentity.Error != AuthenticationError.NoError
+                ? AjaxFormError(loggedIdentity.Error)
+                : new EmptyResult();
         }
 
         public ActionResult LogOut()

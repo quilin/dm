@@ -1,0 +1,107 @@
+﻿@using DM.Web.Classic.Extensions.HtmlHelperExtensions
+@using DM.Web.Classic.Extensions.HtmlHelperExtensions.Dropdown
+@using DM.Web.Classic.Extensions.IconFontExtensions
+@model DM.Web.Classic.Views.EditGame.EditGameViewModel
+
+@using (Html.BeginForm("SaveChanges", "EditGame", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.EditGameForm.ModuleId)
+    <div class="module-generalOptions">
+        <div class="form-field-wrapper">
+            @Html.LabelFor(m => m.EditGameForm.Title, "Название", new {@class = "form-field-label"})
+            @Html.TextBoxFor(m => m.EditGameForm.Title, new Dictionary<string, object> { { "class", "module-attributes-general-input" } })
+            @Html.ValidationMessageFor(m => m.EditGameForm.Title, null, new Dictionary<string, object>{ {"class", "field-validation-error-next-line"} })
+        </div>
+        <div class="form-field-wrapper">
+            @Html.LabelFor(m => m.EditGameForm.SystemName, "Система", new {@class = "form-field-label"})
+            @Html.TextBoxFor(m => m.EditGameForm.SystemName, new Dictionary<string, object> { { "class", "module-attributes-general-input" } })
+            @Html.ValidationMessageFor(m => m.EditGameForm.SystemName, null, new Dictionary<string, object>{ {"class", "field-validation-error-next-line"} })
+        </div>
+        <div class="form-field-wrapper">
+            @Html.LabelFor(m => m.EditGameForm.SettingName, "Сеттинг", new {@class = "form-field-label"})
+            @Html.TextBoxFor(m => m.EditGameForm.SettingName, new Dictionary<string, object> { { "class", "module-attributes-general-input" } })
+            @Html.ValidationMessageFor(m => m.EditGameForm.SettingName, null, new Dictionary<string, object>{ {"class", "field-validation-error-next-line"} })
+        </div>
+        <div class="form-field-wrapper">
+            @Html.Label("ModuleAssistant", "Ассистент", new Dictionary<string, object> {{"class", "form-field-label"}})
+            @Html.TextBox("ModuleAssistant", Model.Assistant, new Dictionary<string, object>
+                                                              {
+                                                                  {"id", "AssistantAutocomplete"},
+                                                                  {"data-url", Url.Action("AutocompleteUser", "Search")},
+                                                                  {"class", "module-attributes-general-input"}
+                                                              })
+            @Html.HiddenFor(m => m.EditGameForm.AssistantId)
+        </div>
+        <div class="form-field-wrapper">
+            @Html.LabelFor(m => m.EditGameForm.AttributeSchemeId, "Характеристики персонажей",
+                new Dictionary<string, object>
+                {
+                    {"id", $"{Html.DisplayNameFor(m => m.EditGameForm.AttributeSchemeId)}_Label"},
+                    {"class", "form-field-label"}
+                })
+            @Html.DropdownFor(m => m.EditGameForm.AttributeSchemeId, Model.AttributeSchemes, Model.AttributeSchemeDescriptions, new Dictionary<string, object> { { "class", "module-attributes-scheme-dropdown" } })
+        </div>
+    </div>
+    <div class="module-extendedOptions-wrapper">
+        <div class="form-field-wrapper">
+            @Html.LabelFor(m => m.EditGameForm.CommentariesAccessMode, "Обсуждения",
+                new Dictionary<string, object>
+                {
+                    {"id", $"{Html.DisplayNameFor(m => m.EditGameForm.CommentariesAccessMode)}_Label"},
+                    {"class", "form-field-label"}
+                })
+            @Html.DropdownFor(m => m.EditGameForm.CommentariesAccessMode,
+                wrapperHtmlAttributes: new Dictionary<string, object>{{"style", "max-width: 200px"}})
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.HideTemper) Скрыть характеры персонажей
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.HideSkills) Скрыть навыки персонажей
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.HideInventory) Скрыть инвентарь персонажей
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.HideStory) Скрыть истории персонажей
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.HideDiceResults) Скрыть броски кубиков
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.ShowPrivateMessages) Показывать всем приватные сообщения
+            </label>
+        </div>
+        <div class="form-field-wrapper">
+            <label class="">
+                @Html.CheckBoxFor(m => m.EditGameForm.DisableAlignment) Отключить графу "мировоззрение"
+            </label>
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        @Html.LabelFor(m => m.EditGameForm.Info, "Описание", new {@class = "form-field-label"})
+        @await Html.SmartTextAreaFor(m => m.EditGameForm.Info, Model.EditGameForm.Parser, inputHtmlAttributes: new Dictionary<string, object> {{"class", "bigSmartTextArea"}})
+    </div>
+    <div class="form-field-wrapper">
+        <div id="EditModuleTags"
+            data-name-format="@Html.NameFor(m => m.EditGameForm.TagIds[0])"
+            data-preselected="[@string.Join(",", Model.EditGameForm.TagIds.Select(id => $"\"{id}\""))]">
+            @Html.DropdownGroup("EditModuleTags_dropdown", Model.Tags, null, false, new Dictionary<string, object> { { "class", "dropdownmultiselect-dropdown" } }, new Dictionary<string, object> { { "class", "tags-dropdown-options" } })
+            <div class="dropdownmultiselect-selectedList create-module-tags-list"></div>
+            <div class="dropdownmultiselect-deselectFormat">@IconFont.Render(IconType.Close)</div>
+        </div>
+    </div>
+
+    @Html.Submit("Сохранить изменения", new Dictionary<string, object>{{"class", "form-submit-button"}})
+}

@@ -1,0 +1,42 @@
+﻿@using DM.Services.Core.Dto.Enums
+@using DM.Web.Classic.Extensions.HtmlHelperExtensions
+@using DM.Web.Core.Extensions.EnumExtensions
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model DM.Web.Classic.Views.EditRoom.EditRoomForm
+@{
+    Layout = "~/Views/Shared/Layout/_LightboxLayout.cshtml";
+    ViewBag.ID = $"EditRoomLightbox_{Model.RoomId}";
+}
+<h3 class="lightbox-title">Настройки комнаты</h3>
+
+@using (Html.BeginForm("Edit", "EditRoom", FormMethod.Post, new Dictionary<string, object>{{"id", $"EditRoomForm_{Model.RoomId}"}}))
+{
+    @Html.HiddenFor(m => m.RoomId)
+    <div class="form-field-wrapper">
+        @Html.LabelFor(m => m.RoomTitle, "Название", new Dictionary<string, object>{{"class", "form-field-label editRoom-label"}})
+        @Html.TextBoxFor(m => m.RoomTitle, "не больше 30 символов", null, null)
+        @Html.ValidationMessageFor(m => m.RoomTitle, null, new Dictionary<string, object>{{"class", "field-validation-error-next-line"}})
+    </div>
+    <div class="form-field-wrapper">
+        @Html.LabelFor(m => m.RoomType, "Тип", new Dictionary<string, object>{{"class", "form-field-label editRoom-label"}})
+        @foreach (RoomType roomType in Enum.GetValues(typeof(RoomType)))
+        {
+            <label class="form-field-wrapper">
+                @Html.RadioButtonFor(m => m.RoomType, roomType) @roomType.GetDescription()
+            </label>
+        }
+    </div>
+    <div class="form-field-wrapper">
+        @Html.LabelFor(m => m.RoomAccess, "Доступ", new Dictionary<string, object>{{"class", "form-field-label editRoom-label"}})
+        @foreach (RoomAccessType roomAccessType in Enum.GetValues(typeof(RoomAccessType)))
+        {
+            <label class="form-field-wrapper">
+                @(Html.RadioButtonFor(m => m.RoomAccess, roomAccessType)) @roomAccessType.GetDescription()
+            </label>
+        }
+    </div>
+    <div class="form-controls-wrapper">
+        @Html.Submit("Сохранить", new Dictionary<string, object>{{"class", "form-submit-button"}})
+        <a href="javascript:void(0)" id="CancelEditLink_@Model.RoomId">Отменить</a>
+    </div>
+}

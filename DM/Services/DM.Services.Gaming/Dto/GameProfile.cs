@@ -19,6 +19,7 @@ namespace DM.Services.Gaming.Dto
             CreateMap<DbGame, Game>()
                 .Include<DbGame, GameExtended>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
+                .ForMember(d => d.Tags, s => s.MapFrom(g => g.GameTags.Select(t => t.Tag)))
                 .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
                     .Where(t => !t.IsRemoved && t.Type == TokenType.AssistantAssignment)
                     .Select(t => t.User)
@@ -28,9 +29,7 @@ namespace DM.Services.Gaming.Dto
                     .Select(c => c.CharacterId)
                     .ToArray()));
 
-            CreateMap<DbGame, GameExtended>()
-                .ForMember(d => d.Id, s => s.MapFrom(g => g.GameId))
-                .ForMember(d => d.Tags, s => s.MapFrom(g => g.GameTags.Select(t => t.Tag)));
+            CreateMap<DbGame, GameExtended>();
 
             CreateMap<DbGameTag, GameTag>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.TagId))

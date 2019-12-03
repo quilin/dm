@@ -1,0 +1,25 @@
+﻿@using DM.Web.Classic.Extensions.HtmlHelperExtensions
+@using DM.Web.Classic.Views.EditGameStatus
+@using DM.Web.Core.Extensions.EnumExtensions
+@model DM.Web.Classic.Views.EditGameStatus.EditGameStatusViewModel
+@{
+    Layout = "~/Views/Shared/Layout/_LightboxLayout.cshtml";
+    ViewBag.Id = "EditModuleStatusLightbox";
+}
+
+<h2 class="lightbox-title">Смена статуса игры</h2>
+@using (Html.BeginForm("EditStatus", "EditGameStatus", FormMethod.Post, new Dictionary<string, object>{{"id", "EditModuleStatusForm"}}))
+{
+    @Html.HiddenFor(m => m.Form.ModuleId)
+    foreach (var (status, allowed) in Model.StatusCredentials)
+    {
+        <label class="form-field-wrapper@(allowed ? string.Empty : " form-field-wrapper-disabled")">
+            @Html.RadioButtonFor(m => m.Form.Status, status, !allowed) <strong>@status.GetDescription()</strong> &mdash; @Html.Raw(EditGameStatusViewModel.StatusDescriptions[status])
+        </label>
+    }
+    
+    <div class="form-controls-wrapper">
+        @Html.Submit("Сохранить изменения", new Dictionary<string, object>{{"class", "form-submit-button"}})
+        <a href="javascript:void(0)" class="lightbox-close">Отменить</a>
+    </div>
+}

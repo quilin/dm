@@ -1,0 +1,12 @@
+﻿@model IEnumerable<DM.Web.Classic.Views.GameCommentaries.Commentary.GameCommentaryViewModel>
+@if (Model.Any())
+{
+    foreach (var comment in Model)
+    {
+        @await Html.PartialAsync("Commentary/Commentary", comment)
+    }
+}
+else
+{
+    <div id="NoCommentariesMessage">Здесь еще никто ничего не написал</div>
+}

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
+using DM.Services.Common.Dto;
+using DbComment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
 {
@@ -13,6 +14,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
         /// </summary>
         /// <param name="comment">DAL model for comment</param>
         /// <returns></returns>
-        Task<Services.Common.Dto.Comment> Create(Comment comment);
+        Task<Comment> Create(DbComment comment);
     }
 }

@@ -1,0 +1,15 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.RoomsList.Room.RoomActions.RoomActionsViewModel
+<div class="room-actions">
+    <a href="@Url.Action("Edit", "EditRoom", new RouteValueDictionary {{"roomId", Model.RoomId}})" id="UpdateRoomLink_@(Model.RoomId)">
+        @IconFont.Render(IconType.Settings)
+    </a>
+    @if (Model.CanRemove)
+    {
+        @:|
+        <a href="@Url.Action("Remove", "Room", new RouteValueDictionary{{"roomId", Model.RoomId}})" id="RemoveRoomLink_@(Model.RoomId)">@IconFont.Render(IconType.Remove)</a>
+    }
+    <a href="@Url.Action("LastUnread", "Post", new RouteValueDictionary {{"roomIdEncoded", Model.RoomId.EncodeToReadable(Model.RoomTitle)}})">@IconFont.Render(IconType.Observe)</a>
+</div>

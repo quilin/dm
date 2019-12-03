@@ -25,12 +25,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<RoomClaim>> GetAll(Guid roomId) => repository.GetAll(roomId, identity.User.UserId);
+        public Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId) =>
+            repository.GetGameClaims(gameId, identity.User.UserId);
 
         /// <inheritdoc />
-        public async Task<RoomClaim> Get(Guid claimId)
+        public Task<IEnumerable<RoomClaim>> GetRoomClaims(Guid roomId) =>
+            repository.GetRoomClaims(roomId, identity.User.UserId);
+
+        /// <inheritdoc />
+        public async Task<RoomClaim> GetClaim(Guid claimId)
         {
-            var claim = await repository.Get(claimId, identity.User.UserId);
+            var claim = await repository.GetClaim(claimId, identity.User.UserId);
             if (claim == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Claim not found");

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Dto.Enums;
+using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
@@ -27,10 +27,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <summary>
         /// Get games page
         /// </summary>
-        /// <param name="query">Paging query</param>
-        /// <param name="status">Status filter</param>
+        /// <param name="query">Search query</param>
         /// <returns>List of fetched games and paging data</returns>
-        Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(PagingQuery query, GameStatus? status);
+        Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(GamesQuery query);
 
         /// <summary>
         /// Get game by identifier

@@ -11,6 +11,7 @@ using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.Dto.Output;
 using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
@@ -40,7 +41,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         }
         
         /// <inheritdoc />
-        public async Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid gameId, PagingQuery query)
+        public async Task<(IEnumerable<Comment> comments, PagingResult paging, Game game)> Get(
+            Guid gameId, PagingQuery query)
         {
             var game = await gameReadingService.GetGame(gameId);
             await intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
@@ -50,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 
             var comments = await commentaryRepository.Get(gameId, paging);
 
-            return (comments, paging.Result);
+            return (comments, paging.Result, game);
         }
 
         /// <inheritdoc />

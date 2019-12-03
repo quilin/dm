@@ -1,0 +1,57 @@
+﻿@using DM.Web.Classic.Views.GameActions
+@model DM.Web.Classic.Views.CharactersList.CharactersListViewModel
+@{
+    ViewBag.Title = $"Персонажи | {Model.GameTitle}";
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
+}
+
+@section LeftColumn
+{
+    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Characters, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+}
+<h1 class="content-pageTitle">Персонажи | @Model.GameTitle</h1>
+
+@if (Model.CharacterLists.Length > 1)
+{
+    <div class="charactersList-tabs">
+        @foreach (var characterList in Model.CharacterLists)
+        {
+            <a href="javascript:void(0)" class="tabLink@(characterList.IsDefault ? " active" : string.Empty)" data-tab-id="@(characterList.Id)CharactersList">@characterList.Title</a>
+        }
+    </div>
+    foreach (var characterList in Model.CharacterLists)
+    {
+        <div class="tabBlock" id="@(characterList.Id)CharactersList" @(characterList.IsDefault ? string.Empty : "style=display:none;") data-tab-uploaded="true">
+            @foreach (var character in characterList.Characters)
+            {
+                @await Html.PartialAsync("~/Views/CharactersList/Character/Character.cshtml", character)
+            }
+        </div>
+    }
+}
+else if (Model.CharacterLists.Length == 1)
+{
+    foreach (var character in Model.CharacterLists[0].Characters)
+    {
+        @await Html.PartialAsync("~/Views/CharactersList/Character/Character.cshtml", character)
+    }
+}
+else
+{
+    <div class="content-noAccessMessage">В игре нет ни одного персонажа</div>
+}
+
+@section FooterScript
+{
+
+    <script>
+        var options = {
+        @if (Model.CharacterId.HasValue)
+        {
+            @:defaultCharacterId: "@Model.CharacterId.Value"
+        }
+        };
+        var charactersList = new DM.CharactersListControl(options);
+        DM.Ready();
+    </script>
+}

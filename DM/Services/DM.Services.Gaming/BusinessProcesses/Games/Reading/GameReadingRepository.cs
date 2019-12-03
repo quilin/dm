@@ -8,6 +8,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using DM.Services.Gaming.BusinessProcesses.Shared;
+using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,20 +30,22 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
-        public Task<int> Count(GameStatus? status, Guid userId)
+        public Task<int> Count(GamesQuery query, Guid userId)
         {
             return dbContext.Games
                 .Where(AccessibilityFilters.GameAvailable(userId))
-                .Where(g => !status.HasValue || g.Status == status.Value)
+                .Where(g => !query.Status.HasValue || g.Status == query.Status.Value)
+                .Where(g => !query.TagId.HasValue || g.GameTags.Any(t => t.TagId == query.TagId.Value))
                 .CountAsync();
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId)
+        public async Task<IEnumerable<Game>> GetGames(PagingData pagingData, GamesQuery query, Guid userId)
         {
             return await dbContext.Games
                 .Where(AccessibilityFilters.GameAvailable(userId))
-                .Where(g => !status.HasValue || g.Status == status.Value)
+                .Where(g => !query.Status.HasValue || g.Status == query.Status.Value)
+                .Where(g => !query.TagId.HasValue || g.GameTags.Any(t => t.TagId == query.TagId.Value))
                 .OrderBy(g => g.ReleaseDate ?? g.CreateDate)
                 .Skip(pagingData.Skip)
                 .Take(pagingData.Take)

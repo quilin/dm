@@ -41,7 +41,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
         /// <inheritdoc />
         public async Task Delete(Guid claimId)
         {
-            var oldClaim = await readingRepository.Get(claimId, identity.User.UserId);
+            var oldClaim = await readingRepository.GetClaim(claimId, identity.User.UserId);
             var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
             await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
             

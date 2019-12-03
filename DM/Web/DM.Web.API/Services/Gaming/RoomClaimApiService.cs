@@ -39,14 +39,14 @@ namespace DM.Web.API.Services.Gaming
         /// <inheritdoc />
         public async Task<ListEnvelope<RoomClaim>> GetAll(Guid roomId)
         {
-            var claims = await readingService.GetAll(roomId);
+            var claims = await readingService.GetRoomClaims(roomId);
             return new ListEnvelope<RoomClaim>(claims.Select(mapper.Map<RoomClaim>));
         }
 
         /// <inheritdoc />
         public async Task<Envelope<RoomClaim>> Get(Guid claimId)
         {
-            var claim = await readingService.Get(claimId);
+            var claim = await readingService.GetClaim(claimId);
             return new Envelope<RoomClaim>(mapper.Map<RoomClaim>(claim));
         }
 

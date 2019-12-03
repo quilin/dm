@@ -7,31 +7,33 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.9.2"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.App"/>
-        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0"/>
+        <PackageReference Include="Autofac" Version="4.9.2" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Services\DM.Services.Common\DM.Services.Common.csproj"/>
-        <ProjectReference Include="..\..\Services\DM.Services.Community\DM.Services.Community.csproj"/>
-        <ProjectReference Include="..\..\Services\DM.Services.DataAccess\DM.Services.DataAccess.csproj"/>
-        <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj"/>
-        <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj"/>
+        <ProjectReference Include="..\..\Services\DM.Services.Common\DM.Services.Common.csproj" />
+        <ProjectReference Include="..\..\Services\DM.Services.Community\DM.Services.Community.csproj" />
+        <ProjectReference Include="..\..\Services\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+        <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj" />
+        <ProjectReference Include="..\..\Services\DM.Services.Gaming\DM.Services.Gaming.csproj" />
+        <ProjectReference Include="..\..\Services\DM.Services.Search\DM.Services.Search.csproj" />
+        <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391"/>
+        <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.8.391" />
     </ItemGroup>
 
     <Target Name="PackageRestore" BeforeTargets="Build">
-        <Exec Command="dotnet restore"/>
+        <Exec Command="dotnet restore" />
     </Target>
     <Target Name="Bundling" AfterTargets="Build">
-        <Exec Command="dotnet bundle"/>
+        <Exec Command="dotnet bundle" />
     </Target>
 
     <ItemGroup>

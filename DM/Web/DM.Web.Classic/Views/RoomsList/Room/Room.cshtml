@@ -1,0 +1,13 @@
+@model DM.Web.Classic.Views.RoomsList.Room.RoomViewModel
+<div class="room-wrapper" id="RoomContainer_@(Model.RoomId)" data-room-id="@Model.RoomId">
+    <div class="room-data">
+        @await Html.PartialAsync("~/Views/RoomsList/Room/RoomActions/RoomActions.cshtml", Model.RoomActions)
+        <div id="RoomTitle_@Model.RoomId">@await Html.PartialAsync("~/Views/RoomsList/Room/RoomTitle.cshtml", Model)</div>
+    </div>
+    <div class="room-characters">
+        @foreach (var character in Model.Characters)
+        {
+            @await Html.PartialAsync("~/Views/RoomsList/Room/Character/Character.cshtml", character, new ViewDataDictionary(ViewData) {{"RoomId", Model.RoomId}})
+        }
+    </div>
+</div>

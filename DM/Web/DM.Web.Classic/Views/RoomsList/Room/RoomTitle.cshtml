@@ -1,0 +1,10 @@
+﻿@using DM.Services.Core.Dto.Enums
+@using DM.Web.Core.Extensions.EnumExtensions
+@model DM.Web.Classic.Views.RoomsList.Room.RoomViewModel
+
+@Model.Title
+(@if (Model.RoomType != RoomType.Default)
+{
+    @Model.RoomType.GetDescription() @:/
+}
+@Model.AccessType.GetDescription())

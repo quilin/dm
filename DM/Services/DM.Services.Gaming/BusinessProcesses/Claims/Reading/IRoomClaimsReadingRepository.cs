@@ -11,12 +11,20 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
     public interface IRoomClaimsReadingRepository
     {
         /// <summary>
+        /// Get all game claims
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId, Guid userId);
+
+        /// <summary>
         /// Get all room claims
         /// </summary>
         /// <param name="roomId">Room identifier</param>
         /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<IEnumerable<RoomClaim>> GetAll(Guid roomId, Guid userId);
+        Task<IEnumerable<RoomClaim>> GetRoomClaims(Guid roomId, Guid userId);
 
         /// <summary>
         /// Get existing room claim
@@ -24,6 +32,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
         /// <param name="claimId">Claim identifier</param>
         /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<RoomClaim> Get(Guid claimId, Guid userId);
+        Task<RoomClaim> GetClaim(Guid claimId, Guid userId);
     }
 }

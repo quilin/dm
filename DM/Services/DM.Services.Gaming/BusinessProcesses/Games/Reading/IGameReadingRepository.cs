@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Dto.Enums;
+using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
@@ -18,16 +18,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <param name="status">Status filter</param>
         /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<int> Count(GameStatus? status, Guid userId);
+        Task<int> Count(GamesQuery status, Guid userId);
 
         /// <summary>
         /// Get list of matching games on certain page
         /// </summary>
         /// <param name="pagingData">Paging data</param>
-        /// <param name="status">Status filter</param>
+        /// <param name="query">Filter query</param>
         /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<IEnumerable<Game>> GetGames(PagingData pagingData, GameStatus? status, Guid userId);
+        Task<IEnumerable<Game>> GetGames(PagingData pagingData, GamesQuery query, Guid userId);
 
         /// <summary>
         /// Get list of user owned active games

@@ -53,17 +53,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
                 .MaybeField(r => r.Type, updateRoom.Type)
                 .MaybeField(r => r.AccessType, updateRoom.AccessType);
 
-            if (updateRoom.PreviousRoomId == room.PreviousRoomId)
+            if (updateRoom.PreviousRoomId == null || updateRoom.PreviousRoomId.Value == room.PreviousRoomId)
             {
                 return await repository.Update(roomUpdate);
             }
 
-            if (!updateRoom.PreviousRoomId.HasValue)
+            if (!updateRoom.PreviousRoomId.Value.HasValue)
             {
                 return await InsertFirst(room, roomUpdate);
             }
 
-            var targetRoom = await repository.GetRoom(updateRoom.PreviousRoomId.Value, identity.User.UserId);
+            var targetRoom = await repository.GetRoom(updateRoom.PreviousRoomId.Value.Value, identity.User.UserId);
             if (targetRoom.Game.Id != room.Game.Id)
             {
                 throw new HttpBadRequestException(new Dictionary<string, string>

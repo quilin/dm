@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Gaming.Dto.Input
@@ -31,6 +32,6 @@ namespace DM.Services.Gaming.Dto.Input
         /// <summary>
         /// Previous room identifier
         /// </summary>
-        public Guid? PreviousRoomId { get; set; }
+        public Optional<Guid> PreviousRoomId { get; set; }
     }
 }

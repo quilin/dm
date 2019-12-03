@@ -1,0 +1,43 @@
+﻿@using DM.Web.Classic.Views.GameActions
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.GameCommentaries.GameCommentariesViewModel
+@{
+    ViewBag.Title = $"Обсуждение игры | {Model.GameTitle}";
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
+}
+@section LeftColumn
+{
+    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Discussions, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+}
+
+<h1 class="content-pageTitle">@Model.GameTitle | Обсуждение игры</h1>
+<div id="Paginator" class="paginator"></div>
+<div id="Container">
+    @await Html.PartialAsync("GameCommentariesList", Model.ModuleCommentaries)
+</div>
+<div class="paginator-fixed-wrapper">
+    <div id="PaginatorHover" class="paginator-fixed"></div>
+</div>
+@if (Model.CreateForm != null)
+{
+    @await Html.PartialAsync("~/Views/GameCommentaries/CreateCommentary/CreateCommentary.cshtml", Model.CreateForm)
+}
+else
+{
+    <div class="content-noAccessMessage">Вы не можете добавлять комментарии к обсуждению этой игры.</div>
+}
+@section FooterScript
+{
+    <script>
+        var moduleCommentaries = new DM.PagedListControl({
+            totalPages: @Model.TotalPagesCount,
+            currentPage: @Model.CurrentPage,
+            pageSize: @Model.PageSize,
+            entityNumber: @Model.EntityNumber,
+            pageUrlTemplate: "@Url.Action("Index", "GameCommentaries", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.GameTitle)}, {"entityNumber", "__pn__"}})",
+            withWarnings: true
+        });
+        DM.Ready();
+    </script>
+}

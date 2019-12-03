@@ -40,7 +40,7 @@ namespace DM.Web.API.Services.Gaming
         /// <inheritdoc />
         public async Task<ListEnvelope<Comment>> Get(Guid gameId, PagingQuery query)
         {
-            var (comments, paging) = await readingService.Get(gameId, query);
+            var (comments, paging, _) = await readingService.Get(gameId, query);
             return new ListEnvelope<Comment>(comments.Select(mapper.Map<Comment>), new Paging(paging));
         }
 

@@ -9,7 +9,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
     public class RoomFactory : IRoomFactory
     {
         private readonly IGuidFactory guidFactory;
-        private const string DefaultRoomTitle = "Основная комната";
 
         /// <inheritdoc />
         public RoomFactory(
@@ -27,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 GameId = gameId,
                 AccessType = RoomAccessType.Open,
                 Type = RoomType.Default,
-                Title = DefaultRoomTitle
+                Title = Dto.Output.Room.DefaultRoomName
             };
         }
     }

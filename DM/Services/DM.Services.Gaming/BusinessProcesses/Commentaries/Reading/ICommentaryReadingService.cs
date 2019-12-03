@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
+using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
@@ -17,7 +18,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         /// <param name="gameId">Game identifier</param>
         /// <param name="query">Paging query</param>
         /// <returns>Pair of comments list and paging data</returns>
-        Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(Guid gameId, PagingQuery query);
+        Task<(IEnumerable<Comment> comments, PagingResult paging, Game game)> Get(Guid gameId, PagingQuery query);
 
         /// <summary>
         /// Get game comment by id

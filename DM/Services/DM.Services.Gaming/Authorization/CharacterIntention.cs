@@ -54,5 +54,25 @@ namespace DM.Services.Gaming.Authorization
         /// Return to the game
         /// </summary>
         Return = 10,
+
+        /// <summary>
+        /// View character temper
+        /// </summary>
+        ViewTemper = 11,
+
+        /// <summary>
+        /// View character story
+        /// </summary>
+        ViewStory = 12,
+
+        /// <summary>
+        /// View character skills
+        /// </summary>
+        ViewSkills = 13,
+
+        /// <summary>
+        /// View character inventory
+        /// </summary>
+        ViewInventory = 14
     }
 }

@@ -1,0 +1,30 @@
+﻿@model DM.Web.Classic.Views.RoomsList.RoomsListViewModel
+@await Html.PartialAsync("~/Views/RoomsList/CreateRoom/CreateRoom.cshtml", Model.CreateRoomForm)
+<div class="roomsList-wrapper">
+    
+    <div class="roomsList-rooms">
+        @if (Model.Rooms != null && Model.Rooms.Length > 0)
+        {
+            foreach (var room in Model.Rooms)
+            {
+                @await Html.PartialAsync("~/Views/RoomsList/Room/Room.cshtml", room)
+            }
+        }
+    </div>
+
+    <div class="roomsList-characters">
+        <h3 class="roomsList-charactersHeader">Персонажи игры</h3>
+        @if (Model.Characters != null && Model.Characters.Length > 0)
+        {
+            foreach (var character in Model.Characters)
+            {
+                @await Html.PartialAsync("~/Views/RoomsList/Character/Character.cshtml", character)
+            }
+        }
+        else
+        {
+            @:В игре еще нет персонажей
+        }
+    </div>
+    
+</div>

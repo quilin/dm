@@ -1,0 +1,35 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using DM.Web.Classic.Views.GameActions
+@using DM.Web.Core.Helpers
+@using Microsoft.AspNetCore.Routing
+@model DM.Web.Classic.Views.GameActions.GameRooms.GameRoomsViewModel
+@if (Model.IsDefaultRoom)
+{
+    var singleRoom = Model.Rooms[0];
+    @:-
+    if (Model.PageType == PageType.Session)
+    {
+        <strong>Ходы игроков</strong>
+    }
+    else
+    {
+        <a href="@Url.Action("LastUnread", "Post", new RouteValueDictionary {{"roomIdEncoded", singleRoom.RoomId.EncodeToReadable(singleRoom.Title)}})">
+            Ходы игроков @Html.UnreadPostsIcon(singleRoom.UnreadCount, true)
+        </a>
+    }
+}
+else if (Model.Rooms != null && Model.Rooms.Length > 0)
+{
+    @:- Ходы игроков:
+    <ul class="leftMenu-list">
+        @foreach(var room in Model.Rooms)
+        {
+            @await Html.PartialAsync("~/Views/GameActions/GameRooms/RoomLink.cshtml", room)
+        }
+    </ul>
+}
+else
+{
+    @:- Ходы игроков:
+    <div class="moduleRooms-error-message">Вы не можете читать эту игру</div>
+}

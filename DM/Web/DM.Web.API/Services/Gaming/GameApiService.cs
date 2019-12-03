@@ -10,6 +10,8 @@ using DM.Services.Gaming.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 using Game = DM.Web.API.Dto.Games.Game;
+using GameApiQuery = DM.Web.API.Dto.Games.GamesQuery;
+using GamesQuery = DM.Services.Gaming.Dto.Input.GamesQuery;
 
 namespace DM.Web.API.Services.Gaming
 {
@@ -38,9 +40,10 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
-        public async Task<ListEnvelope<Game>> Get(GamesQuery gamesQuery)
+        public async Task<ListEnvelope<Game>> Get(GameApiQuery gamesQuery)
         {
-            var (games, paging) = await readingService.GetGames(gamesQuery, gamesQuery.Status?.FirstOrDefault());
+            var query = mapper.Map<GamesQuery>(gamesQuery);
+            var (games, paging) = await readingService.GetGames(query);
             return new ListEnvelope<Game>(games.Select(mapper.Map<Game>), new Paging(paging));
         }
 
