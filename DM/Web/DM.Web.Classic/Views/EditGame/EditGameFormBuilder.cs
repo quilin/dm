@@ -20,7 +20,7 @@ namespace DM.Web.Classic.Views.EditGame
             var parser = bbParserProvider.CurrentInfo;
             return new EditGameForm
             {
-                ModuleId = game.Id,
+                GameId = game.Id,
                 Title = game.Title,
                 SystemName = game.SystemName,
                 SettingName = game.SettingName,

@@ -10,7 +10,7 @@
 <h2 class="lightbox-title">Смена статуса игры</h2>
 @using (Html.BeginForm("EditStatus", "EditGameStatus", FormMethod.Post, new Dictionary<string, object>{{"id", "EditModuleStatusForm"}}))
 {
-    @Html.HiddenFor(m => m.Form.ModuleId)
+    @Html.HiddenFor(m => m.Form.GameId)
     foreach (var (status, allowed) in Model.StatusCredentials)
     {
         <label class="form-field-wrapper@(allowed ? string.Empty : " form-field-wrapper-disabled")">

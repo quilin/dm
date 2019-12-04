@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Threading.Tasks;
+using DM.Services.Gaming.BusinessProcesses.Games.Deleting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.GameControllers
 {
     public class GameRemoveController : DmControllerBase
     {
-        private readonly IModuleService moduleService;
+        private readonly IGameDeletingService gameDeletingService;
 
         public GameRemoveController(
-            IModuleService moduleService)
+            IGameDeletingService gameDeletingService)
         {
-            this.moduleService = moduleService;
+            this.gameDeletingService = gameDeletingService;
         }
 
         [HttpPost]
-        public ActionResult Remove(Guid moduleId)
+        public async Task<IActionResult> Remove(Guid gameId)
         {
-            moduleService.Remove(moduleId);
+            await gameDeletingService.DeleteGame(gameId);
             return RedirectToAction("Index", "Home");
         }
     }

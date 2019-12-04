@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using DM.Services.Gaming.Dto.Output;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace DM.Web.Classic.Views.EditGame
 {
     public interface IEditGameViewModelBuilder
     {
-        Task<EditGameViewModel> Build(GameExtended game);
+        Task<EditGameViewModel> Build(Guid gameId);
     }
 }

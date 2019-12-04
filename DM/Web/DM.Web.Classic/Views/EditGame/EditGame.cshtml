@@ -5,7 +5,7 @@
 
 @using (Html.BeginForm("SaveChanges", "EditGame", FormMethod.Post))
 {
-    @Html.HiddenFor(m => m.EditGameForm.ModuleId)
+    @Html.HiddenFor(m => m.EditGameForm.GameId)
     <div class="module-generalOptions">
         <div class="form-field-wrapper">
             @Html.LabelFor(m => m.EditGameForm.Title, "Название", new {@class = "form-field-label"})

@@ -25,7 +25,7 @@ namespace DM.Web.Classic.Views.GameNotepad
             var notepad = parser.Parse(game.Notepad);
             return new GameNotepadForm
             {
-                ModuleId = gameId,
+                GameId = gameId,
                 Notepad = notepad.ToBb(),
                 NotepadHtml = notepad.ToHtml(),
                 Parser = parser

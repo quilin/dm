@@ -43,6 +43,11 @@ namespace DM.Services.Gaming.Dto
                 participation |= GameParticipation.Player;
             }
 
+            if (game.ReaderUserIds.Contains(userId))
+            {
+                participation |= GameParticipation.Reader;
+            }
+
             return participation;
         }
     }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
+using DM.Services.Gaming.BusinessProcesses.Readers.Subscribing;
+using DM.Web.Classic.Views.GameInfo;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,33 +9,32 @@ namespace DM.Web.Classic.Controllers.GameControllers
 {
     public class GameController : DmControllerBase
     {
-        private readonly IModuleViewModelBuilder moduleViewModelBuilder;
-        private readonly IReaderService readerService;
+        private readonly IReadingSubscribingService subscribingService;
+        private readonly IGameViewModelBuilder gameViewModelBuilder;
 
         public GameController(
-            IModuleViewModelBuilder moduleViewModelBuilder,
-            IReaderService readerService
-            )
+            IReadingSubscribingService subscribingService,
+            IGameViewModelBuilder gameViewModelBuilder)
         {
-            this.moduleViewModelBuilder = moduleViewModelBuilder;
-            this.readerService = readerService;
+            this.subscribingService = subscribingService;
+            this.gameViewModelBuilder = gameViewModelBuilder;
         }
 
-        public IActionResult Index(Guid moduleId)
+        public async Task<IActionResult> Index(Guid gameId)
         {
-            var moduleViewModel = moduleViewModelBuilder.Build(moduleId);
-            return View("~/Views/ModuleInfo/Module.cshtml", moduleViewModel);
+            var gameViewModel = await gameViewModelBuilder.Build(gameId);
+            return View("~/Views/GameInfo/Game.cshtml", gameViewModel);
         }
 
-        public IActionResult Observe(Guid moduleId)
+        public async Task<IActionResult> Observe(Guid gameId)
         {
-            readerService.Observe(moduleId);
+            await subscribingService.Subscribe(gameId);
             return RedirectToAction(Request.GetDisplayUrl());
         }
 
-        public IActionResult StopObserving(Guid moduleId)
+        public async Task<IActionResult> StopObserving(Guid gameId)
         {
-            readerService.StopObserving(moduleId);
+            await subscribingService.Unsubscribe(gameId);
             return Redirect(Request.GetDisplayUrl());
         }
     }

@@ -1,26 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using DM.Services.Gaming.BusinessProcesses.Games.Updating;
+using DM.Services.Gaming.Dto.Input;
+using DM.Web.Classic.Middleware;
+using DM.Web.Classic.Views.EditGame;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.GameControllers
 {
     public class EditGameController : DmControllerBase
     {
-        private readonly IModuleService moduleService;
-        private readonly IUpdateModuleModelConverter updateModuleModelConverter;
+        private readonly IGameUpdatingService gameUpdatingService;
 
         public EditGameController(
-            IModuleService moduleService,
-            IUpdateModuleModelConverter updateModuleModelConverter)
+            IGameUpdatingService gameUpdatingService)
         {
-            this.moduleService = moduleService;
-            this.updateModuleModelConverter = updateModuleModelConverter;
+            this.gameUpdatingService = gameUpdatingService;
         }
 
         [HttpPost, ValidationRequired]
-        public ActionResult SaveChanges(EditModuleForm editModuleForm)
+        public async Task<IActionResult> SaveChanges(EditGameForm editGameForm)
         {
-            var updateModuleModel = updateModuleModelConverter.Convert(editModuleForm);
-            moduleService.Update(updateModuleModel);
-            return RedirectToAction("Index", "Game", new { moduleId = editModuleForm.ModuleId });
+            await gameUpdatingService.Update(new UpdateGame());
+            return RedirectToAction("Index", "Game", new {gameId = editGameForm.GameId});
         }
     }
 }

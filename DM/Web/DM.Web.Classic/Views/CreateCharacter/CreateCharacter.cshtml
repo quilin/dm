@@ -10,7 +10,7 @@
 }
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.CharacterCreate, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+    @await Html.PartialAsync("Layout/GameLeftColumn", PageType.CharacterCreate, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
 }
 
 <h1 class="content-pageTitle">Создание персонажа</h1>
@@ -45,9 +45,9 @@
         </div>
     }
 
-    <div class="form-field-group" style="clear: left;">
+    @*<div class="form-field-group" style="clear: left;">
         @Html.EditorFor(m => m.CharacterAttributes)
-    </div>
+    </div>*@
 
     <div class="form-field-wrapper">
         @Html.LabelFor(m => m.Appearance, "Внешность", new {@class = "form-field-label"})

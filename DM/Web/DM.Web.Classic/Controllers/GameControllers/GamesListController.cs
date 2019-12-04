@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using DM.Services.Core.Dto.Enums;
 using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.GamesList;
 using Microsoft.AspNetCore.Mvc;
@@ -16,26 +18,26 @@ namespace DM.Web.Classic.Controllers.GameControllers
             this.gamesListViewModelBuilder = gamesListViewModelBuilder;
         }
 
-        public IActionResult Index(ModuleStatus status, int entityNumber)
+        public async Task<IActionResult> Index(GameStatus status, int entityNumber)
         {
             if (!Request.IsAjaxRequest())
             {
-                var modulesListViewModel = gamesListViewModelBuilder.Build(status, entityNumber);
+                var modulesListViewModel = await gamesListViewModelBuilder.Build(status, entityNumber);
                 return View("Index", modulesListViewModel);
             }
-            var modulesListItemViewModels = gamesListViewModelBuilder.BuildList(status, entityNumber);
-            return PartialView("~/Views/ModulesList/ModulesList.cshtml", modulesListItemViewModels);
+            var (modulesListItemViewModels, _) = await gamesListViewModelBuilder.BuildList(status, entityNumber);
+            return PartialView("~/Views/GamesList/GamesList.cshtml", modulesListItemViewModels);
         }
 
-        public IActionResult Tags(Guid tagId, int entityNumber)
+        public async Task<IActionResult> Tags(Guid tagId, int entityNumber)
         {
             if (!Request.IsAjaxRequest())
             {
-                var modulesListViewModel = gamesListViewModelBuilder.Build(tagId, entityNumber);
+                var modulesListViewModel = await gamesListViewModelBuilder.Build(tagId, entityNumber);
                 return View("Index", modulesListViewModel);
             }
-            var modulesListItemViewModels = gamesListViewModelBuilder.BuildList(tagId, entityNumber);
-            return PartialView("~/Views/ModulesList/ModulesList.cshtml", modulesListItemViewModels);
+            var (modulesListItemViewModels, _) = await gamesListViewModelBuilder.BuildList(tagId, entityNumber);
+            return PartialView("~/Views/GamesList/GamesList.cshtml", modulesListItemViewModels);
         }
     }
 }

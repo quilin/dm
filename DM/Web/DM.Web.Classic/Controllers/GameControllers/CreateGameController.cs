@@ -1,44 +1,44 @@
-﻿using DM.Web.Classic.Middleware;
+﻿using System.Threading.Tasks;
+using DM.Services.Common.Authorization;
+using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Games.Creating;
+using DM.Services.Gaming.Dto.Input;
+using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.CreateGame;
+using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.GameControllers
 {
     public class CreateGameController : DmControllerBase
     {
+        private readonly IIntentionManager intentionManager;
+        private readonly IGameCreatingService gameCreatingService;
         private readonly ICreateGameViewModelBuilder createGameViewModelBuilder;
-        private readonly ICreateModuleModelConverter createModuleModelConverter;
-        private readonly IIntentionsManager intentionsManager;
-        private readonly IModuleService moduleService;
 
         public CreateGameController(
-            ICreateGameViewModelBuilder createGameViewModelBuilder,
-            ICreateModuleModelConverter createModuleModelConverter,
-            IIntentionsManager intentionsManager,
-            IModuleService moduleService
-            )
+            IIntentionManager intentionManager,
+            IGameCreatingService gameCreatingService,
+            ICreateGameViewModelBuilder createGameViewModelBuilder)
         {
+            this.intentionManager = intentionManager;
+            this.gameCreatingService = gameCreatingService;
             this.createGameViewModelBuilder = createGameViewModelBuilder;
-            this.createModuleModelConverter = createModuleModelConverter;
-            this.intentionsManager = intentionsManager;
-            this.moduleService = moduleService;
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            intentionsManager.ThrowIfForbidden(CommonIntention.CreateModule);
-
-            var createModuleViewModel = createGameViewModelBuilder.Build();
-            return View("CreateModule", createModuleViewModel);
+            await intentionManager.ThrowIfForbidden(GameIntention.Create);
+            var createModuleViewModel = await createGameViewModelBuilder.Build();
+            return View("CreateGame", createModuleViewModel);
         }
 
         [HttpPost, ValidationRequired]
-        public ActionResult Create(CreateGameForm createGameForm)
+        public async Task<IActionResult> Create(CreateGameForm createGameForm)
         {
-            var createModuleModel = createModuleModelConverter.Convert(createGameForm);
-            var module = moduleService.Create(createModuleModel);
-            return RedirectToAction("Index", "Game", new { moduleId = module.ModuleId.EncodeToReadable(module.Title) });
+            var game = await gameCreatingService.Create(new CreateGame());
+            return RedirectToAction("Index", "Game", new {moduleId = game.Id.EncodeToReadable(game.Title)});
         }
     }
 }

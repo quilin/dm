@@ -44,7 +44,12 @@ namespace DM.Web.Classic.Views.GamesList
         public async Task<(IEnumerable<GamesListItemViewModel> games, PagingResult paging)> BuildList(
             GameStatus status, int entityNumber)
         {
-            var query = new GamesQuery {Number = entityNumber, Size = PageSize, Status = status};
+            var query = new GamesQuery
+            {
+                Number = entityNumber,
+                Size = PageSize,
+                Statuses = new HashSet<GameStatus> {status}
+            };
             var (games, paging) = await gameService.GetGames(query);
 
             return (games.Select((m, i) => gamesListItemViewModelBuilder.Build(

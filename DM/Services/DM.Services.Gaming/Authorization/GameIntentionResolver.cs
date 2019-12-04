@@ -25,6 +25,12 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.Subscribe when user.IsAuthenticated:
                     return Task.FromResult(true);
 
+                case GameIntention.SetStatusModeration when user.IsAuthenticated:
+                    return Task.FromResult(
+                        user.Role.HasFlag(UserRole.Administrator) ||
+                        user.Role.HasFlag(UserRole.SeniorModerator) ||
+                        user.Role.HasFlag(UserRole.NannyModerator));
+
                 default:
                     return Task.FromResult(false);
             }

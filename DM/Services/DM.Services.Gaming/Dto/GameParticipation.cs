@@ -14,9 +14,14 @@ namespace DM.Services.Gaming.Dto
         None = 0,
 
         /// <summary>
+        /// User is reading this game
+        /// </summary>
+        Reader = 1,
+
+        /// <summary>
         /// User has an active character in game
         /// </summary>
-        Player = 1,
+        Player = 1 << 1,
 
         /// <summary>
         /// User is game nanny

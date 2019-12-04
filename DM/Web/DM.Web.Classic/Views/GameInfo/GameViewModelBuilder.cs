@@ -69,8 +69,8 @@ namespace DM.Web.Classic.Views.GameInfo
             {
                 ModuleId = game.Id,
                 Status = game.Status,
-                CreateDate = game.CreateDate.DateTime,
-                ReleaseDate = game.ReleaseDate?.DateTime,
+                CreateDate = game.CreateDate,
+                ReleaseDate = game.ReleaseDate,
 
                 Title = game.Title,
                 SystemName = game.SystemName,

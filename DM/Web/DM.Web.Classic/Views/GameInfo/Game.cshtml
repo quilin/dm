@@ -11,7 +11,8 @@
 }
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Information, new ViewDataDictionary(ViewData) {{"ModuleId", Model.ModuleId}})
+    @await Html.PartialAsync("Layout/GameLeftColumn", PageType.Information,
+        new ViewDataDictionary(ViewData) {{"GameId", Model.ModuleId}})
 }
 
 <h1 class="content-pageTitle">@Model.Title</h1>

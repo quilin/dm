@@ -19,7 +19,7 @@ namespace DM.Web.Classic.Views.CreateCharacter
         [StringLength(30, ErrorMessage = "Название класса не должно быть длиннее 30 символов")]
         public string Class { get; set; }
 
-        public Alignment? Alignment { get; set; }
+        public Alignment Alignment { get; set; }
 
         public string Appearance { get; set; }
 

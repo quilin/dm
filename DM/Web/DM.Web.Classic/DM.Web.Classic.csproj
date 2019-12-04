@@ -47,4 +47,8 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Shared\GameList\ModuleLink\ModuleNotification\ModuleNotification.cshtml" />
+    </ItemGroup>
+
 </Project>

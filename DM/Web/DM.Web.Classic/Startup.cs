@@ -66,7 +66,7 @@ namespace DM.Web.Classic
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString(nameof(DmDbContext))));
+                    options.UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
             services
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))

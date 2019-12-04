@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
-using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Web.Classic.Views.EditGame
 {
@@ -19,8 +19,9 @@ namespace DM.Web.Classic.Views.EditGame
             this.editGameFormBuilder = editGameFormBuilder;
         }
 
-        public async Task<EditGameViewModel> Build(GameExtended game)
+        public async Task<EditGameViewModel> Build(Guid gameId)
         {
+            var game = await gameService.GetGameDetails(gameId);
             var groupedTags = await gameService.GetTags();
             var tags = groupedTags
                 .GroupBy(t => t.GroupTitle)

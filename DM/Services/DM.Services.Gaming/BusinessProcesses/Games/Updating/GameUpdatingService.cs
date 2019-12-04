@@ -69,9 +69,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var changes = updateBuilderFactory.Create<Game>(game.Id)
-                .MaybeField(c => c.Title, updateGame.Title)
-                .MaybeField(c => c.SettingName, updateGame.SettingName)
-                .MaybeField(c => c.SystemName, updateGame.SystemName)
+                .MaybeField(c => c.Title, updateGame.Title?.Trim())
+                .MaybeField(c => c.SettingName, updateGame.SettingName?.Trim())
+                .MaybeField(c => c.SystemName, updateGame.SystemName?.Trim())
                 .MaybeField(c => c.Info, updateGame.Info)
                 .MaybeField(c => c.HideTemper, updateGame.HideTemper)
                 .MaybeField(c => c.HideStory, updateGame.HideStory)
@@ -80,7 +80,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 .MaybeField(c => c.HideDiceResult, updateGame.HideDiceResult)
                 .MaybeField(c => c.ShowPrivateMessages, updateGame.ShowPrivateMessages)
                 .MaybeField(c => c.CommentariesAccessMode, updateGame.CommentariesAccessMode)
-                .MaybeField(c => c.DisableAlignment, updateGame.DisableAlignment);
+                .MaybeField(c => c.DisableAlignment, updateGame.DisableAlignment)
+                .MaybeField(c => c.Notepad, updateGame.Notepad);
 
             var oldAssistant = game.Assistant ?? game.PendingAssistant;
             if (updateGame.AssistantLogin != default &&

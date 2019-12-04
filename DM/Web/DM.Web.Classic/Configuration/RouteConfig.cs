@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Core.Dto.Enums;
 using DM.Web.Classic.Controllers;
 using DM.Web.Classic.Controllers.CommentariesControllers;
 using DM.Web.Classic.Controllers.CommunityControllers;
 using DM.Web.Classic.Controllers.ForumControllers;
+using DM.Web.Classic.Controllers.GameCommentariesControllers;
+using DM.Web.Classic.Controllers.GameControllers;
+using DM.Web.Classic.Views.GameSettings;
 using DM.Web.Core.Extensions.RouteExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -19,6 +23,26 @@ namespace DM.Web.Classic.Configuration
 
         public static void Register(IRouteBuilder routes)
         {
+            #region GameRoutes
+            routes.MapAction<GameController>("game/{gameId}", c => c.Index(Guid.Empty));
+
+            routes.MapAction<CreateGameController>("creategame", c => c.Create());
+
+            routes.MapAction<GameSettingsController>(
+                "editgame/{settingsType}/{gameId}",
+                c => c.Index(Guid.Empty, GameSettingsType.General),
+                new Dictionary<string, object>{{"settingsType", GameSettingsType.General}});
+
+            routes.MapAction<GameController>("observe/{gameId}", c => c.Observe(Guid.Empty));
+            routes.MapAction<GameController>("stopobserve/{gameId}", c => c.StopObserving(Guid.Empty));
+
+            routes.MapAction<GameCommentariesController>("outofsession/{gameIdEncoded}", c => c.LastUnread(null));
+            routes.MapAction<GameCommentariesController>("outofsession/{gameId}/{entityNumber}", c => c.Index(Guid.Empty, 0));
+
+            routes.MapAction<GamesListController>("tags/{tagId}/{entityNumber}", c => c.Tags(Guid.Empty, 0), PagingDefaults);
+            routes.MapAction<GamesListController>("games/{status}/{entityNumber}", c => c.Index(GameStatus.Active, 0), PagingDefaults);
+
+            #endregion
             #region CommentariesRoutes
             routes.MapAction<CommentariesController>("comments/{entityId}/{entityNumber}", c => c.Index(Guid.Empty, 0));
             #endregion

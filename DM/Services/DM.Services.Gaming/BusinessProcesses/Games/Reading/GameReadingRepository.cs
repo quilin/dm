@@ -34,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         {
             return dbContext.Games
                 .Where(AccessibilityFilters.GameAvailable(userId))
-                .Where(g => !query.Status.HasValue || g.Status == query.Status.Value)
+                .Where(g => query.Statuses.Contains(g.Status))
                 .Where(g => !query.TagId.HasValue || g.GameTags.Any(t => t.TagId == query.TagId.Value))
                 .CountAsync();
         }
@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         {
             return await dbContext.Games
                 .Where(AccessibilityFilters.GameAvailable(userId))
-                .Where(g => !query.Status.HasValue || g.Status == query.Status.Value)
+                .Where(g => query.Statuses.Contains(g.Status))
                 .Where(g => !query.TagId.HasValue || g.GameTags.Any(t => t.TagId == query.TagId.Value))
                 .OrderBy(g => g.ReleaseDate ?? g.CreateDate)
                 .Skip(pagingData.Skip)

@@ -1,28 +1,32 @@
 ﻿using System;
+using System.Threading.Tasks;
+using DM.Web.Classic.Extensions.RequestExtensions;
+using DM.Web.Classic.ViewComponents;
+using DM.Web.Classic.Views.GameSettings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.GameControllers
 {
     public class GameSettingsController : DmControllerBase
     {
-        private readonly IModuleSettingsViewModelBuilder moduleSettingsViewModelBuilder;
+        private readonly IGameSettingsViewModelBuilder gameSettingsViewModelBuilder;
 
         public GameSettingsController(
-            IModuleSettingsViewModelBuilder moduleSettingsViewModelBuilder
+            IGameSettingsViewModelBuilder gameSettingsViewModelBuilder
         )
         {
-            this.moduleSettingsViewModelBuilder = moduleSettingsViewModelBuilder;
+            this.gameSettingsViewModelBuilder = gameSettingsViewModelBuilder;
         }
 
-        public IActionResult Index(Guid moduleId, ModuleSettingsType settingsType)
+        public async Task<IActionResult> Index(Guid moduleId, GameSettingsType settingsType)
         {
             if (Request.IsAjaxRequest())
             {
-                return ViewComponent(nameof(ModuleSettings), new {moduleId, settingsType});
+                return ViewComponent(nameof(GameSettings), new {moduleId, settingsType});
             }
 
-            var moduleSettingsViewModel = moduleSettingsViewModelBuilder.Build(moduleId, settingsType);
-            return View("ModuleSettings", moduleSettingsViewModel);
+            var moduleSettingsViewModel = await gameSettingsViewModelBuilder.Build(moduleId, settingsType);
+            return View("GameSettings", moduleSettingsViewModel);
         }
     }
 }

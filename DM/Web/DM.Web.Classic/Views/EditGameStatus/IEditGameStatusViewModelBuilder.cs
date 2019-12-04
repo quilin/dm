@@ -5,6 +5,6 @@ namespace DM.Web.Classic.Views.EditGameStatus
 {
     public interface IEditGameStatusViewModelBuilder
     {
-        Task<EditGameStatusViewModel> Build(Guid moduleId);
+        Task<EditGameStatusViewModel> Build(Guid gameId);
     }
 }

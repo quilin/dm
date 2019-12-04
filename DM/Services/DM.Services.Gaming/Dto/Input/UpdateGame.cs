@@ -85,6 +85,11 @@ namespace DM.Services.Gaming.Dto.Input
         public CommentariesAccessMode? CommentariesAccessMode { get; set; }
 
         /// <summary>
+        /// Game notes
+        /// </summary>
+        public string Notepad { get; set; }
+
+        /// <summary>
         /// Game tag identifiers
         /// </summary>
         public IEnumerable<Guid> Tags { get; set; }

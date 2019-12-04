@@ -8,7 +8,7 @@ namespace DM.Web.Classic.Views.EditGame
     public class EditGameForm
     {
         [Required]
-        public Guid ModuleId { get; set; }
+        public Guid GameId { get; set; }
 
         [Required(ErrorMessage = "Введите название игры")]
         [StringLength(100, ErrorMessage = "не больше {1} символов")]

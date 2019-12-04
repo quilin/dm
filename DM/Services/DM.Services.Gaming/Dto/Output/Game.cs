@@ -56,9 +56,14 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser PendingAssistant { get; set; }
 
         /// <summary>
-        /// User participation flag
+        /// Active game character author ids
         /// </summary>
         public IEnumerable<Guid> ActiveCharacterUserIds { get; set; }
+        
+        /// <summary>
+        /// Game reader ids
+        /// </summary>
+        public IEnumerable<Guid> ReaderUserIds { get; set; }
 
         /// <summary>
         /// Game title

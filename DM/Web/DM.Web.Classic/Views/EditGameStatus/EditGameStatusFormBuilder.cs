@@ -8,7 +8,7 @@ namespace DM.Web.Classic.Views.EditGameStatus
         {
             return new EditGameStatusForm
             {
-                ModuleId = game.Id,
+                GameId = game.Id,
                 Status = game.Status
             };
         }

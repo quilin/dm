@@ -14,6 +14,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
+using FluentValidation;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
@@ -21,6 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
     /// <inheritdoc />
     public class GameReadingService : IGameReadingService
     {
+        private readonly IValidator<GamesQuery> validator;
         private readonly IIntentionManager intentionManager;
         private readonly IGameReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
@@ -31,12 +33,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
 
         /// <inheritdoc />
         public GameReadingService(
+            IValidator<GamesQuery> validator,
             IIntentionManager intentionManager,
             IGameReadingRepository repository,
             IIdentityProvider identityProvider,
             IUnreadCountersRepository unreadCountersRepository,
             IMemoryCache cache)
         {
+            this.validator = validator;
             this.intentionManager = intentionManager;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
@@ -84,6 +88,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(GamesQuery query)
         {
+            await validator.ValidateAndThrowAsync(query);
+
             var currentUserId = identity.User.UserId;
             var totalCount = await repository.Count(query, currentUserId);
             var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);

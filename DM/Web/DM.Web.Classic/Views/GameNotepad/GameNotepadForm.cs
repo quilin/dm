@@ -5,7 +5,7 @@ namespace DM.Web.Classic.Views.GameNotepad
 {
     public class GameNotepadForm
     {
-        public Guid ModuleId { get; set; }
+        public Guid GameId { get; set; }
 
         public string NotepadHtml { get; set; }
 

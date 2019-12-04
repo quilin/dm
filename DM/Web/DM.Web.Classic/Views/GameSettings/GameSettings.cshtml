@@ -1,4 +1,5 @@
-﻿@using DM.Web.Classic.Views.GameActions
+﻿@using DM.Web.Classic.ViewComponents
+@using DM.Web.Classic.Views.GameActions
 @using DM.Web.Classic.Views.GameSettings
 @using DM.Web.Core.Extensions.EnumExtensions
 @using DM.Web.Core.Helpers
@@ -11,7 +12,7 @@
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Settings, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+    @await Html.PartialAsync("Layout/GameLeftColumn", PageType.Settings, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
 }
 
 <h1 class="content-pageTitle">Настройки игры</h1>
