@@ -34,6 +34,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             return new CommentaryViewModel
             {
                 CommentaryId = comment.Id,
+                EntityId = comment.EntityId,
                 CreateDate = comment.CreateDate,
                 LastUpdateDate = comment.LastUpdateDate,
                 Author = userViewModelBuilder.Build(comment.Author),

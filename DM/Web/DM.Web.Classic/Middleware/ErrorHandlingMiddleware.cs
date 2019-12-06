@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Core.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace DM.Web.Classic.Middleware
@@ -49,9 +48,8 @@ namespace DM.Web.Classic.Middleware
                     return;
                 }
 
-                var path = httpContext.Request.GetEncodedUrl();
                 httpContext.Response.StatusCode = statusCode;
-                httpContext.Response.Redirect($"/error/{statusCode}/?path={path}");
+                httpContext.Response.Redirect($"/error/{statusCode}/?path={httpContext.Request.Path}");
             }
         }
     }

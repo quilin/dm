@@ -103,6 +103,7 @@ namespace DM.Web.Classic
                 .UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseCookiePolicy()
+                .UseStatusCodePagesWithRedirects("/error/{0}")
                 .UseMvc(RouteConfig.Register);
         }
     }

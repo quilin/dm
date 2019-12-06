@@ -47,11 +47,10 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         }
 
         [HttpPost]
-        public async Task<int> Remove(Guid commentaryId)
+        public async Task<int> Remove(Guid commentaryId, Guid entityId)
         {
             await commentaryDeletingService.Delete(commentaryId);
-            var comment = await commentaryReadingService.Get(commentaryId);
-            var (_, paging) = await commentaryReadingService.Get(comment.EntityId, PagingQuery.Empty);
+            var (_, paging) = await commentaryReadingService.Get(entityId, PagingQuery.Empty);
             return paging.TotalPagesCount;
         }
 

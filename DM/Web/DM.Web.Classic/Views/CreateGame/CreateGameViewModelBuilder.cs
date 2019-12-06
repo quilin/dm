@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Implementation;
@@ -27,8 +28,8 @@ namespace DM.Web.Classic.Views.CreateGame
 
         public async Task<CreateGameViewModel> Build()
         {
-            var groupedTags = await gameService.GetTags();
-            var tags = groupedTags.GroupBy(t => t.GroupTitle)
+            var tags = (await gameService.GetTags())
+                .GroupBy(t => t.GroupTitle)
                 .ToDictionary(g => g.Key,
                     g => (IDictionary<string, object>) g.ToDictionary(v => v.Title, v => (object) v.Id));
 
@@ -36,6 +37,10 @@ namespace DM.Web.Classic.Views.CreateGame
             {
                 Tags = tags,
                 CreateGameForm = createGameFormBuilder.Build(),
+                AttributeSchemes = new Dictionary<Guid, string>
+                {
+                    [Guid.Empty] = "Создать новую схему..."
+                },
                 Parser = bbParserProvider.CurrentInfo
             };
         }

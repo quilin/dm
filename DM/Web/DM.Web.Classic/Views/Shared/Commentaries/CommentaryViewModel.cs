@@ -6,6 +6,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
     public class CommentaryViewModel
     {
         public Guid CommentaryId { get; set; }
+        public Guid EntityId { get; set; }
         public DateTimeOffset CreateDate { get; set; }
         public DateTimeOffset? LastUpdateDate { get; set; }
         public UserViewModel Author { get; set; }

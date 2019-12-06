@@ -51,10 +51,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public Task<IEnumerable<GameTag>> GetTags()
         {
-            return cache.GetOrCreateAsync(TagListCacheKey, e =>
+            return cache.GetOrCreateAsync(TagListCacheKey, async e =>
             {
                 e.SlidingExpiration = TimeSpan.FromDays(1);
-                return repository.GetTags();
+                return await repository.GetTags();
             });
         }
 
