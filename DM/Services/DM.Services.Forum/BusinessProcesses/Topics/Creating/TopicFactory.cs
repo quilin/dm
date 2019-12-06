@@ -30,7 +30,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
                 CreateDate = dateTimeProvider.Now,
                 UserId = userId,
                 Title = createTopic.Title.Trim(),
-                Text = createTopic.Text.Trim()
+                Text = createTopic.Text?.Trim()
             };
         }
     }

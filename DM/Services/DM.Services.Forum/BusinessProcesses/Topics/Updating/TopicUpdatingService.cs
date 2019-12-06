@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
@@ -22,6 +24,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ITopicUpdatingRepository repository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
 
         /// <inheritdoc />
@@ -32,6 +35,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             ITopicUpdatingRepository repository,
+            IUnreadCountersRepository unreadCountersRepository,
             IInvokedEventPublisher invokedEventPublisher)
         {
             this.validator = validator;
@@ -40,6 +44,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
+            this.unreadCountersRepository = unreadCountersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
         }
 
@@ -67,6 +72,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
                     var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);
                     await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
                     changes.Field(t => t.ForumId, forum.Id);
+                    await unreadCountersRepository.ChangeParent(oldTopic.Forum.Id, UnreadEntryType.Message, forum.Id);
                 }
             }
 

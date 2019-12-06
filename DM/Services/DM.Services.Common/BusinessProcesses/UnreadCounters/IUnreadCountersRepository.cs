@@ -89,5 +89,14 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         /// <param name="parentId">Parent entity Id</param>
         /// <returns></returns>
         Task FlushAll(Guid userId, UnreadEntryType entryType, Guid parentId);
+
+        /// <summary>
+        /// Move unread counters to new parent
+        /// </summary>
+        /// <param name="parentId">Parent Id</param>
+        /// <param name="entryType">Entry type</param>
+        /// <param name="newParentId">New parent Id</param>
+        /// <returns></returns>
+        Task ChangeParent(Guid parentId, UnreadEntryType entryType, Guid newParentId);
     }
 }

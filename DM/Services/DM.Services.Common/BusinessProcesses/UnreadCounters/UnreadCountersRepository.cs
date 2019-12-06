@@ -166,5 +166,14 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
                         })
                     {IsUpsert = true}));
         }
+
+        /// <inheritdoc />
+        public async Task ChangeParent(Guid parentId, UnreadEntryType entryType, Guid newParentId)
+        {
+            await Collection.UpdateManyAsync(
+                Filter.Eq(c => c.ParentId, parentId) &
+                Filter.Eq(c => c.EntryType, entryType),
+                Update.Set(c => c.ParentId, newParentId));
+        }
     }
 }
