@@ -7,7 +7,7 @@
 <h2 class="content-mediumTitle">@Model.GameTitle</h2>
 <ul class="leftMenu-list">
     <li class="leftMenu-list-item">
-        @await Component.InvokeAsync(nameof(GameRooms), new{ moduleId = Model.GameId, pageType = Model.PageType, pageId = Model.PageId})
+        @await Component.InvokeAsync(nameof(GameRooms), new{ gameId = Model.GameId, pageType = Model.PageType, pageId = Model.PageId})
     </li>
     @if (Model.CanReadCommentaries)
     {
@@ -19,7 +19,7 @@
             }
             else
             {
-                <a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"moduleIdEncoded", Model.GameId.EncodeToReadable(Model.GameTitle)}})">
+                <a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"gameIdEncoded", Model.GameId.EncodeToReadable(Model.GameTitle)}})">
                     Обсуждение&nbsp;@Html.UnreadCommentsIcon(Model.UnreadCommentariesCount, true)
                 </a>
             }
@@ -33,7 +33,7 @@
         }
         else
         {
-            @Html.ActionLink("Информация", "Index", "Game", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.GameTitle)}}, null)
+            @Html.ActionLink("Информация", "Index", "Game", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.GameTitle)}}, null)
         }
     </li>
     <li class="leftMenu-list-item">
@@ -44,7 +44,7 @@
         }
         else
         {
-            @Html.ActionLink("Персонажи", "Index", "CharactersList", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.GameTitle) } }, null)
+            @Html.ActionLink("Персонажи", "Index", "CharactersList", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.GameTitle) } }, null)
         }
     </li>
 </ul>
@@ -53,7 +53,7 @@
     @if (Model.CanTakeOnPremoderation)
     {
         <li class="leftMenu-list-item">
-            @Html.ActionLink("Взять на премодерацию", "Premoderate", "EditGameStatus", new RouteValueDictionary {{"moduleId", Model.GameId}}, new Dictionary<string, object> {{"id", "PremoderateLink"}})
+            @Html.ActionLink("Взять на премодерацию", "Premoderate", "EditGameStatus", new RouteValueDictionary {{"gameId", Model.GameId}}, new Dictionary<string, object> {{"id", "PremoderateLink"}})
         </li>
     }
     @if (Model.CanCreateCharacter && !Model.CanCreateNpc)

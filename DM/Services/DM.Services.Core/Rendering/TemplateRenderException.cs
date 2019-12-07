@@ -9,14 +9,8 @@ namespace DM.Services.Core.Rendering
     public class TemplateRenderException : Exception
     {
         /// <inheritdoc />
-        public TemplateRenderException(string message) : base(message)
-        {
-        }
-
-        /// <inheritdoc />
         public TemplateRenderException(string templatePath, IEnumerable<string> searchedLocations)
-            : base(
-                $"Could not locate view {templatePath}, searched locations were: {string.Join(",", "searchedLocations")}")
+            : base($"Could not locate view {templatePath}, searched locations were: {string.Join(",", searchedLocations)}")
         {
         }
     }

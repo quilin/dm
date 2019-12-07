@@ -34,13 +34,13 @@ namespace DM.Web.Classic.Views.GameActions
             {
                 GameId = gameId,
                 GameTitle = game.Title,
-                CanReadCommentaries = intentionManager.IsAllowed(GameIntention.ReadComments, game).Result,
-                CanCreateCharacter = intentionManager.IsAllowed(GameIntention.CreateCharacter, game).Result,
+                CanReadCommentaries = await intentionManager.IsAllowed(GameIntention.ReadComments, game),
+                CanCreateCharacter = await intentionManager.IsAllowed(GameIntention.CreateCharacter, game),
                 CanCreateNpc = participation.HasFlag(GameParticipation.Authority),
-                CanObserve = intentionManager.IsAllowed(GameIntention.Subscribe, game).Result,
+                CanObserve = await intentionManager.IsAllowed(GameIntention.Subscribe, game),
                 CanChangeStatus = participation.HasFlag(GameParticipation.Authority),
-                CanTakeOnPremoderation = intentionManager.IsAllowed(GameIntention.SetStatusModeration, game).Result,
-                CanEditInfo = intentionManager.IsAllowed(GameIntention.Edit, game).Result,
+                CanTakeOnPremoderation = await intentionManager.IsAllowed(GameIntention.SetStatusModeration, game),
+                CanEditInfo = await intentionManager.IsAllowed(GameIntention.Edit, game),
                 UnreadCommentariesCount = game.UnreadCommentsCount,
                 PageType = pageType,
                 PageId = pageId

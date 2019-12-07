@@ -8,7 +8,7 @@ namespace DM.Web.Classic.Views.GameInfo
 {
     public class GameViewModel
     {
-        public Guid ModuleId { get; set; }
+        public Guid GameId { get; set; }
         public GameStatus Status { get; set; }
         public DateTimeOffset CreateDate { get; set; }
         public DateTimeOffset? ReleaseDate { get; set; }

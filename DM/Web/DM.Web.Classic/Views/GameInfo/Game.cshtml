@@ -12,7 +12,7 @@
 @section LeftColumn
 {
     @await Html.PartialAsync("Layout/GameLeftColumn", PageType.Information,
-        new ViewDataDictionary(ViewData) {{"GameId", Model.ModuleId}})
+        new ViewDataDictionary(ViewData) {{"GameId", Model.GameId}})
 }
 
 <h1 class="content-pageTitle">@Model.Title</h1>
