@@ -246,14 +246,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// User waits for posts
         /// </summary>
-        [InverseProperty(nameof(PostAnticipation.User))]
-        public virtual ICollection<PostAnticipation> WaitsForPosts { get; set; }
+        [InverseProperty(nameof(PendingPost.AwaitingUser))]
+        public virtual ICollection<PendingPost> WaitsForPosts { get; set; }
 
         /// <summary>
         /// User posts are required
         /// </summary>
-        [InverseProperty(nameof(PostAnticipation.Target))]
-        public virtual ICollection<PostAnticipation> PostsRequired { get; set; }
+        [InverseProperty(nameof(PendingPost.PendingUser))]
+        public virtual ICollection<PendingPost> PostsRequired { get; set; }
 
         #endregion
 

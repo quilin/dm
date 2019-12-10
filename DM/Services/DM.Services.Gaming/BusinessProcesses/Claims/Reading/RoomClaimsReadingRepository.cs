@@ -52,8 +52,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
         /// <inheritdoc />
         public async Task<RoomClaim> GetClaim(Guid claimId, Guid userId)
         {
-            return await dbContext.ParticipantRoomLinks
-                .Where(l => l.ParticipantRoomLinkId == claimId)
+            return await dbContext.RoomClaims
+                .Where(l => l.RoomClaimId == claimId)
                 .Where(l => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(l.Room))
                 .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();

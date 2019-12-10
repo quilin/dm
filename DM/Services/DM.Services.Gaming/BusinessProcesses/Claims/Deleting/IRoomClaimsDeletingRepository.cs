@@ -14,6 +14,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
         /// </summary>
         /// <param name="deleteLink"></param>
         /// <returns></returns>
-        Task Delete(IUpdateBuilder<ParticipantRoomLink> deleteLink);
+        Task Delete(IUpdateBuilder<RoomClaim> deleteLink);
     }
 }

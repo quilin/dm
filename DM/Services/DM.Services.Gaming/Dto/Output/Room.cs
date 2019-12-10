@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Gaming.Dto.Output
@@ -32,6 +33,16 @@ namespace DM.Services.Gaming.Dto.Output
         /// Room access type
         /// </summary>
         public RoomAccessType AccessType { get; set; }
+        
+        /// <summary>
+        /// Room character and reader claims
+        /// </summary>
+        public IEnumerable<RoomClaim> Claims { get; set; }
+        
+        /// <summary>
+        /// Post anticipations
+        /// </summary>
+        public IEnumerable<PendingPost> Pendings { get; set; }
 
         /// <summary>
         /// Unread posts count

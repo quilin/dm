@@ -10,14 +10,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     /// <summary>
     /// DAL model for character room link
     /// </summary>
-    [Table("ParticipantRoomLinks")]
-    public class ParticipantRoomLink
+    public class RoomClaim
     {
         /// <summary>
         /// Link identifier
         /// </summary>
         [Key]
-        public Guid ParticipantRoomLinkId { get; set; }
+        public Guid RoomClaimId { get; set; }
 
         /// <summary>
         /// Participant identifier

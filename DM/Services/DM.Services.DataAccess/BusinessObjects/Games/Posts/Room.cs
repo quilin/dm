@@ -79,8 +79,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// <summary>
         /// Character access links
         /// </summary>
-        [InverseProperty(nameof(ParticipantRoomLink.Room))]
-        public virtual ICollection<ParticipantRoomLink> ParticipantLinks { get; set; }
+        [InverseProperty(nameof(RoomClaim.Room))]
+        public virtual ICollection<RoomClaim> ParticipantLinks { get; set; }
 
         /// <summary>
         /// Posts
@@ -91,7 +91,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// <summary>
         /// Post anticipations in room
         /// </summary>
-        [InverseProperty(nameof(PostAnticipation.Room))]
-        public virtual ICollection<PostAnticipation> PostsAwaited { get; set; }
+        [InverseProperty(nameof(PendingPost.Room))]
+        public virtual ICollection<PendingPost> PendingPosts { get; set; }
     }
 }

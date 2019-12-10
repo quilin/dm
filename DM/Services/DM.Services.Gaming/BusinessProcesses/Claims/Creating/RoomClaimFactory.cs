@@ -18,11 +18,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         }
         
         /// <inheritdoc />
-        public ParticipantRoomLink Create(CreateRoomClaim roomClaim, Guid participantId)
+        public RoomClaim Create(CreateRoomClaim roomClaim, Guid participantId)
         {
-            return new ParticipantRoomLink
+            return new RoomClaim
             {
-                ParticipantRoomLinkId = guidFactory.Create(),
+                RoomClaimId = guidFactory.Create(),
                 Policy = roomClaim.Policy,
                 RoomId = roomClaim.RoomId,
                 ParticipantId = participantId

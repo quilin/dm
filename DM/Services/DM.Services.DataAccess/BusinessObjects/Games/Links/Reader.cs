@@ -43,7 +43,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         /// <summary>
         /// Room links
         /// </summary>
-        [InverseProperty(nameof(ParticipantRoomLink.Reader))]
-        public virtual ICollection<ParticipantRoomLink> RoomLinks { get; set; }
+        [InverseProperty(nameof(RoomClaim.Reader))]
+        public virtual ICollection<RoomClaim> RoomLinks { get; set; }
     }
 }

@@ -115,7 +115,7 @@ namespace DM.Services.DataAccess
         /// <summary>
         /// Characters in rooms
         /// </summary>
-        public DbSet<ParticipantRoomLink> ParticipantRoomLinks { get; set; }
+        public DbSet<RoomClaim> RoomClaims { get; set; }
 
         /// <summary>
         /// Characters
@@ -140,7 +140,7 @@ namespace DM.Services.DataAccess
         /// <summary>
         /// Game post anticipations
         /// </summary>
-        public DbSet<PostAnticipation> PostAnticipations { get; set; }
+        public DbSet<PendingPost> PendingPosts { get; set; }
 
         /// <summary>
         /// Game post rating votes

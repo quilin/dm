@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.API.Dto.Games
@@ -31,6 +32,16 @@ namespace DM.Web.API.Dto.Games
         /// Room content type
         /// </summary>
         public RoomType? Type { get; set; }
+
+        /// <summary>
+        /// Room claims
+        /// </summary>
+        public IEnumerable<RoomClaim> Claims { get; set; }
+
+        /// <summary>
+        /// Post pendings
+        /// </summary>
+        public IEnumerable<PostPending> Pendings { get; set; }
 
         /// <summary>
         /// Number of unread posts

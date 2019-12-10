@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Gaming.Dto.Output;
+using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
 {
@@ -15,6 +14,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         /// </summary>
         /// <param name="updateClaim">Update rules</param>
         /// <returns></returns>
-        Task<RoomClaim> Update(IUpdateBuilder<ParticipantRoomLink> updateClaim);
+        Task<Dto.Output.RoomClaim> Update(IUpdateBuilder<RoomClaim> updateClaim);
     }
 }

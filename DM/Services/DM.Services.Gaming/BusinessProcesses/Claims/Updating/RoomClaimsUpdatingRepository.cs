@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
+using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
 {
@@ -26,13 +25,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         }
 
         /// <inheritdoc />
-        public async Task<RoomClaim> Update(IUpdateBuilder<ParticipantRoomLink> updateClaim)
+        public async Task<Dto.Output.RoomClaim> Update(IUpdateBuilder<RoomClaim> updateClaim)
         {
             var linkId = updateClaim.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
-            return await dbContext.ParticipantRoomLinks
-                .Where(l => l.ParticipantRoomLinkId == linkId)
-                .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
+            return await dbContext.RoomClaims
+                .Where(l => l.RoomClaimId == linkId)
+                .ProjectTo<Dto.Output.RoomClaim>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
     }

@@ -134,8 +134,8 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters
         /// <summary>
         /// Room access
         /// </summary>
-        [InverseProperty(nameof(ParticipantRoomLink.Character))]
-        public virtual ICollection<ParticipantRoomLink> RoomLinks { get; set; }
+        [InverseProperty(nameof(RoomClaim.Character))]
+        public virtual ICollection<RoomClaim> RoomLinks { get; set; }
 
         /// <summary>
         /// Posts

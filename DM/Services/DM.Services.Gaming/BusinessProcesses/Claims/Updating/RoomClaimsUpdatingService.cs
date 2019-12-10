@@ -5,14 +5,13 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Claims.Reading;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 using DM.Services.Gaming.Dto.Input;
-using DM.Services.Gaming.Dto.Output;
 using FluentValidation;
+using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
 {
@@ -47,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         }
         
         /// <inheritdoc />
-        public async Task<RoomClaim> Update(UpdateRoomClaim updateRoomClaim)
+        public async Task<Dto.Output.RoomClaim> Update(UpdateRoomClaim updateRoomClaim)
         {
             await validator.ValidateAndThrowAsync(updateRoomClaim);
             var oldClaim = await readingRepository.GetClaim(updateRoomClaim.ClaimId, identity.User.UserId);
@@ -58,11 +57,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
             {
                 throw new HttpBadRequestException(new Dictionary<string, string>
                 {
-                    [nameof(RoomClaim.Policy)] = ValidationError.Invalid
+                    [nameof(Dto.Output.RoomClaim.Policy)] = ValidationError.Invalid
                 });
             }
 
-            var updateBuilder = updateBuilderFactory.Create<ParticipantRoomLink>(updateRoomClaim.ClaimId)
+            var updateBuilder = updateBuilderFactory.Create<RoomClaim>(updateRoomClaim.ClaimId)
                 .Field(c => c.Policy, updateRoomClaim.Policy);
             return await repository.Update(updateBuilder);
         }

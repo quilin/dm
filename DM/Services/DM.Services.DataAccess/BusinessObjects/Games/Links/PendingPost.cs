@@ -9,24 +9,23 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
     /// <summary>
     /// DAL model for post anticipation (when users await one another in same room)
     /// </summary>
-    [Table("PostWaitNotifications")]
-    public class PostAnticipation
+    public class PendingPost
     {
         /// <summary>
         /// Anticipation identifier
         /// </summary>
         [Key]
-        public Guid PostAnticipationId { get; set; }
+        public Guid PostPendingId { get; set; }
 
         /// <summary>
         /// Waiting user identifier
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid AwaitingUserId { get; set; }
 
         /// <summary>
         /// User that should write a post identifier
         /// </summary>
-        public Guid TargetId { get; set; }
+        public Guid PendingUserId { get; set; }
 
         /// <summary>
         /// Room identifier
@@ -41,14 +40,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         /// <summary>
         /// Waiting user
         /// </summary>
-        [ForeignKey(nameof(UserId))]
-        public virtual User User { get; set; }
+        [ForeignKey(nameof(AwaitingUserId))]
+        public virtual User AwaitingUser { get; set; }
 
         /// <summary>
         /// User that should write a post
         /// </summary>
-        [ForeignKey(nameof(TargetId))]
-        public virtual User Target { get; set; }
+        [ForeignKey(nameof(PendingUserId))]
+        public virtual User PendingUser { get; set; }
 
         /// <summary>
         /// Room

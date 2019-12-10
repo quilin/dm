@@ -18,7 +18,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
         }
         
         /// <inheritdoc />
-        public Task Delete(IUpdateBuilder<ParticipantRoomLink> deleteLink)
+        public Task Delete(IUpdateBuilder<RoomClaim> deleteLink)
         {
             deleteLink.AttachTo(dbContext);
             return dbContext.SaveChangesAsync();

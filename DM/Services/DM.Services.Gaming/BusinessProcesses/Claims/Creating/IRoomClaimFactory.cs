@@ -15,6 +15,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         /// <param name="roomClaim">DTO model</param>
         /// <param name="participantId">Participant identifier</param>
         /// <returns></returns>
-        ParticipantRoomLink Create(CreateRoomClaim roomClaim, Guid participantId);
+        RoomClaim Create(CreateRoomClaim roomClaim, Guid participantId);
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.DataAccess.BusinessObjects.Games.Links;
-using DM.Services.Gaming.Dto.Output;
+using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
 {
@@ -13,9 +12,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         /// <summary>
         /// Save room claim
         /// </summary>
-        /// <param name="link">DAL model</param>
+        /// <param name="claim">DAL model</param>
         /// <returns></returns>
-        Task<RoomClaim> Create(ParticipantRoomLink link);
+        Task<Dto.Output.RoomClaim> Create(RoomClaim claim);
 
         /// <summary>
         /// Find reader in game
