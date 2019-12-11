@@ -4,6 +4,7 @@ using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 using DM.Web.API.Services.Gaming;
+using DM.Web.API.Services.Gaming.Rooms;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -82,17 +83,6 @@ namespace DM.Web.API.Controllers.v1.Gaming
         }
 
         /// <summary>
-        /// Get list of room claims
-        /// </summary>
-        /// <param name="id"></param>
-        /// <response code="200"></response>
-        /// <response code="410">Room not found</response>
-        [HttpGet("{id}/claims", Name = nameof(GetClaims))]
-        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 410)]
-        public async Task<IActionResult> GetClaims(Guid id) => Ok(await claimApiService.GetAll(id));
-
-        /// <summary>
         /// Post new room claim
         /// </summary>
         /// <param name="id"></param>
@@ -114,20 +104,9 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> PostClaim(Guid id, [FromBody] RoomClaim claim)
         {
             var result = await claimApiService.Create(id, claim);
-            return CreatedAtRoute(nameof(GetClaim),
-                new {id = result.Resource.Id}, result);
+            return CreatedAtRoute(nameof(GetRoom),
+                new {id}, result);
         }
-
-        /// <summary>
-        /// Get room claim
-        /// </summary>
-        /// <param name="id"></param>
-        /// <response code="200"></response>
-        /// <response code="410">Claim not found</response>
-        [HttpGet("claims/{id}", Name = nameof(GetClaim))]
-        [ProducesResponseType(typeof(ListEnvelope<RoomClaim>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 410)]
-        public async Task<IActionResult> GetClaim(Guid id) => Ok(await claimApiService.Get(id));
 
         /// <summary>
         /// Update room claim
@@ -168,7 +147,6 @@ namespace DM.Web.API.Controllers.v1.Gaming
             await claimApiService.Delete(id);
             return NoContent();
         }
-            
 
         /// <summary>
         /// Get list of posts

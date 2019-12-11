@@ -6,6 +6,7 @@ using DM.Web.API.Dto.Games;
 using DM.Web.API.Dto.Shared;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Gaming;
+using DM.Web.API.Services.Gaming.Rooms;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 

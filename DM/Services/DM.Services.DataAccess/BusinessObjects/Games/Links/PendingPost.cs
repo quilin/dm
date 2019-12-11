@@ -15,7 +15,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Links
         /// Anticipation identifier
         /// </summary>
         [Key]
-        public Guid PostPendingId { get; set; }
+        public Guid PendingPostId { get; set; }
 
         /// <summary>
         /// Waiting user identifier

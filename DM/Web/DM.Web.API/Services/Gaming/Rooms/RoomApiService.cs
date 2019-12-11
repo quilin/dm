@@ -10,7 +10,7 @@ using DM.Services.Gaming.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 
-namespace DM.Web.API.Services.Gaming
+namespace DM.Web.API.Services.Gaming.Rooms
 {
     /// <inheritdoc />
     public class RoomApiService : IRoomApiService

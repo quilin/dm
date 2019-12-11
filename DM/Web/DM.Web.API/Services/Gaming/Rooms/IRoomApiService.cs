@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 
-namespace DM.Web.API.Services.Gaming
+namespace DM.Web.API.Services.Gaming.Rooms
 {
     /// <summary>
     /// API service for game rooms

@@ -27,7 +27,7 @@ namespace DM.Services.Gaming.Dto
             CreateMap<RoomClaim, Output.RoomClaim>()
                 .ForMember(d => d.Id, s => s.MapFrom(l => l.RoomClaimId));
             CreateMap<DbPendingPost, PendingPost>()
-                .ForMember(d => d.Id, s => s.MapFrom(p => p.PostPendingId))
+                .ForMember(d => d.Id, s => s.MapFrom(p => p.PendingPostId))
                 .ForMember(d => d.AwaitingUser, s => s.MapFrom(p => p.AwaitingUser))
                 .ForMember(d => d.PendingUser, s => s.MapFrom(p => p.PendingUser))
                 .ForMember(d => d.WaitsSince, s => s.MapFrom(p => p.CreateDate));
