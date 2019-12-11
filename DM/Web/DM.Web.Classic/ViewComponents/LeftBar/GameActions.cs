@@ -15,10 +15,10 @@ namespace DM.Web.Classic.ViewComponents.LeftBar
             this.gameActionsViewModelBuilder = gameActionsViewModelBuilder;
         }
         
-        public async Task<IViewComponentResult> InvokeAsync(Guid moduleId, PageType? pageType, Guid? pageId)
+        public async Task<IViewComponentResult> InvokeAsync(Guid gameId, PageType? pageType, Guid? pageId)
         {
             var moduleActionsViewModel = await gameActionsViewModelBuilder.Build(
-                moduleId, pageType ?? PageType.Unknown, pageId);
+                gameId, pageType ?? PageType.Unknown, pageId);
             return View("~/Views/GameActions/GameActions.cshtml", moduleActionsViewModel);
         }
     }

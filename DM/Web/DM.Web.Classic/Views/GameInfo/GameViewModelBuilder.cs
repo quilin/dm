@@ -67,7 +67,7 @@ namespace DM.Web.Classic.Views.GameInfo
 
             return new GameViewModel
             {
-                ModuleId = game.Id,
+                GameId = game.Id,
                 Status = game.Status,
                 CreateDate = game.CreateDate,
                 ReleaseDate = game.ReleaseDate,

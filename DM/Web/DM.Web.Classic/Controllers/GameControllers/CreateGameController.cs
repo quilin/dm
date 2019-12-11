@@ -37,8 +37,23 @@ namespace DM.Web.Classic.Controllers.GameControllers
         [HttpPost, ValidationRequired]
         public async Task<IActionResult> Create(CreateGameForm createGameForm)
         {
-            var game = await gameCreatingService.Create(new CreateGame());
-            return RedirectToAction("Index", "Game", new {moduleId = game.Id.EncodeToReadable(game.Title)});
+            var game = await gameCreatingService.Create(new CreateGame
+            {
+                Title = createGameForm.Title,
+                SystemName = createGameForm.SystemName,
+                SettingName = createGameForm.SettingName,
+                Info = createGameForm.Info,
+                CommentariesAccessMode = createGameForm.CommentariesAccessMode,
+                Draft = createGameForm.CreateAsRegistration,
+                HideTemper = createGameForm.HideTemper,
+                HideStory = createGameForm.HideStory,
+                HideSkills = createGameForm.HideSkills,
+                HideInventory = createGameForm.HideInventory,
+                HideDiceResult = createGameForm.HideDiceResults,
+                ShowPrivateMessages = createGameForm.ShowPrivateMessages,
+                DisableAlignment = createGameForm.DisableAlignment
+            });
+            return RedirectToAction("Index", "Game", new {gameId = game.Id.EncodeToReadable(game.Title)});
         }
     }
 }

@@ -28,6 +28,7 @@ namespace DM.Web.API
         {
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
                 .UseLibuv()
+                .UseUrls("http://localhost:5003")
                 .UseSerilog()
                 .UseStartup<Startup>();
 

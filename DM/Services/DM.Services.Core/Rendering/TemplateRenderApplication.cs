@@ -37,6 +37,7 @@ namespace DM.Services.Core.Rendering
             {
                 ApplicationName = assembly.GetName().Name
             });
+            services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.FileProviders.Clear();

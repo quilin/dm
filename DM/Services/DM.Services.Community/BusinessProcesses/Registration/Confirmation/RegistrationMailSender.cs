@@ -10,13 +10,13 @@ namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
     /// <inheritdoc />
     public class RegistrationMailSender : IRegistrationMailSender
     {
-        private readonly ITemplateRenderer renderer;
+        private readonly IRenderer renderer;
         private readonly IMailSender mailSender;
         private readonly IntegrationSettings integrationSettings;
 
         /// <inheritdoc />
         public RegistrationMailSender(
-            ITemplateRenderer renderer,
+            IRenderer renderer,
             IMailSender mailSender,
             IOptions<IntegrationSettings> integrationSettings)
         {

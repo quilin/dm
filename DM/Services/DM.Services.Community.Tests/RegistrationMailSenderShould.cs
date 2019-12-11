@@ -14,14 +14,14 @@ namespace DM.Services.Community.Tests
 {
     public class RegistrationMailSenderShould : UnitTestBase
     {
-        private readonly Mock<ITemplateRenderer> renderer;
-        private readonly ISetup<ITemplateRenderer, Task<string>> renderSetup;
+        private readonly Mock<IRenderer> renderer;
+        private readonly ISetup<IRenderer, Task<string>> renderSetup;
         private readonly Mock<IMailSender> sender;
         private readonly RegistrationMailSender registrationMailSender;
 
         public RegistrationMailSenderShould()
         {
-            renderer = Mock<ITemplateRenderer>();
+            renderer = Mock<IRenderer>();
             renderSetup = renderer
                 .Setup(r => r.Render(It.IsAny<string>(), It.IsAny<RegistrationConfirmationViewModel>()));
 
