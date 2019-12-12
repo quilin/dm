@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
@@ -18,8 +19,19 @@ namespace DM.Services.Gaming.Dto
             CreateMap<DbRoom, Room>()
                 .Include<DbRoom, RoomToUpdate>()
                 .ForMember(d => d.Id, s => s.MapFrom(r => r.RoomId))
-                .ForMember(d => d.Claims, s => s.MapFrom(r => r.ParticipantLinks))
-                .ForMember(d => d.Pendings, s => s.MapFrom(r => r.PendingPosts));
+                .ForMember(d => d.Claims, s => s.MapFrom(r => r.RoomClaims))
+                .ForMember(d => d.Pendings, s => s.MapFrom(r => r.PendingPosts
+                    .Where(p =>
+                        (
+                            p.Room.Game.MasterId == p.AwaitingUserId ||
+                            p.Room.Game.AssistantId == p.AwaitingUserId ||
+                            p.Room.RoomClaims.Any(c => c.Character.UserId == p.AwaitingUserId)
+                        ) &&
+                        (
+                            p.Room.Game.MasterId == p.PendingUserId ||
+                            p.Room.Game.AssistantId == p.PendingUserId ||
+                            p.Room.RoomClaims.Any(c => c.Character.UserId == p.PendingUserId)
+                        ))));
 
             CreateMap<DbRoom, RoomOrderInfo>()
                 .ForMember(d => d.Id, s => s.MapFrom(r => r.RoomId));

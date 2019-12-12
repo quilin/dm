@@ -20,8 +20,4 @@
       <PackageReference Include="FluentValidation" Version="8.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="BusinessProcesses\Pending\Deleting" />
-    </ItemGroup>
-
 </Project>

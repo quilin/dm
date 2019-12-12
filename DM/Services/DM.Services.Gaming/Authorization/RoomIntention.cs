@@ -13,6 +13,11 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Create new post anticipation
         /// </summary>
-        CreatePendingPost = 2
+        CreatePendingPost = 2,
+
+        /// <summary>
+        /// Delete post anticipation
+        /// </summary>
+        DeletePending = 3
     }
 }

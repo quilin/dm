@@ -19,16 +19,19 @@ namespace DM.Web.API.Controllers.v1.Gaming
     {
         private readonly IRoomApiService roomApiService;
         private readonly IRoomClaimApiService claimApiService;
+        private readonly IPendingPostApiService pendingPostApiService;
         private readonly IPostApiService postApiService;
 
         /// <inheritdoc />
         public RoomController(
             IRoomApiService roomApiService,
             IRoomClaimApiService claimApiService,
+            IPendingPostApiService pendingPostApiService,
             IPostApiService postApiService)
         {
             this.roomApiService = roomApiService;
             this.claimApiService = claimApiService;
+            this.pendingPostApiService = pendingPostApiService;
             this.postApiService = postApiService;
         }
 
@@ -145,6 +148,46 @@ namespace DM.Web.API.Controllers.v1.Gaming
         public async Task<IActionResult> DeleteClaim(Guid id)
         {
             await claimApiService.Delete(id);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Post new pending post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="pendingPost"></param>
+        /// <response code="201"></response>
+        /// <response code="400">Some of claim parameters were invalid</response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to create post pendings in this room</response>
+        /// <response code="409">Post pending already exists</response>
+        /// <response code="410">Room not found</response>
+        [HttpPost("{id}/pendings", Name = nameof(CreatePendingPost))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<PendingPost>), 201)]
+        public async Task<IActionResult> CreatePendingPost(Guid id, [FromBody] PendingPost pendingPost)
+        {
+            var result = await pendingPostApiService.Create(id, pendingPost);
+            return CreatedAtRoute(nameof(GetRoom), new {id}, result);
+        }
+
+        /// <summary>
+        /// Delete pending post
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to delete this pending post</response>
+        /// <response code="410">Pending post not found</response>
+        [HttpDelete("claims/{id}", Name = nameof(DeletePendingPost))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> DeletePendingPost(Guid id)
+        {
+            await pendingPostApiService.Delete(id);
             return NoContent();
         }
 

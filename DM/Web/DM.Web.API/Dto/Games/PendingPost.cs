@@ -6,7 +6,7 @@ namespace DM.Web.API.Dto.Games
     /// <summary>
     /// DTO model for post anticipation
     /// </summary>
-    public class PostPending
+    public class PendingPost
     {
         /// <summary>
         /// Identifier

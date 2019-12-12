@@ -6,6 +6,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [DbContext(typeof(DmDbContext))]
     partial class DmDbContextModelSnapshot : ModelSnapshot
     {
@@ -463,7 +466,7 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPost", b =>
                 {
-                    b.Property<Guid>("PostPendingId")
+                    b.Property<Guid>("PendingPostId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("AwaitingUserId");
@@ -474,7 +477,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid>("RoomId");
 
-                    b.HasKey("PostPendingId");
+                    b.HasKey("PendingPostId");
 
                     b.HasIndex("AwaitingUserId");
 
@@ -1022,7 +1025,7 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
-                        .WithMany("ParticipantLinks")
+                        .WithMany("RoomClaims")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

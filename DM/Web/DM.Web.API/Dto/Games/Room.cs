@@ -41,7 +41,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Post pendings
         /// </summary>
-        public IEnumerable<PostPending> Pendings { get; set; }
+        public IEnumerable<PendingPost> Pendings { get; set; }
 
         /// <summary>
         /// Number of unread posts

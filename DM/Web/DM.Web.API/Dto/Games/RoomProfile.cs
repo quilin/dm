@@ -30,6 +30,14 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.ReaderLogin, s => s.MapFrom(r => r.User != null ? r.User.Login : null));
             CreateMap<RoomClaim, UpdateRoomClaim>()
                 .ForMember(d => d.ClaimId, s => s.MapFrom(r => r.Id));
+
+            CreateMap<DM.Services.Gaming.Dto.Output.PendingPost, PendingPost>()
+                .ForMember(d => d.Id, s => s.MapFrom(p => p.Id.EncodeToReadable(string.Empty)))
+                .ForMember(d => d.Awaiting, s => s.MapFrom(p => p.AwaitingUser))
+                .ForMember(d => d.Pending, s => s.MapFrom(p => p.PendingUser));
+
+            CreateMap<PendingPost, CreatePendingPost>()
+                .ForMember(d => d.PendingUserLogin, s => s.MapFrom(p => p.Pending.Login));
         }
     }
 }

@@ -4,6 +4,11 @@ namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
     /// Message queue event type
+    ///
+    /// 1-99    Community events
+    /// 100-199 Forum events
+    /// 200-299 TBD
+    /// 300-499 Game events
     /// </summary>
     public enum EventType
     {
@@ -52,25 +57,25 @@ namespace DM.Services.Core.Dto.Enums
         /// New commentary has been created on forum
         /// </summary>
         [EventRoutingKey("forum.comment.created")]
-        NewForumComment = 201,
+        NewForumComment = 111,
 
         /// <summary>
         /// Forum commentary has been updated
         /// </summary>
         [EventRoutingKey("forum.comment.changed")]
-        ChangedForumComment = 202,
+        ChangedForumComment = 112,
 
         /// <summary>
         /// Forum commentary has been deleted
         /// </summary>
         [EventRoutingKey("forum.comment.deleted")]
-        DeletedForumComment = 203,
+        DeletedForumComment = 113,
 
         /// <summary>
         /// Forum commentary has been liked
         /// </summary>
         [EventRoutingKey("forum.comment.liked")]
-        LikedForumComment = 204,
+        LikedForumComment = 114,
 
         /// <summary>
         /// New game has been created
@@ -244,6 +249,24 @@ namespace DM.Services.Core.Dto.Enums
         /// Room has been deleted
         /// </summary>
         [EventRoutingKey("game.room.deleted")]
-        DeletedRoom = 383
+        DeletedRoom = 383,
+
+        /// <summary>
+        /// New post pending has been created
+        /// </summary>
+        [EventRoutingKey("game.room.pending.created")]
+        NewPendingPost = 401,
+
+        /// <summary>
+        /// Post pending has been deleted
+        /// </summary>
+        [EventRoutingKey("game.room.pending.deleted")]
+        DeletedPendingPost = 402,
+
+        /// <summary>
+        /// Post pending has been responded
+        /// </summary>
+        [EventRoutingKey("game.room.pending.responded")]
+        RespondedPendingPost = 403
     }
 }

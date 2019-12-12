@@ -3,21 +3,19 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
-using DbRoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
-namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
+namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
 {
     /// <inheritdoc />
-    public class RoomClaimsUpdatingRepository : IRoomClaimsUpdatingRepository
+    public class PendingPostCreatingRepository : IPendingPostCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public RoomClaimsUpdatingRepository(
+        public PendingPostCreatingRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {
@@ -26,13 +24,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         }
 
         /// <inheritdoc />
-        public async Task<RoomClaim> Update(IUpdateBuilder<DbRoomClaim> updateClaim)
+        public async Task<PendingPost> Create(DataAccess.BusinessObjects.Games.Links.PendingPost pendingPost)
         {
-            var linkId = updateClaim.AttachTo(dbContext);
+            dbContext.PendingPosts.Add(pendingPost);
             await dbContext.SaveChangesAsync();
-            return await dbContext.RoomClaims
-                .Where(l => l.RoomClaimId == linkId)
-                .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
+            return await dbContext.PendingPosts
+                .Where(p => p.PendingPostId == pendingPost.PendingPostId)
+                .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
                 .FirstAsync();
         }
     }

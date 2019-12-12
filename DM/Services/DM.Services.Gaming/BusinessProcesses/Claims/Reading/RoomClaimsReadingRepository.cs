@@ -33,7 +33,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
                 .Where(r => r.GameId == gameId)
                 .Where(r => AccessibilityFilters.GameAvailable(userId).Compile().Invoke(r.Game))
                 .Where(AccessibilityFilters.RoomAvailable(userId))
-                .Select(r => r.ParticipantLinks)
+                .Select(r => r.RoomClaims)
                 .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
             return await dbContext.Rooms
                 .Where(r => r.RoomId == roomId)
                 .Where(AccessibilityFilters.RoomAvailable(userId))
-                .Select(r => r.ParticipantLinks)
+                .Select(r => r.RoomClaims)
                 .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
