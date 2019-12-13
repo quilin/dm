@@ -4,6 +4,7 @@ using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Pending.Creating;
 using DM.Services.Gaming.BusinessProcesses.Pending.Deleting;
 using DM.Services.Gaming.Dto.Input;
+using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 
 namespace DM.Web.API.Services.Gaming.Rooms
@@ -27,12 +28,12 @@ namespace DM.Web.API.Services.Gaming.Rooms
         }
         
         /// <inheritdoc />
-        public async Task<PendingPost> Create(Guid roomId, PendingPost pendingPost)
+        public async Task<Envelope<PendingPost>> Create(Guid roomId, PendingPost pendingPost)
         {
             var createPendingPost = mapper.Map<CreatePendingPost>(pendingPost);
             createPendingPost.RoomId = roomId;
             var createdPendingPost = await creatingService.Create(createPendingPost);
-            return mapper.Map<PendingPost>(createdPendingPost);
+            return new Envelope<PendingPost>(mapper.Map<PendingPost>(createdPendingPost));
         }
 
         /// <inheritdoc />

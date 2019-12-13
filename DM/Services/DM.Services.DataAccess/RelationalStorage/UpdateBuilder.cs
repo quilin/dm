@@ -12,25 +12,38 @@ namespace DM.Services.DataAccess.RelationalStorage
         where TEntity : class, new()
     {
         private readonly Guid id;
-        private readonly bool toDelete;
         private readonly IList<Action<TEntity, DbContext>> updateActions;
+        private bool toDelete = false;
 
         /// <inheritdoc />
-        public UpdateBuilder(Guid id, bool toDelete = false)
+        public UpdateBuilder(Guid id)
         {
             this.id = id;
-            this.toDelete = toDelete;
             updateActions = new List<Action<TEntity, DbContext>>();
         }
 
         /// <inheritdoc />
         public IUpdateBuilder<TEntity> Field<TValue>(Expression<Func<TEntity, TValue>> field, TValue value)
         {
+            if (toDelete)
+            {
+                throw new UpdateBuilderException("Builder is configured to delete entity, you cannot modify it");
+            }
             updateActions.Add((entity, dbContext) =>
             {
                 SetPropertyValue(entity, field, value);
                 dbContext.Entry(entity).Property(field).IsModified = true;
             });
+            return this;
+        }
+
+        public IUpdateBuilder<TEntity> Delete()
+        {
+            if (updateActions.Any())
+            {
+                throw new UpdateBuilderException("Builder is configured to update entity, you cannot delete it");
+            }
+            toDelete = true;
             return this;
         }
 

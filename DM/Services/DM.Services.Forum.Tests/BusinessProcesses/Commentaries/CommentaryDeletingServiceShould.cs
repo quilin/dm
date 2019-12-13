@@ -37,13 +37,19 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Returns(Task.CompletedTask);
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-            topicUpdateBuilder = MockUpdateBuilder<ForumTopic>();
-            commentUpdateBuilder = MockUpdateBuilder<Comment>();
+            topicUpdateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+            topicUpdateBuilder
+                .Setup(b => b.Field(t => t.LastCommentId, It.IsAny<Guid?>()))
+                .Returns(topicUpdateBuilder.Object);
+            commentUpdateBuilder = Mock<IUpdateBuilder<Comment>>();
+            commentUpdateBuilder
+                .Setup(b => b.Field(c => c.IsRemoved, It.IsAny<bool>()))
+                .Returns(commentUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
                 .Returns(topicUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<Comment>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
                 .Returns(commentUpdateBuilder.Object);
 
             commentaryRepository = Mock<ICommentaryDeletingRepository>();

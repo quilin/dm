@@ -77,7 +77,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             var pendingPostToCreate = factory.Create(createPendingPost, identity.User.UserId, pendingUserId);
 
             var pendingPost = await repository.Create(pendingPostToCreate);
-            await publisher.Publish(EventType.NewPendingPost, pendingPost.Id);
+            await publisher.Publish(EventType.RoomPendingCreated, pendingPost.Id);
 
             return pendingPost;
         }

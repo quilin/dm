@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 
 namespace DM.Web.API.Services.Gaming.Rooms
@@ -15,7 +16,7 @@ namespace DM.Web.API.Services.Gaming.Rooms
         /// <param name="roomId">Room identifier</param>
         /// <param name="pendingPost">API DTO model</param>
         /// <returns></returns>
-        Task<PendingPost> Create(Guid roomId, PendingPost pendingPost);
+        Task<Envelope<PendingPost>> Create(Guid roomId, PendingPost pendingPost);
 
         /// <summary>
         /// Delete existing pending post

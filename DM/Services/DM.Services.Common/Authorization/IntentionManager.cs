@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using Microsoft.Extensions.Logging;
 
 namespace DM.Services.Common.Authorization
 {
@@ -11,14 +12,17 @@ namespace DM.Services.Common.Authorization
     {
         private readonly IIdentityProvider identityProvider;
         private readonly IEnumerable<IIntentionResolver> resolvers;
+        private readonly ILogger<IntentionManager> logger;
 
         /// <inheritdoc />
         public IntentionManager(
             IIdentityProvider identityProvider,
-            IEnumerable<IIntentionResolver> resolvers)
+            IEnumerable<IIntentionResolver> resolvers,
+            ILogger<IntentionManager> logger)
         {
             this.identityProvider = identityProvider;
             this.resolvers = resolvers;
+            this.logger = logger;
         }
 
         /// <inheritdoc />
@@ -27,8 +31,13 @@ namespace DM.Services.Common.Authorization
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention>>()
                 .FirstOrDefault();
-            return matchingResolver != null &&
-                await matchingResolver.IsAllowed(identityProvider.Current.User, intention);
+            if (matchingResolver != default)
+            {
+                return await matchingResolver.IsAllowed(identityProvider.Current.User, intention);
+            }
+
+            logger.LogError("No matching resolver found for intention type {intentionType}", typeof(TIntention));
+            return false;
         }
 
         /// <inheritdoc />
@@ -39,8 +48,15 @@ namespace DM.Services.Common.Authorization
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention, TTarget>>()
                 .FirstOrDefault();
-            return matchingResolver != null &&
-                   await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
+            if (matchingResolver != default)
+            {
+                return await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
+            }
+
+            logger.LogError(
+                "No matching resolver found for intention type {intentionType} and target type {targetType}",
+                typeof(TIntention), typeof(TTarget));
+            return false;
         }
 
         /// <inheritdoc />
@@ -53,8 +69,15 @@ namespace DM.Services.Common.Authorization
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention, TTarget, TSubTarget>>()
                 .FirstOrDefault();
-            return matchingResolver != null &&
-                await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target, subTarget);
+            if (matchingResolver != default)
+            {
+                return await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target, subTarget);
+            }
+
+            logger.LogError(
+                "No matching resolver found for intention type {intentionType}, target type {targetType} and subtarget type {subTargetType}",
+                typeof(TIntention), typeof(TTarget), typeof(TSubTarget));
+            return false;
         }
 
         /// <inheritdoc />

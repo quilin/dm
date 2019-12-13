@@ -40,10 +40,13 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
                 .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()))
                 .Returns(Task.CompletedTask);
 
-            updateBuilder = MockUpdateBuilder<ForumTopic>();
+            updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+            updateBuilder
+                .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
+                .Returns(updateBuilder.Object);
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
                 .Returns(updateBuilder.Object);
 
             updatingRepository = Mock<ITopicUpdatingRepository>();

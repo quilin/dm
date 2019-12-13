@@ -47,6 +47,12 @@ namespace DM.Web.API.Services.Gaming
         /// </summary>
         /// <param name="postId">Post identifier</param>
         /// <returns></returns>
-        Task<Envelope<Post>> Delete(Guid postId);
+        Task Delete(Guid postId);
+
+        /// <summary>
+        /// Mark all room posts as read
+        /// </summary>
+        /// <returns></returns>
+        Task MarkAsRead(Guid roomId);
     }
 }

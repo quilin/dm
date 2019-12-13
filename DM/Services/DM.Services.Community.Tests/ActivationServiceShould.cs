@@ -42,14 +42,20 @@ namespace DM.Services.Community.Tests
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
-            userUpdateBuilder = MockUpdateBuilder<User>();
-            tokenUpdateBuilder = MockUpdateBuilder<Token>();
+            userUpdateBuilder = Mock<IUpdateBuilder<User>>();
+            userUpdateBuilder
+                .Setup(b => b.Field(u => u.Activated, It.IsAny<bool>()))
+                .Returns(userUpdateBuilder.Object);
+            tokenUpdateBuilder = Mock<IUpdateBuilder<Token>>();
+            tokenUpdateBuilder
+                .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
+                .Returns(tokenUpdateBuilder.Object);
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             updateBuilderFactory
-                .Setup(f => f.Create<User>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
                 .Returns(userUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<Token>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
                 .Returns(tokenUpdateBuilder.Object);
 
             activationService = new ActivationService(dateTimeProvider.Object,

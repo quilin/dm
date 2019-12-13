@@ -37,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
             }
 
             await intentionManager.ThrowIfForbidden(RoomIntention.DeletePending, pendingPost);
-            await repository.Delete(updateBuilderFactory.Create<PendingPost>(pendingPostId, true));
+            await repository.Delete(updateBuilderFactory.Create<PendingPost>(pendingPostId).Delete());
         }
     }
 }

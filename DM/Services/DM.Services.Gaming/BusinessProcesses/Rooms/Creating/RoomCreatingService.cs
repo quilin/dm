@@ -1,12 +1,14 @@
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
+using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 
@@ -22,6 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IRoomCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
+        private readonly IInvokedEventPublisher publisher;
 
         /// <inheritdoc />
         public RoomCreatingService(
@@ -31,7 +34,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
             IRoomFactory roomFactory,
             IUpdateBuilderFactory updateBuilderFactory,
             IRoomCreatingRepository repository,
-            IUnreadCountersRepository unreadCountersRepository)
+            IUnreadCountersRepository unreadCountersRepository,
+            IInvokedEventPublisher publisher)
         {
             this.gameReadingService = gameReadingService;
             this.validator = validator;
@@ -40,6 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
+            this.publisher = publisher;
         }
 
         /// <inheritdoc />
@@ -60,6 +65,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 
             var room = await repository.Create(roomToCreate, updateLastRoom);
             await unreadCountersRepository.Create(room.Id, game.Id, UnreadEntryType.Message);
+            await publisher.Publish(EventType.NewRoom, room.Id);
+
             return room;
         }
     }

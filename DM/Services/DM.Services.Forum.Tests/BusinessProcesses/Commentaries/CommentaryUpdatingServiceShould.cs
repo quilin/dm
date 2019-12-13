@@ -52,9 +52,15 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-            commentUpdateBuilder = MockUpdateBuilder<Comment>();
+            commentUpdateBuilder = Mock<IUpdateBuilder<Comment>>();
+            commentUpdateBuilder
+                .Setup(b => b.Field(t => t.Text, It.IsAny<string>()))
+                .Returns(commentUpdateBuilder.Object);
+            commentUpdateBuilder
+                .Setup(b => b.Field(t => t.LastUpdateDate, It.IsAny<DateTimeOffset?>()))
+                .Returns(commentUpdateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<Comment>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
                 .Returns(commentUpdateBuilder.Object);
 
             commentRepository = Mock<ICommentaryUpdatingRepository>();

@@ -50,7 +50,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
             var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
             await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
 
-            var updateBuilder = updateBuilderFactory.Create<RoomClaim>(claimId, true);
+            var updateBuilder = updateBuilderFactory.Create<RoomClaim>(claimId).Delete();
             await repository.Delete(updateBuilder);
             await publisher.Publish(EventType.ChangedRoom, room.Id);
         }

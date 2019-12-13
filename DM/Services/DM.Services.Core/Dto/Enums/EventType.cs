@@ -255,18 +255,30 @@ namespace DM.Services.Core.Dto.Enums
         /// New post pending has been created
         /// </summary>
         [EventRoutingKey("game.room.pending.created")]
-        NewPendingPost = 401,
-
-        /// <summary>
-        /// Post pending has been deleted
-        /// </summary>
-        [EventRoutingKey("game.room.pending.deleted")]
-        DeletedPendingPost = 402,
+        RoomPendingCreated = 384,
 
         /// <summary>
         /// Post pending has been responded
         /// </summary>
         [EventRoutingKey("game.room.pending.responded")]
-        RespondedPendingPost = 403
+        RoomPendingResponded = 385,
+
+        /// <summary>
+        /// New game post has been created
+        /// </summary>
+        [EventRoutingKey("game.post.created")]
+        NewPost = 401,
+
+        /// <summary>
+        /// Post has been changed
+        /// </summary>
+        [EventRoutingKey("game.post.updated")]
+        ChangedPost = 402,
+
+        /// <summary>
+        /// Post has been deleted
+        /// </summary>
+        [EventRoutingKey("game.post.deleted")]
+        DeletedPost = 403
     }
 }

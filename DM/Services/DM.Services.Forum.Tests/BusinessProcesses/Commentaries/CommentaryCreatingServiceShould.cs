@@ -81,9 +81,12 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                 .Returns(Task.CompletedTask);
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-            updateBuilder = MockUpdateBuilder<ForumTopic>();
+            updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+            updateBuilder
+                .Setup(b => b.Field(t => t.LastCommentId, It.IsAny<Guid?>()))
+                .Returns(updateBuilder.Object);
             updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>(), It.IsAny<bool>()))
+                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
                 .Returns(updateBuilder.Object);
 
             service = new CommentaryCreatingService(validator.Object, topicReadingService.Object,

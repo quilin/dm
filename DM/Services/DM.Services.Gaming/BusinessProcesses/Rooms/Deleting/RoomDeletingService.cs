@@ -4,10 +4,12 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
+using DM.Services.MessageQueuing.Publish;
 using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
@@ -20,6 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
         private readonly IRoomOrderPull roomOrderPull;
         private readonly IRoomUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
+        private readonly IInvokedEventPublisher publisher;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
@@ -29,6 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             IRoomOrderPull roomOrderPull,
             IRoomUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
+            IInvokedEventPublisher publisher,
             IIdentityProvider identityProvider)
         {
             this.intentionManager = intentionManager;
@@ -36,6 +40,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             this.roomOrderPull = roomOrderPull;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
+            this.publisher = publisher;
             identity = identityProvider.Current;
         }
         
@@ -47,8 +52,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
 
             var updateRoom = updateBuilderFactory.Create<DbRoom>(roomId).Field(r => r.IsRemoved, true);
             var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
+
             await repository.Update(updateRoom, updateOldNextRoom, updateOldPreviousRoom);
             await unreadCountersRepository.Delete(roomId, UnreadEntryType.Message);
+            await publisher.Publish(EventType.DeletedRoom, roomId);
         }
     }
 }

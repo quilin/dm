@@ -4,6 +4,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Tests.Core;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -25,7 +26,8 @@ namespace DM.Services.Common.Tests
             var identityProvider = Mock<IIdentityProvider>();
             identity = Mock<IIdentity>();
             identityProvider.Setup(p => p.Current).Returns(identity.Object);
-            manager = new IntentionManager(identityProvider.Object, resolvers);
+            manager = new IntentionManager(identityProvider.Object, resolvers,
+                Mock<ILogger<IntentionManager>>().Object);
         }
 
         [Fact]

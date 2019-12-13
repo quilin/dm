@@ -227,5 +227,23 @@ namespace DM.Web.API.Controllers.v1.Gaming
             return CreatedAtRoute(nameof(PostController.GetPost),
                 new {id = result.Resource.Id}, result);
         }
+
+        /// <summary>
+        /// Mark all room posts as read
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="410">Room not found</response>
+        [HttpDelete("{id}/posts/unread", Name = nameof(MarkPostsAsRead))]
+        [AuthenticationRequired]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> MarkPostsAsRead(Guid id)
+        {
+            await postApiService.MarkAsRead(id);
+            return NoContent();
+        }
     }
 }
