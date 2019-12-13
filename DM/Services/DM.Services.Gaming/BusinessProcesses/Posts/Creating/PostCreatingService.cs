@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -60,15 +61,22 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
             var room = await roomReadingService.Get(createPost.RoomId);
             await intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room, createPost);
 
+            var events = new List<EventType>(2) {EventType.NewPost};
+
             var pendingPostUpdates = room.Pendings
                 .Where(p => p.PendingUser.UserId == identity.User.UserId)
-                .Select(p => updateBuilderFactory.Create<PendingPost>(p.Id).Delete());
+                .Select(p => updateBuilderFactory.Create<PendingPost>(p.Id).Delete())
+                .ToArray();
+            if (pendingPostUpdates.Any())
+            {
+                events.Add(EventType.RoomPendingResponded);
+            }
 
             var post = postFactory.Create(createPost, identity.User.UserId);
 
             var createdPost = await repository.Create(post, pendingPostUpdates);
             await unreadCountersRepository.Increment(createdPost.RoomId, UnreadEntryType.Message);
-            await publisher.Publish(new [] {EventType.NewPost, EventType.RoomPendingResponded}, createdPost.Id);
+            await publisher.Publish(events, createdPost.Id);
 
             return createdPost;
         }
