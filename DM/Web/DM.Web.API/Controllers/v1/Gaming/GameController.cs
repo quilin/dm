@@ -24,6 +24,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         private readonly IReaderApiService readerApiService;
         private readonly ICharacterApiService characterApiService;
         private readonly IRoomApiService roomApiService;
+        private readonly IBlacklistApiService blacklistApiService;
 
         /// <inheritdoc />
         public GameController(
@@ -31,13 +32,15 @@ namespace DM.Web.API.Controllers.v1.Gaming
             ICommentApiService commentApiService,
             IReaderApiService readerApiService,
             ICharacterApiService characterApiService,
-            IRoomApiService roomApiService)
+            IRoomApiService roomApiService,
+            IBlacklistApiService blacklistApiService)
         {
             this.gameApiService = gameApiService;
             this.commentApiService = commentApiService;
             this.readerApiService = readerApiService;
             this.characterApiService = characterApiService;
             this.roomApiService = roomApiService;
+            this.blacklistApiService = blacklistApiService;
         }
 
         /// <summary>
@@ -341,7 +344,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetBlacklist(Guid id) => throw new NotImplementedException();
+        public async Task<IActionResult> GetBlacklist(Guid id) => Ok(await blacklistApiService.Get(id));
 
         /// <summary>
         /// Post new blacklisted user
@@ -362,7 +365,11 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 409)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> PostBlacklist(Guid id, [FromBody] User user) => throw new NotImplementedException();
+        public async Task<IActionResult> PostBlacklist(Guid id, [FromBody] User user)
+        {
+            var result = await blacklistApiService.Create(id, user);
+            return CreatedAtRoute(nameof(GetBlacklist), new {id}, result);
+        }
 
         /// <summary>
         /// Delete blacklisted user link
@@ -381,6 +388,10 @@ namespace DM.Web.API.Controllers.v1.Gaming
         [ProducesResponseType(typeof(GeneralError), 403)]
         [ProducesResponseType(typeof(GeneralError), 409)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> DeleteBlacklist(Guid id, string login) => throw new NotImplementedException();
+        public async Task<IActionResult> DeleteBlacklist(Guid id, string login)
+        {
+            await blacklistApiService.Delete(id, login);
+            return NoContent();
+        }
     }
 }
