@@ -59,11 +59,16 @@ namespace DM.Services.Gaming.Dto.Output
         /// Active game character author ids
         /// </summary>
         public IEnumerable<Guid> ActiveCharacterUserIds { get; set; }
-        
+
         /// <summary>
         /// Game reader ids
         /// </summary>
         public IEnumerable<Guid> ReaderUserIds { get; set; }
+
+        /// <summary>
+        /// Blacklisted user ids
+        /// </summary>
+        public IEnumerable<Guid> BlacklistUserIds { get; set; }
 
         /// <summary>
         /// Game title

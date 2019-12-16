@@ -63,7 +63,6 @@ namespace DM.Services.Gaming.Authorization
                         !HiddenStates.Contains(target.Status));
 
                 case GameIntention.Edit when user.IsAuthenticated:
-                case GameIntention.AdministrateRooms when user.IsAuthenticated:
                     return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority));
 
                 // only the master itself is allowed to remove the game

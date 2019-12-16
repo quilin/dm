@@ -46,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         {
             await validator.ValidateAndThrowAsync(updateRoom);
             var room = await repository.GetRoom(updateRoom.RoomId, identity.User.UserId);
-            await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
+            await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var roomUpdate = updateBuilderFactory.Create<DbRoom>(updateRoom.RoomId)
                 .MaybeField(r => r.Title, updateRoom.Title)

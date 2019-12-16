@@ -28,7 +28,9 @@ namespace DM.Services.Gaming.Dto
                     .Where(c => !c.IsRemoved && c.Status == CharacterStatus.Active)
                     .Select(c => c.CharacterId)))
                 .ForMember(d => d.ReaderUserIds, s => s.MapFrom(g => g.Readers
-                    .Select(r => r.UserId)));
+                    .Select(r => r.UserId)))
+                .ForMember(d => d.BlacklistUserIds, s => s.MapFrom(g => g.BlackList
+                    .Select(b => b.UserId)));
 
             CreateMap<DbGame, GameExtended>();
 

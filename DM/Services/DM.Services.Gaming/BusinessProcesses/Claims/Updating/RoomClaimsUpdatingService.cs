@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
             await validator.ValidateAndThrowAsync(updateRoomClaim);
             var oldClaim = await readingRepository.GetClaim(updateRoomClaim.ClaimId, identity.User.UserId);
             var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
-            await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, room.Game);
+            await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             if (oldClaim.User != null && updateRoomClaim.Policy == RoomAccessPolicy.Full)
             {
