@@ -12,8 +12,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
         /// <summary>
         /// Create new blacklist link
         /// </summary>
-        /// <param name="createBlacklistLink">DTO for creating</param>
+        /// <param name="operateBlacklistLink">DTO for creating</param>
         /// <returns></returns>
-        Task<GeneralUser> Create(CreateBlacklistLink createBlacklistLink);
+        Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink);
     }
 }

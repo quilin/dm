@@ -68,7 +68,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// <summary>
         /// Blacklisted user ids
         /// </summary>
-        public IEnumerable<Guid> BlacklistUserIds { get; set; }
+        public IDictionary<Guid, Guid> BlacklistedUsers { get; set; }
 
         /// <summary>
         /// Game title

@@ -1,5 +1,5 @@
-using System;
 using System.Threading.Tasks;
+using DM.Services.Gaming.Dto.Input;
 
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
 {
@@ -11,9 +11,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
         /// <summary>
         /// Delete existing blacklist link
         /// </summary>
-        /// <param name="gameId">Game identifier</param>
-        /// <param name="login">Login</param>
+        /// <param name="operateBlacklistLink">DTO model</param>
         /// <returns></returns>
-        Task Delete(Guid gameId, string login);
+        Task Delete(OperateBlacklistLink operateBlacklistLink);
     }
 }

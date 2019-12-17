@@ -42,13 +42,14 @@ namespace DM.Web.API.Services.Gaming
         /// <inheritdoc />
         public async Task<Envelope<User>> Create(Guid gameId, User user)
         {
-            var createBlacklistLink = mapper.Map<CreateBlacklistLink>(user);
+            var createBlacklistLink = mapper.Map<OperateBlacklistLink>(user);
             createBlacklistLink.GameId = gameId;
             var result = await creatingService.Create(createBlacklistLink);
             return new Envelope<User>(mapper.Map<User>(result));
         }
 
         /// <inheritdoc />
-        public Task Delete(Guid gameId, string login) => deletingService.Delete(gameId, login);
+        public Task Delete(Guid gameId, string login) =>
+            deletingService.Delete(new OperateBlacklistLink {GameId = gameId, Login = login});
     }
 }

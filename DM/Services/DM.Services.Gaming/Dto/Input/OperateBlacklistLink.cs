@@ -5,7 +5,7 @@ namespace DM.Services.Gaming.Dto.Input
     /// <summary>
     /// DTO for blacklist link creating
     /// </summary>
-    public class CreateBlacklistLink
+    public class OperateBlacklistLink
     {
         /// <summary>
         /// Game identifier

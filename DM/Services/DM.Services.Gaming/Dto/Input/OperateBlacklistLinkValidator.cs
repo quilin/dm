@@ -5,10 +5,10 @@ using FluentValidation;
 namespace DM.Services.Gaming.Dto.Input
 {
     /// <inheritdoc />
-    public class CreateBlacklistLinkValidator : AbstractValidator<CreateBlacklistLink>
+    public class OperateBlacklistLinkValidator : AbstractValidator<OperateBlacklistLink>
     {
         /// <inheritdoc />
-        public CreateBlacklistLinkValidator(
+        public OperateBlacklistLinkValidator(
             IUserRepository userRepository)
         {
             RuleFor(r => r.GameId)
