@@ -31,7 +31,9 @@ namespace DM.Services.Gaming.Dto
                             p.Room.Game.MasterId == p.PendingUserId ||
                             p.Room.Game.AssistantId == p.PendingUserId ||
                             p.Room.RoomClaims.Any(c => c.Character.UserId == p.PendingUserId)
-                        ))));
+                        ))))
+                .ForMember(d => d.TotalPostsCount, s => s.MapFrom(r => r.Posts
+                    .Count(p => !p.IsRemoved)));
 
             CreateMap<DbRoom, RoomOrderInfo>()
                 .ForMember(d => d.Id, s => s.MapFrom(r => r.RoomId));

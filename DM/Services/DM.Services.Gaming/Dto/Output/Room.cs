@@ -33,16 +33,21 @@ namespace DM.Services.Gaming.Dto.Output
         /// Room access type
         /// </summary>
         public RoomAccessType AccessType { get; set; }
-        
+
         /// <summary>
         /// Room character and reader claims
         /// </summary>
         public IEnumerable<RoomClaim> Claims { get; set; }
-        
+
         /// <summary>
         /// Post anticipations
         /// </summary>
         public IEnumerable<PendingPost> Pendings { get; set; }
+
+        /// <summary>
+        /// Total room posts count
+        /// </summary>
+        public int TotalPostsCount { get; set; }
 
         /// <summary>
         /// Unread posts count

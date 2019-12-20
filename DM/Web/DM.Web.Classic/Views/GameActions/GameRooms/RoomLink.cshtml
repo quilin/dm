@@ -4,6 +4,10 @@
 @model DM.Web.Classic.Views.GameActions.GameRooms.RoomLinkViewModel
 <li class="leftMenu-list-item moduleRooms-roomItem">
     -
+    @if (Model.PendingPosts.Any())
+    {
+        <a href="@Url.Action("Index", "Post", new RouteValueDictionary{{"roomIdEncoded", Model.RoomId.EncodeToReadable(null)}})" title="@string.Join(", ", Model.PendingPosts.Select(p => p.AwaitingUser.Login))" class="notification-marker" id="RoomNotification_@(Model.RoomId)">@IconFont.Render(IconType.Clock)</a>
+    }
     @if (Model.Disabled)
     {
         <strong>@Model.Title @Html.UnreadPostsIcon(Model.UnreadCount, true)</strong>

@@ -8,7 +8,7 @@
 }
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Discussions, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+    @await Html.PartialAsync("Layout/GameLeftColumn", PageType.Discussions, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
 }
 
 <h1 class="content-pageTitle">@Model.GameTitle | Обсуждение игры</h1>

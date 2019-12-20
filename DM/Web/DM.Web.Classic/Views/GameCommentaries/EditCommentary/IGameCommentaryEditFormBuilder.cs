@@ -1,9 +1,10 @@
-using DM.Services.Common.Dto;
+using System;
+using System.Threading.Tasks;
 
 namespace DM.Web.Classic.Views.GameCommentaries.EditCommentary
 {
     public interface IGameCommentaryEditFormBuilder
     {
-        GameCommentaryEditForm Build(Comment comment);
+        Task<GameCommentaryEditForm> Build(Guid commentaryId);
     }
 }

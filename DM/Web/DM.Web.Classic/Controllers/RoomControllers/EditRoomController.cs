@@ -46,7 +46,7 @@ namespace DM.Web.Classic.Controllers.RoomControllers
         {
             var room = await roomReadingService.Get(roomId);
             var game = await gameReadingService.GetGame(room.GameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.AdministrateRooms, game);
+            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
             var editRoomForm = editRoomFormBuilder.Build(room);
             return View("~/Views/EditRoom/EditRoom.cshtml", editRoomForm);
         }

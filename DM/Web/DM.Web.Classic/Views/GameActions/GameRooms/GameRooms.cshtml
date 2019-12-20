@@ -7,6 +7,10 @@
 {
     var singleRoom = Model.Rooms[0];
     @:-
+    @if (singleRoom.PendingPosts.Any())
+    {
+        @IconFont.Render(IconType.Clock, new Dictionary<string, object>{{"class", "notification-marker"}, {"id", "RoomNotification"}})
+    }
     if (Model.PageType == PageType.Session)
     {
         <strong>Ходы игроков</strong>
