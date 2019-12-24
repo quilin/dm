@@ -1,5 +1,6 @@
 using System;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Gaming.Dto.Output
 {
@@ -37,5 +38,10 @@ namespace DM.Services.Gaming.Dto.Output
         /// Picture URL
         /// </summary>
         public string PictureUrl { get; set; }
+
+        /// <summary>
+        /// GM access policy
+        /// </summary>
+        public CharacterAccessPolicy AccessPolicy { get; set; }
     }
 }

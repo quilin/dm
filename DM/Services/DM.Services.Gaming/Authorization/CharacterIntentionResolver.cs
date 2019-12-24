@@ -12,7 +12,7 @@ namespace DM.Services.Gaming.Authorization
     /// <inheritdoc cref="IIntentionResolver" />
     public class CharacterIntentionResolver :
         IIntentionResolver<CharacterIntention, CharacterToUpdate>,
-        IIntentionResolver<CharacterIntention, Character, GameExtended>
+        IIntentionResolver<CharacterIntention, (Character, GameExtended)>
     {
         /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, CharacterIntention intention,
@@ -62,9 +62,10 @@ namespace DM.Services.Gaming.Authorization
         };
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, CharacterIntention intention, Character target,
-            GameExtended game)
+        public Task<bool> IsAllowed(AuthenticatedUser user, CharacterIntention intention, (Character, GameExtended) target)
         {
+            var (character, game) = target;
+            
             if (!CharacterGameIntentions.Contains(intention))
             {
                 return Task.FromResult(false);
@@ -75,7 +76,7 @@ namespace DM.Services.Gaming.Authorization
                 return Task.FromResult(true);
             }
 
-            if (target.Author.UserId == user.UserId)
+            if (character.Author.UserId == user.UserId)
             {
                 return Task.FromResult(true);
             }

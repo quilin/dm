@@ -13,7 +13,7 @@ namespace DM.Services.Gaming.Authorization
     public class RoomIntentionResolver :
         IIntentionResolver<RoomIntention, Room>,
         IIntentionResolver<RoomIntention, PendingPost>,
-        IIntentionResolver<RoomIntention, RoomToUpdate, CreatePost>
+        IIntentionResolver<RoomIntention, (RoomToUpdate, CreatePost)>
     {
         /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, Room target)
@@ -41,17 +41,18 @@ namespace DM.Services.Gaming.Authorization
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target,
-            CreatePost subTarget)
+        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, (RoomToUpdate, CreatePost) target)
         {
+            var (room, postForm) = target;
+            
             switch (intention)
             {
-                case RoomIntention.CreatePost when subTarget.CharacterId.HasValue:
-                    return Task.FromResult(target.Claims.Any(c =>
+                case RoomIntention.CreatePost when postForm.CharacterId.HasValue:
+                    return Task.FromResult(room.Claims.Any(c =>
                         c.Character.Author.UserId == user.UserId &&
-                        c.Character.Id == subTarget.CharacterId));
-                case RoomIntention.CreatePost when !subTarget.CharacterId.HasValue:
-                    return Task.FromResult(target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
+                        c.Character.Id == postForm.CharacterId));
+                case RoomIntention.CreatePost when !postForm.CharacterId.HasValue:
+                    return Task.FromResult(room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
                 default:
                     return Task.FromResult(false);
             }

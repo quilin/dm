@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Core.Dto;
 
 namespace DM.Services.Gaming.Dto.Output
 {
@@ -16,6 +17,11 @@ namespace DM.Services.Gaming.Dto.Output
         /// Room identifier
         /// </summary>
         public Guid RoomId { get; set; }
+
+        /// <summary>
+        /// Post author
+        /// </summary>
+        public GeneralUser Author { get; set; }
 
         /// <summary>
         /// Short character information

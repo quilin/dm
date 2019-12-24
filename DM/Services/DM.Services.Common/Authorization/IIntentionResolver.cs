@@ -11,35 +11,12 @@ namespace DM.Services.Common.Authorization
     }
 
     /// <summary>
-    /// Resolves if user is allowed to perform action of specific type upon object of specific type with some dependency
-    /// </summary>
-    /// <typeparam name="TIntention">Action type</typeparam>
-    /// <typeparam name="TTarget">Object type</typeparam>
-    /// <typeparam name="TSubTarget">Dependent object type</typeparam>
-    public interface IIntentionResolver<in TIntention, in TTarget, in TSubTarget> : IIntentionResolver
-        where TIntention : struct
-        where TTarget : class
-        where TSubTarget : class
-    {
-        /// <summary>
-        /// Tells if the user is allowed to perform certain action upon certain object
-        /// </summary>
-        /// <param name="user">Action subject</param>
-        /// <param name="intention">Action</param>
-        /// <param name="target">Action object</param>
-        /// <param name="subTarget">Action dependent object</param>
-        /// <returns>Whether subject is allowed to perform action upon object</returns>
-        Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention, TTarget target, TSubTarget subTarget);
-    }
-
-    /// <summary>
     /// Resolves if user is allowed to perform action of specific type upon object of specific type
     /// </summary>
     /// <typeparam name="TIntention">Action type</typeparam>
     /// <typeparam name="TTarget">Object type</typeparam>
     public interface IIntentionResolver<in TIntention, in TTarget> : IIntentionResolver
         where TIntention : struct
-        where TTarget : class
     {
         /// <summary>
         /// Tells if the user is allowed to perform certain action upon certain object

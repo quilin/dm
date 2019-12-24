@@ -1,11 +1,9 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Text;
-using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
+using Newtonsoft.Json;
 
 namespace DM.Services.Common.Authorization
 {
@@ -26,26 +24,15 @@ namespace DM.Services.Common.Authorization
         {
         }
 
-        private static string GenerateMessage(IUser user, Enum intention, object target = null)
+        private static string GenerateMessage(IUser user, Enum intention, object target = default)
         {
-            var userDisplayName = user == AuthenticatedUser.Guest
-                ? user.Role.ToString()
-                : $"{user.Login} ({string.Join(", ", Enum.GetValues(typeof(UserRole)).Cast<UserRole>().Where(u => user.Role.HasFlag(u)))})";
-            var result = new StringBuilder($"User {userDisplayName} is not allowed to perform {intention} action");
+            var result = new StringBuilder($"User is not allowed to perform {intention} action");
             if (target == null)
             {
                 return result.ToString();
             }
 
-            var subjectType = target.GetType();
-            var subjectName = subjectType.Name;
-            result.Append($" with {subjectName}");
-            var subjectId = subjectType.GetProperty("Id")?.GetValue(target);
-            if (subjectId != null)
-            {
-                result.Append($" with id {subjectId}");
-            }
-
+            result.Append($" with {JsonConvert.SerializeObject(target)}");
             return result.ToString();
         }
     }
