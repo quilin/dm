@@ -2,7 +2,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
+using DM.Services.Gaming.Dto;
 using DM.Services.Gaming.Dto.Input;
+using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.Authorization
@@ -11,7 +13,7 @@ namespace DM.Services.Gaming.Authorization
     public class RoomIntentionResolver :
         IIntentionResolver<RoomIntention, Room>,
         IIntentionResolver<RoomIntention, PendingPost>,
-        IIntentionResolver<RoomIntention, Room, CreatePost>
+        IIntentionResolver<RoomIntention, RoomToUpdate, CreatePost>
     {
         /// <inheritdoc />
         public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, Room target)
@@ -39,14 +41,17 @@ namespace DM.Services.Gaming.Authorization
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, Room target, CreatePost subTarget)
+        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target,
+            CreatePost subTarget)
         {
             switch (intention)
             {
-                case RoomIntention.CreatePost:
+                case RoomIntention.CreatePost when subTarget.CharacterId.HasValue:
                     return Task.FromResult(target.Claims.Any(c =>
                         c.Character.Author.UserId == user.UserId &&
                         c.Character.Id == subTarget.CharacterId));
+                case RoomIntention.CreatePost when !subTarget.CharacterId.HasValue:
+                    return Task.FromResult(target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
                 default:
                     return Task.FromResult(false);
             }

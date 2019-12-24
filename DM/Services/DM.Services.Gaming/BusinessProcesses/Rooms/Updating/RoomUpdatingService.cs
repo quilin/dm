@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -46,6 +47,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         {
             await validator.ValidateAndThrowAsync(updateRoom);
             var room = await repository.GetRoom(updateRoom.RoomId, identity.User.UserId);
+            if (room == default)
+            {
+                throw new HttpException(HttpStatusCode.Gone, "Room not found");
+            }
+            
             await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var roomUpdate = updateBuilderFactory.Create<DbRoom>(updateRoom.RoomId)

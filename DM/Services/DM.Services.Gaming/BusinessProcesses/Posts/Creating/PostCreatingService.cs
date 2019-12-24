@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
-using DM.Services.Gaming.BusinessProcesses.Rooms.Reading;
+using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -22,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
     public class PostCreatingService : IPostCreatingService
     {
         private readonly IValidator<CreatePost> validator;
-        private readonly IRoomReadingService roomReadingService;
+        private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IIntentionManager intentionManager;
         private readonly IPostFactory postFactory;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
@@ -34,7 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
         /// <inheritdoc />
         public PostCreatingService(
             IValidator<CreatePost> validator,
-            IRoomReadingService roomReadingService,
+            IRoomUpdatingRepository roomUpdatingRepository,
             IIntentionManager intentionManager,
             IPostFactory postFactory,
             IUpdateBuilderFactory updateBuilderFactory,
@@ -44,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
-            this.roomReadingService = roomReadingService;
+            this.roomUpdatingRepository = roomUpdatingRepository;
             this.intentionManager = intentionManager;
             this.postFactory = postFactory;
             this.updateBuilderFactory = updateBuilderFactory;
@@ -58,7 +60,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
         public async Task<Post> Create(CreatePost createPost)
         {
             await validator.ValidateAndThrowAsync(createPost);
-            var room = await roomReadingService.Get(createPost.RoomId);
+            var room = await roomUpdatingRepository.GetRoom(createPost.RoomId, identity.User.UserId);
+            if (room == default)
+            {
+                throw new HttpException(HttpStatusCode.Gone, "Room not found");
+            }
+
             await intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room, createPost);
 
             var events = new List<EventType>(2) {EventType.NewPost};
