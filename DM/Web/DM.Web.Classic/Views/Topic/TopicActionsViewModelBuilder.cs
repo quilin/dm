@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Fora;
@@ -19,20 +20,22 @@ namespace DM.Web.Classic.Views.Topic
             this.forumReadingService = forumReadingService;
         }
 
-        public TopicActionsViewModel Build(Services.Forum.Dto.Output.Topic topic)
+        public async Task<TopicActionsViewModel> Build(Services.Forum.Dto.Output.Topic topic)
         {
+            var administrationAllowed = await intentionsManager.IsAllowed(
+                ForumIntention.AdministrateTopics, topic.Forum);
             return new TopicActionsViewModel
             {
                 TopicId = topic.Id,
                 TopicTitle = topic.Title,
-                CanAttach = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                CanDetach = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                CanClose = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                CanOpen = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                CanEdit = intentionsManager.IsAllowed(TopicIntention.Edit, topic).Result,
-                CanRemove = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                CanMove = intentionsManager.IsAllowed(ForumIntention.AdministrateTopics, topic.Forum).Result,
-                Forums = forumReadingService.GetForaList().Result.ToDictionary(f => f.Title, f => (object) f.Title)
+                CanAttach = administrationAllowed,
+                CanDetach = administrationAllowed,
+                CanClose = administrationAllowed,
+                CanOpen = administrationAllowed,
+                CanEdit = await intentionsManager.IsAllowed(TopicIntention.Edit, topic),
+                CanRemove = administrationAllowed,
+                CanMove = administrationAllowed,
+                Forums = (await forumReadingService.GetForaList()).ToDictionary(f => f.Title, f => (object) f.Title)
             };
         }
     }

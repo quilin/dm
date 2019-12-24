@@ -57,7 +57,7 @@ namespace DM.Web.Classic.Views.Topic
                 Attached = topic.Attached,
                 Closed = topic.Closed,
                 Author = userViewModelBuilder.Build(topic.Author),
-                TopicActions = topicActionsViewModelBuilder.Build(topic),
+                TopicActions = await topicActionsViewModelBuilder.Build(topic),
                 Commentaries = commentariesViewModel
             };
         }
