@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Web.Core.Extensions.TypeExtensions;
+using DM.Services.Core.Dto;
 using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -16,10 +16,25 @@ namespace DM.Web.Core.Binders
             var valueProviderResult = bindingContext.ValueProvider.GetValue(key);
             var attemptedValue = valueProviderResult.FirstValue;
 
-            if (string.IsNullOrEmpty(attemptedValue) && bindingContext.ModelType.AllowsNullValue())
+            if (bindingContext.ModelType == typeof(Guid?) && string.IsNullOrEmpty(attemptedValue))
             {
                 bindingContext.Result = ModelBindingResult.Success(null);
                 return Task.CompletedTask;
+            }
+
+            if (bindingContext.ModelType == typeof(Optional<>))
+            {
+                if (attemptedValue == null)
+                {
+                    bindingContext.Result = ModelBindingResult.Success(null);
+                    return Task.CompletedTask;
+                }
+
+                if (string.IsNullOrEmpty(attemptedValue))
+                {
+                    bindingContext.Result = ModelBindingResult.Success(Optional<Guid>.WithValue(null));
+                    return Task.CompletedTask;
+                }
             }
 
             if (string.IsNullOrEmpty(attemptedValue))
