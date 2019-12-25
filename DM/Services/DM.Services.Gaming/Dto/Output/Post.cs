@@ -24,6 +24,11 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser Author { get; set; }
 
         /// <summary>
+        /// Post last update author
+        /// </summary>
+        public GeneralUser LastUpdateAuthor { get; set; }
+
+        /// <summary>
         /// Short character information
         /// </summary>
         public CharacterShort Character { get; set; }

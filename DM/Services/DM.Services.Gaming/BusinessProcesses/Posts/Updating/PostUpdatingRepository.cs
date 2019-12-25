@@ -1,11 +1,9 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
@@ -25,15 +23,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
-        }
-
-        /// <inheritdoc />
-        public Task<PostToUpdate> Get(Guid postId)
-        {
-            return dbContext.Posts
-                .Where(p => p.PostId == postId)
-                .ProjectTo<PostToUpdate>(mapper.ConfigurationProvider)
-                .FirstAsync();
         }
 
         /// <inheritdoc />

@@ -43,6 +43,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         public DateTimeOffset CreateDate { get; set; }
 
         /// <summary>
+        /// Last update author identifier
+        /// </summary>
+        public Guid? LastUpdateUserId { get; set; }
+
+        /// <summary>
         /// Last update moment
         /// </summary>
         public DateTimeOffset? LastUpdateDate { get; set; }
@@ -82,6 +87,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Posts
         /// </summary>
         [ForeignKey(nameof(UserId))]
         public virtual User Author { get; set; }
+
+        /// <summary>
+        /// Last update author
+        /// </summary>
+        [ForeignKey(nameof(LastUpdateUserId))]
+        public virtual User LastUpdateAuthor { get; set; }
 
         /// <summary>
         /// Votes for the post

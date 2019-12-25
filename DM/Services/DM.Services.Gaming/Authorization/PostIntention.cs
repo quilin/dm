@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Change post text
         /// </summary>
-        Edit = 1,
+        EditText = 1,
 
         /// <summary>
         /// Change post character
@@ -16,8 +16,13 @@ namespace DM.Services.Gaming.Authorization
         EditCharacter = 2,
 
         /// <summary>
+        /// Change post master message
+        /// </summary>
+        EditMasterMessage = 3,
+
+        /// <summary>
         /// Delete post
         /// </summary>
-        Delete = 3
+        Delete = 4
     }
 }

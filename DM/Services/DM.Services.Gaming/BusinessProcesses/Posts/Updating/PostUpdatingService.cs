@@ -2,9 +2,12 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Posts.Reading;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -20,6 +23,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         private readonly IValidator<UpdatePost> validator;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
+        private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IPostReadingService postReadingService;
         private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IPostUpdatingRepository repository;
         private readonly IInvokedEventPublisher publisher;
@@ -30,6 +35,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             IValidator<UpdatePost> validator,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
+            IDateTimeProvider dateTimeProvider,
+            IPostReadingService postReadingService,
             IRoomUpdatingRepository roomUpdatingRepository,
             IPostUpdatingRepository repository,
             IInvokedEventPublisher publisher,
@@ -38,6 +45,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             this.validator = validator;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
+            this.dateTimeProvider = dateTimeProvider;
+            this.postReadingService = postReadingService;
             this.roomUpdatingRepository = roomUpdatingRepository;
             this.repository = repository;
             this.publisher = publisher;
@@ -48,23 +57,39 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         public async Task<Post> Update(UpdatePost updatePost)
         {
             await validator.ValidateAndThrowAsync(updatePost);
-            var postToUpdate = await repository.Get(updatePost.PostId);
-            var room = await roomUpdatingRepository.GetRoom(postToUpdate.RoomId, identity.User.UserId);
-            await intentionManager.ThrowIfForbidden(PostIntention.Edit, postToUpdate, (room, updatePost));
+            var post = await postReadingService.Get(updatePost.PostId);
+            var room = await roomUpdatingRepository.GetRoom(post.RoomId, identity.User.UserId);
 
-            var updateBuilder = updateBuilderFactory.Create<DbPost>(updatePost.PostId)
-                .MaybeField(p => p.Text, updatePost.Text)
-                .MaybeField(p => p.Commentary, updatePost.Commentary)
-                .MaybeField(p => p.MasterMessage, updatePost.MasterMessage);
+            var updateBuilder = updateBuilderFactory.Create<DbPost>(updatePost.PostId);
 
-            if (updatePost.CharacterId != default && updatePost.CharacterId.Value != postToUpdate.CharacterId &&
-                await intentionManager.IsAllowed(PostIntention.EditCharacter, postToUpdate, updatePost))
+            if (await intentionManager.IsAllowed(PostIntention.EditText, (post, room)))
+            {
+                updateBuilder
+                    .MaybeField(p => p.Text, updatePost.Text)
+                    .MaybeField(p => p.Commentary, updatePost.Commentary);
+
+                if (await intentionManager.IsAllowed(PostIntention.EditMasterMessage, (post, room)))
+                {
+                    updateBuilder.MaybeField(p => p.MasterMessage, updatePost.MasterMessage);
+                }
+            }
+
+            if (updatePost.CharacterId.HasChanged(post.Character?.Id) &&
+                await intentionManager.IsAllowed(RoomIntention.CreatePost, (room, updatePost.CharacterId.Value)) &&
+                await intentionManager.IsAllowed(PostIntention.EditCharacter, (post, room)))
             {
                 updateBuilder.MaybeField(p => p.CharacterId, updatePost.CharacterId);
             }
 
+            if (updateBuilder.HasChanges())
+            {
+                updateBuilder
+                    .Field(p => p.LastUpdateDate, dateTimeProvider.Now)
+                    .Field(p => p.LastUpdateUserId, identity.User.UserId);
+            }
+
             var updatedPost = await repository.Update(updateBuilder);
-            await publisher.Publish(EventType.ChangedPost, postToUpdate.Id);
+            await publisher.Publish(EventType.ChangedPost, post.Id);
 
             return updatedPost;
         }

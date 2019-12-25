@@ -40,6 +40,11 @@ namespace DM.Services.Gaming.Dto.Output
         public string PictureUrl { get; set; }
 
         /// <summary>
+        /// Character is NPC
+        /// </summary>
+        public bool IsNpc { get; set; }
+
+        /// <summary>
         /// GM access policy
         /// </summary>
         public CharacterAccessPolicy AccessPolicy { get; set; }

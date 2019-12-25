@@ -21,6 +21,12 @@ namespace DM.Services.DataAccess.RelationalStorage
         IUpdateBuilder<TEntity> Field<TValue>(Expression<Func<TEntity, TValue>> field, TValue value);
 
         /// <summary>
+        /// Check if builder is empty
+        /// </summary>
+        /// <returns></returns>
+        bool HasChanges();
+
+        /// <summary>
         /// Delete entity
         /// </summary>
         /// <returns></returns>
