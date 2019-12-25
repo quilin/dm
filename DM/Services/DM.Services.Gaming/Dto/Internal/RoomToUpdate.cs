@@ -11,12 +11,12 @@ namespace DM.Services.Gaming.Dto.Internal
         /// Room parent game
         /// </summary>
         public Game Game { get; set; }
-        
+
         /// <summary>
         /// Previous room order info
         /// </summary>
         public RoomOrderInfo PreviousRoom { get; set; }
-        
+
         /// <summary>
         /// Next room order info
         /// </summary>
