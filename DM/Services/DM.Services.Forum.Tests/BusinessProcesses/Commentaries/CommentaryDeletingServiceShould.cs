@@ -33,8 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         {
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()));
 
             var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
             topicUpdateBuilder = Mock<IUpdateBuilder<ForumTopic>>();

@@ -21,7 +21,7 @@ namespace DM.Web.Classic.Views.GameCommentaries.CreateCommentary
 
         public GameCommentaryCreateForm Build(Game game)
         {
-            if (intentionManager.IsAllowed(GameIntention.CreateComment, game).Result)
+            if (intentionManager.IsAllowed(GameIntention.CreateComment, game))
             {
                 return new GameCommentaryCreateForm
                 {

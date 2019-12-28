@@ -1,23 +1,36 @@
 using System;
+using System.Collections.Generic;
+using DM.Services.Core.Dto.Attributes;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.MongoIntegration;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
 {
     /// <summary>
-    /// DAL model for attribute scheme
+    /// DAL model for attribute schema
     /// </summary>
-    [MongoCollectionName("AttributeSchemes")]
+    [MongoCollectionName("AttributeSchemas")]
     [BsonKnownTypes(
         typeof(NumberAttributeConstraints),
         typeof(StringAttributeConstraints),
         typeof(ListAttributeConstraints))]
-    public class AttributeScheme
+    public class AttributeSchema
     {
         /// <summary>
-        /// Scheme identifier
+        /// Schema identifier
         /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Schema author and owner
+        /// </summary>
+        public Guid? UserId { get; set; }
+
+        /// <summary>
+        /// Schema access type
+        /// </summary>
+        public SchemaType Type { get; set; }
 
         /// <summary>
         /// Display name
@@ -27,6 +40,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
         /// <summary>
         /// Attribute specifications
         /// </summary>
-        public AttributeSpecification[] Specifications { get; set; }
+        public IEnumerable<AttributeSpecification> Specifications { get; set; }
     }
 }

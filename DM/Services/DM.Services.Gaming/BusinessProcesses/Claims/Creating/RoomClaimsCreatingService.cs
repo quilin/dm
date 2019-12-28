@@ -53,7 +53,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         {
             await validator.ValidateAndThrowAsync(createRoomClaim);
             var room = await updatingRepository.GetRoom(createRoomClaim.RoomId, identity.User.UserId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var participantId = createRoomClaim.CharacterId.HasValue
                 ? await characterClaimApprove.GetParticipantId(createRoomClaim.CharacterId.Value, room)

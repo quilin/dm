@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -31,7 +32,7 @@ namespace DM.Web.Classic.Views.GameCommentaries.Commentary
             identity = identityProvider.Current;
         }
 
-        public GameCommentaryViewModel Build(Comment comment, Game game,
+        public async Task<GameCommentaryViewModel> Build(Comment comment, Game game,
             IDictionary<Guid, IEnumerable<string>> characterNames)
         {
             return new GameCommentaryViewModel
@@ -46,13 +47,13 @@ namespace DM.Web.Classic.Views.GameCommentaries.Commentary
                 Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
                 LikesCount = comment.Likes.Count(),
 
-                CanEdit = intentionManager.IsAllowed(CommentIntention.Edit, comment, game).Result,
-                CanRemove = intentionManager.IsAllowed(CommentIntention.Delete, comment, game).Result,
+                CanEdit = intentionManager.IsAllowed(CommentIntention.Edit, (comment, game)),
+                CanRemove = intentionManager.IsAllowed(CommentIntention.Delete, (comment, game)),
 
-                CanLike = intentionManager.IsAllowed(CommentIntention.Like, comment).Result,
+                CanLike = intentionManager.IsAllowed(CommentIntention.Like, comment),
                 HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
 
-                CanWarn = intentionManager.IsAllowed(GameIntention.CreateComment, game).Result
+                CanWarn = intentionManager.IsAllowed(GameIntention.CreateComment, game)
             };
         }
     }

@@ -99,7 +99,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
                 g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
 
             var gamesWithAvailableComments = games
-                .Where(g => intentionManager.IsAllowed(GameIntention.ReadComments, g).Result)
+                .Where(g => intentionManager.IsAllowed(GameIntention.ReadComments, g))
                 .ToArray();
             await unreadCountersRepository.FillEntityCounters(gamesWithAvailableComments, currentUserId,
                 g => g.Id, g => g.UnreadCommentsCount);

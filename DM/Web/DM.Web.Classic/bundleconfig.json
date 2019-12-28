@@ -85,7 +85,7 @@
       "wwwroot/components/Home/ReviewsList.js",
 
       "wwwroot/components/Module/AttributeSpecification.js",
-      "wwwroot/components/Module/CreateAttributeScheme.js",
+      "wwwroot/components/Module/CreateAttributeSchema.js",
 
       "wwwroot/components/Module/CreateModule.js",
       "wwwroot/components/Module/Module.js",

@@ -22,7 +22,7 @@ namespace DM.Web.Classic.Views.GameSettings
         public async Task<GameSettingsViewModel> Build(Guid gameId, GameSettingsType settingsType)
         {
             var game = await gameService.GetGame(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
             
             return new GameSettingsViewModel
             {

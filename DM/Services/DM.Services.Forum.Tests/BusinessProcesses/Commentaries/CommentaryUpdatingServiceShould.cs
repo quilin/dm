@@ -45,8 +45,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()));
 
             var dateTimeProvider = Mock<IDateTimeProvider>();
             currentMomentSetup = dateTimeProvider.Setup(p => p.Now);

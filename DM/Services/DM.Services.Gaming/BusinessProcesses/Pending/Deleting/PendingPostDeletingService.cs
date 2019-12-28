@@ -36,7 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
                 throw new HttpException(HttpStatusCode.Gone, "Pending post not found");
             }
 
-            await intentionManager.ThrowIfForbidden(RoomIntention.DeletePending, pendingPost);
+            intentionManager.ThrowIfForbidden(RoomIntention.DeletePending, pendingPost);
             await repository.Delete(updateBuilderFactory.Create<PendingPost>(pendingPostId).Delete());
         }
     }

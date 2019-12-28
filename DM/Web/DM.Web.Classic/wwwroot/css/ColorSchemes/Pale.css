@@ -1,355 +1,355 @@
-/* .colorscheme_pale */
+/* .colorschema_pale */
 
 /*MainText*/
-.colorscheme_pale html,
-.colorscheme_pale body {
+.colorschema_pale html,
+.colorschema_pale body {
     color: #333;
 }
-.colorscheme_pale .foraList-item-description {
+.colorschema_pale .foraList-item-description {
     color: #333;
 }
-.colorscheme_pale .current-forum {
+.colorschema_pale .current-forum {
     color: #333;
 }
-.colorscheme_pale a .icon-base-action {
+.colorschema_pale a .icon-base-action {
     color: #333;
 }
-.colorscheme_pale .current-module {
+.colorschema_pale .current-module {
     color: #333;
 }
-.colorscheme_pale .smartTextArea-control {
+.colorschema_pale .smartTextArea-control {
     color: #333;
 }
-.colorscheme_pale a.dds-option-link {
+.colorschema_pale a.dds-option-link {
     color: #333;
 }
 
 /*SecondaryText*/
-.colorscheme_pale input[type='submit'][disabled],
-.colorscheme_pale input[type='button'][disabled] {
+.colorschema_pale input[type='submit'][disabled],
+.colorschema_pale input[type='button'][disabled] {
     color: #888;
 }
-.colorscheme_pale .charactersList-name {
+.colorschema_pale .charactersList-name {
     color: #888;
 }
-.colorscheme_pale .chat-message-date {
+.colorschema_pale .chat-message-date {
     color: #888;
 }
-.colorscheme_pale .chat-message-author-offline a {
+.colorschema_pale .chat-message-author-offline a {
     color: #888;
 }
-.colorscheme_pale .chat-placeholder {
+.colorschema_pale .chat-placeholder {
     color: #888;
 }
-.colorscheme_pale .comment-lastUpdateMessage {
+.colorschema_pale .comment-lastUpdateMessage {
     color: #888;
 }
-.colorscheme_pale .comment-data {
+.colorschema_pale .comment-data {
     color: #888;
 }
-.colorscheme_pale .communityList-groupTitle {
+.colorschema_pale .communityList-groupTitle {
     color: #888;
 }
-.colorscheme_pale .content-minorTitle {
+.colorschema_pale .content-minorTitle {
     color: #888;
 }
-.colorscheme_pale .date {
+.colorschema_pale .date {
     color: #888;
 }
-.colorscheme_pale .userPresence-negative {
+.colorschema_pale .userPresence-negative {
     color: #888;
 }
-.colorscheme_pale .characterStatus-registration,
-.colorscheme_pale .characterStatus-left {
+.colorschema_pale .characterStatus-registration,
+.colorschema_pale .characterStatus-left {
     color: #888;
 }
-.colorscheme_pale .notificaion-unread-separator {
+.colorschema_pale .notificaion-unread-separator {
     color: #888;
 }
-.colorscheme_pale .content-userLink-badge-wrapper {
+.colorschema_pale .content-userLink-badge-wrapper {
     color: #888;
 }
-.colorscheme_pale .dice-result-item {
+.colorschema_pale .dice-result-item {
     color: #888;
 }
-.colorscheme_pale .dds-option-additionalData {
+.colorschema_pale .dds-option-additionalData {
     color: #888;
 }
-.colorscheme_pale .footer-copyright {
+.colorschema_pale .footer-copyright {
     color: #888;
 }
-.colorscheme_pale .topicList-item-description {
+.colorschema_pale .topicList-item-description {
     color: #888;
 }
-.colorscheme_pale .topMenu-link {
+.colorschema_pale .topMenu-link {
     color: #888;
 }
-.colorscheme_pale .topMenu-link-create:hover {
+.colorschema_pale .topMenu-link-create:hover {
     border-color: #888;
 }
-.colorscheme_pale .header-stats-counter {
+.colorschema_pale .header-stats-counter {
     color: #888;
 }
-.colorscheme_pale .conversation-actions-link {
+.colorschema_pale .conversation-actions-link {
     color: #888;
 }
-.colorscheme_pale .conversation-action.conversation-actions-disabled {
+.colorschema_pale .conversation-action.conversation-actions-disabled {
     color: #888;
 }
-.colorscheme_pale .placeholder {
+.colorschema_pale .placeholder {
     color: #888;
 }
-.colorscheme_pale .post-dice {
+.colorschema_pale .post-dice {
     color: #888;
 }
-.colorscheme_pale .vote-post-data {
+.colorschema_pale .vote-post-data {
     color: #888;
 }
-.colorscheme_pale .profile-field-label {
+.colorschema_pale .profile-field-label {
     color: #888;
 }
-.colorscheme_pale .quote-author {
+.colorschema_pale .quote-author {
     color: #888;
 }
-.colorscheme_pale .private-message-header {
+.colorschema_pale .private-message-header {
     color: #888;
 }
-.colorscheme_pale .vote-data {
+.colorschema_pale .vote-data {
     color: #888;
 }
-.colorscheme_pale .charactersList-characterInfoTitle {
+.colorschema_pale .charactersList-characterInfoTitle {
     color: #888;
 }
 
 /*CommentText*/
-.colorscheme_pale .best-post-commentary {
+.colorschema_pale .best-post-commentary {
     color: #7b532b;
 }
-.colorscheme_pale .post-commentary {
+.colorschema_pale .post-commentary {
     color: #7b532b;
 }
-.colorscheme_pale .vote-post-commentary {
+.colorschema_pale .vote-post-commentary {
     color: #7b532b;
 }
 
 /*MainLinks*/
-.colorscheme_pale a {
+.colorschema_pale a {
     color: #335a8c;
 }
-.colorscheme_pale .comment-likes {
+.colorschema_pale .comment-likes {
     color: #335a8c;
 }
 /*FocusLinks*/
-.colorscheme_pale a:hover,
-.colorscheme_pale a:focus {
+.colorschema_pale a:hover,
+.colorschema_pale a:focus {
     color: #901717;
 }
 /*Clocks*/
-.colorscheme_pale .module-messageRequired {
+.colorschema_pale .module-messageRequired {
     color: #901717;
 }
 
 /*Head1*/
-.colorscheme_pale .content-pageTitle {
+.colorschema_pale .content-pageTitle {
     color: #630;
 }
-.colorscheme_pale .content-mediumTitle {
+.colorschema_pale .content-mediumTitle {
     color: #630;
 }
-.colorscheme_pale .logo-text {
+.colorschema_pale .logo-text {
     color: #630;
 }
-.colorscheme_pale .info-head {
+.colorschema_pale .info-head {
     color: #630;
 }
 
 /*Everything Red*/
-.colorscheme_pale .content-noAccessMessage {
+.colorschema_pale .content-noAccessMessage {
     color: #901717;
 }
-.colorscheme_pale .rating-negative {
+.colorschema_pale .rating-negative {
     color: #901717;
 }
-.colorscheme_pale .characterStatus-dead,
-.colorscheme_pale .characterStatus-declined {
+.colorschema_pale .characterStatus-dead,
+.colorschema_pale .characterStatus-declined {
     color: #901717;
 }
-.colorscheme_pale .notification-marker {
+.colorschema_pale .notification-marker {
     color: #901717;
 }
-.colorscheme_pale .field-validation-error {
+.colorschema_pale .field-validation-error {
     color: #901717;
 }
-.colorscheme_pale .moduleRooms-error-message {
+.colorschema_pale .moduleRooms-error-message {
     color: #901717;
 }
-.colorscheme_classic .profile-list-mark-inactive {
+.colorschema_classic .profile-list-mark-inactive {
     background-color: #901717;
 }
 /*Everything Green*/
-.colorscheme_pale .chat-message-author-online a {
+.colorschema_pale .chat-message-author-online a {
     color: #337b33;
 }
-.colorscheme_pale .rating-positive {
+.colorschema_pale .rating-positive {
     color: #337b33;
 }
-.colorscheme_pale .userPresence-positive {
+.colorschema_pale .userPresence-positive {
     color: #337b33;
 }
-.colorscheme_pale .characterStatus-active {
+.colorschema_pale .characterStatus-active {
     color: #337b33;
 }
-.colorscheme_pale .content-userLink-badge {
+.colorschema_pale .content-userLink-badge {
     color: #337b33;
 }
-.colorscheme_pale .logo-new-messages {
+.colorschema_pale .logo-new-messages {
     color: #337b33;
 }
-.colorscheme_pale .messages-success {
+.colorschema_pale .messages-success {
     color: #337b33;
 }
-.colorscheme_pale .module-new {
+.colorschema_pale .module-new {
     color: #337b33;
 }
-.colorscheme_pale .profile-action-success {
+.colorschema_pale .profile-action-success {
     color: #337b33;
 }
-.colorscheme_pale .private-message {
+.colorschema_pale .private-message {
     color: #337b33;
 }
-.colorscheme_classic .profile-list-mark-active {
+.colorschema_classic .profile-list-mark-active {
     background-color: #337b33;
 }
 
 /*MessageBackgrd*/
-.colorscheme_pale .comment {
+.colorschema_pale .comment {
     background-color: #fafafa;
 }
-.colorscheme_pale .conversations-message-wrapper:hover {
+.colorschema_pale .conversations-message-wrapper:hover {
     background-color: #fafafa;
 }
-.colorscheme_pale .foraList-item-link:hover {
+.colorschema_pale .foraList-item-link:hover {
     background-color: #fafafa;
 }
-.colorscheme_pale .last-vote-wrapper {
+.colorschema_pale .last-vote-wrapper {
     background-color: #fafafa;
 }
-.colorscheme_pale .post-wrapper {
+.colorschema_pale .post-wrapper {
     background-color: #fafafa;
 }
-.colorscheme_pale .post-wrapper.highlighted {
+.colorschema_pale .post-wrapper.highlighted {
     background-color: #e8e8ee;
 }
-.colorscheme_pale .votes-post {
+.colorschema_pale .votes-post {
     background-color: #fafafa;
 }
 /*NewMessageBg*/
-.colorscheme_pale .message-wrapper.js-message-selected {
+.colorschema_pale .message-wrapper.js-message-selected {
     background-color: #e8e8ee;
 }
-.colorscheme_pale .chat-master-post {
+.colorschema_pale .chat-master-post {
     background-color: #e8e8ee;
 }
 
 /*Quote*/
-.colorscheme_pale .quote {
+.colorschema_pale .quote {
     background-color: #e8e8ee;
     border-left-color: #c3c3d0;
 }
 /*Spoiler*/
-.colorscheme_pale .spoiler {
+.colorschema_pale .spoiler {
     background-color: #f2f1f0;
 }
 
 /*Quote*/
-.colorscheme_pale .quote {
+.colorschema_pale .quote {
     background-color: #e6e6e5;
     border-left-color: #b0c4de;
 }
 /*Spoiler*/
-.colorscheme_pale .spoiler {
+.colorschema_pale .spoiler {
     background-color: #f5f5dc;
 }
 
 /*Buttons*/
-.colorscheme_pale input[type='submit'],
-.colorscheme_pale input[type='button'] {
+.colorschema_pale input[type='submit'],
+.colorschema_pale input[type='button'] {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .conversations-message-unread {
+.colorschema_pale .conversations-message-unread {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale a:hover .icon-base-action {
+.colorschema_pale a:hover .icon-base-action {
     color: #fff;
 }
-.colorscheme_pale .conversation-action {
+.colorschema_pale .conversation-action {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .paginator-link {
+.colorschema_pale .paginator-link {
     border-bottom-color: #335a8c;
     color: #335a8c;
 }
-.colorscheme_pale .paginator-link:hover,
-.colorscheme_pale .paginator-link:focus {
+.colorschema_pale .paginator-link:hover,
+.colorschema_pale .paginator-link:focus {
     border-bottom-color: #a33;
     color: #a33;
 }
-.colorscheme_pale .paginator-fixed .paginator-link {
+.colorschema_pale .paginator-fixed .paginator-link {
     border-bottom-color: #fff;
     color: #fff;
 }
-.colorscheme_pale a.profile-actions-link,
-.colorscheme_pale a.profile-actions-link:focus {
+.colorschema_pale a.profile-actions-link,
+.colorschema_pale a.profile-actions-link:focus {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .profile-action-success {
+.colorschema_pale .profile-action-success {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .profile-picture-uploadForm-progressBar {
+.colorschema_pale .profile-picture-uploadForm-progressBar {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .picture-uploadForm-progressBar {
+.colorschema_pale .picture-uploadForm-progressBar {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale .vote-sign-label.selected {
+.colorschema_pale .vote-sign-label.selected {
     background-color: #335a8c;
     border-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale a.profile-actions-link {
+.colorschema_pale a.profile-actions-link {
     background-color: #335a8c;
     color: #fff;
 }
-.colorscheme_pale a.profile-actions-link .iconic.profile-actions-icon {
+.colorschema_pale a.profile-actions-link .iconic.profile-actions-icon {
     color: #fff;
     background-color: transparent;
 }
-.colorscheme_pale a.profile-actions-link:hover {
+.colorschema_pale a.profile-actions-link:hover {
     background-color: #97c0f4;
     color: #000;
 }
-.colorscheme_pale a.profile-actions-link:hover .iconic.profile-actions-icon {
+.colorschema_pale a.profile-actions-link:hover .iconic.profile-actions-icon {
     background-color: transparent;
     color: #000;
 }
-.colorscheme_pale input[type='submit']:hover,
-.colorscheme_pale input[type='button']:hover {
+.colorschema_pale input[type='submit']:hover,
+.colorschema_pale input[type='button']:hover {
     background-color: #97c0f4;
     color: #000;
 }
-.colorscheme_pale .conversation-action:hover {
+.colorschema_pale .conversation-action:hover {
     background-color: #97c0f4;
     color: #000;
 }
-.colorscheme_pale input[type='submit'][disabled],
-.colorscheme_pale input[type='button'][disabled] {
+.colorschema_pale input[type='submit'][disabled],
+.colorschema_pale input[type='button'][disabled] {
     background-color: #f8f8f8;
     color: #bbb;
 }

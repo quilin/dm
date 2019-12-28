@@ -1,4 +1,4 @@
-namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
+namespace DM.Services.Core.Dto.Attributes
 {
     /// <summary>
     /// DAL model for attribute constraints for a string

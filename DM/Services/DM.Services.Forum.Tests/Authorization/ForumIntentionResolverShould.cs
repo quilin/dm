@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
@@ -24,7 +23,7 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidCreateTopicWhenCreatePolicyMatchesNotUserRole()
+        public void ForbidCreateTopicWhenCreatePolicyMatchesNotUserRole()
         {
             policyConverter
                 .Setup(c => c.Convert(UserRole.Administrator))
@@ -33,7 +32,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     ForumAccessPolicy.Player |
                     ForumAccessPolicy.NannyModerator);
             
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Administrator).Please(),
                 ForumIntention.CreateTopic,
                 new Dto.Output.Forum
@@ -44,17 +43,17 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidCreateTopicWhenUserNotAuthenticated()
+        public void ForbidCreateTopicWhenUserNotAuthenticated()
         {
-            (await resolver.IsAllowed(
+            resolver.IsAllowed(
                     Create.User().Please(),
                     ForumIntention.CreateTopic,
-                    new Dto.Output.Forum()))
+                    new Dto.Output.Forum())
                 .Should().BeFalse();
         }
 
         [Fact]
-        public async Task AllowCreateTopicWhenCreatePolicyMatchUserRole()
+        public void AllowCreateTopicWhenCreatePolicyMatchUserRole()
         {
             policyConverter
                 .Setup(c => c.Convert(UserRole.Administrator | UserRole.Player))
@@ -63,7 +62,7 @@ namespace DM.Services.Forum.Tests.Authorization
                     ForumAccessPolicy.Player |
                     ForumAccessPolicy.Administrator);
             
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Administrator | UserRole.Player).Please(),
                 ForumIntention.CreateTopic,
                 new Dto.Output.Forum
@@ -74,9 +73,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidTopicAdministrationWhenUserNotAdministratorOrLocalModerator()
+        public void ForbidTopicAdministrationWhenUserNotAdministratorOrLocalModerator()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Player | UserRole.RegularModerator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
@@ -87,9 +86,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowTopicAdministrationWhenUserAdministrator()
+        public void AllowTopicAdministrationWhenUserAdministrator()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.NannyModerator | UserRole.Administrator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
@@ -100,10 +99,10 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowTopicAdministrationWhenUserLocalModerator()
+        public void AllowTopicAdministrationWhenUserLocalModerator()
         {
             var userId = Guid.NewGuid();
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User(userId).WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
                 ForumIntention.AdministrateTopics,
                 new Dto.Output.Forum
@@ -116,9 +115,9 @@ namespace DM.Services.Forum.Tests.Authorization
         [Theory]
         [InlineData(ForumIntention.CreateTopic)]
         [InlineData(ForumIntention.AdministrateTopics)]
-        public async Task AllowNothingWhenUserGuest(ForumIntention intention)
+        public void AllowNothingWhenUserGuest(ForumIntention intention)
         {
-            (await resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Output.Forum())).Should().BeFalse();
+            resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Output.Forum()).Should().BeFalse();
         }
     }
 }

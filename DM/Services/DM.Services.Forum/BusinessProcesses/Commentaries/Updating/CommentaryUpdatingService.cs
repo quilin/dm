@@ -48,7 +48,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             await validator.ValidateAndThrowAsync(updateComment);
             var comment = await commentaryReadingService.Get(updateComment.CommentId);
 
-            await intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var updateBuilder = updateBuilderFactory.Create<Comment>(updateComment.CommentId)
                 .MaybeField(f => f.Text, updateComment.Text?.Trim());
 

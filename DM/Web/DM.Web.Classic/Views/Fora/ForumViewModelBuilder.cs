@@ -46,8 +46,8 @@ namespace DM.Web.Classic.Views.Fora
 
         public async Task<ForumViewModel> Build(Forum forum, int entityNumber)
         {
-            var (canCreateTopic, (topics, paging), attachedTopics, moderators) = await AsyncExtensions.WhenAll(
-                intentionsManager.IsAllowed(ForumIntention.CreateTopic, forum),
+            var canCreateTopic = intentionsManager.IsAllowed(ForumIntention.CreateTopic, forum);
+            var ((topics, paging), attachedTopics, moderators) = await AsyncExtensions.WhenAll(
                 topicReadingService.GetTopicsList(forum.Title, new PagingQuery {Number = entityNumber}),
                 topicReadingService.GetAttachedTopics(forum.Title),
                 moderatorsReadingService.GetModerators(forum.Title));

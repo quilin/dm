@@ -18,7 +18,7 @@
     _controlLinks: {
         "GeneralSettingsTab": DM.EditModuleControl,
         "RoomsSettingsTab": DM.RoomsListControl,
-        "AttributesSettingsTab": DM.CreateAttributeSchemeControl,
+        "AttributesSettingsTab": DM.CreateAttributeSchemaControl,
         "NotepadSettingsTab": DM.ModuleNotepadControl,
         "BlackListSettingsTab": DM.ModuleBlackListControl,
         "RemoveSettingsTab": function() {}

@@ -18,13 +18,13 @@
     display: none;
 }
 
-.module-attributes-scheme-dropdown {
+.module-attributes-schema-dropdown {
     width: 160px;
 }
 .module-attributes-general-input {
     width: 162px;
 }
-.module-attributes-scheme-error {
+.module-attributes-schema-error {
     display: none;
     margin-top: 5px;
     vertical-align: top;

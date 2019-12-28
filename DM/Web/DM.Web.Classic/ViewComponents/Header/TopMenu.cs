@@ -20,7 +20,7 @@ namespace DM.Web.Classic.ViewComponents.Header
         {
             var topMenuViewModel = new TopMenuViewModel
             {
-                CanCreateGame = await intentionManager.IsAllowed(GameIntention.Create)
+                CanCreateGame = intentionManager.IsAllowed(GameIntention.Create)
             };
             return View("~/Views/Shared/Layout/TopMenu.cshtml", topMenuViewModel);
         }

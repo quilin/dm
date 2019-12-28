@@ -34,12 +34,12 @@ namespace DM.Web.Classic.Views.EditGameStatus
                 Form = editGameStatusFormBuilder.Build(game),
                 StatusCredentials = new Dictionary<GameStatus, bool>
                 {
-                    {GameStatus.Draft, await intentionManager.IsAllowed(GameIntention.SetStatusDraft, game)},
-                    {GameStatus.Requirement, await intentionManager.IsAllowed(GameIntention.SetStatusRequirement, game)},
-                    {GameStatus.Active, await intentionManager.IsAllowed(GameIntention.SetStatusActive, game)},
-                    {GameStatus.Frozen, await intentionManager.IsAllowed(GameIntention.SetStatusFrozen, game)},
-                    {GameStatus.Finished, await intentionManager.IsAllowed(GameIntention.SetStatusFinished, game)},
-                    {GameStatus.Closed, await intentionManager.IsAllowed(GameIntention.SetStatusClosed, game)},
+                    {GameStatus.Draft, intentionManager.IsAllowed(GameIntention.SetStatusDraft, game)},
+                    {GameStatus.Requirement, intentionManager.IsAllowed(GameIntention.SetStatusRequirement, game)},
+                    {GameStatus.Active, intentionManager.IsAllowed(GameIntention.SetStatusActive, game)},
+                    {GameStatus.Frozen, intentionManager.IsAllowed(GameIntention.SetStatusFrozen, game)},
+                    {GameStatus.Finished, intentionManager.IsAllowed(GameIntention.SetStatusFinished, game)},
+                    {GameStatus.Closed, intentionManager.IsAllowed(GameIntention.SetStatusClosed, game)},
                 }
             };
         }

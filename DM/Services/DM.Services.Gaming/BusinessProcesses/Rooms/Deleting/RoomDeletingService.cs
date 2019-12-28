@@ -48,7 +48,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
         public async Task Delete(Guid roomId)
         {
             var room = await repository.GetRoom(roomId, identity.User.UserId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var updateRoom = updateBuilderFactory.Create<DbRoom>(roomId).Field(r => r.IsRemoved, true);
             var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);

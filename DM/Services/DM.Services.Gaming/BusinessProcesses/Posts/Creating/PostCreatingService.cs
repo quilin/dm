@@ -66,7 +66,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
                 throw new HttpException(HttpStatusCode.Gone, "Room not found");
             }
 
-            await intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, (room, createPost.CharacterId));
+            intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, (room, createPost.CharacterId));
 
             var events = new List<EventType>(2) {EventType.NewPost};
 

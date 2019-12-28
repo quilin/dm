@@ -37,8 +37,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()));
 
             updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
             updateBuilder

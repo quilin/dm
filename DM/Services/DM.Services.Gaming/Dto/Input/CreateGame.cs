@@ -75,6 +75,11 @@ namespace DM.Services.Gaming.Dto.Input
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
 
         /// <summary>
+        /// Attribute schema identifier
+        /// </summary>
+        public Guid? AttributeSchemaId { get; set; }
+
+        /// <summary>
         /// Game tag identifiers
         /// </summary>
         public IEnumerable<Guid> Tags { get; set; }

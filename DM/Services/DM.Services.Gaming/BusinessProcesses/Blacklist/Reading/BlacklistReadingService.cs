@@ -32,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Reading
         public async Task<IEnumerable<GeneralUser>> Get(Guid gameId)
         {
             var game = await gameReadingService.GetGame(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
             return await repository.Get(gameId);
         }
     }

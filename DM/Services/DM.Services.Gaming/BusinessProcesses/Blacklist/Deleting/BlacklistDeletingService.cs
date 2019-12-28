@@ -49,7 +49,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
         {
             await validator.ValidateAndThrowAsync(operateBlacklistLink);
             var game = await gameReadingService.GetGame(operateBlacklistLink.GameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
             if (!game.BlacklistedUsers.TryGetValue(userId, out var linkId))

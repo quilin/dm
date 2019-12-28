@@ -68,7 +68,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         public async Task<GameExtended> Create(CreateGame createGame)
         {
             await validator.ValidateAndThrowAsync(createGame);
-            await intentionManager.ThrowIfForbidden(GameIntention.Create);
+            intentionManager.ThrowIfForbidden(GameIntention.Create);
 
             // resolve game initial status
             var initialStatus = identity.User.QuantityRating < 100

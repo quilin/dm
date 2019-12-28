@@ -21,7 +21,7 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Color scheme for the website view
         /// </summary>
-        public ColorScheme ColorScheme { get; set; }
+        public ColorSchema ColorSchema { get; set; }
 
         /// <summary>
         /// Number of game posts to display on a page
@@ -52,7 +52,7 @@ namespace DM.Services.Authentication.Dto
             CommentsPerPage = 10,
             PostsPerPage = 10,
             MessagesPerPage = 10,
-            ColorScheme = ColorScheme.Modern
+            ColorSchema = ColorSchema.Modern
         };
     }
 }

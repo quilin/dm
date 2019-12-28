@@ -35,7 +35,7 @@ namespace DM.Web.Classic.Controllers.CharacterControllers
         public async Task<IActionResult> Create(Guid gameId)
         {
             var game = await gameService.GetGameDetails(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
+            intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
 
             var characterCreateForm = characterCreateFormBuilder.Build(game);
             return View("CreateCharacter", characterCreateForm);

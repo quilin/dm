@@ -37,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
         public async Task<GeneralUser> LikeComment(Guid commentId)
         {
             var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             return await Like(comment, EventType.LikedGameComment);
         }
 
@@ -45,7 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
         public async Task DislikeComment(Guid commentId)
         {
             var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             await Dislike(comment);
         }
     }

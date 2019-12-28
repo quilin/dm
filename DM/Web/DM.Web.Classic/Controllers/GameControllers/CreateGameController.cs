@@ -29,7 +29,7 @@ namespace DM.Web.Classic.Controllers.GameControllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await intentionManager.ThrowIfForbidden(GameIntention.Create);
+            intentionManager.ThrowIfForbidden(GameIntention.Create);
             var createModuleViewModel = await createGameViewModelBuilder.Build();
             return View("CreateGame", createModuleViewModel);
         }
@@ -43,6 +43,7 @@ namespace DM.Web.Classic.Controllers.GameControllers
                 SystemName = createGameForm.SystemName,
                 SettingName = createGameForm.SettingName,
                 Info = createGameForm.Info,
+                AttributeSchemaId = createGameForm.SchemaId,
                 CommentariesAccessMode = createGameForm.CommentariesAccessMode,
                 Draft = createGameForm.CreateAsRegistration,
                 HideTemper = createGameForm.HideTemper,

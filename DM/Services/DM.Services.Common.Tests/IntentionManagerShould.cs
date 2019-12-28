@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -31,23 +30,23 @@ namespace DM.Services.Common.Tests
         }
 
         [Fact]
-        public async Task ReturnFalseIfNoMatchingResolvers()
+        public void ReturnFalseIfNoMatchingResolvers()
         {
-            var actual = await manager.IsAllowed(Intention.Value, new Target3());
+            var actual = manager.IsAllowed(Intention.Value, new Target3());
             actual.Should().BeFalse();
         }
 
         [Fact]
-        public async Task ReturnFalseIfMatchingResolverResolvesFalse()
+        public void ReturnFalseIfMatchingResolverResolvesFalse()
         {
             resolver1
                 .Setup(r => r.IsAllowed(It.IsAny<AuthenticatedUser>(), It.IsAny<Intention>(), It.IsAny<Target1>()))
-                .ReturnsAsync(false);
+                .Returns(false);
             var user = new AuthenticatedUser();
             identity.Setup(i => i.User).Returns(user);
 
             var target = new Target1();
-            var actual = await manager.IsAllowed(Intention.Value, target);
+            var actual = manager.IsAllowed(Intention.Value, target);
             actual.Should().BeFalse();
             resolver1.Verify(r => r.IsAllowed(user, Intention.Value, target), Times.Once);
             resolver1.VerifyNoOtherCalls();
@@ -58,12 +57,12 @@ namespace DM.Services.Common.Tests
         {
             resolver1
                 .Setup(r => r.IsAllowed(It.IsAny<AuthenticatedUser>(), It.IsAny<Intention>(), It.IsAny<Target1>()))
-                .ReturnsAsync(false);
+                .Returns(false);
             var user = new AuthenticatedUser();
             identity.Setup(i => i.User).Returns(user);
 
             var target = new Target1();
-            manager.Invoking(m => m.ThrowIfForbidden(Intention.Value, target).Wait())
+            manager.Invoking(m => m.ThrowIfForbidden(Intention.Value, target))
                 .Should()
                 .Throw<IntentionManagerException>();
 
@@ -72,16 +71,16 @@ namespace DM.Services.Common.Tests
         }
 
         [Fact]
-        public async Task ReturnTrueIfMatchingResolverResolvesTrue()
+        public void ReturnTrueIfMatchingResolverResolvesTrue()
         {
             resolver2
                 .Setup(r => r.IsAllowed(It.IsAny<AuthenticatedUser>(), It.IsAny<Intention>(), It.IsAny<Target2>()))
-                .ReturnsAsync(true);
+                .Returns(true);
             var user = new AuthenticatedUser();
             identity.Setup(i => i.User).Returns(user);
 
             var target = new Target2();
-            var actual = await manager.IsAllowed(Intention.Value, target);
+            var actual = manager.IsAllowed(Intention.Value, target);
             actual.Should().BeTrue();
             resolver2.Verify(r => r.IsAllowed(user, Intention.Value, target), Times.Once);
             resolver2.VerifyNoOtherCalls();
@@ -92,12 +91,12 @@ namespace DM.Services.Common.Tests
         {
             resolver2
                 .Setup(r => r.IsAllowed(It.IsAny<AuthenticatedUser>(), It.IsAny<Intention>(), It.IsAny<Target2>()))
-                .ReturnsAsync(true);
+                .Returns(true);
             var user = new AuthenticatedUser();
             identity.Setup(i => i.User).Returns(user);
 
             var target = new Target2();
-            manager.Invoking(async m => await m.ThrowIfForbidden(Intention.Value, target))
+            manager.Invoking(m => m.ThrowIfForbidden(Intention.Value, target))
                 .Should()
                 .NotThrow<IntentionManagerException>();
 

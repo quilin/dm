@@ -55,7 +55,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
         {
             await validator.ValidateAndThrowAsync(createPendingPost);
             var room = await roomReadingService.Get(createPendingPost.RoomId);
-            await intentionManager.ThrowIfForbidden(RoomIntention.CreatePendingPost, room);
+            intentionManager.ThrowIfForbidden(RoomIntention.CreatePendingPost, room);
 
             var (_, pendingUserId) = await userRepository.FindUserId(createPendingPost.PendingUserLogin);
             if (room.Pendings.Any(p =>

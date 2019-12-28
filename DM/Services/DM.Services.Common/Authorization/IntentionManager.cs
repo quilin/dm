@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using Microsoft.Extensions.Logging;
 
@@ -26,14 +25,14 @@ namespace DM.Services.Common.Authorization
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsAllowed<TIntention>(TIntention intention) where TIntention : struct
+        public bool IsAllowed<TIntention>(TIntention intention) where TIntention : struct
         {
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention>>()
                 .FirstOrDefault();
             if (matchingResolver != default)
             {
-                return await matchingResolver.IsAllowed(identityProvider.Current.User, intention);
+                return matchingResolver.IsAllowed(identityProvider.Current.User, intention);
             }
 
             logger.LogError("No matching resolver found for intention type {intentionType}", typeof(TIntention));
@@ -41,7 +40,7 @@ namespace DM.Services.Common.Authorization
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target)
+        public bool IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target)
             where TIntention : struct
         {
             var matchingResolver = resolvers
@@ -49,7 +48,7 @@ namespace DM.Services.Common.Authorization
                 .FirstOrDefault();
             if (matchingResolver != default)
             {
-                return await matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
+                return matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
             }
 
             logger.LogError(
@@ -59,19 +58,19 @@ namespace DM.Services.Common.Authorization
         }
 
         /// <inheritdoc />
-        public async Task ThrowIfForbidden<TIntention>(TIntention intention) where TIntention : struct
+        public void ThrowIfForbidden<TIntention>(TIntention intention) where TIntention : struct
         {
-            if (!await IsAllowed(intention))
+            if (!IsAllowed(intention))
             {
                 throw new IntentionManagerException(identityProvider.Current.User, GetIntentionEnum(intention));
             }
         }
 
         /// <inheritdoc />
-        public async Task ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target)
+        public void ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target)
             where TIntention : struct
         {
-            if (!await IsAllowed(intention, target))
+            if (!IsAllowed(intention, target))
             {
                 throw new IntentionManagerException(identityProvider.Current.User, GetIntentionEnum(intention), target);
             }

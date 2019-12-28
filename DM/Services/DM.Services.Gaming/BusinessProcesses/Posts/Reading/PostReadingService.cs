@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         public async Task<(IEnumerable<Post> posts, PagingResult paging)> Get(Guid roomId, PagingQuery query)
         {
             var room = await roomReadingService.Get(roomId);
-            await intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room);
+            intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room);
 
             var totalCount = await repository.Count(roomId, identity.User.UserId);
             var paging = new PagingData(query, identity.Settings.PostsPerPage, totalCount);

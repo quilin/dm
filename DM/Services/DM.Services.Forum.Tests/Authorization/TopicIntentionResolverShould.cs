@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
@@ -23,15 +22,15 @@ namespace DM.Services.Forum.Tests.Authorization
         [InlineData(TopicIntention.Like)]
         [InlineData(TopicIntention.CreateComment)]
         [InlineData(TopicIntention.Edit)]
-        public async Task ForbidEverythingForGuest(TopicIntention intention)
+        public void ForbidEverythingForGuest(TopicIntention intention)
         {
-            (await resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Topic())).Should().BeFalse();
+            resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Topic()).Should().BeFalse();
         }
 
         [Fact]
-        public async Task ForbidCreateCommentInClosedTopic()
+        public void ForbidCreateCommentInClosedTopic()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Player).Please(),
                 TopicIntention.CreateComment,
                 new Topic
@@ -42,9 +41,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowCreateCommentInOpenTopic()
+        public void AllowCreateCommentInOpenTopic()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Player).Please(),
                 TopicIntention.CreateComment,
                 new Topic
@@ -55,9 +54,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidEditWhenUserNotAuthorAndNotLocalModeratorAndNotAdministrator()
+        public void ForbidEditWhenUserNotAuthorAndNotLocalModeratorAndNotAdministrator()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.RegularModerator).Please(),
                 TopicIntention.Edit,
                 new Topic
@@ -73,10 +72,10 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowEditWhenUserIsAuthor()
+        public void AllowEditWhenUserIsAuthor()
         {
             var userId = Guid.NewGuid();
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User(userId).WithRole(UserRole.RegularModerator).Please(),
                 TopicIntention.Edit,
                 new Topic
@@ -92,10 +91,10 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowEditWhenUserIsLocalModerator()
+        public void AllowEditWhenUserIsLocalModerator()
         {
             var userId = Guid.NewGuid();
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User(userId).WithRole(UserRole.RegularModerator).Please(),
                 TopicIntention.Edit,
                 new Topic
@@ -111,9 +110,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task AllowEditWhenUserIsAdministrator()
+        public void AllowEditWhenUserIsAdministrator()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Administrator).Please(),
                 TopicIntention.Edit,
                 new Topic
@@ -129,10 +128,10 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidLikeWhenUserIsAuthor()
+        public void ForbidLikeWhenUserIsAuthor()
         {
             var userId = Guid.NewGuid();
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User(userId).WithRole(UserRole.Administrator).Please(),
                 TopicIntention.Like,
                 new Topic
@@ -148,9 +147,9 @@ namespace DM.Services.Forum.Tests.Authorization
         }
 
         [Fact]
-        public async Task ForbidLikeWhenUserIsNotAuthor()
+        public void ForbidLikeWhenUserIsNotAuthor()
         {
-            var actual = await resolver.IsAllowed(
+            var actual = resolver.IsAllowed(
                 Create.User().WithRole(UserRole.Administrator).Please(),
                 TopicIntention.Like,
                 new Topic

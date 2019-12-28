@@ -59,7 +59,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             await validator.ValidateAndThrowAsync(createComment);
 
             var topic = await topicReadingService.GetTopic(createComment.EntityId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
+            intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
             var comment = commentaryFactory.Create(createComment, identity.User.UserId);
             var topicUpdate = updateBuilderFactory.Create<ForumTopic>(topic.Id)

@@ -40,7 +40,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         public async Task Delete(Guid commentId)
         {
             var comment = await repository.GetForDelete(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Services.Common.Dto.Comment) comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Services.Common.Dto.Comment) comment);
 
             var updateTopic = updateBuilderFactory.Create<ForumTopic>(comment.EntityId);
             if (comment.IsLastCommentOfTopic)

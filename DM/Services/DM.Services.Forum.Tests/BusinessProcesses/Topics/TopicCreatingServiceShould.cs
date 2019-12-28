@@ -48,8 +48,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Dto.Output.Forum>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Dto.Output.Forum>()));
 
             var identityProvider = Mock<IIdentityProvider>();
             identityProvider

@@ -25,7 +25,7 @@ namespace DM.Web.Classic.Views.EditGame
         public Guid? AssistantId { get; set; }
 
         [Required]
-        public Guid AttributeSchemeId { get; set; }
+        public Guid AttributeSchemaId { get; set; }
 
         [Required(ErrorMessage = "Введите информацию об игре")]
         [StringLength(int.MaxValue, MinimumLength = 200, ErrorMessage = "Информация о модуле должна содержать больше {2} символов")]

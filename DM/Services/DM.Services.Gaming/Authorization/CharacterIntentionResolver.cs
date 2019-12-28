@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -15,7 +14,7 @@ namespace DM.Services.Gaming.Authorization
         IIntentionResolver<CharacterIntention, (Character, GameExtended)>
     {
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, CharacterIntention intention,
+        public bool IsAllowed(AuthenticatedUser user, CharacterIntention intention,
             CharacterToUpdate target)
         {
             var characterOwned = target.UserId == user.UserId;
@@ -25,31 +24,31 @@ namespace DM.Services.Gaming.Authorization
             switch (intention)
             {
                 case CharacterIntention.Edit when characterOwned:
-                    return Task.FromResult(gameActive);
+                    return gameActive;
                 case CharacterIntention.Edit when gameOwned:
-                    return Task.FromResult(target.IsNpc ||
-                        target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed));
+                    return target.IsNpc ||
+                        target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed);
                 case CharacterIntention.EditPrivacySettings when characterOwned:
-                    return Task.FromResult(gameActive);
+                    return gameActive;
                 case CharacterIntention.EditMasterSettings when gameOwned:
-                    return Task.FromResult(true);
+                    return true;
                 case CharacterIntention.Delete when characterOwned:
-                    return Task.FromResult(gameActive);
+                    return gameActive;
                 case CharacterIntention.Accept when gameOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Registration ||
-                        target.Status == CharacterStatus.Declined);
+                    return target.Status == CharacterStatus.Registration ||
+                        target.Status == CharacterStatus.Declined;
                 case CharacterIntention.Decline when gameOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Registration);
+                    return target.Status == CharacterStatus.Registration;
                 case CharacterIntention.Kill when gameOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Active);
+                    return target.Status == CharacterStatus.Active;
                 case CharacterIntention.Resurrect when gameOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Dead);
+                    return target.Status == CharacterStatus.Dead;
                 case CharacterIntention.Leave when characterOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Active);
+                    return target.Status == CharacterStatus.Active;
                 case CharacterIntention.Return when characterOwned:
-                    return Task.FromResult(target.Status == CharacterStatus.Left);
+                    return target.Status == CharacterStatus.Left;
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
 
@@ -62,23 +61,23 @@ namespace DM.Services.Gaming.Authorization
         };
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, CharacterIntention intention, (Character, GameExtended) target)
+        public bool IsAllowed(AuthenticatedUser user, CharacterIntention intention, (Character, GameExtended) target)
         {
             var (character, game) = target;
             
             if (!CharacterGameIntentions.Contains(intention))
             {
-                return Task.FromResult(false);
+                return false;
             }
 
             if (game.Participation(user.UserId).HasFlag(GameParticipation.Authority))
             {
-                return Task.FromResult(true);
+                return true;
             }
 
             if (character.Author.UserId == user.UserId)
             {
-                return Task.FromResult(true);
+                return true;
             }
 
             switch (intention)
@@ -87,9 +86,9 @@ namespace DM.Services.Gaming.Authorization
                 case CharacterIntention.ViewStory when !game.HideStory:
                 case CharacterIntention.ViewSkills when !game.HideSkills:
                 case CharacterIntention.ViewInventory when !game.HideInventory:
-                    return Task.FromResult(true);
+                    return true;
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
     }

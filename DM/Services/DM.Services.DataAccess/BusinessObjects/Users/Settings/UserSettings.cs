@@ -28,6 +28,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users.Settings
         /// <summary>
         /// Website color scheme
         /// </summary>
-        public ColorScheme ColorScheme { get; set; }
+        public ColorSchema ColorSchema { get; set; }
     }
 }

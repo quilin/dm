@@ -56,9 +56,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         public Guid? NannyId { get; set; }
 
         /// <summary>
-        /// Character attribute scheme identifier
+        /// Character attribute schema identifier
         /// </summary>
-        public Guid AttributeSchemeId { get; set; }
+        public Guid AttributeSchemaId { get; set; }
 
         /// <summary>
         /// Title

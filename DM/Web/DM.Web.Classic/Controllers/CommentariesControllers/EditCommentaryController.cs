@@ -38,7 +38,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         public async Task<IActionResult> Edit(Guid commentaryId)
         {
             var comment = await commentaryReadingService.Get(commentaryId);
-            await intentionsManager.ThrowIfForbidden(CommentIntention.Edit, comment);
+            intentionsManager.ThrowIfForbidden(CommentIntention.Edit, comment);
             var editCommentaryForm = editCommentaryFormBuilder.Build(comment);
             return PartialView("Commentaries/EditCommentary", editCommentaryForm);
         }

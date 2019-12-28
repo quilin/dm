@@ -53,7 +53,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
         {
             await validator.ValidateAndThrowAsync(createCharacter);
             var game = await gameReadingService.GetGame(createCharacter.GameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
+            intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
 
             var currentUserId = identity.User.UserId;
             var gameParticipation = game.Participation(currentUserId);

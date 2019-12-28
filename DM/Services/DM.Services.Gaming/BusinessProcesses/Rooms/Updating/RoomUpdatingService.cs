@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
                 throw new HttpException(HttpStatusCode.Gone, "Room not found");
             }
             
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var roomUpdate = updateBuilderFactory.Create<DbRoom>(updateRoom.RoomId)
                 .MaybeField(r => r.Title, updateRoom.Title)

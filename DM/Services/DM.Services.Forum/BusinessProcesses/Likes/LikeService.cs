@@ -41,7 +41,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         public async Task<GeneralUser> LikeTopic(Guid topicId)
         {
             var topic = await topicReadingService.GetTopic(topicId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
+            intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
             return await Like(topic, EventType.LikedTopic);
         }
 
@@ -49,7 +49,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         public async Task<GeneralUser> LikeComment(Guid commentId)
         {
             var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             return await Like(comment, EventType.LikedForumComment);
         }
 
@@ -57,7 +57,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         public async Task DislikeTopic(Guid topicId)
         {
             var topic = await topicReadingService.GetTopic(topicId);
-            await intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
+            intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
             await Dislike(topic);
         }
 
@@ -65,7 +65,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
         public async Task DislikeComment(Guid commentId)
         {
             var comment = await commentaryReadingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
             await Dislike(comment);
         }
     }

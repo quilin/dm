@@ -38,7 +38,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
         /// <inheritdoc />
         public async Task<GeneralUser> Subscribe(Guid gameId)
         {
-            await intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
+            intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
             await gameReadingService.GetGame(gameId);
 
             var userId = identity.User.UserId;
@@ -55,7 +55,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
         /// <inheritdoc />
         public async Task Unsubscribe(Guid gameId)
         {
-            await intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
+            intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
             await gameReadingService.GetGame(gameId);
 
             var userId = identity.User.UserId;

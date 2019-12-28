@@ -40,7 +40,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
         public async Task Delete(Guid characterId)
         {
             var character = await repository.Get(characterId);
-            await intentionManager.ThrowIfForbidden(CharacterIntention.Delete, character);
+            intentionManager.ThrowIfForbidden(CharacterIntention.Delete, character);
 
             var updateCharacter = updateBuilderFactory.Create<Character>(characterId);
             updateCharacter.Field(c => c.IsRemoved, true);

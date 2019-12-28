@@ -42,14 +42,14 @@
             @Html.HiddenFor(m => m.CreateGameForm.AssistantId)
         </div>
         <div class="form-field-wrapper">
-            @Html.LabelFor(m => m.CreateGameForm.AttributeSchemeId, "Характеристики персонажей",
+            @Html.LabelFor(m => m.CreateGameForm.AttributeSchemaId, "Характеристики персонажей",
                 new Dictionary<string, object>
                 {
-                    {"id", $"{Html.DisplayNameFor(m => m.CreateGameForm.AttributeSchemeId)}_Label"},
+                    {"id", $"{Html.DisplayNameFor(m => m.CreateGameForm.AttributeSchemaId)}_Label"},
                     {"class", "form-field-label"}
                 })
-            @Html.DropdownFor(m => m.CreateGameForm.AttributeSchemeId, Model.AttributeSchemes, new Dictionary<string, object> { { "class", "module-attributes-scheme-dropdown" } })
-            <span class="field-validation-error module-attributes-scheme-error" id="AttributeSchemeValidationMessage">Выберите схему характеристик персонажей</span>
+            @Html.DropdownFor(m => m.CreateGameForm.AttributeSchemaId, Model.AttributeSchemas, new Dictionary<string, object> { { "class", "module-attributes-schema-dropdown" } })
+            <span class="field-validation-error module-attributes-schema-error" id="AttributeSchemaValidationMessage">Выберите схему характеристик персонажей</span>
         </div>
         <div class="form-field-wrapper">
             <label>@Html.CheckBoxFor(m => m.CreateGameForm.CreateAsRegistration) Оформляется</label>
@@ -131,7 +131,7 @@
 
     <script>
         var createModuleControl = new DM.CreateModuleControl({
-            getCreateSchemeFormUrl: "@Url.Action("GetCreateForm", "CreateAttributeScheme")"
+            getCreateSchemaFormUrl: "@Url.Action("GetCreateForm", "CreateAttributeSchema")"
         });
         DM.Ready();
     </script>

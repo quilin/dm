@@ -1,7 +1,9 @@
-﻿namespace DM.Web.Classic.Views.CreateGame
+﻿using System;
+
+namespace DM.Web.Classic.Views.CreateGame
 {
     public interface ICreateGameFormBuilder
     {
-        CreateGameForm Build();
+        CreateGameForm Build(Guid schemaId);
     }
 }

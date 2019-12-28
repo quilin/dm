@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting
         public async Task Delete(Guid postId)
         {
             var post = await postReadingService.Get(postId);
-            await intentionManager.ThrowIfForbidden(PostIntention.Delete, post);
+            intentionManager.ThrowIfForbidden(PostIntention.Delete, post);
             var updateBuilder = updateBuilderFactory.Create<Post>(postId)
                 .Field(p => p.IsRemoved, true);
 

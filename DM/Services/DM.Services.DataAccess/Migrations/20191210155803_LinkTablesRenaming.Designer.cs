@@ -378,7 +378,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid?>("AssistantId");
 
-                    b.Property<Guid>("AttributeSchemeId");
+                    b.Property<Guid>("AttributeSchemaId");
 
                     b.Property<int>("CommentariesAccessMode");
 

@@ -44,7 +44,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
         public async Task DeleteTopic(Guid topicId)
         {
             var topic = await topicReadingService.GetTopic(topicId);
-            await intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
+            intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
 
             await repository.Update(updateBuilderFactory.Create<ForumTopic>(topicId).Field(t => t.IsRemoved, true));
             await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message);

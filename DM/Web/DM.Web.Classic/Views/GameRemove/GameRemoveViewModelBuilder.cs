@@ -31,7 +31,7 @@ namespace DM.Web.Classic.Views.GameRemove
             {
                 GameId = gameId,
                 Master = userViewModelBuilder.Build(game.Master),
-                CanRemove = intentionManager.IsAllowed(GameIntention.Delete, game).Result
+                CanRemove = intentionManager.IsAllowed(GameIntention.Delete, game)
             };
         }
     }

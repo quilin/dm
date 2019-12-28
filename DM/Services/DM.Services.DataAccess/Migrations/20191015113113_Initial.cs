@@ -212,7 +212,7 @@ namespace DM.Services.DataAccess.Migrations
                     MasterId = table.Column<Guid>(nullable: false),
                     AssistantId = table.Column<Guid>(nullable: true),
                     NannyId = table.Column<Guid>(nullable: true),
-                    AttributeSchemeId = table.Column<Guid>(nullable: false),
+                    AttributeSchemaId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     SystemName = table.Column<string>(nullable: true),
                     SettingName = table.Column<string>(nullable: true),

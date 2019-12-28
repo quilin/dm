@@ -27,7 +27,7 @@ namespace DM.Web.Classic.Views.GameCommentaries.EditCommentary
         {
             var parser = bbParserProvider.CurrentCommon;
             var commentary = await commentaryReadingService.Get(commentaryId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Edit, commentary);
+            intentionManager.ThrowIfForbidden(CommentIntention.Edit, commentary);
 
             return new GameCommentaryEditForm
             {

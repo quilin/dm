@@ -66,7 +66,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         {
             await validator.ValidateAndThrowAsync(updateGame);
             var game = await gameReadingService.GetGameDetails(updateGame.GameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var changes = updateBuilderFactory.Create<Game>(game.Id)
                 .MaybeField(c => c.Title, updateGame.Title?.Trim())
@@ -99,7 +99,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             if (updateGame.Status.HasValue && updateGame.Status != game.Status)
             {
                 var (intention, eventType) = intentionConverter.Convert(updateGame.Status.Value);
-                if (await intentionManager.IsAllowed(intention, game))
+                if (intentionManager.IsAllowed(intention, game))
                 {
                     changes.Field(g => g.Status, updateGame.Status.Value);
                     invokedEvents.Add(eventType);

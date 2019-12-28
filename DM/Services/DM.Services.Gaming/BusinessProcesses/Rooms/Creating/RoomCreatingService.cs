@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
         {
             await validator.ValidateAndThrowAsync(createRoom);
             var game = await gameReadingService.GetGame(createRoom.GameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var lastRoom = await repository.GetLastRoomInfo(createRoom.GameId);
 

@@ -39,7 +39,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting
         public async Task DeleteGame(Guid gameId)
         {
             var gameToRemove = await gameReadingService.GetGame(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.Delete, gameToRemove);
+            intentionManager.ThrowIfForbidden(GameIntention.Delete, gameToRemove);
 
             var updateBuilder = updateBuilderFactory.Create<Game>(gameId)
                 .Field(g => g.IsRemoved, true);

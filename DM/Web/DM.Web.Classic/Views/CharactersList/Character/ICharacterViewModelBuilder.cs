@@ -7,7 +7,7 @@ namespace DM.Web.Classic.Views.CharactersList.Character
 {
     public interface ICharacterViewModelBuilder
     {
-        CharacterViewModel Build(DtoCharacter character, GameExtended game);
+        Task<CharacterViewModel> Build(DtoCharacter character, GameExtended game);
         Task<CharacterViewModel> Build(Guid characterId);
     }
 }

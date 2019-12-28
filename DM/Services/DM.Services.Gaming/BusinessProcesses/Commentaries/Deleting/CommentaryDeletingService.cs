@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
         public async Task Delete(Guid commentId)
         {
             var comment = await readingService.Get(commentId);
-            await intentionManager.ThrowIfForbidden(CommentIntention.Delete, comment);
+            intentionManager.ThrowIfForbidden(CommentIntention.Delete, comment);
 
             var updateComment = updateBuilderFactory.Create<Comment>(commentId)
                 .Field(c => c.IsRemoved, true);

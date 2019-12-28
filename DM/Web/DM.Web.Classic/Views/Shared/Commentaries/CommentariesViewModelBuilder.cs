@@ -48,7 +48,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
                 PageSize = paging.PageSize,
                 EntityNumber = paging.EntityNumber,
                 Commentaries = commentaryTasks.Select(c => c.Result).ToArray(),
-                CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, paging).Result,
+                CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, paging),
                 CreateCommentaryForm = createCommentaryFormBuilder.Build(entityId)
             };
         }

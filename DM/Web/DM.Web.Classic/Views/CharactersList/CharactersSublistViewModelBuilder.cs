@@ -14,8 +14,7 @@ namespace DM.Web.Classic.Views.CharactersList
         private readonly ICharacterViewModelBuilder characterViewModelBuilder;
 
         public CharactersSublistViewModelBuilder(
-            ICharacterViewModelBuilder characterViewModelBuilder
-        )
+            ICharacterViewModelBuilder characterViewModelBuilder)
         {
             this.characterViewModelBuilder = characterViewModelBuilder;
         }
@@ -24,7 +23,7 @@ namespace DM.Web.Classic.Views.CharactersList
         {
             return new CharactersSublistViewModel
             {
-                Characters = characters.Select(c => characterViewModelBuilder.Build(c, game)).ToArray(),
+                Characters = characters.Select(c => characterViewModelBuilder.Build(c, game).Result).ToArray(),
                 IsDefault = defaultCharacterId.HasValue && characters.Any(c => c.Id == defaultCharacterId.Value)
             };
         }

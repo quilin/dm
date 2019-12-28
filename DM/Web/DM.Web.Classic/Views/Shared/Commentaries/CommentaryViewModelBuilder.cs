@@ -41,10 +41,10 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
                 Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
                 LikesCount = comment.Likes.Count(),
 
-                CanEdit = await intentionsManager.IsAllowed(CommentIntention.Edit, comment),
-                CanRemove = await intentionsManager.IsAllowed(CommentIntention.Delete, comment),
+                CanEdit = intentionsManager.IsAllowed(CommentIntention.Edit, comment),
+                CanRemove = intentionsManager.IsAllowed(CommentIntention.Delete, comment),
 
-                CanLike = await intentionsManager.IsAllowed(CommentIntention.Like, comment),
+                CanLike = intentionsManager.IsAllowed(CommentIntention.Like, comment),
                 HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
 
 //                           CanWarn = intentionsManager.IsAllowed(WarningIntention.Create, userService.Read(comment.UserId)),

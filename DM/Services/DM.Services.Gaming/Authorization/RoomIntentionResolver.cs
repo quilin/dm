@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Gaming.Dto;
@@ -16,7 +15,7 @@ namespace DM.Services.Gaming.Authorization
         IIntentionResolver<RoomIntention, PendingPost>
     {
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, (RoomToUpdate, Guid?) target)
+        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, (RoomToUpdate, Guid?) target)
         {
             var (room, characterId) = target;
 
@@ -24,40 +23,39 @@ namespace DM.Services.Gaming.Authorization
             {
                 case RoomIntention.CreatePost when characterId.HasValue:
                     var claim = room.Claims.FirstOrDefault(c => c.Character?.Id == characterId.Value);
-                    return Task.FromResult(claim != null &&
+                    return claim != null &&
                         (claim.Character.Author.UserId == user.UserId ||
                             claim.Character.IsNpc &&
-                            room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority)));
+                            room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
                 case RoomIntention.CreatePost:
-                    return Task.FromResult(room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
+                    return room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority);
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target)
+        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target)
         {
             switch (intention)
             {
                 case RoomIntention.CreatePendingPost:
-                    return Task.FromResult(
-                        target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
-                        target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority));
+                    return target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
+                        target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority);
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, RoomIntention intention, PendingPost target)
+        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, PendingPost target)
         {
             switch (intention)
             {
                 case RoomIntention.DeletePending:
-                    return Task.FromResult(target.AwaitingUser.UserId == user.UserId);
+                    return target.AwaitingUser.UserId == user.UserId;
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
     }

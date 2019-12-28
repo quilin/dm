@@ -45,7 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
             Guid gameId, PagingQuery query)
         {
             var game = await gameReadingService.GetGame(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
+            intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
 
             var totalCount = await commentaryRepository.Count(gameId);
             var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
@@ -66,7 +66,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         public async Task MarkAsRead(Guid gameId)
         {
             var game = await gameReadingService.GetGame(gameId);
-            await intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
+            intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
             await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, gameId);
         }
     }

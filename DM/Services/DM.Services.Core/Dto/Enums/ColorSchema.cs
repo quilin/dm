@@ -1,27 +1,27 @@
 namespace DM.Services.Core.Dto.Enums
 {
     /// <summary>
-    /// Website color scheme
+    /// Website color schema
     /// </summary>
-    public enum ColorScheme
+    public enum ColorSchema
     {
         /// <summary>
-        /// Base DM3 color scheme
+        /// Base DM3 color schema
         /// </summary>
         Modern = 0,
 
         /// <summary>
-        /// DM3 color scheme with paler colors
+        /// DM3 color schema with paler colors
         /// </summary>
         Pale = 1,
 
         /// <summary>
-        /// Base DM2 color scheme
+        /// Base DM2 color schema
         /// </summary>
         Classic = 2,
 
         /// <summary>
-        /// DM2 color scheme with paler colors
+        /// DM2 color schema with paler colors
         /// </summary>
         ClassicPale = 3,
 

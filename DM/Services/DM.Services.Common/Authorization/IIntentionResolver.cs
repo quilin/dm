@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 
 namespace DM.Services.Common.Authorization
@@ -25,7 +24,7 @@ namespace DM.Services.Common.Authorization
         /// <param name="intention">Action</param>
         /// <param name="target">Action object</param>
         /// <returns>Whether subject is allowed to perform action upon object</returns>
-        Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention, TTarget target);
+        bool IsAllowed(AuthenticatedUser user, TIntention intention, TTarget target);
     }
 
     /// <summary>
@@ -41,6 +40,6 @@ namespace DM.Services.Common.Authorization
         /// <param name="user">Action subject</param>
         /// <param name="intention">Action</param>
         /// <returns>Whether subject is allowed to perform action upon object</returns>
-        Task<bool> IsAllowed(AuthenticatedUser user, TIntention intention);
+        bool IsAllowed(AuthenticatedUser user, TIntention intention);
     }
 }

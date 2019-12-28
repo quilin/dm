@@ -42,8 +42,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
 
             var intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(TopicIntention.Like, It.IsAny<Topic>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(TopicIntention.Like, It.IsAny<Topic>()));
             var identityProvider = Mock<IIdentityProvider>();
             var identity = Mock<IIdentity>();
             currentUser = identity.Setup(i => i.User);

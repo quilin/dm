@@ -99,12 +99,12 @@
                         validate: true,
                         updateDefaultDataAfterSuccess: true
                     });
-                    var $dropdown = $(".js-colorscheme-dropdown");
-                    $dropdown.removeClass("js-colorscheme-dropdown");
-                    var colorSchemeDropdown = $dropdown.dropdown(true);
-                    colorSchemeDropdown.on("select", function (option) {
+                    var $dropdown = $(".js-colorschema-dropdown");
+                    $dropdown.removeClass("js-colorschema-dropdown");
+                    var colorSchemaDropdown = $dropdown.dropdown(true);
+                    colorSchemaDropdown.on("select", function (option) {
                         console.log(option.data("value"));
-                        $("html").attr("class", "colorscheme_" + option.data("value").toLowerCase());
+                        $("html").attr("class", "colorschema_" + option.data("value").toLowerCase());
                     });
                 }
             });

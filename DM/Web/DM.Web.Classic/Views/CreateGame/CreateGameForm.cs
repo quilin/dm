@@ -19,12 +19,13 @@ namespace DM.Web.Classic.Views.CreateGame
         public string SettingName { get; set; }
 
         [Required(ErrorMessage = "Введите информацию об игре")]
-        [StringLength(int.MaxValue, MinimumLength = 200, ErrorMessage = "Информация о модуле должна содержать больше {2} символов")]
+        [StringLength(int.MaxValue, MinimumLength = 200,
+            ErrorMessage = "Информация о модуле должна содержать больше {2} символов")]
         public string Info { get; set; }
 
         public bool CreateAsRegistration { get; set; }
 
-        public Guid AttributeSchemeId { get; set; }
+        public Guid AttributeSchemaId { get; set; }
 
         public Guid? AssistantId { get; set; }
 
@@ -39,5 +40,8 @@ namespace DM.Web.Classic.Views.CreateGame
         public CommentariesAccessMode CommentariesAccessMode { get; set; }
 
         public Guid[] TagIds { get; set; }
+        public Guid? SchemaId => AttributeSchemaId == NoSchema ? (Guid?) null : AttributeSchemaId;
+
+        public static Guid NoSchema = Guid.Parse("cc2387b2-066f-4178-9dde-4daafeea91c0");
     }
 }

@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace DM.Services.Common.Authorization
 {
     /// <summary>
@@ -13,8 +11,7 @@ namespace DM.Services.Common.Authorization
         /// <param name="intention">Intended action</param>
         /// <typeparam name="TIntention">Type of intention</typeparam>
         /// <returns>Whether user is allowed to perform the action</returns>
-        Task<bool> IsAllowed<TIntention>(TIntention intention)
-            where TIntention : struct;
+        bool IsAllowed<TIntention>(TIntention intention) where TIntention : struct;
 
         /// <summary>
         /// Tells if current user is allowed to perform certain action
@@ -24,8 +21,7 @@ namespace DM.Services.Common.Authorization
         /// <typeparam name="TIntention">Type of intention</typeparam>
         /// <typeparam name="TTarget">Type of action object</typeparam>
         /// <returns>Whether user is allowed to perform the action</returns>
-        Task<bool> IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target)
-            where TIntention : struct;
+        bool IsAllowed<TIntention, TTarget>(TIntention intention, TTarget target) where TIntention : struct;
 
         /// <summary>
         /// Throws the specific exception <see cref="IntentionManagerException"/> if user is not allowed to perform certain action
@@ -33,8 +29,7 @@ namespace DM.Services.Common.Authorization
         /// <param name="intention">Intended action</param>
         /// <typeparam name="TIntention">Type of intention</typeparam>
         /// <returns></returns>
-        Task ThrowIfForbidden<TIntention>(TIntention intention)
-            where TIntention : struct;
+        void ThrowIfForbidden<TIntention>(TIntention intention) where TIntention : struct;
 
         /// <summary>
         /// Throws the specific exception <see cref="IntentionManagerException"/> if user is not allowed to perform certain action
@@ -44,7 +39,6 @@ namespace DM.Services.Common.Authorization
         /// <typeparam name="TIntention">Type of intention</typeparam>
         /// <typeparam name="TTarget">Type of action object</typeparam>
         /// <returns></returns>
-        Task ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target)
-            where TIntention : struct;
+        void ThrowIfForbidden<TIntention, TTarget>(TIntention intention, TTarget target) where TIntention : struct;
     }
 }

@@ -7,7 +7,7 @@
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ModuleLeftColumn", PageType.Characters, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
+    @await Html.PartialAsync("Layout/GameLeftColumn", PageType.Characters, new ViewDataDictionary(ViewData) {{"ModuleId", Model.GameId}})
 }
 <h1 class="content-pageTitle">Персонажи | @Model.GameTitle</h1>
 
@@ -45,13 +45,13 @@ else
 {
 
     <script>
-        var options = {
+        const options = {
         @if (Model.CharacterId.HasValue)
         {
             @:defaultCharacterId: "@Model.CharacterId.Value"
         }
         };
-        var charactersList = new DM.CharactersListControl(options);
+        const charactersList = new DM.CharactersListControl(options);
         DM.Ready();
     </script>
 }

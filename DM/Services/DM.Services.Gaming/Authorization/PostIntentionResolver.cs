@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -14,43 +13,40 @@ namespace DM.Services.Gaming.Authorization
         IIntentionResolver<PostIntention, (Post, RoomToUpdate)>
     {
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, PostIntention intention, Post target)
+        public bool IsAllowed(AuthenticatedUser user, PostIntention intention, Post target)
         {
             switch (intention)
             {
                 case PostIntention.Delete:
-                    return Task.FromResult(target.Author.UserId == user.UserId);
+                    return target.Author.UserId == user.UserId;
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, PostIntention intention, (Post, RoomToUpdate) target)
+        public bool IsAllowed(AuthenticatedUser user, PostIntention intention, (Post, RoomToUpdate) target)
         {
             var (post, room) = target;
             switch (intention)
             {
                 case PostIntention.EditText:
-                    return Task.FromResult(
-                        post.Author.UserId == user.UserId ||
+                    return post.Author.UserId == user.UserId ||
                         room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
                             post.Character == null ||
                             post.Character.IsNpc ||
-                            post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed)));
+                            post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed));
                 case PostIntention.EditCharacter:
-                    return Task.FromResult(
-                        post.Author.UserId == user.UserId ||
+                    return post.Author.UserId == user.UserId ||
                         room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
                             post.Character == null ||
-                            post.Character.IsNpc));
+                            post.Character.IsNpc);
                 case PostIntention.EditMasterMessage:
-                    return Task.FromResult(
-                        room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
-                            post.Character == null ||
-                            post.Character.IsNpc));
+                    return room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
+                        post.Character == null ||
+                        post.Character.IsNpc);
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
     }

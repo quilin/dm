@@ -53,7 +53,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             await validator.ValidateAndThrowAsync(createTopic);
 
             var forum = await forumReadingService.GetForum(createTopic.ForumTitle);
-            await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+            intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
 
             var topicToCreate = topicFactory.Create(forum.Id, identity.User.UserId, createTopic);
             var topic = await repository.Create(topicToCreate);

@@ -1,7 +1,7 @@
-﻿DM.CreateAttributeSchemeControl = Base.extend({
+﻿DM.CreateAttributeSchemaControl = Base.extend({
     constructor: function(options, view, specificationControlFactory) {
-        this._view = view || new DM.CreateAttributeSchemeControl.View(options);
-        this._specificationControlFactory = specificationControlFactory || new DM.CreateAttributeSchemeControl.SpecificationControlFactory(options);
+        this._view = view || new DM.CreateAttributeSchemaControl.View(options);
+        this._specificationControlFactory = specificationControlFactory || new DM.CreateAttributeSchemaControl.SpecificationControlFactory(options);
 
         this._specifications = [];
         this._prefix = this._view.getPrefix();
@@ -17,14 +17,14 @@
         }
     },
     __attachEventListeners: function() {
-        this._view.on("schemeCreated", this.schemeCreated, this);
-        this._view.on("schemeValidation", this.massageFormData, this);
+        this._view.on("schemaCreated", this.schemaCreated, this);
+        this._view.on("schemaValidation", this.massageFormData, this);
         this._view.on("specificationAdded", this.addSpecification, this);
     },
-    schemeCreated: function (data) {
+    schemaCreated: function (data) {
         if (data) {
             this._view.hide();
-            this.trigger("schemeCreated", data);
+            this.trigger("schemaCreated", data);
         } else {
             this._view.reloadPage();
         }
@@ -59,13 +59,13 @@
 
             this._animationTime = options.animationTime || 200;
 
-            this._form = new DM.FormControl("#CreateAttributeSchemeForm", {
+            this._form = new DM.FormControl("#CreateAttributeSchemaForm", {
                 validate: true,
                 initPlaceholder: true
             });
 
-            this._confirmButton = $("#CreateAttributeSchemeConfirm");
-            this._saveAsButton = $("#SaveAttributeSchemeAs");
+            this._confirmButton = $("#CreateAttributeSchemaConfirm");
+            this._saveAsButton = $("#SaveAttributeSchemaAs");
             
             this._specificationsContainer = $("#SpecificationsContainer");
             this._addSpecificationLink = $("#AddSpecification");
@@ -102,8 +102,8 @@
             });
 
             this._form
-                .on("requestValidation", this.handle("schemeValidation"), this)
-                .on("requestSuccess", this.handle("schemeCreated"), this);
+                .on("requestValidation", this.handle("schemaValidation"), this)
+                .on("requestSuccess", this.handle("schemaCreated"), this);
 
             this._confirmButton.on("click", function() {
                 var confirmMessage = "Изменения в этой схеме могут затронуть другие игры, где вы ее используете. Возможно, вы хотите создать другую схему на основе этой.<br><br>Вы уверены, что хотите сохранить изменения?";
@@ -114,11 +114,11 @@
             this._saveAsButton.on("click", function () {
                 var $this = $(this);
                 var action = $this.data("action");
-                var schemeTitle = $("#SchemeTitle");
-                if (schemeTitle.val() === schemeTitle[0].defaultValue) {
-                    DM.Prompt($this.data("promptText"), $("#SchemeTitle").val() + " (1)").done(function (newName) {
+                var schemaTitle = $("#SchemaTitle");
+                if (schemaTitle.val() === schemaTitle[0].defaultValue) {
+                    DM.Prompt($this.data("promptText"), $("#SchemaTitle").val() + " (1)").done(function (newName) {
                         _this._form.$().attr("action", action);
-                        _this._form.$().find("#SchemeTitle").val(newName);
+                        _this._form.$().find("#SchemaTitle").val(newName);
                         _this._form.submit();
                         _this._savedAs = true;
                     });

@@ -54,13 +54,13 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             await validator.ValidateAndThrowAsync(updateTopic);
             var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId);
 
-            await intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
+            intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
             var changes = updateBuilderFactory.Create<ForumTopic>(updateTopic.TopicId)
                 .MaybeField(t => t.Title, updateTopic.Title?.Trim())
                 .MaybeField(t => t.Text, updateTopic.Text?.Trim());
 
-            if (await intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
+            if (intentionManager.IsAllowed(ForumIntention.AdministrateTopics, oldTopic.Forum))
             {
                 changes
                     .MaybeField(t => t.Closed, updateTopic.Closed)
@@ -70,7 +70,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
                     oldTopic.Forum.Title != updateTopic.ForumTitle)
                 {
                     var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);
-                    await intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
+                    intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
                     changes.Field(t => t.ForumId, forum.Id);
                     await unreadCountersRepository.ChangeParent(oldTopic.Forum.Id, UnreadEntryType.Message, forum.Id);
                 }

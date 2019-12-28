@@ -37,7 +37,7 @@ namespace DM.Web.Classic.Views.CharactersList.Character
             this.userViewModelBuilder = userViewModelBuilder;
         }
 
-        public CharacterViewModel Build(DtoCharacter character, GameExtended game)
+        public async Task<CharacterViewModel> Build(DtoCharacter character, GameExtended game)
         {
             var bbParser = bbParserProvider.CurrentCommon;
             return new CharacterViewModel
@@ -53,16 +53,16 @@ namespace DM.Web.Classic.Views.CharactersList.Character
                 PictureUrl = character.PictureUrl,
                 Appearance = bbParser.Parse(character.Appearance).ToHtml(),
                 Temper = bbParser.Parse(character.Temper).ToHtml(),
-                DisplayTemper = intentionManager.IsAllowed(CharacterIntention.ViewTemper, character, game).Result,
+                DisplayTemper = intentionManager.IsAllowed(CharacterIntention.ViewTemper, (character, game)),
                 TemperHidden = game.HideTemper,
                 Skills = bbParser.Parse(character.Skills).ToHtml(),
-                DisplaySkills = intentionManager.IsAllowed(CharacterIntention.ViewSkills, character, game).Result,
+                DisplaySkills = intentionManager.IsAllowed(CharacterIntention.ViewSkills, (character, game)),
                 SkillsHidden = game.HideSkills,
                 Inventory = bbParser.Parse(character.Inventory).ToHtml(),
-                DisplayInventory = intentionManager.IsAllowed(CharacterIntention.ViewInventory, character, game).Result,
+                DisplayInventory = intentionManager.IsAllowed(CharacterIntention.ViewInventory, (character, game)),
                 InventoryHidden = game.HideInventory,
                 Story = bbParser.Parse(character.Story).ToHtml(),
-                DisplayStory = intentionManager.IsAllowed(CharacterIntention.ViewStory, character, game).Result,
+                DisplayStory = intentionManager.IsAllowed(CharacterIntention.ViewStory, (character, game)),
                 StoryHidden = game.HideStory,
                 DisplayAlignment = !game.DisableAlignment,
                 CharacterActions = characterActionsViewModelBuilder.Build(character, game)
@@ -73,7 +73,7 @@ namespace DM.Web.Classic.Views.CharactersList.Character
         {
             var character = await characterService.GetCharacter(characterId);
             var game = await gameService.GetGameDetails(character.GameId);
-            return Build(character, game);
+            return await Build(character, game);
         }
     }
 }

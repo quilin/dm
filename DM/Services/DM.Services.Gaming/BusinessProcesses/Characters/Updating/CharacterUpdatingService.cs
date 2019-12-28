@@ -49,7 +49,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
             await validator.ValidateAndThrowAsync(updateCharacter);
             var characterToUpdate = await repository.Get(updateCharacter.CharacterId);
 
-            await intentionManager.ThrowIfForbidden(CharacterIntention.Edit, characterToUpdate);
+            intentionManager.ThrowIfForbidden(CharacterIntention.Edit, characterToUpdate);
 
             var changes = updateBuilderFactory.Create<DbCharacter>(updateCharacter.CharacterId)
                 .MaybeField(c => c.Name, updateCharacter.Name?.Trim())
@@ -62,12 +62,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
                 .MaybeField(c => c.Inventory, updateCharacter.Inventory)
                 .Field(c => c.LastUpdateDate, dateTimeProvider.Now);
 
-            if (await intentionManager.IsAllowed(CharacterIntention.EditPrivacySettings))
+            if (intentionManager.IsAllowed(CharacterIntention.EditPrivacySettings))
             {
                 changes.MaybeField(c => c.AccessPolicy, updateCharacter.AccessPolicy);
             }
 
-            if (await intentionManager.IsAllowed(CharacterIntention.EditMasterSettings))
+            if (intentionManager.IsAllowed(CharacterIntention.EditMasterSettings))
             {
                 changes.MaybeField(c => c.IsNpc, updateCharacter.IsNpc);
             }
@@ -77,7 +77,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
             {
                 var (intention, eventType) = intentionConverter.Convert(
                     updateCharacter.Status.Value, characterToUpdate.Status);
-                if (await intentionManager.IsAllowed(intention, characterToUpdate))
+                if (intentionManager.IsAllowed(intention, characterToUpdate))
                 {
                     changes.Field(c => c.Status, updateCharacter.Status.Value);
                     invokedEvents.Add(eventType);

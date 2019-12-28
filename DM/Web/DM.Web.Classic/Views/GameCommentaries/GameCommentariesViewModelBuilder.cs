@@ -44,7 +44,7 @@ namespace DM.Web.Classic.Views.GameCommentaries
                 PageSize = paging.PageSize,
                 EntityNumber = paging.EntityNumber,
                 ModuleCommentaries = comments.Select(c =>
-                    gameCommentaryViewModelBuilder.Build(c, game, characterNames)),
+                    gameCommentaryViewModelBuilder.Build(c, game, characterNames).Result),
                 CreateForm = gameCommentaryCreateFormBuilder.Build(game)
             };
         }
@@ -53,7 +53,7 @@ namespace DM.Web.Classic.Views.GameCommentaries
         {
             var (comments, _, game) = await commentService.Get(gameId, new PagingQuery {Number = entityNumber});
             var characterNames = await GetCharacterNames(game);
-            return comments.Select(c => gameCommentaryViewModelBuilder.Build(c, game, characterNames));
+            return comments.Select(c => gameCommentaryViewModelBuilder.Build(c, game, characterNames).Result);
         }
 
         private async Task<IDictionary<Guid, IEnumerable<string>>> GetCharacterNames(Game game)

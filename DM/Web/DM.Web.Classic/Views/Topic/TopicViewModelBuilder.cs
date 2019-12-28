@@ -43,7 +43,7 @@ namespace DM.Web.Classic.Views.Topic
             var topic = topicReadingService.GetTopic(topicId).Result;
 
             var commentariesViewModel = await commentariesViewModelBuilder.Build(topicId, entityNumber);
-            commentariesViewModel.CanCreate = await intentionsManager.IsAllowed(TopicIntention.CreateComment, topic);
+            commentariesViewModel.CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, topic);
             await commentaryReadingService.MarkAsRead(topicId);
 
             return new TopicViewModel

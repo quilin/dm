@@ -60,8 +60,7 @@ namespace DM.Services.Gaming.Tests
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<GameIntention>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<GameIntention>()));
 
             var identityProvider = Mock<IIdentityProvider>();
             var identity = Mock<IIdentity>();

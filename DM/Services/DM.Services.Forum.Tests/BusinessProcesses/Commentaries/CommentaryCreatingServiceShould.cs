@@ -54,8 +54,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             intentionManager = Mock<IIntentionManager>();
             intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<TopicIntention>(), It.IsAny<Topic>()))
-                .Returns(Task.CompletedTask);
+                .Setup(m => m.ThrowIfForbidden(It.IsAny<TopicIntention>(), It.IsAny<Topic>()));
 
             var identityProvider = Mock<IIdentityProvider>();
             var identity = Mock<IIdentity>();

@@ -22,7 +22,7 @@ namespace DM.Web.Classic.Views.Topic
 
         public async Task<TopicActionsViewModel> Build(Services.Forum.Dto.Output.Topic topic)
         {
-            var administrationAllowed = await intentionsManager.IsAllowed(
+            var administrationAllowed = intentionsManager.IsAllowed(
                 ForumIntention.AdministrateTopics, topic.Forum);
             return new TopicActionsViewModel
             {
@@ -32,7 +32,7 @@ namespace DM.Web.Classic.Views.Topic
                 CanDetach = administrationAllowed,
                 CanClose = administrationAllowed,
                 CanOpen = administrationAllowed,
-                CanEdit = await intentionsManager.IsAllowed(TopicIntention.Edit, topic),
+                CanEdit = intentionsManager.IsAllowed(TopicIntention.Edit, topic),
                 CanRemove = administrationAllowed,
                 CanMove = administrationAllowed,
                 Forums = (await forumReadingService.GetForaList()).ToDictionary(f => f.Title, f => (object) f.Title)

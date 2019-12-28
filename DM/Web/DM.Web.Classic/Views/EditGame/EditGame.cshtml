@@ -33,13 +33,13 @@
             @Html.HiddenFor(m => m.EditGameForm.AssistantId)
         </div>
         <div class="form-field-wrapper">
-            @Html.LabelFor(m => m.EditGameForm.AttributeSchemeId, "Характеристики персонажей",
+            @Html.LabelFor(m => m.EditGameForm.AttributeSchemaId, "Характеристики персонажей",
                 new Dictionary<string, object>
                 {
-                    {"id", $"{Html.DisplayNameFor(m => m.EditGameForm.AttributeSchemeId)}_Label"},
+                    {"id", $"{Html.DisplayNameFor(m => m.EditGameForm.AttributeSchemaId)}_Label"},
                     {"class", "form-field-label"}
                 })
-            @Html.DropdownFor(m => m.EditGameForm.AttributeSchemeId, Model.AttributeSchemes, Model.AttributeSchemeDescriptions, new Dictionary<string, object> { { "class", "module-attributes-scheme-dropdown" } })
+            @Html.DropdownFor(m => m.EditGameForm.AttributeSchemaId, Model.AttributeSchemas, Model.AttributeSchemaDescriptions, new Dictionary<string, object> { { "class", "module-attributes-schema-dropdown" } })
         </div>
     </div>
     <div class="module-extendedOptions-wrapper">

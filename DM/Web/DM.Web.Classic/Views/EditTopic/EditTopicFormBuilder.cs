@@ -27,7 +27,7 @@ namespace DM.Web.Classic.Views.EditTopic
         public async Task<EditTopicForm> Build(Guid topicId)
         {
             var topic = await topicReadingService.GetTopic(topicId);
-            await intentionsManager.ThrowIfForbidden(TopicIntention.Edit, topic);
+            intentionsManager.ThrowIfForbidden(TopicIntention.Edit, topic);
 
             var parser = bbParserProvider.CurrentCommon;
             return new EditTopicForm

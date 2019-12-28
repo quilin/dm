@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -15,24 +14,23 @@ namespace DM.Services.Gaming.Authorization
         IIntentionResolver<GameIntention, Game>
     {
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention)
+        public bool IsAllowed(AuthenticatedUser user, GameIntention intention)
         {
             switch (intention)
             {
                 case GameIntention.Create when user.IsAuthenticated:
-                    return Task.FromResult(true);
+                    return true;
 
                 case GameIntention.Subscribe when user.IsAuthenticated:
-                    return Task.FromResult(true);
+                    return true;
 
                 case GameIntention.SetStatusModeration when user.IsAuthenticated:
-                    return Task.FromResult(
-                        user.Role.HasFlag(UserRole.Administrator) ||
+                    return user.Role.HasFlag(UserRole.Administrator) ||
                         user.Role.HasFlag(UserRole.SeniorModerator) ||
-                        user.Role.HasFlag(UserRole.NannyModerator));
+                        user.Role.HasFlag(UserRole.NannyModerator);
 
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
 
@@ -44,11 +42,11 @@ namespace DM.Services.Gaming.Authorization
         };
 
         /// <inheritdoc />
-        public Task<bool> IsAllowed(AuthenticatedUser user, GameIntention intention, Game target)
+        public bool IsAllowed(AuthenticatedUser user, GameIntention intention, Game target)
         {
             if (intention != GameIntention.Read && intention != GameIntention.ReadComments && !user.IsAuthenticated)
             {
-                return Task.FromResult(false);
+                return false;
             }
 
             var userIsHighAuthority = user.Role.HasFlag(UserRole.Administrator) ||
@@ -59,22 +57,22 @@ namespace DM.Services.Gaming.Authorization
             switch (intention)
             {
                 case GameIntention.Read:
-                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
-                        !HiddenStates.Contains(target.Status));
+                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
+                        !HiddenStates.Contains(target.Status);
 
                 case GameIntention.Edit when user.IsAuthenticated:
-                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Authority));
+                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Authority);
 
                 // only the master itself is allowed to remove the game
                 case GameIntention.Delete when user.IsAuthenticated:
-                    return Task.FromResult(userIsHighAuthority || user.UserId == target.Master.UserId);
+                    return userIsHighAuthority || user.UserId == target.Master.UserId;
 
                 case GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration:
-                    return Task.FromResult(userIsHighAuthority || userIsNanny);
+                    return userIsHighAuthority || userIsNanny;
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation:
-                    return Task.FromResult(userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator));
+                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator);
 
                 case GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement:
                 case GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft:
@@ -86,22 +84,21 @@ namespace DM.Services.Gaming.Authorization
                 case GameIntention.SetStatusFrozen when target.Status == GameStatus.Active:
                 case GameIntention.SetStatusFinished when target.Status == GameStatus.Active:
                 case GameIntention.SetStatusClosed when target.Status == GameStatus.Active:
-                    return Task.FromResult(participation.HasFlag(GameParticipation.Authority));
+                    return participation.HasFlag(GameParticipation.Authority);
 
                 case GameIntention.ReadComments:
-                    return Task.FromResult(target.CommentariesAccessMode != CommentariesAccessMode.Private ||
-                        target.Participation(user.UserId) != GameParticipation.None);
+                    return target.CommentariesAccessMode != CommentariesAccessMode.Private ||
+                        target.Participation(user.UserId) != GameParticipation.None;
 
                 case GameIntention.CreateComment when user.IsAuthenticated:
-                    return Task.FromResult(target.CommentariesAccessMode == CommentariesAccessMode.Public ||
-                        target.Participation(user.UserId) != GameParticipation.None);
+                    return target.CommentariesAccessMode == CommentariesAccessMode.Public ||
+                        target.Participation(user.UserId) != GameParticipation.None;
 
                 case GameIntention.CreateCharacter when user.IsAuthenticated:
-                    return Task.FromResult(
-                        target.Status == GameStatus.Requirement || target.Status == GameStatus.Active);
+                    return target.Status == GameStatus.Requirement || target.Status == GameStatus.Active;
 
                 default:
-                    return Task.FromResult(false);
+                    return false;
             }
         }
     }

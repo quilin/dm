@@ -54,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             await validator.ValidateAndThrowAsync(createComment);
 
             var game = await gameReadingService.GetGame(createComment.EntityId);
-            await intentionManager.ThrowIfForbidden(GameIntention.CreateComment, game);
+            intentionManager.ThrowIfForbidden(GameIntention.CreateComment, game);
 
             var comment = commentaryFactory.Create(createComment, identity.User.UserId);
             var createdComment = await repository.Create(comment);

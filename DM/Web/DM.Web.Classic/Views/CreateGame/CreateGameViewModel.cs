@@ -6,7 +6,7 @@ namespace DM.Web.Classic.Views.CreateGame
 {
     public class CreateGameViewModel
     {
-        public Dictionary<Guid, string> AttributeSchemes { get; set; }
+        public Dictionary<Guid, string> AttributeSchemas { get; set; }
 
         public IDictionary<string, IDictionary<string, object>> Tags { get; set; }
 

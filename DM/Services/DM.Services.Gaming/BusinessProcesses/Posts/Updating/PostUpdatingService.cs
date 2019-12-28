@@ -62,21 +62,21 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
 
             var updateBuilder = updateBuilderFactory.Create<DbPost>(updatePost.PostId);
 
-            if (await intentionManager.IsAllowed(PostIntention.EditText, (post, room)))
+            if (intentionManager.IsAllowed(PostIntention.EditText, (post, room)))
             {
                 updateBuilder
                     .MaybeField(p => p.Text, updatePost.Text)
                     .MaybeField(p => p.Commentary, updatePost.Commentary);
 
-                if (await intentionManager.IsAllowed(PostIntention.EditMasterMessage, (post, room)))
+                if (intentionManager.IsAllowed(PostIntention.EditMasterMessage, (post, room)))
                 {
                     updateBuilder.MaybeField(p => p.MasterMessage, updatePost.MasterMessage);
                 }
             }
 
             if (updatePost.CharacterId.HasChanged(post.Character?.Id) &&
-                await intentionManager.IsAllowed(RoomIntention.CreatePost, (room, updatePost.CharacterId.Value)) &&
-                await intentionManager.IsAllowed(PostIntention.EditCharacter, (post, room)))
+                intentionManager.IsAllowed(RoomIntention.CreatePost, (room, updatePost.CharacterId.Value)) &&
+                intentionManager.IsAllowed(PostIntention.EditCharacter, (post, room)))
             {
                 updateBuilder.MaybeField(p => p.CharacterId, updatePost.CharacterId);
             }

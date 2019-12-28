@@ -95,7 +95,7 @@ namespace DM.Services.Authentication.Tests.Integration
                     new UserSettings
                     {
                         Id = userId,
-                        ColorScheme = ColorScheme.Night,
+                        ColorSchema = ColorSchema.Night,
                         Paging = new PagingSettings
                         {
                             CommentsPerPage = 23,
@@ -111,7 +111,7 @@ namespace DM.Services.Authentication.Tests.Integration
             (await authenticationRepository.FindUserSettings(userId)).Should().BeEquivalentTo(new Dto.UserSettings
             {
                 Id = userId,
-                ColorScheme = ColorScheme.Night,
+                ColorSchema = ColorSchema.Night,
                 CommentsPerPage = 23,
                 MessagesPerPage = 12,
                 NannyGreetingsMessage = "Hi, I'm your nanny!",

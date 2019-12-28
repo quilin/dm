@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.ViewComponents
 {
-    public class ColorScheme : ViewComponent
+    public class ColorSchema : ViewComponent
     {
         private readonly IIdentity identity;
 
-        public ColorScheme(
+        public ColorSchema(
             IIdentityProvider identityProvider)
         {
             identity = identityProvider.Current;
@@ -18,7 +18,7 @@ namespace DM.Web.Classic.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             return await Task.Run(() =>
-                Content($"colorscheme_{identity.Settings.ColorScheme.ToString().ToLower()}"));
+                Content($"colorschema_{identity.Settings.ColorSchema.ToString().ToLower()}"));
         }
     }
 }
