@@ -49,7 +49,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to change this comment</response>
         /// <response code="410">Comment not found</response>
-        [HttpPut("{id}", Name = nameof(PutGameComment))]
+        [HttpPatch("{id}", Name = nameof(PutGameComment))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Comment>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

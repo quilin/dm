@@ -55,7 +55,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this room</response>
         /// <response code="410">Room not found</response>
-        [HttpPut("{id}", Name = nameof(PutRoom))]
+        [HttpPatch("{id}", Name = nameof(PutRoom))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Room>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -121,7 +121,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to update this claim</response>
         /// <response code="410">Claim not found</response>
-        [HttpPut("claims/{id}", Name = nameof(UpdateClaim))]
+        [HttpPatch("claims/{id}", Name = nameof(UpdateClaim))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<RoomClaim>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

@@ -54,7 +54,7 @@ namespace DM.Web.API.Controllers.v1.Fora
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this topic</response>
         /// <response code="410">Topic not found</response>
-        [HttpPut("{id}", Name = nameof(PutTopic))]
+        [HttpPatch("{id}", Name = nameof(PutTopic))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Topic>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

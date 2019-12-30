@@ -32,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
             this.repository = repository;
             identity = identityProvider.Current;
         }
-        
+
         /// <inheritdoc />
         public async Task<AttributeSchema> Create(CreateAttributeSchema createAttributeSchema)
         {

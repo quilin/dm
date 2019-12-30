@@ -44,7 +44,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this post</response>
         /// <response code="410">Post not found</response>
-        [HttpPut("{id}", Name = nameof(PutPost))]
+        [HttpPatch("{id}", Name = nameof(PutPost))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Post>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

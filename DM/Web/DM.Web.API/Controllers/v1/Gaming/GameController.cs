@@ -124,7 +124,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this game</response>
         /// <response code="410">Game not found</response>
-        [HttpPut("{id}/details", Name = nameof(PutGame))]
+        [HttpPatch("{id}/details", Name = nameof(PutGame))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Game>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

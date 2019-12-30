@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using DM.Services.Core.Dto.Attributes;
 using DM.Services.Core.Exceptions;
@@ -55,23 +54,9 @@ namespace DM.Services.Gaming.Dto.Input
                                         ctx.AddFailure(validationFailure);
                                     }
                                     break;
-                                default:
-                                    throw new NotImplementedException();
                             }
                         });
                 });
-        }
-    }
-
-    /// <inheritdoc />
-    public class ListAttributeValueValidator : AbstractValidator<ListAttributeValue>
-    {
-        /// <inheritdoc />
-        public ListAttributeValueValidator()
-        {
-            RuleFor(a => a.Value)
-                .NotEmpty().WithMessage(ValidationError.Empty)
-                .MaximumLength(200).WithMessage(ValidationError.Long);
         }
     }
 }

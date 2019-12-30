@@ -6,7 +6,9 @@ namespace DM.Services.DataAccess.RelationalStorage
     public class UpdateBuilderFactory : IUpdateBuilderFactory
     {
         /// <inheritdoc />
-        public IUpdateBuilder<TEntity> Create<TEntity>(Guid id) where TEntity : class, new() =>
-            new UpdateBuilder<TEntity>(id);
+        public IUpdateBuilder<TEntity> Create<TEntity>(Guid id) where TEntity : class, new()
+        {
+            return new UpdateBuilder<TEntity>(id);
+        }
     }
 }

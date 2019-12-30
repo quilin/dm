@@ -44,7 +44,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not authorized to change some properties of this character</response>
         /// <response code="410">Character not found</response>
-        [HttpPut("{id}", Name = nameof(PutCharacter))]
+        [HttpPatch("{id}", Name = nameof(PutCharacter))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<Character>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

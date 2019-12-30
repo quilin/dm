@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Deleting
 {
     /// <summary>
-    /// Service for attribute schema deleting
+    /// Storage for attribute schema deleting
     /// </summary>
-    public interface ISchemaDeletingService
+    public interface ISchemaDeletingRepository
     {
         /// <summary>
         /// Delete existing attribute schema
         /// </summary>
-        /// <param name="schemaId">Attribute schema identifier</param>
+        /// <param name="schemaId">Schema identifier</param>
         /// <returns></returns>
         Task Delete(Guid schemaId);
     }

@@ -39,5 +39,25 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
                 IsRemoved = false
             };
         }
+
+        /// <inheritdoc />
+        public AttributeSchema Create(UpdateAttributeSchema updateAttributeSchema, Guid userId)
+        {
+            return new AttributeSchema
+            {
+                Id = updateAttributeSchema.SchemaId,
+                Name = updateAttributeSchema.Name.Trim(),
+                Type = SchemaType.Private,
+                UserId = userId,
+                Specifications = updateAttributeSchema.Specifications
+                    .Select(s => new AttributeSpecification
+                    {
+                        Id = s.Id,
+                        Name = s.Name.Trim(),
+                        Constraints = s.Constraints
+                    }),
+                IsRemoved = false
+            };
+        }
     }
 }
