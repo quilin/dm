@@ -11,8 +11,8 @@ namespace DM.Web.API.Dto.Games
     /// Resolver for current user participation
     /// </summary>
     public class GameParticipationResolver :
-        IValueResolver<ServiceGame, Game, bool>,
-        IValueResolver<GameExtended, Game, bool>
+        IValueResolver<ServiceGame, Game, GameParticipation>,
+        IValueResolver<GameExtended, Game, GameParticipation>
     {
         private readonly IIdentity identity;
 
@@ -24,11 +24,13 @@ namespace DM.Web.API.Dto.Games
         }
 
         /// <inheritdoc />
-        public bool Resolve(ServiceGame source, Game destination, bool destMember, ResolutionContext context) =>
-            source.Participation(identity.User.UserId) != GameParticipation.None;
+        public GameParticipation Resolve(
+            ServiceGame source, Game destination, GameParticipation destMember, ResolutionContext context) =>
+            source.Participation(identity.User.UserId);
 
         /// <inheritdoc />
-        public bool Resolve(GameExtended source, Game destination, bool destMember, ResolutionContext context) =>
-            source.Participation(identity.User.UserId) != GameParticipation.None;
+        public GameParticipation Resolve(
+            GameExtended source, Game destination, GameParticipation destMember, ResolutionContext context) =>
+            source.Participation(identity.User.UserId);
     }
 }

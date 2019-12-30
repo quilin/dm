@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Gaming.Dto;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
@@ -63,7 +64,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Requesting user participates in game
         /// </summary>
-        public bool Participation { get; set; }
+        public GameParticipation Participation { get; set; }
 
         /// <summary>
         /// Game tags

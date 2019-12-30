@@ -20,7 +20,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         {
         }
 
-        private static readonly Expression<Func<DbSchema, AttributeSchema>> SchemaProjection = s => new AttributeSchema
+        /// <summary>
+        /// Basic projection for schema
+        /// </summary>
+        public static readonly Expression<Func<DbSchema, AttributeSchema>> SchemaProjection = s => new AttributeSchema
         {
             Id = s.Id,
             Name = s.Name,
@@ -33,8 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         public async Task<IEnumerable<AttributeSchema>> Get(Guid userId)
         {
             return await Collection
-                .Find(Filter.Eq(s => s.Type, SchemaType.Public) |
-                    Filter.Eq(s => s.UserId, userId))
+                .Find(Filter.Eq(s => s.Type, SchemaType.Public) | Filter.Eq(s => s.UserId, userId))
                 .Project(Select.Expression(SchemaProjection))
                 .ToListAsync();
         }
@@ -43,8 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         public async Task<AttributeSchema> Get(Guid schemaId, Guid userId)
         {
             return await Collection
-                .Find(Filter.Eq(s => s.Id, schemaId) &
-                    (Filter.Eq(s => s.UserId, userId) | Filter.Eq(s => s.Type, SchemaType.Public)))
+                .Find(Filter.Eq(s => s.Id, schemaId))
                 .Project(Select.Expression(SchemaProjection))
                 .FirstOrDefaultAsync();
         }

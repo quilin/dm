@@ -63,7 +63,7 @@ namespace DM.Web.API.Controllers.v1.Users
         /// Get current user
         /// </summary>
         /// <response code="200"></response>
-        [HttpGet("", Name = nameof(GetCurrent))]
+        [HttpGet(Name = nameof(GetCurrent))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
         [ProducesResponseType(typeof(GeneralError), 401)]
