@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.Core.Dto.Attributes;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 
 namespace DM.Services.Gaming.Dto.Input
 {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
-using DM.Services.Core.Dto.Attributes;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games

@@ -1,6 +1,6 @@
 using System;
 
-namespace DM.Services.Core.Dto.Attributes
+namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
 {
     /// <summary>
     /// DAL model for attribute specification

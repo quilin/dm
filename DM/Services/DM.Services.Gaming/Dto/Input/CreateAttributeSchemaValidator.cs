@@ -1,6 +1,6 @@
 using System.Linq;
-using DM.Services.Core.Dto.Attributes;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using FluentValidation;
 
 namespace DM.Services.Gaming.Dto.Input

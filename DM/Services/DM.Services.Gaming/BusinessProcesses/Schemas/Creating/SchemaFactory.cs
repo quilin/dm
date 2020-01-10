@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using DM.Services.Core.Dto.Attributes;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
