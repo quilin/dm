@@ -16,7 +16,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         }
 
         /// <inheritdoc />
-        public async Task<AttributeSchema> Update(DbAttributeSchema schema)
+        public async Task<AttributeSchema> UpdateSchema(DbAttributeSchema schema)
         {
             await Collection.ReplaceOneAsync(Filter.Eq(s => s.Id, schema.Id), schema);
             return await Collection

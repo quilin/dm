@@ -32,7 +32,7 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// <summary>
         /// Typed projection definition builder
         /// </summary>
-        protected static ProjectionDefinitionBuilder<TEntity> Select => Select<TEntity>();
+        protected static ProjectionDefinitionBuilder<TEntity> Project => Project<TEntity>();
 
         /// <summary>
         /// Typed collection

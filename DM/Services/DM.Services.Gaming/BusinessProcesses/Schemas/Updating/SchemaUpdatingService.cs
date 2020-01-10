@@ -46,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
             intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
 
             var schema = schemaFactory.Create(updateAttributeSchema, identity.User.UserId);
-            return await repository.Update(schema);
+            return await repository.UpdateSchema(schema);
         }
     }
 }
