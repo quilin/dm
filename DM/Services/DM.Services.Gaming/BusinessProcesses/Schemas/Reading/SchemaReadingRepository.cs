@@ -37,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         {
             return await Collection
                 .Find(Filter.Eq(s => s.Type, SchemaType.Public) | Filter.Eq(s => s.UserId, userId))
-                .Project(Select.Expression(SchemaProjection))
+                .Project(Project.Expression(SchemaProjection))
                 .ToListAsync();
         }
 
@@ -46,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         {
             return await Collection
                 .Find(Filter.Eq(s => s.Id, schemaId))
-                .Project(Select.Expression(SchemaProjection))
+                .Project(Project.Expression(SchemaProjection))
                 .FirstOrDefaultAsync();
         }
     }

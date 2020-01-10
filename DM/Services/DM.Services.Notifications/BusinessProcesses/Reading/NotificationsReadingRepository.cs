@@ -30,7 +30,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Reading
                 .Sort(Sort.Descending(n => n.CreateDate))
                 .Skip(pagingData.Skip)
                 .Limit(pagingData.Take)
-                .Project(Select.As<UserNotification>())
+                .Project(Project.As<UserNotification>())
                 .ToListAsync();
         }
     }

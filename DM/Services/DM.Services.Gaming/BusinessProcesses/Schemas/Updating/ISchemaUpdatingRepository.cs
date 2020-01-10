@@ -14,6 +14,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         /// </summary>
         /// <param name="schema">DAL model</param>
         /// <returns></returns>
-        Task<AttributeSchema> Update(DbAttributeSchema schema);
+        Task<AttributeSchema> UpdateSchema(DbAttributeSchema schema);
     }
 }

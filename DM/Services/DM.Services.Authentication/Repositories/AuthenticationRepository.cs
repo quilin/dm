@@ -64,7 +64,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return await Collection<DbUserSettings>()
                 .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
-                .Project(Select<DbUserSettings>().Expression(s => new UserSettings
+                .Project(Project<DbUserSettings>().Expression(s => new UserSettings
                 {
                     Id = s.Id,
                     ColorSchema = s.ColorSchema,

@@ -41,7 +41,7 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        protected static ProjectionDefinitionBuilder<TEntity> Select<TEntity>() =>
+        protected static ProjectionDefinitionBuilder<TEntity> Project<TEntity>() =>
             new ProjectionDefinitionBuilder<TEntity>();
 
         /// <summary>
