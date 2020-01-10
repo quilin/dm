@@ -54,7 +54,7 @@ namespace DM.Web.Classic.Controllers.GameCommentariesControllers
             var characterNames = characters
                 .ToLookup(c => c.Author.UserId)
                 .ToDictionary(g => g.Key, g => g.Select(c => c.Name));
-            var viewModel = commentaryViewModelBuilder.Build(comment, game, characterNames);
+            var viewModel = await commentaryViewModelBuilder.Build(comment, game, characterNames);
 
             return View("~/Views/GameCommentaries/Commentary/Commentary.cshtml", viewModel);
         }
