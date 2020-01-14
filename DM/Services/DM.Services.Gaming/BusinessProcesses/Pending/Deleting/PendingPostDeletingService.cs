@@ -31,7 +31,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
         public async Task Delete(Guid pendingPostId)
         {
             var pendingPost = await repository.Get(pendingPostId);
-            if (pendingPost == default)
+            if (pendingPost == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Pending post not found");
             }

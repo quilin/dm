@@ -61,7 +61,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
         {
             await validator.ValidateAndThrowAsync(createPost);
             var room = await roomUpdatingRepository.GetRoom(createPost.RoomId, identity.User.UserId);
-            if (room == default)
+            if (room == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Room not found");
             }

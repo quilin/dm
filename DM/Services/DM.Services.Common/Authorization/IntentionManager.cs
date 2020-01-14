@@ -30,7 +30,7 @@ namespace DM.Services.Common.Authorization
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention>>()
                 .FirstOrDefault();
-            if (matchingResolver != default)
+            if (matchingResolver != null)
             {
                 return matchingResolver.IsAllowed(identityProvider.Current.User, intention);
             }
@@ -46,7 +46,7 @@ namespace DM.Services.Common.Authorization
             var matchingResolver = resolvers
                 .OfType<IIntentionResolver<TIntention, TTarget>>()
                 .FirstOrDefault();
-            if (matchingResolver != default)
+            if (matchingResolver != null)
             {
                 return matchingResolver.IsAllowed(identityProvider.Current.User, intention, target);
             }

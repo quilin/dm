@@ -94,4 +94,25 @@ namespace DM.Web.API.Dto.Games
         /// </summary>
         public bool EditPostByMaster { get; set; }
     }
+
+    /// <summary>
+    /// DTO model for character attributes
+    /// </summary>
+    public class CharacterAttributeValue
+    {
+        /// <summary>
+        /// Specification identifier
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Specification title
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Attribute value
+        /// </summary>
+        public string Value { get; set; }
+    }
 }

@@ -47,7 +47,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         {
             await validator.ValidateAndThrowAsync(updateRoom);
             var room = await repository.GetRoom(updateRoom.RoomId, identity.User.UserId);
-            if (room == default)
+            if (room == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Room not found");
             }

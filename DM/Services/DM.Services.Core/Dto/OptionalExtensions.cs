@@ -14,7 +14,7 @@ namespace DM.Services.Core.Dto
         /// <returns></returns>
         public static bool HasChanged<T>(this Optional<T> optional, T? againstValue) where T : struct
         {
-            return optional != default && !optional.Value.Equals(againstValue);
+            return optional != null && !optional.Value.Equals(againstValue);
         }
     }
 }

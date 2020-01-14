@@ -31,7 +31,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         public async Task<AttributeSchema> Get(Guid schemaId)
         {
             var attributeSchema = await repository.Get(schemaId, identity.User.UserId);
-            if (attributeSchema == default)
+            if (attributeSchema == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Schema not found");
             }
