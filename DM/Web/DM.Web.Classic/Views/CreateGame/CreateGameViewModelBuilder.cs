@@ -33,7 +33,7 @@ namespace DM.Web.Classic.Views.CreateGame
         public async Task<CreateGameViewModel> Build()
         {
             var schemas = (await schemaService.Get())
-                .ToDictionary(s => s.Id, s => s.Name);
+                .ToDictionary(s => s.Id, s => s.Title);
             schemas.Add(CreateGameForm.NoSchema, "Без характеристик");
             schemas.Add(Guid.Empty, "Создать новую схему");
 

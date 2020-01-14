@@ -26,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         public static readonly Expression<Func<DbSchema, AttributeSchema>> SchemaProjection = s => new AttributeSchema
         {
             Id = s.Id,
-            Name = s.Name,
+            Title = s.Name,
             UserId = s.UserId,
             Type = s.Type,
             Specifications = s.Specifications

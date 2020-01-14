@@ -35,34 +35,38 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
             }
 
             var schema = await repository.GetSchema(attributeSchemaId.Value);
-            var specificationsIndex = schema.Specifications.ToDictionary(s => s.Id);
 
             foreach (var character in characters)
             {
+                var attributesIndex = character.Attributes.ToDictionary(a => a.Id, a => a.Value);
                 var filledAttributes = new List<CharacterAttribute>();
-                foreach (var attribute in character.Attributes)
+
+                foreach (var specification in schema.Specifications)
                 {
-                    if (!specificationsIndex.TryGetValue(attribute.Id, out var specification))
+                    var filledAttribute = new CharacterAttribute
+                    {
+                        Id = specification.Id,
+                        Title = specification.Title
+                    };
+                    filledAttributes.Add(filledAttribute);
+
+                    if (!attributesIndex.TryGetValue(specification.Id, out var value))
                     {
                         continue;
                     }
 
-                    var filledAttribute = new CharacterAttribute
+                    filledAttribute.Value = value;
+
+                    if (!(specification.Constraints is ListAttributeConstraints listConstraints))
                     {
-                        Id = attribute.Id,
-                        Title = specification.Name,
-                        Value = attribute.Value
-                    };
-                    if (specification.Constraints is ListAttributeConstraints listConstraints)
-                    {
-                        var matchingValue = listConstraints.Values.FirstOrDefault(v => v.Value == attribute.Value);
-                        if (matchingValue != null)
-                        {
-                            filledAttribute.Modifier = matchingValue.Modifier;
-                        }
+                        continue;
                     }
 
-                    filledAttributes.Add(filledAttribute);
+                    var matchingValue = listConstraints.Values.FirstOrDefault(v => v.Value == value);
+                    if (matchingValue != null)
+                    {
+                        filledAttribute.Modifier = matchingValue.Modifier;
+                    }
                 }
 
                 character.Attributes = filledAttributes;
