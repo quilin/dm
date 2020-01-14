@@ -1,3 +1,5 @@
+using System;
+
 namespace DM.Services.Gaming.Dto.Output
 {
     /// <summary>
@@ -6,7 +8,12 @@ namespace DM.Services.Gaming.Dto.Output
     public class CharacterAttribute
     {
         /// <summary>
-        /// Attribute title
+        /// Specification identifier
+        /// </summary>
+        public Guid Id { get; set; }
+        
+        /// <summary>
+        /// Specification title
         /// </summary>
         public string Title { get; set; }
 

@@ -15,14 +15,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         /// </summary>
         /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<IEnumerable<AttributeSchema>> Get(Guid userId);
+        Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId);
 
         /// <summary>
         /// Get certain attribute schema
         /// </summary>
         /// <param name="schemaId">Schema identifier</param>
-        /// <param name="userId">User identifier</param>
         /// <returns></returns>
-        Task<AttributeSchema> Get(Guid schemaId, Guid userId);
+        Task<AttributeSchema> GetSchema(Guid schemaId);
     }
 }

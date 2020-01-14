@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
@@ -8,6 +9,7 @@ using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
+using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
@@ -17,6 +19,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
     {
         private readonly IGameReadingService gameReadingService;
         private readonly ICharacterReadingRepository readingRepository;
+        private readonly ISchemaReadingRepository schemaReadingRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
@@ -24,11 +27,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         public CharacterReadingService(
             IGameReadingService gameReadingService,
             ICharacterReadingRepository readingRepository,
+            ISchemaReadingRepository schemaReadingRepository,
             IUnreadCountersRepository unreadCountersRepository,
             IIdentityProvider identityProvider)
         {
             this.gameReadingService = gameReadingService;
             this.readingRepository = readingRepository;
+            this.schemaReadingRepository = schemaReadingRepository;
             this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
@@ -36,8 +41,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         /// <inheritdoc />
         public async Task<IEnumerable<Character>> GetCharacters(Guid gameId)
         {
-            await gameReadingService.GetGame(gameId);
-            return await readingRepository.GetCharacters(gameId);
+            var game = await gameReadingService.GetGame(gameId);
+            var characters = (await readingRepository.GetCharacters(gameId)).ToArray();
+            await schemaReadingRepository.FillAttributeValues(game.AttributeSchemaId, characters);
+            return characters;
         }
 
         /// <inheritdoc />
@@ -49,7 +56,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
                 throw new HttpException(HttpStatusCode.Gone, "Character not found");
             }
 
-            await gameReadingService.GetGame(character.GameId);
+            var game = await gameReadingService.GetGame(character.GameId);
+            await schemaReadingRepository.FillAttributeValues(game.AttributeSchemaId, new[] {character});
             return character;
         }
 

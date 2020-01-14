@@ -10,7 +10,7 @@ using DbSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attribu
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="ISchemaReadingRepository" />
     public class SchemaReadingRepository :
         MongoCollectionRepository<DbSchema>,
         ISchemaReadingRepository
@@ -33,7 +33,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         };
 
         /// <inheritdoc />
-        public async Task<IEnumerable<AttributeSchema>> Get(Guid userId)
+        public async Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId)
         {
             return await Collection
                 .Find(Filter.Eq(s => s.Type, SchemaType.Public) | Filter.Eq(s => s.UserId, userId))
@@ -42,7 +42,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         }
 
         /// <inheritdoc />
-        public async Task<AttributeSchema> Get(Guid schemaId, Guid userId)
+        public async Task<AttributeSchema> GetSchema(Guid schemaId)
         {
             return await Collection
                 .Find(Filter.Eq(s => s.Id, schemaId))

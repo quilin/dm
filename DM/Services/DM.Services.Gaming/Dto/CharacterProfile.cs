@@ -3,6 +3,7 @@ using AutoMapper;
 using DM.Services.Gaming.Dto.Internal;
 using DM.Services.Gaming.Dto.Output;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
+using DbAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.CharacterAttribute;
 
 namespace DM.Services.Gaming.Dto
 {
@@ -20,6 +21,10 @@ namespace DM.Services.Gaming.Dto
                     .Where(p => !p.IsRemoved)
                     .Select(p => p.VirtualPath)
                     .FirstOrDefault()));
+
+            CreateMap<DbAttribute, CharacterAttribute>()
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.AttributeId))
+                .ForMember(d => d.Value, s => s.MapFrom(a => a.Value));
 
             CreateMap<DbCharacter, CharacterToUpdate>()
                 .ForMember(d => d.GameMasterId, s => s.MapFrom(c => c.Game.MasterId))
