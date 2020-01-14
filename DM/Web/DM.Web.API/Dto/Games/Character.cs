@@ -131,5 +131,10 @@ namespace DM.Web.API.Dto.Games
         /// Attribute modifier
         /// </summary>
         public int? Modifier { get; set; }
+
+        /// <summary>
+        /// Flag of the required value missing
+        /// </summary>
+        public bool Missing { get; set; }
     }
 }

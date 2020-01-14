@@ -11,7 +11,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// Specification identifier
         /// </summary>
         public Guid Id { get; set; }
-        
+
         /// <summary>
         /// Specification title
         /// </summary>
@@ -26,5 +26,10 @@ namespace DM.Services.Gaming.Dto.Output
         /// Attribute modifier
         /// </summary>
         public int? Modifier { get; set; }
+
+        /// <summary>
+        /// Flag of the required value missing
+        /// </summary>
+        public bool Missing { get; set; }
     }
 }

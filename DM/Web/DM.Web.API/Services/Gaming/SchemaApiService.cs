@@ -8,7 +8,7 @@ using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Web.API.Dto.Contracts;
-using DM.Web.API.Dto.Games;
+using DM.Web.API.Dto.Games.Attributes;
 
 namespace DM.Web.API.Services.Gaming
 {

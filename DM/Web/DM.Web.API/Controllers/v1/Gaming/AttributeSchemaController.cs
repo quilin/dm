@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
-using DM.Web.API.Dto.Games;
+using DM.Web.API.Dto.Games.Attributes;
 using DM.Web.API.Services.Gaming;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;

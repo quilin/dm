@@ -66,7 +66,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             // Only master and assistant are allowed to create NPCs
             createCharacter.IsNpc = createCharacter.IsNpc && gameParticipation.HasFlag(GameParticipation.Authority);
 
-            // TODO: Character attributes
             var character = factory.Create(createCharacter, currentUserId, initialStatus);
             var createdCharacter = await creatingRepository.Create(character);
 

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
-using DM.Web.API.Dto.Games;
+using DM.Web.API.Dto.Games.Attributes;
 
 namespace DM.Web.API.Services.Gaming
 {

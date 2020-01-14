@@ -15,7 +15,8 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(c => c.Id, s => s.MapFrom(c => c.Id.EncodeToReadable(c.Name)))
                 .ForMember(c => c.Privacy, s => s.MapFrom<AccessPolicyConverter>());
 
-            CreateMap<DM.Services.Gaming.Dto.Output.CharacterAttribute, CharacterAttribute>();
+            CreateMap<DM.Services.Gaming.Dto.Output.CharacterAttribute, CharacterAttribute>()
+                .ReverseMap();
 
             CreateMap<Character, CreateCharacter>()
                 .ForMember(c => c.IsNpc, s => s.MapFrom(c => c.Privacy.IsNpc))

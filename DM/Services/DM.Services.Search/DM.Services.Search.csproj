@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
-        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Data;
-using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Web.API.Dto.Users;
 
-namespace DM.Web.API.Dto.Games
+namespace DM.Web.API.Dto.Games.Attributes
 {
     /// <summary>
     /// DTO model for game attribute schema
