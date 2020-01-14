@@ -32,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
                     .Select(s => new AttributeSpecification
                     {
                         Id = guidFactory.Create(),
-                        Name = s.Name.Trim(),
+                        Title = s.Title.Trim(),
                         Constraints = s.Constraints
                     }),
                 IsRemoved = false
@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
                     .Select(s => new AttributeSpecification
                     {
                         Id = s.Id,
-                        Name = s.Name.Trim(),
+                        Title = s.Title.Trim(),
                         Constraints = s.Constraints
                     }),
                 IsRemoved = false

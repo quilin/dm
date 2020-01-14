@@ -18,7 +18,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// User identifier

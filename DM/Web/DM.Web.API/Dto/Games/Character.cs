@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 using DM.Web.API.Dto.Users;
 
@@ -39,6 +41,11 @@ namespace DM.Web.API.Dto.Games
         public string Class { get; set; }
 
         /// <summary>
+        /// Character alignment
+        /// </summary>
+        public Alignment? Alignment { get; set; }
+
+        /// <summary>
         /// Character picture URL
         /// </summary>
         public string PictureUrl { get; set; }
@@ -69,6 +76,11 @@ namespace DM.Web.API.Dto.Games
         public string Inventory { get; set; }
 
         /// <summary>
+        /// Character attributes
+        /// </summary>
+        public IEnumerable<CharacterAttribute> Attributes { get; set; }
+
+        /// <summary>
         /// Character privacy settings
         /// </summary>
         public CharacterPrivacySettings Privacy { get; set; }
@@ -96,14 +108,14 @@ namespace DM.Web.API.Dto.Games
     }
 
     /// <summary>
-    /// DTO model for character attributes
+    /// DTO model for character attribute value
     /// </summary>
-    public class CharacterAttributeValue
+    public class CharacterAttribute
     {
         /// <summary>
         /// Specification identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Specification title
@@ -114,5 +126,10 @@ namespace DM.Web.API.Dto.Games
         /// Attribute value
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Attribute modifier
+        /// </summary>
+        public int? Modifier { get; set; }
     }
 }

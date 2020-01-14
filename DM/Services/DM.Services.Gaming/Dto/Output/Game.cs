@@ -36,6 +36,11 @@ namespace DM.Services.Gaming.Dto.Output
         public DateTimeOffset? ReleaseDate { get; set; }
 
         /// <summary>
+        /// Attribute schema identifier
+        /// </summary>
+        public Guid? AttributeSchemaId { get; set; }
+
+        /// <summary>
         /// Game master
         /// </summary>
         public GeneralUser Master { get; set; }

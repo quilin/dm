@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.Dto.Input
             RuleForEach(s => s.Specifications)
                 .ChildRules(specs =>
                 {
-                    specs.RuleFor(s => s.Name)
+                    specs.RuleFor(s => s.Title)
                         .NotEmpty().WithMessage(ValidationError.Empty)
                         .MaximumLength(200).WithMessage(ValidationError.Long);
                     specs.RuleFor(s => s.Constraints)

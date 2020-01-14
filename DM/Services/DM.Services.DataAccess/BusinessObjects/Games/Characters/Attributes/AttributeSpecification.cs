@@ -15,7 +15,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
         /// <summary>
         /// Display name
         /// </summary>
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Specification constraints

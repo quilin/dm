@@ -25,12 +25,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<AttributeSchema>> Get() => repository.Get(identity.User.UserId);
+        public Task<IEnumerable<AttributeSchema>> Get() => repository.GetSchemata(identity.User.UserId);
 
         /// <inheritdoc />
         public async Task<AttributeSchema> Get(Guid schemaId)
         {
-            var attributeSchema = await repository.Get(schemaId, identity.User.UserId);
+            var attributeSchema = await repository.GetSchema(schemaId);
             if (attributeSchema == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Schema not found");
