@@ -65,7 +65,7 @@ namespace DM.Web.API
 
             var assemblies = GetAssemblies();
             services
-                .AddAutoMapper(assemblies)
+                .AddAutoMapper(config => config.AllowNullCollections = true, assemblies)
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
@@ -73,10 +73,7 @@ namespace DM.Web.API
 
             services
                 .AddSwaggerGen(c => c.ConfigureGen())
-                .AddMvc(config =>
-                {
-                    config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider());
-                })
+                .AddMvc(config => { config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()); })
                 .AddJsonOptions(config =>
                 {
                     config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;

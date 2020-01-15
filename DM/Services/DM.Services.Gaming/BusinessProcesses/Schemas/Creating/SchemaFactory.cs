@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using AutoMapper;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
@@ -14,15 +13,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
     public class SchemaFactory : ISchemaFactory
     {
         private readonly IGuidFactory guidFactory;
-        private readonly IMapper mapper;
 
         /// <inheritdoc />
         public SchemaFactory(
-            IGuidFactory guidFactory,
-            IMapper mapper)
+            IGuidFactory guidFactory)
         {
             this.guidFactory = guidFactory;
-            this.mapper = mapper;
         }
         
         /// <inheritdoc />
@@ -65,7 +61,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
                     return new StringAttributeConstraints
                     {
                         Required = specification.Required,
-                        MaxLength = specification.MaxLength ?? 1
+                        MaxLength = specification.MaxLength ?? 0
                     };
                 case AttributeSpecificationType.List:
                     return new ListAttributeConstraints

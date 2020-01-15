@@ -73,7 +73,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to update this attribute schema</response>
         /// <response code="410">Schema not found</response>
-        [HttpPut("{id}", Name = nameof(PutSchema))]
+        [HttpPatch("{id}", Name = nameof(PutSchema))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<AttributeSchema>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

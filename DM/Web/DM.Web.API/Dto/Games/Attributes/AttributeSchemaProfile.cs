@@ -12,7 +12,8 @@ namespace DM.Web.API.Dto.Games.Attributes
             CreateMap<DM.Services.Gaming.Dto.Shared.AttributeSchema, AttributeSchema>()
                 .ForMember(s => s.Id, d => d.MapFrom(s => s.Id.EncodeToReadable(s.Title)));
 
-            CreateMap<DM.Services.Gaming.Dto.Shared.AttributeSpecification, AttributeSpecification>();
+            CreateMap<DM.Services.Gaming.Dto.Shared.AttributeSpecification, AttributeSpecification>()
+                .ForMember(s => s.Id, d => d.MapFrom(s => s.Id.EncodeToReadable(s.Title)));
         }
     }
 }

@@ -32,8 +32,24 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         /// <inheritdoc />
         public async Task<IEnumerable<AttributeSchema>> Get()
         {
-            var schemata = await repository.GetSchemata(identity.User.UserId);
-            return schemata.Select(mapper.Map<AttributeSchema>);
+            var schemata = (await repository.GetSchemata(identity.User.UserId)).ToArray();
+
+            var userIds = schemata.Where(s => s.UserId.HasValue).Select(s => s.UserId.Value).ToHashSet();
+            var schemataAuthors = (await repository.GetSchemataAuthors(userIds)).ToDictionary(u => u.UserId);
+
+            var result = new List<AttributeSchema>(schemata.Length);
+            foreach (var schema in schemata)
+            {
+                var mappedSchema = mapper.Map<AttributeSchema>(schema);
+                if (schema.UserId.HasValue && schemataAuthors.TryGetValue(schema.UserId.Value, out var author))
+                {
+                    mappedSchema.Author = author;
+                }
+
+                result.Add(mappedSchema);
+            }
+
+            return result;
         }
 
         /// <inheritdoc />
@@ -45,7 +61,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
                 throw new HttpException(HttpStatusCode.Gone, "Schema not found");
             }
 
-            return mapper.Map<AttributeSchema>(attributeSchema);
+            var schema = mapper.Map<AttributeSchema>(attributeSchema);
+            if (attributeSchema.UserId.HasValue)
+            {
+                var author = (await repository.GetSchemataAuthors(new[] {attributeSchema.UserId.Value}))
+                    .FirstOrDefault();
+                schema.Author = author;
+            }
+
+            return schema;
         }
     }
 }

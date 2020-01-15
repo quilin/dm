@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Data;
+using DM.Services.Core.Dto.Enums;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games.Attributes
