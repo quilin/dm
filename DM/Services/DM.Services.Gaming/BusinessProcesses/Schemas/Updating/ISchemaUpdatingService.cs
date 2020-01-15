@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
-using DM.Services.Gaming.Dto.Input;
-using DM.Services.Gaming.Dto.Output;
+using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
 {
@@ -12,8 +11,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         /// <summary>
         /// Update attribute schema
         /// </summary>
-        /// <param name="updateAttributeSchema">DTO for updating</param>
+        /// <param name="attributeSchema">DTO for updating</param>
         /// <returns></returns>
-        Task<AttributeSchema> Update(UpdateAttributeSchema updateAttributeSchema);
+        Task<AttributeSchema> Update(AttributeSchema attributeSchema);
     }
 }

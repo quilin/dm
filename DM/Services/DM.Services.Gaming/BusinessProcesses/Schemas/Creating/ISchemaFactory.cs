@@ -1,6 +1,6 @@
 using System;
-using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
-using DM.Services.Gaming.Dto.Input;
+using AttributeSchema = DM.Services.Gaming.Dto.Shared.AttributeSchema;
+using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
@@ -10,19 +10,19 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
     public interface ISchemaFactory
     {
         /// <summary>
-        /// Create schema DAL model from DTO model
+        /// Create new DAL model for schema creating
         /// </summary>
-        /// <param name="createAttributeSchema">DTO model</param>
-        /// <param name="userId">User identifier</param>
+        /// <param name="schema"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        AttributeSchema Create(CreateAttributeSchema createAttributeSchema, Guid userId);
+        DbAttributeSchema CreateNew(AttributeSchema schema, Guid userId);
 
         /// <summary>
-        /// Create schema DAL model for updating
+        /// Create new DAL model for schema updating
         /// </summary>
-        /// <param name="updateAttributeSchema">DTO model</param>
-        /// <param name="userId">User identifier</param>
+        /// <param name="schema"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        AttributeSchema Create(UpdateAttributeSchema updateAttributeSchema, Guid userId);
+        DbAttributeSchema CreateToUpdate(AttributeSchema schema, Guid userId);
     }
 }

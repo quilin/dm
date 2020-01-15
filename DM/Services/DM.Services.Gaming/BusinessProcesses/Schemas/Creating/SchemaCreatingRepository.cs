@@ -1,14 +1,12 @@
 using System.Threading.Tasks;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Services.DataAccess.MongoIntegration;
-using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
-using DM.Services.Gaming.Dto.Output;
 using MongoDB.Driver;
-using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
-    public class SchemaCreatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaCreatingRepository
+    public class SchemaCreatingRepository : MongoCollectionRepository<AttributeSchema>, ISchemaCreatingRepository
     {
         /// <inheritdoc />
         public SchemaCreatingRepository(DmMongoClient client) : base(client)
@@ -16,12 +14,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
         }
 
         /// <inheritdoc />
-        public async Task<AttributeSchema> Create(DbAttributeSchema schema)
+        public async Task<AttributeSchema> Create(AttributeSchema schema)
         {
             await Collection.InsertOneAsync(schema);
             return await Collection
                 .Find(Filter.Eq(s => s.Id, schema.Id))
-                .Project(SchemaReadingRepository.SchemaProjection)
                 .FirstAsync();
         }
     }

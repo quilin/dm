@@ -1,6 +1,6 @@
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
-using DM.Services.Gaming.Dto.Output;
+using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.Authorization
 {
@@ -14,7 +14,7 @@ namespace DM.Services.Gaming.Authorization
             {
                 case AttributeSchemaIntention.Edit:
                 case AttributeSchemaIntention.Delete:
-                    return target.UserId == user.UserId;
+                    return target.Author.UserId == user.UserId;
                 default:
                     return false;
             }

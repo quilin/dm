@@ -1,46 +1,50 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Gaming.Authorization;
-using DM.Services.Gaming.Dto.Input;
-using DM.Services.Gaming.Dto.Output;
-using FluentValidation;
+using DM.Services.Gaming.Dto.Shared;
+using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
     public class SchemaCreatingService : ISchemaCreatingService
     {
-        private readonly IValidator<CreateAttributeSchema> validator;
+        private readonly ISchemaCreatingValidator validator;
         private readonly IIntentionManager intentionManager;
-        private readonly ISchemaFactory schemaFactory;
+        private readonly ISchemaFactory factory;
         private readonly ISchemaCreatingRepository repository;
+        private readonly IMapper mapper;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public SchemaCreatingService(
-            IValidator<CreateAttributeSchema> validator,
+            ISchemaCreatingValidator validator,
             IIntentionManager intentionManager,
-            ISchemaFactory schemaFactory,
+            ISchemaFactory factory,
             ISchemaCreatingRepository repository,
-            IIdentityProvider identityProvider)
+            IIdentityProvider identityProvider,
+            IMapper mapper)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
-            this.schemaFactory = schemaFactory;
+            this.factory = factory;
             this.repository = repository;
+            this.mapper = mapper;
             identity = identityProvider.Current;
         }
 
         /// <inheritdoc />
-        public async Task<AttributeSchema> Create(CreateAttributeSchema createAttributeSchema)
+        public async Task<AttributeSchema> Create(AttributeSchema attributeSchema)
         {
-            await validator.ValidateAndThrowAsync(createAttributeSchema);
+            validator.ValidateAndThrow(attributeSchema);
             intentionManager.ThrowIfForbidden(GameIntention.Create);
 
-            var attributeSchema = schemaFactory.Create(createAttributeSchema, identity.User.UserId);
-            return await repository.Create(attributeSchema);
+            var schemaToCreate = factory.CreateNew(attributeSchema, identity.User.UserId);
+            var createdSchema = await repository.Create(schemaToCreate);
+            return mapper.Map<AttributeSchema>(createdSchema);
         }
     }
 }

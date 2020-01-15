@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 
-namespace DM.Services.Gaming.Dto.Output
+namespace DM.Services.Gaming.Dto.Shared
 {
     /// <summary>
-    /// DTO model for game attribute schema
+    /// DTO model for attribute schema
     /// </summary>
     public class AttributeSchema
     {
@@ -16,22 +16,22 @@ namespace DM.Services.Gaming.Dto.Output
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Name
+        /// Title
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// User identifier
+        /// Author identifier
         /// </summary>
-        public Guid? UserId { get; set; }
+        public GeneralUser Author { get; set; }
 
         /// <summary>
-        /// Access type
+        /// Schema access type
         /// </summary>
         public SchemaType Type { get; set; }
 
         /// <summary>
-        /// Specifications
+        /// Attribute specifications
         /// </summary>
         public IEnumerable<AttributeSpecification> Specifications { get; set; }
     }

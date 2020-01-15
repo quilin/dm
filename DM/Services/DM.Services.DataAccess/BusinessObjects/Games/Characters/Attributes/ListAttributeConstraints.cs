@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
@@ -10,7 +11,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
         /// <summary>
         /// Possible values
         /// </summary>
-        public ListAttributeValue[] Values { get; set; }
+        public IEnumerable<ListAttributeValue> Values { get; set; }
 
         /// <inheritdoc />
         public override string GetDefaultValue() => Values?.FirstOrDefault()?.Value ?? string.Empty;

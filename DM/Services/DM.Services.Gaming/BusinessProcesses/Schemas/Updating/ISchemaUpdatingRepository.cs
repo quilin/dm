@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Gaming.Dto.Output;
 using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
@@ -14,6 +13,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         /// </summary>
         /// <param name="schema">DAL model</param>
         /// <returns></returns>
-        Task<AttributeSchema> UpdateSchema(DbAttributeSchema schema);
+        Task<DbAttributeSchema> UpdateSchema(DbAttributeSchema schema);
     }
 }

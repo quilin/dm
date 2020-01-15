@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.Gaming.Dto.Output;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
 {

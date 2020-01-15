@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
-using DM.Services.Gaming.Dto.Input;
-using DM.Services.Gaming.Dto.Output;
+using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
@@ -12,8 +11,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
         /// <summary>
         /// Create new attribute schema
         /// </summary>
-        /// <param name="createAttributeSchema">DTO for creating</param>
+        /// <param name="attributeSchema">DTO for creating</param>
         /// <returns></returns>
-        Task<AttributeSchema> Create(CreateAttributeSchema createAttributeSchema);
+        Task<AttributeSchema> Create(AttributeSchema attributeSchema);
     }
 }

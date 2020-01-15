@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.MongoIntegration;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
 {
     /// <summary>
     /// DAL model for attribute schema
     /// </summary>
-    [MongoCollectionName("AttributeSchemas")]
-    [BsonKnownTypes(
-        typeof(NumberAttributeConstraints),
-        typeof(StringAttributeConstraints),
-        typeof(ListAttributeConstraints))]
+    [MongoCollectionName("AttributeSchemata")]
     public class AttributeSchema : IRemovable
     {
         /// <summary>
@@ -35,7 +30,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes
         /// <summary>
         /// Display name
         /// </summary>
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Attribute specifications

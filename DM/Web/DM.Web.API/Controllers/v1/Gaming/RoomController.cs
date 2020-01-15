@@ -179,7 +179,7 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to delete this pending post</response>
         /// <response code="410">Pending post not found</response>
-        [HttpDelete("claims/{id}", Name = nameof(DeletePendingPost))]
+        [HttpDelete("pendings/{id}", Name = nameof(DeletePendingPost))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]

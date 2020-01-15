@@ -6,9 +6,9 @@ using DM.Services.Gaming.BusinessProcesses.Schemas.Creating;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Deleting;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Updating;
-using DM.Services.Gaming.Dto.Input;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games.Attributes;
+using DtoAttributeSchema = DM.Services.Gaming.Dto.Shared.AttributeSchema;
 
 namespace DM.Web.API.Services.Gaming
 {
@@ -53,7 +53,7 @@ namespace DM.Web.API.Services.Gaming
         /// <inheritdoc />
         public async Task<Envelope<AttributeSchema>> Create(AttributeSchema schema)
         {
-            var createSchema = mapper.Map<CreateAttributeSchema>(schema);
+            var createSchema = mapper.Map<DtoAttributeSchema>(schema);
             var createdSchema = await creatingService.Create(createSchema);
             return new Envelope<AttributeSchema>(mapper.Map<AttributeSchema>(createdSchema));
         }
@@ -61,8 +61,8 @@ namespace DM.Web.API.Services.Gaming
         /// <inheritdoc />
         public async Task<Envelope<AttributeSchema>> Update(Guid schemaId, AttributeSchema schema)
         {
-            var updateSchema = mapper.Map<UpdateAttributeSchema>(schema);
-            updateSchema.SchemaId = schemaId;
+            var updateSchema = mapper.Map<DtoAttributeSchema>(schema);
+            updateSchema.Id = schemaId;
             var updatedSchema = await updatingService.Update(updateSchema);
             return new Envelope<AttributeSchema>(mapper.Map<AttributeSchema>(updatedSchema));
         }

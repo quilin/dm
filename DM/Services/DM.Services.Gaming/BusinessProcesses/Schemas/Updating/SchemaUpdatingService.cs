@@ -1,33 +1,34 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Creating;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
-using DM.Services.Gaming.Dto.Input;
-using DM.Services.Gaming.Dto.Output;
-using FluentValidation;
+using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
 {
     /// <inheritdoc />
     public class SchemaUpdatingService : ISchemaUpdatingService
     {
-        private readonly IValidator<UpdateAttributeSchema> validator;
+        private readonly ISchemaCreatingValidator validator;
         private readonly ISchemaReadingService readingService;
         private readonly IIntentionManager intentionManager;
         private readonly ISchemaFactory schemaFactory;
         private readonly ISchemaUpdatingRepository repository;
+        private readonly IMapper mapper;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public SchemaUpdatingService(
-            IValidator<UpdateAttributeSchema> validator,
+            ISchemaCreatingValidator validator,
             ISchemaReadingService readingService,
             IIntentionManager intentionManager,
             ISchemaFactory schemaFactory,
             ISchemaUpdatingRepository repository,
+            IMapper mapper,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -35,18 +36,20 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
             this.intentionManager = intentionManager;
             this.schemaFactory = schemaFactory;
             this.repository = repository;
+            this.mapper = mapper;
             identity = identityProvider.Current;
         }
         
         /// <inheritdoc />
-        public async Task<AttributeSchema> Update(UpdateAttributeSchema updateAttributeSchema)
+        public async Task<AttributeSchema> Update(AttributeSchema attributeSchema)
         {
-            await validator.ValidateAndThrowAsync(updateAttributeSchema);
-            var oldSchema = await readingService.Get(updateAttributeSchema.SchemaId);
+            validator.ValidateAndThrow(attributeSchema);
+            var oldSchema = await readingService.Get(attributeSchema.Id);
             intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
 
-            var schema = schemaFactory.Create(updateAttributeSchema, identity.User.UserId);
-            return await repository.UpdateSchema(schema);
+            var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identity.User.UserId);
+            var updatedSchema = await repository.UpdateSchema(schemaToUpdate);
+            return mapper.Map<AttributeSchema>(updatedSchema);
         }
     }
 }
