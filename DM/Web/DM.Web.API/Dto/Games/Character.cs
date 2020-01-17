@@ -135,6 +135,6 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Flag of the required value missing
         /// </summary>
-        public bool Missing { get; set; }
+        public bool Inconsistent { get; set; }
     }
 }
