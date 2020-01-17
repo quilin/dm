@@ -8,8 +8,8 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.Gaming.BusinessProcesses.Characters.Shared;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
-using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
@@ -19,7 +19,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
     {
         private readonly IGameReadingService gameReadingService;
         private readonly ICharacterReadingRepository readingRepository;
-        private readonly ISchemaReadingRepository schemaReadingRepository;
+        private readonly ICharacterAttributeValueFiller attributeValueFiller;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
@@ -27,13 +27,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         public CharacterReadingService(
             IGameReadingService gameReadingService,
             ICharacterReadingRepository readingRepository,
-            ISchemaReadingRepository schemaReadingRepository,
+            ICharacterAttributeValueFiller attributeValueFiller,
             IUnreadCountersRepository unreadCountersRepository,
             IIdentityProvider identityProvider)
         {
             this.gameReadingService = gameReadingService;
             this.readingRepository = readingRepository;
-            this.schemaReadingRepository = schemaReadingRepository;
+            this.attributeValueFiller = attributeValueFiller;
             this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         {
             var game = await gameReadingService.GetGame(gameId);
             var characters = (await readingRepository.GetCharacters(gameId)).ToArray();
-            await schemaReadingRepository.FillAttributeValues(game.AttributeSchemaId, characters);
+            await attributeValueFiller.Fill(characters, game.AttributeSchemaId);
             return characters;
         }
 
@@ -57,7 +57,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
             }
 
             var game = await gameReadingService.GetGame(character.GameId);
-            await schemaReadingRepository.FillAttributeValues(game.AttributeSchemaId, new[] {character});
+            await attributeValueFiller.Fill(new[] {character}, game.AttributeSchemaId);
             return character;
         }
 

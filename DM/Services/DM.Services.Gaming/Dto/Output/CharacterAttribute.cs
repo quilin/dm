@@ -28,8 +28,8 @@ namespace DM.Services.Gaming.Dto.Output
         public int? Modifier { get; set; }
 
         /// <summary>
-        /// Flag of the required value missing
+        /// Flag of consistency
         /// </summary>
-        public bool Missing { get; set; }
+        public bool Inconsistent { get; set; }
     }
 }
