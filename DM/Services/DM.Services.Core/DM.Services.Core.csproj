@@ -9,14 +9,11 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.9.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" PrivateAssets="All" />
         <PackageReference Include="AutoMapper" Version="8.0.0" />
         <PackageReference Include="BBCodeParser" Version="1.0.0" />
         <PackageReference Include="MailKit" Version="2.1.4" />

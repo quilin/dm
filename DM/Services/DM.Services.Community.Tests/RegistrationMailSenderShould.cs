@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Registration.Confirmation;
 using DM.Services.Core.Configuration;
-using DM.Services.Core.Rendering;
+using DM.Services.Mail.Rendering.Rendering;
 using DM.Services.Mail.Sender;
 using DM.Tests.Core;
 using Microsoft.Extensions.Options;

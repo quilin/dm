@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace DM.Services.Core.Rendering
+namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <inheritdoc />
     internal class TemplateRenderer : ITemplateRenderer

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DM.Services.Core.Rendering
+namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <summary>
     /// Template rendering exception

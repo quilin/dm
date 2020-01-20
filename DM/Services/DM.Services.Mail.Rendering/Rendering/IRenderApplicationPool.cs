@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DM.Services.Core.Rendering
+namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <summary>
     /// 

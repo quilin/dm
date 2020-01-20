@@ -12,7 +12,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.WebEncoders;
 
-namespace DM.Services.Core.Rendering
+namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <summary>
     /// The MVC application to compile and render Razor templates
@@ -48,7 +48,9 @@ namespace DM.Services.Core.Rendering
                 .Configure<RazorViewEngineOptions>(options =>
                 {
                     options.FileProviders.Clear();
-                    options.FileProviders.Add(new EmbeddedFileProvider(assembly));
+                    var embeddedFileProvider = new EmbeddedFileProvider(assembly);
+                    var coreFileProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+                    options.FileProviders.Add(new CompositeFileProvider(coreFileProvider, embeddedFileProvider));
                 })
                 .Configure<WebEncoderOptions>(options =>
                     options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
@@ -57,7 +59,8 @@ namespace DM.Services.Core.Rendering
                 .AddDmLogging(applicationName)
                 .AddMvcCore()
                 .AddRazorViewEngine()
-                .AddApplicationPart(Assembly.GetEntryAssembly());
+                .AddApplicationPart(Assembly.GetEntryAssembly())
+                .AddApplicationPart(Assembly.GetExecutingAssembly());
 
             return services.BuildServiceProvider();
         }

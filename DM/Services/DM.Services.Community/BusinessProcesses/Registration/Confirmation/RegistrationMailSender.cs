@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
-using DM.Services.Core.Rendering;
+using DM.Services.Mail.Rendering.Rendering;
 using DM.Services.Mail.Sender;
 using Microsoft.Extensions.Options;
 

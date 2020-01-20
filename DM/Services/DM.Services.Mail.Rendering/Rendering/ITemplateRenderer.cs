@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DM.Services.Core.Rendering
+namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <summary>
     /// Razor template renderer
