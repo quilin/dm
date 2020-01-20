@@ -18,5 +18,9 @@
     <ItemGroup>
       <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Include="Views\**\*.cshtml" />
+    </ItemGroup>
 
 </Project>

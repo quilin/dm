@@ -1,4 +1,7 @@
 @model DM.Services.Community.BusinessProcesses.Registration.Confirmation.RegistrationConfirmationViewModel
+@{
+    Layout = "_EmailLayout";
+}
 <h4>Добро пожаловать на DM.AM, @Model.Login!</h4>
 <div>
     Мы рады приветствовать вас на нашем сайте. Чтобы завершить регистрацию, вам нужно перейти по <a href="@Model.ConfirmationLinkUrl">ссылке</a>.<br/>
