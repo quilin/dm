@@ -36,26 +36,24 @@ namespace DM.Services.Core.Rendering
             var httpContext = new DefaultHttpContext {RequestServices = serviceProvider};
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
-            using (var writer = new StringWriter())
+            using var writer = new StringWriter();
+            var viewResult = viewEngine.FindView(actionContext, templatePath, false);
+            if (!viewResult.Success)
             {
-                var viewResult = viewEngine.FindView(actionContext, templatePath, false);
-                if (!viewResult.Success)
-                {
-                    throw new TemplateRenderException(templatePath, viewResult.SearchedLocations);
-                }
-
-                var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                {
-                    Model = model
-                };
-
-                var viewContext = new ViewContext(actionContext, viewResult.View, viewData,
-                    new TempDataDictionary(actionContext.HttpContext, tempDataProvider), writer,
-                    new HtmlHelperOptions());
-
-                await viewResult.View.RenderAsync(viewContext);
-                return writer.ToString();
+                throw new TemplateRenderException(templatePath, viewResult.SearchedLocations);
             }
+
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
+
+            var viewContext = new ViewContext(actionContext, viewResult.View, viewData,
+                new TempDataDictionary(actionContext.HttpContext, tempDataProvider), writer,
+                new HtmlHelperOptions());
+
+            await viewResult.View.RenderAsync(viewContext);
+            return writer.ToString();
         }
     }
 }

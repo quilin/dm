@@ -56,7 +56,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             mailSender = Mock<IRegistrationMailSender>();
             mailSender
                 .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>()))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(string.Empty);
 
             eventPublisher = Mock<IInvokedEventPublisher>();
             eventPublisher

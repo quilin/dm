@@ -26,7 +26,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
         }
 
         /// <inheritdoc />
-        public async Task Send(string email, string login, Guid token)
+        public async Task<string> Send(string email, string login, Guid token)
         {
             var confirmationLinkUri = new Uri(new Uri(integrationSettings.WebUrl), $"activate/{token}");
             var emailBody = await renderer.Render("RegistrationLetter", new RegistrationConfirmationViewModel
@@ -40,6 +40,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
                 Subject = $"Добро пожаловать на DM.AM, {login}!",
                 Body = emailBody
             });
+            return emailBody;
         }
     }
 }

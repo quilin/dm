@@ -15,6 +15,6 @@ namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
         /// <param name="login">User login</param>
         /// <param name="token">Confirmation token</param>
         /// <returns></returns>
-        Task Send(string email, string login, Guid token);
+        Task<string> Send(string email, string login, Guid token);
     }
 }

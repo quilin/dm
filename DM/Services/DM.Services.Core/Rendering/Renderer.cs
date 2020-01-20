@@ -20,11 +20,9 @@ namespace DM.Services.Core.Rendering
         {
             var application = await applicationPool.GetApplication<TModel>();
             var scopeFactory = application.GetRequiredService<IServiceScopeFactory>();
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var renderer = scope.ServiceProvider.GetRequiredService<ITemplateRenderer>();
-                return await renderer.Render(templateName, model).ConfigureAwait(false);
-            }
+            using var scope = scopeFactory.CreateScope();
+            var renderer = scope.ServiceProvider.GetRequiredService<ITemplateRenderer>();
+            return await renderer.Render(templateName, model).ConfigureAwait(false);
         }
     }
 }

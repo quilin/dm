@@ -14,56 +14,52 @@ namespace DM.Services.Authentication.Tests.Integration
         [Fact]
         public async Task ReturnFalseAndNullWhenNoMatchingUser()
         {
-            using (var rdb = GetRdb(nameof(ReturnFalseAndNullWhenNoMatchingUser)))
+            using var rdb = GetRdb(nameof(ReturnFalseAndNullWhenNoMatchingUser));
+            rdb.Users.Add(new User
             {
-                rdb.Users.Add(new User
-                {
-                    UserId = Guid.NewGuid(),
-                    Login = "Some user",
-                    Email = "user@email.com",
-                    RegistrationDate = DateTimeOffset.UtcNow,
-                    Role = UserRole.Player,
-                    Salt = "salt",
-                    PasswordHash = "hash",
-                    Activated = true,
-                    IsRemoved = false
-                });
-                await rdb.SaveChangesAsync();
+                UserId = Guid.NewGuid(),
+                Login = "Some user",
+                Email = "user@email.com",
+                RegistrationDate = DateTimeOffset.UtcNow,
+                Role = UserRole.Player,
+                Salt = "salt",
+                PasswordHash = "hash",
+                Activated = true,
+                IsRemoved = false
+            });
+            await rdb.SaveChangesAsync();
 
-                var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
-                var actual = await authenticationRepository.TryFindUser("Another user");
+            var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
+            var actual = await authenticationRepository.TryFindUser("Another user");
 
-                actual.Success.Should().BeFalse();
-                actual.User.Should().BeNull();
-            }
+            actual.Success.Should().BeFalse();
+            actual.User.Should().BeNull();
         }
 
         [Fact]
         public async Task ReturnTrueAndUserWhenMatchingUser()
         {
-            using (var rdb = GetRdb(nameof(ReturnTrueAndUserWhenMatchingUser)))
+            using var rdb = GetRdb(nameof(ReturnTrueAndUserWhenMatchingUser));
+            var userId = Guid.NewGuid();
+            rdb.Users.Add(new User
             {
-                var userId = Guid.NewGuid();
-                rdb.Users.Add(new User
-                {
-                    UserId = userId,
-                    Login = "TheUser",
-                    Email = "user@email.com",
-                    RegistrationDate = DateTimeOffset.UtcNow,
-                    Role = UserRole.Player,
-                    Salt = "salt",
-                    PasswordHash = "hash",
-                    Activated = true,
-                    IsRemoved = false
-                });
-                await rdb.SaveChangesAsync();
+                UserId = userId,
+                Login = "TheUser",
+                Email = "user@email.com",
+                RegistrationDate = DateTimeOffset.UtcNow,
+                Role = UserRole.Player,
+                Salt = "salt",
+                PasswordHash = "hash",
+                Activated = true,
+                IsRemoved = false
+            });
+            await rdb.SaveChangesAsync();
 
-                var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
-                var actual = await authenticationRepository.TryFindUser("tHeuSer");
+            var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
+            var actual = await authenticationRepository.TryFindUser("tHeuSer");
 
-                actual.Success.Should().BeTrue();
-                actual.User.UserId.Should().Be(userId);
-            }
+            actual.Success.Should().BeTrue();
+            actual.User.UserId.Should().Be(userId);
         }
     }
 }

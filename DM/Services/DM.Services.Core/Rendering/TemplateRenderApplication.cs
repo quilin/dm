@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using DM.Services.Core.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -31,22 +33,29 @@ namespace DM.Services.Core.Rendering
 
         private static ServiceProvider CreateServiceProvider(Assembly assembly)
         {
-            var services = new ServiceCollection();
-            var provider = new EmbeddedFileProvider(assembly, string.Empty);
-            services.AddSingleton<IHostingEnvironment>(new HostingEnvironment
-            {
-                ApplicationName = assembly.GetName().Name
-            });
-            services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
-            services.Configure<RazorViewEngineOptions>(options =>
-            {
-                options.FileProviders.Clear();
-                options.FileProviders.Add(provider);
-            });
-            services.Configure<WebEncoderOptions>(options =>
-                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
+            var assemblyName = assembly.GetName().Name;
+            var applicationName = $"DM.Renderer.{assemblyName}";
 
-            services.AddMvcCore();
+            var services = new ServiceCollection();
+
+            var hostingEnvironment = new HostingEnvironment {ApplicationName = assemblyName};
+            services
+                .AddSingleton<IHostingEnvironment>(hostingEnvironment)
+                .AddSingleton<ITemplateRenderer, TemplateRenderer>()
+                .AddSingleton<DiagnosticSource>(new DiagnosticListener(applicationName))
+                .Configure<RazorViewEngineOptions>(options =>
+                {
+                    options.FileProviders.Clear();
+                    options.FileProviders.Add(new EmbeddedFileProvider(assembly));
+                })
+                .Configure<WebEncoderOptions>(options =>
+                    options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
+
+            services
+                .AddDmLogging(applicationName)
+                .AddMvcCore()
+                .AddRazorViewEngine();
+
             return services.BuildServiceProvider();
         }
 

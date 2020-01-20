@@ -18,275 +18,261 @@ namespace DM.Services.Authentication.Tests.Integration
         public async Task FindUserByIdentifier()
         {
             var userId = Guid.NewGuid();
-            using (var rdb = GetRdb(nameof(FindUserByIdentifier)))
+            using var rdb = GetRdb(nameof(FindUserByIdentifier));
+            rdb.Users.Add(new User
             {
-                rdb.Users.Add(new User
-                {
-                    UserId = userId,
-                    Login = "MyUser",
-                    Email = "my@user.mail"
-                });
-                await rdb.SaveChangesAsync();
+                UserId = userId,
+                Login = "MyUser",
+                Email = "my@user.mail"
+            });
+            await rdb.SaveChangesAsync();
 
-                var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
-                (await authenticationRepository.FindUser(userId)).Should().NotBeNull();
-                (await authenticationRepository.FindUser(Guid.NewGuid())).Should().BeNull();
-            }
+            var authenticationRepository = new AuthenticationRepository(rdb, null, GetMapper());
+            (await authenticationRepository.FindUser(userId)).Should().NotBeNull();
+            (await authenticationRepository.FindUser(Guid.NewGuid())).Should().BeNull();
         }
 
         [Fact]
         public async Task FindUserSession()
         {
             var sessionId = Guid.NewGuid();
-            using (var mdb = GetMongoClient(nameof(FindUserSession)))
-            {
-                await mdb.Client.GetCollection<UserSessions>()
-                    .InsertManyAsync(new[]
+            using var mdb = GetMongoClient(nameof(FindUserSession));
+            await mdb.Client.GetCollection<UserSessions>()
+                .InsertManyAsync(new[]
+                {
+                    new UserSessions
                     {
-                        new UserSessions
+                        Id = Guid.NewGuid(),
+                        Sessions = new List<Session>
                         {
-                            Id = Guid.NewGuid(),
-                            Sessions = new List<Session>
+                            new Session
                             {
-                                new Session
-                                {
-                                    Id = sessionId,
-                                    ExpirationDate = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                                    IsPersistent = false
-                                },
-                                new Session
-                                {
-                                    Id = Guid.NewGuid(),
-                                    ExpirationDate = new DateTime(2019, 10, 15, 0, 0, 0, DateTimeKind.Utc),
-                                    IsPersistent = true
-                                }
-                            }
-                        },
-                        new UserSessions
-                        {
-                            Id = Guid.NewGuid(),
-                            Sessions = new List<Session>
+                                Id = sessionId,
+                                ExpirationDate = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                                IsPersistent = false
+                            },
+                            new Session
                             {
-                                new Session
-                                {
-                                    Id = Guid.NewGuid(),
-                                    ExpirationDate = DateTime.Today,
-                                    IsPersistent = false
-                                }
+                                Id = Guid.NewGuid(),
+                                ExpirationDate = new DateTime(2019, 10, 15, 0, 0, 0, DateTimeKind.Utc),
+                                IsPersistent = true
                             }
                         }
-                    });
-
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                (await authenticationRepository.FindUserSession(sessionId)).Should().BeEquivalentTo(new Session
-                {
-                    Id = sessionId,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2020, 1, 1), DateTimeKind.Utc),
-                    IsPersistent = false
+                    },
+                    new UserSessions
+                    {
+                        Id = Guid.NewGuid(),
+                        Sessions = new List<Session>
+                        {
+                            new Session
+                            {
+                                Id = Guid.NewGuid(),
+                                ExpirationDate = DateTime.Today,
+                                IsPersistent = false
+                            }
+                        }
+                    }
                 });
-                (await authenticationRepository.FindUserSession(Guid.NewGuid())).Should().BeNull();
-            }
+
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            (await authenticationRepository.FindUserSession(sessionId)).Should().BeEquivalentTo(new Session
+            {
+                Id = sessionId,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2020, 1, 1), DateTimeKind.Utc),
+                IsPersistent = false
+            });
+            (await authenticationRepository.FindUserSession(Guid.NewGuid())).Should().BeNull();
         }
 
         [Fact]
         public async Task FindUserSettings()
         {
             var userId = Guid.NewGuid();
-            using (var mdb = GetMongoClient(nameof(FindUserSettings)))
-            {
-                await mdb.Client.GetCollection<UserSettings>()
-                    .InsertManyAsync(new[]
-                    {
-                        new UserSettings
-                        {
-                            Id = userId,
-                            ColorSchema = ColorSchema.Night,
-                            Paging = new PagingSettings
-                            {
-                                CommentsPerPage = 23,
-                                MessagesPerPage = 12,
-                                PostsPerPage = 10,
-                                TopicsPerPage = 55
-                            },
-                            NannyGreetingsMessage = "Hi, I'm your nanny!",
-                        }
-                    });
-
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                (await authenticationRepository.FindUserSettings(userId)).Should().BeEquivalentTo(new Dto.UserSettings
+            using var mdb = GetMongoClient(nameof(FindUserSettings));
+            await mdb.Client.GetCollection<UserSettings>()
+                .InsertManyAsync(new[]
                 {
-                    Id = userId,
-                    ColorSchema = ColorSchema.Night,
-                    CommentsPerPage = 23,
-                    MessagesPerPage = 12,
-                    NannyGreetingsMessage = "Hi, I'm your nanny!",
-                    PostsPerPage = 10,
-                    TopicsPerPage = 55
+                    new UserSettings
+                    {
+                        Id = userId,
+                        ColorSchema = ColorSchema.Night,
+                        Paging = new PagingSettings
+                        {
+                            CommentsPerPage = 23,
+                            MessagesPerPage = 12,
+                            PostsPerPage = 10,
+                            TopicsPerPage = 55
+                        },
+                        NannyGreetingsMessage = "Hi, I'm your nanny!",
+                    }
                 });
-                (await authenticationRepository.FindUserSettings(Guid.NewGuid())).Should()
-                    .BeEquivalentTo(Dto.UserSettings.Default);
-            }
+
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            (await authenticationRepository.FindUserSettings(userId)).Should().BeEquivalentTo(new Dto.UserSettings
+            {
+                Id = userId,
+                ColorSchema = ColorSchema.Night,
+                CommentsPerPage = 23,
+                MessagesPerPage = 12,
+                NannyGreetingsMessage = "Hi, I'm your nanny!",
+                PostsPerPage = 10,
+                TopicsPerPage = 55
+            });
+            (await authenticationRepository.FindUserSettings(Guid.NewGuid())).Should()
+                .BeEquivalentTo(Dto.UserSettings.Default);
         }
 
         [Fact]
         public async Task AddSessionAsUpsert()
         {
-            using (var mdb = GetMongoClient(nameof(AddSessionAsUpsert)))
+            using var mdb = GetMongoClient(nameof(AddSessionAsUpsert));
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            var userId = Guid.NewGuid();
+            var sessionId = Guid.NewGuid();
+
+            await authenticationRepository.AddSession(userId, new Session
             {
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                var userId = Guid.NewGuid();
-                var sessionId = Guid.NewGuid();
+                Id = sessionId,
+                IsPersistent = true,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
+            });
 
-                await authenticationRepository.AddSession(userId, new Session
+            var sessions = await mdb.Client.GetCollection<UserSessions>()
+                .Find(FilterDefinition<UserSessions>.Empty)
+                .ToListAsync();
+            sessions.Should().HaveCount(1);
+            sessions[0].Should().BeEquivalentTo(new UserSessions
+            {
+                Id = userId,
+                Sessions = new List<Session>
                 {
-                    Id = sessionId,
-                    IsPersistent = true,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
-                });
-
-                var sessions = await mdb.Client.GetCollection<UserSessions>()
-                    .Find(FilterDefinition<UserSessions>.Empty)
-                    .ToListAsync();
-                sessions.Should().HaveCount(1);
-                sessions[0].Should().BeEquivalentTo(new UserSessions
-                {
-                    Id = userId,
-                    Sessions = new List<Session>
+                    new Session
                     {
-                        new Session
-                        {
-                            Id = sessionId,
-                            ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc),
-                            IsPersistent = true
-                        }
+                        Id = sessionId,
+                        ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc),
+                        IsPersistent = true
                     }
-                });
+                }
+            });
 
-                await authenticationRepository.AddSession(userId, new Session
-                {
-                    Id = Guid.NewGuid(),
-                    IsPersistent = false,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
-                });
+            await authenticationRepository.AddSession(userId, new Session
+            {
+                Id = Guid.NewGuid(),
+                IsPersistent = false,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
+            });
 
-                sessions = await mdb.Client.GetCollection<UserSessions>()
-                    .Find(FilterDefinition<UserSessions>.Empty)
-                    .ToListAsync();
-                sessions.Should().HaveCount(1);
-                sessions[0].Sessions.Should().HaveCount(2);
-            }
+            sessions = await mdb.Client.GetCollection<UserSessions>()
+                .Find(FilterDefinition<UserSessions>.Empty)
+                .ToListAsync();
+            sessions.Should().HaveCount(1);
+            sessions[0].Sessions.Should().HaveCount(2);
         }
 
         [Fact]
         public async Task RemoveSession()
         {
-            using (var mdb = GetMongoClient(nameof(RemoveSession)))
+            using var mdb = GetMongoClient(nameof(RemoveSession));
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            var userId = Guid.NewGuid();
+            var sessionId1 = Guid.NewGuid();
+            var sessionId2 = Guid.NewGuid();
+
+            await authenticationRepository.AddSession(userId, new Session
             {
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                var userId = Guid.NewGuid();
-                var sessionId1 = Guid.NewGuid();
-                var sessionId2 = Guid.NewGuid();
+                Id = sessionId1,
+                IsPersistent = true,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
+            });
+            await authenticationRepository.AddSession(userId, new Session
+            {
+                Id = sessionId2,
+                IsPersistent = false,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
+            });
 
-                await authenticationRepository.AddSession(userId, new Session
-                {
-                    Id = sessionId1,
-                    IsPersistent = true,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
-                });
-                await authenticationRepository.AddSession(userId, new Session
-                {
-                    Id = sessionId2,
-                    IsPersistent = false,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
-                });
+            await authenticationRepository.RemoveSession(userId, sessionId1);
 
-                await authenticationRepository.RemoveSession(userId, sessionId1);
-
-                var sessions = await mdb.Client.GetCollection<UserSessions>()
-                    .Find(FilterDefinition<UserSessions>.Empty)
-                    .ToListAsync();
-                sessions.Should().HaveCount(1);
-                sessions[0].Sessions.Should().HaveCount(1);
-            }
+            var sessions = await mdb.Client.GetCollection<UserSessions>()
+                .Find(FilterDefinition<UserSessions>.Empty)
+                .ToListAsync();
+            sessions.Should().HaveCount(1);
+            sessions[0].Sessions.Should().HaveCount(1);
         }
 
         [Fact]
         public async Task RemoveSessions()
         {
-            using (var mdb = GetMongoClient(nameof(RemoveSessions)))
+            using var mdb = GetMongoClient(nameof(RemoveSessions));
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            var userId = Guid.NewGuid();
+
+            await authenticationRepository.AddSession(userId, new Session
             {
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                var userId = Guid.NewGuid();
+                Id = Guid.NewGuid(),
+                IsPersistent = true,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
+            });
+            await authenticationRepository.AddSession(userId, new Session
+            {
+                Id = Guid.NewGuid(),
+                IsPersistent = false,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
+            });
 
-                await authenticationRepository.AddSession(userId, new Session
-                {
-                    Id = Guid.NewGuid(),
-                    IsPersistent = true,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
-                });
-                await authenticationRepository.AddSession(userId, new Session
-                {
-                    Id = Guid.NewGuid(),
-                    IsPersistent = false,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
-                });
+            await authenticationRepository.RemoveSessions(userId);
 
-                await authenticationRepository.RemoveSessions(userId);
-
-                var sessions = await mdb.Client.GetCollection<UserSessions>()
-                    .Find(FilterDefinition<UserSessions>.Empty)
-                    .ToListAsync();
-                sessions.Should().HaveCount(1);
-                sessions[0].Sessions.Should().HaveCount(0);
-            }
+            var sessions = await mdb.Client.GetCollection<UserSessions>()
+                .Find(FilterDefinition<UserSessions>.Empty)
+                .ToListAsync();
+            sessions.Should().HaveCount(1);
+            sessions[0].Sessions.Should().HaveCount(0);
         }
 
         [Fact]
         public async Task RefreshSessions()
         {
-            using (var mdb = GetMongoClient(nameof(RefreshSessions)))
-            {
-                var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-                var userId = Guid.NewGuid();
-                var sessionId1 = Guid.NewGuid();
-                var sessionId2 = Guid.NewGuid();
+            using var mdb = GetMongoClient(nameof(RefreshSessions));
+            var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
+            var userId = Guid.NewGuid();
+            var sessionId1 = Guid.NewGuid();
+            var sessionId2 = Guid.NewGuid();
 
-                await authenticationRepository.AddSession(userId, new Session
+            await authenticationRepository.AddSession(userId, new Session
+            {
+                Id = sessionId1,
+                IsPersistent = true,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
+            });
+            await authenticationRepository.AddSession(userId, new Session
+            {
+                Id = sessionId2,
+                IsPersistent = false,
+                ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
+            });
+
+            await authenticationRepository.RefreshSession(userId, sessionId1,
+                new DateTimeOffset(new DateTime(2019, 6, 14, 11, 0, 0), TimeSpan.Zero));
+
+            var sessions = await mdb.Client.GetCollection<UserSessions>()
+                .Find(FilterDefinition<UserSessions>.Empty)
+                .ToListAsync();
+            sessions.Should().HaveCount(1);
+            sessions[0].Sessions.Should().BeEquivalentTo(new List<Session>
+            {
+                new Session
                 {
                     Id = sessionId1,
                     IsPersistent = true,
-                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
-                });
-                await authenticationRepository.AddSession(userId, new Session
+                    ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 6, 14, 11, 0, 0), DateTimeKind.Utc)
+                },
+                new Session
                 {
                     Id = sessionId2,
                     IsPersistent = false,
                     ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
-                });
-
-                await authenticationRepository.RefreshSession(userId, sessionId1,
-                    new DateTimeOffset(new DateTime(2019, 6, 14, 11, 0, 0), TimeSpan.Zero));
-
-                var sessions = await mdb.Client.GetCollection<UserSessions>()
-                    .Find(FilterDefinition<UserSessions>.Empty)
-                    .ToListAsync();
-                sessions.Should().HaveCount(1);
-                sessions[0].Sessions.Should().BeEquivalentTo(new List<Session>
-                {
-                    new Session
-                    {
-                        Id = sessionId1,
-                        IsPersistent = true,
-                        ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 6, 14, 11, 0, 0), DateTimeKind.Utc)
-                    },
-                    new Session
-                    {
-                        Id = sessionId2,
-                        IsPersistent = false,
-                        ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
-                    }
-                });
-            }
+                }
+            });
         }
     }
 }
