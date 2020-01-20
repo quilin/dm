@@ -9,17 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [DbContext(typeof(DmDbContext))]
-    [Migration("20191016152222_ProfileMerge")]
-    partial class ProfileMerge
+    [Migration("20200120160032_Initial")]
+    partial class Initial
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="modelBuilder"></param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -333,7 +326,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<int>("AccessPolicy");
 
-                    b.Property<int>("Alignment");
+                    b.Property<int?>("Alignment");
 
                     b.Property<string>("Appearance");
 
@@ -381,7 +374,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid?>("AssistantId");
 
-                    b.Property<Guid>("AttributeSchemaId");
+                    b.Property<Guid?>("AttributeSchemaId");
 
                     b.Property<int>("CommentariesAccessMode");
 
@@ -450,24 +443,6 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("BlackListLinks");
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.CharacterRoomLink", b =>
-                {
-                    b.Property<Guid>("CharacterRoomLinkId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CharacterId");
-
-                    b.Property<Guid>("RoomId");
-
-                    b.HasKey("CharacterRoomLinkId");
-
-                    b.HasIndex("CharacterId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("CharacterRoomLinks");
-                });
-
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag", b =>
                 {
                     b.Property<Guid>("GameTagId")
@@ -486,28 +461,28 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("GameTags");
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PostAnticipation", b =>
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPost", b =>
                 {
-                    b.Property<Guid>("PostAnticipationId")
+                    b.Property<Guid>("PendingPostId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("AwaitingUserId");
 
                     b.Property<DateTimeOffset>("CreateDate");
 
+                    b.Property<Guid>("PendingUserId");
+
                     b.Property<Guid>("RoomId");
 
-                    b.Property<Guid>("TargetId");
+                    b.HasKey("PendingPostId");
 
-                    b.Property<Guid>("UserId");
+                    b.HasIndex("AwaitingUserId");
 
-                    b.HasKey("PostAnticipationId");
+                    b.HasIndex("PendingUserId");
 
                     b.HasIndex("RoomId");
 
-                    b.HasIndex("TargetId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PostWaitNotifications");
+                    b.ToTable("PendingPosts");
                 });
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.Reader", b =>
@@ -528,6 +503,26 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("Readers");
                 });
 
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim", b =>
+                {
+                    b.Property<Guid>("RoomClaimId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ParticipantId");
+
+                    b.Property<int>("Policy");
+
+                    b.Property<Guid>("RoomId");
+
+                    b.HasKey("RoomClaimId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomClaims");
+                });
+
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Posts.Post", b =>
                 {
                     b.Property<Guid>("PostId")
@@ -543,6 +538,8 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<DateTimeOffset?>("LastUpdateDate");
 
+                    b.Property<Guid?>("LastUpdateUserId");
+
                     b.Property<string>("MasterMessage");
 
                     b.Property<Guid>("RoomId");
@@ -554,6 +551,8 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasKey("PostId");
 
                     b.HasIndex("CharacterId");
+
+                    b.HasIndex("LastUpdateUserId");
 
                     b.HasIndex("RoomId");
 
@@ -688,6 +687,8 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<DateTimeOffset>("CreateDate");
 
+                    b.Property<Guid>("EntityId");
+
                     b.Property<bool>("IsRemoved");
 
                     b.Property<int>("Type");
@@ -695,6 +696,8 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<Guid>("UserId");
 
                     b.HasKey("TokenId");
+
+                    b.HasIndex("EntityId");
 
                     b.HasIndex("UserId");
 
@@ -966,19 +969,6 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.CharacterRoomLink", b =>
-                {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
-                        .WithMany("RoomLinks")
-                        .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
-                        .WithMany("CharacterLinks")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag", b =>
                 {
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
@@ -992,21 +982,21 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PostAnticipation", b =>
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPost", b =>
                 {
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
-                        .WithMany("PostsAwaited")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Target")
-                        .WithMany("PostsRequired")
-                        .HasForeignKey("TargetId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "AwaitingUser")
                         .WithMany("WaitsForPosts")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AwaitingUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "PendingUser")
+                        .WithMany("PostsRequired")
+                        .HasForeignKey("PendingUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
+                        .WithMany("PendingPosts")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1023,11 +1013,33 @@ namespace DM.Services.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim", b =>
+                {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
+                        .WithMany("RoomLinks")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Links.Reader", "Reader")
+                        .WithMany("RoomLinks")
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
+                        .WithMany("RoomClaims")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Games.Posts.Post", b =>
                 {
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
                         .WithMany("Posts")
                         .HasForeignKey("CharacterId");
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "LastUpdateAuthor")
+                        .WithMany()
+                        .HasForeignKey("LastUpdateUserId");
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
                         .WithMany("Posts")
@@ -1107,6 +1119,11 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Users.Token", b =>
                 {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Game", "Game")
+                        .WithMany("Tokens")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
                         .WithMany("Tokens")
                         .HasForeignKey("UserId")

@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
@@ -8,32 +8,35 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
     public class AttributeValueValidator : IAttributeValueValidator
     {
         /// <inheritdoc />
-        public bool Validate(string value, AttributeSpecification specification)
+        public (bool valid, string error) Validate(string value, AttributeSpecification specification)
         {
             if (value == null)
             {
-                return false;
+                return (false, ValidationError.Empty);
             }
 
             var trimmedValue = value.Trim();
 
             if (string.IsNullOrEmpty(trimmedValue) && specification.Required)
             {
-                return false;
+                return (false, ValidationError.Empty);
             }
 
             switch (specification.Type)
             {
-                case AttributeSpecificationType.Number:
-                    return int.TryParse(trimmedValue, out var numberValue) &&
-                        (!specification.MaxValue.HasValue || numberValue <= specification.MaxValue.Value) &&
-                        (!specification.MinValue.HasValue || numberValue >= specification.MinValue.Value);
-                case AttributeSpecificationType.String:
-                    return specification.MaxLength.HasValue && specification.MaxLength.Value >= trimmedValue.Length;
-                case AttributeSpecificationType.List:
-                    return specification.Values != null && specification.Values.Any(v => v.Value == trimmedValue);
+                case AttributeSpecificationType.Number when
+                    !int.TryParse(trimmedValue, out var numberValue) ||
+                        specification.MaxValue.HasValue && numberValue > specification.MaxValue.Value ||
+                        specification.MinValue.HasValue && numberValue < specification.MinValue.Value:
+                    return (false, ValidationError.Invalid);
+                case AttributeSpecificationType.String when
+                    !specification.MaxLength.HasValue || trimmedValue.Length > specification.MaxLength.Value:
+                    return (false, ValidationError.Long);
+                case AttributeSpecificationType.List when
+                    specification.Values != null && specification.Values.All(v => v.Value != trimmedValue):
+                    return (false, ValidationError.Invalid);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return (true, null);
             }
         }
     }

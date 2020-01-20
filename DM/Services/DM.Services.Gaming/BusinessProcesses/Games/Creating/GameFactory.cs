@@ -34,6 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 Title = createGame.Title,
                 SystemName = createGame.SystemName,
                 SettingName = createGame.SettingName,
+                AttributeSchemaId = createGame.AttributeSchemaId,
                 Info = createGame.Info,
                 DisableAlignment = createGame.DisableAlignment,
                 HideTemper = createGame.HideTemper,

@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <inheritdoc />
-    public partial class Initial : Migration
+    internal partial class Initial : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -34,57 +32,6 @@ namespace DM.Services.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Fora", x => x.ForumId);
-                });
-            migrationBuilder.InsertData(
-                table: "Fora",
-                columns: new[] {"ForumId", "Title", "Order", "Description", "ViewPolicy", "CreateTopicPolicy"},
-                values: new object[,]
-                {
-                    {Guid.Parse("00000000-0000-0000-0000-000000000008"), "Новости проекта", 8, (string) null, 64, 3},
-                    {Guid.Parse("00000000-0000-0000-0000-000000000009"), "Питомник", 10, (string) null, 11, 11},
-                    {Guid.Parse("00000000-0000-0000-0000-00000000000a"), "Администрация", 11, (string) null, 15, 15},
-                    {Guid.Parse("00000000-0000-0000-0000-00000000000b"), "Сердце подземелья", 12, (string) null, 3, 3},
-                    {Guid.Parse("00000000-0000-0000-0000-00000000000c"), "Пещера троллей", 13, (string) null, 1, 1},
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000000"), "Общий", 0,
-                        "Обсуждения всех серьезных тем, которые не подходят под остальные форумы. Также тут можно оставить заявку на \"сожжение\" игры и просмотреть историю банов.",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000001"), "Игровые системы", 1,
-                        "Возникли сложности с освоением GURPS или DnD? Ищете подходящую систему правил для своей игры? Здесь можно найти ответ на любой вопрос связанный с игровыми системами.",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000002"), "Набор игроков и поиск мастера", 2,
-                        "Здесь можно проверить интерес к собственной задумке, найти и заранее записаться в чужую игру, и оставить анонс к своей готовящейся к выходу игре.",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000003"), "Конкурсы", 3,
-                        "Литературные и прочие конкурсы - неотъемлемая часть жизни DMа. Примите участие сами или проголосуйте за понравившегося участника.",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000004"), "Под столом", 4,
-                        "Анархия! Беспредел! Здесь можно обсуждать любую чехарду, узнать о мемах DMа, а также следить за анонсами новых \"Интервью после полуночи\"!",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000005"), "Улучшение сайта", 5,
-                        "Вам кажется, что на сайте что-то не так? Что-то можно сделать удобнее? Быстрее? Красивее? Мы рассматриваем все предложенные идеи и реализуем лучшие из них!",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000006"), "Ошибки", 6,
-                        "Если обнаружили ошибку - обязательно сообщите о ней нам на этом форуме, и мы всё обязательно исправим.",
-                        64, 32
-                    },
-                    {
-                        Guid.Parse("00000000-0000-0000-0000-000000000007"), "Для новичков", 7,
-                        "Только что зарегистрировались на нашем сайте? Именно здесь вы сможете получить ответы  на любые самые глупые вопросы. Дружелюбие на этом форуме просто зашкаливает!",
-                        64, 32
-                    }
                 });
 
             migrationBuilder.CreateTable(
@@ -119,7 +66,14 @@ namespace DM.Services.DataAccess.Migrations
                     Activated = table.Column<bool>(nullable: false),
                     CanMerge = table.Column<bool>(nullable: false),
                     MergeRequested = table.Column<Guid>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
+                    IsRemoved = table.Column<bool>(nullable: false),
+                    Status = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Location = table.Column<string>(nullable: true),
+                    Icq = table.Column<string>(nullable: true),
+                    Skype = table.Column<string>(nullable: true),
+                    ShowEmail = table.Column<bool>(nullable: false),
+                    Info = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -212,7 +166,7 @@ namespace DM.Services.DataAccess.Migrations
                     MasterId = table.Column<Guid>(nullable: false),
                     AssistantId = table.Column<Guid>(nullable: true),
                     NannyId = table.Column<Guid>(nullable: true),
-                    AttributeSchemaId = table.Column<Guid>(nullable: false),
+                    AttributeSchemaId = table.Column<Guid>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     SystemName = table.Column<string>(nullable: true),
                     SettingName = table.Column<string>(nullable: true),
@@ -337,27 +291,6 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tokens",
-                columns: table => new
-                {
-                    TokenId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    IsRemoved = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tokens", x => x.TokenId);
-                    table.ForeignKey(
-                        name: "FK_Tokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserConversationLinks",
                 columns: table => new
                 {
@@ -377,32 +310,6 @@ namespace DM.Services.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserConversationLinks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserDatas",
-                columns: table => new
-                {
-                    UserProfileId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    Status = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Location = table.Column<string>(nullable: true),
-                    Icq = table.Column<string>(nullable: true),
-                    Skype = table.Column<string>(nullable: true),
-                    ShowEmail = table.Column<bool>(nullable: false),
-                    Info = table.Column<string>(nullable: true),
-                    IsRemoved = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDatas", x => x.UserProfileId);
-                    table.ForeignKey(
-                        name: "FK_UserDatas_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -447,7 +354,7 @@ namespace DM.Services.DataAccess.Migrations
                     Name = table.Column<string>(nullable: true),
                     Race = table.Column<string>(nullable: true),
                     Class = table.Column<string>(nullable: true),
-                    Alignment = table.Column<int>(nullable: false),
+                    Alignment = table.Column<int>(nullable: true),
                     Appearance = table.Column<string>(nullable: true),
                     Temper = table.Column<string>(nullable: true),
                     Story = table.Column<string>(nullable: true),
@@ -562,6 +469,34 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    TokenId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    EntityId = table.Column<Guid>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    IsRemoved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.TokenId);
+                    table.ForeignKey(
+                        name: "FK_Tokens_Games_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CharacterAttributes",
                 columns: table => new
                 {
@@ -582,24 +517,32 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CharacterRoomLinks",
+                name: "PendingPosts",
                 columns: table => new
                 {
-                    CharacterRoomLinkId = table.Column<Guid>(nullable: false),
-                    CharacterId = table.Column<Guid>(nullable: false),
-                    RoomId = table.Column<Guid>(nullable: false)
+                    PendingPostId = table.Column<Guid>(nullable: false),
+                    AwaitingUserId = table.Column<Guid>(nullable: false),
+                    PendingUserId = table.Column<Guid>(nullable: false),
+                    RoomId = table.Column<Guid>(nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CharacterRoomLinks", x => x.CharacterRoomLinkId);
+                    table.PrimaryKey("PK_PendingPosts", x => x.PendingPostId);
                     table.ForeignKey(
-                        name: "FK_CharacterRoomLinks_Characters_CharacterId",
-                        column: x => x.CharacterId,
-                        principalTable: "Characters",
-                        principalColumn: "CharacterId",
+                        name: "FK_PendingPosts_Users_AwaitingUserId",
+                        column: x => x.AwaitingUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CharacterRoomLinks_Rooms_RoomId",
+                        name: "FK_PendingPosts_Users_PendingUserId",
+                        column: x => x.PendingUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PendingPosts_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "RoomId",
@@ -615,6 +558,7 @@ namespace DM.Services.DataAccess.Migrations
                     CharacterId = table.Column<Guid>(nullable: true),
                     UserId = table.Column<Guid>(nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    LastUpdateUserId = table.Column<Guid>(nullable: true),
                     LastUpdateDate = table.Column<DateTimeOffset>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     Commentary = table.Column<string>(nullable: true),
@@ -631,6 +575,12 @@ namespace DM.Services.DataAccess.Migrations
                         principalColumn: "CharacterId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Posts_Users_LastUpdateUserId",
+                        column: x => x.LastUpdateUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Posts_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
@@ -645,35 +595,34 @@ namespace DM.Services.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostWaitNotifications",
+                name: "RoomClaims",
                 columns: table => new
                 {
-                    PostAnticipationId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    TargetId = table.Column<Guid>(nullable: false),
+                    RoomClaimId = table.Column<Guid>(nullable: false),
+                    ParticipantId = table.Column<Guid>(nullable: false),
                     RoomId = table.Column<Guid>(nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(nullable: false)
+                    Policy = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostWaitNotifications", x => x.PostAnticipationId);
+                    table.PrimaryKey("PK_RoomClaims", x => x.RoomClaimId);
                     table.ForeignKey(
-                        name: "FK_PostWaitNotifications_Rooms_RoomId",
+                        name: "FK_RoomClaims_Characters_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Characters",
+                        principalColumn: "CharacterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoomClaims_Readers_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Readers",
+                        principalColumn: "ReaderId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoomClaims_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "RoomId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostWaitNotifications_Users_TargetId",
-                        column: x => x.TargetId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostWaitNotifications_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -857,12 +806,6 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Warnings", x => x.WarningId);
                     table.ForeignKey(
-                        name: "FK_Warnings_Comments_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Comments",
-                        principalColumn: "CommentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Warnings_Users_ModeratorId",
                         column: x => x.ModeratorId,
                         principalTable: "Users",
@@ -900,16 +843,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "IX_CharacterAttributes_CharacterId",
                 table: "CharacterAttributes",
                 column: "CharacterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CharacterRoomLinks_CharacterId",
-                table: "CharacterRoomLinks",
-                column: "CharacterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CharacterRoomLinks_RoomId",
-                table: "CharacterRoomLinks",
-                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Characters_GameId",
@@ -1002,9 +935,29 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PendingPosts_AwaitingUserId",
+                table: "PendingPosts",
+                column: "AwaitingUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PendingPosts_PendingUserId",
+                table: "PendingPosts",
+                column: "PendingUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PendingPosts_RoomId",
+                table: "PendingPosts",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_CharacterId",
                 table: "Posts",
                 column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_LastUpdateUserId",
+                table: "Posts",
+                column: "LastUpdateUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_RoomId",
@@ -1014,21 +967,6 @@ namespace DM.Services.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
                 table: "Posts",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostWaitNotifications_RoomId",
-                table: "PostWaitNotifications",
-                column: "RoomId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostWaitNotifications_TargetId",
-                table: "PostWaitNotifications",
-                column: "TargetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostWaitNotifications_UserId",
-                table: "PostWaitNotifications",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -1062,6 +1000,16 @@ namespace DM.Services.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoomClaims_ParticipantId",
+                table: "RoomClaims",
+                column: "ParticipantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoomClaims_RoomId",
+                table: "RoomClaims",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_GameId",
                 table: "Rooms",
                 column: "GameId");
@@ -1081,6 +1029,11 @@ namespace DM.Services.DataAccess.Migrations
                 name: "IX_Tags_TagGroupId",
                 table: "Tags",
                 column: "TagGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_EntityId",
+                table: "Tokens",
+                column: "EntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tokens_UserId",
@@ -1106,12 +1059,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "IX_UserConversationLinks_UserId",
                 table: "UserConversationLinks",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserDatas_UserId",
-                table: "UserDatas",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Votes_GameId",
@@ -1157,7 +1104,6 @@ namespace DM.Services.DataAccess.Migrations
                 onDelete: ReferentialAction.Restrict);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -1180,6 +1126,14 @@ namespace DM.Services.DataAccess.Migrations
                 name: "FK_Games_Users_NannyId",
                 table: "Games");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_Games_EntityId",
+                table: "Comments");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Comments_ForumTopics_EntityId",
+                table: "Comments");
+
             migrationBuilder.DropTable(
                 name: "Bans");
 
@@ -1188,9 +1142,6 @@ namespace DM.Services.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "CharacterAttributes");
-
-            migrationBuilder.DropTable(
-                name: "CharacterRoomLinks");
 
             migrationBuilder.DropTable(
                 name: "ForumModerators");
@@ -1205,13 +1156,13 @@ namespace DM.Services.DataAccess.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "PostWaitNotifications");
-
-            migrationBuilder.DropTable(
-                name: "Readers");
+                name: "PendingPosts");
 
             migrationBuilder.DropTable(
                 name: "Reports");
+
+            migrationBuilder.DropTable(
+                name: "RoomClaims");
 
             migrationBuilder.DropTable(
                 name: "Tokens");
@@ -1221,9 +1172,6 @@ namespace DM.Services.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserConversationLinks");
-
-            migrationBuilder.DropTable(
-                name: "UserDatas");
 
             migrationBuilder.DropTable(
                 name: "Votes");
@@ -1236,6 +1184,9 @@ namespace DM.Services.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Readers");
 
             migrationBuilder.DropTable(
                 name: "Conversations");

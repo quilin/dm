@@ -13,6 +13,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
         /// <param name="value"></param>
         /// <param name="specification"></param>
         /// <returns></returns>
-        bool Validate(string value, AttributeSpecification specification);
+        (bool valid, string error) Validate(string value, AttributeSpecification specification);
     }
 }

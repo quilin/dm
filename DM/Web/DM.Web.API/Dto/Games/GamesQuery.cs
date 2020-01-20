@@ -13,7 +13,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Game statuses to filter by
         /// </summary>
-        public IEnumerable<GameStatus> Status { get; set; }
+        public IEnumerable<GameStatus> Statuses { get; set; }
 
         /// <summary>
         /// Game tags to filter by

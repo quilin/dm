@@ -56,12 +56,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
                     }
                     else
                     {
+                        var (valid, _) = attributeValueValidator.Validate(attribute.Value, specification);
                         var filledAttribute = new CharacterAttribute
                         {
                             Id = specification.Id,
                             Title = specification.Title,
                             Value = attribute.Value,
-                            Inconsistent = !attributeValueValidator.Validate(attribute.Value, specification)
+                            Inconsistent = !valid
                         };
                         if (specification.Type == AttributeSpecificationType.List)
                         {

@@ -6,16 +6,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [DbContext(typeof(DmDbContext))]
     partial class DmDbContextModelSnapshot : ModelSnapshot
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="modelBuilder"></param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -377,7 +370,7 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<Guid?>("AssistantId");
 
-                    b.Property<Guid>("AttributeSchemaId");
+                    b.Property<Guid?>("AttributeSchemaId");
 
                     b.Property<int>("CommentariesAccessMode");
 
@@ -541,6 +534,8 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<DateTimeOffset?>("LastUpdateDate");
 
+                    b.Property<Guid?>("LastUpdateUserId");
+
                     b.Property<string>("MasterMessage");
 
                     b.Property<Guid>("RoomId");
@@ -552,6 +547,8 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasKey("PostId");
 
                     b.HasIndex("CharacterId");
+
+                    b.HasIndex("LastUpdateUserId");
 
                     b.HasIndex("RoomId");
 
@@ -1035,6 +1032,10 @@ namespace DM.Services.DataAccess.Migrations
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Characters.Character", "Character")
                         .WithMany("Posts")
                         .HasForeignKey("CharacterId");
+
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "LastUpdateAuthor")
+                        .WithMany()
+                        .HasForeignKey("LastUpdateUserId");
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Games.Posts.Room", "Room")
                         .WithMany("Posts")

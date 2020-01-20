@@ -58,7 +58,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Games
         /// <summary>
         /// Character attribute schema identifier
         /// </summary>
-        public Guid AttributeSchemaId { get; set; }
+        public Guid? AttributeSchemaId { get; set; }
 
         /// <summary>
         /// Title
