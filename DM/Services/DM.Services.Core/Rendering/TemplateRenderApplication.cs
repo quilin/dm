@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.WebEncoders;
 
 namespace DM.Services.Core.Rendering
@@ -42,7 +43,8 @@ namespace DM.Services.Core.Rendering
             services
                 .AddSingleton<IHostingEnvironment>(hostingEnvironment)
                 .AddSingleton<ITemplateRenderer, TemplateRenderer>()
-                .AddSingleton<DiagnosticSource>(new DiagnosticListener(applicationName))
+                .AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>()
+                .AddSingleton<DiagnosticSource>(new DiagnosticListener("Microsoft.AspNetCore"))
                 .Configure<RazorViewEngineOptions>(options =>
                 {
                     options.FileProviders.Clear();
@@ -54,7 +56,8 @@ namespace DM.Services.Core.Rendering
             services
                 .AddDmLogging(applicationName)
                 .AddMvcCore()
-                .AddRazorViewEngine();
+                .AddRazorViewEngine()
+                .AddApplicationPart(Assembly.GetEntryAssembly());
 
             return services.BuildServiceProvider();
         }
