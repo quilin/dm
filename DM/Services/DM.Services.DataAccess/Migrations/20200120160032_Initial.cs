@@ -483,12 +483,6 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Tokens", x => x.TokenId);
                     table.ForeignKey(
-                        name: "FK_Tokens_Games_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Tokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",

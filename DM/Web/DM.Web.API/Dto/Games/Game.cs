@@ -32,6 +32,11 @@ namespace DM.Web.API.Dto.Games
         public string Setting { get; set; }
 
         /// <summary>
+        /// Attribute schema identifier
+        /// </summary>
+        public string SchemaId { get; set; }
+
+        /// <summary>
         /// Game status
         /// </summary>
         public GameStatus? Status { get; set; }
