@@ -2,10 +2,10 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Core.Exceptions;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.BusinessProcesses.Characters.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Web.Classic.Views.CharactersList;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 

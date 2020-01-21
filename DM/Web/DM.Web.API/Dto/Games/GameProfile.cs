@@ -1,9 +1,9 @@
 using System;
 using AutoMapper;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Web.Core.Helpers;
 using DtoGame = DM.Services.Gaming.Dto.Output.Game;
 
 namespace DM.Web.API.Dto.Games

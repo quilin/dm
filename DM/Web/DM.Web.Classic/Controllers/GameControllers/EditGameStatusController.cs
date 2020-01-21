@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.BusinessProcesses.Games.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.EditGameStatus;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 

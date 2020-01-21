@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Gaming.BusinessProcesses.Likes;
 using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.GameCommentaries;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 

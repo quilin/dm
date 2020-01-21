@@ -36,6 +36,7 @@ namespace DM.Services.Mail.Sender.Consumer
                 smtpClient.Connect(this.configuration.ServerHost, this.configuration.ServerPort,
                     SecureSocketOptions.StartTls);
                 smtpClient.Authenticate(this.configuration.Username, this.configuration.Password);
+                smtpClient.NoOp();
                 return smtpClient;
             });
             retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(5,

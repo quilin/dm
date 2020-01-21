@@ -1,6 +1,6 @@
 using AutoMapper;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Dto.Input;
-using DM.Web.Core.Helpers;
 using Policy = DM.Services.Core.Dto.Enums.CharacterAccessPolicy;
 
 namespace DM.Web.API.Dto.Games

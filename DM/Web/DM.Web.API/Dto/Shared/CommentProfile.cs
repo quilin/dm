@@ -1,6 +1,6 @@
 using AutoMapper;
 using DM.Services.Common.Dto;
-using DM.Web.Core.Helpers;
+using DM.Services.Core.Extensions;
 
 namespace DM.Web.API.Dto.Shared
 {

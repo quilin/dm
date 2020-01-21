@@ -1,5 +1,5 @@
 using AutoMapper;
-using DM.Web.Core.Helpers;
+using DM.Services.Core.Extensions;
 
 namespace DM.Web.API.Dto.Games.Attributes
 {

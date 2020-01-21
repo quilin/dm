@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace DM.Web.Core.Helpers
+namespace DM.Services.Core.Extensions
 {
     /// <summary>
     /// Utils to encode Guid into more readable format
@@ -19,12 +19,11 @@ namespace DM.Web.Core.Helpers
         /// <returns>Readable guid</returns>
         public static string EncodeToReadable(this Guid guid, string readableText)
         {
-            var base64Guid = Convert.ToBase64String(guid.ToByteArray()).Replace("/", "-").Replace("+", "_").Replace("=", "");
-            if (string.IsNullOrEmpty(readableText))
-            {
-                return base64Guid;
-            }
-            return $"{Transliterate(readableText.ToLower())}~{base64Guid}";
+            var base64Guid = Convert.ToBase64String(guid.ToByteArray()).Replace("/", "-").Replace("+", "_")
+                .Replace("=", "");
+            return string.IsNullOrEmpty(readableText)
+                ? base64Guid
+                : $"{Transliterate(readableText.ToLower())}~{base64Guid}";
         }
 
         /// <summary>
@@ -34,7 +33,10 @@ namespace DM.Web.Core.Helpers
         /// <returns>Guid</returns>
         public static Guid DecodeFromReadableGuid(this string encodedGuid)
         {
-            var base64Guid = encodedGuid.Split(new[] {"~"}, StringSplitOptions.None).Last().Replace("-", "/").Replace("_", "+") + "==";
+            var base64Guid = encodedGuid.Split(new[] {"~"}, StringSplitOptions.None)
+                .Last()
+                .Replace("-", "/")
+                .Replace("_", "+") + "==";
             return new Guid(Convert.FromBase64String(base64Guid));
         }
 
@@ -69,6 +71,7 @@ namespace DM.Web.Core.Helpers
                     result.Append(replacement);
                 }
             }
+
             return result.ToString();
         }
 

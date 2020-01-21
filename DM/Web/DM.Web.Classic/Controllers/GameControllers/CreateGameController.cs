@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
+using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.CreateGame;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.GameControllers

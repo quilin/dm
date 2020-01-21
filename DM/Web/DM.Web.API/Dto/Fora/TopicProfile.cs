@@ -1,7 +1,7 @@
 using AutoMapper;
+using DM.Services.Core.Extensions;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
-using DM.Web.Core.Helpers;
 
 namespace DM.Web.API.Dto.Fora
 {

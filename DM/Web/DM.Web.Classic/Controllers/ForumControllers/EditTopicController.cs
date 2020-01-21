@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DM.Services.Core.Extensions;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Views.EditTopic;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 

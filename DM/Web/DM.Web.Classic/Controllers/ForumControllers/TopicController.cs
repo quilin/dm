@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Extensions;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Deleting;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Input;
 using DM.Web.Classic.Views.Topic;
-using DM.Web.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
