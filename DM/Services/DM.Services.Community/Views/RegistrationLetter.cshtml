@@ -1,11 +1,11 @@
+@using DM.Services.Mail.Rendering.Rendering
 @model DM.Services.Community.BusinessProcesses.Registration.Confirmation.RegistrationConfirmationViewModel
 @{
-    Layout = "_EmailLayout";
+    Layout = EmailConstants.Layout;
     ViewData["Title"] = $"Добро пожаловать на DM, {Model.Login}";
 }
-<p style="margin: 16px 0;">Мы рады приветствовать вас на нашем сайте.</p>
-<p style="margin: 16px 0;">Чтобы завершить регистрацию, вам нужно перейти по <a href="@Model.ConfirmationLinkUrl">ссылке</a>.<br/></p>
-<p style="margin: 16px 0;">Если вы не знаете, почему вам пришло это письмо, просто удалите его и знайте, что мы извиняемся!</p>
-<a style="display: block; width: 300px; margin: 0 auto; padding: 12px; background-color: #36a; color: #fff; font-size: 18px; text-decoration: none; text-align: center;"
-   href="@Model.ConfirmationLinkUrl">Завершить регистрацию</a>
-<p style="margin: 16px 0; font-size: 12px; color: #8a8a8a;">Если не получается, попробуйте вставить ссылку в адресную строку: @Model.ConfirmationLinkUrl</p>
+<p style="@EmailConstants.ParagraphStyles">Мы рады приветствовать вас на нашем сайте.</p>
+<p style="@EmailConstants.ParagraphStyles">Чтобы завершить регистрацию, вам нужно перейти по <a href="@Model.ConfirmationLinkUrl">ссылке</a>.<br/></p>
+<p style="@EmailConstants.ParagraphStyles">Если вы не знаете, почему вам пришло это письмо, просто удалите его и знайте, что мы извиняемся!</p>
+<a style="@EmailConstants.ButtonStyles" href="@Model.ConfirmationLinkUrl">Завершить регистрацию</a>
+<p style="@EmailConstants.ParagraphStyles font-size: 12px; color: #8a8a8a;">Если не получается, попробуйте вставить ссылку в адресную строку: @Model.ConfirmationLinkUrl</p>
