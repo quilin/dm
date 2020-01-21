@@ -1,6 +1,5 @@
 using AutoMapper;
 using DM.Services.Common.Dto;
-using DM.Services.Core.Extensions;
 
 namespace DM.Web.API.Dto.Shared
 {
@@ -13,7 +12,6 @@ namespace DM.Web.API.Dto.Shared
         public CommentProfile()
         {
             CreateMap<DM.Services.Common.Dto.Comment, Comment>()
-                .ForMember(d => d.Id, s => s.MapFrom(c => c.Id.EncodeToReadable("")))
                 .ForMember(d => d.Created, s => s.MapFrom(c => c.CreateDate))
                 .ForMember(d => d.Updated, s => s.MapFrom(c => c.LastUpdateDate));
 

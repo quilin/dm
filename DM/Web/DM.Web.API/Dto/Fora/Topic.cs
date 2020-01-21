@@ -12,7 +12,7 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Topic identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Author

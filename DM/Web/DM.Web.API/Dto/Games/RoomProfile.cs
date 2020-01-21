@@ -12,12 +12,7 @@ namespace DM.Web.API.Dto.Games
         /// <inheritdoc />
         public RoomProfile()
         {
-            CreateMap<DM.Services.Gaming.Dto.Output.Room, Room>()
-                .ForMember(d => d.Id, s => s.MapFrom(r => r.Id.EncodeToReadable(r.Title)))
-                .ForMember(d => d.PreviousRoomId, s => s.MapFrom(r =>
-                    r.PreviousRoomId.HasValue
-                        ? r.PreviousRoomId.Value.EncodeToReadable(string.Empty)
-                        : string.Empty));
+            CreateMap<DM.Services.Gaming.Dto.Output.Room, Room>();
 
             CreateMap<Room, CreateRoom>();
             CreateMap<Room, UpdateRoom>();
@@ -26,7 +21,7 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.Id, s => s.MapFrom(r => r.Id.EncodeToReadable(string.Empty)));
 
             CreateMap<RoomClaim, CreateRoomClaim>()
-                .ForMember(d => d.CharacterId, s => s.MapFrom(r => r.Character != null ? r.Character.Id : null))
+                .ForMember(d => d.CharacterId, s => s.MapFrom(r => r.Character.Id))
                 .ForMember(d => d.ReaderLogin, s => s.MapFrom(r => r.User != null ? r.User.Login : null));
             CreateMap<RoomClaim, UpdateRoomClaim>()
                 .ForMember(d => d.ClaimId, s => s.MapFrom(r => r.Id));

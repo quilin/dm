@@ -17,7 +17,7 @@ namespace DM.Services.Core.Extensions
         /// <param name="guid">Guid</param>
         /// <param name="readableText">Custom text</param>
         /// <returns>Readable guid</returns>
-        public static string EncodeToReadable(this Guid guid, string readableText)
+        public static string EncodeToReadable(this Guid guid, string readableText = null)
         {
             var base64Guid = Convert.ToBase64String(guid.ToByteArray()).Replace("/", "-").Replace("+", "_")
                 .Replace("=", "");

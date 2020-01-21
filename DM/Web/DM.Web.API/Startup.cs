@@ -80,6 +80,8 @@ namespace DM.Web.API
                     config.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
                     config.SerializerSettings.DateFormatString = "O";
                     config.SerializerSettings.Converters.Insert(0, new StringEnumConverter());
+                    config.SerializerSettings.Converters.Insert(0, new ReadableGuidConverter());
+                    config.SerializerSettings.Converters.Insert(0, new ReadableNullableGuidConverter());
                     config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

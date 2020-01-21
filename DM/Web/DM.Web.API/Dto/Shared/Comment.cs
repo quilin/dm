@@ -12,7 +12,7 @@ namespace DM.Web.API.Dto.Shared
         /// <summary>
         /// Commentary identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Author

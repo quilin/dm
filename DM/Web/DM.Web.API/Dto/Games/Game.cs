@@ -15,7 +15,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Game identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Game title

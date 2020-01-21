@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 using DM.Web.API.Dto.Users;
@@ -12,7 +13,7 @@ namespace DM.Web.API.Dto.Games.Attributes
         /// <summary>
         /// Schema identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Schema title

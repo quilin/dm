@@ -1,3 +1,5 @@
+using System;
+
 namespace DM.Web.API.Dto.Games
 {
     /// <summary>
@@ -8,7 +10,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Tag display name

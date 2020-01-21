@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Core.Extensions;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
 
@@ -14,7 +13,6 @@ namespace DM.Web.API.Dto.Fora
         public TopicProfile()
         {
             CreateMap<DM.Services.Forum.Dto.Output.Topic, Topic>()
-                .ForMember(d => d.Id, s => s.MapFrom(t => t.Id.EncodeToReadable(t.Title)))
                 .ForMember(d => d.Created, s => s.MapFrom(t => t.CreateDate))
                 .ForMember(d => d.CommentsCount, s => s.MapFrom(t => t.TotalCommentsCount))
                 .ForMember(d => d.Description, s => s.MapFrom(t => t.Text));

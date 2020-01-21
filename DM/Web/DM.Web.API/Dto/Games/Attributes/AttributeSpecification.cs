@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DM.Web.API.Dto.Games.Attributes
@@ -10,7 +11,7 @@ namespace DM.Web.API.Dto.Games.Attributes
         /// <summary>
         /// Identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Title

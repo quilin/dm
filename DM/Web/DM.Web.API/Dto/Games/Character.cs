@@ -13,7 +13,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Character identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Character author

@@ -11,7 +11,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Identifier
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// User who waits a post
