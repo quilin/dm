@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.BusinessProcesses.Characters.Shared;
-using DM.Services.Gaming.BusinessProcesses.Games.Reading;
-using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
+using DM.Services.Gaming.Dto.Shared;
 using FluentValidation;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Gaming.Dto.Input
 {
@@ -13,14 +13,12 @@ namespace DM.Services.Gaming.Dto.Input
     /// </summary>
     public class CreateCharacterValidator : AbstractValidator<CreateCharacter>
     {
-        private const string ValidationCacheKey = nameof(ValidationCacheKey);
-        private const string AttributeValidationArgumentName = nameof(AttributeValidationArgumentName);
+        private const string SchemaCacheKey = nameof(SchemaCacheKey);
+        private const string ErrorMessage = nameof(ErrorMessage);
 
         /// <inheritdoc />
         public CreateCharacterValidator(
-            IMemoryCache memoryCache,
-            IGameReadingService gameReadingService,
-            ISchemaReadingService schemaReadingService,
+            ICharacterValidationRepository validationRepository,
             IAttributeValueValidator attributeValueValidator)
         {
             RuleFor(c => c.Name)
@@ -33,43 +31,54 @@ namespace DM.Services.Gaming.Dto.Input
             RuleFor(c => c.Class)
                 .MaximumLength(30).WithMessage(ValidationError.Long);
 
-            RuleForEach(c => c.Attributes)
-                .MustAsync(async (model, attribute, context, cancellationToken) =>
-                {
-                    var specifications = await memoryCache.GetOrCreateAsync(ValidationCacheKey, async _ =>
+            WhenAsync(validationRepository.GameRequiresAttributes, () =>
+            {
+                RuleFor(c => c.Attributes)
+                    .MustAsync(async (c, attributes, context, _) =>
                     {
-                        var game = await gameReadingService.GetGame(model.GameId);
-                        if (!game.AttributeSchemaId.HasValue)
+                        if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
+                            !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
                         {
-                            return null;
+                            var schema = await validationRepository.GetSchema(c.GameId);
+                            specifications = schema.Specifications.ToDictionary(s => s.Id);
+                            context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
                         }
 
-                        var schema = await schemaReadingService.Get(game.AttributeSchemaId.Value);
-                        return schema.Specifications.ToDictionary(s => s.Id);
-                    });
+                        var attributeIndex = c.Attributes.ToDictionary(a => a.Id);
+                        var missingAttributes = specifications
+                            .Where(s => s.Value.Required && !attributeIndex.ContainsKey(s.Key))
+                            .Select(s => (s.Value.Id, s.Value.Title))
+                            .ToArray();
+                        context.MessageFormatter.AppendArgument(ErrorMessage,
+                            AttributeValidationError.ManyRequiredMissing(missingAttributes));
+                        return !missingAttributes.Any();
+                    })
+                    .WithMessage($"{{{ErrorMessage}}}");
 
-                    if (specifications == null)
+                RuleForEach(c => c.Attributes)
+                    .MustAsync(async (c, attribute, context, _) =>
                     {
-                        context.MessageFormatter.AppendArgument(AttributeValidationArgumentName, "Game has no schema");
-                        return false;
-                    }
+                        if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
+                            !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
+                        {
+                            var schema = await validationRepository.GetSchema(c.GameId);
+                            specifications = schema.Specifications.ToDictionary(s => s.Id);
+                            context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
+                        }
 
-                    if (!specifications.TryGetValue(attribute.Id, out var specification))
-                    {
-                        context.MessageFormatter.AppendArgument(AttributeValidationArgumentName,
-                            "Invalid specification");
-                        return false;
-                    }
+                        if (!specifications.TryGetValue(attribute.Id, out var specification))
+                        {
+                            context.MessageFormatter.AppendArgument(ErrorMessage,
+                                AttributeValidationError.InvalidSpecification);
+                            return false;
+                        }
 
-                    var (valid, error) = attributeValueValidator.Validate(attribute.Value, specification);
-                    if (!valid)
-                    {
-                        context.MessageFormatter.AppendArgument(AttributeValidationArgumentName, error);
-                    }
-
-                    return valid;
-                })
-                .WithMessage($"{{{AttributeValidationArgumentName}}}");
+                        var (valid, error) = attributeValueValidator.Validate(attribute.Value, specification);
+                        context.MessageFormatter.AppendArgument(ErrorMessage, error);
+                        return valid;
+                    })
+                    .WithMessage($"{{{ErrorMessage}}}");
+            });
         }
     }
 }

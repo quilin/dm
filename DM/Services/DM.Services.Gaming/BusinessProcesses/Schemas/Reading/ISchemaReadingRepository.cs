@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.Core.Dto;
-using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
+using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
 {
@@ -24,12 +23,5 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
         /// <param name="schemaId">Schema identifier</param>
         /// <returns></returns>
         Task<AttributeSchema> GetSchema(Guid schemaId);
-
-        /// <summary>
-        /// Get list of users by identifiers
-        /// </summary>
-        /// <param name="userIds"></param>
-        /// <returns></returns>
-        Task<IEnumerable<GeneralUser>> GetSchemataAuthors(ICollection<Guid> userIds);
     }
 }
