@@ -1,3 +1,5 @@
+using DM.Services.Gaming.Dto.Shared;
+
 namespace DM.Services.Gaming.Dto.Output
 {
     /// <summary>
@@ -49,5 +51,10 @@ namespace DM.Services.Gaming.Dto.Output
         /// Any user can read private messages within posts
         /// </summary>
         public bool ShowPrivateMessages { get; set; }
+
+        /// <summary>
+        /// Attribute schema details
+        /// </summary>
+        public AttributeSchema AttributeSchema { get; set; }
     }
 }

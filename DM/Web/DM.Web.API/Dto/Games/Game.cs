@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Gaming.Dto;
+using DM.Web.API.Dto.Games.Attributes;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
@@ -34,7 +35,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Attribute schema identifier
         /// </summary>
-        public string SchemaId { get; set; }
+        public AttributeSchema Schema { get; set; }
 
         /// <summary>
         /// Game status

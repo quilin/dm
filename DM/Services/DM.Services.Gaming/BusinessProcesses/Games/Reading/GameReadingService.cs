@@ -12,6 +12,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
+using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using FluentValidation;
@@ -24,6 +25,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
     {
         private readonly IValidator<GamesQuery> validator;
         private readonly IIntentionManager intentionManager;
+        private readonly ISchemaReadingService schemaReadingService;
         private readonly IGameReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IMemoryCache cache;
@@ -35,6 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         public GameReadingService(
             IValidator<GamesQuery> validator,
             IIntentionManager intentionManager,
+            ISchemaReadingService schemaReadingService,
             IGameReadingRepository repository,
             IIdentityProvider identityProvider,
             IUnreadCountersRepository unreadCountersRepository,
@@ -42,6 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
+            this.schemaReadingService = schemaReadingService;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.cache = cache;
@@ -133,6 +137,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
             if (game == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Game not found");
+            }
+
+            if (game.AttributeSchemaId.HasValue)
+            {
+                game.AttributeSchema = await schemaReadingService.Get(game.AttributeSchemaId.Value);
             }
 
             await unreadCountersRepository.FillEntityCounters(new[] {game}, currentUserId,

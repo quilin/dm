@@ -23,12 +23,12 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.Id.EncodeToReadable(g.Title)))
                 .ForMember(d => d.System, s => s.MapFrom(g => g.SystemName))
                 .ForMember(d => d.Setting, s => s.MapFrom(g => g.SettingName))
-                .ForMember(d => d.SchemaId, s => s.MapFrom<GuidResolver>())
                 .ForMember(d => d.Released, s => s.MapFrom(g => g.ReleaseDate ?? g.CreateDate))
                 .ForMember(d => d.Participation, s => s.MapFrom<GameParticipationResolver>());
 
             CreateMap<GameExtended, Game>()
                 .ForMember(d => d.PrivacySettings, s => s.MapFrom(g => g))
+                .ForMember(d => d.Schema, s => s.MapFrom(g => g.AttributeSchema))
                 .ForMember(d => d.Notes, s => s.MapFrom(g => g.Notepad));
 
             CreateMap<GameExtended, GamePrivacySettings>()
@@ -75,18 +75,12 @@ namespace DM.Web.API.Dto.Games
     }
 
     /// <inheritdoc />
-    public class GuidResolver :
-        IValueResolver<DtoGame, Game, string>,
-        IValueResolver<Game, CreateGame, Guid?>
+    public class GuidResolver : IValueResolver<Game, CreateGame, Guid?>
     {
         /// <inheritdoc />
-        public string Resolve(DtoGame source, Game destination, string destMember, ResolutionContext context) =>
-            source.AttributeSchemaId?.EncodeToReadable(string.Empty);
-
-        /// <inheritdoc />
         public Guid? Resolve(Game source, CreateGame destination, Guid? destMember, ResolutionContext context) =>
-            string.IsNullOrEmpty(source.SchemaId) ||
-            !source.SchemaId.TryDecodeFromReadableGuid(out var id)
+            string.IsNullOrEmpty(source.Schema?.Id) ||
+            !source.Schema.Id.TryDecodeFromReadableGuid(out var id)
                 ? (Guid?) null
                 : id;
     }
