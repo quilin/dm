@@ -106,6 +106,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 
             var createdGame = await repository.Create(game, room, tags);
 
+            await countersRepository.Create(room.RoomId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);
 
