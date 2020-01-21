@@ -1,4 +1,4 @@
- using RabbitMQ.Client;
+using RabbitMQ.Client;
 
 namespace DM.Services.MessageQueuing.Configuration
 {
@@ -34,6 +34,8 @@ namespace DM.Services.MessageQueuing.Configuration
             {
                 channel.QueueBind(configuration.QueueName, configuration.ExchangeName, routingKey);
             }
+
+            channel.BasicQos(0, configuration.PrefetchCount, true);
         }
     }
 }

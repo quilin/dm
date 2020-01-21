@@ -24,7 +24,8 @@ namespace DM.Services.Mail.Sender.Consumer
                     Arguments = new Dictionary<string, object>
                     {
                         ["x-dead-letter-exchange"] = "dm.mail.unsent"
-                    }
+                    },
+                    PrefetchCount = 1
                 };
                 messageConsumer.Consume(configuration);
                 Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");

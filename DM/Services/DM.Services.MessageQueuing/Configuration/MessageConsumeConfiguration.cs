@@ -31,5 +31,10 @@ namespace DM.Services.MessageQueuing.Configuration
         /// Queue exclusiveness flag
         /// </summary>
         public bool Exclusive { get; set; }
+
+        /// <summary>
+        /// Prefetch count
+        /// </summary>
+        public ushort PrefetchCount { get; set; }
     }
 }
