@@ -79,7 +79,9 @@ namespace DM.Web.API.Middleware
                     case ValidationException validationException:
                         statusCode = (int) HttpStatusCode.BadRequest;
                         error = new BadRequestError("Validation failed",
-                            validationException.Errors.ToDictionary(er => er.PropertyName, er => er.ErrorMessage));
+                            validationException.Errors
+                                .GroupBy(er => er.PropertyName)
+                                .ToDictionary(g => g.Key, g => g.Select(er => er.ErrorMessage)));
                         break;
                     default:
                         statusCode = (int) HttpStatusCode.InternalServerError;
