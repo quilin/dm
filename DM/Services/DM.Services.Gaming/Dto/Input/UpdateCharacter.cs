@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Gaming.Dto.Output;
 
 namespace DM.Services.Gaming.Dto.Input
 {
@@ -72,5 +74,10 @@ namespace DM.Services.Gaming.Dto.Input
         /// Character access policy
         /// </summary>
         public CharacterAccessPolicy? AccessPolicy { get; set; }
+
+        /// <summary>
+        /// Character attributes
+        /// </summary>
+        public IEnumerable<CharacterAttribute> Attributes { get; set; }
     }
 }
