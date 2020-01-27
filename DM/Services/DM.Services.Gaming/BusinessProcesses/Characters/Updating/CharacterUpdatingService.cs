@@ -63,14 +63,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
                 .MaybeField(c => c.Skills, updateCharacter.Skills)
                 .MaybeField(c => c.Inventory, updateCharacter.Inventory);
 
-            var attributeChanges = Enumerable.Empty<IUpdateBuilder<DbAttribute>>();
+            var attributeChanges = new IUpdateBuilder<DbAttribute>[0];
             if (updateCharacter.Attributes != null && updateCharacter.Attributes.Any())
             {
                 var attributeIdsIndex = await repository.GetAttributeIds(updateCharacter.CharacterId);
                 attributeChanges = updateCharacter.Attributes
                     .Where(a => attributeIdsIndex.ContainsKey(a.Id))
                     .Select(a => updateBuilderFactory.Create<DbAttribute>(attributeIdsIndex[a.Id])
-                        .Field(aa => aa.Value, a.Value.Trim()));
+                        .Field(aa => aa.Value, a.Value?.Trim()))
+                    .ToArray();
             }
 
             if (intentionManager.IsAllowed(CharacterIntention.EditPrivacySettings))
@@ -95,7 +96,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
                 }
             }
 
-            if (changes.HasChanges())
+            if (changes.HasChanges() || attributeChanges.Any(c => c.HasChanges()))
             {
                 changes.Field(c => c.LastUpdateDate, dateTimeProvider.Now);
             }
