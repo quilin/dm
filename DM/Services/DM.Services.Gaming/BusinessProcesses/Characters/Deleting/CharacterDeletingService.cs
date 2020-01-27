@@ -46,8 +46,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
 
             var updateCharacter = updateBuilderFactory.Create<Character>(characterId);
             updateCharacter.Field(c => c.IsRemoved, true);
+            var updateAttributes = (await repository.GetAttributeIds(characterId)).Keys
+                .Select(id => updateBuilderFactory.Create<CharacterAttribute>(id).Delete());
 
-            await repository.Update(updateCharacter, Enumerable.Empty<IUpdateBuilder<CharacterAttribute>>());
+            await repository.Update(updateCharacter, updateAttributes);
             await unreadCountersRepository.Decrement(character.GameId, UnreadEntryType.Character, character.CreateDate);
             await publisher.Publish(EventType.DeletedCharacter, characterId);
         }
