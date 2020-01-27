@@ -19,16 +19,19 @@ namespace DM.Web.API.Controllers.v1.Users
         private readonly IRegistrationApiService registrationApiService;
         private readonly IActivationApiService activationApiService;
         private readonly ILoginApiService loginApiService;
+        private readonly IPasswordResetApiService passwordResetApiService;
 
         /// <inheritdoc />
         public AccountController(
             IRegistrationApiService registrationApiService,
             IActivationApiService activationApiService,
-            ILoginApiService loginApiService)
+            ILoginApiService loginApiService,
+            IPasswordResetApiService passwordResetApiService)
         {
             this.registrationApiService = registrationApiService;
             this.activationApiService = activationApiService;
             this.loginApiService = loginApiService;
+            this.passwordResetApiService = passwordResetApiService;
         }
 
         /// <summary>
@@ -66,7 +69,24 @@ namespace DM.Web.API.Controllers.v1.Users
         [HttpGet(Name = nameof(GetCurrent))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 401)]
         public async Task<IActionResult> GetCurrent() => Ok(await loginApiService.GetCurrent());
+
+        /// <summary>
+        /// Reset registered user password
+        /// </summary>
+        /// <param name="resetPassword">Activation token</param>
+        /// <response code="200">User has been activated and logged in</response>
+        /// <response code="400">Token is invalid</response>
+        /// <response code="410">Token is expired</response>
+        [HttpPost("password", Name = nameof(ResetPassword))]
+        [ProducesResponseType(typeof(Envelope<User>), 201)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(BadRequestError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
+        {
+            var result = await passwordResetApiService.Reset(resetPassword);
+            return CreatedAtRoute(nameof(UserController.GetUser), new {login = result.Resource.Login}, result);
+        }
     }
 }
