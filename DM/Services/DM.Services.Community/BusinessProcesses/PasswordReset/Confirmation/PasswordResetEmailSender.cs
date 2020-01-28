@@ -37,8 +37,8 @@ namespace DM.Services.Community.BusinessProcesses.PasswordReset.Confirmation
             await mailSender.Send(new MailLetter
             {
                 Address = email,
-                Body = emailBody,
-                Subject = $"Подтверждение сброса пароля на DM.AM для {login}"
+                Subject = $"Подтверждение сброса пароля на DM.AM для {login}",
+                Body = emailBody
             });
         }
     }
