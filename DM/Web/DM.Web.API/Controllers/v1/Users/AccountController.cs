@@ -74,15 +74,12 @@ namespace DM.Web.API.Controllers.v1.Users
         /// <summary>
         /// Reset registered user password
         /// </summary>
-        /// <param name="resetPassword">Activation token</param>
-        /// <response code="200">User has been activated and logged in</response>
-        /// <response code="400">Token is invalid</response>
-        /// <response code="410">Token is expired</response>
+        /// <param name="resetPassword">Account details</param>
+        /// <response code="200">Password has been reset</response>
+        /// <response code="400">Some account details were incorrect</response>
         [HttpPost("password", Name = nameof(ResetPassword))]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
-        [ProducesResponseType(typeof(BadRequestError), 403)]
-        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
         {
             var result = await passwordResetApiService.Reset(resetPassword);

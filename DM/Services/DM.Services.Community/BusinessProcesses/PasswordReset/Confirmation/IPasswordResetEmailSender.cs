@@ -1,15 +1,15 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Community.BusinessProcesses.Registration.Confirmation
+namespace DM.Services.Community.BusinessProcesses.PasswordReset.Confirmation
 {
     /// <summary>
-    /// Registration confirmation email sender
+    /// Password resetting email sender
     /// </summary>
-    public interface IRegistrationMailSender
+    public interface IPasswordResetEmailSender
     {
         /// <summary>
-        /// Sends the registration confirmation letter to newly registered user
+        /// Sends the password reset confirmation letter to registered user
         /// </summary>
         /// <param name="email">User email</param>
         /// <param name="login">User login</param>

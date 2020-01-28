@@ -25,7 +25,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Related entity identifier
         /// </summary>
-        public Guid EntityId { get; set; }
+        public Guid? EntityId { get; set; }
 
         /// <summary>
         /// Creation moment

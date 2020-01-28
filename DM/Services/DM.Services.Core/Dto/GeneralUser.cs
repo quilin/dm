@@ -14,6 +14,11 @@ namespace DM.Services.Core.Dto
         /// <inheritdoc />
         public string Login { get; set; }
 
+        /// <summary>
+        /// User email (for private usage only)
+        /// </summary>
+        public string Email { get; set; }
+
         /// <inheritdoc />
         public UserRole Role { get; set; }
 
