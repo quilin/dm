@@ -11,6 +11,7 @@ using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
+using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -32,6 +33,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IGameTagFactory gameTagFactory;
         private readonly IGameCreatingRepository repository;
         private readonly IUserRepository userRepository;
+        private readonly ISchemaReadingRepository schemaRepository;
         private readonly IUnreadCountersRepository countersRepository;
         private readonly IInvokedEventPublisher publisher;
 
@@ -47,6 +49,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IGameTagFactory gameTagFactory,
             IGameCreatingRepository repository,
             IUserRepository userRepository,
+            ISchemaReadingRepository schemaRepository,
             IUnreadCountersRepository countersRepository,
             IInvokedEventPublisher publisher)
         {
@@ -60,6 +63,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.gameTagFactory = gameTagFactory;
             this.repository = repository;
             this.userRepository = userRepository;
+            this.schemaRepository = schemaRepository;
             this.countersRepository = countersRepository;
             this.publisher = publisher;
         }
@@ -101,6 +105,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
                 if (assistantExists)
                 {
                     await assignmentService.CreateAssignment(game.GameId, foundAssistantId);
+                }
+            }
+
+            if (createGame.AttributeSchemaId.HasValue)
+            {
+                var schema = await schemaRepository.GetSchema(createGame.AttributeSchemaId.Value);
+                if (intentionManager.IsAllowed(AttributeSchemaIntention.Use, schema))
+                {
+                    game.AttributeSchemaId = createGame.AttributeSchemaId.Value;
                 }
             }
 

@@ -13,6 +13,11 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Delete existing schema
         /// </summary>
-        Delete = 1
+        Delete = 1,
+
+        /// <summary>
+        /// Use schema in a game
+        /// </summary>
+        Use = 2
     }
 }
