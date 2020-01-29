@@ -143,6 +143,13 @@ namespace DM.Services.Authentication.Implementation
             return await CreateAuthenticationResult(identity.User, session, identity.Settings);
         }
 
+        /// <inheritdoc />
+        public async Task<IIdentity> LogoutAll(Guid userId)
+        {
+            await repository.RemoveSessions(userId);
+            return await Authenticate(userId);
+        }
+
         private async Task<IIdentity> CreateAuthenticationResult(
             AuthenticatedUser user, Session session, UserSettings settings)
         {

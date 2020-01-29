@@ -1,5 +1,5 @@
 using System;
-using DM.Services.Community.BusinessProcesses.PasswordReset;
+using DM.Services.Community.BusinessProcesses.Reading;
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
@@ -12,13 +12,13 @@ namespace DM.Services.Community.Dto
 
         /// <inheritdoc />
         public UserPasswordResetValidator(
-            IPasswordResetRepository repository)
+            IUserReadingRepository repository)
         {
             RuleFor(r => r.Login)
                 .NotEmpty().WithMessage(ValidationError.Empty)
                 .MustAsync(async (model, login, context, _) =>
                 {
-                    var user = await repository.FindUser(login);
+                    var user = await repository.GetUser(login);
                     if (user == null)
                     {
                         return false;

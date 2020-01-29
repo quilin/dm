@@ -15,5 +15,12 @@ namespace DM.Web.API.Services.Users
         /// <param name="resetPassword"></param>
         /// <returns></returns>
         Task<Envelope<User>> Reset(ResetPassword resetPassword);
+
+        /// <summary>
+        /// Change user password
+        /// </summary>
+        /// <param name="changePassword"></param>
+        /// <returns></returns>
+        Task<Envelope<User>> Change(ChangePassword changePassword);
     }
 }

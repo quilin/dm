@@ -80,10 +80,20 @@ namespace DM.Web.API.Controllers.v1.Users
         [HttpPost("password", Name = nameof(ResetPassword))]
         [ProducesResponseType(typeof(Envelope<User>), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
-        {
-            var result = await passwordResetApiService.Reset(resetPassword);
-            return CreatedAtRoute(nameof(UserController.GetUser), new {login = result.Resource.Login}, result);
-        }
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword) =>
+            Ok(await passwordResetApiService.Reset(resetPassword));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="changePassword"></param>
+        /// <response code="200">Password has been changed</response>
+        /// <response code="400">Some account details were incorrect</response>
+        [HttpPut("password", Name = nameof(ChangePassword))]
+        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword) =>
+            Ok(await passwordResetApiService.Change(changePassword));
     }
 }
