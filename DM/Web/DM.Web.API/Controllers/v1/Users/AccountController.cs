@@ -84,7 +84,7 @@ namespace DM.Web.API.Controllers.v1.Users
             Ok(await passwordResetApiService.Reset(resetPassword));
 
         /// <summary>
-        /// 
+        /// Change registered user password
         /// </summary>
         /// <param name="changePassword"></param>
         /// <response code="200">Password has been changed</response>
