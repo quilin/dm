@@ -24,6 +24,7 @@ namespace DM.Web.API.Dto.Users
                 }));
 
             CreateMap<Registration, UserRegistration>();
+            CreateMap<ResetPassword, UserPasswordReset>();
         }
     }
 }

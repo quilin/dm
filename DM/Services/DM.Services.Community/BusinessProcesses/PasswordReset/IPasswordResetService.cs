@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 
 namespace DM.Services.Community.BusinessProcesses.PasswordReset
@@ -11,9 +12,8 @@ namespace DM.Services.Community.BusinessProcesses.PasswordReset
         /// <summary>
         /// Reset user password
         /// </summary>
-        /// <param name="login">Login</param>
-        /// <param name="email">Email</param>
+        /// <param name="passwordReset"></param>
         /// <returns></returns>
-        Task<GeneralUser> Reset(string login, string email);
+        Task<GeneralUser> Reset(UserPasswordReset passwordReset);
     }
 }

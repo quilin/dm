@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.Community.BusinessProcesses.PasswordReset
@@ -8,6 +9,13 @@ namespace DM.Services.Community.BusinessProcesses.PasswordReset
     /// </summary>
     public interface IPasswordResetRepository
     {
+        /// <summary>
+        /// Find user by login
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <returns></returns>
+        Task<GeneralUser> FindUser(string login);
+
         /// <summary>
         /// Create password restoration token
         /// </summary>
