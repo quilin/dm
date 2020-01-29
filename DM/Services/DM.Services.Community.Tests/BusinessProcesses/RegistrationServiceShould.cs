@@ -56,7 +56,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             mailSender = Mock<IRegistrationMailSender>();
             mailSender
                 .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>()))
-                .ReturnsAsync(string.Empty);
+                .Returns(Task.CompletedTask);
 
             eventPublisher = Mock<IInvokedEventPublisher>();
             eventPublisher
@@ -120,7 +120,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             passwordGenerationSetup.Returns(("hash", "salt"));
             var tokenId = Guid.NewGuid();
             createTokenSetup.Returns(new Token {TokenId = tokenId});
-            createUserSetup.Returns(new User{Email = "email", Login = "login"});
+            createUserSetup.Returns(new User {Email = "email", Login = "login"});
 
             await service.Register(new UserRegistration());
 

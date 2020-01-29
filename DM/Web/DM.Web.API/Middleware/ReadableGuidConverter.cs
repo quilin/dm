@@ -53,7 +53,7 @@ namespace DM.Web.API.Middleware
                 ? simpleGuid
                 : readerValue.TryDecodeFromReadableGuid(out var decodedGuid)
                     ? decodedGuid
-                    : default;
+                    : (Guid?) null;
         }
     }
 }

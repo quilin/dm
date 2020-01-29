@@ -66,8 +66,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             // Only master and assistant are allowed to create NPCs
             createCharacter.IsNpc = createCharacter.IsNpc && gameParticipation.HasFlag(GameParticipation.Authority);
 
-            var character = factory.Create(createCharacter, currentUserId, initialStatus);
-            var createdCharacter = await creatingRepository.Create(character);
+            var (character, attributes) = factory.Create(createCharacter, currentUserId, initialStatus);
+            var createdCharacter = await creatingRepository.Create(character, attributes);
 
             await unreadCountersRepository.Increment(createCharacter.GameId, UnreadEntryType.Character);
             await publisher.Publish(EventType.NewCharacter, createdCharacter.Id);

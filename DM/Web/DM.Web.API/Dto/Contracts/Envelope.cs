@@ -9,15 +9,21 @@ namespace DM.Web.API.Dto.Contracts
     public class Envelope<T>
     {
         /// <inheritdoc />
-        public Envelope(T resource)
+        public Envelope(T resource, object metadata = null)
         {
             Resource = resource;
+            Metadata = metadata;
         }
 
         /// <summary>
         /// Enveloped resource
         /// </summary>
         public T Resource { get; }
+
+        /// <summary>
+        /// Additional metadata
+        /// </summary>
+        public object Metadata { get; }
     }
 
     /// <summary>

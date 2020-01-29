@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Processing;
 using MailKit;
@@ -19,6 +20,7 @@ namespace DM.Services.Mail.Sender.Consumer
     public class MailSendingProcessor : IMessageProcessor<MailLetter>
     {
         private readonly ILogger<MailSendingProcessor> logger;
+        private readonly ICorrelationTokenProvider correlationTokenProvider;
         private readonly EmailConfiguration configuration;
         private readonly Lazy<IMailTransport> client;
         private readonly AsyncRetryPolicy retryPolicy;
@@ -26,9 +28,11 @@ namespace DM.Services.Mail.Sender.Consumer
         /// <inheritdoc />
         public MailSendingProcessor(
             IOptions<EmailConfiguration> configuration,
-            ILogger<MailSendingProcessor> logger)
+            ILogger<MailSendingProcessor> logger,
+            ICorrelationTokenProvider correlationTokenProvider)
         {
             this.logger = logger;
+            this.correlationTokenProvider = correlationTokenProvider;
             this.configuration = configuration.Value;
             client = new Lazy<IMailTransport>(() =>
             {
@@ -54,7 +58,8 @@ namespace DM.Services.Mail.Sender.Consumer
                 ReplyTo = {new MailboxAddress(configuration.ReplyToAddress)},
                 To = {new MailboxAddress(message.Address)},
                 Subject = message.Subject,
-                Body = new TextPart(TextFormat.Html) {Text = message.Body}
+                Body = new TextPart(TextFormat.Html) {Text = message.Body},
+                MessageId = correlationTokenProvider.Current.ToString()
             }));
             return policyResult.Outcome == OutcomeType.Successful
                 ? ProcessResult.Success

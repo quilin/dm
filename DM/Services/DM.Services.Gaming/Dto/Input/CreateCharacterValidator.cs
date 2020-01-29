@@ -39,7 +39,7 @@ namespace DM.Services.Gaming.Dto.Input
                         if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
                             !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
                         {
-                            var schema = await validationRepository.GetSchema(c.GameId);
+                            var schema = await validationRepository.GetGameSchema(c.GameId);
                             specifications = schema.Specifications.ToDictionary(s => s.Id);
                             context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
                         }
@@ -61,7 +61,7 @@ namespace DM.Services.Gaming.Dto.Input
                         if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
                             !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
                         {
-                            var schema = await validationRepository.GetSchema(c.GameId);
+                            var schema = await validationRepository.GetGameSchema(c.GameId);
                             specifications = schema.Specifications.ToDictionary(s => s.Id);
                             context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
                         }

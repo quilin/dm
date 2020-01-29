@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Games.Characters;
+using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Characters.Updating;
@@ -35,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
         }
-        
+
         /// <inheritdoc />
         public async Task Delete(Guid characterId)
         {
@@ -44,8 +46,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
 
             var updateCharacter = updateBuilderFactory.Create<Character>(characterId);
             updateCharacter.Field(c => c.IsRemoved, true);
+            var updateAttributes = (await repository.GetAttributeIds(characterId)).Keys
+                .Select(id => updateBuilderFactory.Create<CharacterAttribute>(id).Delete());
 
-            await repository.Update(updateCharacter);
+            await repository.Update(updateCharacter, updateAttributes);
             await unreadCountersRepository.Decrement(character.GameId, UnreadEntryType.Character, character.CreateDate);
             await publisher.Publish(EventType.DeletedCharacter, characterId);
         }

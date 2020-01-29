@@ -37,7 +37,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
                 .FirstAsync(cancellationToken);
 
         /// <inheritdoc />
-        public async Task<AttributeSchema> GetSchema(Guid gameId)
+        public async Task<AttributeSchema> GetGameSchema(Guid gameId)
         {
             var schemaId = await dbContext.Games
                 .Where(g => g.GameId == gameId)
@@ -47,6 +47,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
                 .Find(Filter.Eq(s => s.Id, schemaId.Value))
                 .FirstAsync();
             return mapper.Map<AttributeSchema>(schema);
+        }
+
+        /// <inheritdoc />
+        public async Task<AttributeSchema> GetCharacterSchema(Guid characterId)
+        {
+            var gameId = await dbContext.Characters
+                .Where(c => c.CharacterId == characterId)
+                .Select(c => c.GameId)
+                .FirstAsync();
+            return await GetGameSchema(gameId);
         }
     }
 }

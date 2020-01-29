@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -10,6 +11,7 @@ using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
 using FluentValidation;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
+using DbAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.CharacterAttribute;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
 {
@@ -59,8 +61,18 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
                 .MaybeField(c => c.Temper, updateCharacter.Temper)
                 .MaybeField(c => c.Story, updateCharacter.Story)
                 .MaybeField(c => c.Skills, updateCharacter.Skills)
-                .MaybeField(c => c.Inventory, updateCharacter.Inventory)
-                .Field(c => c.LastUpdateDate, dateTimeProvider.Now);
+                .MaybeField(c => c.Inventory, updateCharacter.Inventory);
+
+            var attributeChanges = new IUpdateBuilder<DbAttribute>[0];
+            if (updateCharacter.Attributes != null && updateCharacter.Attributes.Any())
+            {
+                var attributeIdsIndex = await repository.GetAttributeIds(updateCharacter.CharacterId);
+                attributeChanges = updateCharacter.Attributes
+                    .Where(a => attributeIdsIndex.ContainsKey(a.Id))
+                    .Select(a => updateBuilderFactory.Create<DbAttribute>(attributeIdsIndex[a.Id])
+                        .Field(aa => aa.Value, a.Value?.Trim()))
+                    .ToArray();
+            }
 
             if (intentionManager.IsAllowed(CharacterIntention.EditPrivacySettings))
             {
@@ -84,7 +96,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
                 }
             }
 
-            var character = await repository.Update(changes);
+            if (changes.HasChanges() || attributeChanges.Any(c => c.HasChanges()))
+            {
+                changes.Field(c => c.LastUpdateDate, dateTimeProvider.Now);
+            }
+
+            var character = await repository.Update(changes, attributeChanges);
             await publisher.Publish(invokedEvents, updateCharacter.CharacterId);
             return character;
         }

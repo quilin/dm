@@ -24,6 +24,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
         /// </summary>
         /// <param name="gameId"></param>
         /// <returns></returns>
-        Task<AttributeSchema> GetSchema(Guid gameId);
+        Task<AttributeSchema> GetGameSchema(Guid gameId);
+
+        /// <summary>
+        /// Get game schema for character
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <returns></returns>
+        Task<AttributeSchema> GetCharacterSchema(Guid characterId);
     }
 }

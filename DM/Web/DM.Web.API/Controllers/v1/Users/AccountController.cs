@@ -19,16 +19,19 @@ namespace DM.Web.API.Controllers.v1.Users
         private readonly IRegistrationApiService registrationApiService;
         private readonly IActivationApiService activationApiService;
         private readonly ILoginApiService loginApiService;
+        private readonly IPasswordResetApiService passwordResetApiService;
 
         /// <inheritdoc />
         public AccountController(
             IRegistrationApiService registrationApiService,
             IActivationApiService activationApiService,
-            ILoginApiService loginApiService)
+            ILoginApiService loginApiService,
+            IPasswordResetApiService passwordResetApiService)
         {
             this.registrationApiService = registrationApiService;
             this.activationApiService = activationApiService;
             this.loginApiService = loginApiService;
+            this.passwordResetApiService = passwordResetApiService;
         }
 
         /// <summary>
@@ -66,7 +69,31 @@ namespace DM.Web.API.Controllers.v1.Users
         [HttpGet(Name = nameof(GetCurrent))]
         [AuthenticationRequired]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 401)]
         public async Task<IActionResult> GetCurrent() => Ok(await loginApiService.GetCurrent());
+
+        /// <summary>
+        /// Reset registered user password
+        /// </summary>
+        /// <param name="resetPassword">Account details</param>
+        /// <response code="200">Password has been reset</response>
+        /// <response code="400">Some account details were incorrect</response>
+        [HttpPost("password", Name = nameof(ResetPassword))]
+        [ProducesResponseType(typeof(Envelope<User>), 201)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword) =>
+            Ok(await passwordResetApiService.Reset(resetPassword));
+
+        /// <summary>
+        /// Change registered user password
+        /// </summary>
+        /// <param name="changePassword"></param>
+        /// <response code="200">Password has been changed</response>
+        /// <response code="400">Some account details were incorrect</response>
+        [HttpPut("password", Name = nameof(ChangePassword))]
+        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword) =>
+            Ok(await passwordResetApiService.Change(changePassword));
     }
 }

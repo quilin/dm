@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace DM.Services.Mail.Sender.Consumer
+namespace DM.Services.Mail.Sender
 {
     /// <summary>
     /// Extensions for address logging obfuscation

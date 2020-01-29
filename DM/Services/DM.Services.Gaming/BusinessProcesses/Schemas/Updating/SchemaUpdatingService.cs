@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
@@ -41,15 +42,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         }
         
         /// <inheritdoc />
-        public async Task<AttributeSchema> Update(AttributeSchema attributeSchema)
+        public Task<AttributeSchema> Update(AttributeSchema attributeSchema)
         {
-            validator.ValidateAndThrow(attributeSchema);
-            var oldSchema = await readingService.Get(attributeSchema.Id);
-            intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
-
-            var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identity.User.UserId);
-            var updatedSchema = await repository.UpdateSchema(schemaToUpdate);
-            return mapper.Map<AttributeSchema>(updatedSchema);
+            throw new NotImplementedException("Attribute schema updates are suspended due to known critical issue");
+            //
+            // validator.ValidateAndThrow(attributeSchema);
+            // var oldSchema = await readingService.Get(attributeSchema.Id);
+            // intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
+            //
+            // var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identity.User.UserId);
+            // var updatedSchema = await repository.UpdateSchema(schemaToUpdate);
+            // return mapper.Map<AttributeSchema>(updatedSchema);
         }
     }
 }
