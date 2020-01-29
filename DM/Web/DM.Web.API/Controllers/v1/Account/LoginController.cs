@@ -6,7 +6,7 @@ using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DM.Web.API.Controllers.v1.Users
+namespace DM.Web.API.Controllers.v1.Account
 {
     /// <summary>
     /// Login
