@@ -118,11 +118,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public string Skype { get; set; }
 
         /// <summary>
-        /// Email display flag
-        /// </summary>
-        public bool ShowEmail { get; set; }
-
-        /// <summary>
         /// Full user information
         /// </summary>
         public string Info { get; set; }
