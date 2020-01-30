@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Community.BusinessProcesses.Activation;
 using DM.Services.Community.BusinessProcesses.Registration.Confirmation;
 using DM.Services.Community.Dto;
 using DM.Services.Core.Dto.Enums;
@@ -14,7 +15,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
         private readonly IValidator<UserRegistration> validator;
         private readonly ISecurityManager securityManager;
         private readonly IUserFactory userFactory;
-        private readonly IRegistrationTokenFactory registrationTokenFactory;
+        private readonly IActivationTokenFactory activationTokenFactory;
         private readonly IRegistrationRepository repository;
         private readonly IRegistrationMailSender mailSender;
         private readonly IInvokedEventPublisher publisher;
@@ -24,7 +25,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             IValidator<UserRegistration> validator,
             ISecurityManager securityManager,
             IUserFactory userFactory,
-            IRegistrationTokenFactory registrationTokenFactory,
+            IActivationTokenFactory activationTokenFactory,
             IRegistrationRepository repository,
             IRegistrationMailSender mailSender,
             IInvokedEventPublisher publisher)
@@ -32,7 +33,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             this.validator = validator;
             this.securityManager = securityManager;
             this.userFactory = userFactory;
-            this.registrationTokenFactory = registrationTokenFactory;
+            this.activationTokenFactory = activationTokenFactory;
             this.repository = repository;
             this.mailSender = mailSender;
             this.publisher = publisher;
@@ -45,7 +46,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
 
             var (hash, salt) = securityManager.GeneratePassword(registration.Password);
             var user = userFactory.Create(registration, salt, hash);
-            var token = registrationTokenFactory.Create(user.UserId);
+            var token = activationTokenFactory.Create(user.UserId);
 
             await repository.AddUser(user, token);
             await mailSender.Send(user.Email, user.Login, token.TokenId);

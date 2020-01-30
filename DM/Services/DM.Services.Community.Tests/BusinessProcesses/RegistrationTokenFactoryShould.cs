@@ -1,5 +1,5 @@
 using System;
-using DM.Services.Community.BusinessProcesses.Registration;
+using DM.Services.Community.BusinessProcesses.Activation;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
@@ -13,7 +13,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
     {
         private readonly ISetup<IGuidFactory, Guid> newIdSetup;
         private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
-        private readonly RegistrationTokenFactory factory;
+        private readonly ActivationTokenFactory factory;
 
         public RegistrationTokenFactoryShould()
         {
@@ -23,7 +23,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             var dateTimeProvider = Mock<IDateTimeProvider>();
             currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
-            factory = new RegistrationTokenFactory(guidFactory.Object, dateTimeProvider.Object);
+            factory = new ActivationTokenFactory(guidFactory.Object, dateTimeProvider.Object);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             {
                 TokenId = tokenId,
                 UserId = userId,
-                Type = TokenType.Registration,
+                Type = TokenType.Activation,
                 CreateDate = dateTimeOffset,
                 IsRemoved = false
             });

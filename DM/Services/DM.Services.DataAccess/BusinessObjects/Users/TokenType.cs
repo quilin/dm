@@ -8,12 +8,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// User registration password setting
         /// </summary>
-        Registration = 0,
+        Activation = 0,
 
         /// <summary>
         /// Password restoration
         /// </summary>
-        PasswordRestoration = 1,
+        PasswordChange = 1,
 
         /// <summary>
         /// Game assistant assignment

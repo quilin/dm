@@ -71,7 +71,7 @@ namespace DM.Services.Community.Tests.Integration
                 var token = new Token
                 {
                     UserId = userId,
-                    Type = TokenType.Registration,
+                    Type = TokenType.Activation,
                     TokenId = tokenId,
                     CreateDate = DateTimeOffset.Now,
                     IsRemoved = false

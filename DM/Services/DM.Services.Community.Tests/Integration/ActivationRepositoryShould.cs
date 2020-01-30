@@ -29,7 +29,7 @@ namespace DM.Services.Community.Tests.Integration
                 rdb.Tokens.Add(new Token
                 {
                     TokenId = tokenId1,
-                    Type = TokenType.Registration,
+                    Type = TokenType.Activation,
                     UserId = userId1,
                     IsRemoved = false,
                     CreateDate = DateTimeOffset.Now
@@ -65,7 +65,7 @@ namespace DM.Services.Community.Tests.Integration
                 rdb.Tokens.Add(new Token
                 {
                     TokenId = tokenId,
-                    Type = TokenType.Registration,
+                    Type = TokenType.Activation,
                     UserId = userId,
                     IsRemoved = false,
                     CreateDate = DateTimeOffset.Now

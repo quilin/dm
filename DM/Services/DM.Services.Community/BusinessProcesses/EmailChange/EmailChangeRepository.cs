@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,16 +8,16 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.BusinessProcesses.PasswordChange
+namespace DM.Services.Community.BusinessProcesses.EmailChange
 {
     /// <inheritdoc />
-    public class PasswordChangeRepository : IPasswordChangeRepository
+    public class EmailChangeRepository : IEmailChangeRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
-        public PasswordChangeRepository(
+        public EmailChangeRepository(
             DmDbContext dbContext,
             IMapper mapper)
         {
@@ -33,15 +32,10 @@ namespace DM.Services.Community.BusinessProcesses.PasswordChange
             .FirstOrDefaultAsync();
 
         /// <inheritdoc />
-        public Task<bool> TokenValid(Guid tokenId, Guid userId, DateTimeOffset createdSince) => dbContext.Tokens
-            .AnyAsync(t => t.TokenId == tokenId && t.UserId == userId &&
-                t.Type == TokenType.PasswordChange && t.CreateDate > createdSince);
-
-        /// <inheritdoc />
-        public Task UpdatePassword(IUpdateBuilder<User> userUpdate, IUpdateBuilder<Token> tokenUpdate)
+        public Task Update(IUpdateBuilder<User> updateUser, Token token)
         {
-            userUpdate.AttachTo(dbContext);
-            tokenUpdate?.AttachTo(dbContext);
+            updateUser.AttachTo(dbContext);
+            dbContext.Tokens.Add(token);
             return dbContext.SaveChangesAsync();
         }
     }

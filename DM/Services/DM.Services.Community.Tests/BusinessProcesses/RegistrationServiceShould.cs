@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Community.BusinessProcesses.Activation;
 using DM.Services.Community.BusinessProcesses.Registration;
 using DM.Services.Community.BusinessProcesses.Registration.Confirmation;
 using DM.Services.Community.Dto;
@@ -21,9 +22,9 @@ namespace DM.Services.Community.Tests.BusinessProcesses
     {
         private readonly ISetup<ISecurityManager, (string Hash, string Salt)> passwordGenerationSetup;
         private readonly ISetup<IUserFactory, User> createUserSetup;
-        private readonly ISetup<IRegistrationTokenFactory, Token> createTokenSetup;
+        private readonly ISetup<IActivationTokenFactory, Token> createTokenSetup;
         private readonly Mock<IUserFactory> userFactory;
-        private readonly Mock<IRegistrationTokenFactory> tokenFactory;
+        private readonly Mock<IActivationTokenFactory> tokenFactory;
         private readonly Mock<IRegistrationRepository> registrationRepository;
         private readonly Mock<IRegistrationMailSender> mailSender;
         private readonly Mock<IInvokedEventPublisher> eventPublisher;
@@ -45,7 +46,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             createUserSetup = userFactory.Setup(f =>
                 f.Create(It.IsAny<UserRegistration>(), It.IsAny<string>(), It.IsAny<string>()));
 
-            tokenFactory = Mock<IRegistrationTokenFactory>();
+            tokenFactory = Mock<IActivationTokenFactory>();
             createTokenSetup = tokenFactory.Setup(f => f.Create(It.IsAny<Guid>()));
 
             registrationRepository = Mock<IRegistrationRepository>();

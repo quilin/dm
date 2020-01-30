@@ -1,0 +1,11 @@
+@using DM.Services.Mail.Rendering.Rendering
+@model DM.Services.Community.BusinessProcesses.Registration.Confirmation.RegistrationConfirmationViewModel
+@{
+    Layout = EmailConstants.Layout;
+    ViewData["Title"] = "Подтверждение смены адреса электронной почты на DM.AM";
+}
+<p style="@EmailConstants.ParagraphStyles">Вы успешно изменили адрес своей электронной почты!</p>
+<p style="@EmailConstants.ParagraphStyles">Ваша учетная запись была деактивирована, но активировать ее обратно очень просто - вам всего лишь нужно перейти по <a href="@Model.ConfirmationLinkUrl">ссылке</a>.<br/></p>
+<p style="@EmailConstants.ParagraphStyles">Если вы не знаете, почему вам пришло это письмо, просто удалите его и знайте, что мы извиняемся!</p>
+<a style="@EmailConstants.ButtonStyles" href="@Model.ConfirmationLinkUrl">Подтвердить новый email</a>
+<p style="@EmailConstants.ParagraphStyles font-size: 12px; color: #8a8a8a;">Если не получается, попробуйте вставить ссылку в адресную строку: @Model.ConfirmationLinkUrl</p>

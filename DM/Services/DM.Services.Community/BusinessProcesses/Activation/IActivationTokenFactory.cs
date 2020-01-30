@@ -1,15 +1,15 @@
 using System;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Community.BusinessProcesses.Registration
+namespace DM.Services.Community.BusinessProcesses.Activation
 {
     /// <summary>
-    /// Factory for registration tokens
+    /// Factory for activation tokens
     /// </summary>
-    public interface IRegistrationTokenFactory
+    public interface IActivationTokenFactory
     {
         /// <summary>
-        /// Create new registration token for account activation
+        /// Create new activation token for account
         /// </summary>
         /// <param name="userId">User identifier</param>
         /// <returns>Token DAL</returns>

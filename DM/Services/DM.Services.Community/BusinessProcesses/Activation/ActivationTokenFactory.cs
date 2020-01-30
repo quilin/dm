@@ -2,16 +2,16 @@ using System;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Community.BusinessProcesses.Registration
+namespace DM.Services.Community.BusinessProcesses.Activation
 {
     /// <inheritdoc />
-    public class RegistrationTokenFactory : IRegistrationTokenFactory
+    public class ActivationTokenFactory : IActivationTokenFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
-        public RegistrationTokenFactory(
+        public ActivationTokenFactory(
             IGuidFactory guidFactory,
             IDateTimeProvider dateTimeProvider)
         {
@@ -26,7 +26,7 @@ namespace DM.Services.Community.BusinessProcesses.Registration
             {
                 TokenId = guidFactory.Create(),
                 UserId = userId,
-                Type = TokenType.Registration,
+                Type = TokenType.Activation,
                 CreateDate = dateTimeProvider.Now,
                 IsRemoved = false
             };

@@ -26,7 +26,7 @@ namespace DM.Services.Community.BusinessProcesses.PasswordReset
             {
                 TokenId = guidFactory.Create(),
                 UserId = userId,
-                Type = TokenType.PasswordRestoration,
+                Type = TokenType.PasswordChange,
                 CreateDate = dateTimeProvider.Now,
                 IsRemoved = false
             };
