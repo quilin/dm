@@ -6,12 +6,12 @@ using DM.Services.Authentication.Implementation;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Tests
 {
@@ -46,8 +46,9 @@ namespace DM.Services.Authentication.Tests
         {
             var userId = Guid.NewGuid();
             var sessionId = Guid.NewGuid();
+            var session = new Session{Id = sessionId};
             userSetup.Returns(new AuthenticatedUser {UserId = userId});
-            sessionSetup.Returns(new Session {Id = sessionId});
+            sessionSetup.Returns(session);
             authenticationRepository
                 .Setup(r => r.RemoveSession(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
@@ -62,7 +63,8 @@ namespace DM.Services.Authentication.Tests
         {
             var userId = Guid.NewGuid();
             var user = new AuthenticatedUser {UserId = userId};
-            var session = new Session {IsPersistent = true};
+            var sessionId = Guid.NewGuid();
+            var session = new Session{Id = sessionId};
             var userSettings = new UserSettings();
             userSetup.Returns(user);
             sessionSetup.Returns(session);
@@ -70,15 +72,17 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository
                 .Setup(r => r.RemoveSessions(It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
-            authenticationRepository
-                .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
-                .Returns(Task.CompletedTask);
             cryptoService
                 .Setup(s => s.Encrypt(It.IsAny<string>()))
                 .ReturnsAsync("token");
 
-            var newSession = new Session();
-            sessionFactory.Setup(f => f.Create(true)).Returns(newSession);
+            var newSessionId = Guid.NewGuid();
+            var newSession = new Session {Id = newSessionId};
+            var sessionToCreate = new DbSession{Id = sessionId};
+            sessionFactory.Setup(f => f.Create(false)).Returns(sessionToCreate);
+            authenticationRepository
+                .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>()))
+                .ReturnsAsync(newSession);
 
             var actual = await service.LogoutAll();
             actual.Error.Should().Be(AuthenticationError.NoError);
@@ -88,7 +92,7 @@ namespace DM.Services.Authentication.Tests
             actual.AuthenticationToken.Should().Be("token");
 
             authenticationRepository.Verify(r => r.RemoveSessions(userId), Times.Once);
-            authenticationRepository.Verify(r => r.AddSession(userId, newSession), Times.Once);
+            authenticationRepository.Verify(r => r.AddSession(userId, sessionToCreate), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();
         }
     }

@@ -11,6 +11,8 @@ using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.UserSettings;
+using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
+using Session = DM.Services.Authentication.Dto.Session;
 
 namespace DM.Services.Authentication.Repositories
 {
@@ -56,7 +58,10 @@ namespace DM.Services.Authentication.Repositories
                 .Find(Filter<UserSessions>()
                     .ElemMatch(u => u.Sessions, s => s.Id == sessionId))
                 .FirstOrDefaultAsync();
-            return userSessions?.Sessions.FirstOrDefault(s => s.Id == sessionId);
+            var matchingSession = userSessions?.Sessions.FirstOrDefault(s => s.Id == sessionId);
+            return matchingSession == null
+                ? null
+                : mapper.Map<Session>(matchingSession);
         }
 
         /// <inheritdoc />
@@ -98,12 +103,13 @@ namespace DM.Services.Authentication.Repositories
         }
 
         /// <inheritdoc />
-        public Task AddSession(Guid userId, Session session)
+        public async Task<Session> AddSession(Guid userId, DbSession session)
         {
-            return Collection<UserSessions>().FindOneAndUpdateAsync(
+            await Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId),
                 Update<UserSessions>().Push(s => s.Sessions, session),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+            return mapper.Map<Session>(session);
         }
 
         /// <inheritdoc />
@@ -111,7 +117,7 @@ namespace DM.Services.Authentication.Repositories
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId),
-                Update<UserSessions>().Set(s => s.Sessions, new List<Session>()),
+                Update<UserSessions>().Set(s => s.Sessions, new List<DbSession>()),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
         }
     }

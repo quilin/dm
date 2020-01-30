@@ -7,7 +7,6 @@ using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
@@ -138,6 +137,7 @@ namespace DM.Services.Authentication.Tests
             var settings = new UserSettings();
             var session = new Session
             {
+                Id = sessionId,
                 IsPersistent = false,
                 ExpirationDate = new DateTime(2018, 06, 11, 10, 0, 0)
             };
@@ -185,6 +185,7 @@ namespace DM.Services.Authentication.Tests
             var settings = new UserSettings();
             var session = new Session
             {
+                Id = sessionId,
                 IsPersistent = false,
                 ExpirationDate = new DateTime(2019, 06, 11, 10, 0, 0)
             };
@@ -228,7 +229,8 @@ namespace DM.Services.Authentication.Tests
             var settings = new UserSettings();
             var session = new Session
             {
-                IsPersistent = true,
+                Id = sessionId,
+                IsPersistent = true
             };
             authenticationRepository
                 .Setup(r => r.FindUser(It.IsAny<Guid>()))

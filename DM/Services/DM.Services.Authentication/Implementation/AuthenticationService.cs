@@ -8,8 +8,8 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using Newtonsoft.Json;
+using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Implementation
 {
@@ -138,8 +138,7 @@ namespace DM.Services.Authentication.Implementation
         public async Task<IIdentity> LogoutAll()
         {
             await repository.RemoveSessions(identity.User.UserId);
-
-            var session = sessionFactory.Create(identity.Session.IsPersistent);
+            var session = sessionFactory.Create(false);
             return await CreateAuthenticationResult(identity.User, session, identity.Settings);
         }
 
@@ -151,16 +150,16 @@ namespace DM.Services.Authentication.Implementation
         }
 
         private async Task<IIdentity> CreateAuthenticationResult(
-            AuthenticatedUser user, Session session, UserSettings settings)
+            AuthenticatedUser user, DbSession session, UserSettings settings)
         {
-            await repository.AddSession(user.UserId, session);
+            var newSession = await repository.AddSession(user.UserId, session);
             var authData = new Dictionary<string, Guid>
             {
                 [UserIdKey] = user.UserId,
                 [SessionIdKey] = session.Id
             };
             var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData));
-            return Identity.Success(user, session, settings, token);
+            return Identity.Success(user, newSession, settings, token);
         }
     }
 }

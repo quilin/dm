@@ -1,5 +1,3 @@
-using DM.Services.DataAccess.BusinessObjects.Users;
-
 namespace DM.Services.Authentication.Dto
 {
     /// <inheritdoc />
@@ -33,9 +31,9 @@ namespace DM.Services.Authentication.Dto
         {
             Error = error,
             User = AuthenticatedUser.Guest,
-            Session = null,
             Settings = UserSettings.Default,
-            AuthenticationToken = null
+            AuthenticationToken = null,
+            Session = null
         };
 
         /// <summary>
@@ -51,9 +49,9 @@ namespace DM.Services.Authentication.Dto
         {
             Error = AuthenticationError.NoError,
             User = user,
-            Session = session,
             Settings = settings,
-            AuthenticationToken = token
+            AuthenticationToken = token,
+            Session = session
         };
 
         /// <summary>

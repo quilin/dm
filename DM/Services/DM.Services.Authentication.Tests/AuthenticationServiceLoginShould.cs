@@ -7,12 +7,12 @@ using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Session = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Tests
 {
@@ -139,6 +139,7 @@ namespace DM.Services.Authentication.Tests
                 PasswordHash = "hash",
                 Salt = "salt"
             };
+            var externalSession = new DM.Services.Authentication.Dto.Session();
             userSearchSetup.ReturnsAsync((true, user));
             securityManager
                 .Setup(m => m.ComparePasswords(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
@@ -151,7 +152,7 @@ namespace DM.Services.Authentication.Tests
                 .ReturnsAsync(userSettings);
             authenticationRepository
                 .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(externalSession);
             cryptoService
                 .Setup(s => s.Encrypt(It.IsAny<string>()))
                 .ReturnsAsync("token");
@@ -160,7 +161,7 @@ namespace DM.Services.Authentication.Tests
 
             actual.Error.Should().Be(AuthenticationError.NoError);
             actual.User.Should().Be(user);
-            actual.Session.Should().Be(session);
+            actual.Session.Should().BeEquivalentTo(externalSession);
             actual.Settings.Should().Be(userSettings);
             actual.AuthenticationToken.Should().Be("token");
             securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
@@ -176,6 +177,7 @@ namespace DM.Services.Authentication.Tests
             var user = new AuthenticatedUser{UserId = userId};
             var session = new Session();
             var userSettings = new UserSettings();
+            var externalSession = new DM.Services.Authentication.Dto.Session();
             authenticationRepository
                 .Setup(r => r.FindUser(It.IsAny<Guid>()))
                 .ReturnsAsync(user);
@@ -190,7 +192,7 @@ namespace DM.Services.Authentication.Tests
                 .ReturnsAsync("token");
             authenticationRepository
                 .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(externalSession);
 
             var actual = await service.Authenticate(userId);
 

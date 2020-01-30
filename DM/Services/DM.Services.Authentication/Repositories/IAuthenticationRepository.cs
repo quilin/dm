@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
-using DM.Services.DataAccess.BusinessObjects.Users;
+using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Repositories
 {
@@ -61,7 +61,7 @@ namespace DM.Services.Authentication.Repositories
         /// <param name="userId">Authenticated user id</param>
         /// <param name="session">Authentication session</param>
         /// <returns></returns>
-        Task AddSession(Guid userId, Session session);
+        Task<Session> AddSession(Guid userId, DbSession session);
 
         /// <summary>
         /// Remove all sessions from the user

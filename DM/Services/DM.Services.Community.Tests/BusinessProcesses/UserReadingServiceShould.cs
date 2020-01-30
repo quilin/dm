@@ -71,7 +71,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
             readingRepository
                 .Setup(r => r.GetUsers(It.IsAny<PagingData>(), It.IsAny<bool>()))
                 .ReturnsAsync(expected);
-            currentUserSettingsSetup.Returns(new UserSettings());
+            currentUserSettingsSetup.Returns(new UserSettings{Paging = new PagingSettings{EntitiesPerPage = 10}});
 
             var (actual, _) = await service.Get(new PagingQuery(), true);
             actual.Should().BeSameAs(expected);

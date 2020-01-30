@@ -9,6 +9,7 @@ using DM.Tests.Core;
 using FluentAssertions;
 using MongoDB.Driver;
 using Xunit;
+using DtoSession = DM.Services.Authentication.Dto.Session;
 
 namespace DM.Services.Authentication.Tests.Integration
 {
@@ -75,10 +76,11 @@ namespace DM.Services.Authentication.Tests.Integration
                 });
 
             var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
-            (await authenticationRepository.FindUserSession(sessionId)).Should().BeEquivalentTo(new Session
+            var actual = await authenticationRepository.FindUserSession(sessionId);
+            actual.Should().BeEquivalentTo(new DtoSession
             {
                 Id = sessionId,
-                ExpirationDate = DateTime.SpecifyKind(new DateTime(2020, 1, 1), DateTimeKind.Utc),
+                ExpirationDate = new DateTimeOffset(new DateTime(2020, 1, 1), TimeSpan.Zero),
                 IsPersistent = false
             });
             (await authenticationRepository.FindUserSession(Guid.NewGuid())).Should().BeNull();
