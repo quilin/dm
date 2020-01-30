@@ -35,5 +35,11 @@ namespace DM.Web.API.Services.Users
             var user = await userReadingService.Get(login);
             return new Envelope<User>(mapper.Map<User>(user));
         }
+
+        /// <inheritdoc />
+        public Task<Envelope<User>> UpdateUser(string login, User user)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

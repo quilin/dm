@@ -22,5 +22,13 @@ namespace DM.Web.API.Services.Users
         /// <param name="login">User login</param>
         /// <returns></returns>
         Task<Envelope<User>> GetUser(string login);
+
+        /// <summary>
+        /// Update user
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <param name="user">User information</param>
+        /// <returns></returns>
+        Task<Envelope<User>> UpdateUser(string login, User user);
     }
 }
