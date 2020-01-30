@@ -56,6 +56,7 @@ namespace DM.Services.MessageQueuing.Tests
             channel.Verify(c => c.ExchangeDeclare("exchange.name", "topic", true, false, null));
             channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.1", null), Times.Once);
             channel.Verify(c => c.QueueBind("queue.name", "exchange.name", "routing.key.2", null), Times.Once);
+            channel.Verify(c => c.BasicQos(0, 0, true), Times.Once);
             channel.VerifyNoOtherCalls();
         }
 

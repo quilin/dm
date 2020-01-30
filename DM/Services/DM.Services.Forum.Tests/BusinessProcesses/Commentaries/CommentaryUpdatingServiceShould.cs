@@ -104,6 +104,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             updateCommentSetup.ReturnsAsync(expected);
             var rightNow = new DateTimeOffset(2019, 01, 12, 10, 00, 00, TimeSpan.Zero);
             currentMomentSetup.Returns(rightNow);
+            commentUpdateBuilder.Setup(b => b.HasChanges()).Returns(true);
 
             var actual = await service.Update(new UpdateComment {CommentId = commentId, Text = "some text boi"});
 

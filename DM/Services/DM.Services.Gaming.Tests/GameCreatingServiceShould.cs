@@ -116,6 +116,7 @@ namespace DM.Services.Gaming.Tests
         {
             currentUserSetup.Returns(new AuthenticatedUser());
             createGameSetup.Returns(new Game());
+            createRoomSetup.Returns(new Room());
             saveGameSetup.ReturnsAsync(new GameExtended());
 
             await service.Create(new CreateGame());
@@ -133,6 +134,7 @@ namespace DM.Services.Gaming.Tests
                 QuantityRating = 99
             });
             createGameSetup.Returns(new Game());
+            createRoomSetup.Returns(new Room());
             saveGameSetup.ReturnsAsync(new GameExtended());
 
             var createGame = new CreateGame();
@@ -152,6 +154,7 @@ namespace DM.Services.Gaming.Tests
                 QuantityRating = 100
             });
             createGameSetup.Returns(new Game());
+            createRoomSetup.Returns(new Room());
             saveGameSetup.ReturnsAsync(new GameExtended());
 
             var createGame = new CreateGame
@@ -224,15 +227,27 @@ namespace DM.Services.Gaming.Tests
         {
             currentUserSetup.Returns(new AuthenticatedUser());
             var gameId = Guid.NewGuid();
-            createGameSetup.Returns(new Game
-            {
-                GameId = gameId
-            });
+            createGameSetup.Returns(new Game {GameId = gameId});
+            createRoomSetup.Returns(new Room());
             saveGameSetup.ReturnsAsync(new GameExtended());
 
             await service.Create(new CreateGame());
 
-            countersRepository.Verify(r => r.Create(gameId, entryType));
+            countersRepository.Verify(r => r.Create(gameId, entryType), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateCountersForRoomEntries()
+        {
+            currentUserSetup.Returns(new AuthenticatedUser());
+            var roomId = Guid.NewGuid();
+            createGameSetup.Returns(new Game {GameId = Guid.NewGuid()});
+            createRoomSetup.Returns(new Room {RoomId = roomId});
+            saveGameSetup.ReturnsAsync(new GameExtended());
+
+            await service.Create(new CreateGame());
+
+            countersRepository.Verify(r => r.Create(roomId, UnreadEntryType.Message), Times.Once);
         }
 
         [Fact]
@@ -241,6 +256,7 @@ namespace DM.Services.Gaming.Tests
             currentUserSetup.Returns(new AuthenticatedUser());
             var gameId = Guid.NewGuid();
             createGameSetup.Returns(new Game {GameId = gameId});
+            createRoomSetup.Returns(new Room());
             saveGameSetup.ReturnsAsync(new GameExtended());
 
             await service.Create(new CreateGame());
