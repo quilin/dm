@@ -10,12 +10,15 @@ using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.BusinessObjects.Users.Settings;
+using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace DM.Services.Community.BusinessProcesses.Reading
 {
     /// <inheritdoc />
-    public class UserReadingRepository : IUserReadingRepository
+    public class UserReadingRepository : MongoCollectionRepository<UserSettings>, IUserReadingRepository
     {
         private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;
@@ -24,8 +27,9 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         /// <inheritdoc />
         public UserReadingRepository(
             DmDbContext dmDbContext,
+            DmMongoClient mongoClient,
             IDateTimeProvider dateTimeProvider,
-            IMapper mapper)
+            IMapper mapper) : base(mongoClient)
         {
             this.dmDbContext = dmDbContext;
             this.dateTimeProvider = dateTimeProvider;
@@ -62,23 +66,29 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         }
 
         /// <inheritdoc />
-        public Task<UserDetails> GetUser(string login)
-        {
-            var lowerLogin = login.ToLower();
-            return dmDbContext.Users
-                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
-                .ProjectTo<UserDetails>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-        }
+        public Task<GeneralUser> GetUser(string login) => dmDbContext.Users
+            .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
+            .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
 
         /// <inheritdoc />
-        public Task<UserDetails> GetProfile(string login)
+        public async Task<UserDetails> GetUserDetails(string login)
         {
-            var lowerLogin = login.ToLower();
-            return dmDbContext.Users
-                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
+            var userDetails = await dmDbContext.Users
+                .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
                 .ProjectTo<UserDetails>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+
+            if (userDetails == null)
+            {
+                return null;
+            }
+
+            var userSettings = await Collection
+                .Find(Filter.Eq(u => u.Id, userDetails.UserId))
+                .FirstOrDefaultAsync();
+            userDetails.Settings = mapper.Map<Authentication.Dto.UserSettings>(userSettings);
+            return userDetails;
         }
     }
 }

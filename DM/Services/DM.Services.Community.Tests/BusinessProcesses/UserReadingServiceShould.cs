@@ -38,13 +38,13 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         public void ThrowGoneWhenUserNotFound()
         {
             readingRepository
-                .Setup(r => r.GetUser(It.IsAny<string>()))
+                .Setup(r => r.GetUserDetails(It.IsAny<string>()))
                 .ReturnsAsync((UserDetails) null);
 
-            service.Invoking(s => s.Get("User").Wait())
+            service.Invoking(s => s.GetDetails("User").Wait())
                 .Should().Throw<HttpException>()
                 .And.StatusCode.Should().Be(HttpStatusCode.Gone);
-            readingRepository.Verify(r => r.GetUser("User"), Times.Once);
+            readingRepository.Verify(r => r.GetUserDetails("User"), Times.Once);
         }
 
         [Fact]
@@ -52,13 +52,13 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         {
             var expected = new UserDetails();
             readingRepository
-                .Setup(r => r.GetUser(It.IsAny<string>()))
+                .Setup(r => r.GetUserDetails(It.IsAny<string>()))
                 .ReturnsAsync(expected);
 
-            var actual = await service.Get("User");
+            var actual = await service.GetDetails("User");
 
             actual.Should().Be(expected);
-            readingRepository.Verify(r => r.GetUser("User"), Times.Once);
+            readingRepository.Verify(r => r.GetUserDetails("User"), Times.Once);
         }
 
         [Fact]

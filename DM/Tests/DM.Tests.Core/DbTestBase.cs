@@ -26,8 +26,7 @@ namespace DM.Tests.Core
         }
 
         protected static DmDbContext GetRdb(string name) => new DmDbContext(
-            new DbContextOptionsBuilder<DmDbContext>()
-                .UseInMemoryDatabase(name).Options);
+            new DbContextOptionsBuilder<DmDbContext>().UseInMemoryDatabase(name).Options);
 
         protected MongoDbWrapper GetMongoClient(string name)
         {

@@ -28,11 +28,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         public Guid UserId { get; set; }
 
         /// <inheritdoc />
+        [MaxLength(100)]
         public string Login { get; set; }
 
         /// <summary>
         /// Registration email (unique)
         /// </summary>
+        [MaxLength(100)]
         public string Email { get; set; }
 
         /// <summary>
@@ -58,11 +60,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Password salt
         /// </summary>
+        [MaxLength(120)]
         public string Salt { get; set; }
 
         /// <summary>
         /// Password hash
         /// </summary>
+        [MaxLength(300)]
         public string PasswordHash { get; set; }
 
         /// <inheritdoc />
@@ -95,26 +99,31 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Custom status
         /// </summary>
+        [MaxLength(200)]
         public string Status { get; set; }
 
         /// <summary>
         /// Real name
         /// </summary>
+        [MaxLength(100)]
         public string Name { get; set; }
 
         /// <summary>
         /// Real location
         /// </summary>
+        [MaxLength(100)]
         public string Location { get; set; }
 
         /// <summary>
         /// ICQ number
         /// </summary>
+        [MaxLength(20)]
         public string Icq { get; set; }
 
         /// <summary>
         /// Skype name
         /// </summary>
+        [MaxLength(50)]
         public string Skype { get; set; }
 
         /// <summary>

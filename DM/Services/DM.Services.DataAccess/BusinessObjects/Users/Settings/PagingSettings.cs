@@ -24,5 +24,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Users.Settings
         /// Number of private messages and conversations on dialogue page
         /// </summary>
         public int MessagesPerPage { get; set; }
+
+        /// <summary>
+        /// Number of other entities on a single page
+        /// </summary>
+        public int EntitiesPerPage { get; set; }
     }
 }

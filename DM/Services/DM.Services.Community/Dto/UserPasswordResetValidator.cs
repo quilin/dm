@@ -18,7 +18,7 @@ namespace DM.Services.Community.Dto
                 .NotEmpty().WithMessage(ValidationError.Empty)
                 .MustAsync(async (model, login, context, _) =>
                 {
-                    var user = await repository.GetUser(login);
+                    var user = await repository.GetUserDetails(login);
                     if (user == null)
                     {
                         return false;

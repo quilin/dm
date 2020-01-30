@@ -19,10 +19,17 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         Task<(IEnumerable<GeneralUser> users, PagingResult paging)> Get(PagingQuery query, bool withInactive);
 
         /// <summary>
-        /// Get community user by login
+        /// Get community user short info by login
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <returns></returns>
+        Task<GeneralUser> Get(string login);
+
+        /// <summary>
+        /// Get community user details by login
         /// </summary>
         /// <param name="login">User login</param>
         /// <returns>Found user</returns>
-        Task<UserDetails> Get(string login);
+        Task<UserDetails> GetDetails(string login);
     }
 }

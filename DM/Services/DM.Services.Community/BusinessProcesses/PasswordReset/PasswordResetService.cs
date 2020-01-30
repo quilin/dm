@@ -35,7 +35,7 @@ namespace DM.Services.Community.BusinessProcesses.PasswordReset
         public async Task<GeneralUser> Reset(UserPasswordReset passwordReset)
         {
             await validator.ValidateAndThrowAsync(passwordReset);
-            var user = await userReadingRepository.GetUser(passwordReset.Login);
+            var user = await userReadingRepository.GetUserDetails(passwordReset.Login);
 
             var token = tokenFactory.Create(user.UserId);
             await repository.CreateToken(token);

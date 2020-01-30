@@ -35,9 +35,21 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         }
 
         /// <inheritdoc />
-        public async Task<UserDetails> Get(string login)
+        public async Task<GeneralUser> Get(string login)
         {
             var user = await readingRepository.GetUser(login);
+            if (user == null)
+            {
+                throw new HttpException(HttpStatusCode.Gone, $"User {login} not found");
+            }
+
+            return user;
+        }
+
+        /// <inheritdoc />
+        public async Task<UserDetails> GetDetails(string login)
+        {
+            var user = await readingRepository.GetUserDetails(login);
             if (user == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, $"User {login} not found");

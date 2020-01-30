@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
+using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using MongoDB.Driver;
 
 namespace DM.Services.DataAccess.RelationalStorage
 {
@@ -12,14 +16,16 @@ namespace DM.Services.DataAccess.RelationalStorage
         where TEntity : class, new()
     {
         private readonly Guid id;
-        private readonly IList<Action<TEntity, DbContext>> updateActions;
+        private readonly IList<Action<TEntity, DbContext>> efUpdateActions;
+        private readonly IList<Func<UpdateDefinition<TEntity>>> mongoUpdateActions;
         private bool toDelete;
 
         /// <inheritdoc />
         public UpdateBuilder(Guid id)
         {
             this.id = id;
-            updateActions = new List<Action<TEntity, DbContext>>();
+            efUpdateActions = new List<Action<TEntity, DbContext>>();
+            mongoUpdateActions = new List<Func<UpdateDefinition<TEntity>>>();
         }
 
         /// <inheritdoc />
@@ -30,20 +36,21 @@ namespace DM.Services.DataAccess.RelationalStorage
                 throw new UpdateBuilderException("Builder is configured to delete entity, you cannot modify it");
             }
 
-            updateActions.Add((entity, dbContext) =>
+            efUpdateActions.Add((entity, dbContext) =>
             {
                 SetPropertyValue(entity, field, value);
                 dbContext.Entry(entity).Property(field).IsModified = true;
             });
+            mongoUpdateActions.Add(() => new UpdateDefinitionBuilder<TEntity>().Set(field, value));
             return this;
         }
 
         /// <inheritdoc />
-        public bool HasChanges() => toDelete || updateActions.Any();
+        public bool HasChanges() => toDelete || EnumerableExtensions.Any(efUpdateActions);
 
         public IUpdateBuilder<TEntity> Delete()
         {
-            if (updateActions.Any())
+            if (EnumerableExtensions.Any(efUpdateActions))
             {
                 throw new UpdateBuilderException("Builder is configured to update entity, you cannot delete it");
             }
@@ -72,16 +79,38 @@ namespace DM.Services.DataAccess.RelationalStorage
                 return id;
             }
 
-            if (!updateActions.Any())
+            if (!EnumerableExtensions.Any(efUpdateActions))
             {
                 return id;
             }
 
             dbContext.Set<TEntity>().Attach(entity);
-            foreach (var updateAction in updateActions)
+            foreach (var updateAction in efUpdateActions)
             {
                 updateAction.Invoke(entity, dbContext);
             }
+
+            return id;
+        }
+
+        public async Task<Guid> SaveTo(DmMongoClient mongoClient)
+        {
+            var entityType = typeof(TEntity);
+            if (entityType.GetCustomAttribute<MongoCollectionNameAttribute>() == null)
+            {
+                throw new UpdateBuilderException($"Entity type {entityType.Name} is not a mongo collection type");
+            }
+
+            if (entityType.GetProperty("Id") == null)
+            {
+                throw new UpdateBuilderException($"Entity type {entityType.Name} has no external Id property");
+            }
+
+            var updateDefinition = new UpdateDefinitionBuilder<TEntity>()
+                .Combine(mongoUpdateActions.Select(a => a.Invoke()));
+
+            await mongoClient.GetCollection<TEntity>()
+                .FindOneAndUpdateAsync(new FilterDefinitionBuilder<TEntity>().Eq("id", id), updateDefinition);
 
             return id;
         }

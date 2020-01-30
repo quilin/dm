@@ -1,5 +1,7 @@
 using System;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.DataAccess.RelationalStorage
@@ -37,5 +39,11 @@ namespace DM.Services.DataAccess.RelationalStorage
         /// </summary>
         /// <returns>Identifier</returns>
         Guid AttachTo(DbContext dbContext);
+
+        /// <summary>
+        /// Save changes in mongodb
+        /// </summary>
+        /// <returns></returns>
+        Task<Guid> SaveTo(DmMongoClient mongoClient);
     }
 }

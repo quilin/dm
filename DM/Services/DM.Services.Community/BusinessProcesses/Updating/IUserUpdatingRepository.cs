@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using DM.Services.Community.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.RelationalStorage;
 
 namespace DM.Services.Community.BusinessProcesses.Updating
@@ -14,7 +14,8 @@ namespace DM.Services.Community.BusinessProcesses.Updating
         /// Save user changes
         /// </summary>
         /// <param name="updateUser"></param>
+        /// <param name="settingsUpdate"></param>
         /// <returns></returns>
-        Task<UserDetails> Update(IUpdateBuilder<User> updateUser);
+        Task Update(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate);
     }
 }

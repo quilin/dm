@@ -37,7 +37,7 @@ namespace DM.Web.API.Services.Users
         /// <inheritdoc />
         public async Task<Envelope<User>> GetUser(string login)
         {
-            var user = await readingService.Get(login);
+            var user = await readingService.GetDetails(login);
             return new Envelope<User>(mapper.Map<User>(user));
         }
 

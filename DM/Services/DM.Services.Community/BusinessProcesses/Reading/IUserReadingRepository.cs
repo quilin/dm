@@ -28,8 +28,15 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         /// <summary>
         /// Get user by login
         /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        Task<GeneralUser> GetUser(string login);
+
+        /// <summary>
+        /// Get user details by login
+        /// </summary>
         /// <param name="login">User login</param>
         /// <returns>User found. Null if none found</returns>
-        Task<UserDetails> GetUser(string login);
+        Task<UserDetails> GetUserDetails(string login);
     }
 }
