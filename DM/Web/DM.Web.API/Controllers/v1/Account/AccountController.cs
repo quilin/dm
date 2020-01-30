@@ -20,18 +20,21 @@ namespace DM.Web.API.Controllers.v1.Account
         private readonly IActivationApiService activationApiService;
         private readonly ILoginApiService loginApiService;
         private readonly IPasswordResetApiService passwordResetApiService;
+        private readonly IEmailChangeApiService emailChangeApiService;
 
         /// <inheritdoc />
         public AccountController(
             IRegistrationApiService registrationApiService,
             IActivationApiService activationApiService,
             ILoginApiService loginApiService,
-            IPasswordResetApiService passwordResetApiService)
+            IPasswordResetApiService passwordResetApiService,
+            IEmailChangeApiService emailChangeApiService)
         {
             this.registrationApiService = registrationApiService;
             this.activationApiService = activationApiService;
             this.loginApiService = loginApiService;
             this.passwordResetApiService = passwordResetApiService;
+            this.emailChangeApiService = emailChangeApiService;
         }
 
         /// <summary>
@@ -92,8 +95,19 @@ namespace DM.Web.API.Controllers.v1.Account
         [HttpPut("password", Name = nameof(ChangePassword))]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
-        [ProducesResponseType(typeof(GeneralError), 403)]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword) =>
             Ok(await passwordResetApiService.Change(changePassword));
+
+        /// <summary>
+        /// Change registered user email
+        /// </summary>
+        /// <param name="changeEmail"></param>
+        /// <response code="200">Email has been changed</response>
+        /// <response code="400">Some account details were incorrect</response>
+        [HttpPut("password", Name = nameof(ChangeEmail))]
+        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmail changeEmail) =>
+            Ok(await emailChangeApiService.Change(changeEmail));
     }
 }
