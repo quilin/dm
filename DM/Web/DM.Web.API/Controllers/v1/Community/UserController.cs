@@ -42,17 +42,6 @@ namespace DM.Web.API.Controllers.v1.Community
         public async Task<IActionResult> GetUser(string login) => Ok(await userApiService.GetUser(login));
 
         /// <summary>
-        /// Get certain user profile
-        /// </summary>
-        /// <param name="login"></param>
-        /// <response code="200"></response>
-        /// <response code="410">User not found</response>
-        [HttpGet("{login}/profile", Name = nameof(GetProfile))]
-        [ProducesResponseType(typeof(Envelope<UserProfile>), 200)]
-        [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetProfile(string login) => throw new NotImplementedException();
-
-        /// <summary>
         /// Post user profile picture
         /// </summary>
         /// <param name="login"></param>

@@ -33,6 +33,11 @@ namespace DM.Services.Core.Dto
         /// </summary>
         public string PictureUrl { get; set; }
 
+        /// <summary>
+        /// User defined status
+        /// </summary>
+        public string Status { get; set; }
+
         /// <inheritdoc />
         public bool RatingDisabled { get; set; }
 

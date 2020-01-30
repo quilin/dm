@@ -39,7 +39,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         {
             readingRepository
                 .Setup(r => r.GetUser(It.IsAny<string>()))
-                .ReturnsAsync((GeneralUser) null);
+                .ReturnsAsync((UserDetails) null);
 
             service.Invoking(s => s.Get("User").Wait())
                 .Should().Throw<HttpException>()
@@ -50,7 +50,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         [Fact]
         public async Task ReturnFoundUser()
         {
-            var expected = new GeneralUser();
+            var expected = new UserDetails();
             readingRepository
                 .Setup(r => r.GetUser(It.IsAny<string>()))
                 .ReturnsAsync(expected);
@@ -59,33 +59,6 @@ namespace DM.Services.Community.Tests.BusinessProcesses
 
             actual.Should().Be(expected);
             readingRepository.Verify(r => r.GetUser("User"), Times.Once);
-        }
-
-        [Fact]
-        public void ThrowGoneWhenUserProfileNotFound()
-        {
-            readingRepository
-                .Setup(r => r.GetProfile(It.IsAny<string>()))
-                .ReturnsAsync((UserProfile) null);
-
-            service.Invoking(s => s.GetProfile("User").Wait())
-                .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.Gone);
-            readingRepository.Verify(r => r.GetProfile("User"), Times.Once);
-        }
-
-        [Fact]
-        public async Task ReturnFoundUserProfile()
-        {
-            var expected = new UserProfile();
-            readingRepository
-                .Setup(r => r.GetProfile(It.IsAny<string>()))
-                .ReturnsAsync(expected);
-
-            var actual = await service.GetProfile("User");
-
-            actual.Should().Be(expected);
-            readingRepository.Verify(r => r.GetProfile("User"), Times.Once);
         }
 
         [Fact]

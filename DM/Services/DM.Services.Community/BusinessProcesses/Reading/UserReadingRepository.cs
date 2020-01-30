@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using Microsoft.EntityFrameworkCore;
-using UserProfile = DM.Services.Community.Dto.UserProfile;
 
 namespace DM.Services.Community.BusinessProcesses.Reading
 {
@@ -62,22 +62,22 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         }
 
         /// <inheritdoc />
-        public Task<GeneralUser> GetUser(string login)
+        public Task<UserDetails> GetUser(string login)
         {
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
                 .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
-                .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
+                .ProjectTo<UserDetails>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
 
         /// <inheritdoc />
-        public Task<UserProfile> GetProfile(string login)
+        public Task<UserDetails> GetProfile(string login)
         {
             var lowerLogin = login.ToLower();
             return dmDbContext.Users
                 .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == lowerLogin)
-                .ProjectTo<UserProfile>(mapper.ConfigurationProvider)
+                .ProjectTo<UserDetails>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
     }

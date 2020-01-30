@@ -13,6 +13,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
+using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.Publish;
@@ -88,6 +89,8 @@ namespace DM.Services.Gaming.Tests
                 .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
                 .Returns(Task.CompletedTask);
 
+            var schemaRepository = Mock<ISchemaReadingRepository>();
+
             publisher = Mock<IInvokedEventPublisher>();
             publisher
                 .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
@@ -103,6 +106,7 @@ namespace DM.Services.Gaming.Tests
                 gameTagFactory.Object,
                 gameRepository.Object,
                 userRepository.Object,
+                schemaRepository.Object,
                 countersRepository.Object,
                 publisher.Object);
         }

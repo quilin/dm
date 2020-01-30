@@ -30,13 +30,6 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         /// </summary>
         /// <param name="login">User login</param>
         /// <returns>User found. Null if none found</returns>
-        Task<GeneralUser> GetUser(string login);
-
-        /// <summary>
-        /// Get user profile by login
-        /// </summary>
-        /// <param name="login">User login</param>
-        /// <returns>User profile found. Null if none found</returns>
-        Task<UserProfile> GetProfile(string login);
+        Task<UserDetails> GetUser(string login);
     }
 }

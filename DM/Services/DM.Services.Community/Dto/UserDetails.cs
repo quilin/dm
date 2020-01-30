@@ -1,26 +1,17 @@
 using System;
+using DM.Services.Core.Dto;
 
 namespace DM.Services.Community.Dto
 {
     /// <summary>
     /// DTO model for user additional data
     /// </summary>
-    public class UserProfile
+    public class UserDetails : GeneralUser
     {
-        /// <summary>
-        /// User Id
-        /// </summary>
-        public Guid UserId { get; set; }
-
         /// <summary>
         /// Date of user registration
         /// </summary>
         public DateTimeOffset RegistrationDate { get; set; }
-
-        /// <summary>
-        /// User-defined status
-        /// </summary>
-        public string Status { get; set; }
 
         /// <summary>
         /// User real name
@@ -41,11 +32,6 @@ namespace DM.Services.Community.Dto
         /// User Skype login
         /// </summary>
         public string Skype { get; set; }
-
-        /// <summary>
-        /// User Email
-        /// </summary>
-        public string Email { get; set; }
 
         /// <summary>
         /// User-defined extended information

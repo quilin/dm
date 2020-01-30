@@ -23,13 +23,6 @@ namespace DM.Services.Community.BusinessProcesses.Reading
         /// </summary>
         /// <param name="login">User login</param>
         /// <returns>Found user</returns>
-        Task<GeneralUser> Get(string login);
-
-        /// <summary>
-        /// Get extended user profile model
-        /// </summary>
-        /// <param name="login">User login</param>
-        /// <returns>Extended user model</returns>
-        Task<UserProfile> GetProfile(string login);
+        Task<UserDetails> Get(string login);
     }
 }
