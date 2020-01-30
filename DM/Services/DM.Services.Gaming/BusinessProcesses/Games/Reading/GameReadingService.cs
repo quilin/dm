@@ -96,7 +96,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
 
             var currentUserId = identity.User.UserId;
             var totalCount = await repository.Count(query, currentUserId);
-            var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
+            var pagingData = new PagingData(query, identity.Settings.Paging.EntitiesPerPage, totalCount);
 
             var games = (await repository.GetGames(pagingData, query, currentUserId)).ToArray();
             await unreadCountersRepository.FillEntityCounters(games, currentUserId,

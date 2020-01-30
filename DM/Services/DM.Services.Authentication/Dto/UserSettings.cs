@@ -24,34 +24,22 @@ namespace DM.Services.Authentication.Dto
         public ColorSchema ColorSchema { get; set; }
 
         /// <summary>
-        /// Number of game posts to display on a page
+        /// Paging settings
         /// </summary>
-        public int PostsPerPage { get; set; }
-
-        /// <summary>
-        /// Number of game or topic comments to display on a page
-        /// </summary>
-        public int CommentsPerPage { get; set; }
-
-        /// <summary>
-        /// Number of forum topics to display on a page
-        /// </summary>
-        public int TopicsPerPage { get; set; }
-
-        /// <summary>
-        /// Number of private dialogues and messages to display on a page
-        /// </summary>
-        public int MessagesPerPage { get; set; }
+        public PagingSettings Paging { get; set; }
 
         /// <summary>
         /// Default user settings for a guest or a newbie
         /// </summary>
         public static readonly UserSettings Default = new UserSettings
         {
-            TopicsPerPage = 10,
-            CommentsPerPage = 10,
-            PostsPerPage = 10,
-            MessagesPerPage = 10,
+            Paging = new PagingSettings
+            {
+                TopicsPerPage = 10,
+                CommentsPerPage = 10,
+                PostsPerPage = 10,
+                MessagesPerPage = 10
+            },
             ColorSchema = ColorSchema.Modern
         };
     }

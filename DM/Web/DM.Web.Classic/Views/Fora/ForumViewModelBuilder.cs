@@ -76,7 +76,7 @@ namespace DM.Web.Classic.Views.Fora
             var (topics, _) = await topicReadingService.GetTopicsList(forum.Title, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.TopicsPerPage
+                Size = identity.Settings.Paging.TopicsPerPage
             });
 
             return topics.Select(topicViewModelBuilder.Build);

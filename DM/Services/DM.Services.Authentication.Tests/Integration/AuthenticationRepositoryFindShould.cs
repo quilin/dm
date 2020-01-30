@@ -112,11 +112,14 @@ namespace DM.Services.Authentication.Tests.Integration
             {
                 Id = userId,
                 ColorSchema = ColorSchema.Night,
-                CommentsPerPage = 23,
-                MessagesPerPage = 12,
                 NannyGreetingsMessage = "Hi, I'm your nanny!",
-                PostsPerPage = 10,
-                TopicsPerPage = 55
+                Paging = new Dto.PagingSettings
+                {
+                    CommentsPerPage = 23,
+                    MessagesPerPage = 12,
+                    PostsPerPage = 10,
+                    TopicsPerPage = 55
+                }
             });
             (await authenticationRepository.FindUserSettings(Guid.NewGuid())).Should()
                 .BeEquivalentTo(Dto.UserSettings.Default);

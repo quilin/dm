@@ -48,7 +48,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
             intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
 
             var totalCount = await commentaryRepository.Count(gameId);
-            var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
+            var paging = new PagingData(query, identity.Settings.Paging.CommentsPerPage, totalCount);
 
             var comments = await commentaryRepository.Get(gameId, paging);
 

@@ -68,10 +68,13 @@ namespace DM.Services.Authentication.Repositories
                 {
                     Id = s.Id,
                     ColorSchema = s.ColorSchema,
-                    PostsPerPage = s.Paging.PostsPerPage,
-                    CommentsPerPage = s.Paging.CommentsPerPage,
-                    MessagesPerPage = s.Paging.MessagesPerPage,
-                    TopicsPerPage = s.Paging.TopicsPerPage,
+                    Paging = new PagingSettings
+                    {
+                        PostsPerPage = s.Paging.PostsPerPage,
+                        CommentsPerPage = s.Paging.CommentsPerPage,
+                        MessagesPerPage = s.Paging.MessagesPerPage,
+                        TopicsPerPage = s.Paging.TopicsPerPage
+                    },
                     NannyGreetingsMessage = s.NannyGreetingsMessage
                 }))
                 .FirstOrDefaultAsync() ?? UserSettings.Default;

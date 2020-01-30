@@ -23,6 +23,8 @@ namespace DM.Web.API.Dto.Users
                     Quality = u.QualityRating,
                     Quantity = u.QuantityRating
                 }));
+            CreateMap<DM.Services.Authentication.Dto.UserSettings, UserSettings>();
+            CreateMap<DM.Services.Authentication.Dto.PagingSettings, PagingSettings>();
 
             CreateMap<Registration, UserRegistration>();
             CreateMap<ResetPassword, UserPasswordReset>();

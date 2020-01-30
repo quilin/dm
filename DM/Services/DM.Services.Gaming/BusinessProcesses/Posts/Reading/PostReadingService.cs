@@ -46,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
             intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room);
 
             var totalCount = await repository.Count(roomId, identity.User.UserId);
-            var paging = new PagingData(query, identity.Settings.PostsPerPage, totalCount);
+            var paging = new PagingData(query, identity.Settings.Paging.PostsPerPage, totalCount);
 
             var posts = await repository.Get(roomId, paging, identity.User.UserId);
 

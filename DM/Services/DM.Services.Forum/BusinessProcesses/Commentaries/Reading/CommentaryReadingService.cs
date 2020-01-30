@@ -45,7 +45,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
             await topicReadingService.GetTopic(topicId);
 
             var totalCount = await commentaryRepository.Count(topicId);
-            var paging = new PagingData(query, identity.Settings.CommentsPerPage, totalCount);
+            var paging = new PagingData(query, identity.Settings.Paging.CommentsPerPage, totalCount);
 
             var comments = await commentaryRepository.Get(topicId, paging);
 

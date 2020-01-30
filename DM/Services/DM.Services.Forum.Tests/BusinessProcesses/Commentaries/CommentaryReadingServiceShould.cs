@@ -40,7 +40,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             readingTopicSetup = topicReadingService.Setup(r => r.GetTopic(It.IsAny<Guid>()));
 
             var identity = Mock<IIdentity>();
-            identity.Setup(i => i.Settings).Returns(new UserSettings {CommentsPerPage = 10});
+            identity.Setup(i => i.Settings).Returns(new UserSettings
+                {Paging = new PagingSettings {CommentsPerPage = 10}});
             currentUserSetup = identity.Setup(i => i.User);
             var identityProvider = Mock<IIdentityProvider>();
             identityProvider.Setup(p => p.Current).Returns(identity.Object);
@@ -126,7 +127,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await readingService.MarkAsRead(forumId);
 
-            unreadCountersRepository.Verify(r => r.FlushAll(userId, UnreadEntryType.Message, forumInternalId), Times.Once);
+            unreadCountersRepository.Verify(r => r.FlushAll(userId, UnreadEntryType.Message, forumInternalId),
+                Times.Once);
             unreadCountersRepository.VerifyNoOtherCalls();
         }
     }

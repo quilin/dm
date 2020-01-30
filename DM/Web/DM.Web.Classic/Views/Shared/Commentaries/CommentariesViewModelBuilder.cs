@@ -37,7 +37,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             var (comments, paging) = commentaryReadingService.Get(entityId, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.CommentsPerPage
+                Size = identity.Settings.Paging.CommentsPerPage
             }).Result;
             var commentaryTasks = comments.Select(commentaryViewModelBuilder.Build).ToArray();
             await Task.WhenAll(commentaryTasks);
@@ -58,7 +58,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             var (comments, _) = await commentaryReadingService.Get(entityId, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.CommentsPerPage,
+                Size = identity.Settings.Paging.CommentsPerPage,
             });
             var commentaryTasks = comments.Select(commentaryViewModelBuilder.Build).ToArray();
             await Task.WhenAll(commentaryTasks);

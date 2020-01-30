@@ -62,6 +62,11 @@ namespace DM.Web.API.Dto.Users
         /// User-defined extended information
         /// </summary>
         public string Info { get; set; }
+
+        /// <summary>
+        /// User settings
+        /// </summary>
+        public UserSettings Settings { get; set; }
     }
 
     /// <summary>

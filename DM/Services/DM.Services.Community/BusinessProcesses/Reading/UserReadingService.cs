@@ -29,7 +29,7 @@ namespace DM.Services.Community.BusinessProcesses.Reading
             PagingQuery query, bool withInactive)
         {
             var totalCount = await readingRepository.CountUsers(withInactive);
-            var paging = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
+            var paging = new PagingData(query, identity.Settings.Paging.EntitiesPerPage, totalCount);
             var users = await readingRepository.GetUsers(paging, withInactive);
             return (users, paging.Result);
         }

@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
 
 namespace DM.Services.Community.Dto
@@ -37,5 +38,10 @@ namespace DM.Services.Community.Dto
         /// User-defined extended information
         /// </summary>
         public string Info { get; set; }
+
+        /// <summary>
+        /// User settings
+        /// </summary>
+        public UserSettings Settings { get; set; }
     }
 }

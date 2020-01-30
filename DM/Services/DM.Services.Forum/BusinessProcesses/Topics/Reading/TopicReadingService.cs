@@ -47,7 +47,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             var forum = await forumReadingService.GetForum(forumTitle);
 
             var totalCount = await repository.Count(forum.Id);
-            var pagingData = new PagingData(query, identity.Settings.TopicsPerPage, totalCount);
+            var pagingData = new PagingData(query, identity.Settings.Paging.TopicsPerPage, totalCount);
 
             var topics = (await repository.Get(forum.Id, pagingData, false)).ToArray();
             if (identity.User.IsAuthenticated)
