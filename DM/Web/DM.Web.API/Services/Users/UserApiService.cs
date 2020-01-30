@@ -2,6 +2,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Reading;
+using DM.Services.Community.BusinessProcesses.Updating;
+using DM.Services.Community.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 
@@ -10,36 +12,42 @@ namespace DM.Web.API.Services.Users
     /// <inheritdoc />
     public class UserApiService : IUserApiService
     {
-        private readonly IUserReadingService userReadingService;
+        private readonly IUserReadingService readingService;
+        private readonly IUserUpdatingService updatingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public UserApiService(
-            IUserReadingService userReadingService,
+            IUserReadingService readingService,
+            IUserUpdatingService updatingService,
             IMapper mapper)
         {
-            this.userReadingService = userReadingService;
+            this.readingService = readingService;
+            this.updatingService = updatingService;
             this.mapper = mapper;
         }
 
         /// <inheritdoc />
         public async Task<ListEnvelope<User>> GetUsers(UsersQuery query)
         {
-            var (users, paging) = await userReadingService.Get(query, query.Inactive);
+            var (users, paging) = await readingService.Get(query, query.Inactive);
             return new ListEnvelope<User>(users.Select(mapper.Map<User>), new Paging(paging));
         }
 
         /// <inheritdoc />
         public async Task<Envelope<User>> GetUser(string login)
         {
-            var user = await userReadingService.Get(login);
+            var user = await readingService.Get(login);
             return new Envelope<User>(mapper.Map<User>(user));
         }
 
         /// <inheritdoc />
-        public Task<Envelope<User>> UpdateUser(string login, User user)
+        public async Task<Envelope<User>> UpdateUser(string login, User user)
         {
-            throw new System.NotImplementedException();
+            var updateUser = mapper.Map<UpdateUser>(user);
+            updateUser.Login = login;
+            var updatedUser = await updatingService.Update(updateUser);
+            return new Envelope<User>(mapper.Map<User>(updatedUser));
         }
     }
 }
