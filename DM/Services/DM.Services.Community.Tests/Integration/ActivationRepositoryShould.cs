@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Activation;
+using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Tests.Core;

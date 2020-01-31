@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using DM.Services.Core.Implementation;
 
 namespace DM.Services.Authentication.Implementation.Security
 {

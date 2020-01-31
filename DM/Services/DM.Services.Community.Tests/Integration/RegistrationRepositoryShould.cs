@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Registration;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;
 using FluentAssertions;

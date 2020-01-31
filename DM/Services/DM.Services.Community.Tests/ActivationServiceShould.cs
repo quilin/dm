@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Activation;
+using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Implementation;

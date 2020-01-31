@@ -28,6 +28,11 @@ namespace DM.Services.MessageQueuing.Configuration
         public IDictionary<string, object> Arguments { get; set; }
 
         /// <summary>
+        /// Consumer tag for UI
+        /// </summary>
+        public string ConsumerTag { get; set; }
+
+        /// <summary>
         /// Queue exclusiveness flag
         /// </summary>
         public bool Exclusive { get; set; }

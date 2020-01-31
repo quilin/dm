@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Registration.Confirmation;
+using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Configuration;
 using DM.Services.Mail.Rendering.Rendering;
 using DM.Services.Mail.Sender;

@@ -1,5 +1,5 @@
 using System.Linq;
-using DM.Services.Community.BusinessProcesses.Reading;
+using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Web.Classic.Views.Community.CommunityUser;
 

@@ -1,9 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Community.BusinessProcesses.Reading;
-using DM.Services.Community.BusinessProcesses.Updating;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Users.Reading;
+using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 

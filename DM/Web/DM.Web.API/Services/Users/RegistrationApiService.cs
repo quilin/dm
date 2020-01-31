@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Community.BusinessProcesses.Registration;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Services.Users

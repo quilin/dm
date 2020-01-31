@@ -1,6 +1,5 @@
 using System;
-using DM.Services.Community.BusinessProcesses.Registration;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;

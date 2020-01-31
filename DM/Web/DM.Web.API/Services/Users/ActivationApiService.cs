@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Implementation;
-using DM.Services.Community.BusinessProcesses.Activation;
+using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 

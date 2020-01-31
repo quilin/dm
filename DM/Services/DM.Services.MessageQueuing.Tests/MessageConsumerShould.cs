@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Consume;
 using DM.Tests.Core;
@@ -24,11 +25,16 @@ namespace DM.Services.MessageQueuing.Tests
                 It.IsAny<IDictionary<string, object>>())).Returns((QueueDeclareOk) null);
             channel.Setup(c => c.QueueBind(
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IDictionary<string, object>>()));
+
             connectionFactory.Setup(f => f.CreateConnection()).Returns(connection.Object);
             connection.Setup(c => c.CreateModel()).Returns(channel.Object);
             connection.Setup(c => c.Close());
+
+            var saltFactory = Mock<ISaltFactory>();
+            saltFactory.Setup(f => f.Create(It.IsAny<int>())).Returns("testSalt");
+
             consumer = new MessageConsumer<TestMessage>(
-                connectionFactory.Object, null);
+                connectionFactory.Object, saltFactory.Object, null);
         }
 
         [Fact]
@@ -40,7 +46,8 @@ namespace DM.Services.MessageQueuing.Tests
                 QueueName = "queue.name",
                 RoutingKeys = new[] {"routing.key.1", "routing.key.2"},
                 ExchangeName = "exchange.name",
-                Arguments = queueArguments
+                Arguments = queueArguments,
+                ConsumerTag = "consumerTag"
             };
             channel
                 .Setup(c => c.BasicConsume(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(),
@@ -50,7 +57,7 @@ namespace DM.Services.MessageQueuing.Tests
             consumer.Consume(configuration);
 
             channel.Verify(c => c
-                .BasicConsume("queue.name", false, "", false, false, null,
+                .BasicConsume("queue.name", false, "consumerTag.testSalt", false, false, null,
                     It.IsAny<EventingBasicConsumer>()), Times.Once);
             channel.Verify(c => c.QueueDeclare("queue.name", true, false, false, queueArguments), Times.Once);
             channel.Verify(c => c.ExchangeDeclare("exchange.name", "topic", true, false, null));
@@ -63,6 +70,7 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public void CloseConnectionsOnDisposition()
         {
+            channel.Setup(c => c.BasicCancel(It.IsAny<string>()));
             channel.Setup(c => c.Close());
             consumer.Dispose();
         }

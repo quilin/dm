@@ -1,5 +1,5 @@
 using System;
-using DM.Services.Community.BusinessProcesses.Activation;
+using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Tests.Core;

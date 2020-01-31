@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Community.BusinessProcesses.Registration;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Account;
 using DM.Web.Core.Authentication;

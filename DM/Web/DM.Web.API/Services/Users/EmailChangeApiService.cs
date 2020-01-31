@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Community.BusinessProcesses.EmailChange;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.EmailChange;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 

@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Community.BusinessProcesses.PasswordChange;
-using DM.Services.Community.BusinessProcesses.PasswordReset;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.PasswordChange;
+using DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 using DM.Services.Mail.Sender;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;

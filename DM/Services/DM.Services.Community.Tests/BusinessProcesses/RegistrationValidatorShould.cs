@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Registration;
-using DM.Services.Community.Dto;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;

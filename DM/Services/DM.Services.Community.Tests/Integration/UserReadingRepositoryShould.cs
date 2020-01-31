@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Community.BusinessProcesses.Reading;
+using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
