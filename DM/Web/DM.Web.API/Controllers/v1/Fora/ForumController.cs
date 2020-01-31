@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Fora
 {
-    /// <summary>
-    /// Fora
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/fora")]
     [ApiExplorerSettings(GroupName = "Forum")]
-    public class ForumController : Controller
+    public class ForumController : ControllerBase
     {
         private readonly IForumApiService forumApiService;
         private readonly ITopicApiService topicApiService;

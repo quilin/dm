@@ -10,12 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Common
 {
-    /// <summary>
-    /// Search
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/search")]
     [ApiExplorerSettings(GroupName = "Common")]
-    public class SearchController : Controller
+    public class SearchController : ControllerBase
     {
         private readonly ISearchEngineRepository repository;
         private readonly IIdentityProvider identityProvider;

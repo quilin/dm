@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Account
 {
-    /// <summary>
-    /// Account
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/account")]
     [ApiExplorerSettings(GroupName = "Account")]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
         private readonly IRegistrationApiService registrationApiService;
         private readonly IActivationApiService activationApiService;

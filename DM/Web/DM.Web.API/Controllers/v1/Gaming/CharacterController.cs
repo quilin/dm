@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming
 {
-    /// <summary>
-    /// Game API controller
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1")]
     [ApiExplorerSettings(GroupName = "Game")]
-    public class CharacterController : Controller
+    public class CharacterController : ControllerBase
     {
         private readonly ICharacterApiService characterApiService;
 

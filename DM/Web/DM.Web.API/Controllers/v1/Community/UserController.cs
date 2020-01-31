@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DM.Web.API.Controllers.v1.Community
 {
     /// <inheritdoc />
+    [ApiController]
     [Route("v1/users")]
     [ApiExplorerSettings(GroupName = "Community")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         private readonly IUserApiService userApiService;
 

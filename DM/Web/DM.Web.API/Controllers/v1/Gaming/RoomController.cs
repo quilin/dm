@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming
 {
-    /// <summary>
-    /// Room API controller
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1")]
     [ApiExplorerSettings(GroupName = "Game")]
-    public class RoomController : Controller
+    public class RoomController : ControllerBase
     {
         private readonly IRoomApiService roomApiService;
         private readonly IRoomClaimApiService claimApiService;

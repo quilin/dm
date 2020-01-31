@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming
 {
-    /// <summary>
-    /// Post API controller
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1")]
     [ApiExplorerSettings(GroupName = "Game")]
-    public class PostController : Controller
+    public class PostController : ControllerBase
     {
         private readonly IPostApiService postApiService;
 

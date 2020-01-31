@@ -11,12 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Fora
 {
-    /// <summary>
-    /// Topics
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/topics")]
     [ApiExplorerSettings(GroupName = "Forum")]
-    public class TopicController : Controller
+    public class TopicController : ControllerBase
     {
         private readonly ITopicApiService topicApiService;
         private readonly ILikeApiService likeApiService;

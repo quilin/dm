@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Account
 {
-    /// <summary>
-    /// Login
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/account/login")]
     [ApiExplorerSettings(GroupName = "Account")]
-    public class LoginController : Controller
+    public class LoginController : ControllerBase
     {
         private readonly ILoginApiService loginApiService;
 

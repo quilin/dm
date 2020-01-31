@@ -10,12 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming
 {
-    /// <summary>
-    /// Commentaries
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/games")]
     [ApiExplorerSettings(GroupName = "Game")]
-    public class CommentController : Controller
+    public class CommentController : ControllerBase
     {
         private readonly ICommentApiService commentApiService;
         private readonly ILikeApiService likeApiService;

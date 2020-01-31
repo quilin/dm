@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming
 {
-    /// <summary>
-    /// Attribute schema API controller
-    /// </summary>
+    /// <inheritdoc />
+    [ApiController]
     [Route("v1/schemata")]
     [ApiExplorerSettings(GroupName = "Game")]
-    public class AttributeSchemaController : Controller
+    public class AttributeSchemaController : ControllerBase
     {
         private readonly ISchemaApiService schemaApiService;
 
