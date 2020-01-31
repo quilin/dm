@@ -17,7 +17,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Access policy
         /// </summary>
-        public RoomAccessPolicy Policy { get; set; }
+        public RoomAccessPolicy? Policy { get; set; }
 
         /// <summary>
         /// Character

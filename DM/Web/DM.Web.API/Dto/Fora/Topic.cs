@@ -37,12 +37,12 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Attached
         /// </summary>
-        public bool Attached { get; set; }
+        public bool? Attached { get; set; }
 
         /// <summary>
         /// Closed
         /// </summary>
-        public bool Closed { get; set; }
+        public bool? Closed { get; set; }
 
         /// <summary>
         /// Last commentary

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.API.Dto.Games
@@ -17,7 +18,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Previous room identifier
         /// </summary>
-        public Guid PreviousRoomId { get; set; }
+        public Optional<Guid> PreviousRoomId { get; set; }
 
         /// <summary>
         /// Room title

@@ -26,7 +26,7 @@ namespace DM.Web.API.Dto.Community
         /// <summary>
         /// Publish flag
         /// </summary>
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
 
         /// <summary>
         /// Review text
