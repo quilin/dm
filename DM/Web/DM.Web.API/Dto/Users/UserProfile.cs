@@ -18,12 +18,7 @@ namespace DM.Web.API.Dto.Users
         /// <inheritdoc />
         public UserProfile()
         {
-            CreateMap<UserDetails, User>();
-            CreateMap<DM.Services.Authentication.Dto.UserSettings, UserSettings>().ReverseMap();
-            CreateMap<DM.Services.Authentication.Dto.PagingSettings, PagingSettings>().ReverseMap();
-
             CreateMap<GeneralUser, User>()
-                .Include<UserDetails, User>()
                 .ForMember(d => d.Roles, s => s.MapFrom(u => u.Role.GetUserRoles()))
                 .ForMember(d => d.Online, s => s.MapFrom(u => u.LastVisitDate))
                 .ForMember(d => d.Rating, s => s.MapFrom(u => new Rating
@@ -32,6 +27,10 @@ namespace DM.Web.API.Dto.Users
                     Quality = u.QualityRating,
                     Quantity = u.QuantityRating
                 }));
+
+            CreateMap<UserDetails, User>().IncludeBase<GeneralUser, User>();
+            CreateMap<DM.Services.Authentication.Dto.UserSettings, UserSettings>().ReverseMap();
+            CreateMap<DM.Services.Authentication.Dto.PagingSettings, PagingSettings>().ReverseMap();
 
             CreateMap<Registration, UserRegistration>();
             CreateMap<ResetPassword, UserPasswordReset>();
