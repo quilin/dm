@@ -9,19 +9,14 @@ namespace DM.Services.Gaming.Authorization
     public class CommentIntentionResolver : IIntentionResolver<CommentIntention, Comment>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, CommentIntention intention, Comment target)
+        public bool IsAllowed(AuthenticatedUser user, CommentIntention intention, Comment target) => intention switch
         {
-            switch (intention)
-            {
-                case CommentIntention.Edit when user.IsAuthenticated:
-                case CommentIntention.Delete when user.IsAuthenticated:
-                    return user.Role.HasFlag(UserRole.Administrator) ||
-                        target.Author.UserId == user.UserId;
-                case CommentIntention.Like when user.IsAuthenticated:
-                    return target.Author.UserId != user.UserId;
-                default:
-                    return false;
-            }
-        }
+            CommentIntention.Edit when user.IsAuthenticated => (user.Role.HasFlag(UserRole.Administrator) ||
+                target.Author.UserId == user.UserId),
+            CommentIntention.Delete when user.IsAuthenticated => (user.Role.HasFlag(UserRole.Administrator) ||
+                target.Author.UserId == user.UserId),
+            CommentIntention.Like when user.IsAuthenticated => (target.Author.UserId != user.UserId),
+            _ => false
+        };
     }
 }

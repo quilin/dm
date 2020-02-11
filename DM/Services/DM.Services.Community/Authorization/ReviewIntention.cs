@@ -8,6 +8,21 @@ namespace DM.Services.Community.Authorization
         /// <summary>
         /// Create new review
         /// </summary>
-        Create = 0
+        Create = 0,
+
+        /// <summary>
+        /// Edit existing review
+        /// </summary>
+        Edit = 1,
+
+        /// <summary>
+        /// Approve review
+        /// </summary>
+        Approve = 2,
+
+        /// <summary>
+        /// Delete review
+        /// </summary>
+        Delete = 3
     }
 }

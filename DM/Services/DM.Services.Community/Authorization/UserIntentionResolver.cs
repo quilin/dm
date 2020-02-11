@@ -8,15 +8,10 @@ namespace DM.Services.Community.Authorization
     public class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target)
+        public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target) => intention switch
         {
-            switch (intention)
-            {
-                case UserIntention.Edit:
-                    return target.UserId == user.UserId;
-                default:
-                    return false;
-            }
-        }
+            UserIntention.Edit => (target.UserId == user.UserId),
+            _ => false
+        };
     }
 }

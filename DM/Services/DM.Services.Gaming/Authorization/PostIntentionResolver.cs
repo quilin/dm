@@ -15,39 +15,30 @@ namespace DM.Services.Gaming.Authorization
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, PostIntention intention, Post target)
         {
-            switch (intention)
+            return intention switch
             {
-                case PostIntention.Delete:
-                    return target.Author.UserId == user.UserId;
-                default:
-                    return false;
-            }
+                PostIntention.Delete => (target.Author.UserId == user.UserId),
+                _ => false
+            };
         }
 
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, PostIntention intention, (Post, RoomToUpdate) target)
         {
             var (post, room) = target;
-            switch (intention)
+            return intention switch
             {
-                case PostIntention.EditText:
-                    return post.Author.UserId == user.UserId ||
-                        room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
-                            post.Character == null ||
-                            post.Character.IsNpc ||
-                            post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed));
-                case PostIntention.EditCharacter:
-                    return post.Author.UserId == user.UserId ||
-                        room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
-                            post.Character == null ||
-                            post.Character.IsNpc);
-                case PostIntention.EditMasterMessage:
-                    return room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) && (
-                        post.Character == null ||
-                        post.Character.IsNpc);
-                default:
-                    return false;
-            }
+                PostIntention.EditText => (post.Author.UserId == user.UserId ||
+                    room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
+                    (post.Character == null || post.Character.IsNpc ||
+                        post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed))),
+                PostIntention.EditCharacter => (post.Author.UserId == user.UserId ||
+                    room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
+                    (post.Character == null || post.Character.IsNpc)),
+                PostIntention.EditMasterMessage => (room.Game.Participation(user.UserId)
+                    .HasFlag(GameParticipation.Authority) && (post.Character == null || post.Character.IsNpc)),
+                _ => false
+            };
         }
     }
 }

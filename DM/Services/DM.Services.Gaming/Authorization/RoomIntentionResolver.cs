@@ -18,7 +18,6 @@ namespace DM.Services.Gaming.Authorization
         public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, (RoomToUpdate, Guid?) target)
         {
             var (room, characterId) = target;
-
             switch (intention)
             {
                 case RoomIntention.CreatePost when characterId.HasValue:
@@ -35,28 +34,18 @@ namespace DM.Services.Gaming.Authorization
         }
 
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target)
+        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target) => intention switch
         {
-            switch (intention)
-            {
-                case RoomIntention.CreatePendingPost:
-                    return target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
-                        target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority);
-                default:
-                    return false;
-            }
-        }
+            RoomIntention.CreatePendingPost => (target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
+                target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority)),
+            _ => false
+        };
 
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, PendingPost target)
+        public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, PendingPost target) => intention switch
         {
-            switch (intention)
-            {
-                case RoomIntention.DeletePending:
-                    return target.AwaitingUser.UserId == user.UserId;
-                default:
-                    return false;
-            }
-        }
+            RoomIntention.DeletePending => (target.AwaitingUser.UserId == user.UserId),
+            _ => false
+        };
     }
 }

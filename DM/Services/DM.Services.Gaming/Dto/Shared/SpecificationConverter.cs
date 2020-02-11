@@ -5,10 +5,13 @@ using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 namespace DM.Services.Gaming.Dto.Shared
 {
     /// <inheritdoc />
-    public class SpecificationConverter : ITypeConverter<DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification, AttributeSpecification>
+    public class SpecificationConverter : ITypeConverter<
+        DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification, AttributeSpecification>
     {
         /// <inheritdoc />
-        public AttributeSpecification Convert(DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification source, AttributeSpecification destination,
+        public AttributeSpecification Convert(
+            DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification source,
+            AttributeSpecification destination,
             ResolutionContext context)
         {
             var result = new AttributeSpecification
@@ -43,19 +46,13 @@ namespace DM.Services.Gaming.Dto.Shared
         }
 
         private static AttributeSpecificationType ResolveType(
-            DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification source)
-        {
-            switch (source.Constraints)
+            DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification source) =>
+            source.Constraints switch
             {
-                case NumberAttributeConstraints _:
-                    return AttributeSpecificationType.Number;
-                case StringAttributeConstraints _:
-                    return AttributeSpecificationType.String;
-                case ListAttributeConstraints _:
-                    return AttributeSpecificationType.List;
-                default:
-                    return AttributeSpecificationType.Number;
-            }
-        }
+                NumberAttributeConstraints _ => AttributeSpecificationType.Number,
+                StringAttributeConstraints _ => AttributeSpecificationType.String,
+                ListAttributeConstraints _ => AttributeSpecificationType.List,
+                _ => AttributeSpecificationType.Number
+            };
     }
 }

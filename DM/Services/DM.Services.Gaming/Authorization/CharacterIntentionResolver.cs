@@ -21,35 +21,23 @@ namespace DM.Services.Gaming.Authorization
             var gameOwned = target.GameMasterId == user.UserId || target.GameAssistantId == user.UserId;
             var gameActive = target.GameStatus == GameStatus.Active || target.GameStatus == GameStatus.Requirement;
 
-            switch (intention)
+            return intention switch
             {
-                case CharacterIntention.Edit when characterOwned:
-                    return gameActive;
-                case CharacterIntention.Edit when gameOwned:
-                    return target.IsNpc ||
-                        target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed);
-                case CharacterIntention.EditPrivacySettings when characterOwned:
-                    return gameActive;
-                case CharacterIntention.EditMasterSettings when gameOwned:
-                    return true;
-                case CharacterIntention.Delete when characterOwned:
-                    return gameActive;
-                case CharacterIntention.Accept when gameOwned:
-                    return target.Status == CharacterStatus.Registration ||
-                        target.Status == CharacterStatus.Declined;
-                case CharacterIntention.Decline when gameOwned:
-                    return target.Status == CharacterStatus.Registration;
-                case CharacterIntention.Kill when gameOwned:
-                    return target.Status == CharacterStatus.Active;
-                case CharacterIntention.Resurrect when gameOwned:
-                    return target.Status == CharacterStatus.Dead;
-                case CharacterIntention.Leave when characterOwned:
-                    return target.Status == CharacterStatus.Active;
-                case CharacterIntention.Return when characterOwned:
-                    return target.Status == CharacterStatus.Left;
-                default:
-                    return false;
-            }
+                CharacterIntention.Edit when characterOwned => gameActive,
+                CharacterIntention.Edit when gameOwned => (target.IsNpc ||
+                    target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed)),
+                CharacterIntention.EditPrivacySettings when characterOwned => gameActive,
+                CharacterIntention.EditMasterSettings when gameOwned => true,
+                CharacterIntention.Delete when characterOwned => gameActive,
+                CharacterIntention.Accept when gameOwned => (target.Status == CharacterStatus.Registration ||
+                    target.Status == CharacterStatus.Declined),
+                CharacterIntention.Decline when gameOwned => (target.Status == CharacterStatus.Registration),
+                CharacterIntention.Kill when gameOwned => (target.Status == CharacterStatus.Active),
+                CharacterIntention.Resurrect when gameOwned => (target.Status == CharacterStatus.Dead),
+                CharacterIntention.Leave when characterOwned => (target.Status == CharacterStatus.Active),
+                CharacterIntention.Return when characterOwned => (target.Status == CharacterStatus.Left),
+                _ => false
+            };
         }
 
         private static readonly CharacterIntention[] CharacterGameIntentions =
@@ -80,16 +68,14 @@ namespace DM.Services.Gaming.Authorization
                 return true;
             }
 
-            switch (intention)
+            return intention switch
             {
-                case CharacterIntention.ViewTemper when !game.HideTemper:
-                case CharacterIntention.ViewStory when !game.HideStory:
-                case CharacterIntention.ViewSkills when !game.HideSkills:
-                case CharacterIntention.ViewInventory when !game.HideInventory:
-                    return true;
-                default:
-                    return false;
-            }
+                CharacterIntention.ViewTemper when !game.HideTemper => true,
+                CharacterIntention.ViewStory when !game.HideStory => true,
+                CharacterIntention.ViewSkills when !game.HideSkills => true,
+                CharacterIntention.ViewInventory when !game.HideInventory => true,
+                _ => false
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Community.Authorization
 {
@@ -10,25 +11,19 @@ namespace DM.Services.Community.Authorization
         IIntentionResolver<ReviewIntention, Review>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, ReviewIntention intention)
+        public bool IsAllowed(AuthenticatedUser user, ReviewIntention intention) => intention switch
         {
-            switch (intention)
-            {
-                case ReviewIntention.Create:
-                    return user.QuantityRating > 1000;
-                default:
-                    return false;
-            }
-        }
+            ReviewIntention.Create => user.QuantityRating > 1000,
+            _ => false
+        };
 
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, ReviewIntention intention, Review target)
+        public bool IsAllowed(AuthenticatedUser user, ReviewIntention intention, Review target) => intention switch
         {
-            switch (intention)
-            {
-                default:
-                    return false;
-            }
-        }
+            ReviewIntention.Edit => !target.Approved && user.UserId == target.Author.UserId,
+            ReviewIntention.Approve => !target.Approved && user.Role.HasFlag(UserRole.Administrator),
+            ReviewIntention.Delete => user.Role.HasFlag(UserRole.Administrator),
+            _ => false
+        };
     }
 }

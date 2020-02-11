@@ -14,25 +14,15 @@ namespace DM.Services.Gaming.Authorization
         IIntentionResolver<GameIntention, Game>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, GameIntention intention)
+        public bool IsAllowed(AuthenticatedUser user, GameIntention intention) => intention switch
         {
-            switch (intention)
-            {
-                case GameIntention.Create when user.IsAuthenticated:
-                    return true;
-
-                case GameIntention.Subscribe when user.IsAuthenticated:
-                    return true;
-
-                case GameIntention.SetStatusModeration when user.IsAuthenticated:
-                    return user.Role.HasFlag(UserRole.Administrator) ||
-                        user.Role.HasFlag(UserRole.SeniorModerator) ||
-                        user.Role.HasFlag(UserRole.NannyModerator);
-
-                default:
-                    return false;
-            }
-        }
+            GameIntention.Create when user.IsAuthenticated => true,
+            GameIntention.Subscribe when user.IsAuthenticated => true,
+            GameIntention.SetStatusModeration when user.IsAuthenticated => (
+                user.Role.HasFlag(UserRole.Administrator) || user.Role.HasFlag(UserRole.SeniorModerator) ||
+                user.Role.HasFlag(UserRole.NannyModerator)),
+            _ => false
+        };
 
         private static readonly IEnumerable<GameStatus> HiddenStates = new HashSet<GameStatus>
         {
@@ -54,52 +44,49 @@ namespace DM.Services.Gaming.Authorization
             var userIsNanny = userIsHighAuthority || user.Role.HasFlag(UserRole.NannyModerator);
             var participation = target.Participation(user.UserId);
 
-            switch (intention)
+            return intention switch
             {
-                case GameIntention.Read:
-                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
-                        !HiddenStates.Contains(target.Status);
-
-                case GameIntention.Edit when user.IsAuthenticated:
-                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Authority);
-
+                GameIntention.Read => (userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
+                    !HiddenStates.Contains(target.Status)),
+                GameIntention.Edit when user.IsAuthenticated => (userIsHighAuthority ||
+                    participation.HasFlag(GameParticipation.Authority)),
                 // only the master itself is allowed to remove the game
-                case GameIntention.Delete when user.IsAuthenticated:
-                    return userIsHighAuthority || user.UserId == target.Master.UserId;
-
-                case GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration:
-                    return userIsHighAuthority || userIsNanny;
-
-                case GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation:
-                case GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation:
-                    return userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator);
-
-                case GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement:
-                case GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft:
-                case GameIntention.SetStatusRequirement when target.Status == GameStatus.Active:
-                case GameIntention.SetStatusActive when target.Status == GameStatus.Requirement:
-                case GameIntention.SetStatusActive when target.Status == GameStatus.Frozen:
-                case GameIntention.SetStatusActive when target.Status == GameStatus.Finished:
-                case GameIntention.SetStatusActive when target.Status == GameStatus.Closed:
-                case GameIntention.SetStatusFrozen when target.Status == GameStatus.Active:
-                case GameIntention.SetStatusFinished when target.Status == GameStatus.Active:
-                case GameIntention.SetStatusClosed when target.Status == GameStatus.Active:
-                    return participation.HasFlag(GameParticipation.Authority);
-
-                case GameIntention.ReadComments:
-                    return target.CommentariesAccessMode != CommentariesAccessMode.Private ||
-                        target.Participation(user.UserId) != GameParticipation.None;
-
-                case GameIntention.CreateComment when user.IsAuthenticated:
-                    return target.CommentariesAccessMode == CommentariesAccessMode.Public ||
-                        target.Participation(user.UserId) != GameParticipation.None;
-
-                case GameIntention.CreateCharacter when user.IsAuthenticated:
-                    return target.Status == GameStatus.Requirement || target.Status == GameStatus.Active;
-
-                default:
-                    return false;
-            }
+                GameIntention.Delete when user.IsAuthenticated => (userIsHighAuthority ||
+                    user.UserId == target.Master.UserId),
+                GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration =>
+                (userIsHighAuthority || userIsNanny),
+                GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation => (userIsHighAuthority ||
+                    participation.HasFlag(GameParticipation.Moderator)),
+                GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation =>
+                (userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator)),
+                GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusRequirement when target.Status == GameStatus.Active => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusActive when target.Status == GameStatus.Requirement => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusActive when target.Status == GameStatus.Frozen => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusActive when target.Status == GameStatus.Finished => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusActive when target.Status == GameStatus.Closed => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusFrozen when target.Status == GameStatus.Active => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusFinished when target.Status == GameStatus.Active => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.SetStatusClosed when target.Status == GameStatus.Active => participation.HasFlag(
+                    GameParticipation.Authority),
+                GameIntention.ReadComments => (target.CommentariesAccessMode != CommentariesAccessMode.Private ||
+                    target.Participation(user.UserId) != GameParticipation.None),
+                GameIntention.CreateComment when user.IsAuthenticated => (target.CommentariesAccessMode ==
+                    CommentariesAccessMode.Public || target.Participation(user.UserId) != GameParticipation.None),
+                GameIntention.CreateCharacter when user.IsAuthenticated => (target.Status == GameStatus.Requirement ||
+                    target.Status == GameStatus.Active),
+                _ => false
+            };
         }
     }
 }

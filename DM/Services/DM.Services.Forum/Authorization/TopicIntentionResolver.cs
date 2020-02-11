@@ -10,21 +10,14 @@ namespace DM.Services.Forum.Authorization
     public class TopicIntentionResolver : IIntentionResolver<TopicIntention, Topic>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, TopicIntention intention, Topic target)
+        public bool IsAllowed(AuthenticatedUser user, TopicIntention intention, Topic target) => intention switch
         {
-            switch (intention)
-            {
-                case TopicIntention.CreateComment when user.IsAuthenticated:
-                    return !target.Closed;
-                case TopicIntention.Edit when user.IsAuthenticated:
-                    return target.Author.UserId == user.UserId && !target.Closed ||
-                        target.Forum.ModeratorIds.Contains(user.UserId) ||
-                        user.Role.HasFlag(UserRole.Administrator);
-                case TopicIntention.Like when user.IsAuthenticated:
-                    return target.Author.UserId != user.UserId;
-                default:
-                    return false;
-            }
-        }
+            TopicIntention.CreateComment when user.IsAuthenticated => !target.Closed,
+            TopicIntention.Edit when user.IsAuthenticated => (
+                target.Author.UserId == user.UserId && !target.Closed ||
+                target.Forum.ModeratorIds.Contains(user.UserId) || user.Role.HasFlag(UserRole.Administrator)),
+            TopicIntention.Like when user.IsAuthenticated => (target.Author.UserId != user.UserId),
+            _ => false
+        };
     }
 }

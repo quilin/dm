@@ -8,16 +8,12 @@ namespace DM.Services.Gaming.Authorization
     public class AttributeSchemaIntentionResolver : IIntentionResolver<AttributeSchemaIntention, AttributeSchema>
     {
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, AttributeSchemaIntention intention, AttributeSchema target)
-        {
-            switch (intention)
+        public bool IsAllowed(AuthenticatedUser user, AttributeSchemaIntention intention, AttributeSchema target) =>
+            intention switch
             {
-                case AttributeSchemaIntention.Edit:
-                case AttributeSchemaIntention.Delete:
-                    return target.Author.UserId == user.UserId;
-                default:
-                    return false;
-            }
-        }
+                AttributeSchemaIntention.Edit => (target.Author.UserId == user.UserId),
+                AttributeSchemaIntention.Delete => (target.Author.UserId == user.UserId),
+                _ => false
+            };
     }
 }

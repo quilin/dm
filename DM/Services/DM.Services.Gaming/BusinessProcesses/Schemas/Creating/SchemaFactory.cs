@@ -48,35 +48,26 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 
         private static AttributeConstraints CreateConstraints(Dto.Shared.AttributeSpecification specification)
         {
-            switch (specification.Type)
+            return specification.Type switch
             {
-                case AttributeSpecificationType.Number:
-                    return new NumberAttributeConstraints
-                    {
-                        Required = specification.Required,
-                        MinValue = specification.MinValue,
-                        MaxValue = specification.MaxValue
-                    };
-                case AttributeSpecificationType.String:
-                    return new StringAttributeConstraints
-                    {
-                        Required = specification.Required,
-                        MaxLength = specification.MaxLength ?? 0
-                    };
-                case AttributeSpecificationType.List:
-                    return new ListAttributeConstraints
-                    {
-                        Required = specification.Required,
-                        Values = specification.Values
-                            .Select(v => new ListAttributeValue
-                            {
-                                Value = v.Value,
-                                Modifier = v.Modifier
-                            })
-                    };
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                AttributeSpecificationType.Number => (AttributeConstraints) new NumberAttributeConstraints
+                {
+                    Required = specification.Required,
+                    MinValue = specification.MinValue,
+                    MaxValue = specification.MaxValue
+                },
+                AttributeSpecificationType.String => new StringAttributeConstraints
+                {
+                    Required = specification.Required, MaxLength = specification.MaxLength ?? 0
+                },
+                AttributeSpecificationType.List => new ListAttributeConstraints
+                {
+                    Required = specification.Required,
+                    Values = specification.Values.Select(v =>
+                        new ListAttributeValue {Value = v.Value, Modifier = v.Modifier})
+                },
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

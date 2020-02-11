@@ -29,21 +29,15 @@ namespace DM.Web.Core.Authentication
             this.logger = logger;
         }
 
-        private async Task<IIdentity> GetAuthenticationResult(AuthCredentials credentials)
+        private async Task<IIdentity> GetAuthenticationResult(AuthCredentials credentials) => credentials switch
         {
-            switch (credentials)
-            {
-                case LoginCredentials loginCredentials:
-                    return await authenticationService.Authenticate(
-                        loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe);
-                case TokenCredentials tokenCredentials:
-                    return await authenticationService.Authenticate(tokenCredentials.Token);
-                case UnconditionalCredentials unconditionalCredentials:
-                    return await authenticationService.Authenticate(unconditionalCredentials.UserId);
-                default:
-                    return Identity.Guest();
-            }
-        }
+            LoginCredentials loginCredentials => await authenticationService.Authenticate(loginCredentials.Login,
+                loginCredentials.Password, loginCredentials.RememberMe),
+            TokenCredentials tokenCredentials => await authenticationService.Authenticate(tokenCredentials.Token),
+            UnconditionalCredentials unconditionalCredentials => await authenticationService.Authenticate(
+                unconditionalCredentials.UserId),
+            _ => Identity.Guest()
+        };
 
         /// <inheritdoc />
         public async Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext)

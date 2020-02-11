@@ -7,27 +7,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
     public class GameIntentionConverter : IGameIntentionConverter
     {
         /// <inheritdoc />
-        public (GameIntention intention, EventType eventType) Convert(GameStatus gameStatus)
+        public (GameIntention intention, EventType eventType) Convert(GameStatus gameStatus) => gameStatus switch
         {
-            switch (gameStatus)
-            {
-                case GameStatus.Moderation:
-                    return (GameIntention.SetStatusModeration, EventType.StatusGameModeration);
-                case GameStatus.Draft:
-                    return (GameIntention.SetStatusDraft, EventType.StatusGameDraft);
-                case GameStatus.Requirement:
-                    return (GameIntention.SetStatusRequirement, EventType.StatusGameRequirement);
-                case GameStatus.Active:
-                    return (GameIntention.SetStatusActive, EventType.StatusGameActive);
-                case GameStatus.Frozen:
-                    return (GameIntention.SetStatusFrozen, EventType.StatusGameFrozen);
-                case GameStatus.Finished:
-                    return (GameIntention.SetStatusFinished, EventType.StatusGameFinished);
-                case GameStatus.Closed:
-                    return (GameIntention.SetStatusClosed, EventType.StatusGameClosed);
-                default:
-                    throw new GameIntentionConverterException(gameStatus);
-            }
-        }
+            GameStatus.Moderation => (GameIntention.SetStatusModeration, EventType.StatusGameModeration),
+            GameStatus.Draft => (GameIntention.SetStatusDraft, EventType.StatusGameDraft),
+            GameStatus.Requirement => (GameIntention.SetStatusRequirement, EventType.StatusGameRequirement),
+            GameStatus.Active => (GameIntention.SetStatusActive, EventType.StatusGameActive),
+            GameStatus.Frozen => (GameIntention.SetStatusFrozen, EventType.StatusGameFrozen),
+            GameStatus.Finished => (GameIntention.SetStatusFinished, EventType.StatusGameFinished),
+            GameStatus.Closed => (GameIntention.SetStatusClosed, EventType.StatusGameClosed),
+            _ => throw new GameIntentionConverterException(gameStatus)
+        };
     }
 }
