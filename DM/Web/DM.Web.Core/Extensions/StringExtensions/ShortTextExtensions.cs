@@ -26,7 +26,7 @@ namespace DM.Web.Core.Extensions.StringExtensions
 
             var breakLineErrorRegex = new Regex(@"(\s*(\<|(\<b)|(\<br)|(\<br\s)|(\<br\s\/)|(\<br\s\/\>))\s*)+$");
             input = breakLineErrorRegex.Replace(input, string.Empty);
-            var lastWhitespaceRegex = new Regex(@"\s[!\>]$");
+            var lastWhitespaceRegex = new Regex(@"\s[^\>]$");
             input = lastWhitespaceRegex.Replace(input, string.Empty);
 
             return input + "...";
