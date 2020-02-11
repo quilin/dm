@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DM.Services.DataAccess.BusinessObjects.DataContracts;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
 namespace DM.Services.DataAccess.BusinessObjects.Common
@@ -10,7 +11,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
     /// DAL model for user review
     /// </summary>
     [Table("Reviews")]
-    public class Review
+    public class Review : IRemovable
     {
         /// <summary>
         /// Review identifier
@@ -37,6 +38,9 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// Premoderation flag
         /// </summary>
         public bool IsApproved { get; set; }
+
+        /// <inheritdoc />
+        public bool IsRemoved { get; set; }
 
         /// <summary>
         /// Author
