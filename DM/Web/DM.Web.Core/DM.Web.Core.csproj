@@ -22,8 +22,4 @@
       <ProjectReference Include="..\..\Services\DM.Services.Core\DM.Services.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Helpers" />
-    </ItemGroup>
-
 </Project>
