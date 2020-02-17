@@ -14,6 +14,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
         /// Conversation identifier
         /// </summary>
         public Guid ConversationId { get; set; }
+        
+        /// <summary>
+        /// Last message identifier
+        /// </summary>
+        public Guid? LastMessageId { get; set; }
 
         /// <summary>
         /// Links with conversation participants
@@ -26,5 +31,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
         /// </summary>
         [InverseProperty(nameof(Message.Conversation))]
         public virtual ICollection<Message> Messages { get; set; }
+        
+        /// <summary>
+        /// Last message
+        /// </summary>
+        [ForeignKey(nameof(LastMessageId))]
+        public virtual Message LastMessage { get; set; }
     }
 }
