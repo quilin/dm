@@ -20,6 +20,6 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Updating
         /// <summary>
         /// Approval flag
         /// </summary>
-        public bool? Approve { get; set; }
+        public bool? Approved { get; set; }
     }
 }
