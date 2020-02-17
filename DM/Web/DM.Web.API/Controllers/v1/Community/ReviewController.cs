@@ -4,6 +4,7 @@ using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Community;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Services.Community;
+using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Community
@@ -24,11 +25,14 @@ namespace DM.Web.API.Controllers.v1.Community
         }
 
         /// <summary>
-        /// 
+        /// Create new review
         /// </summary>
-        /// <param name="review"></param>
-        /// <returns></returns>
+        /// <response code="201"></response>
+        /// <response code="400">Some review parameters were invalid</response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not authorized to create reviews</response>
         [HttpPost(Name = nameof(CreateReview))]
+        [AuthenticationRequired]
         public async Task<IActionResult> CreateReview([FromBody] Review review)
         {
             var result = await reviewApiService.Create(review);
@@ -36,45 +40,62 @@ namespace DM.Web.API.Controllers.v1.Community
         }
 
         /// <summary>
-        /// 
+        /// Get list of reviews
         /// </summary>
         /// <param name="q"></param>
-        /// <returns></returns>
+        /// <response code="200"></response>
         [HttpGet(Name = nameof(GetReviews))]
         [ProducesResponseType(typeof(ListEnvelope<Review>), 200)]
         public async Task<IActionResult> GetReviews([FromQuery] PagingQuery q) => Ok(await reviewApiService.Get(q));
 
         /// <summary>
-        /// 
+        /// Get random review
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200"></response>
         [HttpPost("random", Name = nameof(GetRandomReview))]
+        [ProducesResponseType(typeof(Envelope<Review>), 201)]
         public async Task<IActionResult> GetRandomReview() => Ok(await reviewApiService.GetRandom());
 
         /// <summary>
-        /// 
+        /// Get single review
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <response code="200"></response>
+        /// <response code="410">Review not found</response>
         [HttpGet("{id}", Name = nameof(GetReview))]
+        [ProducesResponseType(typeof(Envelope<Review>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetReview(Guid id) => Ok(await reviewApiService.Get(id));
 
         /// <summary>
-        /// 
+        /// Update review
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="review"></param>
-        /// <returns></returns>
+        /// <response code="200"></response>
+        /// <response code="400">Some review parameters were invalid</response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not authorized to update this review</response>
+        /// <response code="410">Review not found</response>
         [HttpPatch("{id}", Name = nameof(PutReview))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<Review>), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PutReview(Guid id, [FromBody] Review review) =>
             Ok(await reviewApiService.Update(id, review));
         
         /// <summary>
-        /// 
+        /// Delete review
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <response code="204"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="410">Review not found</response>
         [HttpDelete("{id}", Name = nameof(DeleteReview))]
+        [AuthenticationRequired]
+        [ProducesResponseType(240)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> DeleteReview(Guid id)
         {
             await reviewApiService.Delete(id);
