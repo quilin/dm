@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Community;
 using DM.Web.API.Dto.Contracts;
 
@@ -16,13 +15,7 @@ namespace DM.Web.API.Services.Community
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ListEnvelope<Review>> Get(PagingQuery query);
-
-        /// <summary>
-        /// Get random approved review
-        /// </summary>
-        /// <returns></returns>
-        Task<Envelope<Review>> GetRandom();
+        Task<ListEnvelope<Review>> Get(ReviewsQuery query);
 
         /// <summary>
         /// Get single review

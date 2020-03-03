@@ -14,6 +14,7 @@ namespace DM.Services.Community.Authorization
         public bool IsAllowed(AuthenticatedUser user, ReviewIntention intention) => intention switch
         {
             ReviewIntention.Create => user.QuantityRating > 1000,
+            ReviewIntention.ReadUnapproved => user.Role.HasFlag(UserRole.Administrator),
             _ => false
         };
 

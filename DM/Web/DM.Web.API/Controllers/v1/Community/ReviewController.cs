@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Community;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Services.Community;
@@ -25,6 +24,15 @@ namespace DM.Web.API.Controllers.v1.Community
         }
 
         /// <summary>
+        /// Get list of reviews
+        /// </summary>
+        /// <param name="q"></param>
+        /// <response code="200"></response>
+        [HttpGet(Name = nameof(GetReviews))]
+        [ProducesResponseType(typeof(ListEnvelope<Review>), 200)]
+        public async Task<IActionResult> GetReviews([FromQuery] ReviewsQuery q) => Ok(await reviewApiService.Get(q));
+
+        /// <summary>
         /// Create new review
         /// </summary>
         /// <response code="201"></response>
@@ -38,23 +46,6 @@ namespace DM.Web.API.Controllers.v1.Community
             var result = await reviewApiService.Create(review);
             return CreatedAtRoute(nameof(GetReview), new {id = result.Resource.Id}, result);
         }
-
-        /// <summary>
-        /// Get list of reviews
-        /// </summary>
-        /// <param name="q"></param>
-        /// <response code="200"></response>
-        [HttpGet(Name = nameof(GetReviews))]
-        [ProducesResponseType(typeof(ListEnvelope<Review>), 200)]
-        public async Task<IActionResult> GetReviews([FromQuery] PagingQuery q) => Ok(await reviewApiService.Get(q));
-
-        /// <summary>
-        /// Get random review
-        /// </summary>
-        /// <response code="200"></response>
-        [HttpPost("random", Name = nameof(GetRandomReview))]
-        [ProducesResponseType(typeof(Envelope<Review>), 201)]
-        public async Task<IActionResult> GetRandomReview() => Ok(await reviewApiService.GetRandom());
 
         /// <summary>
         /// Get single review

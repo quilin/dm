@@ -14,14 +14,9 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
         /// Get reviews by query
         /// </summary>
         /// <param name="query"></param>
+        /// <param name="onlyApproved"></param>
         /// <returns></returns>
-        Task<(IEnumerable<Review> reviews, PagingResult paging)> Get(PagingQuery query);
-
-        /// <summary>
-        /// Get random approved review
-        /// </summary>
-        /// <returns></returns>
-        Task<Review> GetRandom();
+        Task<(IEnumerable<Review> reviews, PagingResult paging)> Get(PagingQuery query, bool onlyApproved);
 
         /// <summary>
         /// Get single review

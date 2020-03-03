@@ -23,6 +23,11 @@ namespace DM.Services.Community.Authorization
         /// <summary>
         /// Delete review
         /// </summary>
-        Delete = 3
+        Delete = 3,
+
+        /// <summary>
+        /// Read not approved reviews
+        /// </summary>
+        ReadUnapproved = 4,
     }
 }

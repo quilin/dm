@@ -6,7 +6,7 @@ using DM.Services.Community.BusinessProcesses.Reviews.Creating;
 using DM.Services.Community.BusinessProcesses.Reviews.Deleting;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DM.Services.Community.BusinessProcesses.Reviews.Updating;
-using DM.Services.Core.Dto;
+using DM.Web.API.Dto.Community;
 using DM.Web.API.Dto.Contracts;
 using Review = DM.Web.API.Dto.Community.Review;
 
@@ -37,17 +37,10 @@ namespace DM.Web.API.Services.Community
         }
 
         /// <inheritdoc />
-        public async Task<ListEnvelope<Review>> Get(PagingQuery query)
+        public async Task<ListEnvelope<Review>> Get(ReviewsQuery query)
         {
-            var (reviews, paging) = await readingService.Get(query);
+            var (reviews, paging) = await readingService.Get(query, query.OnlyApproved);
             return new ListEnvelope<Review>(reviews.Select(mapper.Map<Review>), new Paging(paging));
-        }
-
-        /// <inheritdoc />
-        public async Task<Envelope<Review>> GetRandom()
-        {
-            var review = await readingService.GetRandom();
-            return new Envelope<Review>(mapper.Map<Review>(review));
         }
 
         /// <inheritdoc />
