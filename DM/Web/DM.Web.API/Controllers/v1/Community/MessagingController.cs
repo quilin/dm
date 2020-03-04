@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Messaging;
+using DM.Web.API.Services.Community;
 using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,15 @@ namespace DM.Web.API.Controllers.v1.Community
     [ApiExplorerSettings(GroupName = "Messaging")]
     public class MessagingController : ControllerBase
     {
+        private readonly IMessagingApiService apiService;
+
+        /// <inheritdoc />
+        public MessagingController(
+            IMessagingApiService apiService)
+        {
+            this.apiService = apiService;
+        }
+
         /// <summary>
         /// Get user conversations
         /// </summary>
@@ -23,8 +33,8 @@ namespace DM.Web.API.Controllers.v1.Community
         [AuthenticationRequired]
         [ProducesResponseType(typeof(ListEnvelope<Conversation>), 200)]
         [ProducesResponseType(typeof(GeneralError), 401)]
-        public Task<IActionResult> GetConversations([FromQuery] PagingQuery q) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> GetConversations([FromQuery] PagingQuery q) =>
+            Ok(await apiService.GetConversations(q));
 
         /// <summary>
         /// Get conversation with user
@@ -51,8 +61,8 @@ namespace DM.Web.API.Controllers.v1.Community
         [ProducesResponseType(typeof(Envelope<Conversation>), 200)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetConversation(Guid id) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> GetConversation(Guid id) =>
+            Ok(await apiService.GetConversation(id));
 
         /// <summary>
         /// Get single conversation messages
@@ -65,8 +75,8 @@ namespace DM.Web.API.Controllers.v1.Community
         [ProducesResponseType(typeof(ListEnvelope<Message>), 200)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 410)]
-        public Task<IActionResult> GetMessages(Guid id, [FromQuery] PagingQuery q) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> GetMessages(Guid id, [FromQuery] PagingQuery q) =>
+            Ok(await apiService.GetMessages(id, q));
 
         /// <summary>
         /// Create message in conversation

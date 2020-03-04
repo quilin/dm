@@ -1,28 +1,23 @@
 using System;
 using System.Collections.Generic;
-using DM.Web.API.Dto.Users;
+using DM.Services.Core.Dto;
 
-namespace DM.Web.API.Dto.Messaging
+namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <summary>
-    /// API DTO model for user conversation
+    /// Service DTO for conversation
     /// </summary>
     public class Conversation
     {
         /// <summary>
-        /// Identifier
+        /// Conversation identifier
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Conversation name
+        /// List of conversation participants
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Conversation participants
-        /// </summary>
-        public IEnumerable<User> Participants { get; set; }
+        public IEnumerable<GeneralUser> Participants { get; set; }
 
         /// <summary>
         /// Last conversation message
@@ -30,7 +25,7 @@ namespace DM.Web.API.Dto.Messaging
         public Message LastMessage { get; set; }
 
         /// <summary>
-        /// Number of unread conversation messages
+        /// Number of unread messages
         /// </summary>
         public int UnreadMessagesCount { get; set; }
     }

@@ -34,7 +34,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         }
 
         [Fact]
-        public void ThrowGoneWhenUserNotFound()
+        public void ThrowGoneWhenUserDetailsNotFound()
         {
             readingRepository
                 .Setup(r => r.GetUserDetails(It.IsAny<string>()))
@@ -47,7 +47,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         }
 
         [Fact]
-        public async Task ReturnFoundUser()
+        public async Task ReturnFoundUserDetails()
         {
             var expected = new UserDetails();
             readingRepository
@@ -58,6 +58,33 @@ namespace DM.Services.Community.Tests.BusinessProcesses
 
             actual.Should().Be(expected);
             readingRepository.Verify(r => r.GetUserDetails("User"), Times.Once);
+        }
+
+        [Fact]
+        public void ThrowGoneWhenUserNotFound()
+        {
+            readingRepository
+                .Setup(r => r.GetUser(It.IsAny<string>()))
+                .ReturnsAsync((GeneralUser) null);
+
+            service.Invoking(s => s.Get("User").Wait())
+                .Should().Throw<HttpException>()
+                .And.StatusCode.Should().Be(HttpStatusCode.Gone);
+            readingRepository.Verify(r => r.GetUser("User"), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReturnFoundUser()
+        {
+            var expected = new GeneralUser();
+            readingRepository
+                .Setup(r => r.GetUser(It.IsAny<string>()))
+                .ReturnsAsync(expected);
+
+            var actual = await service.Get("User");
+
+            actual.Should().Be(expected);
+            readingRepository.Verify(r => r.GetUser("User"), Times.Once);
         }
 
         [Fact]
