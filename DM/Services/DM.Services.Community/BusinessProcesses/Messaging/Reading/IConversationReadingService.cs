@@ -23,5 +23,12 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <param name="id">Conversation identifier</param>
         /// <returns></returns>
         Task<Conversation> Get(Guid id);
+
+        /// <summary>
+        /// Find user visavi conversation
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <returns></returns>
+        Task<Conversation> Get(string login);
     }
 }

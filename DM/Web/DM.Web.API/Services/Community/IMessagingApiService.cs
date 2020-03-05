@@ -26,6 +26,13 @@ namespace DM.Web.API.Services.Community
         Task<Envelope<Conversation>> GetConversation(Guid id);
 
         /// <summary>
+        /// Get visavi conversation with user
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        Task<Envelope<Conversation>> GetConversation(string login);
+
+        /// <summary>
         /// Get list of conversation messages
         /// </summary>
         /// <param name="conversationId">Conversation identifier</param>
@@ -34,10 +41,25 @@ namespace DM.Web.API.Services.Community
         Task<ListEnvelope<Message>> GetMessages(Guid conversationId, PagingQuery query);
 
         /// <summary>
+        /// Create new message
+        /// </summary>
+        /// <param name="conversationId">Conversation identifier</param>
+        /// <param name="message">Message</param>
+        /// <returns></returns>
+        Task<Envelope<Message>> CreateMessage(Guid conversationId, Message message);
+
+        /// <summary>
         /// Get single message
         /// </summary>
         /// <param name="messageId">Message identifier</param>
         /// <returns></returns>
         Task<Envelope<Message>> GetMessage(Guid messageId);
+
+        /// <summary>
+        /// Delete single message
+        /// </summary>
+        /// <param name="messageId">Message identifier</param>
+        /// <returns></returns>
+        Task DeleteMessage(Guid messageId);
     }
 }

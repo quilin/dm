@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Community.BusinessProcesses.Messaging.Creating;
+using DM.Services.Community.BusinessProcesses.Messaging.Deleting;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
@@ -15,16 +17,22 @@ namespace DM.Web.API.Services.Community
     {
         private readonly IConversationReadingService conversationReadingService;
         private readonly IMessageReadingService messageReadingService;
+        private readonly IMessageCreatingService messageCreatingService;
+        private readonly IMessageDeletingService messageDeletingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public MessagingApiService(
             IConversationReadingService conversationReadingService,
             IMessageReadingService messageReadingService,
+            IMessageCreatingService messageCreatingService,
+            IMessageDeletingService messageDeletingService,
             IMapper mapper)
         {
             this.conversationReadingService = conversationReadingService;
             this.messageReadingService = messageReadingService;
+            this.messageCreatingService = messageCreatingService;
+            this.messageDeletingService = messageDeletingService;
             this.mapper = mapper;
         }
 
@@ -43,10 +51,26 @@ namespace DM.Web.API.Services.Community
         }
 
         /// <inheritdoc />
+        public async Task<Envelope<Conversation>> GetConversation(string login)
+        {
+            var conversation = await conversationReadingService.Get(login);
+            return new Envelope<Conversation>(mapper.Map<Conversation>(conversation));
+        }
+
+        /// <inheritdoc />
         public async Task<ListEnvelope<Message>> GetMessages(Guid conversationId, PagingQuery query)
         {
             var (messages, paging) = await messageReadingService.Get(conversationId, query);
             return new ListEnvelope<Message>(messages.Select(mapper.Map<Message>), new Paging(paging));
+        }
+
+        /// <inheritdoc />
+        public async Task<Envelope<Message>> CreateMessage(Guid conversationId, Message message)
+        {
+            var createMessage = mapper.Map<CreateMessage>(message);
+            createMessage.ConversationId = conversationId;
+            var createdMessage = await messageCreatingService.Create(createMessage);
+            return new Envelope<Message>(mapper.Map<Message>(createdMessage));
         }
 
         /// <inheritdoc />
@@ -55,5 +79,8 @@ namespace DM.Web.API.Services.Community
             var message = await messageReadingService.Get(messageId);
             return new Envelope<Message>(mapper.Map<Message>(message));
         }
+
+        /// <inheritdoc />
+        public Task DeleteMessage(Guid messageId) => messageDeletingService.Delete(messageId);
     }
 }
