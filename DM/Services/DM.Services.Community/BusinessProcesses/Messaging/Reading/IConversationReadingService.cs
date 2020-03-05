@@ -20,15 +20,15 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <summary>
         /// Get single conversation
         /// </summary>
-        /// <param name="id">Conversation identifier</param>
+        /// <param name="conversationId">Conversation identifier</param>
         /// <returns></returns>
-        Task<Conversation> Get(Guid id);
+        Task<Conversation> Get(Guid conversationId);
 
         /// <summary>
         /// Find user visavi conversation
         /// </summary>
         /// <param name="login">User login</param>
         /// <returns></returns>
-        Task<Conversation> Get(string login);
+        Task<Conversation> GetOrCreate(string login);
     }
 }

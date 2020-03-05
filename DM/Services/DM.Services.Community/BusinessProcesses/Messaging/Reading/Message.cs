@@ -14,6 +14,11 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Creating moment
+        /// </summary>
+        public DateTimeOffset CreateDate { get; set; }
+
+        /// <summary>
         /// Message author
         /// </summary>
         public GeneralUser Author { get; set; }

@@ -14,7 +14,12 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
         /// Conversation identifier
         /// </summary>
         public Guid ConversationId { get; set; }
-        
+
+        /// <summary>
+        /// Sign of a basic conversation between two users
+        /// </summary>
+        public bool Visavi { get; set; }
+
         /// <summary>
         /// Last message identifier
         /// </summary>
@@ -31,7 +36,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Messaging
         /// </summary>
         [InverseProperty(nameof(Message.Conversation))]
         public virtual ICollection<Message> Messages { get; set; }
-        
+
         /// <summary>
         /// Last message
         /// </summary>

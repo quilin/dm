@@ -53,7 +53,7 @@ namespace DM.Web.API.Services.Community
         /// <inheritdoc />
         public async Task<Envelope<Conversation>> GetConversation(string login)
         {
-            var conversation = await conversationReadingService.Get(login);
+            var conversation = await conversationReadingService.GetOrCreate(login);
             return new Envelope<Conversation>(mapper.Map<Conversation>(conversation));
         }
 
