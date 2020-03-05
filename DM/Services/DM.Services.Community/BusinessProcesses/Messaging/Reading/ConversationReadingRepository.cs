@@ -29,7 +29,12 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
             this.mapper = mapper;
         }
 
-        private static Expression<Func<DbConversation, bool>> UserParticipates(Guid userId) =>
+        /// <summary>
+        /// Participation predicate
+        /// </summary>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        public static Expression<Func<DbConversation, bool>> UserParticipates(Guid userId) =>
             c => c.UserLinks.Any(l => !l.IsRemoved && l.UserId == userId);
 
         /// <inheritdoc />

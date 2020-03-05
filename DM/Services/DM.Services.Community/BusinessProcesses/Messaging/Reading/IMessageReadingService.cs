@@ -21,8 +21,8 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <summary>
         /// Get single message
         /// </summary>
-        /// <param name="id">Message identifier</param>
+        /// <param name="messageId">Message identifier</param>
         /// <returns></returns>
-        Task<Message> Get(Guid id);
+        Task<Message> Get(Guid messageId);
     }
 }
