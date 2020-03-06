@@ -1,4 +1,5 @@
-﻿using DM.Web.Classic.Views.Home;
+﻿using System.Threading.Tasks;
+using DM.Web.Classic.Views.Home;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers
@@ -6,17 +7,26 @@ namespace DM.Web.Classic.Controllers
     public class HomeController : DmControllerBase
     {
         private readonly IHomeViewModelBuilder homeViewModelBuilder;
+        private readonly IAboutViewModelBuilder aboutViewModelBuilder;
 
         public HomeController(
-            IHomeViewModelBuilder homeViewModelBuilder)
+            IHomeViewModelBuilder homeViewModelBuilder,
+            IAboutViewModelBuilder aboutViewModelBuilder)
         {
             this.homeViewModelBuilder = homeViewModelBuilder;
+            this.aboutViewModelBuilder = aboutViewModelBuilder;
         }
 
         public IActionResult Index()
         {
             var homeViewModel = homeViewModelBuilder.Build();
             return View("Home", homeViewModel);
+        }
+
+        public async Task<IActionResult> About()
+        {
+            var aboutViewModel = await aboutViewModelBuilder.Build();
+            return View("About", aboutViewModel);
         }
 
         public ActionResult Rules()

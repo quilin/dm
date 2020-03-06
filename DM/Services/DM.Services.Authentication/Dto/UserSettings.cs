@@ -38,7 +38,8 @@ namespace DM.Services.Authentication.Dto
                 TopicsPerPage = 10,
                 CommentsPerPage = 10,
                 PostsPerPage = 10,
-                MessagesPerPage = 10
+                MessagesPerPage = 10,
+                EntitiesPerPage = 10
             },
             ColorSchema = ColorSchema.Modern
         };

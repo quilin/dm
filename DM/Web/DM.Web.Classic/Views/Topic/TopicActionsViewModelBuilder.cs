@@ -28,6 +28,7 @@ namespace DM.Web.Classic.Views.Topic
             {
                 TopicId = topic.Id,
                 TopicTitle = topic.Title,
+                CanComment = intentionsManager.IsAllowed(TopicIntention.CreateComment, topic),
                 CanAttach = administrationAllowed,
                 CanDetach = administrationAllowed,
                 CanClose = administrationAllowed,

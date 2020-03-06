@@ -30,7 +30,7 @@
         <span class="notification-unread">
             <a href="@Url.Action("GetFirstUnreadPostInModule", "Post", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadPostsIcon(Model.UnreadCountPosts, false)</a>@*
             *@&nbsp;<span class="notificaion-unread-separator">|</span>&nbsp;@*
-            *@<a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"moduleIdEncoded", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadCommentsIcon(Model.UnreadCountComments, false)</a>
+            *@<a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"gameIdEncoded", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadCommentsIcon(Model.UnreadCountComments, false)</a>
             @if (Model.HasUnseenCharacterCounters && Model.UnseenCountCharacters > 0)
             {
                 <span class="notificaion-unread-separator">|</span>

@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
-using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 
 namespace DM.Web.Classic.Views.Shared.Commentaries
@@ -14,25 +12,22 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
     {
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly ICommentaryViewModelBuilder commentaryViewModelBuilder;
-        private readonly IIntentionManager intentionsManager;
         private readonly ICreateCommentaryFormBuilder createCommentaryFormBuilder;
         private readonly IIdentity identity;
 
         public CommentariesViewModelBuilder(
             ICommentaryReadingService commentaryReadingService,
             ICommentaryViewModelBuilder commentaryViewModelBuilder,
-            IIntentionManager intentionsManager,
             ICreateCommentaryFormBuilder createCommentaryFormBuilder,
             IIdentityProvider identityProvider)
         {
             this.commentaryReadingService = commentaryReadingService;
             this.commentaryViewModelBuilder = commentaryViewModelBuilder;
-            this.intentionsManager = intentionsManager;
             this.createCommentaryFormBuilder = createCommentaryFormBuilder;
             identity = identityProvider.Current;
         }
 
-        public async Task<CommentariesViewModel> Build(Guid entityId, int? entityNumber)
+        public async Task<CommentariesViewModel> Build(Guid entityId, int? entityNumber, bool canComment)
         {
             var (comments, paging) = commentaryReadingService.Get(entityId, new PagingQuery
             {
@@ -48,7 +43,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
                 PageSize = paging.PageSize,
                 EntityNumber = paging.EntityNumber,
                 Commentaries = commentaryTasks.Select(c => c.Result).ToArray(),
-                CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, paging),
+                CanCreate = canComment,
                 CreateCommentaryForm = createCommentaryFormBuilder.Build(entityId)
             };
         }

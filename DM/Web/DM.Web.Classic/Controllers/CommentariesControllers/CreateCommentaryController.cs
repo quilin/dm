@@ -31,6 +31,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
                 Text = createCommentaryForm.Text
             };
             await commentaryCreatingService.Create(createComment);
+            await commentaryReadingService.MarkAsRead(createComment.EntityId);
             var (_, paging) = await commentaryReadingService.Get(createCommentaryForm.EntityId, PagingQuery.Empty);
             return paging.TotalPagesCount;
         }

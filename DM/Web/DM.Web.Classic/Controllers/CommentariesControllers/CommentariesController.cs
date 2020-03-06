@@ -42,7 +42,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
                 var commentaries = await commentariesViewModelBuilder.BuildList(entityId, entityNumber);
                 return PartialView("Commentaries/CommentariesList", commentaries);
             }
-            var commentariesViewModel = await commentariesViewModelBuilder.Build(entityId, entityNumber);
+            var commentariesViewModel = await commentariesViewModelBuilder.Build(entityId, entityNumber, false);
             return PartialView("Commentaries/Commentaries", commentariesViewModel);
         }
 

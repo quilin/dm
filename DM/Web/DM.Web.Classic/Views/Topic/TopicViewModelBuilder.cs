@@ -40,9 +40,11 @@ namespace DM.Web.Classic.Views.Topic
 
         public async Task<TopicViewModel> Build(Guid topicId, int entityNumber)
         {
-            var topic = topicReadingService.GetTopic(topicId).Result;
+            var topic = await topicReadingService.GetTopic(topicId);
+            var topicActions = await topicActionsViewModelBuilder.Build(topic);
 
-            var commentariesViewModel = await commentariesViewModelBuilder.Build(topicId, entityNumber);
+            var commentariesViewModel = await commentariesViewModelBuilder.Build(
+                topicId, entityNumber, topicActions.CanComment);
             commentariesViewModel.CanCreate = intentionsManager.IsAllowed(TopicIntention.CreateComment, topic);
             await commentaryReadingService.MarkAsRead(topicId);
 
@@ -57,7 +59,7 @@ namespace DM.Web.Classic.Views.Topic
                 Attached = topic.Attached,
                 Closed = topic.Closed,
                 Author = userViewModelBuilder.Build(topic.Author),
-                TopicActions = await topicActionsViewModelBuilder.Build(topic),
+                TopicActions = topicActions,
                 Commentaries = commentariesViewModel
             };
         }

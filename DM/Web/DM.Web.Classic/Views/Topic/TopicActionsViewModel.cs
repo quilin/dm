@@ -8,6 +8,7 @@ namespace DM.Web.Classic.Views.Topic
         public Guid TopicId { get; set; }
         public string TopicTitle { get; set; }
 
+        public bool CanComment { get; set; }
         public bool CanClose { get; set; }
         public bool CanOpen { get; set; }
         public bool CanAttach { get; set; }

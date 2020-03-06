@@ -63,12 +63,14 @@ namespace DM.Web.Classic.Configuration
             #endregion
 
             #region CommunityRoutes
+
             routes.MapAction<CommunityController>("community/{entityNumber}", c => c.Index(0, false), new Dictionary<string, object>{{"entityNumber", 1}, {"withInactive", false}});
             #endregion
 
             routes.MapAction<ErrorController>("error/{statusCode}", c => c.Index(0, null));
 
             routes.MapAction<HomeController>("", c => c.Index());
+            routes.MapAction<HomeController>("about", c => c.About());
             routes.MapAction<HomeController>("rules", c => c.Rules());
             routes.MapAction<HomeController>("donate", c => c.Donate());
 

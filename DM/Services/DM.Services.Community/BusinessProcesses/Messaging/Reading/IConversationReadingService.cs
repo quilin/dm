@@ -30,5 +30,12 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <param name="login">User login</param>
         /// <returns></returns>
         Task<Conversation> GetOrCreate(string login);
+
+        /// <summary>
+        /// Mark all conversation messages as read
+        /// </summary>
+        /// <param name="conversationId">Conversation identifier</param>
+        /// <returns></returns>
+        Task MarkAsRead(Guid conversationId);
     }
 }

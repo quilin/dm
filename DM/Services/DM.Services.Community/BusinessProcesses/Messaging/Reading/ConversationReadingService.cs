@@ -91,5 +91,9 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 
             return result;
         }
+
+        /// <inheritdoc />
+        public Task MarkAsRead(Guid conversationId) =>
+            unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, conversationId);
     }
 }
