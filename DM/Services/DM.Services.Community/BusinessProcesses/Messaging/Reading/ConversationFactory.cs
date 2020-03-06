@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DM.Services.Core.Implementation;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 using DbConversationLink = DM.Services.DataAccess.BusinessObjects.Messaging.UserConversationLink;
@@ -28,23 +29,15 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
                 LastMessageId = null,
                 Visavi = true
             };
-            var links = new[]
-            {
-                new DbConversationLink
+            var links = new[] {userId, visaviId}
+                .Distinct()
+                .Select(id => new DbConversationLink
                 {
                     UserConversationLinkId = guidFactory.Create(),
                     ConversationId = conversationId,
-                    UserId = userId,
+                    UserId = id,
                     IsRemoved = false
-                },
-                new DbConversationLink
-                {
-                    UserConversationLinkId = guidFactory.Create(),
-                    ConversationId = conversationId,
-                    UserId = visaviId,
-                    IsRemoved = false
-                }
-            };
+                });
 
             return (conversation, links);
         }

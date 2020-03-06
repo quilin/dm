@@ -1,29 +1,35 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
+using DM.Services.DataAccess.BusinessObjects.Common;
 
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
     public class ConversationReadingService : IConversationReadingService
     {
-        private readonly IConversationReadingRepository repository;
         private readonly IConversationFactory factory;
+        private readonly IConversationReadingRepository repository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IIdentity identity;
 
         /// <inheritdoc />
         public ConversationReadingService(
-            IConversationReadingRepository repository,
             IConversationFactory factory,
+            IConversationReadingRepository repository,
+            IUnreadCountersRepository unreadCountersRepository,
             IIdentityProvider identityProvider)
         {
-            this.repository = repository;
             this.factory = factory;
+            this.repository = repository;
+            this.unreadCountersRepository = unreadCountersRepository;
             identity = identityProvider.Current;
         }
 
@@ -58,14 +64,22 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
                 throw new HttpException(HttpStatusCode.Gone, "User not found");
             }
 
-            var existingConversation = await repository.FindVisaviConversation(identity.User.UserId, visaviId.Value);
+            var currentUserId = identity.User.UserId;
+            var existingConversation = await repository.FindVisaviConversation(currentUserId, visaviId.Value);
             if (existingConversation != null)
             {
                 return existingConversation;
             }
 
-            var (conversation, conversationLinks) = factory.CreateVisavi(identity.User.UserId, visaviId.Value);
-            return await repository.Create(conversation, conversationLinks);
+            var (conversation, conversationLinks) = factory.CreateVisavi(currentUserId, visaviId.Value);
+            var result = await repository.Create(conversation, conversationLinks);
+
+            foreach (var participantId in new[] {currentUserId, visaviId.Value}.Distinct())
+            {
+                await unreadCountersRepository.Create(result.Id, participantId, UnreadEntryType.Message);
+            }
+
+            return result;
         }
     }
 }
