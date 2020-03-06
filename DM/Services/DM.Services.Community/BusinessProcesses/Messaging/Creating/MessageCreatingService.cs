@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using DM.Services.Authentication.Dto;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Community.Authorization;
@@ -23,6 +25,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
         private readonly IMessageCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
+        private readonly IIdentity identity;
 
         /// <inheritdoc />
         public MessageCreatingService(
@@ -33,7 +36,8 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             IUpdateBuilderFactory updateBuilderFactory,
             IMessageCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventPublisher publisher,
+            IIdentityProvider identityProvider)
         {
             this.conversationReadingService = conversationReadingService;
             this.validator = validator;
@@ -43,6 +47,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
+            identity = identityProvider.Current;
         }
 
         /// <inheritdoc />
@@ -52,7 +57,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             var conversation = await conversationReadingService.Get(createMessage.ConversationId);
             intentionManager.ThrowIfForbidden(ConversationIntention.CreateMessage, conversation);
 
-            var message = factory.Create(createMessage);
+            var message = factory.Create(createMessage, identity.User.UserId);
             var updateConversation = updateBuilderFactory.Create<DbConversation>(conversation.Id)
                 .Field(c => c.LastMessageId, message.MessageId);
 
