@@ -279,6 +279,12 @@ namespace DM.Services.Core.Dto.Enums
         /// Post has been deleted
         /// </summary>
         [EventRoutingKey("game.post.deleted")]
-        DeletedPost = 403
+        DeletedPost = 403,
+
+        /// <summary>
+        /// New message has been sent
+        /// </summary>
+        [EventRoutingKey("messaging.message.created")]
+        NewMessage = 601
     }
 }

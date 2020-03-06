@@ -1,0 +1,66 @@
+using System.Threading.Tasks;
+using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.UnreadCounters;
+using DM.Services.Community.Authorization;
+using DM.Services.Community.BusinessProcesses.Messaging.Reading;
+using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Common;
+using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.MessageQueuing.Publish;
+using FluentValidation;
+using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
+
+namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
+{
+    /// <inheritdoc />
+    public class MessageCreatingService : IMessageCreatingService
+    {
+        private readonly IConversationReadingService conversationReadingService;
+        private readonly IValidator<CreateMessage> validator;
+        private readonly IIntentionManager intentionManager;
+        private readonly IMessageFactory factory;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
+        private readonly IMessageCreatingRepository repository;
+        private readonly IUnreadCountersRepository unreadCountersRepository;
+        private readonly IInvokedEventPublisher publisher;
+
+        /// <inheritdoc />
+        public MessageCreatingService(
+            IConversationReadingService conversationReadingService,
+            IValidator<CreateMessage> validator,
+            IIntentionManager intentionManager,
+            IMessageFactory factory,
+            IUpdateBuilderFactory updateBuilderFactory,
+            IMessageCreatingRepository repository,
+            IUnreadCountersRepository unreadCountersRepository,
+            IInvokedEventPublisher publisher)
+        {
+            this.conversationReadingService = conversationReadingService;
+            this.validator = validator;
+            this.intentionManager = intentionManager;
+            this.factory = factory;
+            this.updateBuilderFactory = updateBuilderFactory;
+            this.repository = repository;
+            this.unreadCountersRepository = unreadCountersRepository;
+            this.publisher = publisher;
+        }
+
+        /// <inheritdoc />
+        public async Task<Message> Create(CreateMessage createMessage)
+        {
+            await validator.ValidateAndThrowAsync(createMessage);
+            var conversation = await conversationReadingService.Get(createMessage.ConversationId);
+            intentionManager.ThrowIfForbidden(ConversationIntention.CreateMessage, conversation);
+
+            var message = factory.Create(createMessage);
+            var updateConversation = updateBuilderFactory.Create<DbConversation>(conversation.Id)
+                .Field(c => c.LastMessageId, message.MessageId);
+
+            var result = await repository.Create(message, updateConversation);
+            await unreadCountersRepository.Increment(conversation.Id, UnreadEntryType.Message);
+            await publisher.Publish(EventType.NewMessage, message.MessageId);
+
+            return result;
+        }
+    }
+}
