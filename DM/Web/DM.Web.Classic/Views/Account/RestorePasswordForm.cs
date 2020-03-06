@@ -6,5 +6,8 @@ namespace DM.Web.Classic.Views.Account
     {
         [Required(ErrorMessage = "Введите свой e-mail")]
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "Введите свой логин")]
+        public string Login { get; set; }
     }
 }

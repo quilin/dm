@@ -47,4 +47,8 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Account\Activation\UpdatePassword.cshtml" />
+    </ItemGroup>
+
 </Project>

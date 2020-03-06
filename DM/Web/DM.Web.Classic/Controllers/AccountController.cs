@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
-using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Account;
@@ -14,26 +14,23 @@ namespace DM.Web.Classic.Controllers
     public class AccountController : DmControllerBase
     {
         private readonly IRegistrationService registrationService;
+        private readonly IPasswordResetService passwordResetService;
         private readonly ILoginFormBuilder loginFormBuilder;
         private readonly IWebAuthenticationService webAuthenticationService;
         private readonly IRegistrationFormBuilder registrationFormBuilder;
-        private readonly IUserActionsViewModelBuilder userActionsViewModelBuilder;
-        private readonly IIdentity identity;
 
         public AccountController(
             IRegistrationService registrationService,
+            IPasswordResetService passwordResetService,
             ILoginFormBuilder loginFormBuilder,
             IWebAuthenticationService webAuthenticationService,
-            IRegistrationFormBuilder registrationFormBuilder,
-            IUserActionsViewModelBuilder userActionsViewModelBuilder,
-            IIdentityProvider identityProvider)
+            IRegistrationFormBuilder registrationFormBuilder)
         {
             this.registrationService = registrationService;
+            this.passwordResetService = passwordResetService;
             this.loginFormBuilder = loginFormBuilder;
             this.webAuthenticationService = webAuthenticationService;
             this.registrationFormBuilder = registrationFormBuilder;
-            this.userActionsViewModelBuilder = userActionsViewModelBuilder;
-            identity = identityProvider.Current;
         }
 
         [HttpGet]
@@ -91,17 +88,18 @@ namespace DM.Web.Classic.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        #region ChildActions
-        public ActionResult GetUserActions()
-        {
-            if (!identity.User.IsAuthenticated)
-            {
-                return PartialView("GuestActions");
-            }
+        [HttpGet]
+        public IActionResult RestorePassword() => View("RestorePassword", new RestorePasswordForm());
 
-            var userActionsViewModel = userActionsViewModelBuilder.Build(identity.User.Login);
-            return PartialView("UserActions", userActionsViewModel);
+        [HttpPost]
+        public async Task<IActionResult> RestorePassword(RestorePasswordForm restorePasswordForm)
+        {
+            await passwordResetService.Reset(new UserPasswordReset
+            {
+                Email = restorePasswordForm.Email,
+                Login = restorePasswordForm.Login
+            });
+            return NoContent();
         }
-        #endregion
     }
 }
