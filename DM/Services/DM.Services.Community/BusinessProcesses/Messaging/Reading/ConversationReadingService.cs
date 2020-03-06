@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
+using DM.Services.Common.Extensions;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Common;
@@ -36,9 +37,12 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <inheritdoc />
         public async Task<(IEnumerable<Conversation> conversations, PagingResult paging)> Get(PagingQuery query)
         {
-            var totalCount = await repository.Count(identity.User.UserId);
+            var currentUserId = identity.User.UserId;
+            var totalCount = await repository.Count(currentUserId);
             var pagingData = new PagingData(query, identity.Settings.Paging.MessagesPerPage, totalCount);
-            var conversations = await repository.Get(identity.User.UserId, pagingData);
+            var conversations = (await repository.Get(currentUserId, pagingData)).ToArray();
+            await unreadCountersRepository.FillEntityCounters(conversations, currentUserId,
+                c => c.Id, c => c.UnreadMessagesCount);
 
             return (conversations, pagingData.Result);
         }
@@ -46,11 +50,15 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <inheritdoc />
         public async Task<Conversation> Get(Guid conversationId)
         {
-            var conversation = await repository.Get(conversationId, identity.User.UserId);
+            var currentUserId = identity.User.UserId;
+            var conversation = await repository.Get(conversationId, currentUserId);
             if (conversation == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Conversation not found");
             }
+
+            await unreadCountersRepository.FillEntityCounters(new[] {conversation}, currentUserId,
+                c => c.Id, c => c.UnreadMessagesCount);
 
             return conversation;
         }
@@ -68,6 +76,8 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
             var existingConversation = await repository.FindVisaviConversation(currentUserId, visaviId.Value);
             if (existingConversation != null)
             {
+                await unreadCountersRepository.FillEntityCounters(new[] {existingConversation}, currentUserId,
+                    c => c.Id, c => c.UnreadMessagesCount);
                 return existingConversation;
             }
 
