@@ -61,5 +61,12 @@ namespace DM.Web.API.Services.Community
         /// <param name="messageId">Message identifier</param>
         /// <returns></returns>
         Task DeleteMessage(Guid messageId);
+
+        /// <summary>
+        /// Mark all conversation messages as read
+        /// </summary>
+        /// <param name="conversationId">Conversation identifier</param>
+        /// <returns></returns>
+        Task MarkAsRead(Guid conversationId);
     }
 }

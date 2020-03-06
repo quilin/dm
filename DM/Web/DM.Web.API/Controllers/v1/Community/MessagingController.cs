@@ -103,6 +103,19 @@ namespace DM.Web.API.Controllers.v1.Community
         }
 
         /// <summary>
+        /// Mark all messages in conversation as read
+        /// </summary>
+        /// <response code="204"></response>
+        /// <response code="410">Dialogue not found</response>
+        [HttpDelete("dialogues/{id}/messages/unread")]
+        [AuthenticationRequired]
+        public async Task<IActionResult> MarkAsRead(Guid id)
+        {
+            await apiService.MarkAsRead(id);
+            return NoContent();
+        }
+
+        /// <summary>
         /// Get message
         /// </summary>
         /// <response code="200"></response>

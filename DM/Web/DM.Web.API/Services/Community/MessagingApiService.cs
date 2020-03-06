@@ -82,5 +82,8 @@ namespace DM.Web.API.Services.Community
 
         /// <inheritdoc />
         public Task DeleteMessage(Guid messageId) => messageDeletingService.Delete(messageId);
+
+        /// <inheritdoc />
+        public Task MarkAsRead(Guid conversationId) => conversationReadingService.MarkAsRead(conversationId);
     }
 }
