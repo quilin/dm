@@ -13,7 +13,8 @@ namespace DM.Web.Classic.Views.GameActions.GameRooms
                 Title = room.Title,
                 Disabled = pageType == PageType.Session && pageId == room.Id,
                 UnreadCount = room.UnreadPostsCount,
-                TotalCount = room.TotalPostsCount
+                TotalCount = room.TotalPostsCount,
+                PendingPosts = room.Pendings
             };
         }
     }
