@@ -1,12 +1,11 @@
-﻿@using DM.Web.Classic.Extensions.IconFontExtensions
-@model DM.Web.Classic.Views.Shared.Layout.TopMenuViewModel
+﻿@model DM.Web.Classic.Views.Shared.Layout.TopMenuViewModel
 
 @Html.ActionLink("О проекте", "About", "Home", null, new { @class = "topMenu-link" })
 @Html.ActionLink("Сообщество", "Index", "Community", new { entityNumber = 1 }, new { @class = "topMenu-link" })
 @Html.ActionLink("Правила", "Rules", "Home", null, new { @class = "topMenu-link" })
 @if (Model.CanCreateGame)
 {
-    <a class="topMenu-link topMenu-link-create" href="@Url.Action("Create", "CreateGame")">
+    @*<a class="topMenu-link topMenu-link-create" href="@Url.Action("Create", "CreateGame")">
         @IconFont.Render(IconType.Add) Создать игру
-    </a>
+    </a>*@
 }

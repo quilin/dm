@@ -1,5 +1,0 @@
-﻿@model IEnumerable<DM.Web.Classic.Views.GamesList.GamesListItem.GamesListItemViewModel>
-@foreach (var module in Model)
-{
-    @await Html.PartialAsync("GamesListItem/GamesListItem", module)
-}
