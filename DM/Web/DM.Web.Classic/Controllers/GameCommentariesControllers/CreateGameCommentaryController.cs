@@ -30,6 +30,7 @@ namespace DM.Web.Classic.Controllers.GameCommentariesControllers
                 EntityId = createForm.GameId,
                 Text = createForm.Text
             });
+            await commentReadingService.MarkAsRead(createForm.GameId);
             var (_, paging, _) = await commentReadingService.Get(createForm.GameId, PagingQuery.Empty);
             return Ok(paging.TotalPagesCount);
         }

@@ -34,6 +34,7 @@ namespace DM.Web.Classic.Views.GameCommentaries
         public async Task<GameCommentariesViewModel> Build(Guid gameId, int entityNumber)
         {
             var (comments, paging, game) = await commentService.Get(gameId, new PagingQuery {Number = entityNumber});
+            await commentService.MarkAsRead(gameId);
             var characterNames = await GetCharacterNames(game);
             return new GameCommentariesViewModel
             {

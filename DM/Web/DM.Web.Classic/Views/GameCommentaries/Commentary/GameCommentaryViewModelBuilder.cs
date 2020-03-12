@@ -32,18 +32,18 @@ namespace DM.Web.Classic.Views.GameCommentaries.Commentary
             identity = identityProvider.Current;
         }
 
-        public async Task<GameCommentaryViewModel> Build(Comment comment, Game game,
+        public Task<GameCommentaryViewModel> Build(Comment comment, Game game,
             IDictionary<Guid, IEnumerable<string>> characterNames)
         {
-            return new GameCommentaryViewModel
+            return Task.FromResult(new GameCommentaryViewModel
             {
                 CommentaryId = comment.Id,
                 Author = userViewModelBuilder.Build(comment.Author),
                 CharacterNames = characterNames.TryGetValue(comment.Author.UserId, out var names)
                     ? names
                     : new string[0],
-                CreateDate = comment.CreateDate.DateTime,
-                LastUpdateDate = comment.LastUpdateDate?.DateTime,
+                CreateDate = comment.CreateDate,
+                LastUpdateDate = comment.LastUpdateDate,
                 Text = bbParserProvider.CurrentCommon.Parse(comment.Text).ToHtml(),
                 LikesCount = comment.Likes.Count(),
 
@@ -54,7 +54,7 @@ namespace DM.Web.Classic.Views.GameCommentaries.Commentary
                 HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
 
                 CanWarn = intentionManager.IsAllowed(GameIntention.CreateComment, game)
-            };
+            });
         }
     }
 }

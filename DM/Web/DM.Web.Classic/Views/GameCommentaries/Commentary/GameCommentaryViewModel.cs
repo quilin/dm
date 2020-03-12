@@ -8,8 +8,8 @@ namespace DM.Web.Classic.Views.GameCommentaries.Commentary
     {
         public Guid CommentaryId { get; set; }
         public UserViewModel Author { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime? LastUpdateDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
+        public DateTimeOffset? LastUpdateDate { get; set; }
         public string Text { get; set; }
         public int LikesCount { get; set; }
 
