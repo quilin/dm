@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Common.Extensions;
@@ -16,7 +15,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
     /// <inheritdoc />
     public class ForumReadingService : IForumReadingService
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IAccessPolicyConverter accessPolicyConverter;
         private readonly IForumRepository forumRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
@@ -28,7 +27,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
             IForumRepository forumRepository,
             IUnreadCountersRepository unreadCountersRepository)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.accessPolicyConverter = accessPolicyConverter;
             this.forumRepository = forumRepository;
             this.unreadCountersRepository = unreadCountersRepository;
@@ -38,6 +37,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         public async Task<IEnumerable<Dto.Output.Forum>> GetForaList()
         {
             var fora = await GetFora();
+            var identity = identityProvider.Current;
             if (identity.User.IsAuthenticated)
             {
                 await unreadCountersRepository.FillParentCounters(fora, identity.User.UserId,
@@ -51,6 +51,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         public async Task<Dto.Output.Forum> GetSingleForum(string forumTitle)
         {
             var forum = await GetForum(forumTitle);
+            var identity = identityProvider.Current;
             if (identity.User.IsAuthenticated)
             {
                 forum.UnreadTopicsCount = (await unreadCountersRepository.SelectByParents(
@@ -75,7 +76,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora
         private async Task<Dto.Output.Forum[]> GetFora(bool onlyAvailable = true)
         {
             var accessPolicy = onlyAvailable
-                ? accessPolicyConverter.Convert(identity.User.Role)
+                ? accessPolicyConverter.Convert(identityProvider.Current.User.Role)
                 : (ForumAccessPolicy?) null;
             return (await forumRepository.SelectFora(accessPolicy)).ToArray();
         }

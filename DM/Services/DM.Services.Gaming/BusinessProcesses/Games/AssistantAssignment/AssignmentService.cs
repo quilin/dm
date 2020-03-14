@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
@@ -16,7 +15,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
     /// <inheritdoc />
     public class AssignmentService : IAssignmentService
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IAssistantAssignmentTokenFactory tokenFactory;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IAssignmentRepository repository;
@@ -30,7 +29,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
             IAssignmentRepository repository,
             IInvokedEventPublisher publisher)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.tokenFactory = tokenFactory;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
@@ -55,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 
         private async Task Assign(Guid tokenId, bool accept)
         {
-            var userId = identity.User.UserId;
+            var userId = identityProvider.Current.User.UserId;
             var gameId = await repository.FindGameToAssign(tokenId, userId);
             if (!gameId.HasValue)
             {

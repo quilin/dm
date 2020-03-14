@@ -11,7 +11,11 @@
     }))
     {
         <div class="create-review-text">
-            @await Html.SmartTextAreaFor(m => m.Text, Model.Parser, "Напишите, что вы думаете о нашем проекте и нажмите кнопку \"Отправить\"", new Dictionary<string, object>{{"id", "CreateReviewText"}})
+            @await Html.SmartTextAreaFor(m => m.Text, Model.Parser, new Dictionary<string, object>
+            {
+                {"id", "CreateReviewText"},
+                {"placeholder", "Напишите, что вы думаете о нашем проекте и нажмите кнопку \"Отправить\""}
+            })
         </div>
         @Html.Submit("Отправить отзыв", new Dictionary<string, object>{{"class", "form-submit-button"}})
         <a href="javascript:void(0)" id="CreateReviewCancel">Отменить</a>

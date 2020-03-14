@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.Dto.Output;
@@ -13,7 +12,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
     public class RoomClaimsReadingService : IRoomClaimsReadingService
     {
         private readonly IRoomClaimsReadingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomClaimsReadingService(
@@ -21,21 +20,21 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
             IIdentityProvider identityProvider)
         {
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId) =>
-            repository.GetGameClaims(gameId, identity.User.UserId);
+            repository.GetGameClaims(gameId, identityProvider.Current.User.UserId);
 
         /// <inheritdoc />
         public Task<IEnumerable<RoomClaim>> GetRoomClaims(Guid roomId) =>
-            repository.GetRoomClaims(roomId, identity.User.UserId);
+            repository.GetRoomClaims(roomId, identityProvider.Current.User.UserId);
 
         /// <inheritdoc />
         public async Task<RoomClaim> GetClaim(Guid claimId)
         {
-            var claim = await repository.GetClaim(claimId, identity.User.UserId);
+            var claim = await repository.GetClaim(claimId, identityProvider.Current.User.UserId);
             if (claim == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Claim not found");

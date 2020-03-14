@@ -21,7 +21,11 @@
     </div>
     <div class="form-field-wrapper">
         @Html.LabelFor(m => m.Text, "Описание", new Dictionary<string, object> { { "class", "form-field-sta-label" }, { "style", "width: 104px;" } })
-        @await Html.SmartTextAreaFor(m => m.Text, Model.Parser, inputHtmlAttributes: new Dictionary<string, object> { { "class", "bigSmartTextArea" } }, placeholder: "Введите текст сообщения и нажмите Ctrl+Enter, чтобы отправить")
+        @await Html.SmartTextAreaFor(m => m.Text, Model.Parser, new Dictionary<string, object>
+        {
+            { "class", "bigSmartTextArea" },
+            {"placeholder", "Введите текст сообщения и нажмите Ctrl+Enter, чтобы отправить"}
+        })
     </div>
 
     @Html.Submit("Сохранить", new Dictionary<string, object> { { "class", "form-submit-button" } })

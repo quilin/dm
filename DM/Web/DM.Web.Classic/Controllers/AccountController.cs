@@ -48,10 +48,7 @@ namespace DM.Web.Classic.Controllers
         }
 
         [HttpGet]
-        public ActionResult LogIn()
-        {
-            return View("LogIn", loginFormBuilder.Build(Request));
-        }
+        public IActionResult LogIn() => View("LogIn", loginFormBuilder.Build(Request));
 
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginForm loginForm)
@@ -78,9 +75,9 @@ namespace DM.Web.Classic.Controllers
                 : new EmptyResult();
         }
 
-        public ActionResult LogOut()
+        public async Task<IActionResult> LogOut()
         {
-            webAuthenticationService.Logout(HttpContext).Wait();
+            await webAuthenticationService.Logout(HttpContext);
             return RedirectToAction("Index", "Home");
         }
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -29,7 +28,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         private readonly IGameReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IMemoryCache cache;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         private const string TagListCacheKey = nameof(TagListCacheKey);
 
@@ -49,7 +48,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.cache = cache;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -65,7 +64,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<IEnumerable<Game>> GetOwnGames()
         {
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var games = (await repository.GetOwn(currentUserId)).ToArray();
 
             await unreadCountersRepository.FillEntityCounters(
@@ -94,9 +93,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         {
             await validator.ValidateAndThrowAsync(query);
 
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var totalCount = await repository.Count(query, currentUserId);
-            var pagingData = new PagingData(query, identity.Settings.Paging.EntitiesPerPage, totalCount);
+            var pagingData = new PagingData(query,
+                identityProvider.Current.Settings.Paging.EntitiesPerPage, totalCount);
 
             var games = (await repository.GetGames(pagingData, query, currentUserId)).ToArray();
             await unreadCountersRepository.FillEntityCounters(games, currentUserId,
@@ -114,7 +114,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<Game> GetGame(Guid gameId)
         {
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var game = await repository.GetGame(gameId, currentUserId);
             if (game == null)
             {
@@ -132,7 +132,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<GameExtended> GetGameDetails(Guid gameId)
         {
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var game = await repository.GetGameDetails(gameId, currentUserId);
             if (game == null)
             {

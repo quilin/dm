@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Dto;
@@ -21,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         private readonly IForumReadingService forumReadingService;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly ICommentaryReadingRepository commentaryRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public CommentaryReadingService(
@@ -35,7 +34,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
             this.forumReadingService = forumReadingService;
             this.unreadCountersRepository = unreadCountersRepository;
             this.commentaryRepository = commentaryRepository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -45,7 +44,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
             await topicReadingService.GetTopic(topicId);
 
             var totalCount = await commentaryRepository.Count(topicId);
-            var paging = new PagingData(query, identity.Settings.Paging.CommentsPerPage, totalCount);
+            var paging = new PagingData(query, identityProvider.Current.Settings.Paging.CommentsPerPage, totalCount);
 
             var comments = await commentaryRepository.Get(topicId, paging);
 
@@ -63,14 +62,16 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
         public async Task MarkAsRead(Guid topicId)
         {
             await topicReadingService.GetTopic(topicId);
-            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, topicId);
+            await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
+                UnreadEntryType.Message, topicId);
         }
 
         /// <inheritdoc />
         public async Task MarkAsRead(string forumTitle)
         {
             var forum = await forumReadingService.GetForum(forumTitle);
-            await unreadCountersRepository.FlushAll(identity.User.UserId, UnreadEntryType.Message, forum.Id);
+            await unreadCountersRepository.FlushAll(identityProvider.Current.User.UserId,
+                UnreadEntryType.Message, forum.Id);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Common.Extensions;
@@ -19,7 +18,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         private readonly IConversationFactory factory;
         private readonly IConversationReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public ConversationReadingService(
@@ -31,12 +30,13 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
             this.factory = factory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task<(IEnumerable<Conversation> conversations, PagingResult paging)> Get(PagingQuery query)
         {
+            var identity = identityProvider.Current;
             var currentUserId = identity.User.UserId;
             var totalCount = await repository.Count(currentUserId);
             var pagingData = new PagingData(query, identity.Settings.Paging.MessagesPerPage, totalCount);
@@ -50,7 +50,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <inheritdoc />
         public async Task<Conversation> Get(Guid conversationId)
         {
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var conversation = await repository.Get(conversationId, currentUserId);
             if (conversation == null)
             {
@@ -72,7 +72,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
                 throw new HttpException(HttpStatusCode.Gone, "User not found");
             }
 
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var existingConversation = await repository.FindVisaviConversation(currentUserId, visaviId.Value);
             if (existingConversation != null)
             {
@@ -94,6 +94,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 
         /// <inheritdoc />
         public Task MarkAsRead(Guid conversationId) =>
-            unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, conversationId);
+            unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
+                UnreadEntryType.Message, conversationId);
     }
 }

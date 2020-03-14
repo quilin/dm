@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Gaming.Authorization;
@@ -17,7 +16,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
         private readonly ISchemaFactory factory;
         private readonly ISchemaCreatingRepository repository;
         private readonly IMapper mapper;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public SchemaCreatingService(
@@ -33,7 +32,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
             this.factory = factory;
             this.repository = repository;
             this.mapper = mapper;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -42,7 +41,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
             validator.ValidateAndThrow(attributeSchema);
             intentionManager.ThrowIfForbidden(GameIntention.Create);
 
-            var schemaToCreate = factory.CreateNew(attributeSchema, identity.User.UserId);
+            var schemaToCreate = factory.CreateNew(attributeSchema, identityProvider.Current.User.UserId);
             var createdSchema = await repository.Create(schemaToCreate);
             return mapper.Map<AttributeSchema>(createdSchema);
         }

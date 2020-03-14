@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
@@ -18,7 +17,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
         private readonly IReaderFactory readerFactory;
         private readonly IReadingSubscribingRepository repository;
         private readonly IIntentionManager intentionManager;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public ReadingSubscribingService(
@@ -32,7 +31,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
             this.readerFactory = readerFactory;
             this.repository = repository;
             this.intentionManager = intentionManager;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
@@ -41,6 +40,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
             intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
             await gameReadingService.GetGame(gameId);
 
+            var identity = identityProvider.Current;
             var userId = identity.User.UserId;
             if (await repository.HasSubscription(userId, gameId))
             {
@@ -58,7 +58,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
             intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
             await gameReadingService.GetGame(gameId);
 
-            var userId = identity.User.UserId;
+            var userId = identityProvider.Current.User.UserId;
             if (!await repository.HasSubscription(userId, gameId))
             {
                 throw new HttpException(HttpStatusCode.Conflict, "User is not subscribed to this game");

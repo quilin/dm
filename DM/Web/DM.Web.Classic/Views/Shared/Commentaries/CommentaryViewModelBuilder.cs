@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.Dto;
@@ -15,7 +14,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
         private readonly IIntentionManager intentionsManager;
         private readonly IBbParserProvider bbParserProvider;
         private readonly IUserViewModelBuilder userViewModelBuilder;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         public CommentaryViewModelBuilder(
             IIntentionManager intentionsManager,
@@ -26,7 +25,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             this.intentionsManager = intentionsManager;
             this.bbParserProvider = bbParserProvider;
             this.userViewModelBuilder = userViewModelBuilder;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         public async Task<CommentaryViewModel> Build(Comment comment)
@@ -45,7 +44,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
                 CanRemove = intentionsManager.IsAllowed(CommentIntention.Delete, comment),
 
                 CanLike = intentionsManager.IsAllowed(CommentIntention.Like, comment),
-                HasLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId),
+                HasLiked = comment.Likes.Any(l => l.UserId == identityProvider.Current.User.UserId),
 
 //                           CanWarn = intentionsManager.IsAllowed(WarningIntention.Create, userService.Read(comment.UserId)),
 //                           WarningsList = warningsListViewModelBuilder.Build(comment.CommentId)

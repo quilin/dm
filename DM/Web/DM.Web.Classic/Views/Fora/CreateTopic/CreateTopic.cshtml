@@ -3,17 +3,24 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @model DM.Web.Classic.Views.Fora.CreateTopic.CreateTopicForm
 
-@using (Html.BeginForm("Create", "CreateTopic", FormMethod.Post, new Dictionary<string, object> { { "class", "topicList-actions-createForm" }, { "id", "CreateTopicForm" } }))
+@using (Html.BeginForm("Create", "CreateTopic", FormMethod.Post, new Dictionary<string, object> {{"class", "topicList-actions-createForm"}, {"id", "CreateTopicForm"}}))
 {
     @Html.HiddenFor(m => m.ForumId)
     <div class="form-field-wrapper">
-        @Html.LabelFor(m => m.Title, "Заголовок", new Dictionary<string, object> {{"class", "form-field-label"}})
-        @Html.TextBoxFor(m => m.Title, new Dictionary<string, object>{{ "class", "wide-input" }})
+        @Html.TextBoxFor(m => m.Title, new Dictionary<string, object>
+        {
+            {"class", "wide-input"},
+            {"placeholder", "Название темы"}
+        })
         @Html.ValidationMessageFor(m => m.Title)
     </div>
     <div class="form-field-wrapper">
-        @Html.LabelFor(m => m.Description, "Описание", new Dictionary<string, object>{{"class", "form-field-sta-label"}, {"style", "width: 104px;"}})
-        @await Html.SmartTextAreaFor(m => m.Description, Model.Parser, inputHtmlAttributes: new Dictionary<string, object>{{"class", "bigSmartTextArea"}}, placeholder: "Введите текст сообщения и нажмите Ctrl+Enter, чтобы отправить")
+        @Html.LabelFor(m => m.Description, "Описание", new Dictionary<string, object> {{"class", "form-field-sta-label"}, {"style", "width: 104px;"}})
+        @await Html.SmartTextAreaFor(m => m.Description, Model.Parser, new Dictionary<string, object>
+        {
+            {"class", "bigSmartTextArea"},
+            {"placeholder", "Введите текст сообщения и нажмите Ctrl+Enter, чтобы отправить"}
+        })
     </div>
     @IconFont.Render(IconType.Warning)
     @:На всякий пожарный, убедитесь, что вы не дублируете уже существующую тему

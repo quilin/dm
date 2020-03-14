@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -27,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
         private readonly IUserRepository userRepository;
         private readonly IPendingPostCreatingRepository repository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public PendingPostCreatingService(
@@ -47,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             this.userRepository = userRepository;
             this.repository = repository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -58,8 +57,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             intentionManager.ThrowIfForbidden(RoomIntention.CreatePendingPost, room);
 
             var (_, pendingUserId) = await userRepository.FindUserId(createPendingPost.PendingUserLogin);
+            var currentUserId = identityProvider.Current.User.UserId;
             if (room.Pendings.Any(p =>
-                p.AwaitingUser.UserId == identity.User.UserId &&
+                p.AwaitingUser.UserId == currentUserId &&
                 p.PendingUser.UserId == pendingUserId))
             {
                 throw new HttpException(HttpStatusCode.Conflict,
@@ -74,7 +74,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
                 });
             }
 
-            var pendingPostToCreate = factory.Create(createPendingPost, identity.User.UserId, pendingUserId);
+            var pendingPostToCreate = factory.Create(createPendingPost, currentUserId, pendingUserId);
 
             var pendingPost = await repository.Create(pendingPostToCreate);
             await publisher.Publish(EventType.RoomPendingCreated, pendingPost.Id);

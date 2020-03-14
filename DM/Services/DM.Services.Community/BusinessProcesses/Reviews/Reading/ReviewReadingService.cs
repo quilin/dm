@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.Authorization;
@@ -16,7 +15,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
     {
         private readonly IIntentionManager intentionManager;
         private readonly IReviewReadingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public ReviewReadingService(
@@ -26,7 +25,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
         {
             this.intentionManager = intentionManager;
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -34,7 +33,8 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
         {
             onlyApproved = onlyApproved && intentionManager.IsAllowed(ReviewIntention.ReadUnapproved);
             var totalCount = await repository.Count(onlyApproved);
-            var pagingData = new PagingData(query, identity.Settings.Paging.EntitiesPerPage, totalCount);
+            var pagingData = new PagingData(query,
+                identityProvider.Current.Settings.Paging.EntitiesPerPage, totalCount);
 
             var reviews = await repository.Get(pagingData, onlyApproved);
             return (reviews, pagingData.Result);

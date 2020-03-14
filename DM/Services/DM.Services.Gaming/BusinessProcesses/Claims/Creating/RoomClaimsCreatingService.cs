@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -23,7 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         private readonly IReaderClaimApprove readerClaimApprove;
         private readonly IRoomClaimsCreatingRepository repository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomClaimsCreatingService(
@@ -45,14 +44,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
             this.readerClaimApprove = readerClaimApprove;
             this.repository = repository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task<RoomClaim> Create(CreateRoomClaim createRoomClaim)
         {
             await validator.ValidateAndThrowAsync(createRoomClaim);
-            var room = await updatingRepository.GetRoom(createRoomClaim.RoomId, identity.User.UserId);
+            var room = await updatingRepository.GetRoom(createRoomClaim.RoomId, identityProvider.Current.User.UserId);
             intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var participantId = createRoomClaim.CharacterId.HasValue

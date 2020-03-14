@@ -14,12 +14,13 @@
 <h1 class="content-pageTitle">Сообщество</h1>
 
 <h3 class="content-minorTitle">Поиск по сообществу</h3>
-@Html.TextBoxWithPlaceholder(null, "Введите имя пользователя...", new Dictionary<string, object>
+@Html.TextBox(null, null, null, new Dictionary<string, object>
             {
                 {"id", "SearchAutocomplete"},
                 {"class", "community-search-input"},
+                {"placeholder", "Введите имя пользователя..."},
                 {"data-url", Url.Action("SearchUser", "Search")}
-            }, new Dictionary<string, object> { {"class", "community-search-input-placeholder" } })
+            })
 
 <div class="communityG-34">
     <div class="communityG-row">

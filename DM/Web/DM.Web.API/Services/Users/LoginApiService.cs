@@ -18,7 +18,7 @@ namespace DM.Web.API.Services.Users
     public class LoginApiService : ILoginApiService
     {
         private readonly IWebAuthenticationService authenticationService;
-        private readonly IIdentity currentIdentity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
@@ -28,7 +28,7 @@ namespace DM.Web.API.Services.Users
             IMapper mapper)
         {
             this.authenticationService = authenticationService;
-            currentIdentity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.mapper = mapper;
         }
 
@@ -70,6 +70,6 @@ namespace DM.Web.API.Services.Users
 
         /// <inheritdoc />
         public Task<Envelope<User>> GetCurrent() =>
-            Task.FromResult(new Envelope<User>(mapper.Map<User>(currentIdentity.User)));
+            Task.FromResult(new Envelope<User>(mapper.Map<User>(identityProvider.Current.User)));
     }
 }

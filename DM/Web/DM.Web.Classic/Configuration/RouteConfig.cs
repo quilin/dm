@@ -49,6 +49,7 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<HomeController>("about", c => c.About());
             routes.MapAction<HomeController>("rules", c => c.Rules());
             routes.MapAction<HomeController>("donate", c => c.Donate());
+            routes.MapAction<HomeController>("api", c => c.Api());
 
             routes.MapAction<ApiController>("api", c => c.Index());
 

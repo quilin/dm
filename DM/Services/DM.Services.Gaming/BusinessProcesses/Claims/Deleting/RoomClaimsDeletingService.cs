@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -22,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomClaimsDeletingService(
@@ -40,14 +39,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task Delete(Guid claimId)
         {
-            var oldClaim = await readingRepository.GetClaim(claimId, identity.User.UserId);
-            var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
+            var currentUserId = identityProvider.Current.User.UserId;
+            var oldClaim = await readingRepository.GetClaim(claimId, currentUserId);
+            var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, currentUserId);
             intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var updateBuilder = updateBuilderFactory.Create<RoomClaim>(claimId).Delete();

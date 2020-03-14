@@ -1,5 +1,4 @@
 using System.Net;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,17 +16,17 @@ namespace DM.Web.Core.Authentication
 
         private class AuthenticationRequiredFilter : IActionFilter
         {
-            private readonly IIdentity identity;
+            private readonly IIdentityProvider identityProvider;
 
             public AuthenticationRequiredFilter(
                 IIdentityProvider identityProvider)
             {
-                identity = identityProvider.Current;
+                this.identityProvider = identityProvider;
             }
 
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (!identity.User.IsAuthenticated)
+                if (!identityProvider.Current.User.IsAuthenticated)
                 {
                     throw new HttpException(HttpStatusCode.Unauthorized, "User must be authenticated");
                 }

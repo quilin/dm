@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -22,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         private readonly IIntentionManager intentionManager;
         private readonly IPostReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public PostReadingService(
@@ -36,7 +35,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
             this.intentionManager = intentionManager;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -45,6 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
             var room = await roomReadingService.Get(roomId);
             intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room);
 
+            var identity = identityProvider.Current;
             var totalCount = await repository.Count(roomId, identity.User.UserId);
             var paging = new PagingData(query, identity.Settings.Paging.PostsPerPage, totalCount);
 
@@ -56,7 +56,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         /// <inheritdoc />
         public async Task<Post> Get(Guid postId)
         {
-            var post = await repository.Get(postId, identity.User.UserId);
+            var post = await repository.Get(postId, identityProvider.Current.User.UserId);
             if (post == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Post not found");
@@ -69,7 +69,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         public async Task MarkAsRead(Guid roomId)
         {
             await roomReadingService.Get(roomId);
-            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, roomId);
+            await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
+                UnreadEntryType.Message, roomId);
         }
     }
 }

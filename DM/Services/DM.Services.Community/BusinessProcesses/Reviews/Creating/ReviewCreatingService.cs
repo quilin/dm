@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.Authorization;
@@ -15,7 +14,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IReviewFactory factory;
         private readonly IReviewCreatingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public ReviewCreatingService(
@@ -29,7 +28,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
             this.intentionManager = intentionManager;
             this.factory = factory;
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -38,7 +37,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
             await validator.ValidateAndThrowAsync(createReview);
             intentionManager.ThrowIfForbidden(ReviewIntention.Create);
 
-            var review = factory.Create(createReview, identity.User.UserId);
+            var review = factory.Create(createReview, identityProvider.Current.User.UserId);
             return await repository.Create(review);
         }
     }

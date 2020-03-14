@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -31,7 +30,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
         private readonly IPostCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public PostCreatingService(
@@ -53,13 +52,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task<Post> Create(CreatePost createPost)
         {
             await validator.ValidateAndThrowAsync(createPost);
+            var identity = identityProvider.Current;
             var room = await roomUpdatingRepository.GetRoom(createPost.RoomId, identity.User.UserId);
             if (room == null)
             {

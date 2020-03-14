@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
@@ -14,7 +13,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
     {
         private readonly IConversationReadingService conversationReadingService;
         private readonly IMessageReadingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public MessageReadingService(
@@ -24,7 +23,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         {
             this.conversationReadingService = conversationReadingService;
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -33,7 +32,8 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         {
             await conversationReadingService.Get(conversationId);
             var totalCount = await repository.Count(conversationId);
-            var pagingData = new PagingData(query, identity.Settings.Paging.MessagesPerPage, totalCount);
+            var pagingData = new PagingData(query,
+                identityProvider.Current.Settings.Paging.MessagesPerPage, totalCount);
             var messages = await repository.Get(conversationId, pagingData);
             return (messages, pagingData.Result);
         }
@@ -41,7 +41,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// <inheritdoc />
         public async Task<Message> Get(Guid messageId)
         {
-            var message = await repository.Get(messageId, identity.User.UserId);
+            var message = await repository.Get(messageId, identityProvider.Current.User.UserId);
             if (message == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Message not found");

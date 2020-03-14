@@ -17,26 +17,14 @@ namespace DM.Web.Classic.Controllers
             this.aboutViewModelBuilder = aboutViewModelBuilder;
         }
 
-        public IActionResult Index()
-        {
-            var homeViewModel = homeViewModelBuilder.Build();
-            return View("Home", homeViewModel);
-        }
+        public IActionResult Index() => View(homeViewModelBuilder.Build());
 
-        public async Task<IActionResult> About()
-        {
-            var aboutViewModel = await aboutViewModelBuilder.Build();
-            return View("About", aboutViewModel);
-        }
+        public async Task<IActionResult> About() => View(await aboutViewModelBuilder.Build());
 
-        public ActionResult Rules()
-        {
-            return View();
-        }
+        public IActionResult Rules() => View();
 
-        public ActionResult Donate()
-        {
-            return View();
-        }
+        public IActionResult Donate() => View();
+
+        public IActionResult Api() => View();
     }
 }

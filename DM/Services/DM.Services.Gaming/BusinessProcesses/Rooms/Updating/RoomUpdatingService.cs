@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Exceptions;
@@ -23,7 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IRoomOrderPull roomOrderPull;
         private readonly IRoomUpdatingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomUpdatingService(
@@ -39,14 +38,15 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
             this.updateBuilderFactory = updateBuilderFactory;
             this.roomOrderPull = roomOrderPull;
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task<Room> Update(UpdateRoom updateRoom)
         {
             await validator.ValidateAndThrowAsync(updateRoom);
-            var room = await repository.GetRoom(updateRoom.RoomId, identity.User.UserId);
+            var currentUserId = identityProvider.Current.User.UserId;
+            var room = await repository.GetRoom(updateRoom.RoomId, currentUserId);
             if (room == null)
             {
                 throw new HttpException(HttpStatusCode.Gone, "Room not found");
@@ -69,7 +69,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
                 return await InsertFirst(room, roomUpdate);
             }
 
-            var targetRoom = await repository.GetRoom(updateRoom.PreviousRoomId.Value.Value, identity.User.UserId);
+            var targetRoom = await repository.GetRoom(updateRoom.PreviousRoomId.Value.Value, currentUserId);
             if (targetRoom.Game.Id != room.Game.Id)
             {
                 throw new HttpBadRequestException(new Dictionary<string, string>

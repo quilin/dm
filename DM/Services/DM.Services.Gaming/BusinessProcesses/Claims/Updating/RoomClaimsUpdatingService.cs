@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -25,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
         private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomClaimsUpdatingService(
@@ -43,15 +42,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
             this.roomUpdatingRepository = roomUpdatingRepository;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
         public async Task<RoomClaim> Update(UpdateRoomClaim updateRoomClaim)
         {
             await validator.ValidateAndThrowAsync(updateRoomClaim);
-            var oldClaim = await readingRepository.GetClaim(updateRoomClaim.ClaimId, identity.User.UserId);
-            var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, identity.User.UserId);
+            var currentUserId = identityProvider.Current.User.UserId;
+            var oldClaim = await readingRepository.GetClaim(updateRoomClaim.ClaimId, currentUserId);
+            var room = await roomUpdatingRepository.GetRoom(oldClaim.RoomId, currentUserId);
             intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             if (oldClaim.User != null && updateRoomClaim.Policy == RoomAccessPolicy.Full)

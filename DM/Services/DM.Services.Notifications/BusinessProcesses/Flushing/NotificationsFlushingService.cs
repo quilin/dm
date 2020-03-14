@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 
 namespace DM.Services.Notifications.BusinessProcesses.Flushing
@@ -8,7 +7,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Flushing
     /// <inheritdoc />
     public class NotificationsFlushingService : INotificationsFlushingService
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly INotificationsFlushingRepository repository;
 
         /// <inheritdoc />
@@ -16,16 +15,16 @@ namespace DM.Services.Notifications.BusinessProcesses.Flushing
             IIdentityProvider identityProvider,
             INotificationsFlushingRepository repository)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.repository = repository;
         }
 
         /// <inheritdoc />
         public Task MarkAsRead(Guid notificationId) =>
-            repository.MarkAsRead(notificationId, identity.User.UserId);
+            repository.MarkAsRead(notificationId, identityProvider.Current.User.UserId);
 
         /// <inheritdoc />
         public Task MarkAllAsRead() =>
-            repository.MarkAllAsRead(identity.User.UserId);
+            repository.MarkAllAsRead(identityProvider.Current.User.UserId);
     }
 }

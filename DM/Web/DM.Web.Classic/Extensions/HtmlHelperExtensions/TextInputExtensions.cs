@@ -18,12 +18,9 @@ namespace DM.Web.Classic.Extensions.HtmlHelperExtensions
 
         public static async Task<IHtmlContent> SmartTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> html,
             Expression<Func<TModel, TValue>> expression, IBbParser parser,
-            string placeholder = null, IDictionary<string, object> inputHtmlAttributes = null,
-            IDictionary<string, object> placeholderHtmlAttributes = null,
-            IDictionary<string, object> placeholderWrapperHtmlAttributes = null,
-            IDictionary<string, object> inputWrapperHtmlAttributes = null)
+            IDictionary<string, object> inputHtmlAttributes = null)
         {
-            inputHtmlAttributes = inputHtmlAttributes ?? new Dictionary<string, object>();
+            inputHtmlAttributes ??= new Dictionary<string, object>();
 
             if (inputHtmlAttributes.ContainsKey("class"))
             {
@@ -51,18 +48,16 @@ namespace DM.Web.Classic.Extensions.HtmlHelperExtensions
                     .Select(CreateControl)
                     .ToArray(),
                 TextAreaId = textAreaId,
-                TextArea = html.TextAreaFor(expression, placeholder, inputHtmlAttributes, placeholderHtmlAttributes,
-                    placeholderWrapperHtmlAttributes, inputWrapperHtmlAttributes),
+                TextArea = html.TextAreaFor(expression, inputHtmlAttributes),
                 ValidationMessage = html.ValidationMessageFor(expression)
             };
             return await html.PartialAsync("~/Views/Shared/SmartTextArea/SmartTextArea.cshtml", smartTextAreaViewModel);
         }
 
         public static Task<IHtmlContent> SmartTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> html,
-            Expression<Func<TModel, TValue>> expression, IBbParser parser,
-            string placeholder, object htmlAttributes)
+            Expression<Func<TModel, TValue>> expression, IBbParser parser, object htmlAttributes)
         {
-            return SmartTextAreaFor(html, expression, parser, placeholder,
+            return SmartTextAreaFor(html, expression, parser,
                 HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         }
 

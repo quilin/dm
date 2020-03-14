@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
@@ -24,7 +23,7 @@ namespace DM.Web.Classic.Views.Fora
         private readonly IIntentionManager intentionsManager;
         private readonly ICreateTopicFormBuilder createTopicFormBuilder;
         private readonly IUserViewModelBuilder userViewModelBuilder;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         public ForumViewModelBuilder(
             ITopicReadingService topicReadingService,
@@ -41,7 +40,7 @@ namespace DM.Web.Classic.Views.Fora
             this.intentionsManager = intentionsManager;
             this.createTopicFormBuilder = createTopicFormBuilder;
             this.userViewModelBuilder = userViewModelBuilder;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         public async Task<ForumViewModel> Build(Forum forum, int entityNumber)
@@ -66,7 +65,7 @@ namespace DM.Web.Classic.Views.Fora
                 EntityNumber = paging.EntityNumber,
 
                 CanCreateTopic = canCreateTopic,
-                CanMarkAsRead = identity.User.IsAuthenticated,
+                CanMarkAsRead = identityProvider.Current.User.IsAuthenticated,
                 CreateForm = canCreateTopic ? createTopicFormBuilder.Build(forum) : null
             };
         }
@@ -76,7 +75,7 @@ namespace DM.Web.Classic.Views.Fora
             var (topics, _) = await topicReadingService.GetTopicsList(forum.Title, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.Paging.TopicsPerPage
+                Size = identityProvider.Current.Settings.Paging.TopicsPerPage
             });
 
             return topics.Select(topicViewModelBuilder.Build);

@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Gaming.Authorization;
@@ -19,7 +18,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
         private readonly ISchemaFactory schemaFactory;
         private readonly ISchemaUpdatingRepository repository;
         private readonly IMapper mapper;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public SchemaUpdatingService(
@@ -37,7 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
             this.schemaFactory = schemaFactory;
             this.repository = repository;
             this.mapper = mapper;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
@@ -47,7 +46,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
             var oldSchema = await readingService.Get(attributeSchema.Id);
             intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
             
-            var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identity.User.UserId);
+            var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identityProvider.Current.User.UserId);
             var updatedSchema = await repository.UpdateSchema(schemaToUpdate);
             return mapper.Map<AttributeSchema>(updatedSchema);
         }

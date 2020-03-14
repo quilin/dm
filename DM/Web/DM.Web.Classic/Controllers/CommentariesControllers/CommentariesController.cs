@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
@@ -18,7 +17,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         private readonly ICommentaryDeletingService commentaryDeletingService;
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly ILikeService likeService;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly ICommentariesViewModelBuilder commentariesViewModelBuilder;
 
         public CommentariesController(
@@ -31,7 +30,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
             this.commentaryDeletingService = commentaryDeletingService;
             this.commentaryReadingService = commentaryReadingService;
             this.likeService = likeService;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.commentariesViewModelBuilder = commentariesViewModelBuilder;
         }
         
@@ -58,7 +57,7 @@ namespace DM.Web.Classic.Controllers.CommentariesControllers
         public async Task<IActionResult> ToggleLike(Guid commentaryId)
         {
             var comment = await commentaryReadingService.Get(commentaryId);
-            var userLiked = comment.Likes.Any(l => l.UserId == identity.User.UserId);
+            var userLiked = comment.Likes.Any(l => l.UserId == identityProvider.Current.User.UserId);
             if (userLiked)
             {
                 await likeService.DislikeComment(commentaryId);

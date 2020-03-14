@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -25,7 +24,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
         private readonly IMessageCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public MessageCreatingService(
@@ -47,7 +46,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -57,7 +56,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             var conversation = await conversationReadingService.Get(createMessage.ConversationId);
             intentionManager.ThrowIfForbidden(ConversationIntention.CreateMessage, conversation);
 
-            var message = factory.Create(createMessage, identity.User.UserId);
+            var message = factory.Create(createMessage, identityProvider.Current.User.UserId);
             var updateConversation = updateBuilderFactory.Create<DbConversation>(conversation.Id)
                 .Field(c => c.LastMessageId, message.MessageId);
 

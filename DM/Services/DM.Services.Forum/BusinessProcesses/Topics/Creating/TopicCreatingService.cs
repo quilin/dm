@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -24,7 +23,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
         private readonly ITopicCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher invokedEventPublisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public TopicCreatingService(
@@ -44,7 +43,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -55,7 +54,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             var forum = await forumReadingService.GetForum(createTopic.ForumTitle);
             intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
 
-            var topicToCreate = topicFactory.Create(forum.Id, identity.User.UserId, createTopic);
+            var topicToCreate = topicFactory.Create(forum.Id, identityProvider.Current.User.UserId, createTopic);
             var topic = await repository.Create(topicToCreate);
 
             await Task.WhenAll(

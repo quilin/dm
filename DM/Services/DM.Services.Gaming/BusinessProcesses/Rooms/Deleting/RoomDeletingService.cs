@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -23,7 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
         private readonly IRoomUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public RoomDeletingService(
@@ -41,13 +40,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
         public async Task Delete(Guid roomId)
         {
-            var room = await repository.GetRoom(roomId, identity.User.UserId);
+            var room = await repository.GetRoom(roomId, identityProvider.Current.User.UserId);
             intentionManager.ThrowIfForbidden(GameIntention.Edit, room.Game);
 
             var updateRoom = updateBuilderFactory.Create<DbRoom>(roomId).Field(r => r.IsRemoved, true);

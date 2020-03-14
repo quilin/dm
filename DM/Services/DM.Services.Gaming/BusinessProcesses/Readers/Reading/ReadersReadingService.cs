@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
@@ -13,7 +12,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Reading
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IReadersReadingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public ReadersReadingService(
@@ -23,14 +22,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Reading
         {
             this.gameReadingService = gameReadingService;
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<GeneralUser>> Get(Guid gameId)
         {
             await gameReadingService.GetGame(gameId);
-            return await repository.Get(gameId, identity.User.UserId);
+            return await repository.Get(gameId, identityProvider.Current.User.UserId);
         }
     }
 }

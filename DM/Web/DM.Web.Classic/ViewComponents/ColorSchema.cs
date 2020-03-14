@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,18 +6,17 @@ namespace DM.Web.Classic.ViewComponents
 {
     public class ColorSchema : ViewComponent
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         public ColorSchema(
             IIdentityProvider identityProvider)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return await Task.Run(() =>
-                Content($"colorschema_{identity.Settings.ColorSchema.ToString().ToLower()}"));
+            return Content($"colorschema_{identityProvider.Current.Settings.ColorSchema.ToString().ToLower()}");
         }
     }
 }

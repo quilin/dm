@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.Dto.Shared;
@@ -13,7 +12,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
     public class SchemaReadingService : ISchemaReadingService
     {
         private readonly ISchemaReadingRepository repository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public SchemaReadingService(
@@ -21,11 +20,12 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
             IIdentityProvider identityProvider)
         {
             this.repository = repository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<AttributeSchema>> Get() => await repository.GetSchemata(identity.User.UserId);
+        public async Task<IEnumerable<AttributeSchema>> Get() =>
+            await repository.GetSchemata(identityProvider.Current.User.UserId);
 
         /// <inheritdoc />
         public async Task<AttributeSchema> Get(Guid schemaId)

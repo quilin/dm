@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Core.Exceptions;
@@ -21,7 +20,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         private readonly ICharacterReadingRepository readingRepository;
         private readonly ICharacterAttributeValueFiller attributeValueFiller;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public CharacterReadingService(
@@ -35,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
             this.readingRepository = readingRepository;
             this.attributeValueFiller = attributeValueFiller;
             this.unreadCountersRepository = unreadCountersRepository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -65,7 +64,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
         public async Task MarkAsRead(Guid gameId)
         {
             await gameReadingService.GetGame(gameId);
-            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Character, gameId);
+            await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
+                UnreadEntryType.Character, gameId);
         }
     }
 }

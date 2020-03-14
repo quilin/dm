@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -27,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IGameReadingService readingService;
         private readonly IAssignmentService assignmentService;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IGameFactory gameFactory;
         private readonly IRoomFactory roomFactory;
         private readonly IGameTagFactory gameTagFactory;
@@ -57,7 +56,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.intentionManager = intentionManager;
             this.readingService = readingService;
             this.assignmentService = assignmentService;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.gameFactory = gameFactory;
             this.roomFactory = roomFactory;
             this.gameTagFactory = gameTagFactory;
@@ -75,6 +74,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             intentionManager.ThrowIfForbidden(GameIntention.Create);
 
             // resolve game initial status
+            var identity = identityProvider.Current;
             var initialStatus = identity.User.QuantityRating < 100
                 ? GameStatus.RequiresModeration
                 : createGame.Draft

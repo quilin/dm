@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
@@ -28,7 +27,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IPostUpdatingRepository repository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public PostUpdatingService(
@@ -50,7 +49,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             this.roomUpdatingRepository = roomUpdatingRepository;
             this.repository = repository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -58,7 +57,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         {
             await validator.ValidateAndThrowAsync(updatePost);
             var post = await postReadingService.Get(updatePost.PostId);
-            var room = await roomUpdatingRepository.GetRoom(post.RoomId, identity.User.UserId);
+            var currentUserId = identityProvider.Current.User.UserId;
+            var room = await roomUpdatingRepository.GetRoom(post.RoomId, currentUserId);
 
             var updateBuilder = updateBuilderFactory.Create<DbPost>(updatePost.PostId);
 
@@ -85,7 +85,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             {
                 updateBuilder
                     .Field(p => p.LastUpdateDate, dateTimeProvider.Now)
-                    .Field(p => p.LastUpdateUserId, identity.User.UserId);
+                    .Field(p => p.LastUpdateUserId, currentUserId);
             }
 
             var updatedPost = await repository.Update(updateBuilder);

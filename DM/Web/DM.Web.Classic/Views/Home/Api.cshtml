@@ -1,0 +1,28 @@
+@{
+    ViewBag.Title = "Правила проекта | Dungeonmaster.ru";
+    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
+}
+
+@section LeftColumn
+{
+    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+}
+@section RightColumn
+{
+    @await Html.PartialAsync("Layout/GeneralRightColumn")
+}
+
+<h1 class="content-pageTitle">DM.API</h1>
+
+<div style="margin-bottom: 20px;">Для тех, кому не нравится интерфейс, не хватает какой-то быстрой кнопки, которая должна заменить десяток частоиспользуемых действий,
+    кто хочет попрактиковаться в каких-то фичах, на которые сайту пока не хватает времени (например, заняться выгрузкой игр в PDF-формате или типа того)
+    &ndash; милости просим, вот вам публичное API!</div>
+
+<iframe src="https://dmam.herokuapp.com/index.html" width="100%" height="600px" style="border: 1px solid #eee; border-radius: 4px;"></iframe>
+
+@section FooterScript
+{
+    <script>
+        DM.Ready();
+    </script>
+}

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.Commentaries;
@@ -23,7 +22,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly IValidator<CreateComment> validator;
         private readonly ITopicReadingService topicReadingService;
         private readonly IIntentionManager intentionManager;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly ICommentaryFactory commentaryFactory;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryCreatingRepository repository;
@@ -50,7 +49,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             this.repository = repository;
             this.countersRepository = countersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -61,7 +60,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             var topic = await topicReadingService.GetTopic(createComment.EntityId);
             intentionManager.ThrowIfForbidden(TopicIntention.CreateComment, topic);
 
-            var comment = commentaryFactory.Create(createComment, identity.User.UserId);
+            var comment = commentaryFactory.Create(createComment, identityProvider.Current.User.UserId);
             var topicUpdate = updateBuilderFactory.Create<ForumTopic>(topic.Id)
                 .Field(t => t.LastCommentId, comment.CommentId);
             var createdComment = await repository.Create(comment, topicUpdate);

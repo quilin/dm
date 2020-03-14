@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
@@ -13,7 +12,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly ICommentaryViewModelBuilder commentaryViewModelBuilder;
         private readonly ICreateCommentaryFormBuilder createCommentaryFormBuilder;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         public CommentariesViewModelBuilder(
             ICommentaryReadingService commentaryReadingService,
@@ -24,7 +23,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             this.commentaryReadingService = commentaryReadingService;
             this.commentaryViewModelBuilder = commentaryViewModelBuilder;
             this.createCommentaryFormBuilder = createCommentaryFormBuilder;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         public async Task<CommentariesViewModel> Build(Guid entityId, int? entityNumber, bool canComment)
@@ -32,7 +31,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             var (comments, paging) = commentaryReadingService.Get(entityId, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.Paging.CommentsPerPage
+                Size = identityProvider.Current.Settings.Paging.CommentsPerPage
             }).Result;
             var commentaryTasks = comments.Select(commentaryViewModelBuilder.Build).ToArray();
             await Task.WhenAll(commentaryTasks);
@@ -53,7 +52,7 @@ namespace DM.Web.Classic.Views.Shared.Commentaries
             var (comments, _) = await commentaryReadingService.Get(entityId, new PagingQuery
             {
                 Number = entityNumber,
-                Size = identity.Settings.Paging.CommentsPerPage,
+                Size = identityProvider.Current.Settings.Paging.CommentsPerPage,
             });
             var commentaryTasks = comments.Select(commentaryViewModelBuilder.Build).ToArray();
             await Task.WhenAll(commentaryTasks);

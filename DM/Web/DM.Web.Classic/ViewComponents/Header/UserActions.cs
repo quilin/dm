@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Web.Classic.Views.Account;
 using Microsoft.AspNetCore.Mvc;
@@ -8,14 +7,14 @@ namespace DM.Web.Classic.ViewComponents.Header
 {
     public class UserActions : ViewComponent
     {
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly IUserActionsViewModelBuilder userActionsViewModelBuilder;
 
         public UserActions(
             IIdentityProvider identityProvider,
             IUserActionsViewModelBuilder userActionsViewModelBuilder)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.userActionsViewModelBuilder = userActionsViewModelBuilder;
         }
         
@@ -23,7 +22,7 @@ namespace DM.Web.Classic.ViewComponents.Header
         {
             return await Task.Run(() =>
             {
-                var user = identity.User;
+                var user = identityProvider.Current.User;
                 if (!user.IsAuthenticated)
                 {
                     return View("~/Views/Account/GuestActions.cshtml");

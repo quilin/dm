@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -23,7 +22,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         private readonly IGameReadingService gameReadingService;
         private readonly ICommentaryReadingRepository commentaryRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public CommentaryReadingService(
@@ -37,7 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
             this.gameReadingService = gameReadingService;
             this.commentaryRepository = commentaryRepository;
             this.unreadCountersRepository = unreadCountersRepository;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
@@ -48,7 +47,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
             intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
 
             var totalCount = await commentaryRepository.Count(gameId);
-            var paging = new PagingData(query, identity.Settings.Paging.CommentsPerPage, totalCount);
+            var paging = new PagingData(query, identityProvider.Current.Settings.Paging.CommentsPerPage, totalCount);
 
             var comments = await commentaryRepository.Get(gameId, paging);
 
@@ -67,7 +66,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
         {
             var game = await gameReadingService.GetGame(gameId);
             intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
-            await unreadCountersRepository.Flush(identity.User.UserId, UnreadEntryType.Message, gameId);
+            await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
+                UnreadEntryType.Message, gameId);
         }
     }
 }

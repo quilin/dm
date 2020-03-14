@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.Commentaries;
@@ -21,7 +20,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
         private readonly IValidator<CreateComment> validator;
         private readonly IGameReadingService gameReadingService;
         private readonly IIntentionManager intentionManager;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
         private readonly ICommentaryFactory commentaryFactory;
         private readonly ICommentaryCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
@@ -45,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             this.repository = repository;
             this.countersRepository = countersRepository;
             this.invokedEventPublisher = invokedEventPublisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
 
         /// <inheritdoc />
@@ -56,7 +55,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             var game = await gameReadingService.GetGame(createComment.EntityId);
             intentionManager.ThrowIfForbidden(GameIntention.CreateComment, game);
 
-            var comment = commentaryFactory.Create(createComment, identity.User.UserId);
+            var comment = commentaryFactory.Create(createComment, identityProvider.Current.User.UserId);
             var createdComment = await repository.Create(comment);
             await countersRepository.Increment(game.Id, UnreadEntryType.Message);
             await invokedEventPublisher.Publish(EventType.NewGameComment, comment.CommentId);

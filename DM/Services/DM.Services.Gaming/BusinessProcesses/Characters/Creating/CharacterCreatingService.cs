@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -25,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
         private readonly ICharacterCreatingRepository creatingRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
         private readonly IInvokedEventPublisher publisher;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public CharacterCreatingService(
@@ -45,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             this.creatingRepository = creatingRepository;
             this.unreadCountersRepository = unreadCountersRepository;
             this.publisher = publisher;
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
         }
         
         /// <inheritdoc />
@@ -55,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             var game = await gameReadingService.GetGame(createCharacter.GameId);
             intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
 
-            var currentUserId = identity.User.UserId;
+            var currentUserId = identityProvider.Current.User.UserId;
             var gameParticipation = game.Participation(currentUserId);
 
             // Master and assistant characters should be created in Active status

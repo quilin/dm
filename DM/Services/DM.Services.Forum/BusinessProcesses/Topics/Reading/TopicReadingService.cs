@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
 using DM.Services.Common.Extensions;
@@ -23,7 +22,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
         private readonly IAccessPolicyConverter accessPolicyConverter;
         private readonly ITopicReadingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IIdentity identity;
+        private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
         public TopicReadingService(
@@ -33,7 +32,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             ITopicReadingRepository repository,
             IUnreadCountersRepository unreadCountersRepository)
         {
-            identity = identityProvider.Current;
+            this.identityProvider = identityProvider;
             this.forumReadingService = forumReadingService;
             this.accessPolicyConverter = accessPolicyConverter;
             this.repository = repository;
@@ -47,6 +46,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
             var forum = await forumReadingService.GetForum(forumTitle);
 
             var totalCount = await repository.Count(forum.Id);
+            var identity = identityProvider.Current;
             var pagingData = new PagingData(query, identity.Settings.Paging.TopicsPerPage, totalCount);
 
             var topics = (await repository.Get(forum.Id, pagingData, false)).ToArray();
@@ -64,6 +64,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
         {
             var forum = await forumReadingService.GetForum(forumTitle);
             var topics = (await repository.Get(forum.Id, null, true)).ToArray();
+            var identity = identityProvider.Current;
             if (identity.User.IsAuthenticated)
             {
                 await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
@@ -76,6 +77,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
         /// <inheritdoc />
         public async Task<Topic> GetTopic(Guid topicId)
         {
+            var identity = identityProvider.Current;
             var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
             var topic = await repository.Get(topicId, accessPolicy);
             if (topic == null)
