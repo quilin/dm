@@ -1,16 +1,4 @@
 ﻿(function($) {
-    $.fn.placeholder = function(returnAsControl) {
-        var placeholdersCollection = [];
-        this.each(function() {
-            var $this = $(this);
-            placeholdersCollection.push(DM.Placeholder.create($this));
-        });
-        if (returnAsControl)
-            return placeholdersCollection.length > 0
-                ? placeholdersCollection
-                : placeholdersCollection[0];
-        return this;
-    };
     $.fn.resetForm = function () {
         this[0].reset();
         this.find("input[type='text'], input[type='password'], input[type='hidden'], textarea")

@@ -17,7 +17,7 @@ namespace DM.Web.Classic.Controllers
             this.aboutViewModelBuilder = aboutViewModelBuilder;
         }
 
-        public IActionResult Index() => View(homeViewModelBuilder.Build());
+        public async Task<IActionResult> Index() => View(await homeViewModelBuilder.Build());
 
         public async Task<IActionResult> About() => View(await aboutViewModelBuilder.Build());
 

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Web.Classic.Views.Community.CommunityUser;
@@ -21,13 +23,13 @@ namespace DM.Web.Classic.Views.Community
             this.communityUserViewModelBuilder = communityUserViewModelBuilder;
         }
 
-        public CommunityViewModel Build(int entityNumber, bool withInactive)
+        public async Task<CommunityViewModel> Build(int entityNumber, bool withInactive)
         {
-            var (users, paging) = userReadingService.Get(new PagingQuery
+            var (users, paging) = await userReadingService.Get(new PagingQuery
             {
                 Number = entityNumber,
                 Size = PageSize
-            }, withInactive).Result;
+            }, withInactive);
             var firstUserNumber = (paging.CurrentPage - 1) * PageSize + 1;
 
             return new CommunityViewModel
@@ -44,13 +46,13 @@ namespace DM.Web.Classic.Views.Community
             };
         }
 
-        public CommunityUserViewModel[] BuildList(int entityNumber, bool withInactive)
+        public async Task<IEnumerable<CommunityUserViewModel>> BuildList(int entityNumber, bool withInactive)
         {
-            var (users, paging) = userReadingService.Get(new PagingQuery
+            var (users, paging) = await userReadingService.Get(new PagingQuery
             {
                 Number = entityNumber,
                 Size = PageSize
-            }, withInactive).Result;
+            }, withInactive);
             var firstUserNumber = (paging.CurrentPage - 1) * PageSize + 1;
 
             return users

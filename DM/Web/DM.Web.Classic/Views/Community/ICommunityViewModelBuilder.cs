@@ -1,10 +1,12 @@
-﻿using DM.Web.Classic.Views.Community.CommunityUser;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DM.Web.Classic.Views.Community.CommunityUser;
 
 namespace DM.Web.Classic.Views.Community
 {
     public interface ICommunityViewModelBuilder
     {
-        CommunityViewModel Build(int entityNumber, bool withInactive);
-        CommunityUserViewModel[] BuildList(int entityNumber, bool withInactive);
+        Task<CommunityViewModel> Build(int entityNumber, bool withInactive);
+        Task<IEnumerable<CommunityUserViewModel>> BuildList(int entityNumber, bool withInactive);
     }
 }

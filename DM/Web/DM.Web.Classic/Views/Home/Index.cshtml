@@ -15,7 +15,7 @@
     @await Html.PartialAsync("Layout/GeneralRightColumn")
 }
 <div class="home-wrapper">
-    @if (Model.News.Length > 0)
+    @if (Model.News.Any())
     {
         <h2 class="content-mediumTitle home-title">Новости проекта</h2>
         foreach (var article in Model.News)
@@ -25,6 +25,10 @@
         <a class="modulesList-allLink" href="@Url.Action("Index", "Forum", new RouteValueDictionary {{"forumTitle", "Новости проекта"}})">
             К остальным новостям @IconFont.Render(IconType.DoubleRightAngle)
         </a>
+    }
+    @if (Model.RandomReview != null)
+    {
+        @await Html.PartialAsync("Reviews/Review", Model.RandomReview)
     }
 </div>
 

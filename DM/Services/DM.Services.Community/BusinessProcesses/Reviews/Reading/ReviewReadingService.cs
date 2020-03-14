@@ -31,7 +31,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
         /// <inheritdoc />
         public async Task<(IEnumerable<Review> reviews, PagingResult paging)> Get(PagingQuery query, bool onlyApproved)
         {
-            onlyApproved = onlyApproved && intentionManager.IsAllowed(ReviewIntention.ReadUnapproved);
+            onlyApproved = onlyApproved || !intentionManager.IsAllowed(ReviewIntention.ReadUnapproved);
             var totalCount = await repository.Count(onlyApproved);
             var pagingData = new PagingData(query,
                 identityProvider.Current.Settings.Paging.EntitiesPerPage, totalCount);

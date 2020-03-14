@@ -1,4 +1,5 @@
-﻿using DM.Web.Classic.Extensions.RequestExtensions;
+﻿using System.Threading.Tasks;
+using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.Community;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,14 +16,14 @@ namespace DM.Web.Classic.Controllers.CommunityControllers
             this.communityViewModelBuilder = communityViewModelBuilder;
         }
 
-        public IActionResult Index(int entityNumber, bool withInactive)
+        public async Task<IActionResult> Index(int entityNumber, bool withInactive)
         {
             if (Request.IsAjaxRequest())
             {
-                var communityUsers = communityViewModelBuilder.BuildList(entityNumber, withInactive);
+                var communityUsers = await communityViewModelBuilder.BuildList(entityNumber, withInactive);
                 return PartialView("UsersList", communityUsers);
             }
-            var communityViewModel = communityViewModelBuilder.Build(entityNumber, withInactive);
+            var communityViewModel = await communityViewModelBuilder.Build(entityNumber, withInactive);
             return View(communityViewModel);
         }
     }

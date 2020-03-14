@@ -48,9 +48,7 @@
       "wwwroot/js/BaseControls/Node/NodeExtensions.js",
       "wwwroot/js/BaseControls/Node/FormLightbox.js",
 
-      "wwwroot/js/BaseControls/Input/Placeholder.js",
       "wwwroot/js/BaseControls/Input/InputExtensions.js",
-      "wwwroot/js/BaseControls/Input/InitiatePlaceholders.js",
       "wwwroot/js/BaseControls/Input/InitiateSpoilers.js",
       "wwwroot/js/BaseControls/Input/InitiateSmartTextarea.js",
       "wwwroot/js/BaseControls/Input/InitiateDropdowns.js",

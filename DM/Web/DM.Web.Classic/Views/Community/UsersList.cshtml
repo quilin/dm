@@ -1,4 +1,4 @@
-﻿@model DM.Web.Classic.Views.Community.CommunityUser.CommunityUserViewModel[]
+﻿@model IEnumerable<DM.Web.Classic.Views.Community.CommunityUser.CommunityUserViewModel>
 @foreach (var user in Model)
 {
     @await Html.PartialAsync("CommunityUser/CommunityUser", user)
