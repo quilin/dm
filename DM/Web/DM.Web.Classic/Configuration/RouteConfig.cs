@@ -41,6 +41,8 @@ namespace DM.Web.Classic.Configuration
             #region CommunityRoutes
 
             routes.MapAction<CommunityController>("community/{entityNumber}", c => c.Index(0, false), new Dictionary<string, object>{{"entityNumber", 1}, {"withInactive", false}});
+            routes.MapAction<ProfileController>("profile/{login}", c => c.Index(null));
+
             #endregion
 
             routes.MapAction<ErrorController>("error/{statusCode}", c => c.Index(0, null));

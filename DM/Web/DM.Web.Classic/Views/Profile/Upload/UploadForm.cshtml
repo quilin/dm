@@ -1,0 +1,31 @@
+﻿@using DM.Web.Classic.Extensions.IconFontExtensions
+@using Microsoft.AspNetCore.Routing
+@model Guid
+@{
+    var uploadRootId = Guid.NewGuid();
+}
+@using (Html.BeginForm("Upload", "ProfilePictureUpload", new RouteValueDictionary
+{
+    {"userId", Model},
+    {"uploadRootId", uploadRootId}
+}, FormMethod.Post, true, new Dictionary<string, object>
+{
+    {"id", $"UploadPicture_{uploadRootId}"},
+    {"target", $"UploadPictureIframe_{uploadRootId}"},
+    {"class", "profile-picture-uploadForm"},
+    {"data-upload-id", uploadRootId},
+    {"enctype", "multipart/form-data"}
+}))
+{
+    <div class="profile-picture-uploadForm-description" id="UploadProfilePictureDescription_@(uploadRootId)">
+        <input type="file" name="files" class="profile-picture-uploadForm-input"/>
+        @IconFont.Render(IconType.Upload) Загрузите изображение
+    </div>
+    <div class="profile-picture-uploadForm-progress" id="UploadPictureProgress_@(uploadRootId)">
+        <div class="profile-picture-uploadForm-progressBar-wrapper">
+            <div class="profile-picture-uploadForm-progressBar" id="UploadPictureProgressBar_@(uploadRootId)"></div>
+            <div class="profile-picture-uploadForm-progressBar-fileName" id="UploadPictureProgressFile_@(uploadRootId)"></div>
+        </div>
+    </div>
+}
+<iframe id="UploadPictureIframe_@(uploadRootId)" name="UploadPictureIframe_@(uploadRootId)" width="0" height="0" src="about:none"></iframe>
