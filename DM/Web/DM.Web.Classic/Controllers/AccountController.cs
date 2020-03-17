@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
+using DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Account;
@@ -13,17 +13,20 @@ namespace DM.Web.Classic.Controllers
     public class AccountController : DmControllerBase
     {
         private readonly IRegistrationService registrationService;
+        private readonly IPasswordResetService passwordResetService;
         private readonly ILoginFormBuilder loginFormBuilder;
         private readonly IWebAuthenticationService webAuthenticationService;
         private readonly IRegistrationFormBuilder registrationFormBuilder;
 
         public AccountController(
             IRegistrationService registrationService,
+            IPasswordResetService passwordResetService,
             ILoginFormBuilder loginFormBuilder,
             IWebAuthenticationService webAuthenticationService,
             IRegistrationFormBuilder registrationFormBuilder)
         {
             this.registrationService = registrationService;
+            this.passwordResetService = passwordResetService;
             this.loginFormBuilder = loginFormBuilder;
             this.webAuthenticationService = webAuthenticationService;
             this.registrationFormBuilder = registrationFormBuilder;
@@ -48,7 +51,7 @@ namespace DM.Web.Classic.Controllers
         }
 
         [HttpGet]
-        public IActionResult LogIn() => View("LogIn", loginFormBuilder.Build(Request));
+        public IActionResult LogIn() => View(loginFormBuilder.Build(Request));
 
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginForm loginForm)
@@ -64,11 +67,38 @@ namespace DM.Web.Classic.Controllers
                 : Content(loginForm.RedirectUrl);
         }
 
-        public async Task<IActionResult> LogInAs(Guid userId)
+        [HttpGet]
+        public ActionResult RestorePassword() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> RestorePassword(RestorePasswordForm restorePasswordForm)
+        {
+            await passwordResetService.Reset(new UserPasswordReset
+            {
+                Email = restorePasswordForm.Email,
+                Login = restorePasswordForm.Login
+            });
+            return Ok();
+        }
+
+        [HttpGet]
+        public ActionResult UpdatePassword(Guid tokenId)
+        {
+            var token = userService.FindToken(tokenId);
+            if (token == null)
+            {
+                return View("UserActivationFailed");
+            }
+
+            var updatePasswordForm = updatePasswordFormBuilder.Build(token);
+            return View("Activation/UpdatePassword", updatePasswordForm);
+        }
+
+        public async Task<IActionResult> LogInAs(string login)
         {
             var loggedIdentity = await webAuthenticationService.Authenticate(new UnconditionalCredentials
             {
-                UserId = userId
+                // UserId = userId
             }, HttpContext);
             return loggedIdentity.Error != AuthenticationError.NoError
                 ? AjaxFormError(loggedIdentity.Error)
@@ -79,6 +109,12 @@ namespace DM.Web.Classic.Controllers
         {
             await webAuthenticationService.Logout(HttpContext);
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> LogOutElsewhere(string login)
+        {
+            await webAuthenticationService.LogoutAll(HttpContext);
+            return Ok();
         }
     }
 }
