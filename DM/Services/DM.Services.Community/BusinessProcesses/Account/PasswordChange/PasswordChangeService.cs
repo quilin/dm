@@ -36,7 +36,9 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
         public async Task<GeneralUser> Change(UserPasswordChange passwordChange)
         {
             await validator.ValidateAndThrowAsync(passwordChange);
-            var user = await repository.FindUser(passwordChange.Login);
+            var user = passwordChange.Token.HasValue
+                ? await repository.FindUser(passwordChange.Token.Value)
+                : await repository.FindUser(passwordChange.Login);
 
             var (hash, salt) = securityManager.GeneratePassword(passwordChange.NewPassword);
             var userUpdate = updateBuilderFactory.Create<User>(user.UserId)

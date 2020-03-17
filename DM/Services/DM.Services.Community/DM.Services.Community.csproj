@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="BusinessProcesses\Account" />
       <Folder Include="BusinessProcesses\Users" />
     </ItemGroup>
 

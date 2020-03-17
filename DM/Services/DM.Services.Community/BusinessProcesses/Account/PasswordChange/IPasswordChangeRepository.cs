@@ -19,13 +19,19 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
         Task<AuthenticatedUser> FindUser(string login);
 
         /// <summary>
+        /// Find token user
+        /// </summary>
+        /// <param name="tokenId"></param>
+        /// <returns></returns>
+        Task<AuthenticatedUser> FindUser(Guid tokenId);
+
+        /// <summary>
         /// Check if token is valid
         /// </summary>
         /// <param name="tokenId"></param>
-        /// <param name="userId"></param>
         /// <param name="createdSince"></param>
         /// <returns></returns>
-        Task<bool> TokenValid(Guid tokenId, Guid userId, DateTimeOffset createdSince);
+        Task<bool> TokenValid(Guid tokenId, DateTimeOffset createdSince);
 
         /// <summary>
         /// Save user password changes

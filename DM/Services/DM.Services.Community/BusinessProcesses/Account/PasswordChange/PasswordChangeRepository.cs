@@ -33,8 +33,15 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
             .FirstOrDefaultAsync();
 
         /// <inheritdoc />
-        public Task<bool> TokenValid(Guid tokenId, Guid userId, DateTimeOffset createdSince) => dbContext.Tokens
-            .AnyAsync(t => t.TokenId == tokenId && t.UserId == userId &&
+        public Task<AuthenticatedUser> FindUser(Guid tokenId) => dbContext.Tokens
+            .Where(u => u.TokenId == tokenId)
+            .Select(u => u.User)
+            .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+
+        /// <inheritdoc />
+        public Task<bool> TokenValid(Guid tokenId, DateTimeOffset createdSince) => dbContext.Tokens
+            .AnyAsync(t => t.TokenId == tokenId &&
                 t.Type == TokenType.PasswordChange && t.CreateDate > createdSince);
 
         /// <inheritdoc />

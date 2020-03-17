@@ -45,6 +45,13 @@ namespace DM.Web.Classic.Configuration
 
             #endregion
 
+            #region AccountRoutes
+
+            routes.MapAction<AccountController>("password/{token}", c => c.UpdatePassword(Guid.Empty));
+            routes.MapAction<AccountController>("login/{userId}", c => c.LogInAs(Guid.Empty));
+
+            #endregion
+            
             routes.MapAction<ErrorController>("error/{statusCode}", c => c.Index(0, null));
 
             routes.MapAction<HomeController>("", c => c.Index());

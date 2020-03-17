@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
+using DM.Services.Community.BusinessProcesses.Account.PasswordChange;
 using DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Account;
+using DM.Web.Classic.Views.Account.Activation;
 using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Mvc;
@@ -14,22 +17,28 @@ namespace DM.Web.Classic.Controllers
     {
         private readonly IRegistrationService registrationService;
         private readonly IPasswordResetService passwordResetService;
-        private readonly ILoginFormBuilder loginFormBuilder;
+        private readonly IPasswordChangeService passwordChangeService;
         private readonly IWebAuthenticationService webAuthenticationService;
         private readonly IRegistrationFormBuilder registrationFormBuilder;
+        private readonly ILoginFormBuilder loginFormBuilder;
+        private readonly IUpdatePasswordFormBuilder updatePasswordFormBuilder;
 
         public AccountController(
             IRegistrationService registrationService,
             IPasswordResetService passwordResetService,
-            ILoginFormBuilder loginFormBuilder,
+            IPasswordChangeService passwordChangeService,
             IWebAuthenticationService webAuthenticationService,
-            IRegistrationFormBuilder registrationFormBuilder)
+            IRegistrationFormBuilder registrationFormBuilder,
+            ILoginFormBuilder loginFormBuilder,
+            IUpdatePasswordFormBuilder updatePasswordFormBuilder)
         {
             this.registrationService = registrationService;
             this.passwordResetService = passwordResetService;
-            this.loginFormBuilder = loginFormBuilder;
+            this.passwordChangeService = passwordChangeService;
             this.webAuthenticationService = webAuthenticationService;
             this.registrationFormBuilder = registrationFormBuilder;
+            this.loginFormBuilder = loginFormBuilder;
+            this.updatePasswordFormBuilder = updatePasswordFormBuilder;
         }
 
         [HttpGet]
@@ -82,27 +91,31 @@ namespace DM.Web.Classic.Controllers
         }
 
         [HttpGet]
-        public ActionResult UpdatePassword(Guid tokenId)
-        {
-            var token = userService.FindToken(tokenId);
-            if (token == null)
-            {
-                return View("UserActivationFailed");
-            }
+        public async Task<IActionResult> UpdatePassword(Guid token) =>
+            View("Activation/UpdatePassword", await updatePasswordFormBuilder.Build(token));
 
-            var updatePasswordForm = updatePasswordFormBuilder.Build(token);
-            return View("Activation/UpdatePassword", updatePasswordForm);
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordForm updatePasswordForm)
+        {
+            var user = await passwordChangeService.Change(new UserPasswordChange
+            {
+                Token = updatePasswordForm.Token,
+                NewPassword = updatePasswordForm.AlteredPassword
+            });
+            await webAuthenticationService.Authenticate(new UnconditionalCredentials
+            {
+                UserId = user.UserId
+            }, HttpContext);
+            return new EmptyResult();
         }
 
-        public async Task<IActionResult> LogInAs(string login)
+        public async Task<IActionResult> LogInAs(Guid userId)
         {
-            var loggedIdentity = await webAuthenticationService.Authenticate(new UnconditionalCredentials
+            await webAuthenticationService.Authenticate(new UnconditionalCredentials
             {
-                // UserId = userId
+                UserId = userId
             }, HttpContext);
-            return loggedIdentity.Error != AuthenticationError.NoError
-                ? AjaxFormError(loggedIdentity.Error)
-                : new EmptyResult();
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> LogOut()
