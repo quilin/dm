@@ -11,6 +11,15 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
     public interface IUnreadCountersRepository
     {
         /// <summary>
+        /// Create a counter for the entity for a certain user
+        /// </summary>
+        /// <param name="entityId">Entity Id</param>
+        /// <param name="entryType">Entry type</param>
+        /// <param name="userIds">User Ids</param>
+        /// <returns></returns>
+        Task Create(Guid entityId, UnreadEntryType entryType, IEnumerable<Guid> userIds);
+    
+        /// <summary>
         /// Create a counter for the entity
         /// </summary>
         /// <param name="entityId">Entity Id</param>

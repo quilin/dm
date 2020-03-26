@@ -22,6 +22,20 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
         }
 
         /// <inheritdoc />
+        public Task Create(Guid entityId, UnreadEntryType entryType, IEnumerable<Guid> userIds)
+        {
+            return Collection.InsertManyAsync(userIds.Select(id => new UnreadCounter
+            {
+                UserId = id,
+                EntityId = entityId,
+                ParentId = id,
+                EntryType = entryType,
+                LastRead = dateTimeProvider.Now.UtcDateTime,
+                Counter = 0
+            }));
+        }
+
+        /// <inheritdoc />
         public Task Create(Guid entityId, Guid parentId, UnreadEntryType entryType)
         {
             return Collection.InsertOneAsync(new UnreadCounter

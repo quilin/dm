@@ -84,10 +84,8 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
             var (conversation, conversationLinks) = factory.CreateVisavi(currentUserId, visaviId.Value);
             var result = await repository.Create(conversation, conversationLinks);
 
-            foreach (var participantId in new[] {currentUserId, visaviId.Value}.Distinct())
-            {
-                await unreadCountersRepository.Create(result.Id, participantId, UnreadEntryType.Message);
-            }
+            await unreadCountersRepository.Create(result.Id, UnreadEntryType.Message,
+                new[] {currentUserId, visaviId.Value}.Distinct());
 
             return result;
         }
