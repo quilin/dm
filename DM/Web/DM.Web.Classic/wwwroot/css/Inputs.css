@@ -11,7 +11,6 @@ textarea {
     font-family: PT Sans;
     font-size: 14px;
     margin: 0;
-    background: transparent;
     position: relative;
     transition: box-shadow 0.2s;
     transition: border-color 0.2s;
