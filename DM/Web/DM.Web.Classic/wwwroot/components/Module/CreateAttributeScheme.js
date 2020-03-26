@@ -60,8 +60,7 @@
             this._animationTime = options.animationTime || 200;
 
             this._form = new DM.FormControl("#CreateAttributeSchemaForm", {
-                validate: true,
-                initPlaceholder: true
+                validate: true
             });
 
             this._confirmButton = $("#CreateAttributeSchemaConfirm");

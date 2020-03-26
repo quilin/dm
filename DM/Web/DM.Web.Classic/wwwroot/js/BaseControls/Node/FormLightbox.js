@@ -52,8 +52,7 @@
             });
 
             this._form = new DM.FormControl(this._lightbox.$().find("form"), {
-                validate: true,
-                initPlaceholder: true
+                validate: true
             });
             this._form.on("requestSuccess", this._resolveResult, this);
 

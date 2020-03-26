@@ -15,7 +15,6 @@
 
             this._form = new DM.FormControl("#EditRoomForm_" + this._roomId, {
                 updateDefaultDataAfterSuccess: true,
-                initPlaceholder: true,
                 validate: true
             });
             this._cancelLink = $("#CancelEditLink_" + this._roomId);

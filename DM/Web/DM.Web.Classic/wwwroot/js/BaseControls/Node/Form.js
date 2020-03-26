@@ -6,13 +6,9 @@
         this._isRequesting = false;
         this._updateDefaultDataAfterSuccess = options && options.updateDefaultDataAfterSuccess;
         this._validateAtStart = options && options.validate;
-        this._initPlaceholder = options && options.initPlaceholder;
 
         if (this._validateAtStart) {
             this.validate();
-        }
-        if (this._initPlaceholder) {
-            this.initPlaceholder();
         }
 
         this.__attachEventListeners();
@@ -32,9 +28,6 @@
     },
     isValid: function() {
         return this._view.isValid();
-    },
-    initPlaceholder: function () {
-        this._view.initPlaceholder();
     },
     submit: function () {
         this._view.submit();
@@ -123,9 +116,6 @@
                 .on("input.valueChanged", "input, textarea", function (evt) { _this.resolveEnabled(); });
         },
 
-        initPlaceholder: function() {
-            this._form.find("input, textarea").placeholder();
-        },
         validate: function () {
             $.validator.unobtrusive.parse(this._form);
         },

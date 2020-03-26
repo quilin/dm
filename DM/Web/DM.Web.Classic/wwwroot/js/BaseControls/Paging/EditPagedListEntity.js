@@ -14,7 +14,6 @@
             this._entityId = options.entityId;
 
             this._form = new DM.FormControl("#EditForm_" + this._entityId, {
-                initPlaceholder: true,
                 validate: true
             });
             this._input = this._form.$()
