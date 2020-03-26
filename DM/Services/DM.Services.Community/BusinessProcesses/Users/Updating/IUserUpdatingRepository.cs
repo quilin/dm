@@ -16,6 +16,6 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         /// <param name="updateUser"></param>
         /// <param name="settingsUpdate"></param>
         /// <returns></returns>
-        Task Update(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate);
+        Task UpdateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate);
     }
 }

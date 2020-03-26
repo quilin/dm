@@ -1,16 +1,14 @@
 ﻿using System;
 using DM.Services.Core.Dto.Enums;
 using DM.Web.Classic.Views.Profile.Actions;
-using DM.Web.Classic.Views.Profile.EditInfo;
+using DM.Web.Classic.Views.Profile.EditorTemplates;
 using DM.Web.Classic.Views.Shared.User;
 
 namespace DM.Web.Classic.Views.Profile
 {
     public class ProfileViewModel
     {
-        public Guid UserId { get; set; }
         public UserViewModel User { get; set; }
-        public bool HasRoles { get; set; }
         public UserRole Role { get; set; }
 
         public DateTimeOffset RegistrationDate { get; set; }

@@ -31,7 +31,7 @@ namespace DM.Web.Classic.Views.Profile.Settings
         public int EntitiesPerPage { get; set; }
 
         public bool CanEditNurseGreetingsMessage { get; set; }
-        public string NurseGreetingsMessage { get; set; }
+        public string NannyGreetingsMessage { get; set; }
 
         public ColorSchema ColorSchema { get; set; }
 

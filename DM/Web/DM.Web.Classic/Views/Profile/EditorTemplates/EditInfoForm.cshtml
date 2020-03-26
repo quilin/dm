@@ -1,5 +1,5 @@
 ﻿@using DM.Web.Classic.Extensions.HtmlHelperExtensions
-@model DM.Web.Classic.Views.Profile.EditInfo.EditInfoForm
+@model DM.Web.Classic.Views.Profile.EditorTemplates.EditInfoForm
 
 @using (Html.BeginForm("EditInfo", "EditProfile", FormMethod.Post,
     new Dictionary<string, object>
@@ -8,7 +8,7 @@
             {"class", "profile-edit-info-form"}
         }))
 {
-    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.Login)
     @await Html.SmartTextAreaFor(m => m.Info, Model.Parser)
     <div class="profile-edit-info-actions">
         @Html.Submit("Сохранить", new Dictionary<string, object>{{"class", "form-submit-button"}})

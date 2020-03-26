@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Core.Exceptions;
+using DM.Web.Classic.Extensions.RequestExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -41,6 +42,12 @@ namespace DM.Web.Classic.Middleware
                 }
 
                 logger.LogCritical(e, message);
+
+                if (httpContext.Request.IsAjaxRequest())
+                {
+                    httpContext.Response.StatusCode = statusCode;
+                    return;
+                }
 
                 if (httpContext.Request.Path.HasValue &&
                     httpContext.Request.Path.Value.Contains("/error/"))

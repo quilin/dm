@@ -19,17 +19,20 @@
             </div>
         </div>
         @using (Html.BeginForm("EditPersonalData", "EditProfile",
-                               new RouteValueDictionary {{"field", type}},
-                               FormMethod.Post, true,
-                               new Dictionary<string, object>
-                                   {
-                                       {"class", "profile-edit-data-form"},
-                                       {"id", $"EditDataFieldForm_{type}"}
-                                   }))
+            new RouteValueDictionary
+            {
+                {"field", type},
+                {"login", Model.User.Login}
+            },
+            FormMethod.Post, true,
+            new Dictionary<string, object>
+            {
+                {"class", "profile-edit-data-form"},
+                {"id", $"EditDataFieldForm_{type}"}
+            }))
         {
-            @Html.HiddenFor(m => m.UserId)
-            @Html.TextBox("value", value, new Dictionary<string, object>{{"class", "profile-edit-data-input"}})
-            @Html.SmallSubmit(new Dictionary<string, object>{{"class", "profile-edit-data-submit"}})
+            @Html.TextBox("value", value, new Dictionary<string, object> {{"class", "profile-edit-data-input"}})
+            @Html.SmallSubmit(new Dictionary<string, object> {{"class", "profile-edit-data-submit"}})
             <a href="javascript:void(0)" class="profile-edit-data-cancel" id="CancelFormLink_@(type)">@IconFont.Render(IconType.Close)</a>
         }
     </div>

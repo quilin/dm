@@ -39,12 +39,12 @@
     </div>
     <div class="content-minorTitle profile-settings-group">Цветовая схема</div>
     <div class="form-field-wrapper">
-        @Html.DropdownFor(m => m.ColorSchema, wrapperHtmlAttributes: new Dictionary<string, object>{{"class", "js-colorscheme-dropdown"}})
+        @Html.DropdownFor(m => m.ColorSchema, wrapperHtmlAttributes: new Dictionary<string, object>{{"class", "js-colorschema-dropdown"}})
     </div>
     if (Model.CanEditNurseGreetingsMessage)
     {
-        @Html.LabelFor(m => m.NurseGreetingsMessage, "Приветственное письмо от няни")
-        @await Html.SmartTextAreaFor(m => m.NurseGreetingsMessage, Model.Parser)
+        @Html.LabelFor(m => m.NannyGreetingsMessage, "Приветственное письмо от няни")
+        @await Html.SmartTextAreaFor(m => m.NannyGreetingsMessage, Model.Parser)
     }
     <div class="content-minorTitle form-field-wrapper profile-settings-group">
         <label>

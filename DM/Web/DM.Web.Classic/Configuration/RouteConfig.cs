@@ -20,11 +20,15 @@ namespace DM.Web.Classic.Configuration
         public static void Register(IRouteBuilder routes)
         {
             #region CommentariesRoutes
+
             routes.MapAction<CommentariesController>("comments/{entityId}/{entityNumber}", c => c.Index(Guid.Empty, 0));
+
             #endregion
-            
+
             #region ForumRoutes
-            routes.MapAction<ForumController>("forum/{forumTitle}/{entityNumber}", c => c.Index(null, 0, null), new Dictionary<string, object>{{"forumTitle", null}, {"entityNumber", 1}});
+
+            routes.MapAction<ForumController>("forum/{forumTitle}/{entityNumber}", c => c.Index(null, 0, null),
+                new Dictionary<string, object> {{"forumTitle", null}, {"entityNumber", 1}});
             routes.MapAction<ForumController>("readallmessages", c => c.MarkAllAsRead(null));
 
             routes.MapAction<EditTopicController>("topic/{topicId}/edit", c => c.Edit(Guid.Empty));
@@ -36,11 +40,16 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<TopicController>("detachtopic", c => c.DetachTopic(Guid.Empty));
             routes.MapAction<TopicController>("removetopic", c => c.RemoveTopic(Guid.Empty));
             routes.MapAction<TopicController>("movetopic", c => c.MoveTopic(Guid.Empty, null));
+
             #endregion
 
             #region CommunityRoutes
 
-            routes.MapAction<CommunityController>("community/{entityNumber}", c => c.Index(0, false), new Dictionary<string, object>{{"entityNumber", 1}, {"withInactive", false}});
+            routes.MapAction<CommunityController>("community/{entityNumber}", c => c.Index(0, false),
+                new Dictionary<string, object> {{"entityNumber", 1}, {"withInactive", false}});
+            routes.MapAction<ProfileController>("profile", c => c.Index(null),
+                new Dictionary<string, object> {{"login", null}});
+            routes.MapAction<ProfileController>("profile/settings", c => c.GetSettings());
             routes.MapAction<ProfileController>("profile/{login}", c => c.Index(null));
 
             #endregion
@@ -51,7 +60,7 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<AccountController>("login/{userId}", c => c.LogInAs(Guid.Empty));
 
             #endregion
-            
+
             routes.MapAction<ErrorController>("error/{statusCode}", c => c.Index(0, null));
 
             routes.MapAction<HomeController>("", c => c.Index());

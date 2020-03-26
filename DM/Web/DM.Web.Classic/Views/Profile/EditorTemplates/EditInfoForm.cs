@@ -1,11 +1,10 @@
-﻿using System;
-using BBCodeParser;
+﻿using BBCodeParser;
 
-namespace DM.Web.Classic.Views.Profile.EditInfo
+namespace DM.Web.Classic.Views.Profile.EditorTemplates
 {
     public class EditInfoForm
     {
-        public Guid UserId { get; set; }
+        public string Login { get; set; }
 
         public string Info { get; set; }
 

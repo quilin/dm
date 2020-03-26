@@ -66,7 +66,7 @@ namespace DM.Web.Core.Authentication
         {
             if (identity.Error == AuthenticationError.ForgedToken)
             {
-                logger.LogError($"Похоже, кто-то форжит токены аутентификации для юзера {identity.User.Login}");
+                logger.LogError($"Seems like someone is trying to forge the token for {identity.User.Login}");
             }
 
             return identity.Error == AuthenticationError.NoError && identity.User.IsAuthenticated

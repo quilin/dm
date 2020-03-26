@@ -67,22 +67,26 @@ namespace DM.Services.Authentication.Repositories
         /// <inheritdoc />
         public async Task<UserSettings> FindUserSettings(Guid userId)
         {
-            return await Collection<DbUserSettings>()
-                .Find(Filter<DbUserSettings>().Eq(u => u.Id, userId))
-                .Project(Project<DbUserSettings>().Expression(s => new UserSettings
-                {
-                    Id = s.Id,
-                    ColorSchema = s.ColorSchema,
-                    Paging = new PagingSettings
+            var settings = await Collection<DbUserSettings>()
+                .Find(Filter<DbUserSettings>()
+                    .Eq(u => u.Id, userId))
+                .Project(Project<DbUserSettings>()
+                    .Expression(s => new UserSettings
                     {
-                        PostsPerPage = s.Paging.PostsPerPage,
-                        CommentsPerPage = s.Paging.CommentsPerPage,
-                        MessagesPerPage = s.Paging.MessagesPerPage,
-                        TopicsPerPage = s.Paging.TopicsPerPage
-                    },
-                    NannyGreetingsMessage = s.NannyGreetingsMessage
-                }))
-                .FirstOrDefaultAsync() ?? UserSettings.Default;
+                        Id = s.Id,
+                        ColorSchema = s.ColorSchema,
+                        Paging = new PagingSettings
+                        {
+                            PostsPerPage = s.Paging.PostsPerPage,
+                            CommentsPerPage = s.Paging.CommentsPerPage,
+                            MessagesPerPage = s.Paging.MessagesPerPage,
+                            TopicsPerPage = s.Paging.TopicsPerPage,
+                            EntitiesPerPage = s.Paging.EntitiesPerPage
+                        },
+                        NannyGreetingsMessage = s.NannyGreetingsMessage
+                    }))
+                .FirstOrDefaultAsync();
+            return settings ?? UserSettings.Default;
         }
 
         /// <inheritdoc />

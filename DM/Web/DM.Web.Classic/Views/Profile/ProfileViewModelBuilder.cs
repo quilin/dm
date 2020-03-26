@@ -6,7 +6,7 @@ using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Parsing;
 using DM.Web.Classic.Views.Profile.Actions;
-using DM.Web.Classic.Views.Profile.EditInfo;
+using DM.Web.Classic.Views.Profile.EditorTemplates;
 using DM.Web.Classic.Views.Shared.User;
 
 namespace DM.Web.Classic.Views.Profile
@@ -52,7 +52,6 @@ namespace DM.Web.Classic.Views.Profile
 
             return new ProfileViewModel
             {
-                UserId = userDetails.UserId,
                 User = userViewModelBuilder.Build(userDetails),
                 RegistrationDate = userDetails.RegistrationDate,
                 LastVisitDate = userDetails.LastVisitDate,
@@ -76,7 +75,7 @@ namespace DM.Web.Classic.Views.Profile
                 Skype = userDetails.Skype,
 
                 Info = info.ToHtml(),
-                EditInfoForm = editInfoFormFactory.Create(userDetails.UserId, info.ToBb()),
+                EditInfoForm = editInfoFormFactory.Create(userDetails.Login, info.ToBb()),
 
                 CanEdit = canEdit,
                 CanEditSettings = canEdit,

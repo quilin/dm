@@ -52,7 +52,7 @@ namespace DM.Web.Classic.Views.Profile.Settings
                 MessagesPerPage = settings.Paging.MessagesPerPage,
                 EntitiesPerPage = settings.Paging.EntitiesPerPage,
                 CanEditNurseGreetingsMessage = user.Role.HasFlag(UserRole.NannyModerator),
-                NurseGreetingsMessage = settings.NannyGreetingsMessage,
+                NannyGreetingsMessage = settings.NannyGreetingsMessage,
                 ColorSchema = settings.ColorSchema,
                 RatingDisabled = user.RatingDisabled,
 

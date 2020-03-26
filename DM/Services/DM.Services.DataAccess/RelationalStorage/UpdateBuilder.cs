@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -93,7 +92,7 @@ namespace DM.Services.DataAccess.RelationalStorage
             return id;
         }
 
-        public async Task<Guid> SaveTo(DmMongoClient mongoClient)
+        public (Guid, UpdateDefinition<TEntity>) DefineUpdateTo(DmMongoClient mongoClient)
         {
             var entityType = typeof(TEntity);
             if (entityType.GetCustomAttribute<MongoCollectionNameAttribute>() == null)
@@ -106,13 +105,8 @@ namespace DM.Services.DataAccess.RelationalStorage
                 throw new UpdateBuilderException($"Entity type {entityType.Name} has no external Id property");
             }
 
-            var updateDefinition = new UpdateDefinitionBuilder<TEntity>()
-                .Combine(mongoUpdateActions.Select(a => a.Invoke()));
-
-            await mongoClient.GetCollection<TEntity>()
-                .FindOneAndUpdateAsync(new FilterDefinitionBuilder<TEntity>().Eq("id", id), updateDefinition);
-
-            return id;
+            return (id, new UpdateDefinitionBuilder<TEntity>().Combine(
+                mongoUpdateActions.Select(a => a.Invoke())));
         }
 
         private static void SetPropertyValue<TValue>(TEntity target,

@@ -35,13 +35,13 @@
     <div class="profile-action-success" id="CloseSessionsSuccessMessage">
         @IconFont.Render(IconType.Tick) Вы успешно вышли из своей учётной записи с других устройств!
     </div>
-    <a href="@Url.Action("EditEmail", "EditProfile")" class="profile-actions-link" id="ChangeEmailLink">
+    <a href="@Url.Action("EditEmail", "Profile")" class="profile-actions-link" id="ChangeEmailLink">
         @IconFont.Render(IconType.Edit, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Сменить E-mail
     </a>
     <div class="profile-action-success" id="EmailChangeSuccessMessage">
         @IconFont.Render(IconType.Tick) E-mail успешно изменен!
     </div>
-    <a href="@Url.Action("EditPassword", "EditProfile")" class="profile-actions-link" id="ChangePasswordLink">
+    <a href="@Url.Action("EditPassword", "Profile")" class="profile-actions-link" id="ChangePasswordLink">
         @IconFont.Render(IconType.Lock, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Сменить пароль
     </a>
     <div class="profile-action-success" id="PasswordChangeSuccessMessage">

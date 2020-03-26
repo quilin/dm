@@ -1,12 +1,12 @@
 ﻿@using DM.Web.Classic.Extensions.IconFontExtensions
 @using Microsoft.AspNetCore.Routing
-@model Guid
+@model string
 @{
     var uploadRootId = Guid.NewGuid();
 }
 @using (Html.BeginForm("Upload", "ProfilePictureUpload", new RouteValueDictionary
 {
-    {"userId", Model},
+    {"login", Model},
     {"uploadRootId", uploadRootId}
 }, FormMethod.Post, true, new Dictionary<string, object>
 {

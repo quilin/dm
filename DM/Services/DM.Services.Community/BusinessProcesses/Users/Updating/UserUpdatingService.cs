@@ -57,7 +57,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
                 .MaybeField(u => u.Paging.PostsPerPage, updateUser.Settings?.Paging?.PostsPerPage)
                 .MaybeField(u => u.Paging.EntitiesPerPage, updateUser.Settings?.Paging?.EntitiesPerPage);
 
-            await repository.Update(userUpdate, settingsUpdate);
+            await repository.UpdateUser(userUpdate, settingsUpdate);
             return await userReadingService.GetDetails(updateUser.Login);
         }
     }
