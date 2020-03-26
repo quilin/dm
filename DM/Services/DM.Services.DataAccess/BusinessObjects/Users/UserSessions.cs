@@ -41,6 +41,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// <summary>
         /// Persistence flag
         /// </summary>
-        public bool IsPersistent { get; set; }
+        public bool Persistent { get; set; }
+
+        /// <summary>
+        /// Flag of invisible log in
+        /// </summary>
+        public bool Invisible { get; set; }
     }
 }

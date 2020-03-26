@@ -167,7 +167,7 @@
         },
         requestError: function (xhr) {
             try {
-                var errorData = $.parseJSON(xhr.responseText).obj;
+                var errorData = $.parseJSON(xhr.responseText);
                 var validator = this._form.validate();
                 this._form.find(".field-validation-error").text('');
                 validator.showErrors(errorData);

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommunityControllers
 {
-    public class ProfileController : DmControllerBase
+    public class ProfileController : Controller
     {
         private readonly IProfileViewModelBuilder profileViewModelBuilder;
         private readonly IUserSettingsFormBuilder userSettingsFormBuilder;

@@ -28,5 +28,10 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         /// Number of unread messages
         /// </summary>
         public int UnreadMessagesCount { get; set; }
+
+        /// <summary>
+        /// Total number of messages
+        /// </summary>
+        public int TotalMessagesCount { get; set; }
     }
 }

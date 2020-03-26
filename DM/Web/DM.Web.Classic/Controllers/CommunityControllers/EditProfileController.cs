@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace DM.Web.Classic.Controllers.CommunityControllers
 {
-    public class EditProfileController : DmControllerBase
+    public class EditProfileController : Controller
     {
         private readonly IUserUpdatingService userUpdatingService;
         private readonly IBbParserProvider bbParserProvider;

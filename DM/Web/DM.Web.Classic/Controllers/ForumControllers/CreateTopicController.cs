@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace DM.Web.Classic.Controllers.ForumControllers
 {
-    public class CreateTopicController : DmControllerBase
+    public class CreateTopicController : Controller
     {
         private readonly ITopicCreatingService topicCreatingService;
 

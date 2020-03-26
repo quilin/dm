@@ -19,13 +19,14 @@ namespace DM.Services.Authentication.Factories
         }
 
         /// <inheritdoc />
-        public Session Create(bool persistent)
+        public Session Create(bool persistent, bool invisible)
         {
             var rightNow = dateTimeProvider.Now.UtcDateTime;
             return new Session
             {
                 Id = guidFactory.Create(),
-                IsPersistent = persistent,
+                Persistent = persistent,
+                Invisible = invisible,
                 ExpirationDate = persistent
                     ? rightNow.AddMonths(1)
                     : rightNow.AddDays(1)

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
@@ -24,13 +25,19 @@ namespace DM.Web.Core.Middleware
         /// <param name="httpContext"></param>
         /// <param name="credentialsStorage"></param>
         /// <param name="authenticationService"></param>
+        /// <param name="identityProvider"></param>
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext httpContext,
             ICredentialsStorage credentialsStorage,
-            IWebAuthenticationService authenticationService)
+            IWebAuthenticationService authenticationService,
+            IIdentityProvider identityProvider)
         {
-            var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
-            await authenticationService.Authenticate(tokenCredentials, httpContext);
+            if (identityProvider.Current == null)
+            {
+                var tokenCredentials = await credentialsStorage.ExtractToken(httpContext);
+                await authenticationService.Authenticate(tokenCredentials, httpContext);
+            }
+
             await next(httpContext);
         }
     }

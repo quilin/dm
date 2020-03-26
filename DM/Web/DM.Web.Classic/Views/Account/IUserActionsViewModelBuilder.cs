@@ -1,7 +1,9 @@
-﻿namespace DM.Web.Classic.Views.Account
+﻿using System.Threading.Tasks;
+
+namespace DM.Web.Classic.Views.Account
 {
     public interface IUserActionsViewModelBuilder
     {
-        UserActionsViewModel Build(string login);
+        Task<UserActionsViewModel> Build(string login);
     }
 }

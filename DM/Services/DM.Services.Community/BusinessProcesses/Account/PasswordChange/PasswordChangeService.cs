@@ -49,7 +49,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
                 : null;
 
             await repository.UpdatePassword(userUpdate, tokenUpdate);
-            await authenticationService.LogoutAll(user.UserId);
+            await authenticationService.LogoutAll();
 
             return user;
         }

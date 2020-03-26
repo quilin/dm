@@ -93,6 +93,13 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         }
 
         /// <inheritdoc />
+        public async Task<int> GetTotalUnreadCount()
+        {
+            var userId = identityProvider.Current.User.UserId;
+            return (await unreadCountersRepository.SelectByParents(userId, UnreadEntryType.Message, userId))[userId];
+        }
+
+        /// <inheritdoc />
         public Task MarkAsRead(Guid conversationId) =>
             unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
                 UnreadEntryType.Message, conversationId);

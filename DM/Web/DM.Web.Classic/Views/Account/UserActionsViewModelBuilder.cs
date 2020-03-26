@@ -1,30 +1,24 @@
-﻿using DM.Services.Authentication.Implementation.UserIdentity;
-using DM.Services.Common.BusinessProcesses.UnreadCounters;
-using DM.Services.DataAccess.BusinessObjects.Common;
+﻿using System.Threading.Tasks;
+using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 
 namespace DM.Web.Classic.Views.Account
 {
     public class UserActionsViewModelBuilder : IUserActionsViewModelBuilder
     {
-        private readonly IUnreadCountersRepository unreadCounterService;
-        private readonly IIdentityProvider identityProvider;
+        private readonly IConversationReadingService conversationReadingService;
 
         public UserActionsViewModelBuilder(
-            IUnreadCountersRepository unreadCounterService,
-            IIdentityProvider identityProvider)
+            IConversationReadingService conversationReadingService)
         {
-            this.unreadCounterService = unreadCounterService;
-            this.identityProvider = identityProvider;
+            this.conversationReadingService = conversationReadingService;
         }
 
-        public UserActionsViewModel Build(string login)
+        public async Task<UserActionsViewModel> Build(string login)
         {
-            var userId = identityProvider.Current.User.UserId;
             return new UserActionsViewModel
             {
                 UserName = login,
-                UnreadDialoguesCount = unreadCounterService.SelectByParents(userId, UnreadEntryType.Message, userId)
-                    .Result[userId]
+                UnreadDialoguesCount = await conversationReadingService.GetTotalUnreadCount()
             };
         }
     }

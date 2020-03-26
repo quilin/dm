@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommunityControllers
 {
-    public class CommunityController : DmControllerBase
+    public class CommunityController : Controller
     {
         private readonly ICommunityViewModelBuilder communityViewModelBuilder;
 

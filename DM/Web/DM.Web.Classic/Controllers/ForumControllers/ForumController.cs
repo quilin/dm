@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace DM.Web.Classic.Controllers.ForumControllers
 {
-    public class ForumController : DmControllerBase
+    public class ForumController : Controller
     {
         private readonly IForumReadingService forumReadingService;
         private readonly ICommentaryReadingService commentaryReadingService;

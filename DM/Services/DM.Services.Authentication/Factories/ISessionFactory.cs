@@ -11,7 +11,8 @@ namespace DM.Services.Authentication.Factories
         /// Creates a session to be stored in DB
         /// </summary>
         /// <param name="persistent">Persistence flag</param>
+        /// <param name="invisible">Invisibility flag</param>
         /// <returns></returns>
-        Session Create(bool persistent);
+        Session Create(bool persistent, bool invisible);
     }
 }

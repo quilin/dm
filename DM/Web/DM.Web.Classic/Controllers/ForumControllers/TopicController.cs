@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace DM.Web.Classic.Controllers.ForumControllers
 {
-    public class TopicController : DmControllerBase
+    public class TopicController : Controller
     {
         private readonly ITopicViewModelBuilder topicViewModelBuilder;
         private readonly ITopicUpdatingService topicUpdatingService;

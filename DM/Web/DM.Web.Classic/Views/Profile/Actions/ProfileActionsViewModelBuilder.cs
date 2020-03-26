@@ -31,7 +31,7 @@ namespace DM.Web.Classic.Views.Profile.Actions
             return new ProfileActionsViewModel
             {
                 Login = user.Login,
-                // CanWriteMessages = intentionsManager.IsAllowed(UserIntention.WriteMessage, user),
+                CanWriteMessages = intentionManager.IsAllowed(UserIntention.WriteMessage, user),
                 // CanReportUser = intentionsManager.IsAllowed(UserIntention.Report, user),
                 // CanReport = intentionsManager.IsAllowed(CommonIntention.Report),
                 // CanViewStatistics = intentionsManager.IsAllowed(UserIntention.ViewStatistics, user),

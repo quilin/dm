@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommentariesControllers
 {
-    public class CommentariesController : DmControllerBase
+    public class CommentariesController : Controller
     {
         private readonly ICommentaryDeletingService commentaryDeletingService;
         private readonly ICommentaryReadingService commentaryReadingService;

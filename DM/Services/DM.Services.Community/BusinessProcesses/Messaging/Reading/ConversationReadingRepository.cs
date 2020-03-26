@@ -46,6 +46,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         public async Task<IEnumerable<Conversation>> Get(Guid userId, PagingData paging) =>
             await dbContext.Conversations
                 .Where(UserParticipates(userId))
+                .Where(c => c.LastMessageId.HasValue)
                 .OrderByDescending(c => c.LastMessage.CreateDate)
                 .Page(paging)
                 .ProjectTo<Conversation>(mapper.ConfigurationProvider)

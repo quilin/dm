@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommentariesControllers
 {
-    public class EditCommentaryController : DmControllerBase
+    public class EditCommentaryController : Controller
     {
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IEditCommentaryFormBuilder editCommentaryFormBuilder;

@@ -38,7 +38,7 @@ namespace DM.Services.Authentication.Tests
             userSetup = identity.Setup(i => i.User);
             sessionSetup = identity.Setup(i => i.Session);
             service = new AuthenticationService(null, cryptoService.Object,
-                authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object);
+                authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object, null);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace DM.Services.Authentication.Tests
             var newSessionId = Guid.NewGuid();
             var newSession = new Session {Id = newSessionId};
             var sessionToCreate = new DbSession{Id = sessionId};
-            sessionFactory.Setup(f => f.Create(false)).Returns(sessionToCreate);
+            sessionFactory.Setup(f => f.Create(false, false)).Returns(sessionToCreate);
             authenticationRepository
                 .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>()))
                 .ReturnsAsync(newSession);

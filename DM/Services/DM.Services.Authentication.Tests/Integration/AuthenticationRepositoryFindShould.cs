@@ -50,13 +50,13 @@ namespace DM.Services.Authentication.Tests.Integration
                             {
                                 Id = sessionId,
                                 ExpirationDate = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                                IsPersistent = false
+                                Persistent = false
                             },
                             new Session
                             {
                                 Id = Guid.NewGuid(),
                                 ExpirationDate = new DateTime(2019, 10, 15, 0, 0, 0, DateTimeKind.Utc),
-                                IsPersistent = true
+                                Persistent = true
                             }
                         }
                     },
@@ -69,7 +69,7 @@ namespace DM.Services.Authentication.Tests.Integration
                             {
                                 Id = Guid.NewGuid(),
                                 ExpirationDate = DateTime.Today,
-                                IsPersistent = false
+                                Persistent = false
                             }
                         }
                     }
@@ -81,7 +81,7 @@ namespace DM.Services.Authentication.Tests.Integration
             {
                 Id = sessionId,
                 ExpirationDate = new DateTimeOffset(new DateTime(2020, 1, 1), TimeSpan.Zero),
-                IsPersistent = false
+                Persistent = false
             });
             (await authenticationRepository.FindUserSession(Guid.NewGuid())).Should().BeNull();
         }
@@ -138,7 +138,7 @@ namespace DM.Services.Authentication.Tests.Integration
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = sessionId,
-                IsPersistent = true,
+                Persistent = true,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
             });
 
@@ -155,7 +155,7 @@ namespace DM.Services.Authentication.Tests.Integration
                     {
                         Id = sessionId,
                         ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc),
-                        IsPersistent = true
+                        Persistent = true
                     }
                 }
             });
@@ -163,7 +163,7 @@ namespace DM.Services.Authentication.Tests.Integration
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = Guid.NewGuid(),
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
             });
 
@@ -186,13 +186,13 @@ namespace DM.Services.Authentication.Tests.Integration
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = sessionId1,
-                IsPersistent = true,
+                Persistent = true,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
             });
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = sessionId2,
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
             });
 
@@ -215,13 +215,13 @@ namespace DM.Services.Authentication.Tests.Integration
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = Guid.NewGuid(),
-                IsPersistent = true,
+                Persistent = true,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
             });
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = Guid.NewGuid(),
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
             });
 
@@ -246,13 +246,13 @@ namespace DM.Services.Authentication.Tests.Integration
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = sessionId1,
-                IsPersistent = true,
+                Persistent = true,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
             });
             await authenticationRepository.AddSession(userId, new Session
             {
                 Id = sessionId2,
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
             });
 
@@ -268,13 +268,13 @@ namespace DM.Services.Authentication.Tests.Integration
                 new Session
                 {
                     Id = sessionId1,
-                    IsPersistent = true,
+                    Persistent = true,
                     ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 6, 14, 11, 0, 0), DateTimeKind.Utc)
                 },
                 new Session
                 {
                     Id = sessionId2,
-                    IsPersistent = false,
+                    Persistent = false,
                     ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
                 }
             });

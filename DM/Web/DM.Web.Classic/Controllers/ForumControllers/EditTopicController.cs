@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace DM.Web.Classic.Controllers.ForumControllers
 {
-    public class EditTopicController : DmControllerBase
+    public class EditTopicController : Controller
     {
         private readonly IEditTopicFormBuilder editTopicFormBuilder;
         private readonly ITopicUpdatingService topicUpdatingService;

@@ -30,7 +30,7 @@ namespace DM.Web.Classic.Authentication
                     HttpOnly = true,
                     IsEssential = true,
                     Secure = false,
-                    Expires = identity.Session.IsPersistent
+                    Expires = identity.Session.Persistent
                         ? identity.Session.ExpirationDate
                         : (DateTimeOffset?) null
                 });

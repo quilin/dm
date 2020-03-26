@@ -38,7 +38,7 @@ namespace DM.Services.Authentication.Tests
             var identityProvider = Mock<IIdentityProvider>();
             identityProvider.Setup(p => p.Current).Returns(Identity.Guest);
             service = new AuthenticationService(securityManager.Object, cryptoService.Object,
-                authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object);
+                authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object, null);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace DM.Services.Authentication.Tests
                 .Setup(m => m.ComparePasswords(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(true);
             sessionFactory
-                .Setup(f => f.Create(It.IsAny<bool>()))
+                .Setup(f => f.Create(It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(session);
             authenticationRepository
                 .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
@@ -165,7 +165,7 @@ namespace DM.Services.Authentication.Tests
             actual.Settings.Should().Be(userSettings);
             actual.AuthenticationToken.Should().Be("token");
             securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
-            sessionFactory.Verify(f => f.Create(true));
+            sessionFactory.Verify(f => f.Create(true, false));
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
             authenticationRepository.Verify(r => r.AddSession(userId, session), Times.Once);
         }
@@ -182,7 +182,7 @@ namespace DM.Services.Authentication.Tests
                 .Setup(r => r.FindUser(It.IsAny<Guid>()))
                 .ReturnsAsync(user);
             sessionFactory
-                .Setup(f => f.Create(It.IsAny<bool>()))
+                .Setup(f => f.Create(It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(session);
             authenticationRepository
                 .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))

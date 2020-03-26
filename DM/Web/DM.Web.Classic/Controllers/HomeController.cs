@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers
 {
-    public class HomeController : DmControllerBase
+    public class HomeController : Controller
     {
         private readonly IHomeViewModelBuilder homeViewModelBuilder;
         private readonly IAboutViewModelBuilder aboutViewModelBuilder;

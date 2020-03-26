@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommentariesControllers
 {
-    public class CreateCommentaryController : DmControllerBase
+    public class CreateCommentaryController : Controller
     {
         private readonly ICommentaryCreatingService commentaryCreatingService;
         private readonly ICommentaryReadingService commentaryReadingService;

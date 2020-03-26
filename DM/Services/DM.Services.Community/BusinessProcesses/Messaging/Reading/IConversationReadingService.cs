@@ -32,6 +32,12 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
         Task<Conversation> GetOrCreate(string login);
 
         /// <summary>
+        /// Count all unread conversations
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetTotalUnreadCount();
+
+        /// <summary>
         /// Mark all conversation messages as read
         /// </summary>
         /// <param name="conversationId">Conversation identifier</param>

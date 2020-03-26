@@ -8,6 +8,11 @@ namespace DM.Services.Community.Authorization
         /// <summary>
         /// Edit user details
         /// </summary>
-        Edit = 1
+        Edit = 1,
+
+        /// <summary>
+        /// Participate in dialogues with user
+        /// </summary>
+        WriteMessage = 2
     }
 }

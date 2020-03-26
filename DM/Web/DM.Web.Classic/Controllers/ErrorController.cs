@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers
 {
-    public class ErrorController : DmControllerBase
+    public class ErrorController : Controller
     {
         private readonly IErrorViewModelBuilder errorViewModelBuilder;
 

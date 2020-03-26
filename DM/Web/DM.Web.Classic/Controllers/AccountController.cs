@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Community.BusinessProcesses.Account.PasswordChange;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers
 {
-    public class AccountController : DmControllerBase
+    public class AccountController : Controller
     {
         private readonly IRegistrationService registrationService;
         private readonly IPasswordResetService passwordResetService;
@@ -71,9 +72,21 @@ namespace DM.Web.Classic.Controllers
                 Password = loginForm.Password,
                 RememberMe = !loginForm.DoNotRemember
             }, HttpContext);
-            return loggedIdentity.Error != AuthenticationError.NoError
-                ? AjaxFormError(loggedIdentity.Error)
-                : Content(loginForm.RedirectUrl);
+            return loggedIdentity.Error switch
+            {
+                AuthenticationError.NoError => Content(loginForm.RedirectUrl),
+                AuthenticationError.WrongLogin => BadRequest(new Dictionary<string, object>
+                    {[nameof(LoginForm.Login)] = "Такого пользователя нет"}),
+                AuthenticationError.WrongPassword => BadRequest(new Dictionary<string, object>
+                    {[nameof(LoginForm.Password)] = "Неправильный пароль"}),
+                AuthenticationError.Banned => BadRequest(new Dictionary<string, object>
+                    {[nameof(LoginForm.Login)] = "Учетная запись заблокирована в связи с нарушением правил сайта"}),
+                AuthenticationError.Inactive => BadRequest(new Dictionary<string, object>
+                    {[nameof(LoginForm.Login)] = "Учетная запись ещё не активирована. Проверьте свою почту!"}),
+                AuthenticationError.Removed => BadRequest(new Dictionary<string, object>
+                    {[nameof(LoginForm.Login)] = "Учетная запись удалена"}),
+                _ => BadRequest()
+            };
         }
 
         [HttpGet]

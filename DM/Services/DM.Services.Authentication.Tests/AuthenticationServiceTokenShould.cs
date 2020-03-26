@@ -34,7 +34,7 @@ namespace DM.Services.Authentication.Tests
             var identityProvider = Mock<IIdentityProvider>();
             service = new AuthenticationService(securityManager.Object, cryptoService.Object,
                 authenticationRepository.Object, sessionFactory.Object, dateTimeProvider.Object,
-                identityProvider.Object);
+                identityProvider.Object, null);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace DM.Services.Authentication.Tests
                 .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
                 .ReturnsAsync(new Session
                 {
-                    IsPersistent = false,
+                    Persistent = false,
                     ExpirationDate = new DateTime(2018, 06, 11, 9, 59, 59)
                 });
             authenticationRepository
@@ -138,7 +138,7 @@ namespace DM.Services.Authentication.Tests
             var session = new Session
             {
                 Id = sessionId,
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = new DateTime(2018, 06, 11, 10, 0, 0)
             };
             authenticationRepository
@@ -186,7 +186,7 @@ namespace DM.Services.Authentication.Tests
             var session = new Session
             {
                 Id = sessionId,
-                IsPersistent = false,
+                Persistent = false,
                 ExpirationDate = new DateTime(2019, 06, 11, 10, 0, 0)
             };
             authenticationRepository
@@ -230,7 +230,7 @@ namespace DM.Services.Authentication.Tests
             var session = new Session
             {
                 Id = sessionId,
-                IsPersistent = true
+                Persistent = true
             };
             authenticationRepository
                 .Setup(r => r.FindUser(It.IsAny<Guid>()))

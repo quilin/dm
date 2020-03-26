@@ -8,6 +8,8 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
+using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.RelationalStorage;
 using Newtonsoft.Json;
 using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
@@ -22,6 +24,7 @@ namespace DM.Services.Authentication.Implementation
         private readonly ISessionFactory sessionFactory;
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IIdentityProvider identityProvider;
+        private readonly IUpdateBuilderFactory updateBuilderFactory;
 
         private const string UserIdKey = "userId";
         private const string SessionIdKey = "sessionId";
@@ -33,7 +36,8 @@ namespace DM.Services.Authentication.Implementation
             IAuthenticationRepository repository,
             ISessionFactory sessionFactory,
             IDateTimeProvider dateTimeProvider,
-            IIdentityProvider identityProvider)
+            IIdentityProvider identityProvider,
+            IUpdateBuilderFactory updateBuilderFactory)
         {
             this.securityManager = securityManager;
             this.cryptoService = cryptoService;
@@ -41,6 +45,7 @@ namespace DM.Services.Authentication.Implementation
             this.sessionFactory = sessionFactory;
             this.dateTimeProvider = dateTimeProvider;
             this.identityProvider = identityProvider;
+            this.updateBuilderFactory = updateBuilderFactory;
         }
 
         /// <inheritdoc />
@@ -62,7 +67,7 @@ namespace DM.Services.Authentication.Implementation
                     return Identity.Fail(AuthenticationError.WrongPassword);
 
                 default:
-                    var session = sessionFactory.Create(persistent);
+                    var session = sessionFactory.Create(persistent, false);
                     var settings = await repository.FindUserSettings(user.UserId);
                     return await CreateAuthenticationResult(user, session, settings);
             }
@@ -101,7 +106,7 @@ namespace DM.Services.Authentication.Implementation
                 return Identity.Fail(AuthenticationError.SessionExpired);
             }
 
-            if (!session.IsPersistent &&
+            if (!session.Persistent &&
                 session.ExpirationDate < dateTimeProvider.Now)
             {
                 await repository.RemoveSession(userId, sessionId);
@@ -109,10 +114,19 @@ namespace DM.Services.Authentication.Implementation
             }
 
             var sessionRefreshDelta = TimeSpan.FromMinutes(20);
-            if (!session.IsPersistent &&
+            if (!session.Persistent &&
                 session.ExpirationDate < dateTimeProvider.Now + sessionRefreshDelta)
             {
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
+            }
+            
+            if (!session.Invisible && (
+                    !user.LastVisitDate.HasValue ||
+                    dateTimeProvider.Now - user.LastVisitDate.Value > TimeSpan.FromMinutes(1)))
+            {
+                var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
+                    .Field(u => u.LastVisitDate, dateTimeProvider.Now);
+                await repository.UpdateActivity(userUpdate);
             }
 
             return Identity.Success(user, session, settings, authToken);
@@ -122,7 +136,7 @@ namespace DM.Services.Authentication.Implementation
         public async Task<IIdentity> Authenticate(Guid userId)
         {
             var user = await repository.FindUser(userId);
-            var session = sessionFactory.Create(false);
+            var session = sessionFactory.Create(false, true);
             var settings = await repository.FindUserSettings(userId);
             return await CreateAuthenticationResult(user, session, settings);
         }
@@ -140,15 +154,8 @@ namespace DM.Services.Authentication.Implementation
         {
             var identity = identityProvider.Current;
             await repository.RemoveSessions(identity.User.UserId);
-            var session = sessionFactory.Create(false);
+            var session = sessionFactory.Create(false, false);
             return await CreateAuthenticationResult(identity.User, session, identity.Settings);
-        }
-
-        /// <inheritdoc />
-        public async Task<IIdentity> LogoutAll(Guid userId)
-        {
-            await repository.RemoveSessions(userId);
-            return await Authenticate(userId);
         }
 
         private async Task<IIdentity> CreateAuthenticationResult(

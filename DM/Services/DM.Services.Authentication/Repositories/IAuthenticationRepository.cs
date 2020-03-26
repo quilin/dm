@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
+using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.RelationalStorage;
 using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
+using Session = DM.Services.Authentication.Dto.Session;
 
 namespace DM.Services.Authentication.Repositories
 {
@@ -69,5 +72,12 @@ namespace DM.Services.Authentication.Repositories
         /// <param name="userId">Authenticated user id</param>
         /// <returns></returns>
         Task RemoveSessions(Guid userId);
+
+        /// <summary>
+        /// Update user last activity date
+        /// </summary>
+        /// <param name="userUpdate"></param>
+        /// <returns></returns>
+        Task UpdateActivity(IUpdateBuilder<User> userUpdate);
     }
 }

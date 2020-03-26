@@ -13,12 +13,12 @@
     @Html.HiddenFor(m => m.RedirectUrl, new Dictionary<string, object>{{"id", "RedirectAfterLogin"}})
     <div class="form-field-wrapper">
         @Html.TextBoxFor(m => m.Login, new {placeholder = "Логин"})
-        @Html.ValidationMessageFor(m => m.Login, null, new Dictionary<string, object>{{"class", "field-validation-error-next-line"}})
+        @Html.ValidationMessageFor(m => m.Login, null, new Dictionary<string, object>{{"style", "display:block;"}})
     </div>
     <div class="form-field-wrapper">
         @Html.PasswordFor(m => m.Password, new {placeholder = "Пароль"})
         @Html.ActionLink("Забыли пароль?", "RestorePassword", "Account", null, new Dictionary<string, object>{{"id", "RestorePasswordLink"}})
-        @Html.ValidationMessageFor(m => m.Password, null, new Dictionary<string, object>{{"class", "field-validation-error-next-line"}})
+        @Html.ValidationMessageFor(m => m.Password, null, new Dictionary<string, object>{{"style", "display:block;"}})
     </div>
     <div class="form-field-wrapper">
         <label>

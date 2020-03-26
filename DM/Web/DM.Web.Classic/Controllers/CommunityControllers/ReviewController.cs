@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.Classic.Controllers.CommunityControllers
 {
-    public class ReviewController : DmControllerBase
+    public class ReviewController : Controller
     {
         private readonly IReviewCreatingService creatingService;
         private readonly IReviewUpdatingService updatingService;

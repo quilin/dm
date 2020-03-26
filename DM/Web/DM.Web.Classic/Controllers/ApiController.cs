@@ -2,7 +2,7 @@
 
 namespace DM.Web.Classic.Controllers
 {
-    public class ApiController : DmControllerBase
+    public class ApiController : Controller
     {
         public IActionResult Index()
         {

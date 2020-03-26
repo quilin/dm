@@ -51,6 +51,10 @@ namespace DM.Web.Classic.Configuration
                 new Dictionary<string, object> {{"login", null}});
             routes.MapAction<ProfileController>("profile/settings", c => c.GetSettings());
             routes.MapAction<ProfileController>("profile/{login}", c => c.Index(null));
+            
+            routes.MapAction<ConversationsController>("dialogues/{entityNumber}", c => c.List(0), PagingDefaults);
+            routes.MapAction<ConversationsController>("messages/{login}", c => c.LastUnread(null));
+            routes.MapAction<ConversationsController>("messages/{login}/{entityNumber}", c => c.Index(null, 0));
 
             #endregion
 

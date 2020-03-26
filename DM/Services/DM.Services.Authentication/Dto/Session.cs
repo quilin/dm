@@ -15,7 +15,12 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Session persistence flag
         /// </summary>
-        public bool IsPersistent { get; set; }
+        public bool Persistent { get; set; }
+
+        /// <summary>
+        /// Session invisibility flag
+        /// </summary>
+        public bool Invisible { get; set; }
 
         /// <summary>
         /// Expiration date

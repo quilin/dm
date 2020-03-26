@@ -8,6 +8,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Services.DataAccess.RelationalStorage;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.UserSettings;
@@ -123,6 +124,13 @@ namespace DM.Services.Authentication.Repositories
                 Filter<UserSessions>().Eq(u => u.Id, userId),
                 Update<UserSessions>().Set(s => s.Sessions, new List<DbSession>()),
                 new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+        }
+
+        /// <inheritdoc />
+        public Task UpdateActivity(IUpdateBuilder<User> userUpdate)
+        {
+            userUpdate.AttachTo(dbContext);
+            return dbContext.SaveChangesAsync();
         }
     }
 }

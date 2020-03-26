@@ -11,6 +11,7 @@ namespace DM.Services.Community.Authorization
         public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target) => intention switch
         {
             UserIntention.Edit => (target.UserId == user.UserId),
+            UserIntention.WriteMessage => (target.UserId != user.UserId),
             _ => false
         };
     }

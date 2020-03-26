@@ -31,11 +31,12 @@ namespace DM.Services.Authentication.Tests
             createIdSetup.Returns(sessionId);
             currentMoment.Returns(new DateTimeOffset(2017, 12, 5, 0, 0, 0, TimeSpan.Zero));
 
-            var actual = sessionFactory.Create(true);
+            var actual = sessionFactory.Create(true, false);
             actual.Should().BeEquivalentTo(new Session
             {
                 Id = sessionId,
-                IsPersistent = true,
+                Persistent = true,
+                Invisible = false,
                 ExpirationDate = new DateTime(2018, 1, 5)
             });
         }
@@ -47,11 +48,12 @@ namespace DM.Services.Authentication.Tests
             createIdSetup.Returns(sessionId);
             currentMoment.Returns(new DateTimeOffset(2017, 7, 13, 0, 0, 0, TimeSpan.Zero));
 
-            var actual = sessionFactory.Create(false);
+            var actual = sessionFactory.Create(false, true);
             actual.Should().BeEquivalentTo(new Session
             {
                 Id = sessionId,
-                IsPersistent = false,
+                Persistent = false,
+                Invisible = true,
                 ExpirationDate = new DateTime(2017, 7, 14)
             });
         }

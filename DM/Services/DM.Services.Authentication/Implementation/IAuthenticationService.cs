@@ -43,12 +43,5 @@ namespace DM.Services.Authentication.Implementation
         /// </summary>
         /// <returns>Newly created authentication identity</returns>
         Task<IIdentity> LogoutAll();
-
-        /// <summary>
-        /// Logout from all devices and create new session
-        /// </summary>
-        /// <param name="userId">User identifier</param>
-        /// <returns></returns>
-        Task<IIdentity> LogoutAll(Guid userId);
     }
 }
