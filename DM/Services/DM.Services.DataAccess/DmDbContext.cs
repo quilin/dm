@@ -166,6 +166,11 @@ namespace DM.Services.DataAccess
         /// </summary>
         public DbSet<Message> Messages { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+
         #endregion
 
         #region Administration

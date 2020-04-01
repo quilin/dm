@@ -61,5 +61,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Administration
         /// </summary>
         [ForeignKey(nameof(EntityId))]
         public virtual Comment Comment { get; set; }
+
+        /// <summary>
+        /// Warning causation chat message
+        /// </summary>
+        [ForeignKey(nameof(EntityId))]
+        public virtual ChatMessage ChatMessage { get; set; }
     }
 }

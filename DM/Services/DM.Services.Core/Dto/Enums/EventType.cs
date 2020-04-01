@@ -30,6 +30,18 @@ namespace DM.Services.Core.Dto.Enums
         ActivatedUser = 2,
 
         /// <summary>
+        /// New message has been sent
+        /// </summary>
+        [EventRoutingKey("messaging.message.created")]
+        NewMessage = 11,
+
+        /// <summary>
+        /// New chat message has been sent
+        /// </summary>
+        [EventRoutingKey("chat.message.created")]
+        NewChatMessage = 31,
+
+        /// <summary>
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("forum.topic.created")]
@@ -50,8 +62,7 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// Topic has been liked
         /// </summary>
-        [EventRoutingKey("forum.topic.liked")]
-        LikedTopic = 104,
+        [EventRoutingKey("forum.topic.liked")] LikedTopic = 104,
 
         /// <summary>
         /// New commentary has been created on forum
@@ -236,20 +247,17 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// New room has been created
         /// </summary>
-        [EventRoutingKey("game.room.created")]
-        NewRoom = 381,
+        [EventRoutingKey("game.room.created")] NewRoom = 381,
 
         /// <summary>
         /// Room has been updated
         /// </summary>
-        [EventRoutingKey("game.room.updated")]
-        ChangedRoom = 382,
+        [EventRoutingKey("game.room.updated")] ChangedRoom = 382,
 
         /// <summary>
         /// Room has been deleted
         /// </summary>
-        [EventRoutingKey("game.room.deleted")]
-        DeletedRoom = 383,
+        [EventRoutingKey("game.room.deleted")] DeletedRoom = 383,
 
         /// <summary>
         /// New post pending has been created
@@ -266,25 +274,16 @@ namespace DM.Services.Core.Dto.Enums
         /// <summary>
         /// New game post has been created
         /// </summary>
-        [EventRoutingKey("game.post.created")]
-        NewPost = 401,
+        [EventRoutingKey("game.post.created")] NewPost = 401,
 
         /// <summary>
         /// Post has been changed
         /// </summary>
-        [EventRoutingKey("game.post.updated")]
-        ChangedPost = 402,
+        [EventRoutingKey("game.post.updated")] ChangedPost = 402,
 
         /// <summary>
         /// Post has been deleted
         /// </summary>
-        [EventRoutingKey("game.post.deleted")]
-        DeletedPost = 403,
-
-        /// <summary>
-        /// New message has been sent
-        /// </summary>
-        [EventRoutingKey("messaging.message.created")]
-        NewMessage = 601
+        [EventRoutingKey("game.post.deleted")] DeletedPost = 403,
     }
 }
