@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Chat.Creating;
+using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Middleware;
 using DM.Web.Classic.Views.Chat;
 using DM.Web.Classic.Views.Chat.CreateMessage;
@@ -19,11 +20,13 @@ namespace DM.Web.Classic.Controllers.CommunityControllers
             this.chatViewModelBuilder = chatViewModelBuilder;
             this.chatCreatingService = chatCreatingService;
         }
-        
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int skip = 0)
         {
-            var chatViewModel = await chatViewModelBuilder.Build();
-            return View(chatViewModel);
+            var chatViewModel = await chatViewModelBuilder.Build(skip);
+            return Request.IsAjaxRequest()
+                ? View("~/Views/Chat/ChatMessages.cshtml", chatViewModel)
+                : View(chatViewModel);
         }
 
         [HttpPost, ValidationRequired]

@@ -20,8 +20,7 @@ namespace DM.Web.Classic.Views.Chat
             ICreateChatMessageFormBuilder createChatMessageFormBuilder,
             IIntentionManager intentionManager,
             IChatReadingService chatService,
-            IChatMessageViewModelBuilder chatMessageViewModelBuilder
-        )
+            IChatMessageViewModelBuilder chatMessageViewModelBuilder)
         {
             this.createChatMessageFormBuilder = createChatMessageFormBuilder;
             this.intentionManager = intentionManager;
@@ -29,12 +28,11 @@ namespace DM.Web.Classic.Views.Chat
             this.chatMessageViewModelBuilder = chatMessageViewModelBuilder;
         }
 
-        public async Task<ChatViewModel> Build(int skip = 0, int size = 50)
+        public async Task<ChatViewModel> Build(int skip)
         {
             var (messages, paging) = await chatService.GetMessages(new PagingQuery
             {
-                Skip = skip,
-                Size = size
+                Skip = skip
             });
             var allMessages = messages.ToArray();
 
