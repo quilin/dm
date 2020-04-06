@@ -77,7 +77,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             }
 
             var topic = await repository.Update(changes);
-            await invokedEventPublisher.Publish(EventType.ChangedTopic, topic.Id);
+            await invokedEventPublisher.Publish(EventType.ChangedForumTopic, topic.Id);
 
             return topic;
         }

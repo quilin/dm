@@ -107,6 +107,24 @@ namespace DM.Services.DataAccess.Migrations
                     b.ToTable("Warnings");
                 });
 
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.ChatMessage", b =>
+                {
+                    b.Property<Guid>("ChatMessageId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("CreateDate");
+
+                    b.Property<string>("Text");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("ChatMessageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.Comment", b =>
                 {
                     b.Property<Guid>("CommentId")
@@ -803,6 +821,11 @@ namespace DM.Services.DataAccess.Migrations
 
             modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Administration.Warning", b =>
                 {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.ChatMessage", "ChatMessage")
+                        .WithMany("Warnings")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Common.Comment", "Comment")
                         .WithMany("Warnings")
                         .HasForeignKey("EntityId")
@@ -815,6 +838,14 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "User")
                         .WithMany("WarningsReceived")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DM.Services.DataAccess.BusinessObjects.Common.ChatMessage", b =>
+                {
+                    b.HasOne("DM.Services.DataAccess.BusinessObjects.Users.User", "Author")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -72,7 +72,7 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<HomeController>("rules", c => c.Rules());
             routes.MapAction<HomeController>("donate", c => c.Donate());
             routes.MapAction<HomeController>("api", c => c.Api());
-            routes.MapAction<ChatController>("fm", c => c.Index());
+            routes.MapAction<ChatController>("fm", c => c.Index(0));
 
             routes.MapRoute(
                 name: "default_route",

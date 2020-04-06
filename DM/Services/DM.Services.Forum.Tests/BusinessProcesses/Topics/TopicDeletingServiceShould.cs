@@ -121,7 +121,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             await service.DeleteTopic(topicId);
 
-            publisher.Verify(p => p.Publish(EventType.DeletedTopic, topicId), Times.Once);
+            publisher.Verify(p => p.Publish(EventType.DeletedForumTopic, topicId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

@@ -4,7 +4,9 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
+using DM.Services.Core.Implementation;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.MongoIntegration;
@@ -99,13 +101,13 @@ namespace DM.Services.Search.Consumer
                 ExchangeName = InvokedEventsTransport.ExchangeName,
                 RoutingKeys = new[]
                 {
-                    "forum.comment.changed",
-                    "forum.comment.created",
-                    "forum.comment.deleted",
-                    "forum.topic.changed",
-                    "forum.topic.created",
-                    "forum.topic.deleted"
-                },
+                    EventType.NewForumComment,
+                    EventType.ChangedForumComment,
+                    EventType.DeletedForumComment,
+                    EventType.NewForumTopic,
+                    EventType.ChangedForumTopic,
+                    EventType.DeletedForumTopic,
+                }.ToRoutingKeys(),
                 QueueName = "dm.search-engine"
             };
             consumer.Consume(configuration);

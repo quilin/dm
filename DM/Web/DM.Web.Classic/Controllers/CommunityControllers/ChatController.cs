@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Chat.Creating;
 using DM.Web.Classic.Extensions.RequestExtensions;
@@ -21,11 +23,11 @@ namespace DM.Web.Classic.Controllers.CommunityControllers
             this.chatCreatingService = chatCreatingService;
         }
 
-        public async Task<IActionResult> Index(int skip = 0)
+        public async Task<IActionResult> Index(int skip)
         {
             var chatViewModel = await chatViewModelBuilder.Build(skip);
             return Request.IsAjaxRequest()
-                ? View("~/Views/Chat/ChatMessages.cshtml", chatViewModel)
+                ? View("ChatMessages", chatViewModel)
                 : View(chatViewModel);
         }
 
@@ -37,6 +39,14 @@ namespace DM.Web.Classic.Controllers.CommunityControllers
                 Text = form.Text
             });
             return NoContent();
+        }
+
+        public async Task<IActionResult> NewestChatEntries(DateTimeOffset fromDate)
+        {
+            var chatViewModel = await chatViewModelBuilder.Build(fromDate);
+            return chatViewModel.Messages.Any()
+                ? View("ChatMessages", chatViewModel)
+                : (IActionResult) new EmptyResult();
         }
     }
 }

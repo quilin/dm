@@ -19,7 +19,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
         }
         
         /// <inheritdoc />
-        protected override EventType EventType => EventType.DeletedTopic;
+        protected override EventType EventType => EventType.DeletedForumTopic;
 
         /// <inheritdoc />
         public override Task Index(InvokedEvent message)

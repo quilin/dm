@@ -27,12 +27,15 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Reading
         public async Task<(IEnumerable<ChatMessage> messages, PagingResult paging)> GetMessages(PagingQuery pagingQuery)
         {
             var totalCount = await repository.Count();
-            var pageSize = identityProvider.Current.Settings.Paging.MessagesPerPage;
+            var pageSize = identityProvider.Current.Settings.Paging.EntitiesPerPage;
             var pagingData = new PagingData(pagingQuery, pageSize, totalCount);
             var chatMessages = await repository.Get(pagingData);
 
             return (chatMessages, pagingData.Result);
         }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<ChatMessage>> GetNewMessages(DateTimeOffset since) => repository.Get(since);
 
         /// <inheritdoc />
         public async Task<ChatMessage> GetMessage(Guid id)

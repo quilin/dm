@@ -34,7 +34,17 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Reading
             .OrderByDescending(m => m.CreateDate)
             .Page(pagingData)
             .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
+            .OrderBy(m => m.CreateDate)
             .ToArrayAsync();
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<ChatMessage>> Get(DateTimeOffset since) =>
+            await dbContext.ChatMessages
+                .OrderByDescending(m => m.CreateDate)
+                .Where(m => m.CreateDate >= since)
+                .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
+                .OrderBy(m => m.CreateDate)
+                .ToArrayAsync();
 
         /// <inheritdoc />
         public async Task<ChatMessage> Get(Guid id) => await dbContext.ChatMessages

@@ -11,7 +11,7 @@
 <h1 class="content-pageTitle">@ViewBag.Title</h1>
 
 <div class="chat-wrapper" id="ChatContainer">
-    @if (Model.Messages.Any())
+    @if (Model.Messages.Any() && Model.HasMoreMessages)
     {
         <div style="text-align: center">
             <a href="#" id="ChatOlderEntriesLink">&uarr; Прочитать старые сообщения</a>
@@ -42,6 +42,7 @@ else
     <script>
         var chat = new DM.ChatControl({
             loadOlderEntriesUrl: "@Url.Action("Index", "Chat")",
+            loadNewestEntriesUrl: "@Url.Action("NewestChatEntries", "Chat")",
             createMessageFormId: "CreateForm"
         });
         DM.Ready();

@@ -74,7 +74,7 @@
             this._loadOlderEntriesLink.on("click.request", function(evt) {
                 evt.preventDefault();
                 _this.trigger("olderEntriesRequest", {
-                    startIndex: _this._container.find(".chat-message-wrapper").length
+                    skip: _this._container.find(".chat-message-wrapper").length
                 });
             });
         },

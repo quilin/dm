@@ -45,19 +45,19 @@ namespace DM.Services.Core.Dto.Enums
         /// New topic has been created
         /// </summary>
         [EventRoutingKey("forum.topic.created")]
-        NewTopic = 101,
+        NewForumTopic = 101,
 
         /// <summary>
         /// Topic text has been updated
         /// </summary>
         [EventRoutingKey("forum.topic.changed")]
-        ChangedTopic = 102,
+        ChangedForumTopic = 102,
 
         /// <summary>
         /// Topic has been deleted
         /// </summary>
         [EventRoutingKey("forum.topic.deleted")]
-        DeletedTopic = 103,
+        DeletedForumTopic = 103,
 
         /// <summary>
         /// Topic has been liked

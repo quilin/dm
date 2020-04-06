@@ -30,10 +30,10 @@ namespace DM.Services.MessageQueuing.Tests
         {
             var entityId = Guid.NewGuid();
 
-            await publisherWrapper.Publish(EventType.ChangedTopic, entityId);
+            await publisherWrapper.Publish(EventType.ChangedForumTopic, entityId);
 
             publisher.Verify(p => p.Publish(
-                    It.Is<InvokedEvent>(e => e.EntityId == entityId && e.Type == EventType.ChangedTopic),
+                    It.Is<InvokedEvent>(e => e.EntityId == entityId && e.Type == EventType.ChangedForumTopic),
                     It.Is<MessagePublishConfiguration>(c => c.ExchangeName == "dm.events"),
                     "forum.topic.changed"),
                 Times.Once);

@@ -146,7 +146,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             await service.CreateTopic(createTopic);
 
-            publisher.Verify(p => p.Publish(EventType.NewTopic, forumTopicId), Times.Once);
+            publisher.Verify(p => p.Publish(EventType.NewForumTopic, forumTopicId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

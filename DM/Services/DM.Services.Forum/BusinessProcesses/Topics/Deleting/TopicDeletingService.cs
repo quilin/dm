@@ -48,7 +48,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
 
             await repository.Update(updateBuilderFactory.Create<ForumTopic>(topicId).Field(t => t.IsRemoved, true));
             await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message);
-            await invokedEventPublisher.Publish(EventType.DeletedTopic, topicId);
+            await invokedEventPublisher.Publish(EventType.DeletedForumTopic, topicId);
         }
     }
 }

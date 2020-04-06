@@ -58,7 +58,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             var topic = await repository.Create(topicToCreate);
 
             await Task.WhenAll(
-                invokedEventPublisher.Publish(EventType.NewTopic, topic.Id),
+                invokedEventPublisher.Publish(EventType.NewForumTopic, topic.Id),
                 unreadCountersRepository.Create(topic.Id, forum.Id, UnreadEntryType.Message));
 
             return topic;

@@ -24,6 +24,13 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Reading
         Task<IEnumerable<ChatMessage>> Get(PagingData pagingData);
 
         /// <summary>
+        /// Get new messages since given moment
+        /// </summary>
+        /// <param name="since"></param>
+        /// <returns></returns>
+        Task<IEnumerable<ChatMessage>> Get(DateTimeOffset since);
+
+        /// <summary>
         /// Get single chat message
         /// </summary>
         /// <param name="id"></param>

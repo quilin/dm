@@ -31,7 +31,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
         }
         
         /// <inheritdoc />
-        protected override EventType EventType => EventType.ChangedTopic;
+        protected override EventType EventType => EventType.ChangedForumTopic;
 
         /// <inheritdoc />
         public override async Task Index(InvokedEvent message)
