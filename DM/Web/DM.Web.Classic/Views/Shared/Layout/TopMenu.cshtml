@@ -11,4 +11,7 @@
         @IconFont.Render(IconType.Add) Новая игра
     </a>
 }
-@Html.ActionLink("API", "Api", "Home", null, new { @class = "topMenu-link" })
+<a href="@Url.Action("Index", "Search")" class="topMenu-link">
+    @IconFont.Render(IconType.Search) Поиск
+</a>
+@*@Html.ActionLink("API", "Api", "Home", null, new { @class = "topMenu-link" })*@

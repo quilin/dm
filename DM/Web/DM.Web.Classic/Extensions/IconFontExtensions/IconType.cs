@@ -5,6 +5,7 @@
         // common
         public const int Disc = 0xe001;
         public const int Tick = 0xe006;
+        public const int Search = 0xe009;
 
         // arrows
         public const int UpAngle = 0xe059;

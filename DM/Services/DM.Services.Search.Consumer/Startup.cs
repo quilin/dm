@@ -101,6 +101,7 @@ namespace DM.Services.Search.Consumer
                 ExchangeName = InvokedEventsTransport.ExchangeName,
                 RoutingKeys = new[]
                 {
+                    EventType.ActivatedUser,
                     EventType.NewForumComment,
                     EventType.ChangedForumComment,
                     EventType.DeletedForumComment,

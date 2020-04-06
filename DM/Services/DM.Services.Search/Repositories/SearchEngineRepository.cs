@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Dto;
@@ -24,24 +25,36 @@ namespace DM.Services.Search.Repositories
         private static readonly Fuzziness SearchFuzziness = Fuzziness.EditDistance(1);
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(string query, int skip, int take,
-            IEnumerable<UserRole> roles, Guid userId)
+        public async Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(
+            string query, SearchEntityType? searchEntityType,
+            PagingData pagingData, IEnumerable<UserRole> roles, Guid userId)
         {
             var searchResponse = await client.SearchAsync<SearchEntity>(s => s
                 .Source(sf => sf.Excludes(e => e.Fields(
                     f => f.AuthorizedRoles, f => f.AuthorizedUsers, f => f.UnauthorizedUsers)))
                 .Query(q =>
-                    (q.Match(mt => mt.Field(f => f.Text)
-                         .Query(query)
-                         .Fuzziness(SearchFuzziness)
-                         .Boost(1)) ||
-                     q.Match(mt => mt.Field(f => f.Title)
-                         .Query(query)
-                         .Fuzziness(SearchFuzziness)
-                         .Boost(3))) &&
-                    (q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles.Cast<int>()).Boost(0)) ||
-                     q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0)) ||
-                     !q.Terms(t => t.Field(f => f.UnauthorizedUsers).Terms(userId).Boost(0))))
+                {
+                    var querySearch =
+                        q.Match(mt => mt.Field(f => f.Text)
+                            .Query(query)
+                            .Fuzziness(SearchFuzziness)
+                            .Boost(1)) ||
+                        q.Match(mt => mt.Field(f => f.Title)
+                            .Query(query)
+                            .Fuzziness(SearchFuzziness)
+                            .Boost(3));
+                    if (searchEntityType.HasValue)
+                    {
+                        querySearch = querySearch && q.Term(f => f.EntityType, searchEntityType.Value);
+                    }
+
+                    var authorizeSearch =
+                        q.Terms(t => t.Field(f => f.AuthorizedRoles).Terms(roles.Cast<int>()).Boost(0)) ||
+                        q.Terms(t => t.Field(f => f.AuthorizedUsers).Terms(userId).Boost(0)) ||
+                        !q.Terms(t => t.Field(f => f.UnauthorizedUsers).Terms(userId).Boost(0));
+
+                    return querySearch && authorizeSearch;
+                })
                 .Sort(so => so.Descending(SortSpecialField.Score))
                 .Highlight(h => h
                     .Fields(
@@ -53,8 +66,8 @@ namespace DM.Services.Search.Repositories
                             .Field(ff => ff.Text)
                             .PreTags("<mark>")
                             .PostTags("</mark>")))
-                .From(skip)
-                .Size(take));
+                .From(pagingData.Skip)
+                .Size(pagingData.Take));
 
             return (searchResponse.Hits
                 .Select(h => new FoundEntity

@@ -1,0 +1,33 @@
+@model DM.Web.Classic.Views.Search.SearchViewModel
+@{
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
+    ViewBag.Title = "Поиск по сайту";
+}
+@section LeftColumn
+{
+    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+}
+
+<h1 class="content-pageTitle">@ViewBag.Title</h1>
+
+@await Html.PartialAsync("SearchForm", Model.Form)
+@if (Model.Results != null)
+{
+    if (Model.Results.Any())
+    {
+        foreach (var result in Model.Results)
+        {
+            @await Html.PartialAsync("SearchEntry", result)
+        }
+    }
+    else
+    {
+        @:Увы, по вашему запросу ничего не найдено
+    }
+ }
+
+@section FooterScript {
+    <script>
+        DM.Ready();
+    </script>
+}

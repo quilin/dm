@@ -8,7 +8,9 @@ namespace DM.Services.Search.Consumer
     {
         static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args)
+                .UseUrls("https://localhost:5002")
+                .Build().Run();
         }
         
         /// <summary>
