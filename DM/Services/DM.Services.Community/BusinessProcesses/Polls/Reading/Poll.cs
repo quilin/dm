@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.DataAccess.MongoIntegration;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace DM.Services.DataAccess.BusinessObjects.Fora
+namespace DM.Services.Community.BusinessProcesses.Polls.Reading
 {
     /// <summary>
-    /// DAL model for poll
+    /// DTO model for poll
     /// </summary>
-    [MongoCollectionName("Polls")]
     public class Poll
     {
         /// <summary>
@@ -17,21 +14,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Moment from
+        /// Start moment
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>
-        /// Moment to
+        /// End moment
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime EndDate { get; set; }
-
-        /// <summary>
-        /// Poll is global
-        /// </summary>
-        public bool Global { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         /// <summary>
         /// Question text
@@ -39,13 +29,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public string Title { get; set; }
 
         /// <summary>
-        /// Options
+        /// Answers list
         /// </summary>
         public IEnumerable<PollOption> Options { get; set; }
     }
 
     /// <summary>
-    /// DAL model for poll option
+    /// DTO model for poll answer option
     /// </summary>
     public class PollOption
     {
@@ -60,7 +50,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public string Text { get; set; }
 
         /// <summary>
-        /// Voted users identifiers
+        /// List of voted users
         /// </summary>
         public IEnumerable<Guid> UserIds { get; set; }
     }

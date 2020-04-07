@@ -1,4 +1,4 @@
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Reviews
 {
     /// <summary>
     /// List of review actions that require authorization

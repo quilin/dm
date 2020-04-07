@@ -15,10 +15,10 @@ namespace DM.Services.Search.BusinessProcesses
         /// Look through entities
         /// </summary>
         /// <param name="query">Search query</param>
-        /// <param name="type">Entity type</param>
+        /// <param name="types">Entity types</param>
         /// <param name="pagingQuery">Paging query</param>
         /// <returns></returns>
-        Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query, SearchEntityType? type,
-            PagingQuery pagingQuery);
+        Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query,
+            IEnumerable<SearchEntityType> types, PagingQuery pagingQuery);
     }
 }

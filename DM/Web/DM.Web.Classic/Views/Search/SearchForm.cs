@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.Classic.Views.Search
 {
@@ -8,6 +7,6 @@ namespace DM.Web.Classic.Views.Search
         [Required(ErrorMessage = "Введите что-нибудь")]
         public string Query { get; set; }
 
-        public SearchEntityType SearchEntityType { get; set; }
+        public SearchLocation Location { get; set; }
     }
 }

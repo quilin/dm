@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DM.Services.DataAccess.MongoIntegration;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace DM.Services.DataAccess.BusinessObjects.Fora
+namespace DM.Web.API.Dto.Community
 {
     /// <summary>
-    /// DAL model for poll
+    /// API model for poll
     /// </summary>
-    [MongoCollectionName("Polls")]
     public class Poll
     {
         /// <summary>
@@ -17,35 +14,23 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Moment from
+        /// End date
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset Ends { get; set; }
 
         /// <summary>
-        /// Moment to
-        /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-        public DateTime EndDate { get; set; }
-
-        /// <summary>
-        /// Poll is global
-        /// </summary>
-        public bool Global { get; set; }
-
-        /// <summary>
-        /// Question text
+        /// Poll question
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Options
+        /// Poll answer options
         /// </summary>
         public IEnumerable<PollOption> Options { get; set; }
     }
 
     /// <summary>
-    /// DAL model for poll option
+    /// API model for poll option
     /// </summary>
     public class PollOption
     {
@@ -60,8 +45,13 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         public string Text { get; set; }
 
         /// <summary>
-        /// Voted users identifiers
+        /// Votes given for the answer
         /// </summary>
-        public IEnumerable<Guid> UserIds { get; set; }
+        public int VotesCount { get; set; }
+
+        /// <summary>
+        /// Current user has voted for it
+        /// </summary>
+        public bool? Voted { get; set; }
     }
 }

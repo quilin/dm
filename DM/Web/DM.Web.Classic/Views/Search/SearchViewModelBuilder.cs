@@ -27,10 +27,16 @@ namespace DM.Web.Classic.Views.Search
 
         public async Task<SearchViewModel> Build(SearchForm searchForm, int entityNumber)
         {
-            var (results, _) = await searchService.Search(searchForm.Query,
-                searchForm.SearchEntityType == SearchEntityType.Unknown
-                    ? (SearchEntityType?) null
-                    : searchForm.SearchEntityType, new PagingQuery {Number = entityNumber});
+            var entityTypes = searchForm.Location switch
+            {
+                SearchLocation.Everywhere => Enumerable.Empty<SearchEntityType>(),
+                SearchLocation.Forum => new[] {SearchEntityType.Topic, SearchEntityType.ForumComment},
+                SearchLocation.Games => new[] {SearchEntityType.Game},
+                SearchLocation.Community => new[] {SearchEntityType.User}
+            };
+
+            var (results, _) = await searchService.Search(searchForm.Query, entityTypes,
+                new PagingQuery {Number = entityNumber});
             
             return new SearchViewModel
             {

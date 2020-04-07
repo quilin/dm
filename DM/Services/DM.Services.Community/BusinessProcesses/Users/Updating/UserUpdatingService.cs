@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;

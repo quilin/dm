@@ -1,4 +1,4 @@
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Users
 {
     /// <summary>
     /// List of user actions that require authorization

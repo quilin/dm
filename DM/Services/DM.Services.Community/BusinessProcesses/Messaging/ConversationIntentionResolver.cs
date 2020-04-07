@@ -3,7 +3,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Messaging
 {
     /// <inheritdoc />
     public class ConversationIntentionResolver : IIntentionResolver<ConversationIntention, Conversation>

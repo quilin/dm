@@ -25,9 +25,8 @@ namespace DM.Services.Search.Repositories
         private static readonly Fuzziness SearchFuzziness = Fuzziness.EditDistance(1);
 
         /// <inheritdoc />
-        public async Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(
-            string query, SearchEntityType? searchEntityType,
-            PagingData pagingData, IEnumerable<UserRole> roles, Guid userId)
+        public async Task<(IEnumerable<FoundEntity> entities, int totalCount)> Search(string query,
+            IEnumerable<SearchEntityType> types, PagingData pagingData, IEnumerable<UserRole> roles, Guid userId)
         {
             var searchResponse = await client.SearchAsync<SearchEntity>(s => s
                 .Source(sf => sf.Excludes(e => e.Fields(
@@ -43,9 +42,11 @@ namespace DM.Services.Search.Repositories
                             .Query(query)
                             .Fuzziness(SearchFuzziness)
                             .Boost(3));
-                    if (searchEntityType.HasValue)
+
+                    var searchEntityTypes = types as SearchEntityType[] ?? types.ToArray();
+                    if (searchEntityTypes.Any())
                     {
-                        querySearch = querySearch && q.Term(f => f.EntityType, searchEntityType.Value);
+                        querySearch = querySearch && q.Terms(t => t.Field(f => f.EntityType).Terms(searchEntityTypes));
                     }
 
                     var authorizeSearch =
@@ -78,7 +79,7 @@ namespace DM.Services.Search.Repositories
                         ? titleHit.Highlights.First()
                         : h.Source.Title,
                     FoundText = h.Highlights.TryGetValue(nameof(SearchEntity.Text).ToLower(), out var textHit)
-                        ? textHit.Highlights.First()
+                        ? string.Join("<br />", textHit.Highlights.Where(hl => !string.IsNullOrWhiteSpace(hl)))
                         : h.Source.Text
                 }), (int) searchResponse.Total);
         }

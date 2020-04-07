@@ -1,5 +1,5 @@
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
+using DM.Services.Community.BusinessProcesses.Reviews;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DM.Services.Core.Parsing;
 using DM.Web.Classic.Views.Shared.User;

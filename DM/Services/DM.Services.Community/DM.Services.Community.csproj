@@ -20,8 +20,4 @@
       <EmbeddedResource Include="Views\**\*.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="BusinessProcesses\Users" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,5 @@
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
+using DM.Services.Community.BusinessProcesses.Messaging;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Parsing;
 

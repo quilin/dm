@@ -2,7 +2,7 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Users
 {
     /// <inheritdoc />
     public class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>

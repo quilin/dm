@@ -27,14 +27,14 @@ namespace DM.Services.Search.BusinessProcesses
         
         /// <inheritdoc />
         public async Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query,
-            SearchEntityType? type, PagingQuery pagingQuery)
+            IEnumerable<SearchEntityType> types, PagingQuery pagingQuery)
         {
             var identity = identityProvider.Current;
             var pagingData = new PagingData(pagingQuery, identity.Settings.Paging.EntitiesPerPage, int.MaxValue);
             var userRoles = Enum.GetValues(typeof(UserRole)).Cast<UserRole>()
                 .Where(r => identity.User.Role.HasFlag(r));
             var (entities, totalCount) = await searchEngineRepository.Search(
-                query, type, pagingData, userRoles, identity.User.UserId);
+                query, types, pagingData, userRoles, identity.User.UserId);
             
             pagingData = new PagingData(pagingQuery, identity.Settings.Paging.EntitiesPerPage, totalCount);
             return (entities, pagingData.Result);

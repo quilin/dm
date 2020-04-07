@@ -1,7 +1,7 @@
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Chat
 {
     /// <inheritdoc />
     public class ChatIntentionResolver : IIntentionResolver<ChatIntention>

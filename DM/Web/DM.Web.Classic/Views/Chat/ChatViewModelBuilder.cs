@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
+using DM.Services.Community.BusinessProcesses.Chat;
 using DM.Services.Community.BusinessProcesses.Chat.Reading;
 using DM.Services.Core.Dto;
 using DM.Web.Classic.Views.Chat.CreateMessage;

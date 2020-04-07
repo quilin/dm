@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
-using DM.Services.Community.Authorization;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;

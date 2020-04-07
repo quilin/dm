@@ -3,7 +3,7 @@ using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DM.Services.Core.Dto.Enums;
 
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Reviews
 {
     /// <inheritdoc />
     public class ReviewIntentionResolver :

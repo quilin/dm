@@ -4,8 +4,7 @@
 
 @using (Html.BeginForm("Index", "Search", FormMethod.Post))
 {
-    @Html.TextBoxFor(m => m.Query, new {placeholder = "Что ищем?"})
-    @:и где: @Html.DropdownFor(x => x.SearchEntityType,
-                 wrapperHtmlAttributes: new Dictionary<string, object>{["class"] = "dds-select-inline"})
+    @Html.TextBoxFor(m => m.Query, new {placeholder = "Что ищем"})
+    @:и где: @Html.DropdownFor(x => x.Location)
     @Html.Submit("Найти")
 }

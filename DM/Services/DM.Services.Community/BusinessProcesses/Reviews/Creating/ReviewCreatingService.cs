@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using FluentValidation;
 

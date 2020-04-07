@@ -1,6 +1,6 @@
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
-using DM.Services.Community.Authorization;
+using DM.Services.Community.BusinessProcesses.Users;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;

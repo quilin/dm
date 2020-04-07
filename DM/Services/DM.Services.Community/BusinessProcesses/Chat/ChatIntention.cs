@@ -1,4 +1,4 @@
-namespace DM.Services.Community.Authorization
+namespace DM.Services.Community.BusinessProcesses.Chat
 {
     /// <summary>
     /// List of chat actions that requires authorization
