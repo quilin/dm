@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
@@ -9,7 +11,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls
     /// <inheritdoc />
     public class PollIntentionResolver :
         IIntentionResolver<PollIntention>,
-        IIntentionResolver<PollIntention, Poll>
+        IIntentionResolver<PollIntention, (Poll poll, Guid optionId)>
     {
         private readonly IDateTimeProvider dateTimeProvider;
 
@@ -19,7 +21,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls
         {
             this.dateTimeProvider = dateTimeProvider;
         }
-        
+
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, PollIntention intention) => intention switch
         {
@@ -28,10 +30,13 @@ namespace DM.Services.Community.BusinessProcesses.Polls
         };
 
         /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, PollIntention intention, Poll target) => intention switch
-        {
-            PollIntention.Vote => user.IsAuthenticated && target.EndDate > dateTimeProvider.Now,
-            _ => false
-        };
+        public bool IsAllowed(AuthenticatedUser user, PollIntention intention, (Poll poll, Guid optionId) target) =>
+            intention switch
+            {
+                PollIntention.Vote when user.IsAuthenticated =>
+                    target.poll.EndDate > dateTimeProvider.Now &&
+                    target.poll.Options.Any(o => o.Id == target.optionId),
+                _ => false
+            };
     }
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Polls.Creating;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
+using DM.Services.Community.BusinessProcesses.Polls.Voting;
 using DM.Web.API.Dto.Community;
 using DM.Web.API.Dto.Contracts;
 using Poll = DM.Web.API.Dto.Community.Poll;
@@ -15,16 +16,19 @@ namespace DM.Web.API.Services.Community
     {
         private readonly IPollReadingService readingService;
         private readonly IPollCreatingService creatingService;
+        private readonly IPollVotingService votingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public PollApiService(
             IPollReadingService readingService,
             IPollCreatingService creatingService,
+            IPollVotingService votingService,
             IMapper mapper)
         {
             this.readingService = readingService;
             this.creatingService = creatingService;
+            this.votingService = votingService;
             this.mapper = mapper;
         }
         
@@ -48,6 +52,13 @@ namespace DM.Web.API.Services.Community
             var createPoll = mapper.Map<CreatePoll>(poll);
             var createdPoll = await creatingService.Create(createPoll);
             return new Envelope<Poll>(mapper.Map<Poll>(createdPoll));
+        }
+
+        /// <inheritdoc />
+        public async Task<Envelope<Poll>> Vote(Guid pollId, Guid optionId)
+        {
+            var poll = await votingService.Vote(pollId, optionId);
+            return new Envelope<Poll>(mapper.Map<Poll>(poll));
         }
     }
 }

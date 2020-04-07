@@ -41,7 +41,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// <summary>
         /// Options
         /// </summary>
-        public IEnumerable<PollOption> Options { get; set; }
+        public List<PollOption> Options { get; set; }
     }
 
     /// <summary>
@@ -62,6 +62,6 @@ namespace DM.Services.DataAccess.BusinessObjects.Fora
         /// <summary>
         /// Voted users identifiers
         /// </summary>
-        public IEnumerable<Guid> UserIds { get; set; }
+        public List<Guid> UserIds { get; set; }
     }
 }

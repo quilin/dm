@@ -62,5 +62,23 @@ namespace DM.Web.API.Controllers.v1.Community
         [ProducesResponseType(typeof(Envelope<Poll>), 200)]
         [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> GetPoll(Guid id) => Ok(await apiService.Get(id));
+
+        /// <summary>
+        /// Vote for the poll option
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="optionId"></param>
+        /// <response code="200"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not authorized to vote for this poll</response>
+        /// <response code="410">Poll not found</response>
+        [HttpPut("{id}", Name = nameof(PutPollVote))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<Poll>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
+        public async Task<IActionResult> PutPollVote(Guid id, [FromQuery] Guid optionId) =>
+            Ok(await apiService.Vote(id, optionId));
     }
 }

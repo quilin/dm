@@ -30,5 +30,13 @@ namespace DM.Web.API.Services.Community
         /// <param name="poll"></param>
         /// <returns></returns>
         Task<Envelope<Poll>> Create(Poll poll);
+
+        /// <summary>
+        /// Vote for the poll option
+        /// </summary>
+        /// <param name="pollId">Poll identifier</param>
+        /// <param name="optionId">Option identifier</param>
+        /// <returns></returns>
+        Task<Envelope<Poll>> Vote(Guid pollId, Guid optionId);
     }
 }

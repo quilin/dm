@@ -31,12 +31,14 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating
                 EndDate = createPoll.EndDate.UtcDateTime,
                 Global = true,
                 Title = createPoll.Title,
-                Options = createPoll.Options.Select(o => new PollOption
-                {
-                    Id = guidFactory.Create(),
-                    Text = o,
-                    UserIds = new List<Guid>()
-                })
+                Options = createPoll.Options
+                    .Select(o => new PollOption
+                    {
+                        Id = guidFactory.Create(),
+                        Text = o,
+                        UserIds = new List<Guid>()
+                    })
+                    .ToList()
             };
         }
     }
