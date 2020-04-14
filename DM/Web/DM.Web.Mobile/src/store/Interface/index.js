@@ -8,8 +8,8 @@ export default {
     getInterfaceSidebarShow: state => state.interfaceSidebarShow,
   },
   actions: {
-    async setInterfaceSidebarShow({commit}, {status}) {
-      commit(types.INTERFACE_SIDEBAR_SHOW_SET, {status});
+    setInterfaceSidebarShow({commit}, displaySidebar) {
+      commit(types.INTERFACE_SIDEBAR_SHOW_SET, displaySidebar);
     }
   },
   mutations: {

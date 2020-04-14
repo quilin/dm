@@ -35,7 +35,6 @@
     },
     methods: {
       fetch() {
-        this.$store.dispatch('setInterfaceSidebarShow', {status: false});
       },
     },
   }
