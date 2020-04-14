@@ -11,16 +11,33 @@
         <router-view name="footer"/>
       </div>
     </div>
-    <div class="sidebar">
+    <div class="sidebar" v-show="sidebarShow.status">
       <router-view name="sidebar"/>
     </div>
-
   </div>
 </template>
 
 <script>
+  import {mapGetters} from "vuex";
+
   export default {
     name: 'app',
+    created() {
+      this.fetch()
+    },
+    computed: {
+      ...mapGetters({
+        sidebarShow: 'getInterfaceSidebarShow',
+      })
+    },
+    watch: {
+      $route: 'fetch'
+    },
+    methods: {
+      fetch() {
+        this.$store.dispatch('setInterfaceSidebarShow', {status: false});
+      },
+    },
   }
 </script>
 
@@ -103,6 +120,15 @@
         border-top: @color-basic 1px solid;
         text-align: center;
       }
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 3.2rem;
+      left: 1rem;
+      right: 0;
+      bottom: 3.2rem;
+      box-shadow: -1px -1px 5px 1px rgba(0, 0, 0, 0.7);
     }
   }
   .iconic {
