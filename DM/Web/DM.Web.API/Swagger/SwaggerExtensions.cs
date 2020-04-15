@@ -54,11 +54,11 @@ namespace DM.Web.API.Swagger
         public static void ConfigureUi(this SwaggerUIOptions options)
         {
             options.EnableValidator(null); // disable validator for encoded Guids
-            options.SwaggerEndpoint("/swagger/Account/swagger.json", "Account");
-            options.SwaggerEndpoint("/swagger/Common/swagger.json", "Common");
-            options.SwaggerEndpoint("/swagger/Forum/swagger.json", "Forum");
-            options.SwaggerEndpoint("/swagger/Game/swagger.json", "Game");
-            options.SwaggerEndpoint("/swagger/Community/swagger.json", "Community");
+            options.SwaggerEndpoint("swagger/Account/swagger.json", "Account");
+            options.SwaggerEndpoint("swagger/Common/swagger.json", "Common");
+            options.SwaggerEndpoint("swagger/Forum/swagger.json", "Forum");
+            options.SwaggerEndpoint("swagger/Game/swagger.json", "Game");
+            options.SwaggerEndpoint("swagger/Community/swagger.json", "Community");
 
             options.RoutePrefix = string.Empty;
             options.DocumentTitle = "DM.API";

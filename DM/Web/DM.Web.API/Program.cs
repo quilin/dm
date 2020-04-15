@@ -29,7 +29,6 @@ namespace DM.Web.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
-                .UseLibuv()
                 .UseSerilog()
                 .UseStartup<Startup>();
 
