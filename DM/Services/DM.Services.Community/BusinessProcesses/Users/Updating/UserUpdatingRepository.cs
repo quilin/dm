@@ -4,7 +4,6 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.DataAccess.RelationalStorage;
-using MongoDB.Driver;
 
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
 {
@@ -28,11 +27,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         {
             updateUser.AttachTo(dbContext);
             await dbContext.SaveChangesAsync();
-
-            var (id, updateSettings) = settingsUpdate.DefineUpdateTo(mongoClient);
-            await mongoClient.GetCollection<UserSettings>()
-                .UpdateOneAsync(Filter.Eq(u => u.Id, id), updateSettings,
-                    new UpdateOptions {IsUpsert = true});
+            await settingsUpdate.UpdateFor(mongoClient, true);
         }
     }
 }

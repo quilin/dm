@@ -90,8 +90,4 @@
       <_ContentIncludedByDefault Remove="Views\EditRoom\EditRoom.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\UploadControllers" />
-    </ItemGroup>
-
 </Project>

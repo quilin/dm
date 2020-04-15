@@ -67,10 +67,9 @@ namespace DM.Web.Classic.Views.Conversations
 
         public async Task<IEnumerable<MessageViewModel>> BuildList(string login, int entityNumber)
         {
-            var currentUserId = identityProvider.Current.User.UserId;
             var conversation = await conversationReadingService.GetOrCreate(login);
-            
-            var (messages, paging) = await messageReadingService.Get(conversation.Id,
+
+            var (messages, _) = await messageReadingService.Get(conversation.Id,
                 new PagingQuery {Number = entityNumber});
             var allMessages = messages.ToArray();
 

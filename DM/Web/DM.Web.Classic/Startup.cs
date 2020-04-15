@@ -73,7 +73,8 @@ namespace DM.Web.Classic
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
+                        options.UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))),
+                    ServiceLifetime.Transient);
 
             services
                 .AddRouting(options => options.LowercaseUrls = true)
