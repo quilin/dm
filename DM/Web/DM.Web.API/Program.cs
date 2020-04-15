@@ -30,6 +30,7 @@ namespace DM.Web.API
         {
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .UseKestrel(options => options.AllowSynchronousIO = true)
                 .UseStartup<Startup>();
 
             // For heroku deployment, where only available port is defined in runtime by the environment variable
