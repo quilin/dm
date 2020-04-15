@@ -58,7 +58,7 @@
 
             var _this = this;
             this._bindItem
-                .on("input", $.debounce(function () {
+                .on("input", $.throttle(function () {
                     this.value = this.value.replace(/^\s+/, "").replace(/\s+$/, "");
                     if (this.value.length > 0 && this.value !== _this._lastValue) {
                         _this._lastValue = this.value;
@@ -188,9 +188,9 @@
         },
         request: function (value) {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: this._url,
-                data: {value: value},
+                data: {query: value},
                 context: this,
                 beforeSend: this.handle("requestBegin"),
                 complete: this.handle("requestComplete"),

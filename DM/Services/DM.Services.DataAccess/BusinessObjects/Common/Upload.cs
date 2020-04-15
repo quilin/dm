@@ -39,7 +39,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         /// <summary>
         /// Path to download or view the file
         /// </summary>
-        public string VirtualPath { get; set; }
+        public string FilePath { get; set; }
 
         /// <summary>
         /// Display name for the file

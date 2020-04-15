@@ -1,16 +1,12 @@
 ﻿@using DM.Web.Classic.Extensions.IconFontExtensions
 @{
     ViewBag.Title = "Правила проекта | Dungeonmaster.ru";
-    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
 }
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
-}
-@section RightColumn
-{
-    @await Html.PartialAsync("Layout/GeneralRightColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
 }
 
 <h1 class="content-pageTitle">Правила проекта</h1>

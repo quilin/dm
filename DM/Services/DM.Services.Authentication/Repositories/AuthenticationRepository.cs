@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -118,12 +117,12 @@ namespace DM.Services.Authentication.Repositories
         }
 
         /// <inheritdoc />
-        public Task RemoveSessions(Guid userId)
+        public Task RemoveSessionsExcept(Guid userId, Guid sessionId)
         {
             return Collection<UserSessions>().FindOneAndUpdateAsync(
                 Filter<UserSessions>().Eq(u => u.Id, userId),
-                Update<UserSessions>().Set(s => s.Sessions, new List<DbSession>()),
-                new FindOneAndUpdateOptions<UserSessions> {IsUpsert = true});
+                Update<UserSessions>().PullFilter(s => s.Sessions, s => s.Id != sessionId),
+                new FindOneAndUpdateOptions<UserSessions>{IsUpsert =  true});
         }
 
         /// <inheritdoc />

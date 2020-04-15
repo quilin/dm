@@ -15,16 +15,6 @@ namespace DM.Services.Community.BusinessProcesses.Users.Reading
         public DateTimeOffset RegistrationDate { get; set; }
 
         /// <summary>
-        /// User real name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// User real location
-        /// </summary>
-        public string Location { get; set; }
-
-        /// <summary>
         /// User ICQ number
         /// </summary>
         public string Icq { get; set; }

@@ -13,10 +13,11 @@
                 {
                     <a href="@Url.Action("LogInAs", "Account", new RouteValueDictionary{{"userId", Model.UserId}})">@IconFont.Render(IconType.User)</a>
                 }
-            </div></div>
+            </div>
+        </div>
         <div class="communityG-col-9 communityG-span-4"><div class="communityG-contentWrapper">@Html.RatingLink(Model.User)</div></div>
         <div class="communityG-col-13 communityG-span-3"><div class="communityG-contentWrapper">@Model.User.IsOnline.PresenceFormat()</div></div>
-        <div class="communityG-col-16 communityG-span-9"><div class="communityG-contentWrapper">@Model.Name</div></div>
-        <div class="communityG-col-25 communityG-span-10"><div class="communityG-contentWrapper">@Model.Location</div></div>
+        <div class="communityG-col-16 communityG-span-9"><div class="communityG-contentWrapper">@Model.User.Name</div></div>
+        <div class="communityG-col-25 communityG-span-10"><div class="communityG-contentWrapper">@Model.User.Location</div></div>
     </div>
 </div>

@@ -67,11 +67,12 @@ namespace DM.Services.Authentication.Repositories
         Task<Session> AddSession(Guid userId, DbSession session);
 
         /// <summary>
-        /// Remove all sessions from the user
+        /// Remove all sessions from the user except one
         /// </summary>
         /// <param name="userId">Authenticated user id</param>
+        /// <param name="sessionId">Session id</param>
         /// <returns></returns>
-        Task RemoveSessions(Guid userId);
+        Task RemoveSessionsExcept(Guid userId, Guid sessionId);
 
         /// <summary>
         /// Update user last activity date

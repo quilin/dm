@@ -1,7 +1,7 @@
 using AutoMapper;
 using DbUpload = DM.Services.DataAccess.BusinessObjects.Common.Upload;
 
-namespace DM.Services.Common.Dto
+namespace DM.Services.Common.BusinessProcesses.Uploads
 {
     /// <summary>
     /// Profile for upload mapper
@@ -11,8 +11,7 @@ namespace DM.Services.Common.Dto
         /// <inheritdoc />
         public UploadProfile()
         {
-            CreateMap<DbUpload, Upload>()
-                .ForMember(d => d.Owner, c => c.MapFrom(d => d.Owner));
+            CreateMap<DbUpload, Upload>();
         }
     }
 }

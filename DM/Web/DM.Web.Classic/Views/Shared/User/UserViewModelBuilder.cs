@@ -19,6 +19,9 @@ namespace DM.Web.Classic.Views.Shared.User
             return new UserViewModel
             {
                 Login = user.Login,
+                Name = user.Name,
+                Location = user.Location,
+                Status = user.Status,
                 IsOnline = user.LastVisitDate.HasValue,
                 Rating = userRatingFactory.Create(user),
                 ProfilePictureUrl = user.PictureUrl,

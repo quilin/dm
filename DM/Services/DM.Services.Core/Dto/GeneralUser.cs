@@ -15,7 +15,7 @@ namespace DM.Services.Core.Dto
         public string Login { get; set; }
 
         /// <summary>
-        /// User email (for private usage only)
+        /// For internal usage only
         /// </summary>
         public string Email { get; set; }
 
@@ -34,9 +34,19 @@ namespace DM.Services.Core.Dto
         public string PictureUrl { get; set; }
 
         /// <summary>
-        /// User defined status
+        /// Status
         /// </summary>
         public string Status { get; set; }
+
+        /// <summary>
+        /// Name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Location
+        /// </summary>
+        public string Location { get; set; }
 
         /// <inheritdoc />
         public bool RatingDisabled { get; set; }

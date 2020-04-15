@@ -19,8 +19,8 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
             new Poll
             {
                 Id = p.Id,
-                StartDate = p.StartDate,
-                EndDate = p.EndDate,
+                StartDate = new DateTimeOffset(p.StartDate),
+                EndDate = new DateTimeOffset(p.EndDate),
                 Title = p.Title,
                 Options = p.Options.Select(o => new PollOption
                 {
@@ -38,7 +38,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
         /// <inheritdoc />
         public Task<long> Count(DateTimeOffset? activeUntil) =>
             Collection.CountDocumentsAsync(activeUntil.HasValue
-                ? Filter.Gte(p => p.EndDate, activeUntil.Value)
+                ? Filter.Gte(p => p.EndDate, activeUntil.Value.UtcDateTime)
                 : Filter.Empty);
 
         /// <inheritdoc />
@@ -46,7 +46,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
         {
             return await Collection
                 .Find(activeUntil.HasValue
-                    ? Filter.Gte(p => p.EndDate, activeUntil.Value)
+                    ? Filter.Gte(p => p.EndDate, activeUntil.Value.UtcDateTime)
                     : Filter.Empty)
                 .Skip(pagingData.Skip)
                 .Limit(pagingData.Take)

@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MongoDB.Driver;
 
 namespace DM.Services.DataAccess.RelationalStorage
@@ -45,11 +44,11 @@ namespace DM.Services.DataAccess.RelationalStorage
         }
 
         /// <inheritdoc />
-        public bool HasChanges() => toDelete || EnumerableExtensions.Any(efUpdateActions);
+        public bool HasChanges() => toDelete || efUpdateActions.Any();
 
         public IUpdateBuilder<TEntity> Delete()
         {
-            if (EnumerableExtensions.Any(efUpdateActions))
+            if (efUpdateActions.Any())
             {
                 throw new UpdateBuilderException("Builder is configured to update entity, you cannot delete it");
             }
@@ -78,7 +77,7 @@ namespace DM.Services.DataAccess.RelationalStorage
                 return id;
             }
 
-            if (!EnumerableExtensions.Any(efUpdateActions))
+            if (!efUpdateActions.Any())
             {
                 return id;
             }
@@ -119,7 +118,11 @@ namespace DM.Services.DataAccess.RelationalStorage
                     memberExpression = body;
                     break;
                 case UnaryExpression unary:
-                    memberExpression = (MemberExpression) unary.RemoveConvert();
+                    Expression expression = unary;
+                    do expression = ((UnaryExpression) expression).Operand;
+                    while (expression.NodeType == ExpressionType.Convert ||
+                           expression.NodeType == ExpressionType.ConvertChecked);
+                    memberExpression = (MemberExpression) expression;
                     break;
                 default:
                     return;

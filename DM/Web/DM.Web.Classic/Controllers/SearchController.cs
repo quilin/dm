@@ -1,4 +1,8 @@
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using DM.Services.Core.Exceptions;
+using DM.Web.Classic.Extensions.RequestExtensions;
 using DM.Web.Classic.Views.Search;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +17,23 @@ namespace DM.Web.Classic.Controllers
         {
             this.searchViewModelBuilder = searchViewModelBuilder;
         }
-        
-        public async Task<IActionResult> Index() => View(await searchViewModelBuilder.Build());
 
-        [HttpPost]
-        public async Task<IActionResult> Index(SearchForm searchForm, int entityNumber)
+        [HttpGet]
+        public async Task<IActionResult> Index(string query, SearchLocation location, int entityNumber)
         {
-            var searchViewModel = await searchViewModelBuilder.Build(searchForm, entityNumber);
-            return View(searchViewModel);
+            var searchViewModel = await searchViewModelBuilder.Build(query, location, entityNumber);
+            return Request.IsAjaxRequest()
+                ? (IActionResult) PartialView("SearchEntries", searchViewModel)
+                : View(searchViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserAutocomplete(string query)
+        {
+            var result = await searchViewModelBuilder.BuildAutocomplete(query);
+            return result.Any()
+                ? Ok(result)
+                : throw new HttpException(HttpStatusCode.NotFound, "Nothing found");
         }
     }
 }

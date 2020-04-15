@@ -55,6 +55,7 @@
 
       "wwwroot/js/BaseControls/DropdownMultiSelect/DropdownMultiSelect.js",
 
+      "wwwroot/js/BaseControls/Upload/FileUpload.js",
       "wwwroot/js/BaseControls/Upload/PictureUpload.js",
 
       "wwwroot/js/BaseControls/Paging/Paging.js",
@@ -118,8 +119,8 @@
       "wwwroot/components/Community/Community.js"
     ],
     "minify": {
-      "enabled": true,
-      "renameLocals": true
+      "enabled": false,
+      "renameLocals": false
     }
   }
 ]

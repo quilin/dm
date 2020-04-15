@@ -13,17 +13,17 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
         /// <summary>
         /// Count all
         /// </summary>
-        /// <param name="activeUntil"></param>
+        /// <param name="activeAt"></param>
         /// <returns></returns>
-        Task<long> Count(DateTimeOffset? activeUntil);
+        Task<long> Count(DateTimeOffset? activeAt);
 
         /// <summary>
         /// Get list of polls
         /// </summary>
-        /// <param name="activeUntil"></param>
+        /// <param name="activeAt"></param>
         /// <param name="pagingData"></param>
         /// <returns></returns>
-        Task<IEnumerable<Poll>> Get(DateTimeOffset? activeUntil, PagingData pagingData);
+        Task<IEnumerable<Poll>> Get(DateTimeOffset? activeAt, PagingData pagingData);
 
         /// <summary>
         /// Get single poll by id

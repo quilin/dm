@@ -30,11 +30,11 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
         /// <inheritdoc />
         public async Task<(IEnumerable<Poll> polls, PagingResult paging)> Get(PagingQuery pagingQuery, bool onlyActive)
         {
-            var activeUntil = onlyActive ? dateTimeProvider.Now : (DateTimeOffset?) null;
-            var totalCount = await repository.Count(activeUntil);
+            var activeAt = onlyActive ? dateTimeProvider.Now : (DateTimeOffset?) null;
+            var totalCount = await repository.Count(activeAt);
             var pageSize = identityProvider.Current.Settings.Paging.EntitiesPerPage;
             var pagingData = new PagingData(pagingQuery, pageSize, (int) totalCount);
-            var polls = await repository.Get(activeUntil, pagingData);
+            var polls = await repository.Get(activeAt, pagingData);
             return (polls, pagingData.Result);
         }
 

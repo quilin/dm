@@ -922,30 +922,6 @@ namespace DM.Services.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Uploads", x => x.UploadId);
                     table.ForeignKey(
-                        name: "FK_Uploads_Characters_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Characters",
-                        principalColumn: "CharacterId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Uploads_Games_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Games",
-                        principalColumn: "GameId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Uploads_Posts_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Posts",
-                        principalColumn: "PostId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Uploads_Users_EntityId",
-                        column: x => x.EntityId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Uploads_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",

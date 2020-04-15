@@ -8,7 +8,7 @@
 }
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/ForumLeftColumn", Model.ForumId)
+    @await Html.PartialAsync("Layout/LeftBar/ForumLeftColumn", Model.ForumId)
 }
 <h1 class="content-pageTitle">@ViewBag.Title</h1>
 @using (Html.BeginForm("Edit", "EditTopic", FormMethod.Post))

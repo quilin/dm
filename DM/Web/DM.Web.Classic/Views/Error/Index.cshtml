@@ -2,12 +2,12 @@
 
 @{
     Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
-    ViewBag.Title = string.Format("Ошибка {0}", Model.StatusCode);
+    ViewBag.Title = $"Ошибка {Model.StatusCode}";
 }
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
 }
 
 <h1 class="content-pageTitle">@ViewBag.Title</h1>

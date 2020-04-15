@@ -4,6 +4,7 @@ using DM.Web.Classic.Controllers;
 using DM.Web.Classic.Controllers.CommentariesControllers;
 using DM.Web.Classic.Controllers.CommunityControllers;
 using DM.Web.Classic.Controllers.ForumControllers;
+using DM.Web.Classic.Views.Search;
 using DM.Web.Core.Extensions.RouteExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -51,10 +52,13 @@ namespace DM.Web.Classic.Configuration
                 new Dictionary<string, object> {{"login", null}});
             routes.MapAction<ProfileController>("profile/settings", c => c.GetSettings());
             routes.MapAction<ProfileController>("profile/{login}", c => c.Index(null));
-            
+
             routes.MapAction<ConversationsController>("dialogues/{entityNumber}", c => c.List(0), PagingDefaults);
             routes.MapAction<ConversationsController>("messages/{login}", c => c.LastUnread(null));
             routes.MapAction<ConversationsController>("messages/{login}/{entityNumber}", c => c.Index(null, 0));
+
+            routes.MapAction<ChatController>("fm", c => c.Index(0));
+            routes.MapAction<PollsController>("polls", c => c.Index(0), PagingDefaults);
 
             #endregion
 
@@ -72,7 +76,10 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<HomeController>("rules", c => c.Rules());
             routes.MapAction<HomeController>("donate", c => c.Donate());
             routes.MapAction<HomeController>("api", c => c.Api());
-            routes.MapAction<ChatController>("fm", c => c.Index(0));
+
+            routes.MapAction<SearchController>("search", c =>
+                c.Index(null, SearchLocation.Everywhere, 0), PagingDefaults);
+            routes.MapAction<SearchController>("autocomplete/users", c => c.UserAutocomplete(null));
 
             routes.MapRoute(
                 name: "default_route",

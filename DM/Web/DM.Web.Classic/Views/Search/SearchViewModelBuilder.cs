@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
@@ -19,15 +20,9 @@ namespace DM.Web.Classic.Views.Search
             this.searchEntryViewModelBuilder = searchEntryViewModelBuilder;
         }
 
-        public Task<SearchViewModel> Build() => Task.FromResult(new SearchViewModel
+        public async Task<SearchViewModel> Build(string query, SearchLocation location, int entityNumber)
         {
-            Form = new SearchForm(),
-            Results = null
-        });
-
-        public async Task<SearchViewModel> Build(SearchForm searchForm, int entityNumber)
-        {
-            var entityTypes = searchForm.Location switch
+            var entityTypes = location switch
             {
                 SearchLocation.Everywhere => Enumerable.Empty<SearchEntityType>(),
                 SearchLocation.Forum => new[] {SearchEntityType.Topic, SearchEntityType.ForumComment},
@@ -35,14 +30,26 @@ namespace DM.Web.Classic.Views.Search
                 SearchLocation.Community => new[] {SearchEntityType.User}
             };
 
-            var (results, _) = await searchService.Search(searchForm.Query, entityTypes,
+            var (results, paging) = await searchService.Search(query, entityTypes,
                 new PagingQuery {Number = entityNumber});
-            
+
             return new SearchViewModel
             {
-                Form = searchForm,
-                Results = results.Select(searchEntryViewModelBuilder.Build)
+                Query = query,
+                Location = location,
+                Results = results.Select(searchEntryViewModelBuilder.Build),
+                Paging = paging
             };
+        }
+
+        public async Task<IDictionary<string, string>> BuildAutocomplete(string query)
+        {
+            var (results, _) = await searchService.Search(query, new[] {SearchEntityType.User}, new PagingQuery
+            {
+                Skip = 0,
+                Size = 5
+            });
+            return results.ToDictionary(r => r.OriginalTitle, r => r.OriginalTitle);
         }
     }
 }

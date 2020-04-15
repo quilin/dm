@@ -3,16 +3,12 @@
 @model DM.Web.Classic.Views.Home.HomeViewModel
 @{
     ViewBag.Title = "Форумные ролевые игры на Dungeonmaster";
-    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
 }
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
-}
-@section RightColumn
-{
-    @await Html.PartialAsync("Layout/GeneralRightColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
 }
 <div class="home-wrapper">
     @if (Model.News.Any())

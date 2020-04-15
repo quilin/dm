@@ -225,6 +225,10 @@
     line-height: 20px;
 }
 
+
+.poll-createLink {
+    float: right;
+}
 .poll-wrapper {
     margin: 10px 0;
 }

@@ -14,9 +14,7 @@ namespace DM.Web.Classic.ViewComponents
             this.identityProvider = identityProvider;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            return Content($"colorschema_{identityProvider.Current.Settings.ColorSchema.ToString().ToLower()}");
-        }
+        public Task<IViewComponentResult> InvokeAsync() => Task.FromResult((IViewComponentResult) Content(
+            $"colorschema_{identityProvider.Current.Settings.ColorSchema.ToString().ToLower()}"));
     }
 }

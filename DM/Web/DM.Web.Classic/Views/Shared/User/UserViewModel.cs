@@ -3,6 +3,9 @@
     public class UserViewModel
     {
         public string Login { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
+        public string Location { get; set; }
         public UserRating Rating { get; set; }
         public string ProfilePictureUrl { get; set; }
 

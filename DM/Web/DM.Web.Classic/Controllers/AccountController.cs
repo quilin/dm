@@ -57,7 +57,7 @@ namespace DM.Web.Classic.Controllers
                 Login = registrationForm.Login,
                 Password = registrationForm.Password
             });
-            return new EmptyResult();
+            return Ok();
         }
 
         [HttpGet]
@@ -139,7 +139,7 @@ namespace DM.Web.Classic.Controllers
 
         public async Task<IActionResult> LogOutElsewhere(string login)
         {
-            await webAuthenticationService.LogoutAll(HttpContext);
+            await webAuthenticationService.LogoutElsewhere(HttpContext);
             return Ok();
         }
     }

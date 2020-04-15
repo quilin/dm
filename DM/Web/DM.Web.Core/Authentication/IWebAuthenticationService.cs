@@ -30,6 +30,6 @@ namespace DM.Web.Core.Authentication
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <returns></returns>
-        Task<IIdentity> LogoutAll(HttpContext httpContext);
+        Task<IIdentity> LogoutElsewhere(HttpContext httpContext);
     }
 }

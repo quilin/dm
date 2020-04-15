@@ -42,6 +42,6 @@ namespace DM.Services.Authentication.Implementation
         /// Logout from all devices except this
         /// </summary>
         /// <returns>Newly created authentication identity</returns>
-        Task<IIdentity> LogoutAll();
+        Task<IIdentity> LogoutElsewhere();
     }
 }

@@ -19,10 +19,6 @@ namespace DM.Web.Classic.Views.Community.CommunityUser
             {
                 UserId = user.UserId,
                 User = userViewModelBuilder.Build(user),
-                // Name = user.Name,
-                // Location = user.Location,
-                // CanWriteMessage = intentionsManager.IsAllowed(UserIntention.WriteMessage, user as IUser),
-                // CanLogIn = intentionsManager.IsAllowed(CommonIntention.LogAsAnyUser),
                 Number = index
             };
         }

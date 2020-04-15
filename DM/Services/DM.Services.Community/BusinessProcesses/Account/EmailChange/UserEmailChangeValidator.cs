@@ -1,7 +1,6 @@
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Core.Exceptions;
-using DM.Services.Core.Implementation;
 using FluentValidation;
 
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
@@ -14,7 +13,6 @@ namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
         /// <inheritdoc />
         public UserEmailChangeValidator(
             IEmailChangeRepository repository,
-            IDateTimeProvider dateTimeProvider,
             ISecurityManager securityManager)
         {
             RuleFor(u => u.Login)

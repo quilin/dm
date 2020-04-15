@@ -150,12 +150,11 @@ namespace DM.Services.Authentication.Implementation
         }
 
         /// <inheritdoc />
-        public async Task<IIdentity> LogoutAll()
+        public async Task<IIdentity> LogoutElsewhere()
         {
             var identity = identityProvider.Current;
-            await repository.RemoveSessions(identity.User.UserId);
-            var session = sessionFactory.Create(false, false);
-            return await CreateAuthenticationResult(identity.User, session, identity.Settings);
+            await repository.RemoveSessionsExcept(identity.User.UserId, identity.Session.Id);
+            return identity;
         }
 
         private async Task<IIdentity> CreateAuthenticationResult(

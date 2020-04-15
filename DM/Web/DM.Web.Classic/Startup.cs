@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using DM.Services.Common.Configuration;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
@@ -22,6 +26,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DM.Web.Classic
 {
@@ -52,8 +57,8 @@ namespace DM.Web.Classic
                     Configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<IntegrationSettings>(
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
-                .Configure<EmailConfiguration>(
-                    Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<CdnConfiguration>(
+                    Configuration.GetSection(nameof(CdnConfiguration)).Bind)
                 .AddDmLogging("DM.Classic");
             var assemblies = GetAssemblies();
 
@@ -71,6 +76,7 @@ namespace DM.Web.Classic
                     options.UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
             services
+                .AddRouting(options => options.LowercaseUrls = true)
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -84,6 +90,22 @@ namespace DM.Web.Classic
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            builder.Register<IAmazonS3>(ctx =>
+                {
+                    var cdnConfiguration = ctx.Resolve<IOptions<CdnConfiguration>>().Value;
+                    var s3Client = new AmazonS3Client(
+                        new BasicAWSCredentials(cdnConfiguration.AccessKey, cdnConfiguration.SecretKey),
+                        new AmazonS3Config
+                        {
+                            ServiceURL = cdnConfiguration.Url,
+                            RegionEndpoint = RegionEndpoint.GetBySystemName(cdnConfiguration.Region)
+                        });
+                    return s3Client;
+                })
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .SingleInstance();
 
             builder.RegisterModuleOnce<MessageQueuingModule>();
             builder.RegisterModuleOnce<SearchEngineModule>();

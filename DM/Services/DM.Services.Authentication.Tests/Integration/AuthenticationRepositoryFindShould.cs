@@ -212,9 +212,10 @@ namespace DM.Services.Authentication.Tests.Integration
             var authenticationRepository = new AuthenticationRepository(null, mdb.Client, GetMapper());
             var userId = Guid.NewGuid();
 
+            var sessionId = Guid.NewGuid();
             await authenticationRepository.AddSession(userId, new Session
             {
-                Id = Guid.NewGuid(),
+                Id = sessionId,
                 Persistent = true,
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 1), DateTimeKind.Utc)
             });
@@ -225,13 +226,13 @@ namespace DM.Services.Authentication.Tests.Integration
                 ExpirationDate = DateTime.SpecifyKind(new DateTime(2019, 1, 2), DateTimeKind.Utc)
             });
 
-            await authenticationRepository.RemoveSessions(userId);
+            await authenticationRepository.RemoveSessionsExcept(userId, sessionId);
 
             var sessions = await mdb.Client.GetCollection<UserSessions>()
                 .Find(FilterDefinition<UserSessions>.Empty)
                 .ToListAsync();
             sessions.Should().HaveCount(1);
-            sessions[0].Sessions.Should().HaveCount(0);
+            sessions[0].Sessions.Should().HaveCount(1);
         }
 
         [Fact]

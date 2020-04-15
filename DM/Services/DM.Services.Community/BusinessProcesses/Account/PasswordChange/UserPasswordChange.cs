@@ -8,11 +8,6 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
     public class UserPasswordChange
     {
         /// <summary>
-        /// Login
-        /// </summary>
-        public string Login { get; set; }
-
-        /// <summary>
         /// Password reset token
         /// </summary>
         public Guid? Token { get; set; }

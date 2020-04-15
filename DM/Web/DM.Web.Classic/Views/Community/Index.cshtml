@@ -8,7 +8,7 @@
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
 }
 
 <h1 class="content-pageTitle">Сообщество</h1>
@@ -19,7 +19,7 @@
                 {"id", "SearchAutocomplete"},
                 {"class", "community-search-input"},
                 {"placeholder", "Введите имя пользователя..."},
-                {"data-url", Url.Action("SearchUser", "Search")}
+                {"data-url", Url.Action("UserAutocomplete", "Search")}
             })
 
 <div class="communityG-34">

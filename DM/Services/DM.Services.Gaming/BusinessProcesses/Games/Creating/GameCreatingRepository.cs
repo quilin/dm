@@ -31,10 +31,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         public async Task<GameExtended> Create(DbGame game, DbRoom room,
             IEnumerable<DbTag> tags)
         {
-            await Task.WhenAll(
-                dbContext.Games.AddAsync(game),
-                dbContext.Rooms.AddAsync(room),
-                dbContext.GameTags.AddRangeAsync(tags));
+            await dbContext.Games.AddAsync(game);
+            await dbContext.Rooms.AddAsync(room);
+            await dbContext.GameTags.AddRangeAsync(tags);
             await dbContext.SaveChangesAsync();
             return await dbContext.Games
                 .Where(g => g.GameId == game.GameId)

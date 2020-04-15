@@ -36,7 +36,6 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
-        private readonly Mock<ITopicReadingService> topicReadingService;
         private readonly Mock<IInvokedEventPublisher> invokedEventPublisher;
         private readonly Mock<IIntentionManager> intentionManager;
         private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
@@ -49,7 +48,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ValidationResult());
 
-            topicReadingService = Mock<ITopicReadingService>();
+            var topicReadingService = Mock<ITopicReadingService>();
             topicReadingSetup = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
             intentionManager = Mock<IIntentionManager>();

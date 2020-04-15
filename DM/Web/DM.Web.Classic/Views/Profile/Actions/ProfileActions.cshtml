@@ -35,13 +35,13 @@
     <div class="profile-action-success" id="CloseSessionsSuccessMessage">
         @IconFont.Render(IconType.Tick) Вы успешно вышли из своей учётной записи с других устройств!
     </div>
-    <a href="@Url.Action("EditEmail", "Profile")" class="profile-actions-link" id="ChangeEmailLink">
+    <a href="@Url.Action("EditEmail", "EditProfile")" class="profile-actions-link" id="ChangeEmailLink">
         @IconFont.Render(IconType.Edit, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Сменить E-mail
     </a>
     <div class="profile-action-success" id="EmailChangeSuccessMessage">
         @IconFont.Render(IconType.Tick) E-mail успешно изменен!
     </div>
-    <a href="@Url.Action("EditPassword", "Profile")" class="profile-actions-link" id="ChangePasswordLink">
+    <a href="@Url.Action("EditPassword", "EditProfile")" class="profile-actions-link" id="ChangePasswordLink">
         @IconFont.Render(IconType.Lock, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Сменить пароль
     </a>
     <div class="profile-action-success" id="PasswordChangeSuccessMessage">
@@ -60,23 +60,4 @@
         @IconFont.Render(IconType.User, new Dictionary<string, object> {{"class", "profile-actions-icon"}})
         Войти под юзером
     </a>
-}
-@if (Model.CanCompleteMerge)
-{
-    <a href="@Url.Action("CompleteMerge", "MergeProfile")" class="profile-actions-link" id="CompleteMergeLink">
-        @IconFont.Render(IconType.Sum, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Объединить профили
-    </a>
-    <div class="profile-action-success" id="CompleteMergeSuccessMessage">
-        @IconFont.Render(IconType.Tick) Профили успешно объединены!<br/>
-        <a href="@Url.Action("Index", new RouteValueDictionary{{"login", null}})">@IconFont.Render(IconType.Refresh) Обновите страницу</a>
-    </div>
-}
-else if (Model.CanInitiateMerge)
-{
-    <a href="@Url.Action("InitiateMerge", "MergeProfile")" class="profile-actions-link" id="InitiateMergeLink">
-        @IconFont.Render(IconType.Sum, new Dictionary<string, object> { { "class", "profile-actions-icon" } }) Объединить профили
-    </a>
-    <div class="profile-action-success" id="InitiateMergeSuccessMessage">
-        @IconFont.Render(IconType.Tick) Запрос на объединение профиля успешно отправлен!
-    </div>
 }

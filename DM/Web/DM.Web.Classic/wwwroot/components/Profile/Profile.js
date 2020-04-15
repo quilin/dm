@@ -2,7 +2,7 @@
     constructor: function (options, view, proxy, personalDataFieldControlFactory, profilePictureUploadControl) {
         this._view = view || new DM.ProfileControl.View(options);
         this._proxy = proxy || new DM.ProfileControl.Proxy(options);
-        this._profilePictureUploadControl = profilePictureUploadControl || new DM.PictureUploadControl(options);
+        this._profilePictureUploadControl = profilePictureUploadControl || new DM.PictureUploadControl({suffix: "profile"});
 
         this._personalDataFieldControlFactory = personalDataFieldControlFactory || new DM.ProfileControl.PersonalDataFieldControlFactory();
 

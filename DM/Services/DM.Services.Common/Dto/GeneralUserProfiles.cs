@@ -19,7 +19,7 @@ namespace DM.Services.Common.Dto
                     d => d.PictureUrl,
                     s => s.MapFrom(u => u.ProfilePictures
                         .Where(p => !p.IsRemoved)
-                        .Select(p => p.VirtualPath)
+                        .Select(p => p.FilePath)
                         .FirstOrDefault()));
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(d => d.AccessRestrictionPolicies, s => s.MapFrom(

@@ -70,7 +70,7 @@ namespace DM.Services.Authentication.Tests
             sessionSetup.Returns(session);
             identity.Setup(i => i.Settings).Returns(userSettings);
             authenticationRepository
-                .Setup(r => r.RemoveSessions(It.IsAny<Guid>()))
+                .Setup(r => r.RemoveSessionsExcept(It.IsAny<Guid>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
             cryptoService
                 .Setup(s => s.Encrypt(It.IsAny<string>()))
@@ -84,14 +84,9 @@ namespace DM.Services.Authentication.Tests
                 .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>()))
                 .ReturnsAsync(newSession);
 
-            var actual = await service.LogoutAll();
-            actual.Error.Should().Be(AuthenticationError.NoError);
-            actual.User.Should().Be(user);
-            actual.Session.Should().Be(newSession);
-            actual.Settings.Should().Be(userSettings);
-            actual.AuthenticationToken.Should().Be("token");
+            service.Invoking(async s => await s.LogoutElsewhere()).Should().NotThrow();
 
-            authenticationRepository.Verify(r => r.RemoveSessions(userId), Times.Once);
+            authenticationRepository.Verify(r => r.RemoveSessionsExcept(userId, sessionId), Times.Once);
             authenticationRepository.Verify(r => r.AddSession(userId, sessionToCreate), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();
         }

@@ -30,13 +30,19 @@ namespace DM.Services.Search.BusinessProcesses
             IEnumerable<SearchEntityType> types, PagingQuery pagingQuery)
         {
             var identity = identityProvider.Current;
-            var pagingData = new PagingData(pagingQuery, identity.Settings.Paging.EntitiesPerPage, int.MaxValue);
+            var pageSize = identity.Settings.Paging.EntitiesPerPage;
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return (Enumerable.Empty<FoundEntity>(), PagingResult.Empty(pageSize));
+            }
+        
+            var pagingData = new PagingData(pagingQuery, pageSize, int.MaxValue);
             var userRoles = Enum.GetValues(typeof(UserRole)).Cast<UserRole>()
                 .Where(r => identity.User.Role.HasFlag(r));
             var (entities, totalCount) = await searchEngineRepository.Search(
                 query, types, pagingData, userRoles, identity.User.UserId);
             
-            pagingData = new PagingData(pagingQuery, identity.Settings.Paging.EntitiesPerPage, totalCount);
+            pagingData = new PagingData(pagingQuery, pageSize, totalCount);
             return (entities, pagingData.Result);
         }
     }

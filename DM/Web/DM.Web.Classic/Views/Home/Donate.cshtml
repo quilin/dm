@@ -2,17 +2,12 @@
 @using Microsoft.AspNetCore.Routing
 @{
     ViewBag.Title = "Помощь проекту | Dungeonmaster.ru";
-    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
+    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
 }
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
-}
-
-@section RightColumn
-{
-    @await Html.PartialAsync("Layout/GeneralRightColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
 }
 
 <h1 class="content-pageTitle">Помощь проекту</h1>

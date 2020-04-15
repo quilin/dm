@@ -1,7 +1,7 @@
 using System;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Common.Dto
+namespace DM.Services.Common.BusinessProcesses.Uploads
 {
     /// <summary>
     /// DTO model for user upload
@@ -31,6 +31,6 @@ namespace DM.Services.Common.Dto
         /// <summary>
         /// Path to file in storage
         /// </summary>
-        public string VirtualPath { get; set; }
+        public string FilePath { get; set; }
     }
 }

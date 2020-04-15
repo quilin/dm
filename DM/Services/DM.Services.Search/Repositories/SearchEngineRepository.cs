@@ -41,7 +41,10 @@ namespace DM.Services.Search.Repositories
                         q.Match(mt => mt.Field(f => f.Title)
                             .Query(query)
                             .Fuzziness(SearchFuzziness)
-                            .Boost(3));
+                            .Boost(3)) ||
+                        q.Prefix(pr => pr.Field(f => f.Title)
+                            .Value(query)
+                            .Boost(2));
 
                     var searchEntityTypes = types as SearchEntityType[] ?? types.ToArray();
                     if (searchEntityTypes.Any())
@@ -78,6 +81,7 @@ namespace DM.Services.Search.Repositories
                     FoundTitle = h.Highlights.TryGetValue(nameof(SearchEntity.Title).ToLower(), out var titleHit)
                         ? titleHit.Highlights.First()
                         : h.Source.Title,
+                    OriginalTitle = h.Source.Title,
                     FoundText = h.Highlights.TryGetValue(nameof(SearchEntity.Text).ToLower(), out var textHit)
                         ? string.Join("<br />", textHit.Highlights.Where(hl => !string.IsNullOrWhiteSpace(hl)))
                         : h.Source.Text

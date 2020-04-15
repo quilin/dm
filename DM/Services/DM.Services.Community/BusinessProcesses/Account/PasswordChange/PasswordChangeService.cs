@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
@@ -14,6 +15,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
         private readonly IValidator<UserPasswordChange> validator;
         private readonly IPasswordChangeRepository repository;
         private readonly IAuthenticationService authenticationService;
+        private readonly IIdentityProvider identityProvider;
         private readonly ISecurityManager securityManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
 
@@ -23,11 +25,13 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
             ISecurityManager securityManager,
             IUpdateBuilderFactory updateBuilderFactory,
             IPasswordChangeRepository repository,
-            IAuthenticationService authenticationService)
+            IAuthenticationService authenticationService,
+            IIdentityProvider identityProvider)
         {
             this.validator = validator;
             this.repository = repository;
             this.authenticationService = authenticationService;
+            this.identityProvider = identityProvider;
             this.securityManager = securityManager;
             this.updateBuilderFactory = updateBuilderFactory;
         }
@@ -38,7 +42,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
             await validator.ValidateAndThrowAsync(passwordChange);
             var user = passwordChange.Token.HasValue
                 ? await repository.FindUser(passwordChange.Token.Value)
-                : await repository.FindUser(passwordChange.Login);
+                : identityProvider.Current.User;
 
             var (hash, salt) = securityManager.GeneratePassword(passwordChange.NewPassword);
             var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
@@ -49,7 +53,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
                 : null;
 
             await repository.UpdatePassword(userUpdate, tokenUpdate);
-            await authenticationService.LogoutAll();
+            await authenticationService.LogoutElsewhere();
 
             return user;
         }

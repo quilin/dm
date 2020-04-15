@@ -24,6 +24,11 @@ namespace DM.Services.Search.Dto
         public string FoundTitle { get; set; }
 
         /// <summary>
+        /// Original title
+        /// </summary>
+        public string OriginalTitle { get; set; }
+
+        /// <summary>
         /// Text with highlights
         /// </summary>
         public string FoundText { get; set; }

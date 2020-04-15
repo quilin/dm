@@ -24,6 +24,7 @@
 
 .profile-data {
     overflow: hidden;
+    max-width: 600px;
 }
 .profile-data-tabs {
     margin-bottom: 10px;

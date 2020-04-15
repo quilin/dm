@@ -1,6 +1,6 @@
 using System;
-using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.Security;
+using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
 using DM.Services.Core.Implementation;
 using FluentValidation;
@@ -10,12 +10,11 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
     /// <inheritdoc />
     public class UserPasswordChangeValidator : AbstractValidator<UserPasswordChange>
     {
-        private const string FoundUserKey = nameof(FoundUserKey);
-
         /// <inheritdoc />
         public UserPasswordChangeValidator(
             IPasswordChangeRepository passwordChangeRepository,
             IDateTimeProvider dateTimeProvider,
+            IIdentityProvider identityProvider,
             ISecurityManager securityManager)
         {
             When(c => c.Token.HasValue, () =>
@@ -30,26 +29,12 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
                         .WithMessage(ValidationError.Invalid))
                 .Otherwise(() =>
                 {
-                    RuleFor(c => c.Login)
-                        .NotEmpty().WithMessage(ValidationError.Empty)
-                        .MustAsync(async (model, login, context, _) =>
-                        {
-                            var user = await passwordChangeRepository.FindUser(login);
-                            if (user == null)
-                            {
-                                return false;
-                            }
-
-                            context.ParentContext.RootContextData[FoundUserKey] = user;
-                            return true;
-                        }).WithMessage(ValidationError.Invalid);
-
                     RuleFor(c => c.OldPassword)
                         .NotEmpty().WithMessage(ValidationError.Empty)
                         .Must((model, password, context) =>
-                            context.ParentContext.RootContextData.TryGetValue(FoundUserKey, out var userWrapper) &&
-                            userWrapper is AuthenticatedUser user &&
-                            securityManager.ComparePasswords(password, user.Salt, user.PasswordHash))
+                            identityProvider.Current.User.IsAuthenticated &&
+                            securityManager.ComparePasswords(password,
+                                identityProvider.Current.User.Salt, identityProvider.Current.User.PasswordHash))
                         .WithMessage(ValidationError.Invalid);
                 });
 

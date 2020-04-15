@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-        <LangVersion>8</LangVersion>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
 
@@ -13,7 +13,7 @@
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -88,6 +88,10 @@
       <_ContentIncludedByDefault Remove="Views\EditGame\EditGame.cshtml" />
       <_ContentIncludedByDefault Remove="Views\EditGameStatus\EditGameStatus.cshtml" />
       <_ContentIncludedByDefault Remove="Views\EditRoom\EditRoom.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\UploadControllers" />
     </ItemGroup>
 
 </Project>

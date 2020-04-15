@@ -58,14 +58,13 @@
     bottom: 10px;
     left: 10px;
     right: 10px;
-    border: 1px solid #888;
+    border: 1px solid #36a;
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.6);
 }
 .profile-picture-uploadForm-progressBar {
     height: 100%;
     background: #36a;
-    border-radius: 4px;
 }
 .profile-picture-uploadForm-progressBar-fileName {
     position: absolute;

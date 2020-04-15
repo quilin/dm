@@ -7,7 +7,7 @@
 
 @{
     ViewBag.Title = $"{Model.User.Login} | Личный кабинет";
-    Layout = "~/Views/Shared/Layout/_TwoColumnLayout.cshtml";
+    Layout = "~/Views/Shared/Layout/_ThreeColumnLayout.cshtml";
 
     var warningsClass = "";
 
@@ -23,7 +23,11 @@
 
 @section LeftColumn
 {
-    @await Html.PartialAsync("Layout/GeneralLeftColumn")
+    @await Html.PartialAsync("Layout/LeftBar/GeneralLeftColumn")
+}
+@section RightColumn
+{
+    
 }
 
 <h2 class="content-pageTitle">
@@ -34,11 +38,11 @@
 <div class="profile-mainInfo">
 
     <div class="js-picture-upload profile-picture">
-        <img class="profile-picture-image" id="Picture" data-default-url="@Url.Content("~/images/avatar_placeholder.jpg")"
+        <img class="profile-picture-image" id="Picture_profile" data-default-url="@Url.Content("~/images/avatar_placeholder.jpg")"
              src="@(Model.ProfilePictureUrl ?? Url.Content("~/images/avatar_placeholder.jpg"))" onerror="this.src = this.getAttribute('data-default-url')"/>
         @if (Model.CanEdit)
         {
-            @await Html.PartialAsync("~/Views/Profile/Upload/UploadForm.cshtml", Model.User.Login)
+            @await Html.PartialAsync("~/Views/Profile/Upload/UploadForm.cshtml", "profile")
             <a href="@Url.Action("RemovePicture", "ProfilePictureUpload")" class="picture-clear" id="PictureClearLink">@IconFont.Render(IconType.Close)</a>
         }
     </div>
@@ -158,11 +162,7 @@
 }
 @section FooterScript {
     <script>
-        var profile = new DM.ProfileControl({
-            getProgressUrl: "@Url.Action("Progress", "ProfilePictureUpload")",
-            getNewFormUrl:
-                "@Url.Action("GetForm", "ProfilePictureUpload", new RouteValueDictionary {{"login", Model.User.Login}})"
-        });
+        var profile = new DM.ProfileControl({});
         var roomCharactersControl = new DM.RoomCharactersControl();
         DM.Ready();
     </script>

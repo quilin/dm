@@ -50,5 +50,17 @@ namespace DM.Services.Core.Dto
                 EntityNumber = Math.Min(Math.Max(1, entityNumber), totalEntitiesCount)
             };
         }
+
+        /// <summary>
+        /// Empty paging result
+        /// </summary>
+        public static PagingResult Empty(int pageSize) => new PagingResult
+        {
+            TotalPagesCount = 0,
+            TotalEntitiesCount = 0,
+            CurrentPage = 1,
+            PageSize = pageSize,
+            EntityNumber = 0
+        };
     }
 }

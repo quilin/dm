@@ -19,7 +19,7 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.Id, s => s.MapFrom(c => c.CharacterId))
                 .ForMember(d => d.PictureUrl, s => s.MapFrom(c => c.Pictures
                     .Where(p => !p.IsRemoved)
-                    .Select(p => p.VirtualPath)
+                    .Select(p => p.FilePath)
                     .FirstOrDefault()));
 
             CreateMap<DbAttribute, CharacterAttribute>()

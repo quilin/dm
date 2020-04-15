@@ -66,7 +66,7 @@ namespace DM.Web.API.Services.Users
         public Task Logout(HttpContext httpContext) => authenticationService.Logout(httpContext);
 
         /// <inheritdoc />
-        public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutAll(httpContext);
+        public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutElsewhere(httpContext);
 
         /// <inheritdoc />
         public Task<Envelope<User>> GetCurrent() =>

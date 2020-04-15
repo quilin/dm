@@ -55,9 +55,9 @@ namespace DM.Web.Core.Authentication
         }
 
         /// <inheritdoc />
-        public async Task<IIdentity> LogoutAll(HttpContext httpContext)
+        public async Task<IIdentity> LogoutElsewhere(HttpContext httpContext)
         {
-            var identity = identitySetter.Current = await authenticationService.LogoutAll();
+            var identity = identitySetter.Current = await authenticationService.LogoutElsewhere();
             await TryLoadAuthenticationResult(httpContext, identity);
             return identity;
         }

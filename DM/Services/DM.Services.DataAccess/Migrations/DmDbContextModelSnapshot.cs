@@ -230,11 +230,11 @@ namespace DM.Services.DataAccess.Migrations
 
                     b.Property<string>("FileName");
 
+                    b.Property<string>("FilePath");
+
                     b.Property<bool>("IsRemoved");
 
                     b.Property<Guid>("UserId");
-
-                    b.Property<string>("VirtualPath");
 
                     b.HasKey("UploadId");
 

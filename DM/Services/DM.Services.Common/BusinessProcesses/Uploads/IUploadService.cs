@@ -1,18 +1,16 @@
 using System.Threading.Tasks;
-using DM.Services.Common.Dto;
 
 namespace DM.Services.Common.BusinessProcesses.Uploads
 {
     /// <summary>
-    /// Service for operating user uploads
+    /// Service for file uploads
     /// </summary>
     public interface IUploadService
     {
         /// <summary>
-        /// 
+        /// Upload new file
         /// </summary>
-        /// <param name="createUpload"></param>
         /// <returns></returns>
-        Task<Upload> Create(CreateUpload createUpload);
+        Task<Upload> Upload(CreateUpload createUpload);
     }
 }
