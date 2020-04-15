@@ -27,6 +27,7 @@ namespace DM.Web.API.Swagger
             options.SwaggerEndpoint("/swagger/Forum/swagger.json", "Forum");
             options.SwaggerEndpoint("/swagger/Game/swagger.json", "Game");
             options.SwaggerEndpoint("/swagger/Community/swagger.json", "Community");
+
             options.RoutePrefix = string.Empty;
             options.DocumentTitle = "DM.API";
         }

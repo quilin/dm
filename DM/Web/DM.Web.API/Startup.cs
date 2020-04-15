@@ -87,8 +87,6 @@ namespace DM.Web.API
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSignalR();
-
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
