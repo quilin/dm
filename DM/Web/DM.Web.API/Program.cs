@@ -29,8 +29,8 @@ namespace DM.Web.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var webHostBuilder = WebHost.CreateDefaultBuilder(args)
-                .UseLibuv()
                 .UseSerilog()
+                .UseKestrel(options => options.AllowSynchronousIO = true)
                 .UseStartup<Startup>();
 
             // For heroku deployment, where only available port is defined in runtime by the environment variable

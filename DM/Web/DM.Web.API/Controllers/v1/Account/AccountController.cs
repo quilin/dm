@@ -103,7 +103,7 @@ namespace DM.Web.API.Controllers.v1.Account
         /// <param name="changeEmail"></param>
         /// <response code="200">Email has been changed</response>
         /// <response code="400">Some account details were incorrect</response>
-        [HttpPut("password", Name = nameof(ChangeEmail))]
+        [HttpPut("email", Name = nameof(ChangeEmail))]
         [ProducesResponseType(typeof(Envelope<User>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmail changeEmail) =>

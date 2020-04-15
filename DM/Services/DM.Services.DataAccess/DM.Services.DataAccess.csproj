@@ -18,45 +18,4 @@
       <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <DocFileItem Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.xml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\DM.Services.DataAccess.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.pdb" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Native.DM.Services.DataAccess.manifest" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp2.2\DM.Services.DataAccess.application" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\DM.Services.DataAccess.pdb" />
-      <Clean Remove="obj\Debug\netcoreapp2.2\\TempCA\DM.Services.DataAccess.dll" />
-    </ItemGroup>
-
 </Project>

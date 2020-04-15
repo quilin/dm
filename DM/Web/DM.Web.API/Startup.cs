@@ -87,8 +87,6 @@ namespace DM.Web.API
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSignalR();
-
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.IsClass)
@@ -115,11 +113,11 @@ namespace DM.Web.API
         public void Configure(IApplicationBuilder appBuilder)
         {
             appBuilder
+                .UseSwagger(c => c.Configure())
+                .UseSwaggerUI(c => c.ConfigureUi())
                 .UseMiddleware<CorrelationMiddleware>()
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
-                .UseSwagger()
-                .UseSwaggerUI(c => c.ConfigureUi())
                 .UseCors(b => b
                     .WithExposedHeaders("X-Dm-Auth-Token")
                     .AllowAnyHeader()
