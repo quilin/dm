@@ -116,7 +116,7 @@ namespace DM.Web.API
                 .UseMiddleware<CorrelationMiddleware>()
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
-                .UseSwagger()
+                .UseSwagger(c => c.Configure())
                 .UseSwaggerUI(c => c.ConfigureUi())
                 .UseCors(b => b
                     .WithExposedHeaders("X-Dm-Auth-Token")
