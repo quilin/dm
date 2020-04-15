@@ -4,7 +4,7 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>preview</LangVersion>
         <AssemblyName>DM.Services.Gaming</AssemblyName>
         <RootNamespace>DM.Services.Gaming</RootNamespace>
     </PropertyGroup>
