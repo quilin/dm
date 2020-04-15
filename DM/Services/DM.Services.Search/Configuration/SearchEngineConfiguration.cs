@@ -9,10 +9,5 @@ namespace DM.Services.Search.Configuration
         /// Searchable entity index name
         /// </summary>
         public const string IndexName = "dm_search";
-
-        /// <summary>
-        /// Searchable entity type name
-        /// </summary>
-        public const string TypeName = "search_entity";
     }
 }

@@ -44,6 +44,7 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.Id, s => s.MapFrom(p => p.PendingPostId))
                 .ForMember(d => d.AwaitingUser, s => s.MapFrom(p => p.AwaitingUser))
                 .ForMember(d => d.PendingUser, s => s.MapFrom(p => p.PendingUser))
+                .ForMember(d => d.RoomId, s => s.MapFrom(p => p.RoomId))
                 .ForMember(d => d.WaitsSince, s => s.MapFrom(p => p.CreateDate));
         }
     }

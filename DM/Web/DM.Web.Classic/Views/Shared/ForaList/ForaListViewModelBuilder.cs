@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DM.Services.Forum.BusinessProcesses.Fora;
 
 namespace DM.Web.Classic.Views.Shared.ForaList
@@ -18,9 +19,9 @@ namespace DM.Web.Classic.Views.Shared.ForaList
             this.forumService = forumService;
         }
 
-        public ForaListViewModel Build(Guid? forumId)
+        public async Task<ForaListViewModel> Build(Guid? forumId)
         {
-            var forums = forumService.GetForaList().Result;
+            var forums = await forumService.GetForaList();
             return new ForaListViewModel
             {
                 Fora = forums.Select(f => foraListItemViewModelBuilder.Build(f, forumId)).ToArray()

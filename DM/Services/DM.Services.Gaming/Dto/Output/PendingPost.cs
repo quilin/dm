@@ -14,10 +14,15 @@ namespace DM.Services.Gaming.Dto.Output
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Room identifier
+        /// </summary>
+        public Guid RoomId { get; set; }
+
+        /// <summary>
         /// Who waits for the post
         /// </summary>
         public GeneralUser AwaitingUser { get; set; }
-        
+
         /// <summary>
         /// Who needs to write the post
         /// </summary>

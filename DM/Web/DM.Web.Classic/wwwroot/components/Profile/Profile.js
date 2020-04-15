@@ -103,7 +103,6 @@
                     $dropdown.removeClass("js-colorschema-dropdown");
                     var colorSchemaDropdown = $dropdown.dropdown(true);
                     colorSchemaDropdown.on("select", function (option) {
-                        console.log(option.data("value"));
                         $("html").attr("class", "colorschema_" + option.data("value").toLowerCase());
                     });
                 }

@@ -47,9 +47,9 @@ namespace DM.Services.Search.Consumer.Implementation
         public Task UpdateByParent(Guid parentEntityId, IEnumerable<UserRole> roles)
         {
             return client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
-                .Term(t => t
-                    .Field(f => f.ParentEntityId)
-                    .Value(parentEntityId)))
+                    .Term(t => t
+                        .Field(f => f.ParentEntityId)
+                        .Value(parentEntityId)))
                 .Script($"ctx._source.authorizedRoles = [{string.Join(",", roles.Cast<int>())}]"));
         }
 
@@ -65,12 +65,12 @@ namespace DM.Services.Search.Consumer.Implementation
 
         private async Task DeclareIndex()
         {
-            if ((await client.IndexExistsAsync(SearchEngineConfiguration.IndexName)).Exists)
+            if ((await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName)).Exists)
             {
                 return;
             }
 
-            await client.CreateIndexAsync(SearchEngineConfiguration.IndexName, i => i
+            await client.Indices.CreateAsync(SearchEngineConfiguration.IndexName, i => i
                 .Settings(s => s
                     .Analysis(a => a
                         .Analyzers(an => an
@@ -81,13 +81,13 @@ namespace DM.Services.Search.Consumer.Implementation
                             .Custom("dm_search_analyzer", ca => ca
                                 .Tokenizer("standard")
                                 .Filters("standard", "lowercase", "stop")))))
-                .Mappings(m => m.Map<SearchEntity>(mm => mm
+                .Map<SearchEntity>(m => m
                     .AutoMap()
                     .Properties(p => p
                         .Text(t => t
                             .Name(n => n.Text)
                             .Analyzer("dm_analyzer")
-                            .SearchAnalyzer("dm_search_analyzer"))))));
+                            .SearchAnalyzer("dm_search_analyzer")))));
         }
     }
 }

@@ -72,17 +72,21 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
             await unreadCountersRepository.FillEntityCounters(
                 games, currentUserId, g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
 
-            var gameRooms = await repository.GetAvailableRoomIds(games.Select(g => g.Id), currentUserId);
+            var gameIds = games.Select(g => g.Id).ToArray();
+            var gameRooms = await repository.GetAvailableRoomIds(gameIds, currentUserId);
             var allRoomIds = gameRooms.SelectMany(r => r.Value).ToArray();
             var unreadPostCounters = await unreadCountersRepository.SelectByEntities(
                 currentUserId, UnreadEntryType.Message, allRoomIds);
+
+            var pendingPosts = (await repository.GetPendingPosts(gameIds, currentUserId)).ToArray();
+
             foreach (var game in games)
             {
-                if (gameRooms.TryGetValue(game.Id, out var roomIds))
-                {
-                    game.UnreadPostsCount = roomIds.Sum(id =>
-                        unreadPostCounters.TryGetValue(id, out var count) ? count : 0);
-                }
+                if (!gameRooms.TryGetValue(game.Id, out var roomIds)) continue;
+                var gameRoomIds = roomIds.ToArray();
+                game.UnreadPostsCount = gameRoomIds.Sum(id =>
+                    unreadPostCounters.TryGetValue(id, out var count) ? count : 0);
+                game.Pendings = pendingPosts.Where(p => gameRoomIds.Contains(p.RoomId));
             }
 
             return games;

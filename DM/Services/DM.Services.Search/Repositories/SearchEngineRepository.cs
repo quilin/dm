@@ -78,12 +78,12 @@ namespace DM.Services.Search.Repositories
                 {
                     Id = h.Source.Id,
                     Type = h.Source.EntityType,
-                    FoundTitle = h.Highlights.TryGetValue(nameof(SearchEntity.Title).ToLower(), out var titleHit)
-                        ? titleHit.Highlights.First()
+                    FoundTitle = h.Highlight.TryGetValue(nameof(SearchEntity.Title).ToLower(), out var titleHits)
+                        ? titleHits.First()
                         : h.Source.Title,
                     OriginalTitle = h.Source.Title,
-                    FoundText = h.Highlights.TryGetValue(nameof(SearchEntity.Text).ToLower(), out var textHit)
-                        ? string.Join("<br />", textHit.Highlights.Where(hl => !string.IsNullOrWhiteSpace(hl)))
+                    FoundText = h.Highlight.TryGetValue(nameof(SearchEntity.Text).ToLower(), out var textHits)
+                        ? string.Join("<br />", textHits.Where(hl => !string.IsNullOrWhiteSpace(hl)))
                         : h.Source.Text
                 }), (int) searchResponse.Total);
         }

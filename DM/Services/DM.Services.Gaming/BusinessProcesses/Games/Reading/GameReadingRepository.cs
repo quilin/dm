@@ -78,6 +78,17 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<PendingPost>> GetPendingPosts(IEnumerable<Guid> gameIds, Guid userId)
+        {
+            return await dbContext.PendingPosts
+                .Where(p => p.PendingUser.UserId == userId)
+                .Where(p => gameIds.Contains(p.Room.GameId))
+                .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
+                .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+        }
+
+        /// <inheritdoc />
         public Task<GameExtended> GetGameDetails(Guid gameId, Guid userId)
         {
             return dbContext.Games

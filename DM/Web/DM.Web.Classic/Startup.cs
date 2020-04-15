@@ -77,7 +77,6 @@ namespace DM.Web.Classic
                     ServiceLifetime.Transient);
 
             services
-                .AddRouting(options => options.LowercaseUrls = true)
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

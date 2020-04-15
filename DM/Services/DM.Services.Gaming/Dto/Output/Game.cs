@@ -76,6 +76,11 @@ namespace DM.Services.Gaming.Dto.Output
         public IDictionary<Guid, Guid> BlacklistedUsers { get; set; }
 
         /// <summary>
+        /// Game pending posts
+        /// </summary>
+        public IEnumerable<PendingPost> Pendings { get; set; }
+
+        /// <summary>
         /// Game title
         /// </summary>
         public string Title { get; set; }

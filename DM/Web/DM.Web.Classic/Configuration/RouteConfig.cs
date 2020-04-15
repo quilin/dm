@@ -42,6 +42,9 @@ namespace DM.Web.Classic.Configuration
             routes.MapAction<TopicController>("removetopic", c => c.RemoveTopic(Guid.Empty));
             routes.MapAction<TopicController>("movetopic", c => c.MoveTopic(Guid.Empty, null));
 
+            routes.MapAction<CommentariesController>("comments/{entityId}/{entityNumber}",
+                c => c.Index(Guid.Empty, 0), PagingDefaults);
+
             #endregion
 
             #region CommunityRoutes

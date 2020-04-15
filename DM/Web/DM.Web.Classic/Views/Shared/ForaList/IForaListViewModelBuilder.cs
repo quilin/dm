@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DM.Web.Classic.Views.Shared.ForaList
 {
     public interface IForaListViewModelBuilder
     {
-        ForaListViewModel Build(Guid? forumId);
+        Task<ForaListViewModel> Build(Guid? forumId);
     }
 }

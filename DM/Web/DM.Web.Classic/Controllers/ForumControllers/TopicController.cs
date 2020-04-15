@@ -45,7 +45,7 @@ namespace DM.Web.Classic.Controllers.ForumControllers
         {
             topicIdEncoded.TryDecodeFromReadableGuid(out var topicId);
             var entityNumber = 1;
-            var (_, paging) = await commentaryReadingService.Get(topicId, new PagingQuery {Size = 0});
+            var (_, paging) = await commentaryReadingService.Get(topicId, PagingQuery.Empty);
             if (paging.TotalEntitiesCount > 0)
             {
                 var topic = await topicReadingService.GetTopic(topicId);

@@ -17,11 +17,8 @@ namespace DM.Web.Classic.ViewComponents.LeftBar
 
         public async Task<IViewComponentResult> InvokeAsync(Guid? forumId)
         {
-            return await Task.Run(() =>
-            {
-                var forumsListViewModel = foraListViewModelBuilder.Build(forumId);
-                return View("~/Views/Shared/ForaList/ForaList.cshtml", forumsListViewModel);
-            });
+            var forumsListViewModel = await foraListViewModelBuilder.Build(forumId);
+            return View("~/Views/Shared/ForaList/ForaList.cshtml", forumsListViewModel);
         }
     }
 }

@@ -46,7 +46,6 @@
             this._editLink.on("click.request", function (evt) {
                 evt.preventDefault();
                 var href = this.href;
-                console.log("Not implemented yet");
             });
         },
 

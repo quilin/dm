@@ -25,8 +25,7 @@ namespace DM.Services.Search
                     var connectionStrings = x.Resolve<IOptions<ConnectionStrings>>().Value;
                     return new ConnectionSettings(new Uri(connectionStrings.SearchEngine))
                         .DefaultMappingFor<SearchEntity>(m => m
-                            .IndexName(SearchEngineConfiguration.IndexName)
-                            .TypeName(SearchEngineConfiguration.TypeName));
+                            .IndexName(SearchEngineConfiguration.IndexName));
                 })
                 .SingleInstance();
             builder.Register(x => new ElasticClient(x.Resolve<ConnectionSettings>()))

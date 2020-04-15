@@ -43,6 +43,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         Task<IDictionary<Guid, IEnumerable<Guid>>> GetAvailableRoomIds(IEnumerable<Guid> gameIds, Guid userId);
 
         /// <summary>
+        /// Get game pending posts
+        /// </summary>
+        /// <param name="gameIds">Game identifiers</param>
+        /// <param name="userId">User identifier</param>
+        /// <returns></returns>
+        Task<IEnumerable<PendingPost>> GetPendingPosts(IEnumerable<Guid> gameIds, Guid userId);
+
+        /// <summary>
         /// Get single game model
         /// </summary>
         /// <param name="gameId">Game identifier</param>
