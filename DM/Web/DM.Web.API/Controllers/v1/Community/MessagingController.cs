@@ -129,12 +129,12 @@ namespace DM.Web.API.Controllers.v1.Community
         public async Task<IActionResult> GetMessage(Guid id) => Ok(await apiService.GetMessage(id));
 
         /// <summary>
-        /// Get single message
+        /// Delete single message
         /// </summary>
         /// <response code="200"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="410">Message not found</response>
-        [HttpGet("messages/{id}", Name = nameof(DeleteMessage))]
+        [HttpDelete("messages/{id}", Name = nameof(DeleteMessage))]
         [AuthenticationRequired]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(GeneralError), 401)]

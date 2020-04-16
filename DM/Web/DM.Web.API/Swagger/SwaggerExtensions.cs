@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DM.Web.API.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
@@ -18,17 +20,24 @@ namespace DM.Web.API.Swagger
     /// </summary>
     public static class SwaggerExtensions
     {
+        private static readonly IEnumerable<string> ApiGroups = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(ControllerBase)))
+            .Select(t => t.GetCustomAttribute<ApiExplorerSettingsAttribute>())
+            .Where(t => t != null && !t.IgnoreApi)
+            .Select(t => t.GroupName)
+            .Distinct();
+        
         /// <summary>
         /// Configure swagger gen
         /// </summary>
         /// <param name="options"></param>
         public static void ConfigureGen(this SwaggerGenOptions options)
         {
-            options.SwaggerDoc("Account", new OpenApiInfo {Title = "DM.API Account", Version = "v1"});
-            options.SwaggerDoc("Common", new OpenApiInfo {Title = "DM.API Common", Version = "v1"});
-            options.SwaggerDoc("Forum", new OpenApiInfo {Title = "DM.API Forum", Version = "v1"});
-            options.SwaggerDoc("Game", new OpenApiInfo {Title = "DM.API Game", Version = "v1"});
-            options.SwaggerDoc("Community", new OpenApiInfo {Title = "DM.API Community", Version = "v1"});
+            foreach (var apiGroup in ApiGroups)
+            {
+                options.SwaggerDoc(apiGroup, new OpenApiInfo {Title = $"DM.API {apiGroup}", Version = "v1"});
+            }
+
             options.OperationFilter<AuthenticationSwaggerFilter>();
 
             var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
@@ -53,12 +62,10 @@ namespace DM.Web.API.Swagger
         /// <param name="options"></param>
         public static void ConfigureUi(this SwaggerUIOptions options)
         {
-            options.EnableValidator(null); // disable validator for encoded Guids
-            options.SwaggerEndpoint("swagger/Account/swagger.json", "Account");
-            options.SwaggerEndpoint("swagger/Common/swagger.json", "Common");
-            options.SwaggerEndpoint("swagger/Forum/swagger.json", "Forum");
-            options.SwaggerEndpoint("swagger/Game/swagger.json", "Game");
-            options.SwaggerEndpoint("swagger/Community/swagger.json", "Community");
+            foreach (var apiGroup in ApiGroups)
+            {
+                options.SwaggerEndpoint($"swagger/{apiGroup}/swagger.json", apiGroup);
+            }
 
             options.RoutePrefix = string.Empty;
             options.DocumentTitle = "DM.API";

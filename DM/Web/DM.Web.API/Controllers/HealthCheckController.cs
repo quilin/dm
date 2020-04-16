@@ -4,7 +4,7 @@ namespace DM.Web.API.Controllers
 {
     /// <inheritdoc />
     [ApiExplorerSettings(GroupName = "Service", IgnoreApi = true)]
-    public class HealthCheckController : Controller
+    public class HealthCheckController : ControllerBase
     {
         /// <summary>
         /// Health check
