@@ -1,0 +1,35 @@
+@font-face
+  font-family PT Sans, sans-serif
+  src url('//fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic&subset=latin,cyrillic')
+
+@font-face
+  font-family Iconic
+  src url('~@/assets/DM-eco-webfont-clean.otf')
+  font-weight normal
+  font-style normal
+
+icon()
+  font-family Iconic !important
+  font-weight normal !important
+  -webkit-font-smoothing antialiased
+  user-select none
+
+pageTitle()
+  margin $medium 0 $small
+  font-size $titleFontSize
+  theme(color, $highlightText)
+
+header()
+  margin $gridStep * 5 0 $gridStep
+  font-weight bold
+  text-transform uppercase
+  theme(color, $highlightText)
+
+minorTitle()
+  font-weight bold
+  theme(color, $secondaryText)
+
+secondary()
+  font-size $secondaryFontSize
+  font-weight normal
+  theme(color, $secondaryText)

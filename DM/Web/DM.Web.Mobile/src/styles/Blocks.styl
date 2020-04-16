@@ -1,0 +1,23 @@
+layoutNav(blockPosition, borderPosition)
+  position fixed
+  {blockPosition} 0
+  left 0
+  right 0
+  theme(background-color, $background)
+  height $layoutNav
+  border-{borderPosition} 1px solid
+  theme('border-%s-color' % borderPosition, $border)
+
+footerIcons()
+  display flex
+  align-items center
+  justify-content space-between
+  height $layoutNav
+  padding 0 $medium
+
+  a
+    theme(color, $text)
+    text-decoration none
+
+  .icon
+    font-size $big

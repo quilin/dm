@@ -1,0 +1,60 @@
+theme(attr, colorSet)
+  {attr}: colorSet.modern
+  #app.theme_contrast ^[0..-1]
+    {attr}: colorSet.contrast
+  #app.theme_classic ^[0..-1]
+    {attr}: colorSet.classic
+  #app.theme_pale ^[0..-1]
+    {attr}: colorSet.pale
+  #app.theme_night ^[0..-1]
+    {attr}: colorSet.night
+
+themeExtend(attr, value, set)
+  theme(attr, colorSet(value set.modern, value set.contrast, value set.classic, value set.pale, value set.night))
+
+colorSet(modern, contrast, classic, pale, night)
+  return {modern: modern, contrast: contrast, classic: classic, pale: pale, night: night}
+
+colorPair(day, night)
+  return {modern: day, contrast: day, classic: day, pale: day, night: night}
+
+/* COLOR THEMES                      Modern   Contrast Classic  Pale     Night */
+/// Texts
+$text =                     colorSet(#333,    #333,    #666,    #333,    #eaeaea)
+$secondaryText =            colorSet(#8a8a8a, #999,    #999,    #888,    #adadad)
+$commentText =              colorSet(#8b532b, #7b532b, #7b532b, #7b532b, #e89b65)
+$highlightText =            colorSet(#630,    #666,    #888,    #630,    #e89b65)
+
+/// Links
+$activeText =               colorSet(#3f78a8, #304060, #506080, #335a8c, #bac7a9)
+$activeHoverText =          colorSet(#a33,    #3f78a8, #3f78a8, #901717, #ffc73f)
+
+/// Functions
+$positiveText =             colorSet(#337b33, #363,    #008000, #337b33, #92b5e0)
+$negativeText =             colorSet(#900,    #933,    #933,    #901717, #ec6f5b)
+$negativeBorder =           colorSet(#b33,    #b33,    #b33,    #b33,    #b33)    // TBD
+
+/// Backgrounds
+$background =               colorSet(#fff,   #fff,     #fff,    #fff,    #222)
+$blockBackground =          colorSet(#fafafa, #edeceb, #edeceb, #ddd,    #333)
+$blockHighlightBackground = colorSet(#e9f0f9, #b0c4de, #b0c4de, #e8e8ee, #4a4a4a)
+$blockHoverBackground =     colorSet(#fafafa, #fafafa, #fafafa, #fafafa, #2c2c2c) // TBD
+$controlBackground =        colorSet(#eee,    #edeceb, #edeceb, #ddd,    #333)    // TBD
+$overlayBackground =        colorPair(rgba(0, 0, 0, 0.3), rgba(150, 150, 150, 0.3))
+
+/// Components
+$quoteBackground =          colorSet(#e8e8f2, #e6e6e5, #e6e6e5, #e8e8ee, #38353c)
+$quoteOutline =             colorSet(#c3c3d5, #b0c4de, #b0c4de, #c3c3d0, #a790c1)
+$spoilerBackground =        colorSet(#ffe,    #f5f5dc, #f5f5dc, #f2f1f0, #444)
+$anticipation =             colorSet(#900,    #630,    #963,    #901717, #ec6f5b)
+
+/// Buttons
+$buttonText =               colorSet(#fff,    #444,    #444,    #fff,    #fff)
+$buttonBackground =         colorSet(#36a,    #eaeaea, #eaeaea, #335a8c, #c76a28)
+$buttonHoverText =          colorSet(#000,    #eaeaea, #eaeaea, #000,    #222)
+$buttonHoverBackground =    colorSet(#a8cbff, #444,    #444,    #97c0f4, #ffd63f)
+$buttonDisabledText =       colorSet(#8a8a8a, #bbb,    #bbb,    #8a8a8a, #ccc)
+$buttonDisabledBackground = colorSet(#ddd,    #f8f8f8, #f8f8f8, #ddd,    #666)
+
+/// Borders and outlines
+$border =                   colorSet(#dfdfdf, #ccc,    #ccc,    #ccc,    #333) // TBD
