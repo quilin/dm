@@ -42,10 +42,10 @@ namespace DM.Web.API.Controllers.v1.Community
         /// <response code="403">User is not allowed to create chat messages</response>
         [HttpPost(Name = nameof(PostChatMessage))]
         [AuthenticationRequired]
-        [ProducesResponseType(typeof(Envelope<ChatController>), 201)]
-        [ProducesResponseType(typeof(Envelope<ChatController>), 400)]
-        [ProducesResponseType(typeof(Envelope<ChatController>), 401)]
-        [ProducesResponseType(typeof(Envelope<ChatController>), 403)]
+        [ProducesResponseType(typeof(Envelope<ChatMessage>), 201)]
+        [ProducesResponseType(typeof(Envelope<ChatMessage>), 400)]
+        [ProducesResponseType(typeof(Envelope<ChatMessage>), 401)]
+        [ProducesResponseType(typeof(Envelope<ChatMessage>), 403)]
         public async Task<IActionResult> PostChatMessage([FromBody] ChatMessage chatMessage)
         {
             var result = await chatApiService.CreateMessage(chatMessage);
