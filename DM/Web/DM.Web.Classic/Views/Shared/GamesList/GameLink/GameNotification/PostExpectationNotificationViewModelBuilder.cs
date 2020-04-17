@@ -14,19 +14,20 @@ namespace DM.Web.Classic.Views.Shared.GamesList.GameLink.GameNotification
             this.userViewModelBuilder = userViewModelBuilder;
         }
 
-        public PostExpectationNotificationViewModel Build(Game game) => new PostExpectationNotificationViewModel
-        {
-            RoomId = game.Pendings.OrderBy(p => p.WaitsSince).First().RoomId,
-            Authors = game.Pendings.Select(p => userViewModelBuilder.Build(p.AwaitingUser))
-        };
+        public PostExpectationNotificationViewModel Build(Game game) => game.Pendings?.Any() == true
+            ? new PostExpectationNotificationViewModel
+            {
+                RoomId = game.Pendings.OrderBy(p => p.WaitsSince).First().RoomId,
+                Authors = game.Pendings.Select(p => userViewModelBuilder.Build(p.AwaitingUser))
+            }
+            : null;
 
-        public PostExpectationNotificationViewModel Build(Room room)
-        {
-            return new PostExpectationNotificationViewModel
+        public PostExpectationNotificationViewModel Build(Room room) => room.Pendings?.Any() == true
+            ? new PostExpectationNotificationViewModel
             {
                 RoomId = room.Id,
                 Authors = room.Pendings.Select(p => userViewModelBuilder.Build(p.AwaitingUser))
-            };
-        }
+            }
+            : null;
     }
 }

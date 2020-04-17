@@ -4,6 +4,7 @@ using DM.Web.Classic.Controllers;
 using DM.Web.Classic.Controllers.CommentariesControllers;
 using DM.Web.Classic.Controllers.CommunityControllers;
 using DM.Web.Classic.Controllers.ForumControllers;
+using DM.Web.Classic.Controllers.GameControllers;
 using DM.Web.Classic.Views.Search;
 using DM.Web.Core.Extensions.RouteExtensions;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,16 @@ namespace DM.Web.Classic.Configuration
 
         public static void Register(IRouteBuilder routes)
         {
+            #region GameRoutes
+
+            routes.MapAction<GameController>("game/{gameId}", c => c.Index(Guid.Empty));
+            routes.MapAction<CreateGameController>("creategame", c => c.Create());
+
+            routes.MapAction<GameController>("observe/{gameId}", c => c.Observe(Guid.Empty));
+            routes.MapAction<GameController>("stopobserve/{gameId}", c => c.StopObserving(Guid.Empty));
+
+            #endregion
+        
             #region CommentariesRoutes
 
             routes.MapAction<CommentariesController>("comments/{entityId}/{entityNumber}", c => c.Index(Guid.Empty, 0));

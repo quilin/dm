@@ -32,6 +32,7 @@ export default class DmFooter extends Vue {
     bottom 0
     background url('~@/assets/footer_bg.gif') left bottom repeat-x
     theme(filter, colorPair(none, invert(87%)))
+    transition filter $animationTime
 
 .copyright
   position relative

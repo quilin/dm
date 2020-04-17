@@ -1,5 +1,6 @@
 import { ActionTree } from 'vuex';
 import forumApi from '@/api/requests/forumApi';
+import { Topic } from '@/api/models/forum';
 import ForumState from './forumState';
 import RootState from './../rootState';
 
@@ -9,8 +10,8 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateFora', resources);
   },
   async fetchNews({ commit }): Promise<void> {
-    const { resources } = await forumApi.getNews();
-    commit('updateNews', resources);
+    const { data } = await forumApi.getNews();
+    commit('updateNews', data!);
   },
 
   async fetchModerators({ commit }, { id }): Promise<void> {
@@ -38,7 +39,10 @@ const actions: ActionTree<ForumState, RootState> = {
     }
   },
   async createTopic({ commit }, { title, description }): Promise<void> {
-    const x = 10;
+    const { error, data } = await forumApi.postTopic({title, description} as Topic);
+    if (!error) {
+      console.log('created!');
+    }
   },
 
   async selectTopic({ commit }, { id }): Promise<void> {
@@ -54,7 +58,7 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateComments', null);
     const { data, error } = await forumApi.getComments(id, n);
     if (!error) {
-      commit('updateComments', data!.resources);
+      commit('updateComments', data!);
     }
   },
 };

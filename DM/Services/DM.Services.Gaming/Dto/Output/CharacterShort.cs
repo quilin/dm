@@ -20,6 +20,11 @@ namespace DM.Services.Gaming.Dto.Output
         public GeneralUser Author { get; set; }
 
         /// <summary>
+        /// Character status
+        /// </summary>
+        public CharacterStatus Status { get; set; }
+
+        /// <summary>
         /// Character name
         /// </summary>
         public string Name { get; set; }

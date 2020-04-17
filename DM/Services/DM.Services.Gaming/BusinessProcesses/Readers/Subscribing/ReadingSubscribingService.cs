@@ -38,7 +38,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
         public async Task<GeneralUser> Subscribe(Guid gameId)
         {
             intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
-            await gameReadingService.GetGame(gameId);
+            var game = await gameReadingService.GetGame(gameId);
+            intentionManager.ThrowIfForbidden(GameIntention.Subscribe, game);
 
             var identity = identityProvider.Current;
             var userId = identity.User.UserId;
@@ -56,7 +57,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
         public async Task Unsubscribe(Guid gameId)
         {
             intentionManager.ThrowIfForbidden(GameIntention.Subscribe);
-            await gameReadingService.GetGame(gameId);
+            var game = await gameReadingService.GetGame(gameId);
+            intentionManager.ThrowIfForbidden(GameIntention.Unsubscribe, game);
 
             var userId = identityProvider.Current.User.UserId;
             if (!await repository.HasSubscription(userId, gameId))

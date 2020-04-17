@@ -48,17 +48,21 @@ namespace DM.Services.Gaming.Authorization
             {
                 GameIntention.Read => (userIsHighAuthority || participation.HasFlag(GameParticipation.Authority) ||
                     !HiddenStates.Contains(target.Status)),
-                GameIntention.Edit when user.IsAuthenticated => (userIsHighAuthority ||
-                    participation.HasFlag(GameParticipation.Authority)),
+                GameIntention.Subscribe when user.IsAuthenticated => participation == GameParticipation.None,
+                GameIntention.Unsubscribe when user.IsAuthenticated => participation.HasFlag(GameParticipation.Reader),
+
+                GameIntention.Edit when user.IsAuthenticated => userIsHighAuthority ||
+                    participation.HasFlag(GameParticipation.Authority),
                 // only the master itself is allowed to remove the game
-                GameIntention.Delete when user.IsAuthenticated => (userIsHighAuthority ||
-                    user.UserId == target.Master.UserId),
+                GameIntention.Delete when user.IsAuthenticated => userIsHighAuthority ||
+                    user.UserId == target.Master.UserId,
+
                 GameIntention.SetStatusModeration when target.Status == GameStatus.RequiresModeration =>
-                (userIsHighAuthority || userIsNanny),
+                    userIsHighAuthority || userIsNanny,
                 GameIntention.SetStatusDraft when target.Status == GameStatus.Moderation => (userIsHighAuthority ||
                     participation.HasFlag(GameParticipation.Moderator)),
                 GameIntention.SetStatusRequirement when target.Status == GameStatus.Moderation =>
-                (userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator)),
+                    userIsHighAuthority || participation.HasFlag(GameParticipation.Moderator),
                 GameIntention.SetStatusDraft when target.Status == GameStatus.Requirement => participation.HasFlag(
                     GameParticipation.Authority),
                 GameIntention.SetStatusRequirement when target.Status == GameStatus.Draft => participation.HasFlag(
@@ -79,12 +83,13 @@ namespace DM.Services.Gaming.Authorization
                     GameParticipation.Authority),
                 GameIntention.SetStatusClosed when target.Status == GameStatus.Active => participation.HasFlag(
                     GameParticipation.Authority),
-                GameIntention.ReadComments => (target.CommentariesAccessMode != CommentariesAccessMode.Private ||
-                    target.Participation(user.UserId) != GameParticipation.None),
+                GameIntention.ReadComments => 
+                    target.CommentariesAccessMode != CommentariesAccessMode.Private ||
+                    target.Participation(user.UserId) != GameParticipation.None,
                 GameIntention.CreateComment when user.IsAuthenticated => (target.CommentariesAccessMode ==
                     CommentariesAccessMode.Public || target.Participation(user.UserId) != GameParticipation.None),
-                GameIntention.CreateCharacter when user.IsAuthenticated => (target.Status == GameStatus.Requirement ||
-                    target.Status == GameStatus.Active),
+                GameIntention.CreateCharacter when user.IsAuthenticated =>
+                    target.Status == GameStatus.Requirement || target.Status == GameStatus.Active,
                 _ => false
             };
         }

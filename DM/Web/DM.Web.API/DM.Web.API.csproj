@@ -36,4 +36,9 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Middleware\BbTextOptions\IBbOptionsProvider.cs" />
+      <Compile Remove="Middleware\BbTextOptions\BbTextOptionsMiddleware.cs" />
+    </ItemGroup>
+
 </Project>

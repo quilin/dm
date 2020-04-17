@@ -43,13 +43,11 @@ export default class ForumTopic extends Vue {
 @import '~@/views/pages/forum/Grid'
 
 .row
-  grid()
+  grid($forumGridTemplate)
   &.closed
     opacity 0.7
     &.attached
       opacity initial
-  & > *
-    padding $minor
 
 .link
   display block

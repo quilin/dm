@@ -71,6 +71,7 @@ body
   overflow-y scroll
   theme(color, $text)
   theme(background-color, $background)
+  transition color, background-color $animationTime
 
 .content-container
   position relative
@@ -85,6 +86,7 @@ body
     bottom 0
     background url('~@/assets/header_bg.gif') left top repeat-x
     theme(filter, colorPair(none, invert(87%)))
+    transition filter $animationTime
 
 .content-wrapper
   position relative

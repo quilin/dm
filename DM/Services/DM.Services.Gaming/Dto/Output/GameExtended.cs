@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using DM.Services.Core.Dto;
 using DM.Services.Gaming.Dto.Shared;
 
 namespace DM.Services.Gaming.Dto.Output
@@ -7,6 +9,16 @@ namespace DM.Services.Gaming.Dto.Output
     /// </summary>
     public class GameExtended : Game
     {
+        /// <summary>
+        /// Game readers
+        /// </summary>
+        public IEnumerable<GeneralUser> Readers { get; set; }
+
+        /// <summary>
+        /// Game characters
+        /// </summary>
+        public IEnumerable<CharacterShortInfo> Characters { get; set; }
+
         /// <summary>
         /// Game public information
         /// </summary>

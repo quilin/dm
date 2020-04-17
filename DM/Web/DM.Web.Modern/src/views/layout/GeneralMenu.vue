@@ -21,7 +21,12 @@
       <loader v-if="!fora.length" />
       <div v-else v-for="forum in fora" :key="forum.id" class="menu-item"
         :class="{ selected: activeRoute && forum.id === selectedForum }">
-        <router-link :to="{name: 'forum', params: {id: forum.id, n: 1}}">
+        <span v-if="activeRoute && forum.id === selectedForum">
+          {{forum.id}}
+          <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
+          <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>
+        </span>
+        <router-link v-else :to="{name: 'forum', params: {id: forum.id, n: 1}}">
           {{forum.id}}
           <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
           <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>

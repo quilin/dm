@@ -36,7 +36,7 @@ namespace DM.Web.Classic.Views.Shared.GamesList.GameLink
 
                 IsNew = game.ReleaseDate.HasValue && (dateTimeProvider.Now - game.ReleaseDate.Value).TotalDays < 2,
 
-                HasPostNotification = game.Pendings.Any(),
+                HasPostNotification = game.Pendings?.Any() == true,
                 Notification = postExpectationNotificationViewModelBuilder.Build(game),
 
                 HasUnreadCounters = true,

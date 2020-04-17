@@ -1,0 +1,13 @@
+grid(template)
+  display grid
+  grid-template-columns template
+  justify-items stretch
+  align-items stretch  
+  & > *
+    padding $small $minor
+
+gridHead(template)
+  grid(template)
+  border-bottom 1px solid
+  theme(border-bottom-color, $border)
+  theme(background-color, $blockBackground)

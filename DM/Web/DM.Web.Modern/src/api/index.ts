@@ -39,8 +39,8 @@ class Api {
     return this.send(() => this.axios.post(url, params));
   }
 
-  public async put<T>(url: string, params: any): Promise<ApiResult<T>> {
-    return this.send(() => this.axios.put(url, params));
+  public async patch<T>(url: string, params: any): Promise<ApiResult<T>> {
+    return this.send(() => this.axios.patch(url, params));
   }
 
   public async delete<T>(url: string): Promise<ApiResult<T>> {
@@ -50,7 +50,7 @@ class Api {
   private async send<T>(sender: () => Promise<AxiosResponse<T>>): Promise<ApiResult<T>> {
     try {
       const { data, headers } = await sender();
-      if ((tokenKey in headers)) {
+      if (tokenKey in headers) {
         const token = headers[tokenKey];
         this.axios.defaults.headers.common[tokenKey] = token;
         localStorage.setItem(tokenKey, token);

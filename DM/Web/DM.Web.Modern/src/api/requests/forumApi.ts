@@ -5,17 +5,16 @@ import Api from '@/api';
 
 export default new class ForumApi {
   public async getFora(): Promise<ListEnvelope<Forum>> {
-    const { data } = await Api.get('fora');
-    return data;
+    const { data } = await Api.get<ListEnvelope<Forum>>('fora');
+    return data!;
   }
   public async getForum(id: string): Promise<ApiResult<Envelope<Forum>>> {
     return await Api.get(`fora/${id}`);
   }
-  public async getNews(): Promise<ListEnvelope<Topic>> {
-    const { data } = await Api.get('fora/Новости проекта/topics', {
+  public async getNews(): Promise<ApiResult<ListEnvelope<Topic>>> {
+    return await Api.get<ListEnvelope<Topic>>('fora/Новости проекта/topics', {
       size: 3,
     });
-    return data;
   }
 
   public async getModerators(id: string): Promise<ApiResult<ListEnvelope<User>>> {

@@ -21,23 +21,23 @@
             var linkClass = string.Join(" ", linkClasses);
         }
 
-        @Html.ActionLink(Model.Title, "Index", "Game", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.Title)}},
+        @Html.ActionLink(Model.Title, "Index", "Game", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.Title)}},
             new Dictionary<string, object>
             {
-                {"title", $"Мастер: {Model.Master}\r\nСистема: {Model.SystemName}\r\nСеттинг: {Model.SettingName}"},
+                {"title", $"Мастер: {Model.Master.Login}\nСистема: {Model.SystemName}\nСеттинг: {Model.SettingName}"},
                 {"class", linkClass}
             })
     </span>
     @if (Model.HasUnreadCounters)
     {
         <span class="notification-unread">
-            <a href="@Url.Action("FirstUnreadPostInGame", "Post", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadPostsIcon(Model.UnreadPostsCount, false)</a>@*
+            <a href="@Url.Action("FirstUnreadPostInGame", "Post", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadPostsIcon(Model.UnreadPostsCount, false)</a>@*
             *@&nbsp;<span class="notificaion-unread-separator">|</span>&nbsp;@*
-            *@<a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"moduleIdEncoded", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadCommentsIcon(Model.UnreadCommentsCount, false)</a>
+            *@<a href="@Url.Action("LastUnread", "GameCommentaries", new RouteValueDictionary {{"gameIdEncoded", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">@Html.UnreadCommentsIcon(Model.UnreadCommentsCount, false)</a>
             @if (Model.UnreadCharactersCount > 0)
             {
                 <span class="notificaion-unread-separator">|</span>
-                <a href="@Url.Action("Index", "CharactersList", new RouteValueDictionary {{"moduleId", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">
+                <a href="@Url.Action("Index", "CharactersList", new RouteValueDictionary {{"gameId", Model.GameId.EncodeToReadable(Model.Title)}})" class="@linkClass">
                     @IconFont.Render(IconType.User)
                     @Model.UnreadCharactersCount
                 </a>

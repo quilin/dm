@@ -5,6 +5,8 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Dto.Output;
 using DbGame = DM.Services.DataAccess.BusinessObjects.Games.Game;
 using DbGameTag = DM.Services.DataAccess.BusinessObjects.Common.Tag;
+using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
+using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 
 namespace DM.Services.Gaming.Dto
 {
@@ -32,7 +34,9 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.BlacklistedUsers, s => s.MapFrom(g => g.BlackList
                     .ToDictionary(b => b.UserId, b => b.BlackListLinkId)));
 
-            CreateMap<DbGame, GameExtended>();
+            CreateMap<DbGame, GameExtended>()
+                .ForMember(d => d.Readers, s => s.MapFrom(g => g.Readers))
+                .ForMember(d => d.Characters, s => s.MapFrom(g => g.Characters.Where(c => !c.IsRemoved)));
 
             CreateMap<DbGameTag, GameTag>()
                 .ForMember(d => d.Id, s => s.MapFrom(g => g.TagId))

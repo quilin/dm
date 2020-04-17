@@ -85,11 +85,8 @@ export default class TopicsList extends Vue {
 @import '~@/views/pages/forum/Grid'
 
 .list
-  grid()
+  gridHead($forumGridTemplate)
   margin-top $medium
-  theme(background-color, $blockBackground)
-  & > *
-    padding $minor
 
 .topics-loader
   margin $medium auto

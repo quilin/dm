@@ -6,10 +6,9 @@
     </div>
 
     <div class="forum-info">
-      <div class="moderators">
+      <div v-if="moderators" class="moderators">
         Модераторы:
         <router-link
-          v-if="moderators"
           v-for="moderator in moderators" :key="moderator.login"
           :to="{name: 'user', params: {login: moderator.login}}">
           {{moderator.login}}
@@ -58,7 +57,7 @@ export default class ForumPage extends Vue {
     return this.user &&
       (this.selectedForum !== 'Новости проекта' ||
        this.user.roles.some((r: string) =>
-        r === 'Admin' || r === 'SeniorModerator'));
+        r === 'Administrator' || r === 'SeniorModerator'));
   }
 
   @Watch('$route')

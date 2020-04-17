@@ -76,6 +76,11 @@ namespace DM.Services.Gaming.Authorization
         Subscribe = 13,
 
         /// <summary>
+        /// Unsubscribe from a game
+        /// </summary>
+        Unsubscribe = 14,
+
+        /// <summary>
         /// Create game character
         /// </summary>
         CreateCharacter = 14

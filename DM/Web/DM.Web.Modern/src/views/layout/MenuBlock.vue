@@ -16,37 +16,21 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class MenuBlock extends Vue {
   @Prop()
   private token!: string;
-  private get cookieName(): string {
+  private get storageKey(): string {
     return `__HideLeftMenuModules__${this.token}__`;
   }
 
   private show: boolean = true;
 
   private toggle(): void {
-    if (this.show) {
-      this.saveCookie();
-    } else {
-      this.removeCookie();
-    }
-    this.show = !this.show;
+    localStorage.setItem(this.storageKey, (this.show = !this.show).toString());
   }
 
   private mounted() {
-    if (document.cookie.indexOf(this.cookieName) !== -1) {
+    const storedValue = localStorage.getItem(this.storageKey);
+    if (storedValue === false.toString()) {
       this.show = false;
     }
-  }
-
-  private saveCookie(): void {
-    this.setCookie(new Date(new Date().getFullYear() + 10, 1, 1));
-  }
-
-  private removeCookie(): void {
-    this.setCookie(new Date(0));
-  }
-
-  private setCookie(expires: Date): void {
-    document.cookie = `${this.cookieName}=${this.cookieName};path=/;expires=${expires.toUTCString()}`;
   }
 }
 </script>

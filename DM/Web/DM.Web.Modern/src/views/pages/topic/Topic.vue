@@ -63,7 +63,7 @@ export default class TopicPage extends Vue {
 
   private fetchData(): void {
     const id = this.$route.params.id;
-    this.selectTopic(id);
+    this.selectTopic({id});
     this.fetchComments({ id, n: this.$route.params.n });
   }
 }

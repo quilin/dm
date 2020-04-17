@@ -9,8 +9,8 @@ const mutations: MutationTree<ForumState> = {
   updateFora(state, payload: Forum[]) {
     state.fora = payload;
   },
-  updateNews(state, payload: Topic[]) {
-    state.news = payload;
+  updateNews(state, payload: ListEnvelope<Topic>) {
+    state.news = payload.resources;
   },
 
   updateSelectedForum(state, payload: string) {
