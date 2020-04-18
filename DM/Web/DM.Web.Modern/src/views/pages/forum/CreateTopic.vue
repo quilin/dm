@@ -8,17 +8,17 @@
     <lightbox name="create-topic">
       <template slot="title">Создать тему</template>
       <div class="form">
-        <label class="field-label">Название</label>
-        <input type="text" v-model="title" />
-        <label class="field-label">Описание</label>
-        <text-area v-model="description" />
+        <label class="field-label create-topic__label">Название</label>
+        <input type="text" v-model="title"/>
+        <label class="field-label create-topic__label create-topic__description">Описание</label>
+        <text-area v-model="description"/>
       </div>
       <template slot="controls">
         <input type="button"
-          @click="createTopic"
-          :disabled="formEmpty"
-          value="Создать" />
-        <a href="javascript:void(0)" @click="$modal.hide('create-topic')">Отменить</a>
+               @click="createTopic"
+               :disabled="formEmpty"
+               value="Создать"/>
+        <a @click="$modal.hide('create-topic')">Отменить</a>
       </template>
     </lightbox>
   </div>
@@ -60,5 +60,15 @@ export default class CreateTopicComponent extends Vue {
 </script>
 
 <style lang="stylus">
+  .create-topic {
+    &__label {
+      display block;
 
-<style>
+      margin-bottom $minor
+    }
+
+    &__description {
+      margin-top $small;
+    }
+  }
+</style>

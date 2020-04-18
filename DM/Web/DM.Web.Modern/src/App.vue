@@ -19,14 +19,18 @@
         <dm-footer />
       </div>
     </div>
+    <portal-target name="lightbox"></portal-target>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
+import PortalVue from 'portal-vue';
 import DmFooter from '@/views/layout/Footer.vue';
 import DmHeader from '@/views/layout/Header.vue';
+
+Vue.use(PortalVue);
 
 @Component({
   components: {
@@ -113,6 +117,7 @@ a
   theme(color, $activeText)
   text-decoration none
   transition all $animationTime
+  cursor pointer
   &:hover
     theme(color, $activeHoverText)
 
