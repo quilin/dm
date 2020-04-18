@@ -30,6 +30,7 @@ enum IconType {
   PostVoteNegative = 0xe01e,
 
   Add = 0xe00d,
+  Tick = 0xe006,
 
   List = 0xe01c,
 

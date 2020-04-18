@@ -17,11 +17,13 @@ export default class DmFooter extends Vue {
 
 <style scoped lang="stylus">
 .footer
+  display flex
+  justify-content center
   position relative
   box-sizing border-box
   height $footerHeight
   margin-top -(@height)
-  padding-top 50px
+  line-height $footerHeight
 
   &:before
     content ''
@@ -30,11 +32,12 @@ export default class DmFooter extends Vue {
     right 0
     top 0
     bottom 0
-    background url('~@/assets/footer_bg.gif') left bottom repeat-x
+    background url('~@/assets/footer_bg.gif') left top repeat-x
     theme(filter, colorPair(none, invert(87%)))
     transition filter $animationTime
 
 .copyright
+  align-self center
   position relative
   text-align center
   secondary()

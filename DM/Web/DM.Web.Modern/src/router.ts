@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 
 import GeneralMenu from './views/layout/GeneralMenu.vue';
+import GeneralSidebar from './views/layout/GeneralSidebar.vue';
 
 Vue.use(Router);
 
@@ -15,6 +16,7 @@ export default new Router({
       name: 'home',
       components: {
         menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import('./views/pages/home/Home.vue'),
       },
     },
@@ -23,6 +25,7 @@ export default new Router({
       name: 'error',
       components: {
         menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import('./views/pages/error/Error.vue'),
       },
     },
@@ -46,6 +49,7 @@ export default new Router({
       name: 'rules',
       components: {
         menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import('./views/pages/rules/Rules.vue'),
       },
     },
@@ -68,6 +72,7 @@ export default new Router({
       path: '/forum/:id',
       components: {
         menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import('./views/pages/forum/Forum.vue'),
       },
       children: [{
@@ -81,6 +86,7 @@ export default new Router({
       name: 'topic',
       components: {
         menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import('./views/pages/topic/Topic.vue'),
       },
     },

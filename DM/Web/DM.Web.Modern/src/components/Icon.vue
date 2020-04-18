@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import IconType from './IconType';
+import IconType from './iconType';
 
 @Component({})
 export default class Icon extends Vue {

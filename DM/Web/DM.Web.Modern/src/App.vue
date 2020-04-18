@@ -13,7 +13,6 @@
             </div>
             <div class="content-sidebar">
               <router-view name="sidebar" />
-              Hello, world!
             </div>
           </div>
         </div>
