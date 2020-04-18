@@ -40,9 +40,6 @@ const actions: ActionTree<ForumState, RootState> = {
   },
   async createTopic({ commit }, { title, description }): Promise<void> {
     const { error, data } = await forumApi.postTopic({title, description} as Topic);
-    if (!error) {
-      console.log('created!');
-    }
   },
 
   async selectTopic({ commit }, { id }): Promise<void> {

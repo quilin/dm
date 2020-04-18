@@ -9,7 +9,7 @@ const mutations: MutationTree<CommunityState> = {
   },
   updatePolls(state, payload: ListEnvelope<Poll>) {
     state.polls = payload;
-  }
+  },
 };
 
 export default mutations;

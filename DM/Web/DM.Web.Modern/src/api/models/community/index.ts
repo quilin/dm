@@ -28,10 +28,9 @@ export interface Poll {
   options: PollOption[];
 }
 
-export interface PollOption
-{
+export interface PollOption {
   id: string;
-  text : string;
+  text: string;
   votesCount: number;
   voted: boolean;
 }

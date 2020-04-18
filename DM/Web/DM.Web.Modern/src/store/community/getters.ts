@@ -10,7 +10,7 @@ const getters: GetterTree<CommunityState, RootState> = {
   },
   polls(state): ListEnvelope<Poll> | null {
     return state.polls;
-  }
+  },
 };
 
 export default getters;

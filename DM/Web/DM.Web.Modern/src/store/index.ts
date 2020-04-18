@@ -60,6 +60,6 @@ export default new Vuex.Store<RootState>({
   },
   modules: {
     forum,
-    community
+    community,
   },
 });
