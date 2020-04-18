@@ -1,16 +1,18 @@
 <template>
-  <modal :name="name" :adaptive="true" height="auto" width="452px">
-    <div class="lightbox">
-      <div class="page-title">
-        <slot name="title" />
+  <portal to="lightbox">
+    <modal :name="name" :adaptive="true" height="auto" width="452px">
+      <div class="lightbox">
+        <div class="page-title">
+          <slot name="title"/>
+        </div>
+        <slot/>
+        <div class="lightbox-controls">
+          <slot name="controls"/>
+        </div>
+        <icon :font="IconType.Close" class="lightbox-close" @click.native="$modal.hide(name)"/>
       </div>
-      <slot />
-      <div class="lightbox-controls">
-        <slot name="controls" />
-      </div>
-      <icon :font="IconType.Close" class="lightbox-close" @click.native="$modal.hide(name)" />
-    </div>
-  </modal>
+    </modal>
+  </portal>
 </template>
 
 <script lang="ts">
