@@ -13,7 +13,6 @@ export default new class ForumApi {
   public async getNews(): Promise<ApiResult<ListEnvelope<Topic>>> {
     return await Api.get('fora/Новости проекта/topics', {size: 3});
   }
-
   public async getModerators(id: string): Promise<ApiResult<ListEnvelope<User>>> {
     return await Api.get(`fora/${id}/moderators`);
   }
@@ -29,5 +28,8 @@ export default new class ForumApi {
   }
   public async getComments(id: string, n: number): Promise<ApiResult<ListEnvelope<Comment>>> {
     return await Api.get(`topics/${id}/comments`, { number: n });
+  }
+  public async markAllTopicsAsRead(id: string): Promise<ApiResult<void>> {
+    return await Api.delete(`fora/${id}/comments/unread`);
   }
 }();

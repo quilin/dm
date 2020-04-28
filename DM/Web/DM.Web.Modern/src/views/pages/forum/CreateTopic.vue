@@ -26,11 +26,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
-import forumApi from '@/api/requests/forumApi';
+import {Action, Getter} from 'vuex-class';
 import IconType from '@/components/iconType';
 
-const namespace = 'forum';
 
 @Component({})
 export default class CreateTopicComponent extends Vue {
@@ -39,21 +37,27 @@ export default class CreateTopicComponent extends Vue {
   private title: string = '';
   private description: string = '';
 
-  @Getter('selectedForum', { namespace })
-  private selectedForum!: string;
-
   private get formEmpty(): boolean {
     return this.title === '' && this.description === '';
   }
 
-  private async createTopic(): Promise<void> {
-    await forumApi.postTopic({
-      forum: {
-        id: this.selectedForum,
-        unreadTopicsCount: 0,
+  @Getter('forum/selectedForum')
+  private selectedForum!: string;
+
+  @Action('forum/createTopic')
+  private createTopicAction: any;
+
+  private createTopic() {
+    this.createTopicAction({
+      topic: {
+        forum: {
+          id: this.selectedForum,
+          unreadTopicsCount: 0,
+        },
+        title: this.title,
+        description: this.description,
       },
-      title: this.title,
-      description: this.description,
+      router: this.$router
     });
   }
 }

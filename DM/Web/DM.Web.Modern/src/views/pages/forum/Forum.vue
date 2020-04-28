@@ -2,7 +2,7 @@
   <div>
     <div class="forum-info">
       <div class="page-title">{{selectedForum}} | Форум</div>
-      <a v-if="user" href="javascript:void(0)">Отметить всё прочитанным</a>
+      <a v-if="user && hasUnreadTopics" @click="markAllTopicsAsRead">Отметить всё прочитанным</a>
     </div>
 
     <div class="forum-info">
@@ -29,6 +29,7 @@ import { Route } from 'vue-router';
 import { User } from '@/api/models/community';
 
 import CreateTopic from './CreateTopic.vue';
+import { Forum } from "@/api/models/forum";
 
 const namespace: string = 'forum';
 
@@ -38,7 +39,7 @@ const namespace: string = 'forum';
   },
 })
 export default class ForumPage extends Vue {
-  @Getter('selectedForum', { namespace })
+  @Getter('forum/selectedForum')
   private selectedForum!: string | null;
 
   @Getter('moderators', { namespace })
@@ -47,11 +48,21 @@ export default class ForumPage extends Vue {
   @Getter('user')
   private user!: User;
 
+  @Getter('forum/forum')
+  private forum!: Forum;
+
   @Action('selectForum', { namespace })
   private selectForum: any;
 
   @Action('fetchModerators', { namespace })
   private fetchModerators: any;
+
+  @Action('forum/markAllTopicsAsRead')
+  private markAllTopicsAsReadAction: any;
+
+  private get hasUnreadTopics(): boolean {
+    return this.forum && Boolean(this.forum.unreadTopicsCount);
+  }
 
   private get canCreateTopic(): boolean {
     return this.user &&
@@ -76,6 +87,10 @@ export default class ForumPage extends Vue {
     this.selectForum({ id, router: this.$router });
     this.fetchModerators({ id });
   }
+
+  private markAllTopicsAsRead() {
+    this.markAllTopicsAsReadAction({ id: this.$route.params.id });
+  };
 }
 </script>
 

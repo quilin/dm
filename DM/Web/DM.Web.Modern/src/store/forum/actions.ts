@@ -39,10 +39,13 @@ const actions: ActionTree<ForumState, RootState> = {
       router.push({ name: 'error', params: { code: 404 } });
     }
   },
-  async createTopic({ commit }, { title, description }): Promise<void> {
-    const { error, data } = await forumApi.postTopic({title, description} as Topic);
-  },
+  async createTopic({ commit }, { router, topic }): Promise<void> {
+    const { data, error } = await forumApi.postTopic(topic as Topic);
 
+    if (data && !error) {
+      router.push({ name: 'topic', params: { id: data.resource.id } });
+    }
+  },
   async selectTopic({ commit }, { id }): Promise<void> {
     commit('updateSelectedTopic', { topic: null, id });
     const { error, data } = await forumApi.getTopic(id);
@@ -57,6 +60,12 @@ const actions: ActionTree<ForumState, RootState> = {
     const { data, error } = await forumApi.getComments(id, n);
     if (!error) {
       commit('updateComments', data!);
+    }
+  },
+  async markAllTopicsAsRead({ commit }, { id }): Promise<void> {
+    const { error } = await forumApi.markAllTopicsAsRead(id);
+    if (!error) {
+      commit('markAllTopicsAsRead');
     }
   },
 };
