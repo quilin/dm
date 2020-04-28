@@ -1,9 +1,9 @@
 <template>
-  <div :class="{ 'hidden': !show }">
+  <div :class="{'hidden': !show}">
     <div class="title" @click="toggle">
       <slot name="title" />
     </div>
-    <div class="list">
+    <div class="list" ref="content">
       <slot />
     </div>
   </div>
@@ -14,6 +14,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class MenuBlock extends Vue {
+  public $refs!: {
+    content: HTMLElement,
+  };
+
   @Prop()
   private token!: string;
   private get storageKey(): string {
@@ -24,6 +28,17 @@ export default class MenuBlock extends Vue {
 
   private toggle(): void {
     localStorage.setItem(this.storageKey, (this.show = !this.show).toString());
+    const content = this.$refs.content;
+    if (this.show) {
+      content.style.height = 'auto';
+      const neededHeight = content.clientHeight;
+      content.style.height = '0';
+      setTimeout(() => content.style.height = `${neededHeight}px`, 0);
+      setTimeout(() => content.style.height = 'auto', 200);
+    } else {
+      content.style.height = `${content.clientHeight}px`;
+      setTimeout(() => content.style.height = '0', 0);
+    }
   }
 
   private mounted() {
@@ -46,7 +61,7 @@ export default class MenuBlock extends Vue {
     content ' '
 
 .list
-  .hidden &
-    display none
+  overflow hidden
+  transition height .2s
 
 </style>

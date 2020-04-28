@@ -6,7 +6,8 @@ import RootState from './../rootState';
 
 const actions: ActionTree<ForumState, RootState> = {
   async fetchFora({ commit }): Promise<void> {
-    const { resources } = await forumApi.getFora();
+    const { data } = await forumApi.getFora();
+    const { resources } = data!;
     commit('updateFora', resources);
   },
   async fetchNews({ commit }): Promise<void> {

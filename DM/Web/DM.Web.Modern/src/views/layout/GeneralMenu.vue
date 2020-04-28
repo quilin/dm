@@ -1,38 +1,14 @@
 <template>
   <div>
-    <menu-block v-if="user" token="MyGames">
-      <template v-slot:title>Мои игры</template>
-      Все активные игры
-    </menu-block>
-    <menu-block v-else token="Active">
-      <template v-slot:title>Активные игры</template>
-      Все активные игры
-    </menu-block>
-    <menu-block token="Requirement">
-      <template v-slot:title>Набор игроков</template>
-      Все игры с открытым набором
-    </menu-block>
-    <menu-block token="Finished">
-      <template v-slot:title>Завершенные игры</template>
-      Все завершенные игры
-    </menu-block>
-    <menu-block token="Forum">
-      <template v-slot:title>Форумы</template>
-      <loader v-if="!fora.length" />
-      <div v-else v-for="forum in fora" :key="forum.id" class="menu-item"
-        :class="{ selected: activeRoute && forum.id === selectedForum }">
-        <span v-if="activeRoute && forum.id === selectedForum">
-          {{forum.id}}
-          <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
-          <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>
-        </span>
-        <router-link v-else :to="{name: 'forum', params: {id: forum.id, n: 1}}">
-          {{forum.id}}
-          <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
-          <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>
-        </router-link>
-      </div>
-    </menu-block>
+    <moderation-games v-if="user && user.roles.some(r => r ==='Administrator' || r === 'SeniorModerator')" />
+    <own-games v-if="user" />
+    <active-games v-else />
+
+    <requiring-games />
+
+    <finished-games />
+
+    <fora />
   </div>
 </template>
 
@@ -41,13 +17,25 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
 import { User } from '@/api/models/community';
+import { Game } from '@/api/models/gaming/games';
 import { Forum } from '@/api/models/forum';
 import IconType from '@/components/iconType';
-import MenuBlock from './MenuBlock.vue';
+
+import ModerationGames from './menu/ModerationGames.vue';
+import OwnGames from './menu/OwnGames.vue';
+import ActiveGames from './menu/ActiveGames.vue';
+import RequiringGames from './menu/RequiringGames.vue';
+import FinishedGames from './menu/FinishedGames.vue';
+import Fora from './menu/Fora.vue';
 
 @Component({
   components: {
-    MenuBlock,
+    ModerationGames,
+    OwnGames,
+    ActiveGames,
+    RequiringGames,
+    FinishedGames,
+    Fora,
   },
 })
 export default class GeneralMenu extends Vue {
@@ -55,35 +43,14 @@ export default class GeneralMenu extends Vue {
 
   @Getter('user')
   private user!: User;
-
-  @Getter('fora', { namespace: 'forum' })
-  private fora!: Forum[];
-
-  @Getter('selectedForum', { namespace: 'forum' })
-  private selectedForum!: string | null;
-
-  private get activeRoute(): boolean {
-    const name = this.$route.name;
-    return name === 'forum' || name === 'topic' || name === 'topics';
-  }
-
-  @Action('fetchFora', { namespace: 'forum' })
-  private fetchFora: any;
-
-  @Watch('user')
-  private onUserChange() {
-    this.fetchFora();
-  }
-
-  private mounted() {
-    this.fetchFora();
-  }
 }
 </script>
 
 <style scoped lang="stylus">
-.menu-item
-  margin $tiny 0
-  &.selected
-    font-weight bold
+.menu-game-item
+  display flex
+  justify-content space-between
+
+.menu-rest-link
+  font-weight bold
 </style>

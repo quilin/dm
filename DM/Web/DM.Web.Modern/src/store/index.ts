@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import RootState from './rootState';
 import forum from './forum';
 import community from './community';
+import gaming from './gaming';
 import accountApi from '@/api/requests/accountApi';
 
 Vue.use(Vuex);
@@ -61,5 +62,6 @@ export default new Vuex.Store<RootState>({
   modules: {
     forum,
     community,
+    gaming,
   },
 });

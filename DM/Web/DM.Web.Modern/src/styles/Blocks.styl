@@ -28,6 +28,11 @@ block()
   width $gridStep * 20
   flex-shrink 0
 
+.menu-item
+  margin $tiny 0
+  &.selected
+    font-weight bold
+
 $shakeDelta = $tiny
 @keyframes shake-error
   0%

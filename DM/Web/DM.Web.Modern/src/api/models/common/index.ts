@@ -9,6 +9,12 @@ export interface Paging {
   number: number;
 }
 
+export interface PagingQuery {
+  skip: number | null;
+  size: number | null;
+  number: number | null;
+}
+
 export interface ListEnvelope<T> {
   resources: T[];
   paging: Paging | null;
