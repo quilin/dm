@@ -1,22 +1,21 @@
 <template>
   <div class="header-block">
-    <div class="title">{{title}}</div>
-    <div v-if="subtitle" class="subtitle">{{subtitle}}</div>
+    <div class="title">
+      <slot name="title"/>
+    </div>
+    <div class="subtitle">
+      <slot name="subtitle"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+  import {Component, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class HeaderDefault extends Vue {
+  @Component
+  export default class Header extends Vue {
 
-        @Prop()
-        private title!: string;
-
-        @Prop()
-        private subtitle?: string;
-    }
+  }
 </script>
 
 <style scoped lang="stylus">

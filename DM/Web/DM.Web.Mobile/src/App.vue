@@ -18,17 +18,17 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {Getter} from 'vuex-class';
+  import {Component, Vue} from 'vue-property-decorator';
+  import {Getter} from 'vuex-class';
 
-    @Component
-    export default class DmApp extends Vue {
-        @Getter('currentTheme')
-        private currentTheme!: string;
+  @Component
+  export default class DmApp extends Vue {
+    @Getter('currentTheme')
+    private currentTheme!: string;
 
-        @Getter('menuBarStatus')
-        private menuBarStatus!: boolean;
-    }
+    @Getter('menuBarStatus')
+    private menuBarStatus!: boolean;
+  }
 </script>
 
 <style lang="stylus">

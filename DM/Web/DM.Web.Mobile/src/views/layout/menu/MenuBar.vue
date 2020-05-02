@@ -3,21 +3,22 @@
     <div class="close">
       <icon :font="IconType.Close" @click.native="hideMenuBar"/>
     </div>
+    <slot/>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import IconType from '@/components/iconType';
-    import {Action} from 'vuex-class';
+  import {Component, Vue} from 'vue-property-decorator';
+  import IconType from '@/components/iconType';
+  import {Action} from 'vuex-class';
 
-    @Component
-    export default class MenuBarDefault extends Vue {
-        private IconType: typeof IconType = IconType;
+  @Component
+  export default class MenuBar extends Vue {
+    private IconType: typeof IconType = IconType;
 
-        @Action('hideMenuBar')
-        private hideMenuBar: any;
-    }
+    @Action('hideMenuBar')
+    private hideMenuBar: any;
+  }
 </script>
 
 <style scoped lang="stylus">
