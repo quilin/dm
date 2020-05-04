@@ -19,7 +19,7 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import {Getter} from 'vuex-class';
+  import {Action, Getter} from 'vuex-class';
 
   @Component
   export default class DmApp extends Vue {
@@ -28,6 +28,13 @@
 
     @Getter('menuBarStatus')
     private menuBarStatus!: boolean;
+
+    @Action('fetchUser')
+    private fetchUser: any;
+
+    private mounted(): void {
+      this.fetchUser();
+    }
   }
 </script>
 
@@ -83,5 +90,8 @@
       header()
     h3
       minorTitle()
+
+    .button
+      button()
 
 </style>

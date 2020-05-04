@@ -16,4 +16,21 @@ export interface User {
   profilePictureUrl: string;
   rating: Rating;
   online: string;
+  status: string;
+  name: string;
+  location: string;
+}
+
+export interface Poll {
+  id: string;
+  ends: string;
+  title: string;
+  options: PollOption[];
+}
+
+export interface PollOption {
+  id: string;
+  text: string;
+  votesCount: number;
+  voted: boolean;
 }

@@ -8,6 +8,10 @@ layoutNav(blockPosition, borderPosition)
   border-{borderPosition} 1px solid
   theme('border-%s-color' % borderPosition, $border)
 
+iconBig()
+  font-size $big
+  theme(color, $activeText)
+
 footerIcons()
   display flex
   align-items center
@@ -16,8 +20,8 @@ footerIcons()
   padding 0 $medium
 
   .icon
-    font-size $big
-    theme(color, $activeText)
+    iconBig()
+
 
 button()
   border-radius $minor

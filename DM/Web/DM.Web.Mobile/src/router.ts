@@ -25,6 +25,7 @@ const routes: Array<RouteConfig> = [
       header: HeaderDefault,
       footer: FooterDefault,
       menuBar: MenuBarDefault,
+      page: () => import('./views/pages/user/Login.vue'),
     },
   },
   {

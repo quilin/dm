@@ -19,7 +19,9 @@ const getters: GetterTree<ForumState, RootState> = {
   selectedTopic(state): string | null {
     return state.selectedTopicId;
   },
-
+  forum(state): Forum | null {
+    return state.fora.find(f => f.id === state.selectedForumId) || null;
+  },
   moderators(state): User[] {
     return state.moderators;
   },
@@ -32,7 +34,6 @@ const getters: GetterTree<ForumState, RootState> = {
   topicsPaging(state): Paging | null {
     return state.topics && state.topics!.paging;
   },
-
   topic(state): Topic | null {
     return state.topic ||
       state.topics &&

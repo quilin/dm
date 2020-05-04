@@ -1,14 +1,5 @@
 <template>
   <div class="home">
-    <div class="user">
-      <div v-if="user" class="user-info">
-
-      </div>
-      <div v-else class="login">
-        <router-link :to="{name: 'UserLogin'}">Войти</router-link>
-        <router-link :to="{name: 'UserRegister'}">Зарегистрироваться</router-link>
-      </div>
-    </div>
     <div class="news">
       <h2>Последние новости</h2>
       <loader v-if="!news" />
@@ -42,7 +33,6 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import {Action, Getter} from 'vuex-class';
-  import {User} from '@/api/models/community';
   import { Topic } from '@/api/models/forum';
   import IconType from '@/components/iconType';
   import TopicListBlock from "@/views/pages/forum/TopicListBlock.vue";
@@ -51,9 +41,6 @@
   })
   export default class Home extends Vue {
     private IconType: typeof IconType = IconType;
-
-    @Getter('user')
-    private user!: User | null;
 
     @Getter('news', { namespace: 'forum' })
     private news!: Topic[];

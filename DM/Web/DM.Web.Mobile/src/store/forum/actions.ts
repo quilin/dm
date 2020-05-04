@@ -1,16 +1,18 @@
 import { ActionTree } from 'vuex';
 import forumApi from '@/api/requests/forumApi';
+import { Topic } from '@/api/models/forum';
 import ForumState from './forumState';
 import RootState from './../rootState';
 
 const actions: ActionTree<ForumState, RootState> = {
   async fetchFora({ commit }): Promise<void> {
-    const { resources } = await forumApi.getFora();
+    const { data } = await forumApi.getFora();
+    const { resources } = data!;
     commit('updateFora', resources);
   },
   async fetchNews({ commit }): Promise<void> {
-    const { resources } = await forumApi.getNews();
-    commit('updateNews', resources);
+    const { data } = await forumApi.getNews();
+    commit('updateNews', data!);
   },
 
   async fetchModerators({ commit }, { id }): Promise<void> {
@@ -37,10 +39,13 @@ const actions: ActionTree<ForumState, RootState> = {
       router.push({ name: 'error', params: { code: 404 } });
     }
   },
-  async createTopic({ commit }, { title, description }): Promise<void> {
-    const x = 10;
-  },
+  async createTopic({ commit }, { router, topic }): Promise<void> {
+    const { data, error } = await forumApi.postTopic(topic as Topic);
 
+    if (data && !error) {
+      router.push({ name: 'topic', params: { id: data.resource.id } });
+    }
+  },
   async selectTopic({ commit }, { id }): Promise<void> {
     commit('updateSelectedTopic', { topic: null, id });
     const { error, data } = await forumApi.getTopic(id);
@@ -54,7 +59,13 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateComments', null);
     const { data, error } = await forumApi.getComments(id, n);
     if (!error) {
-      commit('updateComments', data!.resources);
+      commit('updateComments', data!);
+    }
+  },
+  async markAllTopicsAsRead({ commit }, { id }): Promise<void> {
+    const { error } = await forumApi.markAllTopicsAsRead(id);
+    if (!error) {
+      commit('markAllTopicsAsRead');
     }
   },
 };

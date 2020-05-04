@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate';
 import App from './App.vue'
 
 import moment from 'moment';
@@ -9,6 +10,8 @@ import HumanTimespan from '@/components/HumanTimespan.vue';
 
 import router from './router'
 import store from './store'
+
+Vue.use(Vuelidate);
 
 Vue.component('icon', Icon);
 Vue.component('loader', Loader);

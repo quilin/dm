@@ -18,7 +18,7 @@ const state: ForumState = {
   selectedTopicId: null,
   topic: null,
   comments: null,
-}
+};
 
 const fora: Module<ForumState, RootState> = {
   namespaced: true,
@@ -26,6 +26,6 @@ const fora: Module<ForumState, RootState> = {
   getters,
   actions,
   mutations,
-}
+};
 
-export default fora
+export default fora;
