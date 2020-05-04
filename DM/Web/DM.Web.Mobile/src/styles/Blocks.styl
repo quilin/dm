@@ -15,9 +15,13 @@ footerIcons()
   height $layoutNav
   padding 0 $medium
 
-  a
-    theme(color, $text)
-    text-decoration none
-
   .icon
     font-size $big
+    theme(color, $activeText)
+
+button()
+  border-radius $minor
+  padding $small
+  text-align center
+  theme(color, $buttonText)
+  theme(background-color, $buttonBackground)

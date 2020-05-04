@@ -1,6 +1,6 @@
 <template>
   <div class="menu-block">
-    <div class="title"><slot name="title"/></div>
+    <h3><slot name="title"/></h3>
     <div class="list"><slot /></div>
   </div>
 </template>
@@ -17,8 +17,6 @@
 
 <style scoped lang="stylus">
   .menu-block
-    .title
-      minorTitle()
     .list
       margin-bottom $medium
       a

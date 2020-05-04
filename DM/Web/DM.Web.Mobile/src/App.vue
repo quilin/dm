@@ -52,6 +52,10 @@
     theme(color, $text)
     theme(background-color, $background)
 
+  a
+    theme(color, $activeText)
+    text-decoration none
+
   #app
     position relative
 
@@ -73,5 +77,11 @@
       bottom: $layoutNav + $gridStep;
       theme(background-color, $background)
       box-shadow: -1px -1px 5px 1px rgba(0, 0, 0, 0.7);
+    h1
+      pageTitle()
+    h2
+      header()
+    h3
+      minorTitle()
 
 </style>

@@ -3,7 +3,7 @@
     <template v-slot:title>Форумы</template>
     <loader v-if="!fora.length" />
     <div v-else v-for="forum in fora" :key="forum.id" class="menu-item"
-         :class="{ selected: forum.id === selectedForum }">
+         :class="{ selected:  activeForumRoute && forum.id === selectedForum }">
       <router-link :to="{name: 'Forum', params: {id: forum.id, n: 1}}">
         {{forum.id}}
         <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
@@ -42,7 +42,7 @@
 
     private get activeForumRoute(): boolean {
       const name = this.$route.name;
-      return name === 'forum' || name === 'topic' || name === 'topics';
+      return name === 'Forum' || name === 'Topic' || name === 'Topics';
     }
 
     @Action('forum/fetchFora')
@@ -62,6 +62,10 @@
 <style scoped lang="stylus">
   .menu-item
     margin $small 0
+    a
+      theme(color, $activeText)
     &.selected
       font-weight bold
+      a
+        theme(color, $activeHoverText)
 </style>
