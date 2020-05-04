@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import { ApiResult } from '@/api/models/common';
 
-const tokenKey: string = 'x-dm-auth-token';
+const tokenKey = 'x-dm-auth-token';
 
 const defautlHeaders: { [key: string]: string } = {
   'Cache-Control': 'no-cache',
@@ -19,7 +19,7 @@ if (storedToken) {
 }
 
 const configuration: AxiosRequestConfig = {
-  baseURL: 'https://dmam.herokuapp.com/v1',
+  baseURL: 'http://localhost:5000/v1', //TODO: real api
   headers: defautlHeaders,
   responseType: 'json',
 };
