@@ -11,6 +11,18 @@
     </div>
     <div class="news">
       <h2>Последние новости</h2>
+      <loader v-if="!news" />
+      <div v-else-if="!news.length">
+        Ничего нового!
+      </div>
+      <template v-else>
+        <div v-for="article in news" :key="article.id">
+          <TopicListBlock :article="article" />
+        </div>
+        <router-link :to="{name: 'forum', params: {id: 'Новости проекта'}}" class="news-rest">
+          К остальным новостям <icon :font="IconType.Forward" />
+        </router-link>
+      </template>
     </div>
     <div class="buttons">
       <router-link :to="{name: 'PageAbout'}">О проекте</router-link>
@@ -28,28 +40,37 @@
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue} from 'vue-property-decorator';
+  import {Component, Vue} from 'vue-property-decorator';
   import {Action, Getter} from 'vuex-class';
   import {User} from '@/api/models/community';
-
-
-  @Component
+  import { Topic } from '@/api/models/forum';
+  import IconType from '@/components/iconType';
+  import TopicListBlock from "@/views/pages/forum/TopicListBlock.vue";
+  @Component({
+    components: {TopicListBlock}
+  })
   export default class Home extends Vue {
+    private IconType: typeof IconType = IconType;
+
     @Getter('user')
     private user!: User | null;
 
-    @Action('toggleTheme')
-    private toggleTheme: any;
+    @Getter('news', { namespace: 'forum' })
+    private news!: Topic[];
 
-    @Action('signOut')
-    private signOut: any;
+    @Action('fetchNews', { namespace: 'forum' })
+    private fetchNews: any;
+
+    private mounted(): void {
+      this.fetchNews();
+    }
   }
 </script>
 
 <style scoped lang="stylus">
   .home
     > div
-      margin-bottom $medium
+      margin-bottom $big
 
   .login
     display grid
