@@ -15,9 +15,14 @@ input()
 
   font-family PT Sans
   font-size $fontSize
+  theme(background-color, $inputBackground)
+  transition all $animationTime
 
   &:focus
     themeExtend(box-shadow, inset 0 0 $minor, $border)
+
+  &:disabled,
+    theme(background-color, $inputDisabledBackground)
 
   &:-internal-autofill-selected
     theme(color, $text)
