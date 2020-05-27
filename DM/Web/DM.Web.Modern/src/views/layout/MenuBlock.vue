@@ -15,13 +15,14 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component({})
 export default class MenuBlock extends Vue {
   public $refs!: {
-    content: HTMLElement,
+    content: HTMLElement;
   };
 
   @Prop()
   private token!: string;
+
   private get storageKey(): string {
-    return `__HideLeftMenuModules__${this.token}__`;
+    return `__HideLeftMenuModules__${ this.token }__`;
   }
 
   private show: boolean = true;
@@ -33,10 +34,10 @@ export default class MenuBlock extends Vue {
       content.style.height = 'auto';
       const neededHeight = content.clientHeight;
       content.style.height = '0';
-      setTimeout(() => content.style.height = `${neededHeight}px`, 0);
+      setTimeout(() => content.style.height = `${ neededHeight }px`, 0);
       setTimeout(() => content.style.height = 'auto', 200);
     } else {
-      content.style.height = `${content.clientHeight}px`;
+      content.style.height = `${ content.clientHeight }px`;
       setTimeout(() => content.style.height = '0', 0);
     }
   }
@@ -54,9 +55,11 @@ export default class MenuBlock extends Vue {
 .title
   header()
   cursor pointer
+
   &:after
     icon()
     content ' '
+
   .hidden &:after
     content ' '
 

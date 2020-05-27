@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
 
 import GeneralMenu from './views/layout/GeneralMenu.vue';
 import GeneralSidebar from './views/layout/GeneralSidebar.vue';

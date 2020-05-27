@@ -9,15 +9,15 @@
       <template slot="title">Создать тему</template>
       <div class="form">
         <label class="field-label create-topic__label">Название</label>
-        <input type="text" v-model="title"/>
+        <input type="text" v-model="title" />
         <label class="field-label create-topic__label create-topic__description">Описание</label>
-        <text-area v-model="description"/>
+        <text-area v-model="description" />
       </div>
       <template slot="controls">
         <input type="button"
                @click="createTopic"
                :disabled="formEmpty"
-               value="Создать"/>
+               value="Создать" />
         <a @click="$modal.hide('create-topic')">Отменить</a>
       </template>
     </lightbox>

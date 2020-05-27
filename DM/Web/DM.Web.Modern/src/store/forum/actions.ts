@@ -39,7 +39,7 @@ const actions: ActionTree<ForumState, RootState> = {
       router.push({ name: 'error', params: { code: 404 } });
     }
   },
-  async createTopic({ commit }, { router, topic }): Promise<void> {
+  async createTopic(_0, { router, topic }): Promise<void> {
     const { data, error } = await forumApi.postTopic(topic as Topic);
 
     if (data && !error) {

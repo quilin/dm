@@ -2,7 +2,6 @@ import axios, {
   AxiosRequestConfig,
   AxiosInstance,
   AxiosResponse,
-  Canceler,
 } from 'axios';
 import { ApiResult } from '@/api/models/common';
 

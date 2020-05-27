@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
 
 import { Poll } from '@/api/models/community';
 import IconType from '@/components/iconType';

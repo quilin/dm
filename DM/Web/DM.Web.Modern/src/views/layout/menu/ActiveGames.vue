@@ -9,11 +9,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+import { Component, Vue } from 'vue-property-decorator';
 
-import { User } from '@/api/models/community';
-import { Game } from '@/api/models/gaming/games';
 import IconType from '@/components/iconType';
 import MenuBlock from '../MenuBlock.vue';
 

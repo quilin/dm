@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
-import { Topic, Forum, Comment } from '@/api/models/forum';
+import { Topic, Comment } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 
 const namespace = 'forum';

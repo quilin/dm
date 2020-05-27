@@ -1,7 +1,6 @@
 <template>
-  <div class="paging">
+  <div class="paging" v-if="hasPages">
     <router-link
-      v-if="hasPages"
       v-for="(link, index) in links"
       :key="index"
       :to="link.to"

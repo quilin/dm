@@ -29,7 +29,7 @@ import { Route } from 'vue-router';
 import { User } from '@/api/models/community';
 
 import CreateTopic from './CreateTopic.vue';
-import { Forum } from "@/api/models/forum";
+import { Forum } from '@/api/models/forum';
 
 const namespace: string = 'forum';
 
@@ -68,7 +68,7 @@ export default class ForumPage extends Vue {
     return this.user &&
       (this.selectedForum !== 'Новости проекта' ||
        this.user.roles.some((r: string) =>
-        r === 'Administrator' || r === 'SeniorModerator'));
+         r === 'Administrator' || r === 'SeniorModerator'));
   }
 
   @Watch('$route')
@@ -90,7 +90,7 @@ export default class ForumPage extends Vue {
 
   private markAllTopicsAsRead() {
     this.markAllTopicsAsReadAction({ id: this.$route.params.id });
-  };
+  }
 }
 </script>
 

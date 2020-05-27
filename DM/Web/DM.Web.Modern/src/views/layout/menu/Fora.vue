@@ -22,8 +22,6 @@ import { Forum } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 import MenuBlock from '../MenuBlock.vue';
 
-const namespace = 'forum';
-
 @Component({
   components: {
     MenuBlock,

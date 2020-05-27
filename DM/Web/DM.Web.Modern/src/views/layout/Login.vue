@@ -30,7 +30,7 @@
 import { Vue } from 'vue-property-decorator';
 import Component from 'vue-class-component';
 import { required } from 'vuelidate/lib/validators';
-import { Action, Getter } from 'vuex-class';
+import { Action } from 'vuex-class';
 import accountApi from '@/api/requests/accountApi';
 
 @Component({

@@ -3,13 +3,13 @@
     <modal :name="name" :adaptive="true" height="auto" width="452px">
       <div class="lightbox">
         <div class="page-title">
-          <slot name="title"/>
+          <slot name="title" />
         </div>
-        <slot/>
+        <slot />
         <div class="lightbox-controls">
-          <slot name="controls"/>
+          <slot name="controls" />
         </div>
-        <icon :font="IconType.Close" class="lightbox-close" @click.native="$modal.hide(name)"/>
+        <icon :font="IconType.Close" class="lightbox-close" @click.native="$modal.hide(name)" />
       </div>
     </modal>
   </portal>
