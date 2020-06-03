@@ -26,25 +26,22 @@ const getters: GetterTree<ForumState, RootState> = {
     return state.moderators;
   },
   attachedTopics(state): Topic[] | null {
-    return state.attachedTopics && state.attachedTopics!.resources;
+    return state.attachedTopics?.resources || null;
   },
   topics(state): Topic[] | null {
-    return state.topics && state.topics!.resources;
+    return state.topics?.resources || null;
   },
   topicsPaging(state): Paging | null {
-    return state.topics && state.topics!.paging;
+    return state.topics?.paging || null;
   },
   topic(state): Topic | null {
-    return state.topic ||
-      state.topics &&
-      state.topics!.resources &&
-      (state.topics!.resources!.find((t: Topic) => t.id === state.selectedTopicId) || null);
+    return state.topic || state.topics?.resources.find((t: Topic) => t.id === state.selectedTopicId) || null;
   },
   comments(state): Comment[] | null {
-    return state.comments && state.comments!.resources;
+    return state.comments?.resources || null;
   },
   commentsPaging(state): Paging | null {
-    return state.comments && state.comments!.paging;
+    return state.comments?.paging || null;
   },
 };
 
