@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="`theme_${currentTheme}`">
-    <div class="content">
+    <div class="content" v-touch:swipe.left="showMenuBar">
       <div class="header">
         <router-view name="header"/>
       </div>
@@ -31,6 +31,9 @@
 
     @Action('fetchUser')
     private fetchUser: any;
+
+    @Action('showMenuBar')
+    private showMenuBar: any;
 
     private mounted(): void {
       this.fetchUser();

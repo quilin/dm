@@ -1,5 +1,5 @@
 <template>
-  <div class="menu">
+  <div class="menu" v-touch:swipe.right="hideMenuBar">
     <div class="close">
       <icon :font="IconType.Close" @click.native="hideMenuBar"/>
     </div>
