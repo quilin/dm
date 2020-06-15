@@ -22,6 +22,7 @@ export interface ListEnvelope<T> {
 
 export interface GeneralError {
   message: string;
+  code: number;
 }
 
 export interface BadRequestError extends GeneralError {

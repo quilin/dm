@@ -4,12 +4,15 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 import { ApiResult } from '@/api/models/common';
+import { BbRenderMode } from './bbRenderMode';
 
 const tokenKey: string = 'x-dm-auth-token';
+const renderKey: string = 'x-dm-bb-render-mode';
 
 const defautlHeaders: { [key: string]: string } = {
   'Cache-Control': 'no-cache',
   'Content-Type': 'application/json',
+  [renderKey]: 'html',
 };
 
 const storedToken = localStorage.getItem(tokenKey);
@@ -30,8 +33,11 @@ class Api {
     this.axios = axios.create(configuration);
   }
 
-  public async get<T>(url: string, params?: any): Promise<ApiResult<T>> {
-    return this.send(() => this.axios.get(url, { params }));
+  public async get<T>(
+    url: string,
+    params?: any,
+    bbRenderMode: BbRenderMode = BbRenderMode.Html): Promise<ApiResult<T>> {
+    return this.send(() => this.axios.get(url, { params, headers: {[renderKey]: bbRenderMode} }));
   }
 
   public async post<T>(url: string, params: any): Promise<ApiResult<T>> {
@@ -64,7 +70,7 @@ class Api {
     } catch (err) {
       return {
         data: null,
-        error: err.response.data.error,
+        error: {...err.response.data.error, code: err.response.status},
       };
     }
   }

@@ -5,23 +5,20 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using DM.Services.Core.Configuration;
-using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
+using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
-using DM.Services.DataAccess.MongoIntegration;
-using DM.Services.MessageQueuing;
-using DM.Services.Search;
+using DM.Web.API.Configuration;
 using DM.Web.API.Middleware;
 using DM.Web.API.Swagger;
 using DM.Web.Core.Binders;
 using DM.Web.Core.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace DM.Web.API
 {
@@ -69,37 +66,20 @@ namespace DM.Web.API
                 .AddMemoryCache()
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))), ServiceLifetime.Transient);
+
+            var httpContextAccessor = new HttpContextAccessor();
+            var bbParserProvider = new BbParserProvider();
 
             services
                 .AddSwaggerGen(c => c.ConfigureGen())
-                .AddMvc(config => { config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()); })
-                .AddJsonOptions(config =>
-                {
-                    config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    config.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    config.SerializerSettings.DateFormatString = "O";
-                    config.SerializerSettings.Converters.Insert(0, new StringEnumConverter());
-                    config.SerializerSettings.Converters.Insert(0, new ReadableGuidConverter());
-                    config.SerializerSettings.Converters.Insert(0, new ReadableNullableGuidConverter());
-                    config.SerializerSettings.Converters.Insert(0, new OptionalConverter());
-                    config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                })
+                .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
+                .AddJsonOptions(config => config.Setup(httpContextAccessor, bbParserProvider))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(assemblies)
-                .Where(t => t.IsClass)
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterTypes(typeof(DmMongoClient))
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
 
-            builder.RegisterModuleOnce<MessageQueuingModule>();
-            builder.RegisterModuleOnce<SearchEngineModule>();
+            builder.RegisterModule(new ApiModule(assemblies, httpContextAccessor, bbParserProvider));
             builder.Populate(services);
 
             var container = builder.Build();

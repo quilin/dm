@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Shared
@@ -32,7 +33,7 @@ namespace DM.Web.API.Dto.Shared
         /// <summary>
         /// Text
         /// </summary>
-        public string Text { get; set; }
+        public CommonBbText Text { get; set; }
 
         /// <summary>
         /// Users who liked it

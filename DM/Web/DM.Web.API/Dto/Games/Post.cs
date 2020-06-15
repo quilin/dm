@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
@@ -42,17 +43,17 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Text
         /// </summary>
-        public string Text { get; set; }
+        public PostBbText Text { get; set; }
 
         /// <summary>
         /// Additional text
         /// </summary>
-        public string Commentary { get; set; }
+        public CommonBbText Commentary { get; set; }
 
         /// <summary>
         /// Private text to master
         /// </summary>
-        public string MasterMessage { get; set; }
+        public CommonBbText MasterMessage { get; set; }
 
         /// <summary>
         /// Dice roll results

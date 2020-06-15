@@ -1,4 +1,5 @@
 using System;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Community
@@ -31,6 +32,6 @@ namespace DM.Web.API.Dto.Community
         /// <summary>
         /// Review text
         /// </summary>
-        public string Text { get; set; }
+        public CommonBbText Text { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Messaging
@@ -26,6 +27,6 @@ namespace DM.Web.API.Dto.Messaging
         /// <summary>
         /// Content
         /// </summary>
-        public string Text { get; set; }
+        public ChatBbText Text { get; set; }
     }
 }

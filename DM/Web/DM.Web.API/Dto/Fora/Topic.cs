@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Fora
@@ -32,7 +33,7 @@ namespace DM.Web.API.Dto.Fora
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; set; }
+        public CommonBbText Description { get; set; }
 
         /// <summary>
         /// Attached

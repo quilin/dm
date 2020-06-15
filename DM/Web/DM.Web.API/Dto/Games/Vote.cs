@@ -1,5 +1,6 @@
 using System;
 using DM.Services.Core.Dto.Enums;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Users;
 
 namespace DM.Web.API.Dto.Games
@@ -28,6 +29,11 @@ namespace DM.Web.API.Dto.Games
         /// Vote reason type
         /// </summary>
         public VoteType Type { get; set; }
+
+        /// <summary>
+        /// Vote text
+        /// </summary>
+        public CommonBbText Text { get; set; }
 
         /// <summary>
         /// Creation moment

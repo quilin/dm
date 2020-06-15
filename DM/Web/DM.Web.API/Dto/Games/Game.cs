@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Gaming.Dto;
+using DM.Web.API.BbRendering;
 using DM.Web.API.Dto.Games.Attributes;
 using DM.Web.API.Dto.Users;
 
@@ -80,7 +81,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Game information
         /// </summary>
-        public string Info { get; set; }
+        public InfoBbText Info { get; set; }
 
         /// <summary>
         /// Game private notes for master

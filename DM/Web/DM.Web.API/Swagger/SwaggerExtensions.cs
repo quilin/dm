@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DM.Web.API.Authentication;
+using DM.Web.API.BbRendering;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace DM.Web.API.Swagger
             }
 
             options.OperationFilter<AuthenticationSwaggerFilter>();
+            options.OperationFilter<BbRenderModeSwaggerFilter>();
 
             var apiAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{apiAssemblyName}.xml"));

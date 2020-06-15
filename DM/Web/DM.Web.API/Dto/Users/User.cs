@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Web.API.BbRendering;
 
 namespace DM.Web.API.Dto.Users
 {
@@ -61,7 +62,7 @@ namespace DM.Web.API.Dto.Users
         /// <summary>
         /// User-defined extended information
         /// </summary>
-        public string Info { get; set; }
+        public InfoBbText Info { get; set; }
 
         /// <summary>
         /// User settings
