@@ -6,7 +6,6 @@ using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.MessageQueuing.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Framing;
 
 namespace DM.Services.MessageQueuing.Publish
 {
@@ -29,20 +28,19 @@ namespace DM.Services.MessageQueuing.Publish
         public Task Publish<TMessage>(TMessage message, MessagePublishConfiguration configuration, string routingKey)
             where TMessage : class
         {
-            using (var connection = connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                Ensure.Publish(channel, configuration);
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                channel.BasicPublish(configuration.ExchangeName, routingKey,
-                    new BasicProperties
-                    {
-                        Persistent = true,
-                        ContentType = MediaTypeNames.Application.Json,
-                        CorrelationId = correlationTokenProvider.Current.ToString()
-                    }, body);
-                return Task.CompletedTask;
-            }
+            using var connection = connectionFactory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            Ensure.Publish(channel, configuration);
+
+            var basicProperties = channel.CreateBasicProperties();
+            basicProperties.Persistent = true;
+            basicProperties.ContentType = MediaTypeNames.Application.Json;
+            basicProperties.CorrelationId = correlationTokenProvider.Current.ToString();
+
+            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+            channel.BasicPublish(configuration.ExchangeName, routingKey, basicProperties, body);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -50,25 +48,22 @@ namespace DM.Services.MessageQueuing.Publish
             MessagePublishConfiguration configuration)
             where TMessage : class
         {
-            using (var connection = connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                Ensure.Publish(channel, configuration);
-                var basicPublishBatch = channel.CreateBasicPublishBatch();
-                foreach (var (message, routingKey) in messages)
-                {
-                    var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                    basicPublishBatch.Add(configuration.ExchangeName, routingKey, false,
-                        new BasicProperties
-                        {
-                            Persistent = true,
-                            ContentType = MediaTypeNames.Application.Json,
-                            CorrelationId = correlationTokenProvider.Current.ToString()
-                        }, body);
-                }
+            using var connection = connectionFactory.CreateConnection();
+            using var channel = connection.CreateModel();
 
-                basicPublishBatch.Publish();
+            Ensure.Publish(channel, configuration);
+            var basicPublishBatch = channel.CreateBasicPublishBatch();
+            foreach (var (message, routingKey) in messages)
+            {
+                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                var basicProperties = channel.CreateBasicProperties();
+                basicProperties.Persistent = true;
+                basicProperties.ContentType = MediaTypeNames.Application.Json;
+                basicProperties.CorrelationId = correlationTokenProvider.Current.ToString();
+                basicPublishBatch.Add(configuration.ExchangeName, routingKey, false, basicProperties, body);
             }
+
+            basicPublishBatch.Publish();
 
             return Task.CompletedTask;
         }

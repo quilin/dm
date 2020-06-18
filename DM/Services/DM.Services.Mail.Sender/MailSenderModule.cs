@@ -1,5 +1,6 @@
-using System.Reflection;
 using Autofac;
+using DM.Services.Core.Extensions;
+using DM.Services.MessageQueuing;
 using Module = Autofac.Module;
 
 namespace DM.Services.Mail.Sender
@@ -10,10 +11,10 @@ namespace DM.Services.Mail.Sender
         /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .Where(t => t.IsClass)
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+            builder.RegisterDefaultTypes();
+
+            builder.RegisterModuleOnce<MessageQueuingModule>();
+
             base.Load(builder);
         }
     }

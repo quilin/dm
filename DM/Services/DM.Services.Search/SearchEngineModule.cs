@@ -1,7 +1,10 @@
 using System;
-using System.Reflection;
 using Autofac;
+using DM.Services.Authentication;
+using DM.Services.Core;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Extensions;
+using DM.Services.DataAccess;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Configuration;
 using Microsoft.Extensions.Options;
@@ -16,10 +19,9 @@ namespace DM.Services.Search
         /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .Where(t => t.IsClass)
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+            builder.RegisterDefaultTypes();
+            builder.RegisterMapper();
+
             builder.Register(x =>
                 {
                     var connectionStrings = x.Resolve<IOptions<ConnectionStrings>>().Value;
@@ -28,9 +30,15 @@ namespace DM.Services.Search
                             .IndexName(SearchEngineConfiguration.IndexName));
                 })
                 .SingleInstance();
+
             builder.Register(x => new ElasticClient(x.Resolve<ConnectionSettings>()))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterModuleOnce<CoreModule>();
+            builder.RegisterModuleOnce<DataAccessModule>();
+            builder.RegisterModuleOnce<AuthenticationModule>();
+
             base.Load(builder);
         }
     }

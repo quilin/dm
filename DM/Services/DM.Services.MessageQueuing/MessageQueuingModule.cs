@@ -1,7 +1,7 @@
 using System;
-using System.Reflection;
 using Autofac;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Extensions;
 using DM.Services.MessageQueuing.Consume;
 using DM.Services.MessageQueuing.Processing;
 using Microsoft.Extensions.Options;
@@ -16,10 +16,8 @@ namespace DM.Services.MessageQueuing
         /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .Where(t => t.IsClass)
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+            builder.RegisterDefaultTypes();
+
             builder.Register<IConnectionFactory>(x =>
                 {
                     var mqConfiguration = x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue;
@@ -33,6 +31,7 @@ namespace DM.Services.MessageQueuing
                 })
                 .AsImplementedInterfaces()
                 .SingleInstance();
+
             builder.RegisterGeneric(typeof(EventProcessorAdapter<>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
@@ -42,6 +41,7 @@ namespace DM.Services.MessageQueuing
             builder.RegisterGeneric(typeof(MessageConsumer<>))
                 .AsImplementedInterfaces()
                 .SingleInstance();
+
             base.Load(builder);
         }
     }

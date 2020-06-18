@@ -119,10 +119,10 @@ namespace DM.Services.Authentication.Implementation
             {
                 await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
             }
-            
+
             if (!session.Invisible && (
-                    !user.LastVisitDate.HasValue ||
-                    dateTimeProvider.Now - user.LastVisitDate.Value > TimeSpan.FromMinutes(1)))
+                !user.LastVisitDate.HasValue ||
+                dateTimeProvider.Now - user.LastVisitDate.Value > TimeSpan.FromMinutes(1)))
             {
                 var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
                     .Field(u => u.LastVisitDate, dateTimeProvider.Now);

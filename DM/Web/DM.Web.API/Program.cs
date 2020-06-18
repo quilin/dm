@@ -1,6 +1,7 @@
 ﻿using System;
-using Microsoft.AspNetCore;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace DM.Web.API
@@ -16,9 +17,7 @@ namespace DM.Web.API
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args)
-                .Build()
-                .Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         /// <summary>
@@ -26,18 +25,24 @@ namespace DM.Web.API
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var webHostBuilder = WebHost.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .UseKestrel(options => options.AllowSynchronousIO = true)
-                .UseStartup<Startup>();
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseKestrel(options => options.AllowSynchronousIO = true)
+                        .UseSerilog()
+                        .UseStartup<Startup>();
 
-            // For heroku deployment, where only available port is defined in runtime by the environment variable
-            var predefinedPort = Environment.GetEnvironmentVariable("PORT");
-            return string.IsNullOrEmpty(predefinedPort)
-                ? webHostBuilder
-                : webHostBuilder.UseUrls($"http://*:{predefinedPort}");
+                    // For heroku deployment, where only available port is defined in runtime by the environment variable
+                    var predefinedPort = Environment.GetEnvironmentVariable("PORT");
+                    if (!string.IsNullOrEmpty(predefinedPort))
+                    {
+                        webBuilder.UseUrls($"http://*:{predefinedPort}");
+                    }
+                });
         }
     }
 }

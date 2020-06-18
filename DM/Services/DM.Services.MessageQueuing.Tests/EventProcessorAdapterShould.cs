@@ -9,7 +9,6 @@ using Moq;
 using Moq.Language.Flow;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Framing;
 using Xunit;
 
 namespace DM.Services.MessageQueuing.Tests
@@ -56,14 +55,13 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public async Task ProcessWithDeserializedMessageAndPassedCorrelationToken()
         {
+            var basicProperties = Mock<IBasicProperties>();
+            basicProperties.Setup(p => p.CorrelationId).Returns("correlationId");
             var basicDeliverEventArgs = new BasicDeliverEventArgs
             {
                 Body = Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}"),
                 DeliveryTag = 45,
-                BasicProperties = new BasicProperties
-                {
-                    CorrelationId = "correlationId"
-                }
+                BasicProperties = basicProperties.Object
             };
             processSetup.ReturnsAsync(ProcessResult.Success);
             await processorAdapter.ProcessEvent(basicDeliverEventArgs, channel.Object);
@@ -78,14 +76,13 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public async Task AckIfSuccessfullyProcessed()
         {
+            var basicProperties = Mock<IBasicProperties>();
+            basicProperties.Setup(p => p.CorrelationId).Returns("correlationId");
             var basicDeliverEventArgs = new BasicDeliverEventArgs
             {
                 Body = Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}"),
                 DeliveryTag = 45,
-                BasicProperties = new BasicProperties
-                {
-                    CorrelationId = "correlationId"
-                }
+                BasicProperties = basicProperties.Object
             };
             processSetup.ReturnsAsync(ProcessResult.Success);
 
@@ -98,14 +95,13 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public async Task NackWithRequeueIfProcessedAccordingly()
         {
+            var basicProperties = Mock<IBasicProperties>();
+            basicProperties.Setup(p => p.CorrelationId).Returns("correlationId");
             var basicDeliverEventArgs = new BasicDeliverEventArgs
             {
                 Body = Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}"),
                 DeliveryTag = 45,
-                BasicProperties = new BasicProperties
-                {
-                    CorrelationId = "correlationId"
-                }
+                BasicProperties = basicProperties.Object
             };
             processSetup.ReturnsAsync(ProcessResult.RetryNeeded);
 
@@ -118,14 +114,13 @@ namespace DM.Services.MessageQueuing.Tests
         [Fact]
         public async Task NackWithoutRequeueIfProcessingFailed()
         {
+            var basicProperties = Mock<IBasicProperties>();
+            basicProperties.Setup(p => p.CorrelationId).Returns("correlationId");
             var basicDeliverEventArgs = new BasicDeliverEventArgs
             {
                 Body = Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}"),
                 DeliveryTag = 45,
-                BasicProperties = new BasicProperties
-                {
-                    CorrelationId = "correlationId"
-                }
+                BasicProperties = basicProperties.Object
             };
             processSetup.ReturnsAsync(ProcessResult.Fail);
 

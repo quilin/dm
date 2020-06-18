@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace DM.Web.Core.Binders
+namespace DM.Web.API.Binding
 {
     /// <inheritdoc />
     public class ReadableGuidBinderProvider : IModelBinderProvider

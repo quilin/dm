@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore;
+﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace DM.Services.Search.Consumer
@@ -8,9 +9,7 @@ namespace DM.Services.Search.Consumer
     {
         static void Main(string[] args)
         {
-            CreateWebHostBuilder(args)
-                .UseUrls("https://localhost:5002")
-                .Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
         
         /// <summary>
@@ -18,10 +17,15 @@ namespace DM.Services.Search.Consumer
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseLibuv()
-                .UseSerilog()
-                .UseStartup<Startup>();
+        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseKestrel(options => options.AllowSynchronousIO = true)
+                        .UseSerilog()
+                        .UseStartup<Startup>();
+                });
     }
 }

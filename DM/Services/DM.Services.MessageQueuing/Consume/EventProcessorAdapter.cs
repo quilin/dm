@@ -30,7 +30,7 @@ namespace DM.Services.MessageQueuing.Consume
         {
             try
             {
-                var message = JsonConvert.DeserializeObject<TMessage>(Encoding.UTF8.GetString(eventArgs.Body));
+                var message = JsonConvert.DeserializeObject<TMessage>(Encoding.UTF8.GetString(eventArgs.Body.ToArray()));
                 var processor = processorFactory();
                 var result = await processor.ProcessWithCorrelation(message, eventArgs.BasicProperties.CorrelationId);
                 switch (result)

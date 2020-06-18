@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using DM.Web.API.Authentication;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
 using DM.Web.API.Services.Gaming.Rooms;
-using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Gaming

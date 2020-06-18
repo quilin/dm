@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
+using DM.Web.API.Authentication;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Messaging;
 using DM.Web.API.Services.Community;
-using DM.Web.Core.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Community

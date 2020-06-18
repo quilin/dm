@@ -4,7 +4,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace DM.Web.Core.Binders
+namespace DM.Web.API.Binding
 {
     /// <inheritdoc />
     public class ReadableGuidBinder : IModelBinder

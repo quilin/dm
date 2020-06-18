@@ -1,11 +1,10 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using DM.Services.Core.Parsing;
 using DM.Web.API.BbRendering;
-using DM.Web.API.Middleware;
+using DM.Web.API.Binding;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 
 namespace DM.Web.API.Configuration
 {
@@ -20,22 +19,20 @@ namespace DM.Web.API.Configuration
         /// <param name="config"></param>
         /// <param name="httpContextAccessor"></param>
         /// <param name="bbParserProvider"></param>
-        public static void Setup(this MvcJsonOptions config,
+        public static void Setup(this JsonOptions config,
             IHttpContextAccessor httpContextAccessor,
             IBbParserProvider bbParserProvider)
         {
-            config.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            config.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 
-            config.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            config.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            config.SerializerSettings.DateFormatString = "O";
-
-            config.SerializerSettings.Converters.Insert(0, new StringEnumConverter());
-            config.SerializerSettings.Converters.Insert(0, new ReadableGuidConverter());
-            config.SerializerSettings.Converters.Insert(0, new ReadableNullableGuidConverter());
-            config.SerializerSettings.Converters.Insert(0, new OptionalConverter());
-            config.SerializerSettings.Converters.Insert(0, new BbConverter(httpContextAccessor, bbParserProvider));
+            config.JsonSerializerOptions.IgnoreNullValues = true;
+            
+            config.JsonSerializerOptions.Converters.Insert(0, new JsonStringEnumConverter());
+            config.JsonSerializerOptions.Converters.Insert(0, new ReadableGuidConverter());
+            config.JsonSerializerOptions.Converters.Insert(0, new ReadableNullableGuidConverter());
+            config.JsonSerializerOptions.Converters.Insert(0, new OptionalConverterFactory());
+            config.JsonSerializerOptions.Converters.Insert(0, new BbConverterFactory(httpContextAccessor, bbParserProvider));
         }
     }
 }

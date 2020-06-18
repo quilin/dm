@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using DM.Web.API.Authentication;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Users;
-using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Mvc;
 

@@ -28,7 +28,7 @@ namespace DM.Web.API.Controllers.v1.Common
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ListEnvelope<object>> Search([FromQuery] string query, PagingQuery q)
+        public async Task<ListEnvelope<object>> Search([FromQuery] string query, [FromQuery] PagingQuery q)
         {
             // TODO: Move to service and massage it
             var (entities, paging) = await service.Search(query, Enumerable.Empty<SearchEntityType>(), q);

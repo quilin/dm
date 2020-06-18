@@ -1,19 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="4.9.2" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-      <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
+      <PackageReference Include="Autofac" Version="5.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.5" />
+      <PackageReference Include="RabbitMQ.Client" Version="6.1.0" />
     </ItemGroup>
 
     <ItemGroup>

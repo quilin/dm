@@ -152,7 +152,7 @@ namespace DM.Services.Common.BusinessProcesses.UnreadCounters
                         LastRead = dateTimeProvider.Now.UtcDateTime,
                         Counter = 0
                     },
-                    new UpdateOptions {IsUpsert = true});
+                    new ReplaceOptions {IsUpsert = true});
         }
 
         /// <inheritdoc />

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Account.EmailChange;
 using DM.Services.Community.BusinessProcesses.Account.PasswordChange;
@@ -6,7 +9,7 @@ using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Services.Core.Dto;
-using DM.Web.Core.Extensions.EnumExtensions;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.API.Dto.Users
 {
@@ -18,8 +21,16 @@ namespace DM.Web.API.Dto.Users
         /// <inheritdoc />
         public UserProfile()
         {
+            CreateMap<UserRole, IEnumerable<string>>()
+                .ConvertUsing(userRole =>
+                    Enum.GetValues(typeof(UserRole))
+                        .Cast<UserRole>()
+                        .Where(role => role != UserRole.Guest && role != UserRole.Player)
+                        .Where(role => userRole.HasFlag(role))
+                        .Select(role => role.ToString()));
+
             CreateMap<GeneralUser, User>()
-                .ForMember(d => d.Roles, s => s.MapFrom(u => u.Role.GetUserRoles()))
+                .ForMember(d => d.Roles, s => s.MapFrom(u => u.Role))
                 .ForMember(d => d.Online, s => s.MapFrom(u => u.LastVisitDate))
                 .ForMember(d => d.Rating, s => s.MapFrom(u => new Rating
                 {

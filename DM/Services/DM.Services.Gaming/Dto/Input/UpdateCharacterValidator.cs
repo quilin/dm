@@ -5,7 +5,6 @@ using DM.Services.Core.Exceptions;
 using DM.Services.Gaming.BusinessProcesses.Characters.Shared;
 using DM.Services.Gaming.Dto.Shared;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DM.Services.Gaming.Dto.Input
 {
@@ -33,7 +32,7 @@ namespace DM.Services.Gaming.Dto.Input
                 RuleFor(c => c.Class)
                     .MaximumLength(30).WithMessage(ValidationError.Long));
 
-            When(c => c.Attributes != null && EnumerableExtensions.Any(c.Attributes), () =>
+            When(c => c.Attributes != null && c.Attributes.Any(), () =>
                 RuleForEach(c => c.Attributes)
                     .MustAsync(async (c, attribute, context, _) =>
                     {

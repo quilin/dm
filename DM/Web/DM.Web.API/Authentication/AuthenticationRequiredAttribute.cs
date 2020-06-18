@@ -4,7 +4,7 @@ using DM.Services.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace DM.Web.Core.Authentication
+namespace DM.Web.API.Authentication
 {
     /// <inheritdoc />
     public class AuthenticationRequiredAttribute : TypeFilterAttribute

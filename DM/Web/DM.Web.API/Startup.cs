@@ -1,24 +1,27 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using Autofac;
 using AutoMapper;
+using DM.Services.Common;
+using DM.Services.Community;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
+using DM.Services.Forum;
+using DM.Services.Gaming;
+using DM.Services.Notifications;
+using DM.Services.Search;
 using DM.Web.API.Configuration;
 using DM.Web.API.Middleware;
 using DM.Web.API.Swagger;
-using DM.Web.Core.Binders;
+using DM.Web.Core;
 using DM.Web.Core.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ReadableGuidBinderProvider = DM.Web.API.Binding.ReadableGuidBinderProvider;
 
 namespace DM.Web.API
 {
@@ -27,26 +30,21 @@ namespace DM.Web.API
     /// </summary>
     public class Startup
     {
-        private IConfigurationRoot Configuration { get; set; }
-
-        private static Assembly[] GetAssemblies()
+        /// <inheritdoc />
+        public Startup(IConfiguration configuration)
         {
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
-            return referencedAssemblies
-                .Union(new[] {currentAssembly})
-                .Union(referencedAssemblies.SelectMany(a => a.GetReferencedAssemblies().Select(Assembly.Load)))
-                .Where(a => a.FullName.StartsWith("DM."))
-                .Distinct()
-                .ToArray();
+            Configuration = configuration;
         }
+
+        private IConfiguration Configuration { get; set; }
+        private IHttpContextAccessor httpContextAccessor;
+        private IBbParserProvider bbParserProvider;
 
         /// <summary>
         /// Configure application services
         /// </summary>
         /// <param name="services">Service collection</param>
-        /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             Configuration = ConfigurationFactory.Default;
 
@@ -60,30 +58,50 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
-            var assemblies = GetAssemblies();
             services
-                .AddAutoMapper(config => config.AllowNullCollections = true, assemblies)
+                .AddAutoMapper(config => config.AllowNullCollections = true)
                 .AddMemoryCache()
-                .AddEntityFrameworkNpgsql()
                 .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))), ServiceLifetime.Transient);
+                        .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))),
+                    ServiceLifetime.Transient);
 
-            var httpContextAccessor = new HttpContextAccessor();
-            var bbParserProvider = new BbParserProvider();
+            services.AddHealthChecks();
+
+            httpContextAccessor = new HttpContextAccessor();
+            bbParserProvider = new BbParserProvider();
 
             services
                 .AddSwaggerGen(c => c.ConfigureGen())
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
-                .AddJsonOptions(config => config.Setup(httpContextAccessor, bbParserProvider))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddJsonOptions(config => config.Setup(httpContextAccessor, bbParserProvider));
+        }
 
-            var builder = new ContainerBuilder();
+        /// <summary>
+        /// Configure application container
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterDefaultTypes();
+            builder.RegisterMapper();
 
-            builder.RegisterModule(new ApiModule(assemblies, httpContextAccessor, bbParserProvider));
-            builder.Populate(services);
+            builder.RegisterInstance(httpContextAccessor)
+                .AsSelf()
+                .AsImplementedInterfaces();
+            builder.RegisterInstance(bbParserProvider)
+                .AsSelf()
+                .AsImplementedInterfaces();
 
-            var container = builder.Build();
-            return new AutofacServiceProvider(container);
+            builder.RegisterModuleOnce<CommonModule>();
+            builder.RegisterModuleOnce<DataAccessModule>();
+
+            builder.RegisterModuleOnce<CommunityModule>();
+            builder.RegisterModuleOnce<ForumModule>();
+            builder.RegisterModuleOnce<GamingModule>();
+            builder.RegisterModuleOnce<NotificationsModule>();
+            builder.RegisterModuleOnce<SearchEngineModule>();
+
+            builder.RegisterModuleOnce<WebCoreModule>();
         }
 
         /// <summary>
@@ -103,7 +121,9 @@ namespace DM.Web.API
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowAnyOrigin())
-                .UseMvc();
+                .UseRouting()
+                .UseHealthChecks("/_health")
+                .UseEndpoints(c => c.MapControllers());
         }
     }
 }

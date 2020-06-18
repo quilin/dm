@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using AutoMapper;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess;
@@ -12,18 +10,7 @@ namespace DM.Tests.Core
 {
     public abstract class DbTestBase : UnitTestBase
     {
-        protected static IMapper GetMapper()
-        {
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            var referencedAssemblies = currentAssembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
-            var assemblies = referencedAssemblies
-                .Union(new[] {currentAssembly})
-                .Union(referencedAssemblies.SelectMany(a => a.GetReferencedAssemblies().Select(Assembly.Load)))
-                .Where(a => a.FullName.StartsWith("DM."))
-                .Distinct()
-                .ToArray();
-            return new Mapper(new MapperConfiguration(c => c.AddProfiles(assemblies)));
-        }
+        protected static IMapper GetMapper() => new Mapper(new MapperConfiguration(c => { }));
 
         protected static DmDbContext GetRdb(string name) => new DmDbContext(
             new DbContextOptionsBuilder<DmDbContext>().UseInMemoryDatabase(name).Options);

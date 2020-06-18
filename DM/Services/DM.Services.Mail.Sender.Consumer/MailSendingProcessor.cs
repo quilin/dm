@@ -54,9 +54,9 @@ namespace DM.Services.Mail.Sender.Consumer
             logger.LogInformation($"Sending letter to {message.Address.Obfuscate()}");
             var policyResult = await retryPolicy.ExecuteAndCaptureAsync(() => client.Value.SendAsync(new MimeMessage
             {
-                From = {new MailboxAddress(configuration.FromAddress)},
-                ReplyTo = {new MailboxAddress(configuration.ReplyToAddress)},
-                To = {new MailboxAddress(message.Address)},
+                From = {new MailboxAddress(configuration.FromDisplayName, configuration.FromAddress)},
+                ReplyTo = {new MailboxAddress(configuration.FromDisplayName, configuration.ReplyToAddress)},
+                To = {MailboxAddress.Parse(message.Address)},
                 Subject = message.Subject,
                 Body = new TextPart(TextFormat.Html) {Text = message.Body},
                 MessageId = correlationTokenProvider.Current.ToString()

@@ -7,11 +7,14 @@ using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Implementation;
+using DM.Services.DataAccess.BusinessObjects.Users;
+using DM.Services.DataAccess.RelationalStorage;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
+using Session = DM.Services.Authentication.Dto.Session;
 
 namespace DM.Services.Authentication.Tests
 {
@@ -22,19 +25,31 @@ namespace DM.Services.Authentication.Tests
         private readonly Mock<IDateTimeProvider> dateTimeProvider;
         private readonly ISetup<ISymmetricCryptoService, Task<string>> tokenDecryptSetup;
         private readonly Mock<ISymmetricCryptoService> cryptoService;
+        private readonly Mock<IUpdateBuilder<User>> updateBuilder;
 
         public AuthenticationServiceTokenShould()
         {
             var securityManager = Mock<ISecurityManager>();
             cryptoService = Mock<ISymmetricCryptoService>();
             tokenDecryptSetup = cryptoService.Setup(s => s.Decrypt(It.IsAny<string>()));
+
             authenticationRepository = Mock<IAuthenticationRepository>();
+
             var sessionFactory = Mock<ISessionFactory>();
+
             dateTimeProvider = Mock<IDateTimeProvider>();
+
             var identityProvider = Mock<IIdentityProvider>();
+
+            updateBuilder = Mock<IUpdateBuilder<User>>();
+            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+            updateBuilderFactory
+                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
+                .Returns(updateBuilder.Object);
+
             service = new AuthenticationService(securityManager.Object, cryptoService.Object,
                 authenticationRepository.Object, sessionFactory.Object, dateTimeProvider.Object,
-                identityProvider.Object, null);
+                identityProvider.Object, updateBuilderFactory.Object);
         }
 
         [Fact]
@@ -151,11 +166,14 @@ namespace DM.Services.Authentication.Tests
                 .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
                 .ReturnsAsync(session);
             authenticationRepository
-                .Setup(r => r.RefreshSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<DateTime>()))
+                .Setup(r => r.RefreshSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()))
                 .Returns(Task.CompletedTask);
             dateTimeProvider
                 .Setup(p => p.Now)
                 .Returns(new DateTime(2018, 06, 11, 9, 50, 0));
+            updateBuilder
+                .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
+                .Returns(updateBuilder.Object);
 
             var actual = await service.Authenticate("token");
             actual.Error.Should().Be(AuthenticationError.NoError);
@@ -168,8 +186,11 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
-            authenticationRepository.Verify(r => r.RefreshSession(userId, sessionId, new DateTime(2018, 06, 11, 10, 20, 0)));
+            authenticationRepository.Verify(r => r.RefreshSession(userId, sessionId, new DateTimeOffset(new DateTime(2018, 06, 11, 10, 20, 0))));
+            authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();
+
+            updateBuilder.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -187,7 +208,7 @@ namespace DM.Services.Authentication.Tests
             {
                 Id = sessionId,
                 Persistent = false,
-                ExpirationDate = new DateTime(2019, 06, 11, 10, 0, 0)
+                ExpirationDate = new DateTimeOffset(new DateTime(2019, 06, 11, 10, 0, 0))
             };
             authenticationRepository
                 .Setup(r => r.FindUser(It.IsAny<Guid>()))
@@ -201,6 +222,9 @@ namespace DM.Services.Authentication.Tests
             dateTimeProvider
                 .Setup(p => p.Now)
                 .Returns(new DateTime(2018, 06, 11, 10, 10, 0));
+            updateBuilder
+                .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
+                .Returns(updateBuilder.Object);
 
             var actual = await service.Authenticate("token");
             actual.Error.Should().Be(AuthenticationError.NoError);
@@ -213,6 +237,7 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
+            authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();
         }
 
@@ -241,6 +266,9 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository
                 .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
                 .ReturnsAsync(session);
+            updateBuilder
+                .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
+                .Returns(updateBuilder.Object);
 
             var actual = await service.Authenticate("token");
             actual.Error.Should().Be(AuthenticationError.NoError);
@@ -253,6 +281,7 @@ namespace DM.Services.Authentication.Tests
             authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
             authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
+            authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();
         }
     }

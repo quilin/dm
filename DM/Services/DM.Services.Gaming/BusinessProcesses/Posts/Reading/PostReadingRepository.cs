@@ -55,7 +55,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
             return dbContext.Posts
                 .Where(p => !p.IsRemoved && p.PostId == postId)
                 .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
-                .ProjectTo<Post>()
+                .ProjectTo<Post>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
     }

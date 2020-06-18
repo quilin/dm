@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Routing;
 namespace DM.Services.Mail.Rendering.Rendering
 {
     /// <inheritdoc />
-    internal class TemplateRenderer : ITemplateRenderer
+    internal class TemplateRenderer : ITemplateRenderer, IRenderer
     {
         private readonly IRazorViewEngine viewEngine;
         private readonly IServiceProvider serviceProvider;
@@ -36,7 +36,7 @@ namespace DM.Services.Mail.Rendering.Rendering
             var httpContext = new DefaultHttpContext {RequestServices = serviceProvider};
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
-            using var writer = new StringWriter();
+            await using var writer = new StringWriter();
             var viewResult = viewEngine.FindView(actionContext, templatePath, false);
             if (!viewResult.Success)
             {
