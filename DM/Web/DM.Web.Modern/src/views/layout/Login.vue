@@ -12,15 +12,13 @@
         <input type="password" v-model="$v.password.$model" />
         <div v-if="$v.password.$error" class="form-field-error">$v.password.$error</div>
       </div>
-      <div class="form-field">
-        <label>
-          <input type="checkbox" v-model="rememberMe" />
-          Запомнить меня
-        </label>
-      </div>
+      <label>
+        <input type="checkbox" v-model="rememberMe" />
+        Запомнить меня
+      </label>
     </div>
     <template slot="controls">
-      <input type="button" @click="signIn" :disabled="$v.$error" value="Войти" />
+      <button @click="signIn" :disabled="$v.$error">Войти</button>
       <a href="javascript:void(0)" @click="$modal.hide('login')">Отменить</a>
     </template>
   </lightbox>
@@ -73,4 +71,6 @@ export default class Login extends Vue {
 </script>
 
 <style lang="stylus">
+.form-field
+  labeled-field()
 </style>

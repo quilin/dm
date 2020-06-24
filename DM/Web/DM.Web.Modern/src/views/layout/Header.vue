@@ -101,6 +101,7 @@ export default class DmHeader extends Vue {
   height 26px /// image size
   background transparent url('~@/assets/logo.gif') no-repeat
   theme(filter, colorPair(none, invert(87%)))
+  transition filter $animationTime
 
 .logo-text
   theme(color, $highlightText)

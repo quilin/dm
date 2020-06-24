@@ -68,13 +68,15 @@ body
 .v--modal-overlay
   theme(background-color, $overlayBackground)
 
+*
+  transition color, background-color $animationTime
+
 .main
   height 100%
   min-height 100%
   overflow-y scroll
   theme(color, $text)
   theme(background-color, $background)
-  transition color, background-color $animationTime
 
 .content-container
   position relative
@@ -116,7 +118,7 @@ body
 a
   theme(color, $activeText)
   text-decoration none
-  transition all $animationTime
+  transition color $animationTime
   cursor pointer
   &:hover
     theme(color, $activeHoverText)

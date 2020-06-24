@@ -39,16 +39,15 @@ $controlsOffset = $small + $minor
   font-size $titleFontSize
   position absolute
   top $small
-  right $small - $tiny // font exception
+  right $small - $tiny // особенности шрифта вынуждают уточнить положение
   cursor pointer
   &:hover
     theme(color, $activeText)
 
 .lightbox-controls
+  display flex
+  align-items baseline
   margin $medium (-($lightboxOffset)) 0
   padding $controlsOffset $lightboxOffset
   theme(background-color, $controlBackground)
-
-  & input[type='button']
-    margin-right $medium
 </style>
