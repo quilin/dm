@@ -8,6 +8,11 @@ const actions: ActionTree<CommunityState, RootState> = {
     const polls = await communityApi.getPolls(true);
     commit('updateActivePolls', polls.resources);
   },
+
+  async fetchUsers({ commit }, { n }): Promise<void> {
+    const users = await communityApi.getUsers(n);
+    commit('updateUsers', users);
+  },
 };
 
 export default actions;

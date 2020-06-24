@@ -54,10 +54,15 @@ export default new Router({
     },
     {
       path: '/community',
-      name: 'community',
       components: {
         menu: GeneralMenu,
+        page: () => import('./views/pages/community/Community.vue'),
       },
+      children: [{
+        path: ':n?',
+        name: 'community',
+        component: () => import('./views/pages/community/UsersList.vue'),
+      }],
     },
     {
       path: '/fm',

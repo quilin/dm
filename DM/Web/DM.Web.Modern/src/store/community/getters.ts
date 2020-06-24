@@ -1,7 +1,7 @@
 import { GetterTree } from 'vuex';
 import CommunityState from './communityState';
 import RootState from './../rootState';
-import { Poll } from '@/api/models/community';
+import { Poll, User } from '@/api/models/community';
 import { ListEnvelope } from '@/api/models/common';
 
 const getters: GetterTree<CommunityState, RootState> = {
@@ -10,6 +10,10 @@ const getters: GetterTree<CommunityState, RootState> = {
   },
   polls(state): ListEnvelope<Poll> | null {
     return state.polls;
+  },
+
+  users(state): ListEnvelope<User> | null {
+    return state.users;
   },
 };
 

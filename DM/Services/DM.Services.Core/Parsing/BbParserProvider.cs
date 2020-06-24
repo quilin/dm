@@ -58,7 +58,7 @@ namespace DM.Services.Core.Parsing
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
-            {"\r\n", "<br />"}
+            {"\n", "<br />"}
         };
 
         private static readonly Dictionary<string, string> ConversationMessageSubstitutions =
@@ -72,15 +72,15 @@ namespace DM.Services.Core.Parsing
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
-            {"\r\n___\r\n", "<hr />"},
-            {"\r\n", "<br />"},
+            {"\n___", "<hr />"},
+            {"\n", "<br />"},
         };
 
         private static readonly Dictionary<string, string> SafeSubstitutions = new Dictionary<string, string>
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
-            {"\r\n", "<br />"}
+            {"\n", "<br />"}
         };
 
         private static TagSetBuilder DefaultTags => new TagSetBuilder(new[]

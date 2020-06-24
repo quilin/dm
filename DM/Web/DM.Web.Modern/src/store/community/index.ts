@@ -8,6 +8,8 @@ import RootState from './../rootState';
 const state: CommunityState = {
   activePolls: null,
   polls: null,
+
+  users: null,
 };
 
 const community: Module<CommunityState, RootState> = {
