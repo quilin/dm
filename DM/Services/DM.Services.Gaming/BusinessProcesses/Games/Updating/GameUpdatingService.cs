@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -82,7 +83,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 .MaybeField(c => c.DisableAlignment, updateGame.DisableAlignment)
                 .MaybeField(c => c.Notepad, updateGame.Notepad);
 
-            var oldAssistant = game.Assistant ?? game.PendingAssistant;
+            var oldAssistant = game.Assistant ?? game.PendingAssistant.FirstOrDefault();
             if (updateGame.AssistantLogin != default &&
                 !updateGame.AssistantLogin.Equals(oldAssistant?.Login, StringComparison.InvariantCultureIgnoreCase))
             {

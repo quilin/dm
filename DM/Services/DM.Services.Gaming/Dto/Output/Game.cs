@@ -57,8 +57,9 @@ namespace DM.Services.Gaming.Dto.Output
 
         /// <summary>
         /// Pending assistant if any
+        /// <remarks>Due to some issues in EFCore 3.1.5 had to move to IEnumerable, but make no mistake - that is a single assistant every time!</remarks>
         /// </summary>
-        public GeneralUser PendingAssistant { get; set; }
+        public IEnumerable<GeneralUser> PendingAssistant { get; set; }
 
         /// <summary>
         /// Active game character author ids
@@ -73,7 +74,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// <summary>
         /// Blacklisted user ids
         /// </summary>
-        public IDictionary<Guid, Guid> BlacklistedUsers { get; set; }
+        public IEnumerable<BlacklistedUser> BlacklistedUsers { get; set; }
 
         /// <summary>
         /// Game pending posts

@@ -30,10 +30,9 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
         public async Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId, Guid userId)
         {
             return await dbContext.Rooms
-                .Where(r => r.GameId == gameId)
-                .Where(r => AccessibilityFilters.GameAvailable(userId).Compile().Invoke(r.Game))
                 .Where(AccessibilityFilters.RoomAvailable(userId))
-                .Select(r => r.RoomClaims)
+                .Where(r => r.GameId == gameId)
+                .SelectMany(r => r.RoomClaims)
                 .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
@@ -52,9 +51,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
         /// <inheritdoc />
         public async Task<RoomClaim> GetClaim(Guid claimId, Guid userId)
         {
-            return await dbContext.RoomClaims
+            return await dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .SelectMany(r => r.RoomClaims)
                 .Where(l => l.RoomClaimId == claimId)
-                .Where(l => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(l.Room))
                 .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }

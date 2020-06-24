@@ -40,9 +40,10 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
             .ToArrayAsync();
 
         /// <inheritdoc />
-        public Task<Message> Get(Guid messageId, Guid userId) => dbContext.Messages
+        public Task<Message> Get(Guid messageId, Guid userId) => dbContext.Conversations
+            .Where(ConversationReadingRepository.UserParticipates(userId))
+            .SelectMany(c => c.Messages)
             .Where(m => !m.IsRemoved && m.MessageId == messageId)
-            .Where(m => ConversationReadingRepository.UserParticipates(userId).Compile().Invoke(m.Conversation))
             .ProjectTo<Message>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
     }

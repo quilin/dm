@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
@@ -51,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
             intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
-            if (game.BlacklistedUsers.ContainsKey(userId))
+            if (game.BlacklistedUsers.Any(l => l.UserId == userId))
             {
                 throw new HttpException(HttpStatusCode.Conflict, "User already blacklisted");
             }

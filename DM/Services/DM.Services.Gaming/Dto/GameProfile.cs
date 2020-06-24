@@ -1,12 +1,14 @@
 using System.Linq;
 using AutoMapper;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.Gaming.Dto.Output;
 using DbGame = DM.Services.DataAccess.BusinessObjects.Games.Game;
 using DbGameTag = DM.Services.DataAccess.BusinessObjects.Common.Tag;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
 using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
+using GameTag = DM.Services.Gaming.Dto.Output.GameTag;
 
 namespace DM.Services.Gaming.Dto
 {
@@ -25,14 +27,16 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
                     .Where(t => !t.IsRemoved && t.Type == TokenType.AssistantAssignment)
                     .Select(t => t.User)
-                    .FirstOrDefault()))
+                    .Take(1)))
                 .ForMember(d => d.ActiveCharacterUserIds, s => s.MapFrom(g => g.Characters
                     .Where(c => !c.IsRemoved && c.Status == CharacterStatus.Active)
                     .Select(c => c.CharacterId)))
                 .ForMember(d => d.ReaderUserIds, s => s.MapFrom(g => g.Readers
                     .Select(r => r.UserId)))
-                .ForMember(d => d.BlacklistedUsers, s => s.MapFrom(g => g.BlackList
-                    .ToDictionary(b => b.UserId, b => b.BlackListLinkId)));
+                .ForMember(d => d.BlacklistedUsers, s => s.MapFrom(g => g.BlackList));
+
+            CreateMap<BlackListLink, BlacklistedUser>()
+                .ForMember(u => u.LinkId, s => s.MapFrom(l => l.BlackListLinkId));
 
             CreateMap<DbGame, GameExtended>()
                 .ForMember(d => d.Readers, s => s.MapFrom(g => g.Readers))

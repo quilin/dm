@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
@@ -52,12 +53,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
             intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
             var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
-            if (!game.BlacklistedUsers.TryGetValue(userId, out var linkId))
+            var blacklistedLink = game.BlacklistedUsers.FirstOrDefault(u => u.UserId == userId);
+            if (blacklistedLink == default)
             {
                 throw new HttpException(HttpStatusCode.Conflict, "User is not blacklisted");
             }
 
-            var updateBuilder = updateBuilderFactory.Create<BlackListLink>(linkId).Delete();
+            var updateBuilder = updateBuilderFactory.Create<BlackListLink>(blacklistedLink.LinkId).Delete();
             await repository.Delete(updateBuilder);
             await invokedEventPublisher.Publish(EventType.ChangedGame, game.Id);
         }

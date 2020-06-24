@@ -69,21 +69,23 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <inheritdoc />
         public async Task<IDictionary<Guid, IEnumerable<Guid>>> GetAvailableRoomIds(IEnumerable<Guid> gameIds, Guid userId)
         {
-            return await dbContext.Rooms
+            var roomsInGames = await dbContext.Rooms
                 .Where(AccessibilityFilters.RoomAvailable(userId))
                 .Where(r => gameIds.Contains(r.GameId))
                 .Select(r => new {r.RoomId, r.GameId})
-                .GroupBy(r => r.GameId)
-                .ToDictionaryAsync(g => g.Key, g => g.Select(r => r.RoomId));
+                .ToArrayAsync();
+            return roomsInGames
+                .GroupBy(g => g.GameId)
+                .ToDictionary(g => g.Key, g => g.Select(r => r.RoomId));
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<PendingPost>> GetPendingPosts(IEnumerable<Guid> gameIds, Guid userId)
         {
-            return await dbContext.PendingPosts
-                .Where(p => p.PendingUser.UserId == userId)
-                .Where(p => gameIds.Contains(p.Room.GameId))
-                .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
+            return await dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .Where(r => gameIds.Contains(r.GameId))
+                .SelectMany(r => r.PendingPosts)
                 .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }

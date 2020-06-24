@@ -31,18 +31,22 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         /// <inheritdoc />
         public Task<int> Count(Guid roomId, Guid userId)
         {
-            return dbContext.Posts
-                .Where(p => !p.IsRemoved && p.RoomId == roomId)
-                .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
+            return dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .Where(r => r.RoomId == roomId)
+                .SelectMany(r => r.Posts)
+                .Where(p => !p.IsRemoved)
                 .CountAsync();
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<Post>> Get(Guid roomId, PagingData paging, Guid userId)
         {
-            return await dbContext.Posts
-                .Where(p => !p.IsRemoved && p.RoomId == roomId)
-                .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
+            return await dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .Where(r => r.RoomId == roomId)
+                .SelectMany(r => r.Posts)
+                .Where(p => !p.IsRemoved)
                 .OrderBy(p => p.CreateDate)
                 .Page(paging)
                 .ProjectTo<Post>(mapper.ConfigurationProvider)
@@ -52,9 +56,10 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
         /// <inheritdoc />
         public Task<Post> Get(Guid postId, Guid userId)
         {
-            return dbContext.Posts
+            return dbContext.Rooms
+                .Where(AccessibilityFilters.RoomAvailable(userId))
+                .SelectMany(r => r.Posts)
                 .Where(p => !p.IsRemoved && p.PostId == postId)
-                .Where(p => AccessibilityFilters.RoomAvailable(userId).Compile().Invoke(p.Room))
                 .ProjectTo<Post>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }
