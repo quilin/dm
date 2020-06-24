@@ -1,6 +1,6 @@
 <template>
   <div>
-    <menu-block token="OpenPolls">
+    <menu-block token="OpenPolls" v-if="polls === null || polls.length > 0">
       <template v-slot:title>Опросы</template>
       <loader v-if="polls === null" />
       <poll-component v-else v-for="poll in polls" :key="poll.id" :poll="poll" />
@@ -45,7 +45,5 @@ export default class GeneralMenu extends Vue {
 
 <style scoped lang="stylus">
 .menu-item
-  margin $tiny 0
-  &.selected
-    font-weight bold
+  menu-item()
 </style>

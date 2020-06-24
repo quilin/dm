@@ -1,4 +1,4 @@
-block()
+panel()
   margin $small 0
   padding $minor
   border 1px solid
@@ -6,29 +6,29 @@ block()
   theme(background, $blockBackground)
   font-size $textFontSize
 
-.form
-  margin-top $medium
-
-.form-field
+labeled-field()
   display flex
   margin $small 0
+
   & input
     flex-shrink 0
+
   &.error input
     theme(border-color, $negativeBorder)
     animation-name shake-error
     animation-duration $animationTime
     animation-timing-function ease-in-out
+
     &:focus
       themeExtend(box-shadow, inset 0 0 $minor, $negativeBorder)
+  
+  & label
+    flex-shrink 0
+    display inline-block
+    margin-top $minor + $tiny
+    width $gridStep * 20
 
-.form-field-label
-  display inline-block
-  margin-top $minor + $tiny
-  width $gridStep * 20
-  flex-shrink 0
-
-.menu-item
+menu-item()
   margin $tiny 0
   &.selected
     font-weight bold

@@ -1,7 +1,4 @@
-input[type='text'],
-input[type='password'],
-textarea
-  position relative
+input()
   margin 0
   border 1px solid
   outline none
@@ -19,8 +16,7 @@ textarea
     theme(color, $text)
     background transparent
 
-input[type='button'],
-button
+button()
   padding ($minor + 1px) $small ($minor + 2px)
   margin 0
   min-width $gridStep * 25
@@ -41,5 +37,9 @@ button
     theme(color, $buttonDisabledText)
     cursor not-allowed
 
-label
-  theme(color, $text)
+input,
+textarea
+  input()
+
+button
+  button()
