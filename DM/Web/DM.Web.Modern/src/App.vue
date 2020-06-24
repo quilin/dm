@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="`theme_${currentTheme}`">
-    <div class="main">
+    <div class="main" ref="scroll">
       <div class="content-container">
         <div class="content-wrapper">
           <dm-header />
@@ -19,7 +19,8 @@
         <dm-footer />
       </div>
     </div>
-    <portal-target name="lightbox"></portal-target>
+    <portal-target name="lightbox" />
+    <portal-target name="popup" class="popup-container" />
   </div>
 </template>
 
@@ -39,6 +40,10 @@ Vue.use(PortalVue);
   },
 })
 export default class DmApp extends Vue {
+  public $refs!: {
+    scroll: HTMLElement;
+  }
+
   @Getter('currentTheme')
   private currentTheme!: string;
 
@@ -56,12 +61,14 @@ html, body, #app
   height 100%
   margin 0
   height 100%
+  overflow hidden
 
 body
   font-family PT Sans
   font-size $fontSize
   line-height 1
   word-wrap break-word
+  transition color, background-color $animationTime
 
 .v--modal
   theme(background-color, $background)
@@ -75,8 +82,8 @@ body
   height 100%
   min-height 100%
   overflow-y scroll
-  theme(color, $text)
   theme(background-color, $background)
+  theme(color, $text)
 
 .content-container
   position relative
@@ -131,4 +138,11 @@ a
 
 .content-minor-title
   minorTitle()
+
+.popup-container
+  position absolute
+  top 0
+  left 0
+  z-index 1000
+  theme(color, $text)
 </style>

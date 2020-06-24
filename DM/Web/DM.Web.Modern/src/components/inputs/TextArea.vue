@@ -21,6 +21,7 @@ export default class TextArea extends Vue {
 
 <style lang="stylus" scoped>
 textarea
+  display block
   height $large
   width 100%
   box-sizing border-box
