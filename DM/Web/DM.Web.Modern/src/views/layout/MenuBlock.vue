@@ -66,5 +66,7 @@ export default class MenuBlock extends Vue {
 .list
   overflow hidden
   transition height .2s
+  .hidden &
+    height 0
 
 </style>
