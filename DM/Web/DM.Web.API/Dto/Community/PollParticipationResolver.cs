@@ -6,8 +6,7 @@ using DtoPollOption = DM.Services.Community.BusinessProcesses.Polls.Reading.Poll
 namespace DM.Web.API.Dto.Community
 {
     /// <inheritdoc />
-    public class PollParticipationResolver :
-        IValueResolver<DtoPollOption, PollOption, bool?>
+    public class PollParticipationResolver : IValueResolver<DtoPollOption, PollOption, bool?>
     {
         private readonly IIdentityProvider identityProvider;
 

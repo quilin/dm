@@ -1,49 +1,24 @@
 <template>
   <div>
-    <menu-block token="OpenPolls" v-if="polls === null || polls.length > 0">
-      <template v-slot:title>Опросы</template>
-      <loader v-if="polls === null" />
-      <poll-component v-else v-for="poll in polls" :key="poll.id" :poll="poll" />
-    </menu-block>
+    <active-polls />
+    <donate />
+    <most-read-games />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
-import { Action, Getter } from 'vuex-class';
+import { Component, Vue } from 'vue-property-decorator';
 
-import { Poll } from '@/api/models/community';
-import IconType from '@/components/iconType';
-import MenuBlock from './MenuBlock.vue';
-import PollComponent from '@/components/Poll.vue';
+import ActivePolls from '@/views/layout/sidebar/ActivePolls.vue';
+import Donate from '@/views/layout/sidebar/Donate.vue';
+import MostReadGames from '@/views/layout/sidebar/MostReadGames.vue';
 
 @Component({
   components: {
-    MenuBlock,
-    PollComponent,
+    ActivePolls,
+    Donate,
+    MostReadGames,
   },
 })
-export default class GeneralMenu extends Vue {
-  private IconType: typeof IconType = IconType;
-
-  @Getter('activePolls', { namespace: 'community' })
-  private polls!: Poll[];
-
-  @Action('fetchActivePolls', { namespace: 'community' })
-  private fetchPolls: any;
-
-  @Watch('user')
-  private onUserChange() {
-    this.fetchPolls();
-  }
-
-  private mounted() {
-    this.fetchPolls();
-  }
-}
+export default class GeneralMenu extends Vue {}
 </script>
-
-<style scoped lang="stylus">
-.menu-item
-  menu-item()
-</style>

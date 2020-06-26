@@ -62,15 +62,24 @@ namespace DM.Services.Core.Extensions
         /// <returns></returns>
         public static ContainerBuilder RegisterMapper(this ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
+            var callingAssembly = Assembly.GetCallingAssembly();
+            builder.RegisterAssemblyTypes(callingAssembly)
                 .Where(t => t.IsClass && t.IsSubclassOf(typeof(Profile)))
                 .As<Profile>();
 
-            builder.Register(ctx => new Mapper(
-                    new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>()))))
-                .AsSelf()
-                .AsImplementedInterfaces()
+            builder
+                .Register<IConfigurationProvider>(ctx =>
+                    new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>())))
                 .SingleInstance();
+
+            builder
+                .Register(ctx =>
+                {
+                    var context = ctx.Resolve<IComponentContext>();
+                    var configuration = context.Resolve<IConfigurationProvider>();
+                    return configuration.CreateMapper(context.Resolve);
+                })
+                .InstancePerLifetimeScope();
 
             return builder;
         }

@@ -11,6 +11,7 @@ using DM.Services.Forum;
 using DM.Services.Gaming;
 using DM.Services.Notifications;
 using DM.Services.Search;
+using DM.Web.API.Binding;
 using DM.Web.API.Configuration;
 using DM.Web.API.Middleware;
 using DM.Web.API.Swagger;
@@ -21,7 +22,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ReadableGuidBinderProvider = DM.Web.API.Binding.ReadableGuidBinderProvider;
 
 namespace DM.Web.API
 {

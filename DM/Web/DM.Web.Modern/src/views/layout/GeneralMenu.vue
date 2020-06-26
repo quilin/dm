@@ -1,7 +1,10 @@
 <template>
   <div>
-    <moderation-games v-if="user && user.roles.some(r => r ==='Administrator' || r === 'SeniorModerator')" />
-    <own-games v-if="user" />
+
+    <template v-if="user">
+      <moderation-games v-if="user.roles.some(r => r ==='Administrator' || r === 'SeniorModerator')" />
+      <own-games v-if="user" />
+    </template>
     <active-games v-else />
 
     <requiring-games />
@@ -9,6 +12,7 @@
     <finished-games />
 
     <fora />
+
   </div>
 </template>
 
@@ -43,12 +47,3 @@ export default class GeneralMenu extends Vue {
   private user!: User;
 }
 </script>
-
-<style scoped lang="stylus">
-.menu-game-item
-  display flex
-  justify-content space-between
-
-.menu-rest-link
-  font-weight bold
-</style>

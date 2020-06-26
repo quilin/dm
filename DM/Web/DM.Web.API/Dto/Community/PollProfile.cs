@@ -17,6 +17,7 @@ namespace DM.Web.API.Dto.Community
             CreateMap<DtoPollOption, PollOption>()
                 .ForMember(d => d.VotesCount, s => s.MapFrom(o => o.UserIds.Count()))
                 .ForMember(d => d.Voted, s => s.MapFrom<PollParticipationResolver>());
+
             CreateMap<Poll, CreatePoll>()
                 .ForMember(d => d.Title, s => s.MapFrom(p => p.Title))
                 .ForMember(d => d.EndDate, s => s.MapFrom(p => p.Ends))

@@ -32,5 +32,5 @@ export interface PollOption {
   id: string;
   text: string;
   votesCount: number;
-  voted: boolean;
+  voted: boolean | null;
 }

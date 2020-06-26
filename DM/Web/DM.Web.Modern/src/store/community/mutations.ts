@@ -10,6 +10,16 @@ const mutations: MutationTree<CommunityState> = {
   updatePolls(state, payload: ListEnvelope<Poll>) {
     state.polls = payload;
   },
+  updatePoll(state, payload: Poll) {
+    if (state.activePolls !== null) {
+      const matchingActivePoll = state.activePolls.find((poll: Poll) => poll.id === payload.id);
+      Object.assign(matchingActivePoll, payload);
+    }
+    if (state.polls !== null) {
+      const matchingPoll = state.polls!.resources.find((poll: Poll) => poll.id === payload.id);
+      Object.assign(matchingPoll, payload);
+    }
+  },
 
   updateUsers(state, payload: ListEnvelope<User>) {
     state.users = payload;

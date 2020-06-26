@@ -33,6 +33,7 @@ enum IconType {
   Tick = 0xe006,
 
   List = 0xe01c,
+  Ruble = 0xe046,
 
   UserSettings = 0xe05b,
   Logout = 0xe039,

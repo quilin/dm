@@ -16,13 +16,15 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Voting
         }
 
         /// <inheritdoc />
-        public Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId) => Collection.FindOneAndUpdateAsync(
-            Filter.Eq(p => p.Id, pollId) &
-            Filter.ElemMatch(p => p.Options, o => o.Id == optionId),
-            Update.Push(u => u.Options[-1].UserIds, userId),
-            new FindOneAndUpdateOptions<DbPoll, Poll>
-            {
-                Projection = PollReadingRepository.PollProjection
-            });
+        public Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId) =>
+            Collection.FindOneAndUpdateAsync(
+                Filter.Eq(p => p.Id, pollId) &
+                Filter.ElemMatch(p => p.Options, o => o.Id == optionId),
+                Update.Push(u => u.Options[-1].UserIds, userId),
+                new FindOneAndUpdateOptions<DbPoll, Poll>
+                {
+                    Projection = PollReadingRepository.PollProjection,
+                    ReturnDocument = ReturnDocument.After
+                });
     }
 }

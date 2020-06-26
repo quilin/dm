@@ -44,6 +44,10 @@ class Api {
     return this.send(() => this.axios.post(url, params));
   }
 
+  public async put<T>(url: string, params?: any): Promise<ApiResult<T>> {
+    return this.send(() => this.axios.put(url, params));
+  }
+
   public async patch<T>(url: string, params: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.patch(url, params));
   }

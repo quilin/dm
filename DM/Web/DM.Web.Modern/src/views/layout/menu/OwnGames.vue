@@ -49,7 +49,6 @@ export default class OwnGames extends Vue {
 
   @Watch('user')
   private onUserChange() {
-    console.log('test');
     this.fetchOwnGames();
   }
 
