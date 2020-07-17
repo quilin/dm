@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.MongoIntegration;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DM.Services.DataAccess.BusinessObjects.Users.Settings
 {
@@ -8,12 +10,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Users.Settings
     /// DAL model for user settings
     /// </summary>
     [MongoCollectionName("UserSettings")]
+    [BsonIgnoreExtraElements]
     public class UserSettings
     {
         /// <summary>
         /// User identifier
         /// </summary>
-        public Guid Id { get; set; }
+        [Key]
+        public Guid UserId { get; set; }
 
         /// <summary>
         /// Paging settings

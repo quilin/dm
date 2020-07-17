@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="controls"></div>
-    <textarea @input="textUpdate"></textarea>
+    <div class="controls">TODO: элементы управления</div>
+    <textarea :value="value" @input="$emit('input', $event.target.value)" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 @Component({})
 export default class TextArea extends Vue {
   @Prop()
-  private text!: string;
+  private value!: string;
 
   private textUpdate(evt: any): void {
     this.$emit('input', evt.target.value);
@@ -20,6 +20,9 @@ export default class TextArea extends Vue {
 </script>
 
 <style lang="stylus" scoped>
+.controls
+  secondary()
+
 textarea
   display block
   height $large

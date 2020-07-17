@@ -12,13 +12,49 @@ export interface Rating {
 
 export interface User {
   login: string;
-  roles: string[];
+  roles: UserRole[];
   profilePictureUrl: string;
   rating: Rating;
   online: string;
   status: string;
   name: string;
   location: string;
+  skype: string;
+
+  info: string;
+  registration: string;
+  settings?: UserSettings;
+}
+
+export enum UserRole {
+  Guest = 'Guest',
+  Player = 'Player',
+  Administrator = 'Administrator',
+  NannyModerator = 'NannyModerator',
+  RegularModerator = 'RegularModerator',
+  SeniorModerator = 'SeniorModerator',
+}
+
+export enum ColorSchema {
+  Modern = 'Modern',
+  Pale = 'Pale',
+  Classic = 'Classic',
+  ClassicPale = 'ClassicPale',
+  Night = 'Night',
+}
+
+export interface PagingSettings {
+  postsPerPage: number;
+  commentsPerPage: number;
+  topicsPerPage: number;
+  messagesPerPage: number;
+  entitiesPerPage: number;
+}
+
+export interface UserSettings {
+  nannyGreetingsMessage: string;
+  colorSchema: ColorSchema;
+  paging: PagingSettings;
 }
 
 export interface Poll {

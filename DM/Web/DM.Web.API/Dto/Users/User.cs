@@ -50,6 +50,11 @@ namespace DM.Web.API.Dto.Users
         public string Location { get; set; }
 
         /// <summary>
+        /// User registration moment
+        /// </summary>
+        public DateTimeOffset? Registration { get; set; }
+
+        /// <summary>
         /// User ICQ number
         /// </summary>
         public string Icq { get; set; }

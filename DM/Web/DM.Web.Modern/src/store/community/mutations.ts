@@ -24,6 +24,9 @@ const mutations: MutationTree<CommunityState> = {
   updateUsers(state, payload: ListEnvelope<User>) {
     state.users = payload;
   },
+  updateSelectedUser(state, payload: { view: User; edit: User }) {
+    state.selectedUser = payload;
+  },
 };
 
 export default mutations;

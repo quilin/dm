@@ -15,8 +15,8 @@
           </div>
           <div class="article-description" v-html="article.description"></div>
           <div class="article-data">
-            <router-link :to="{name: 'user', params: {login: article.author.login}}">{{article.author.login}}</router-link>,
-            {{article.created}}
+            <router-link :to="{name: 'profile', params: {login: article.author.login}}">{{article.author.login}}</router-link>, 
+            <human-timespan :date="article.created" />&#32;
             <icon v-if="!article.unreadCommentsCount" :font="IconType.CommentsNoUnread" />
           </div>
         </div>
@@ -39,10 +39,10 @@ import IconType from '@/components/iconType';
 export default class News extends Vue {
   private IconType: typeof IconType = IconType;
 
-  @Getter('news', { namespace: 'forum' })
+  @Getter('forum/news')
   private news!: Topic[];
 
-  @Action('fetchNews', { namespace: 'forum' })
+  @Action('forum/fetchNews')
   private fetchNews: any;
 
   private mounted(): void {
@@ -63,5 +63,5 @@ export default class News extends Vue {
   font-weight bold
 
 .article-data
-  theme(color, $secondaryText)
+  secondary()
 </style>

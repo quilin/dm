@@ -6,7 +6,7 @@ import ForumState from './forumState';
 import RootState from './../rootState';
 
 const state: ForumState = {
-  news: [],
+  news: null,
 
   fora: [],
 

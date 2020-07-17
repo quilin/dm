@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using DM.Web.API.Controllers.v1.Account;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -20,10 +21,10 @@ namespace DM.Web.API.Authentication
             (operation.Parameters ?? (operation.Parameters = new List<OpenApiParameter>()))
                 .Add(new OpenApiParameter
                 {
-                    Name = "X-Dm-Auth-Token",
+                    Name = ApiCredentialsStorage.HttpAuthTokenHeader,
                     In = ParameterLocation.Header,
-                    Required = false,
-                    Description = "Authenticated requests require X-Dm-Auth-Token header. " +
+                    Required = context.MethodInfo.GetCustomAttribute<AuthenticationRequiredAttribute>() != null,
+                    Description = $"Authenticated requests require {ApiCredentialsStorage.HttpAuthTokenHeader} header. " +
                         "You can get the data from POST /account/ method, " +
                         "sending login and password in \"token\" response field"
                 });

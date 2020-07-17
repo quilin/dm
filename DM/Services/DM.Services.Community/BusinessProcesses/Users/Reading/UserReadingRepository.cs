@@ -84,9 +84,11 @@ namespace DM.Services.Community.BusinessProcesses.Users.Reading
             }
 
             var userSettings = await Collection
-                .Find(Filter.Eq(u => u.Id, userDetails.UserId))
+                .Find(Filter.Eq(u => u.UserId, userDetails.UserId))
                 .FirstOrDefaultAsync();
-            userDetails.Settings = mapper.Map<Authentication.Dto.UserSettings>(userSettings);
+            userDetails.Settings = userSettings == null
+                ? Authentication.Dto.UserSettings.Default
+                : mapper.Map<Authentication.Dto.UserSettings>(userSettings);
             return userDetails;
         }
     }

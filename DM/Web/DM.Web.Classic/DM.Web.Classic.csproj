@@ -6,7 +6,6 @@
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
-
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.9.2" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
@@ -46,48 +45,6 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Views\Account\Activation\UpdatePassword.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameInfo\Characters\Character.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameInfo\Characters\CharactersList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameInfo\Game.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameNotepad\GameNotepad.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameRemove\RemoveForm.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameSettings\GameSettings.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GamesList\GamesList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GamesList\GamesListItem\GamesListItem.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GamesList\Index.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\Character\Character.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\CreateRoom\CreateRoom.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\RoomsList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\Room\Character\Character.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\Room\Room.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\Room\RoomActions\RoomActions.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\RoomsList\Room\RoomTitle.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\GameList\GameLink\GameLink.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\GameList\GamesList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\GameList\GamesLists.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Shared\GameList\PlayerGamesList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameCommentaries\Commentary\Commentary.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameCommentaries\CreateCommentary\CreateCommentary.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameCommentaries\EditCommentary\EditCommentary.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameCommentaries\GameCommentaries.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameCommentaries\GameCommentariesList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameActions\GameActions.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameActions\GameRooms\GameRooms.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\GameActions\GameRooms\RoomLink.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CreateGame\CreateGame.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CreateCharacter\CreateCharacter.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\Character\Character.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CharactersList\CharactersList.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CharactersList\Character\Character.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CharactersList\Character\CharacterActions\CharacterActions.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\CharactersList\Character\CharacterPreview.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\EditGame\EditGame.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\EditGameStatus\EditGameStatus.cshtml" />
-      <_ContentIncludedByDefault Remove="Views\EditRoom\EditRoom.cshtml" />
     </ItemGroup>
 
 </Project>

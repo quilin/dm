@@ -69,11 +69,11 @@ namespace DM.Services.Authentication.Repositories
         {
             var settings = await Collection<DbUserSettings>()
                 .Find(Filter<DbUserSettings>()
-                    .Eq(u => u.Id, userId))
+                    .Eq(u => u.UserId, userId))
                 .Project(Project<DbUserSettings>()
                     .Expression(s => new UserSettings
                     {
-                        Id = s.Id,
+                        Id = s.UserId,
                         ColorSchema = s.ColorSchema,
                         Paging = new PagingSettings
                         {

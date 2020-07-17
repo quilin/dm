@@ -39,7 +39,8 @@ namespace DM.Web.API.Dto.Users
                     Quantity = u.QuantityRating
                 }));
 
-            CreateMap<UserDetails, User>().IncludeBase<GeneralUser, User>();
+            CreateMap<UserDetails, User>().IncludeBase<GeneralUser, User>()
+                .ForMember(d => d.Registration, s => s.MapFrom(u => u.RegistrationDate));
             CreateMap<DM.Services.Authentication.Dto.UserSettings, UserSettings>().ReverseMap();
             CreateMap<DM.Services.Authentication.Dto.PagingSettings, PagingSettings>().ReverseMap();
 

@@ -9,7 +9,10 @@ namespace DM.Web.API.Authentication
     /// <inheritdoc />
     public class ApiCredentialsStorage : ICredentialsStorage
     {
-        private const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
+        /// <summary>
+        /// Authentication HTTP header key
+        /// </summary>
+        public const string HttpAuthTokenHeader = "X-Dm-Auth-Token";
 
         /// <inheritdoc />
         public Task<TokenCredentials> ExtractToken(HttpContext httpContext)

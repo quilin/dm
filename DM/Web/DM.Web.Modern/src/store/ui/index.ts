@@ -2,18 +2,15 @@ import { Module } from 'vuex';
 import getters from './getters';
 import actions from './actions';
 import mutations from './mutations';
-import CommunityState from './communityState';
+import UiState from './uiState';
 import RootState from './../rootState';
+import { ColorSchema } from '@/api/models/community';
 
-const state: CommunityState = {
-  activePolls: null,
-  polls: null,
-
-  users: null,
-  selectedUser: null,
+const state: UiState = {
+  theme: ColorSchema.Modern,
 };
 
-const community: Module<CommunityState, RootState> = {
+const gaming: Module<UiState, RootState> = {
   namespaced: true,
   state,
   getters,
@@ -21,4 +18,4 @@ const community: Module<CommunityState, RootState> = {
   mutations,
 };
 
-export default community;
+export default gaming;

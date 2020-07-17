@@ -15,6 +15,12 @@ const getters: GetterTree<CommunityState, RootState> = {
   users(state): ListEnvelope<User> | null {
     return state.users;
   },
+  selectedUser(state): User | null {
+    return state.selectedUser?.view ?? null;
+  },
+  editableUser(state): User | null {
+    return state.selectedUser?.edit ?? null;
+  }
 };
 
 export default getters;

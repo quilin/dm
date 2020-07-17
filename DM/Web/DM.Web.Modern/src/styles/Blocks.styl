@@ -1,9 +1,5 @@
 panel()
   margin $small 0
-  padding $minor
-  border 1px solid
-  theme(border-color, $border)
-  theme(background, $blockBackground)
   font-size $textFontSize
 
 labeled-field()
@@ -33,6 +29,25 @@ menu-item()
   &.selected
     font-weight bold
 
+tab-links()
+  display flex
+  margin-bottom $medium
+
+  & a
+    margin-right $medium
+    text-transform uppercase
+
+    &.router-link-exact-active
+      theme(color, $text)
+      font-weight bold
+
+square($size)
+  width $size
+  height @width
+  background-position center center
+  background-repeat no-repeat
+  background-size @width
+
 $shakeDelta = $tiny
 @keyframes shake-error
   0%
@@ -51,3 +66,15 @@ $shakeDelta = $tiny
     transform translateX(-($shakeDelta))
   100%
     transform translateX(0)
+
+.tab-links
+  margin-bottom $medium
+
+.tab-link
+  display inline-block
+  margin-right $medium
+  text-transform uppercase
+
+  &.router-link-exact-active
+    theme(color, $text)
+    font-weight bold

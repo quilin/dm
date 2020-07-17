@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Exceptions;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -19,16 +20,19 @@ namespace DM.Web.API.Services.Users
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;
+        private readonly IUserReadingService userReadingService;
         private readonly IMapper mapper;
 
         /// <inheritdoc />
         public LoginApiService(
             IWebAuthenticationService authenticationService,
             IIdentityProvider identityProvider,
+            IUserReadingService userReadingService,
             IMapper mapper)
         {
             this.authenticationService = authenticationService;
             this.identityProvider = identityProvider;
+            this.userReadingService = userReadingService;
             this.mapper = mapper;
         }
 
@@ -39,7 +43,8 @@ namespace DM.Web.API.Services.Users
             switch (identity.Error)
             {
                 case AuthenticationError.NoError:
-                    return new Envelope<User>(mapper.Map<User>(identity.User));
+                    var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login);
+                    return new Envelope<User>(mapper.Map<User>(userDetails));
                 case AuthenticationError.WrongLogin:
                     throw new HttpBadRequestException(new Dictionary<string, string>
                     {
@@ -69,7 +74,10 @@ namespace DM.Web.API.Services.Users
         public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutElsewhere(httpContext);
 
         /// <inheritdoc />
-        public Task<Envelope<User>> GetCurrent() =>
-            Task.FromResult(new Envelope<User>(mapper.Map<User>(identityProvider.Current.User)));
+        public async Task<Envelope<User>> GetCurrent()
+        {
+            var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login);
+            return new Envelope<User>(mapper.Map<User>(userDetails));
+        }
     }
 }

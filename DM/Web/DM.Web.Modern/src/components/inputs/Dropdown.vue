@@ -39,6 +39,7 @@ export default class Dropdown extends PopupBase {
 
   private selectOption(option: DropdownOption) {
     this.popupShown = false;
+    this.selectedOption = option;
     this.$emit('input', option.value);
   }
 }
@@ -49,7 +50,7 @@ export default class Dropdown extends PopupBase {
   display inline-block
 
   border 1px solid
-  border-radius $tiny
+  border-radius $borderRadius
   theme(border-color, $border)
 
 .label

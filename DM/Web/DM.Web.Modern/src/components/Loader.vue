@@ -14,10 +14,6 @@ export default class Loader extends Vue {
 
 <style scoped lang="stylus">
 .loader
-  width $medium
-  height @width
-  background-position center center
-  background-repeat no-repeat
-  background-size contain
+  square($medium)
   background-image url('~@/assets/loader.gif')
 </style>

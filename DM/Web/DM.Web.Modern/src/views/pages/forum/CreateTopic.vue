@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {Action, Getter} from 'vuex-class';
+import { Action, Getter } from 'vuex-class';
 import IconType from '@/components/iconType';
 
 
@@ -57,7 +57,7 @@ export default class CreateTopicComponent extends Vue {
         title: this.title,
         description: this.description,
       },
-      router: this.$router
+      router: this.$router,
     });
   }
 }

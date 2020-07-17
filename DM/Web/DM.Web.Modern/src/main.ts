@@ -7,8 +7,10 @@ import Icon from '@/components/Icon.vue';
 
 import Lightbox from '@/components/Lightbox.vue';
 
+import HumanTimespan from '@/components/dates/HumanTimespan.vue';
+import HumanDate from '@/components/dates/HumanDate.vue';
+
 import Loader from '@/components/Loader.vue';
-import HumanTimespan from '@/components/HumanTimespan.vue';
 import Paging from '@/components/Paging.vue';
 
 import TextArea from '@/components/inputs/TextArea.vue';
@@ -30,8 +32,11 @@ Vue.use(Vuelidate);
 Vue.config.productionTip = false;
 Vue.component('icon', Icon);
 Vue.component('lightbox', Lightbox);
-Vue.component('loader', Loader);
+
 Vue.component('humanTimespan', HumanTimespan);
+Vue.component('humanDate', HumanDate);
+
+Vue.component('loader', Loader);
 Vue.component('paging', Paging);
 
 Vue.component('textArea', TextArea);

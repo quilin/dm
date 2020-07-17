@@ -9,7 +9,7 @@
         <icon :font="IconType.CommentsUnread" />{{topic.unreadCommentsCount}}
       </div>
     </router-link>
-    <div>{{topic.created.substr(0, 10).split('-').reverse().join('.')}}</div>
+    <div>{{moment(topic.created).format("DD.MM.YYYY")}}</div>
     <div>
       <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
     </div>
@@ -29,10 +29,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Topic } from '@/api/models/forum';
 import IconType from '@/components/iconType';
+import moment from 'moment';
 
 @Component({})
 export default class ForumTopic extends Vue {
   private IconType: typeof IconType = IconType;
+  private moment: any = moment;
 
   @Prop()
   private topic!: Topic;

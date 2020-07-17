@@ -28,7 +28,7 @@ const actions: ActionTree<ForumState, RootState> = {
       forumApi.getTopics(id, true, 1),
       forumApi.getTopics(id, false, n)]);
     commit('updateTopics', {
-      attachedTopics: attachedTopics.data,
+      attachedTopics: attachedTopics.data!.resources,
       topics: topics.data,
     });
   },

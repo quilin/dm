@@ -4,7 +4,7 @@
       <div class="logo-text">
         <template v-if="user">
           Добро пожаловать,
-          <router-link :to="{name: 'user', params: {login: user.login}}">
+          <router-link :to="{ name: 'profile', params: { login: user.login } }">
             <icon :font="IconType.UserSettings" />
             {{user.login}}
           </router-link>
@@ -37,9 +37,9 @@
       <router-link class="link" :to="{name: 'community'}">Сообщество</router-link>
       <router-link class="link" :to="{name: 'rules'}">Правила</router-link>
       <router-link class="link" :to="{name: 'chat'}">Чат</router-link>
-      <router-link class="link create" :to="{name: 'create-game'}">
+      <router-link v-if="user" class="link create" :to="{name: 'create-game'}">
         <icon :font="IconType.Add" />
-        Создать игру
+        Новая игра
       </router-link>
     </div>
     <div class="controls" @click="toggleTheme">
@@ -71,7 +71,7 @@ export default class DmHeader extends Vue {
   @Getter('unreadConversations')
   private unread!: number;
 
-  @Action('toggleTheme')
+  @Action('ui/toggleTheme')
   private toggleTheme: any;
 
   @Action('signOut')

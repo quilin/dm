@@ -30,13 +30,6 @@ export default new Router({
     },
 
     {
-      path: '/profile/:login',
-      name: 'user',
-      components: {
-        menu: GeneralMenu,
-      },
-    },
-    {
       path: '/about',
       name: 'about',
       components: {
@@ -54,6 +47,7 @@ export default new Router({
     },
     {
       path: '/community',
+      name: 'community',
       components: {
         menu: GeneralMenu,
         page: () => import('./views/pages/community/Community.vue'),
@@ -70,6 +64,28 @@ export default new Router({
       components: {
         menu: GeneralMenu,
       },
+    },
+    {
+      path: '/profile/:login',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/profile/Profile.vue'),
+      },
+      children: [{
+        path: '',
+        name: 'profile',
+        component: () => import('./views/pages/profile/Information.vue'),
+      }, {
+        path: 'games',
+        name: 'profile-games',
+      }, {
+        path: 'characters',
+        name: 'profile-characters',
+      }, {
+        path: 'settings',
+        name: 'profile-settings',
+        component: () => import('./views/pages/profile/Settings.vue'),
+      }],
     },
 
     {

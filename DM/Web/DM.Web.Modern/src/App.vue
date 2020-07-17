@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="`theme_${currentTheme}`">
+  <div id="app" :class="`theme_${theme}`">
     <div class="main" ref="scroll">
       <div class="content-container">
         <div class="content-wrapper">
@@ -44,8 +44,8 @@ export default class DmApp extends Vue {
     scroll: HTMLElement;
   }
 
-  @Getter('currentTheme')
-  private currentTheme!: string;
+  @Getter('ui/theme')
+  private theme!: string;
 
   @Action('fetchUser')
   private fetchUser: any;

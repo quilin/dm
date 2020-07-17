@@ -72,21 +72,38 @@ namespace DM.Web.Classic.Controllers
                 Password = loginForm.Password,
                 RememberMe = !loginForm.DoNotRemember
             }, HttpContext);
-            return loggedIdentity.Error switch
+            switch (loggedIdentity.Error)
             {
-                AuthenticationError.NoError => Content(loginForm.RedirectUrl),
-                AuthenticationError.WrongLogin => BadRequest(new Dictionary<string, object>
-                    {[nameof(LoginForm.Login)] = "Такого пользователя нет"}),
-                AuthenticationError.WrongPassword => BadRequest(new Dictionary<string, object>
-                    {[nameof(LoginForm.Password)] = "Неправильный пароль"}),
-                AuthenticationError.Banned => BadRequest(new Dictionary<string, object>
-                    {[nameof(LoginForm.Login)] = "Учетная запись заблокирована в связи с нарушением правил сайта"}),
-                AuthenticationError.Inactive => BadRequest(new Dictionary<string, object>
-                    {[nameof(LoginForm.Login)] = "Учетная запись ещё не активирована. Проверьте свою почту!"}),
-                AuthenticationError.Removed => BadRequest(new Dictionary<string, object>
-                    {[nameof(LoginForm.Login)] = "Учетная запись удалена"}),
-                _ => BadRequest()
-            };
+                case AuthenticationError.NoError:
+                    return Content(loginForm.RedirectUrl);
+                case AuthenticationError.WrongLogin:
+                    return BadRequest(new Dictionary<string, object>
+                    {
+                        [nameof(LoginForm.Login)] = "Такого пользователя нет"
+                    });
+                case AuthenticationError.WrongPassword:
+                    return BadRequest(new Dictionary<string, object>
+                    {
+                        [nameof(LoginForm.Password)] = "Неправильный пароль"
+                    });
+                case AuthenticationError.Banned:
+                    return BadRequest(new Dictionary<string, object>
+                    {
+                        [nameof(LoginForm.Login)] = "Учетная запись заблокирована в связи с нарушением правил сайта"
+                    });
+                case AuthenticationError.Inactive:
+                    return BadRequest(new Dictionary<string, object>
+                    {
+                        [nameof(LoginForm.Login)] = "Учетная запись ещё не активирована. Проверьте свою почту!"
+                    });
+                case AuthenticationError.Removed:
+                    return BadRequest(new Dictionary<string, object>
+                    {
+                        [nameof(LoginForm.Login)] = "Учетная запись удалена"
+                    });
+                default:
+                    return BadRequest();
+            }
         }
 
         [HttpGet]

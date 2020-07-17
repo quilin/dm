@@ -124,8 +124,6 @@ namespace DM.Web.Classic
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>();
             appBuilder
-                .UseHsts()
-                .UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseCookiePolicy()
                 .UseStatusCodePagesWithRedirects("/error/{0}")

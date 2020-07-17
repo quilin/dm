@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -63,13 +64,13 @@ namespace DM.Services.DataAccess.RelationalStorage
         {
             var entity = new TEntity();
             var type = entity.GetType();
-            var propertyInfo = type.GetProperty($"{type.Name}Id");
-            if (propertyInfo == null)
+            var primaryKeyProperty = GetPrimaryKeyProperty();
+            if (primaryKeyProperty == null)
             {
                 throw new UpdateBuilderException($"No key property was found for entity {type.Name}");
             }
 
-            propertyInfo.SetValue(entity, id);
+            primaryKeyProperty.SetValue(entity, id);
 
             if (toDelete)
             {
@@ -100,10 +101,7 @@ namespace DM.Services.DataAccess.RelationalStorage
                 throw new UpdateBuilderException($"Entity type {entityType.Name} is not a mongo collection type");
             }
 
-            if (entityType.GetProperty("Id") == null)
-            {
-                throw new UpdateBuilderException($"Entity type {entityType.Name} has no external Id property");
-            }
+            var primaryKeyProperty = GetPrimaryKeyProperty();
 
             if (!mongoUpdateActions.Any())
             {
@@ -113,11 +111,38 @@ namespace DM.Services.DataAccess.RelationalStorage
             var updateDefinition = new UpdateDefinitionBuilder<TEntity>()
                 .Combine(mongoUpdateActions.Select(a => a.Invoke()));
             var filterDefinition = new FilterDefinitionBuilder<TEntity>()
-                .Eq("id", id);
+                .Eq(primaryKeyProperty.Name, id);
             await mongoClient.GetCollection<TEntity>()
                 .UpdateOneAsync(filterDefinition, updateDefinition, new UpdateOptions {IsUpsert = upsert});
 
             return id;
+        }
+
+        private static PropertyInfo GetPrimaryKeyProperty()
+        {
+            var entityType = typeof(TEntity);
+            var propertyInfos = entityType.GetProperties();
+            var keyAttributedProperty =
+                propertyInfos.Where(i => i.GetCustomAttribute<KeyAttribute>() != null).ToArray();
+            if (keyAttributedProperty.Length == 1)
+            {
+                return keyAttributedProperty.First();
+            }
+
+            var idProperty = entityType.GetProperty("Id");
+            if (idProperty != null)
+            {
+                return idProperty;
+            }
+
+            var conventionIdProperty = entityType.GetProperty($"{entityType.Name}Id");
+            if (conventionIdProperty != null)
+            {
+                return conventionIdProperty;
+            }
+
+            throw new UpdateBuilderException(
+                $"Entity {entityType.Name} has no primary key properties or only has composite key");
         }
 
         private static void SetPropertyValue<TValue>(TEntity target,
@@ -133,7 +158,7 @@ namespace DM.Services.DataAccess.RelationalStorage
                     Expression expression = unary;
                     do expression = ((UnaryExpression) expression).Operand;
                     while (expression.NodeType == ExpressionType.Convert ||
-                           expression.NodeType == ExpressionType.ConvertChecked);
+                        expression.NodeType == ExpressionType.ConvertChecked);
                     memberExpression = (MemberExpression) expression;
                     break;
                 default:

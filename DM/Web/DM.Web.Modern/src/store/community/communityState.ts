@@ -6,4 +6,5 @@ export default interface CommunityState {
   polls: ListEnvelope<Poll> | null;
 
   users: ListEnvelope<User> | null;
+  selectedUser: { view: User; edit: User } | null;
 }

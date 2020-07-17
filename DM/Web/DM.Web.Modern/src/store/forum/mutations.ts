@@ -18,7 +18,7 @@ const mutations: MutationTree<ForumState> = {
   updateModerators(state, payload: User[]) {
     state.moderators = payload;
   },
-  updateTopics(state, payload: { attachedTopics: ListEnvelope<Topic>; topics: ListEnvelope<Topic> }) {
+  updateTopics(state, payload: { attachedTopics: Topic[]; topics: ListEnvelope<Topic> }) {
     state.attachedTopics = payload.attachedTopics;
     state.topics = payload.topics;
   },
@@ -36,16 +36,16 @@ const mutations: MutationTree<ForumState> = {
     state.comments = payload;
   },
   markAllTopicsAsRead(state) {
-    state.fora.forEach(f => {
+    state.fora.forEach((f: Forum) => {
       if (f.id === state.selectedForumId) {
         f.unreadTopicsCount = 0;
       }
     });
 
-    state.topics!.resources.forEach(topic => {
+    state.topics!.resources.forEach((topic: Topic) => {
       topic.unreadCommentsCount = 0;
     });
-  }
+  },
 };
 
 export default mutations;

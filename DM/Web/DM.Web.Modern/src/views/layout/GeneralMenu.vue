@@ -8,9 +8,7 @@
     <active-games v-else />
 
     <requiring-games />
-
     <finished-games />
-
     <fora />
 
   </div>

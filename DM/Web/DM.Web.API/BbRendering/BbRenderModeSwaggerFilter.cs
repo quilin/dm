@@ -5,7 +5,6 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DM.Web.API.BbRendering
-
 {
     /// <inheritdoc />
     public class BbRenderModeSwaggerFilter : IOperationFilter
@@ -15,7 +14,6 @@ namespace DM.Web.API.BbRendering
         {
             (operation.Parameters ?? (operation.Parameters = new List<OpenApiParameter>()))
                 .Add(new OpenApiParameter
-
                 {
                     Name = "X-Dm-Bb-Render-Mode",
                     In = ParameterLocation.Header,

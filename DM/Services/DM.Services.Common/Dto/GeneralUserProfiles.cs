@@ -3,6 +3,8 @@ using AutoMapper;
 using DM.Services.Authentication.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
+using DbUserSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.UserSettings;
+using DbPagingSettings = DM.Services.DataAccess.BusinessObjects.Users.Settings.PagingSettings;
 
 namespace DM.Services.Common.Dto
 {
@@ -27,6 +29,10 @@ namespace DM.Services.Common.Dto
                         .Where(b => !b.IsRemoved)
                         .Select(b => b.AccessRestrictionPolicy)
                         .ToList()));
+
+            CreateMap<DbUserSettings, UserSettings>()
+                .ForMember(d => d.Id, s => s.MapFrom(u => u.UserId));
+            CreateMap<DbPagingSettings, PagingSettings>();
         }
     }
 }

@@ -3,13 +3,13 @@ import { User } from '@/api/models/community';
 import { Forum, Topic, Comment } from '@/api/models/forum';
 
 export default interface ForumState {
-  news: Topic[];
+  news: Topic[] | null;
 
   fora: Forum[];
 
   selectedForumId: string | null;
   moderators: User[];
-  attachedTopics: ListEnvelope<Topic> | null;
+  attachedTopics: Topic[] | null;
   topics: ListEnvelope<Topic> | null;
 
   selectedTopicId: string | null;

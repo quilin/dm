@@ -10,7 +10,7 @@ namespace DM.Web.API.BbRendering
         {
             CreateMap<BbText, string>()
                 .IncludeAllDerived()
-                .ConvertUsing(v => v.Value);
+                .ConvertUsing(v => v == null ? null : v.Value);
 
             CreateMap<string, ChatBbText>().ConvertUsing(v => new ChatBbText {Value = v});
             CreateMap<string, PostBbText>().ConvertUsing(v => new PostBbText {Value = v});
