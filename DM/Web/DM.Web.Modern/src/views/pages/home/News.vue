@@ -15,7 +15,7 @@
           </div>
           <div class="article-description" v-html="article.description"></div>
           <div class="article-data">
-            <router-link :to="{name: 'profile', params: {login: article.author.login}}">{{article.author.login}}</router-link>, 
+            <user-link :user="article.author" />
             <human-timespan :date="article.created" />&#32;
             <icon v-if="!article.unreadCommentsCount" :font="IconType.CommentsNoUnread" />
           </div>
@@ -63,5 +63,6 @@ export default class News extends Vue {
   font-weight bold
 
 .article-data
+  margin-top $minor
   secondary()
 </style>

@@ -1,9 +1,7 @@
 <template>
   <div class="row">
     <span class="number">{{number}}</span>
-    <router-link :to="{ name: 'profile', params: { login: user.login } }">
-      {{user.login}}
-    </router-link>
+    <user-link :user="user" />
     <rating :user="user" />
     <online :user="user" />
     <span>{{user.name}}</span>

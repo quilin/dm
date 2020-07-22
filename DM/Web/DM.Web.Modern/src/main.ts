@@ -20,6 +20,7 @@ import SuggestInput from '@/components/inputs/SuggestInput.vue';
 
 import Rating from '@/components/community/Rating.vue';
 import Online from '@/components/community/Online.vue';
+import UserLink from '@/components/community/UserLink.vue';
 
 import moment from 'moment';
 
@@ -46,6 +47,7 @@ Vue.component('suggestInput', SuggestInput);
 
 Vue.component('rating', Rating);
 Vue.component('online', Online);
+Vue.component('userLink', UserLink);
 
 moment.locale('ru');
 
