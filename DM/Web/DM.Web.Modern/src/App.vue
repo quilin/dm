@@ -18,9 +18,9 @@
         </div>
         <dm-footer />
       </div>
+      <portal-target name="lightbox" />
+      <portal-target name="popup" class="popup-container" />
     </div>
-    <portal-target name="lightbox" />
-    <portal-target name="popup" class="popup-container" />
   </div>
 </template>
 
@@ -60,7 +60,6 @@ export default class DmApp extends Vue {
 html, body, #app
   height 100%
   margin 0
-  height 100%
   overflow hidden
 
 body

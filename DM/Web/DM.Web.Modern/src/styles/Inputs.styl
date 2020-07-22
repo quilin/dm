@@ -6,6 +6,7 @@ input()
   theme(color, $text)
   border-radius $borderRadius
   padding $minor
+  padding-top $minor + 1px // font render adjustment
   font-family PT Sans
   font-size $fontSize
   background transparent
@@ -19,7 +20,6 @@ input()
 button()
   padding ($minor + 1px) $small ($minor + 2px)
   margin 0
-  min-width $gridStep * 25
   outline none
   border none
   border-radius $borderRadius
