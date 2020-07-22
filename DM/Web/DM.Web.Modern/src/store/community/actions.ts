@@ -2,7 +2,8 @@ import { ActionTree, Commit } from 'vuex';
 import communityApi from '@/api/requests/communityApi';
 import CommunityState from './communityState';
 import RootState from './../rootState';
-import { User } from '@/api/models/community';
+import { User, UserRole, Review } from '@/api/models/community';
+import { PagingQuery } from '@/api/models/common';
 
 async function updateUserPart(commit: Commit, state: CommunityState, router: any, userPart: User): Promise<void> {
   if (state.selectedUser === null) return;
@@ -17,7 +18,7 @@ async function updateUserPart(commit: Commit, state: CommunityState, router: any
 
 const actions: ActionTree<CommunityState, RootState> = {
   async fetchActivePolls({ commit }): Promise<void> {
-    const { resources } = await communityApi.getPolls(true);
+    const { resources } = await communityApi.getPolls({ size: 10 } as PagingQuery, true);
     commit('updateActivePolls', resources);
   },
   async vote({ commit }, { router, pollId, optionId }): Promise<void> {
@@ -53,6 +54,29 @@ const actions: ActionTree<CommunityState, RootState> = {
   async updateSettings({ commit, state }, { router }): Promise<void> {
     const user = state.selectedUser!.edit;
     await updateUserPart(commit, state, router, { settings: user.settings } as User);
+  },
+
+  async fetchReviews({ commit, rootState }, { n }): Promise<void> {
+    const canApprove = rootState.user !== null &&
+      rootState.user.roles.some((r: UserRole) => r === UserRole.Administrator);
+    const reviews = await communityApi.getReviews({ number: n, size: 2 } as PagingQuery, !canApprove);
+    commit('updateReviews', reviews);
+  },
+  async approveReview({ commit }, { id, router }): Promise<void> {
+    const { data, error } = await communityApi.updateReview(id, { approved: true } as Review);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code } });
+    } else {
+      commit('approveReview', data);
+    }
+  },
+  async removeReview({ commit }, { id, router }): Promise<void> {
+    const { error } = await communityApi.removeReview(id);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code } });
+    } else {
+      commit('removeReview', id);
+    }
   },
 };
 

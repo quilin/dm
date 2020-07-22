@@ -70,3 +70,11 @@ export interface PollOption {
   votesCount: number;
   voted: boolean | null;
 }
+
+export interface Review {
+  id: string;
+  author: User;
+  created: string;
+  approved: boolean;
+  text: string;
+}

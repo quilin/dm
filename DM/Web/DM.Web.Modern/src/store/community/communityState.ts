@@ -1,4 +1,4 @@
-import { Poll, User } from '@/api/models/community';
+import { Poll, Review, User } from '@/api/models/community';
 import { ListEnvelope } from '@/api/models/common';
 
 export default interface CommunityState {
@@ -7,4 +7,6 @@ export default interface CommunityState {
 
   users: ListEnvelope<User> | null;
   selectedUser: { view: User; edit: User } | null;
+
+  reviews: ListEnvelope<Review> | null;
 }

@@ -11,6 +11,8 @@ const state: CommunityState = {
 
   users: null,
   selectedUser: null,
+
+  reviews: null,
 };
 
 const community: Module<CommunityState, RootState> = {
