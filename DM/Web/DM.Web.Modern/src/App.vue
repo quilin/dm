@@ -65,7 +65,7 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 1
+  line-height 1.2
   word-wrap break-word
   transition color, background-color $animationTime
 
