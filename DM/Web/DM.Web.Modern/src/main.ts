@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
 import Vuelidate from 'vuelidate';
+import PortalVue from 'portal-vue';
 import App from './App.vue';
 
 import Icon from '@/components/Icon.vue';
@@ -29,6 +30,7 @@ import store from './store';
 
 Vue.use(VModal);
 Vue.use(Vuelidate);
+Vue.use(PortalVue);
 
 Vue.config.productionTip = false;
 Vue.component('icon', Icon);

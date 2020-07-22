@@ -27,11 +27,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
-import PortalVue from 'portal-vue';
 import DmFooter from '@/views/layout/Footer.vue';
 import DmHeader from '@/views/layout/Header.vue';
-
-Vue.use(PortalVue);
 
 @Component({
   components: {
