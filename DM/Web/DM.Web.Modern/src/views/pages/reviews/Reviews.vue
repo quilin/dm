@@ -7,15 +7,11 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { Review, User } from '@/api/models/community';
-import { ListEnvelope } from '@/api/models/common';
+import { User } from '@/api/models/community';
 import { Action, Getter } from 'vuex-class';
 
 @Component({})
 export default class Reviews extends Vue {
-  @Getter('community/reviews')
-  private reviews!: ListEnvelope<Review> | null;
-
   @Getter('user')
   private user!: User | null;
 

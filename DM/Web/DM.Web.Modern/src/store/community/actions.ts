@@ -59,7 +59,7 @@ const actions: ActionTree<CommunityState, RootState> = {
   async fetchReviews({ commit, rootState }, { n }): Promise<void> {
     const canApprove = rootState.user !== null &&
       rootState.user.roles.some((r: UserRole) => r === UserRole.Administrator);
-    const reviews = await communityApi.getReviews({ number: n, size: 2 } as PagingQuery, !canApprove);
+    const reviews = await communityApi.getReviews({ number: n } as PagingQuery, !canApprove);
     commit('updateReviews', reviews);
   },
   async approveReview({ commit }, { id, router }): Promise<void> {

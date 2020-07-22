@@ -75,7 +75,7 @@ body
   theme(background-color, $overlayBackground)
 
 *
-  transition color, background-color $animationTime
+  transition color, background-color, border-color $animationTime
 
 .main
   height 100%

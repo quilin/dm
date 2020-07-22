@@ -4,6 +4,7 @@
     <div class="review-info">
       <user-link :user="review.author" />
       <div v-if="canAdministrate">
+        <span v-if="!review.approved">ожидает проверки</span>
         <template v-if="!loading">
           <a v-if="!review.approved" @click="approve"><icon :font="IconType.Tick" /></a>
           <a @click="remove"><icon :font="IconType.Close" /></a>
@@ -69,22 +70,21 @@ export default class ReviewComponent extends Vue {
   padding $medium
   margin-bottom $small
   border-radius $borderRadius
-  theme(background-color, $panelBackground)
+  theme(background-color, $panelHighlightBackground)
 
   &:after
     position absolute
     top 100%
-    right $small
+    left $small
 
     content ''
     border solid $minor
-    theme(border-top-color, $panelBackground)
-    theme(border-right-color, $panelBackground)
+    theme(border-top-color, $panelHighlightBackground)
+    theme(border-left-color, $panelHighlightBackground)
     border-bottom-color transparent
-    border-left-color transparent
+    border-right-color transparent
 
 .review-info
   display flex
-  flex-direction row-reverse
   justify-content space-between
 </style>
