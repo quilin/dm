@@ -25,7 +25,7 @@ export default class ProgressBar extends Vue {
   margin $small 0
   padding $minor
 
-  theme(background, $blockBackground)
+  theme(background, $panelBackground)
   border-radius $borderRadius
 
 .progress-scale
@@ -33,7 +33,7 @@ export default class ProgressBar extends Vue {
   top 0
   bottom 0
   left 0
-  theme(background, $blockHighlightBackground)
+  theme(background, $panelHighlightBackground)
   transition width $animationTime
 
 .progress-text
