@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import CommunityState from './communityState';
 import { Poll, Review, User } from '@/api/models/community';
-import {Envelope, ListEnvelope} from '@/api/models/common';
+import { Envelope, ListEnvelope } from '@/api/models/common';
 
 const mutations: MutationTree<CommunityState> = {
   updateActivePolls(state, payload: Poll[]) {

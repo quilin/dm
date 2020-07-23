@@ -1,4 +1,4 @@
-import {ListEnvelope, Envelope, ApiResult, PagingQuery} from '@/api/models/common';
+import { ListEnvelope, Envelope, ApiResult, PagingQuery } from '@/api/models/common';
 import { User } from '@/api/models/community';
 import { Forum, Topic, Comment } from '@/api/models/forum';
 import Api from '@/api';
