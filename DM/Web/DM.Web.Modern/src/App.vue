@@ -64,15 +64,11 @@ body
   font-size $fontSize
   line-height 1.2
   word-wrap break-word
-  transition color, background-color $animationTime
 
 .v--modal
   theme(background-color, $background)
 .v--modal-overlay
   theme(background-color, $overlayBackground)
-
-*
-  transition color, background-color, border-color $animationTime
 
 .main
   height 100%
@@ -80,6 +76,7 @@ body
   overflow-y scroll
   theme(background-color, $background)
   theme(color, $text)
+  transition color $animationTime, background-color $animationTime
 
 .content-container
   position relative

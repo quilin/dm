@@ -51,7 +51,7 @@ export default class UserLink extends Vue {
 
   margin-right $minor
   background url('~@/assets/userpic.png') 0 0 no-repeat
-  vertical-align middle
+  vertical-align text-bottom
   background-size contain
 
 .user-badge-container

@@ -71,6 +71,7 @@ export default class ReviewComponent extends Vue {
   margin-bottom $small
   border-radius $borderRadius
   theme(background-color, $panelHighlightBackground)
+  transition background-color, $animationTime
 
   &:after
     position absolute
@@ -83,6 +84,7 @@ export default class ReviewComponent extends Vue {
     theme(border-left-color, $panelHighlightBackground)
     border-bottom-color transparent
     border-right-color transparent
+    transition border-color $animationTime
 
 .review-info
   display flex
