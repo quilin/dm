@@ -18,8 +18,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Getter, Action } from 'vuex-class';
-import { Review, User, UserRole } from '@/api/models/community';
+import { Review, User } from '@/api/models/community';
 import IconType from '@/components/iconType';
+import { userIsAdmin } from '@/api/models/community/helpers';
 
 @Component({})
 export default class ReviewComponent extends Vue {
@@ -43,19 +44,18 @@ export default class ReviewComponent extends Vue {
   private removeReview: any;
 
   private get canAdministrate(): boolean {
-    return this.controls && this.user !== null &&
-      this.user.roles.some((r: UserRole) => r === UserRole.Administrator);
+    return this.controls && userIsAdmin(this.user);
   }
 
   private async approve(): Promise<void> {
     this.loading = true;
-    await this.approveReview({ id: this.review.id, router: this.$router });
+    await this.approveReview({ id: this.review.id, router: this.$router, route: this.$route });
     this.loading = false;
   }
 
   private async remove(): Promise<void> {
     this.loading = true;
-    await this.removeReview({ id: this.review.id, router: this.$router });
+    await this.removeReview({ id: this.review.id, router: this.$router, route: this.$route });
     this.loading = false;
   }
 }
@@ -67,11 +67,13 @@ export default class ReviewComponent extends Vue {
 
 .review-text
   position relative
+
   padding $medium
   margin-bottom $small
+
   border-radius $borderRadius
   theme(background-color, $panelHighlightBackground)
-  transition background-color, $animationTime
+  transition all $animationTime
 
   &:after
     position absolute
@@ -84,7 +86,7 @@ export default class ReviewComponent extends Vue {
     theme(border-left-color, $panelHighlightBackground)
     border-bottom-color transparent
     border-right-color transparent
-    transition border-color $animationTime
+    transition all $animationTime
 
 .review-info
   display flex
