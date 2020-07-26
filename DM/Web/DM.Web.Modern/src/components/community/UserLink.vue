@@ -14,8 +14,9 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import {User, UserRole} from '@/api/models/community';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { User } from '@/api/models/community';
+import { userIsAdmin, userIsAuthority } from '@/api/models/community/helpers';
 
 @Component({})
 export default class UserLink extends Vue {
@@ -23,13 +24,11 @@ export default class UserLink extends Vue {
   private user!: User;
 
   private get badge(): string | null {
-    if (this.user.roles.some((r: UserRole) => r === UserRole.Administrator)) {
+    if (userIsAdmin(this.user)) {
       return 'A';
     }
 
-    if (this.user.roles.some((r: UserRole) =>
-      r === UserRole.SeniorModerator ||
-      r === UserRole.RegularModerator)) {
+    if (userIsAuthority(this.user)) {
       return 'M';
     }
 
