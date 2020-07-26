@@ -7,6 +7,7 @@ export interface Paging {
   current: number;
   size: number;
   number: number;
+  total: number;
 }
 
 export interface PagingQuery {

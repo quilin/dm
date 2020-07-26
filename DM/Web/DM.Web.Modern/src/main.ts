@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VModal from 'vue-js-modal';
 import Vuelidate from 'vuelidate';
+import PortalVue from 'portal-vue';
 import App from './App.vue';
 
 import Icon from '@/components/Icon.vue';
@@ -20,6 +21,7 @@ import SuggestInput from '@/components/inputs/SuggestInput.vue';
 
 import Rating from '@/components/community/Rating.vue';
 import Online from '@/components/community/Online.vue';
+import UserLink from '@/components/community/UserLink.vue';
 
 import moment from 'moment';
 
@@ -28,6 +30,7 @@ import store from './store';
 
 Vue.use(VModal);
 Vue.use(Vuelidate);
+Vue.use(PortalVue);
 
 Vue.config.productionTip = false;
 Vue.component('icon', Icon);
@@ -46,6 +49,7 @@ Vue.component('suggestInput', SuggestInput);
 
 Vue.component('rating', Rating);
 Vue.component('online', Online);
+Vue.component('userLink', UserLink);
 
 moment.locale('ru');
 

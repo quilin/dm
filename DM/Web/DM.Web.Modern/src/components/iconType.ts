@@ -40,6 +40,7 @@ enum IconType {
   Home = 0xe05c,
 
   Edit = 0xe00f,
+  Remove = 0xe022,
   Closed = 0xe02e,
   Attached = 0xe073,
 

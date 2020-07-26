@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Dto;
+using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
         public async Task<IEnumerable<Review>> Get(PagingData paging, bool approvedOnly) => await dbContext.Reviews
             .Where(r => (!approvedOnly || r.IsApproved) && !r.IsRemoved)
             .OrderByDescending(r => r.CreateDate)
+            .Page(paging)
             .ProjectTo<Review>(mapper.ConfigurationProvider)
             .ToArrayAsync();
 

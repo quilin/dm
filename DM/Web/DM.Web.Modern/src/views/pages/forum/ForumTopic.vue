@@ -55,7 +55,7 @@ export default class ForumTopic extends Vue {
   display block
   position relative
   &:hover
-    theme(background-color, $blockHoverBackground)
+    theme(background-color, $panelHoverBackground)
   .attached &
     font-weight bold
 

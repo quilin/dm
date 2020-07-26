@@ -39,7 +39,6 @@ export default class MenuLink extends Vue {
 .menu-game-item
   display flex
   justify-content space-between
-  margin $minor 0
 
 .menu-game-item-separator
   display inline-block

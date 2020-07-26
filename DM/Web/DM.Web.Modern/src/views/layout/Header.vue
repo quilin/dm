@@ -130,8 +130,8 @@ export default class DmHeader extends Vue {
     padding $minor + $tiny $small
     border-radius $borderRadius
     border 1px solid
-    theme(background, $blockBackground)
-    theme(border-color, $blockBackground)
+    theme(background, $panelBackground)
+    theme(border-color, $panelBackground)
     &:hover
       theme(border-color, $border)
 

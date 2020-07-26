@@ -1,7 +1,7 @@
 import { GetterTree } from 'vuex';
 import CommunityState from './communityState';
 import RootState from './../rootState';
-import { Poll, User } from '@/api/models/community';
+import { Poll, Review, User } from '@/api/models/community';
 import { ListEnvelope } from '@/api/models/common';
 
 const getters: GetterTree<CommunityState, RootState> = {
@@ -20,6 +20,10 @@ const getters: GetterTree<CommunityState, RootState> = {
   },
   editableUser(state): User | null {
     return state.selectedUser?.edit ?? null;
+  },
+
+  reviews(state): ListEnvelope<Review> | null {
+    return state.reviews;
   }
 };
 

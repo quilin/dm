@@ -1,11 +1,11 @@
-import { ListEnvelope, Envelope, ApiResult } from '@/api/models/common';
-import { Poll, User } from '@/api/models/community';
+import { ListEnvelope, Envelope, ApiResult, PagingQuery } from '@/api/models/common';
+import { Poll, Review, User } from '@/api/models/community';
 import Api from '@/api';
 import { BbRenderMode } from '../bbRenderMode';
 
 export default new class CommunityApi {
-  public async getPolls(onlyActive: boolean): Promise<ListEnvelope<Poll>> {
-    const { data } = await Api.get<ListEnvelope<Poll>>('polls', { onlyActive });
+  public async getPolls(q: PagingQuery, onlyActive: boolean): Promise<ListEnvelope<Poll>> {
+    const { data } = await Api.get<ListEnvelope<Poll>>('polls', { ...q, onlyActive });
     return  data!;
   }
 
@@ -13,8 +13,8 @@ export default new class CommunityApi {
     return await Api.put<Envelope<Poll>>(`polls/${pollId}?optionId=${optionId}`);
   }
 
-  public async getUsers(n: number): Promise<ListEnvelope<User>> {
-    const { data } = await Api.get<ListEnvelope<User>>('users', { number: n });
+  public async getUsers(q: PagingQuery): Promise<ListEnvelope<User>> {
+    const { data } = await Api.get<ListEnvelope<User>>('users', q);
     return data!;
   }
 
@@ -27,5 +27,16 @@ export default new class CommunityApi {
   }
   public async updateUser(login: string, user: User): Promise<ApiResult<Envelope<User>>> {
     return await Api.patch<Envelope<User>>(`users/${login}`, user);
+  }
+
+  public async getReviews(q: PagingQuery, onlyApproved: boolean): Promise<ListEnvelope<Review>> {
+    const { data } = await Api.get<ListEnvelope<Review>>('reviews', { ...q, onlyApproved });
+    return data!;
+  }
+  public async updateReview(id: string, review: Review): Promise<ApiResult<Envelope<Review>>> {
+    return await Api.patch<Envelope<Review>>(`reviews/${id}`, review);
+  }
+  public async removeReview(id: string): Promise<ApiResult<Envelope<Review>>> {
+    return await Api.delete<Envelope<Review>>(`reviews/${id}`);
   }
 }();

@@ -3,6 +3,7 @@ import forumApi from '@/api/requests/forumApi';
 import { Topic } from '@/api/models/forum';
 import ForumState from './forumState';
 import RootState from './../rootState';
+import { PagingQuery } from '@/api/models/common';
 
 const actions: ActionTree<ForumState, RootState> = {
   async fetchFora({ commit }): Promise<void> {
@@ -25,8 +26,8 @@ const actions: ActionTree<ForumState, RootState> = {
   async fetchTopics({ commit }, { id, n }): Promise<void> {
     commit('clearTopics');
     const [attachedTopics, topics] = await Promise.all([
-      forumApi.getTopics(id, true, 1),
-      forumApi.getTopics(id, false, n)]);
+      forumApi.getTopics(id, { number: 1 } as PagingQuery, true),
+      forumApi.getTopics(id, { number: n } as PagingQuery, false)]);
     commit('updateTopics', {
       attachedTopics: attachedTopics.data!.resources,
       topics: topics.data,

@@ -27,11 +27,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
-import PortalVue from 'portal-vue';
 import DmFooter from '@/views/layout/Footer.vue';
 import DmHeader from '@/views/layout/Header.vue';
-
-Vue.use(PortalVue);
 
 @Component({
   components: {
@@ -65,17 +62,13 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 1
+  line-height 1.2
   word-wrap break-word
-  transition color, background-color $animationTime
 
 .v--modal
   theme(background-color, $background)
 .v--modal-overlay
   theme(background-color, $overlayBackground)
-
-*
-  transition color, background-color $animationTime
 
 .main
   height 100%
@@ -83,6 +76,7 @@ body
   overflow-y scroll
   theme(background-color, $background)
   theme(color, $text)
+  transition color $animationTime, background-color $animationTime
 
 .content-container
   position relative

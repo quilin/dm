@@ -31,10 +31,15 @@ export default new Router({
 
     {
       path: '/about',
-      name: 'about',
       components: {
         menu: GeneralMenu,
+        page: () => import('./views/pages/reviews/Reviews.vue'),
       },
+      children: [{
+        path: ':n?',
+        name: 'about',
+        component: () => import('./views/pages/reviews/ReviewsList.vue'),
+      }],
     },
     {
       path: '/rules',
@@ -47,7 +52,6 @@ export default new Router({
     },
     {
       path: '/community',
-      name: 'community',
       components: {
         menu: GeneralMenu,
         page: () => import('./views/pages/community/Community.vue'),
