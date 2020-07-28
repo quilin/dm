@@ -5,6 +5,7 @@ using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 
 namespace DM.Web.API.Services.Users
 {
@@ -36,17 +37,24 @@ namespace DM.Web.API.Services.Users
         /// <inheritdoc />
         public async Task<Envelope<User>> GetUser(string login)
         {
-            var user = await readingService.GetDetails(login);
+            var user = await readingService.Get(login);
             return new Envelope<User>(mapper.Map<User>(user));
         }
 
         /// <inheritdoc />
-        public async Task<Envelope<User>> UpdateUser(string login, User user)
+        public async Task<Envelope<UserDetails>> GetUserDetails(string login)
+        {
+            var user = await readingService.GetDetails(login);
+            return new Envelope<UserDetails>(mapper.Map<UserDetails>(user));
+        }
+
+        /// <inheritdoc />
+        public async Task<Envelope<UserDetails>> UpdateUser(string login, UserDetails user)
         {
             var updateUser = mapper.Map<UpdateUser>(user);
             updateUser.Login = login;
             var updatedUser = await updatingService.Update(updateUser);
-            return new Envelope<User>(mapper.Map<User>(updatedUser));
+            return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
         }
     }
 }

@@ -24,11 +24,18 @@ namespace DM.Web.API.Services.Users
         Task<Envelope<User>> GetUser(string login);
 
         /// <summary>
+        /// Get community user details
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        Task<Envelope<UserDetails>> GetUserDetails(string login);
+
+        /// <summary>
         /// Update user
         /// </summary>
         /// <param name="login">User login</param>
         /// <param name="user">User information</param>
         /// <returns></returns>
-        Task<Envelope<User>> UpdateUser(string login, User user);
+        Task<Envelope<UserDetails>> UpdateUser(string login, UserDetails user);
     }
 }

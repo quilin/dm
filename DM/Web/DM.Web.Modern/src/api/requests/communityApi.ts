@@ -19,14 +19,14 @@ export default new class CommunityApi {
   }
 
   public async getUser(login: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.get<Envelope<User>>(`users/${login}`);
+    return await Api.get<Envelope<User>>(`users/${login}/details`);
   }
   public async getUserForUpdate(login: string): Promise<User> {
-    const { data } = await Api.get<Envelope<User>>(`users/${login}`, undefined, BbRenderMode.Bb);
+    const { data } = await Api.get<Envelope<User>>(`users/${login}/details`, undefined, BbRenderMode.Bb);
     return data!.resource;
   }
   public async updateUser(login: string, user: User): Promise<ApiResult<Envelope<User>>> {
-    return await Api.patch<Envelope<User>>(`users/${login}`, user);
+    return await Api.patch<Envelope<User>>(`users/${login}/details`, user);
   }
 
   public async getReviews(q: PagingQuery, onlyApproved: boolean): Promise<ListEnvelope<Review>> {
