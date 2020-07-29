@@ -70,7 +70,7 @@ namespace DM.Web.API.Controllers.v1.Account
         /// <response code="200"></response>
         [HttpGet(Name = nameof(GetCurrent))]
         [AuthenticationRequired]
-        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(Envelope<UserDetails>), 200)]
         public async Task<IActionResult> GetCurrent() => Ok(await loginApiService.GetCurrent());
 
         /// <summary>
