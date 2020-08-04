@@ -6,17 +6,17 @@ export default class PopupBase extends Vue {
     container: HTMLElement;
   }
 
-  protected popupShown: boolean = false;
+  protected popupShown = false;
 
-  protected top: string = '0';
-  protected left: string = '0';
+  protected top = '0';
+  protected left = '0';
 
   @Watch('popupShown')
-  private onToggle(): void {
+  private onToggle() {
     this.calculatePosition();
   }
 
-  private mounted(): void {
+  private mounted() {
     document.addEventListener('click', this.handleClick);
     window.addEventListener('resize', this.calculatePosition);
 
@@ -25,7 +25,7 @@ export default class PopupBase extends Vue {
     scrollElement.addEventListener('scroll', this.calculatePosition);
   }
 
-  private beforeDestroy(): void {
+  private beforeDestroy() {
     document.removeEventListener('click', this.handleClick);
     window.removeEventListener('resize', this.calculatePosition);
 
@@ -34,7 +34,7 @@ export default class PopupBase extends Vue {
     scrollElement.removeEventListener('scroll', this.calculatePosition);
   }
 
-  private calculatePosition(): void {
+  private calculatePosition() {
     if (!this.popupShown) return;
 
     const { container } = this.$refs;
@@ -44,7 +44,7 @@ export default class PopupBase extends Vue {
     this.left = `${left}px`;
   }
 
-  private handleClick(event: MouseEvent): void {
+  private handleClick(event: MouseEvent) {
     const { target } = event;
     const { $el } = this;
     if (!$el.contains(target as Node)) {

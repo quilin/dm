@@ -86,7 +86,7 @@ export default class ProfileSettings extends Vue {
   private pagingSuggestions: any = pagingSuggestions;
   private colorSchemaOptions: any = colorSchemaOptions;
 
-  private saving: boolean = false;
+  private saving = false;
   private savedSettings: UserSettings | null = null;
 
   @Getter('community/editableUser')
@@ -94,7 +94,7 @@ export default class ProfileSettings extends Vue {
 
   @Action('community/updateSettings')
   private updateSettings: any;
-  
+
   @Action('ui/updateTheme')
   private updateTheme: any;
 

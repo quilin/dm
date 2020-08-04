@@ -31,8 +31,6 @@ import { User } from '@/api/models/community';
 import CreateTopic from './CreateTopic.vue';
 import { Forum } from '@/api/models/forum';
 
-const namespace: string = 'forum';
-
 @Component({
   components: {
     CreateTopic,
@@ -42,7 +40,7 @@ export default class ForumPage extends Vue {
   @Getter('forum/selectedForum')
   private selectedForum!: string | null;
 
-  @Getter('moderators', { namespace })
+  @Getter('forum/moderators')
   private moderators!: User[];
 
   @Getter('user')
@@ -51,10 +49,10 @@ export default class ForumPage extends Vue {
   @Getter('forum/forum')
   private forum!: Forum;
 
-  @Action('selectForum', { namespace })
+  @Action('forum/selectForum')
   private selectForum: any;
 
-  @Action('fetchModerators', { namespace })
+  @Action('forum/fetchModerators')
   private fetchModerators: any;
 
   @Action('forum/markAllTopicsAsRead')

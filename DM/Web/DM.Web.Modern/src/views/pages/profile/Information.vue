@@ -30,8 +30,8 @@ import { User } from '@/api/models/community';
 export default class ProfileInformation extends Vue {
   private IconType: typeof IconType = IconType;
 
-  private editMode: boolean = false;
-  private saving: boolean = false;
+  private editMode = false;
+  private saving = false;
   private savedInfo: string | null = null;
 
   @Action('community/updateInformation')

@@ -15,7 +15,6 @@ module.exports = {
     'quotes': [2, 'single'],
     'indent': ['error', 2],
     'vue/html-closing-bracket-spacing': 2,
-    '@typescript-eslint/no-inferrable-types': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/no-non-null-assertion': 0,

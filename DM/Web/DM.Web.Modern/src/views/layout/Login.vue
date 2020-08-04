@@ -42,11 +42,11 @@ import accountApi from '@/api/requests/accountApi';
   },
 })
 export default class Login extends Vue {
-  private login: string = '';
-  private password: string = '';
-  private rememberMe: boolean = false;
+  private login = '';
+  private password = '';
+  private rememberMe = false;
 
-  private validations: any = {
+  private validations = {
     login: {
       required,
     },

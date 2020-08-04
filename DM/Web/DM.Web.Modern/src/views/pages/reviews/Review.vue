@@ -26,7 +26,7 @@ import { userIsAdmin } from '@/api/models/community/helpers';
 export default class ReviewComponent extends Vue {
   private IconType: typeof IconType = IconType;
 
-  private loading: boolean = false;
+  private loading = false;
 
   @Prop()
   private review!: Review;

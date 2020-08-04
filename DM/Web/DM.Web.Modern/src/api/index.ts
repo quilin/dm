@@ -6,8 +6,8 @@ import axios, {
 import { ApiResult } from '@/api/models/common';
 import { BbRenderMode } from './bbRenderMode';
 
-const tokenKey: string = 'x-dm-auth-token';
-const renderKey: string = 'x-dm-bb-render-mode';
+const tokenKey = 'x-dm-auth-token';
+const renderKey = 'x-dm-bb-render-mode';
 
 const defautlHeaders: { [key: string]: string } = {
   'Cache-Control': 'no-cache',
