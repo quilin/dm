@@ -35,6 +35,20 @@ const mutations: MutationTree<ForumState> = {
   updateComments(state, payload: ListEnvelope<Comment>) {
     state.comments = payload;
   },
+  updateComment(state, payload: Comment) {
+    state.comments!.resources = state.comments!.resources.map(comment => {
+      if (comment.id === payload.id) {
+        return payload;
+      }
+
+      return comment;
+    });
+  },
+  addComment(state, payload: Comment) {
+    if (state.comments) {
+      state.comments.resources.push(payload);
+    }
+  },
   markAllTopicsAsRead(state) {
     state.fora.forEach((f: Forum) => {
       if (f.id === state.selectedForumId) {

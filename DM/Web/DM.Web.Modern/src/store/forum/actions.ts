@@ -1,6 +1,6 @@
 import { ActionTree } from 'vuex';
 import forumApi from '@/api/requests/forumApi';
-import { Topic } from '@/api/models/forum';
+import { Comment, Topic } from '@/api/models/forum';
 import ForumState from './forumState';
 import RootState from './../rootState';
 import { PagingQuery } from '@/api/models/common';
@@ -57,11 +57,38 @@ const actions: ActionTree<ForumState, RootState> = {
     }
   },
   async fetchComments({ commit }, { id, n }): Promise<void> {
-    commit('updateComments', null);
-    const { data, error } = await forumApi.getComments(id, n);
+    const { data, error } = await forumApi.getComments(id, { number: n, size: null, skip: null });
+
     if (!error) {
       commit('updateComments', data!);
     }
+  },
+  async createComment({ commit }, { id, router, comment }): Promise<void> {
+    const { error: postCommentError } = await forumApi.postComment(id, comment as Comment);
+
+    if (!postCommentError) {
+      const { data: commentsData, error: commentsError } =
+        await forumApi.getComments(id, { size: 0, number: 0, skip: 0 });
+
+      if (!commentsError && commentsData?.paging) {
+        commit('updateComments', commentsData);
+        router.push({ name: 'topic', params: { id, n: commentsData.paging.total } });
+      }
+    }
+
+    if (postCommentError) {
+      return Promise.reject();
+    }
+  },
+  async updateComment({ commit }, { id, comment }): Promise<void> {
+    const { data, error } = await forumApi.updateComment(id, comment as Comment);
+
+    if (!error) {
+      commit('updateComment', data?.resource);
+    }
+  },
+  async deleteComment(_0, { id }): Promise<void> {
+    await forumApi.deleteComment(id);
   },
   async markAllTopicsAsRead({ commit }, { id }): Promise<void> {
     const { error } = await forumApi.markAllTopicsAsRead(id);
