@@ -23,7 +23,6 @@
           <profile-stat title="Как зовут">{{user.name || '—'}}</profile-stat>
           <profile-stat title="Где живет">{{user.location || '—'}}</profile-stat>
           <profile-stat title="Skype">{{user.skype || '—'}}</profile-stat>
-          
         </div>
         <div class="details">
 
@@ -51,7 +50,6 @@ import { Route } from 'vue-router';
 
 import { User, UserRole } from '@/api/models/community';
 
-import IconType from '@/components/iconType';
 import ProfileStat from './ProfileStat.vue';
 
 const roleNames: Record<string, string> = {
@@ -67,8 +65,6 @@ const roleNames: Record<string, string> = {
   },
 })
 export default class Profile extends Vue {
-  private IconType: typeof IconType = IconType;
-  
   @Getter('user')
   private currentUser!: User;
 
