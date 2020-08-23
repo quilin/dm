@@ -66,18 +66,14 @@ const actions: ActionTree<ForumState, RootState> = {
   async createComment({ commit }, { id, router, comment }): Promise<void> {
     const { error: postCommentError } = await forumApi.postComment(id, comment as Comment);
 
-    if (!postCommentError) {
-      const { data: commentsData, error: commentsError } =
-        await forumApi.getComments(id, { size: 0, number: 0, skip: 0 });
+    if (postCommentError) return Promise.reject();
 
-      if (!commentsError && commentsData?.paging) {
-        commit('updateComments', commentsData);
-        router.push({ name: 'topic', params: { id, n: commentsData.paging.total } });
-      }
-    }
+    const { data: commentsData, error: commentsError } =
+      await forumApi.getComments(id, { size: 0, number: 0, skip: 0 });
 
-    if (postCommentError) {
-      return Promise.reject();
+    if (!commentsError && commentsData?.paging) {
+      commit('updateComments', commentsData);
+      router.push({ name: 'topic', params: { id, n: commentsData.paging.total } });
     }
   },
   async updateComment({ commit }, { id, comment }): Promise<void> {
