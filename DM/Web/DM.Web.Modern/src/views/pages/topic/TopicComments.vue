@@ -7,6 +7,7 @@
         v-for="comment in comments"
         :key="comment.id"
         :comment="comment"
+        :editable="commentEditable(comment.author)"
         @deleted="fetchData"
     />
     <div v-else class="topicComments__empty">Здесь еще никто ничего не написал</div>
@@ -25,21 +26,35 @@ import { Action, Getter } from 'vuex-class';
 import { Comment } from '@/api/models/forum';
 import { Paging } from '@/api/models/common';
 import TopicComment from './TopicComment.vue';
+import { User } from '@/api/models/community';
+import { userIsHighAuthority } from '@/api/models/community/helpers';
 
 @Component({
   components: { TopicComment },
 })
 export default class TopicComments extends Vue {
+  private loading = false;
+
   @Getter('forum/comments')
   private comments!: Comment[];
-
-  @Action('forum/fetchComments')
-  private fetchComments: any;
 
   @Getter('forum/commentsPaging')
   private paging!: Paging | null;
 
-  private loading = false;
+  @Getter('user')
+  private user!: User | null;
+
+  @Getter('forum/moderators')
+  private moderators!: User[];
+
+  @Action('forum/fetchComments')
+  private fetchComments: any;
+
+  private commentEditable(author: User) {
+    return author.login === this.user?.login ||
+        this.moderators.some(moderator => moderator.login === author.login) ||
+        userIsHighAuthority(this.user);
+  }
 
   @Watch('paging.current')
   private onRouteChanged(): void {
