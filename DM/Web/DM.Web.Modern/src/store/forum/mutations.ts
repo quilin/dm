@@ -44,11 +44,6 @@ const mutations: MutationTree<ForumState> = {
       return comment;
     });
   },
-  addComment(state, payload: Comment) {
-    if (state.comments) {
-      state.comments.resources.push(payload);
-    }
-  },
   markAllTopicsAsRead(state) {
     state.fora.forEach((f: Forum) => {
       if (f.id === state.selectedForumId) {
