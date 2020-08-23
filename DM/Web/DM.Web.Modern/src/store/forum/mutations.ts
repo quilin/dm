@@ -60,6 +60,21 @@ const mutations: MutationTree<ForumState> = {
       topic.unreadCommentsCount = 0;
     });
   },
+  markTopicAsRead(state) {
+    state.fora.forEach((f: Forum) => {
+      if (f.id === state.selectedForumId) {
+        f.unreadTopicsCount = f.unreadTopicsCount - 1;
+      }
+    });
+
+    state.topics!.resources.forEach((topic: Topic) => {
+      if (topic.id === state.selectedTopicId) {
+        topic.unreadCommentsCount = 0;
+      }
+    });
+
+    state.topic!.unreadCommentsCount = 0;
+  },
 };
 
 export default mutations;

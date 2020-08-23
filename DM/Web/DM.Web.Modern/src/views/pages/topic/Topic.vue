@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import { Topic } from '@/api/models/forum';
 import IconType from '@/components/iconType';
@@ -39,21 +39,24 @@ export default class TopicPage extends Vue {
   @Action('forum/selectTopic')
   private selectTopic: any;
 
+  @Action('forum/markTopicAsRead')
+  private markTopicAsRead: any;
+
   @Getter('forum/selectedTopic')
   private selectedTopic!: string | null;
-
-  @Watch('selectedTopic')
-  private onRouteChanged(): void {
-    this.fetchData();
-  }
 
   private mounted(): void {
     this.fetchData();
   }
 
-  private fetchData(): void {
+  private async fetchData() {
     const id = this.$route.params.id;
-    this.selectTopic({ id });
+
+    await this.selectTopic({ id });
+
+    if (this.topic.unreadCommentsCount) {
+      this.markTopicAsRead({ id });
+    }
   }
 }
 </script>

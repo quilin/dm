@@ -37,6 +37,10 @@ export default new class ForumApi {
     return await Api.delete(`fora/${id}/comments/unread`);
   }
 
+  public async markTopicAsRead(id: string): Promise<ApiResult<void>> {
+    return await Api.delete(`topics/${id}/comments/unread`);
+  }
+
   public async getComments(id: string, q: PagingQuery): Promise<ApiResult<ListEnvelope<Comment>>> {
     return await Api.get(`topics/${id}/comments`, q);
   }

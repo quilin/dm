@@ -96,6 +96,12 @@ const actions: ActionTree<ForumState, RootState> = {
       commit('markAllTopicsAsRead');
     }
   },
+  async markTopicAsRead({ commit }, { id }): Promise<void> {
+    const { error } = await forumApi.markTopicAsRead(id);
+    if (!error) {
+      commit('markTopicAsRead');
+    }
+  },
 };
 
 export default actions;
