@@ -43,7 +43,6 @@ export default class EditCommentForm extends Vue {
     await this.updateComment({
       id: this.comment.id,
       comment: {
-        ...this.comment,
         text: this.bbCommentText,
       },
     })

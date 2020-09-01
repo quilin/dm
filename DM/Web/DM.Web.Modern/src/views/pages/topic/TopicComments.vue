@@ -3,18 +3,18 @@
     <div class="content-title">Комментарии</div>
     <loader v-if="loading" />
     <topic-comment
-        v-else-if="comments && comments.length"
-        v-for="comment in comments"
+        v-else-if="comments?.resources.length"
+        v-for="comment in comments.resources"
         :key="comment.id"
         :comment="comment"
         :editable="commentEditable(comment.author)"
         @deleted="fetchData"
     />
-    <div v-else class="topicComments__empty">Здесь еще никто ничего не написал</div>
+    <div v-else>Здесь еще никто ничего не написал</div>
     <paging
-        class="topicComments__paging"
-        v-if="paging"
-        :paging="paging"
+        class="topic-сomments__paging"
+        v-if="comments?.paging"
+        :paging="comments.paging"
         :to="{name: 'topic', params: $route.params}"
     />
   </div>
@@ -24,7 +24,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import { Comment } from '@/api/models/forum';
-import { Paging } from '@/api/models/common';
+import { ListEnvelope } from '@/api/models/common';
 import TopicComment from './TopicComment.vue';
 import { User } from '@/api/models/community';
 import { userIsHighAuthority } from '@/api/models/community/helpers';
@@ -36,10 +36,7 @@ export default class TopicComments extends Vue {
   private loading = false;
 
   @Getter('forum/comments')
-  private comments!: Comment[];
-
-  @Getter('forum/commentsPaging')
-  private paging!: Paging | null;
+  private comments!: ListEnvelope<Comment>;
 
   @Getter('user')
   private user!: User | null;
@@ -78,7 +75,7 @@ export default class TopicComments extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.topicComments
+.topic-сomments
   &__paging
     margin-top $medium
 </style>
