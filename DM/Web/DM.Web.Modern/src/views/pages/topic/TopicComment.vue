@@ -14,7 +14,7 @@
           </template>
         </div>
         <div class="topic-comment__controls" v-if="editable">
-          <a class="topic-comment__control" @click="editComment">
+          <a class="topic-comment__control" @click="showEditForm">
             <icon :font="IconType.Edit" />
             Редактировать
           </a>
@@ -25,8 +25,14 @@
         </div>
       </div>
     </template>
-    <edit-comment-form v-else :comment="comment" @edited="onEdit" />
-    <delete-comment-lightbox :comment-id="comment.id" @deleted="onDelete" />
+    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" />
+    <confirm-lightbox
+        name="delete-comment"
+        title="Удалить комментарий?"
+        accept-text="Удалить"
+        @accepted="deleteComment"
+        @canceled="$modal.hide('delete-comment')"
+    />
   </div>
 </template>
 
@@ -35,10 +41,11 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Comment } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 import EditCommentForm from '@/views/pages/topic/EditCommentForm.vue';
-import DeleteCommentLightbox from '@/views/pages/topic/DeleteCommentLightbox.vue';
+import ConfirmLightbox from '@/components/ConfirmLightbox.vue';
+import { Action } from 'vuex-class';
 
 @Component({
-  components: { DeleteCommentLightbox, EditCommentForm },
+  components: { ConfirmLightbox, EditCommentForm },
 })
 export default class TopicComment extends Vue {
   private IconType: typeof IconType = IconType;
@@ -51,15 +58,20 @@ export default class TopicComment extends Vue {
   @Prop()
   private editable!: boolean;
 
-  private editComment() {
+  @Action('forum/deleteComment')
+  private deleteCommentAction: any;
+
+  private showEditForm() {
     this.editMode = true;
   }
 
-  private onEdit() {
+  private hideEditForm() {
     this.editMode = false;
   }
 
-  private onDelete() {
+  private deleteComment() {
+    this.deleteCommentAction({ id: this.comment.id });
+
     this.$emit('deleted');
   }
 }
