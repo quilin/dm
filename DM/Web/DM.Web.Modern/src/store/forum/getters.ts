@@ -1,7 +1,7 @@
 import { GetterTree } from 'vuex';
 import ForumState from './forumState';
 import RootState from './../rootState';
-import { Paging } from '@/api/models/common';
+import { ListEnvelope, Paging } from '@/api/models/common';
 import { User } from '@/api/models/community';
 import { Forum, Topic, Comment } from '@/api/models/forum';
 
@@ -37,11 +37,8 @@ const getters: GetterTree<ForumState, RootState> = {
   topic(state): Topic | null {
     return state.topic || state.topics?.resources.find((t: Topic) => t.id === state.selectedTopicId) || null;
   },
-  comments(state): Comment[] | null {
-    return state.comments?.resources || null;
-  },
-  commentsPaging(state): Paging | null {
-    return state.comments?.paging || null;
+  comments(state): ListEnvelope<Comment> | null {
+    return state.comments;
   },
 };
 

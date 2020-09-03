@@ -71,7 +71,7 @@ class Api {
     } catch (err) {
       return {
         data: null,
-        error: {...err.response.data.error, code: err.response.status},
+        error: err.response ? {...err.response.data.error, code: err.response.status} : err,
       };
     }
   }

@@ -116,6 +116,7 @@ body
 
 .content
   flex-grow 1
+  min-width 0 // fix inner overflow elements https://www.w3.org/TR/css-flexbox-1/#flex-common
   margin-left 0
   margin-right $big
 

@@ -35,6 +35,15 @@ const mutations: MutationTree<ForumState> = {
   updateComments(state, payload: ListEnvelope<Comment>) {
     state.comments = payload;
   },
+  updateComment(state, payload: Comment) {
+    state.comments!.resources = state.comments!.resources.map(comment => {
+      if (comment.id === payload.id) {
+        return payload;
+      }
+
+      return comment;
+    });
+  },
   markAllTopicsAsRead(state) {
     state.fora.forEach((f: Forum) => {
       if (f.id === state.selectedForumId) {
@@ -45,6 +54,21 @@ const mutations: MutationTree<ForumState> = {
     state.topics!.resources.forEach((topic: Topic) => {
       topic.unreadCommentsCount = 0;
     });
+  },
+  markTopicAsRead(state) {
+    state.fora.forEach((f: Forum) => {
+      if (f.id === state.selectedForumId) {
+        f.unreadTopicsCount = f.unreadTopicsCount - 1;
+      }
+    });
+
+    state.topics!.resources.forEach((topic: Topic) => {
+      if (topic.id === state.selectedTopicId) {
+        topic.unreadCommentsCount = 0;
+      }
+    });
+
+    state.topic!.unreadCommentsCount = 0;
   },
 };
 
