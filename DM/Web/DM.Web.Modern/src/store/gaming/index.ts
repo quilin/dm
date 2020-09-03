@@ -7,6 +7,8 @@ import RootState from './../rootState';
 
 const state: GamingState = {
   ownGames: null,
+  schemas: null,
+  tags: null,
 };
 
 const gaming: Module<GamingState, RootState> = {

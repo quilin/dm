@@ -21,13 +21,11 @@ namespace DM.Web.API.Dto.Users
         /// <inheritdoc />
         public UserProfile()
         {
-            CreateMap<UserRole, IEnumerable<string>>()
+            CreateMap<UserRole, IEnumerable<UserRole>>()
                 .ConvertUsing(userRole =>
                     Enum.GetValues(typeof(UserRole))
                         .Cast<UserRole>()
-                        .Where(role => role != UserRole.Guest && role != UserRole.Player)
-                        .Where(role => userRole.HasFlag(role))
-                        .Select(role => role.ToString()));
+                        .Where(role => userRole.HasFlag(role)));
 
             CreateMap<GeneralUser, User>()
                 .ForMember(d => d.Roles, s => s.MapFrom(u => u.Role))

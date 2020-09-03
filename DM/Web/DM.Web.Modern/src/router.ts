@@ -116,8 +116,28 @@ export default new Router({
     },
 
     {
-      path: '/creategame',
+      path: '/create-game',
       name: 'create-game',
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import('./views/pages/create-game/CreateGame.vue'),
+      },
     },
+    {
+      path: '/games',
+      name: 'games',
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+      },
+    },
+    {
+      path: '/game/:id',
+      name: 'game',
+      components: {
+        menu: GeneralMenu, // todo: game menu
+      },
+    }
   ],
 });

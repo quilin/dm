@@ -5,6 +5,7 @@ panel()
 labeled-field()
   display flex
   margin $small 0
+  align-items baseline
 
   & input
     flex-shrink 0
@@ -21,8 +22,10 @@ labeled-field()
   & label
     flex-shrink 0
     display inline-block
-    margin-top $minor + $tiny
-    width $gridStep * 20
+    min-width $gridStep * 30
+
+.form-field
+  labeled-field()
 
 menu-item()
   margin $tiny 0

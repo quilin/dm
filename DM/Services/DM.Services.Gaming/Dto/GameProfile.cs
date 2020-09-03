@@ -9,6 +9,7 @@ using DbGameTag = DM.Services.DataAccess.BusinessObjects.Common.Tag;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
 using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 using GameTag = DM.Services.Gaming.Dto.Output.GameTag;
+using DbReader = DM.Services.DataAccess.BusinessObjects.Games.Links.Reader;
 
 namespace DM.Services.Gaming.Dto
 {
@@ -39,7 +40,7 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(u => u.LinkId, s => s.MapFrom(l => l.BlackListLinkId));
 
             CreateMap<DbGame, GameExtended>()
-                .ForMember(d => d.Readers, s => s.MapFrom(g => g.Readers))
+                .ForMember(d => d.Readers, s => s.MapFrom(g => g.Readers.Select(r => r.User)))
                 .ForMember(d => d.Characters, s => s.MapFrom(g => g.Characters.Where(c => !c.IsRemoved)));
 
             CreateMap<DbGameTag, GameTag>()

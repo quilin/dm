@@ -1,12 +1,26 @@
-import { ListEnvelope, ApiResult } from '@/api/models/common';
-import { Game, GamesQuery } from '@/api/models/gaming/games';
+import { ApiResult, Envelope, ListEnvelope } from '@/api/models/common';
+import { Game, AttributeSchema, Tag } from '@/api/models/gaming';
 import Api from '@/api';
 
 export default new class {
-  public async getOwnGames(): Promise<ApiResult<ListEnvelope<Game>>> {
-    return await Api.get('games/own');
+  public async getOwnGames(): Promise<ListEnvelope<Game>> {
+    const { data } = await Api.get<ListEnvelope<Game>>('games/own');
+    return data!;
   }
-  public async getGames(query: GamesQuery): Promise<ApiResult<ListEnvelope<Game>>> {
-    return await Api.get('games', query);
+
+  public async getSchemas(): Promise<ListEnvelope<AttributeSchema>> {
+    const { data } = await Api.get<ListEnvelope<AttributeSchema>>('schemata');
+    return data!;
+  }
+  public async getTags(): Promise<ListEnvelope<Tag>> {
+    const { data } = await Api.get<ListEnvelope<Tag>>('games/tags');
+    return data!;
+  }
+
+  public async createSchema(schema: AttributeSchema): Promise<ApiResult<Envelope<AttributeSchema>>> {
+    return await Api.post<Envelope<AttributeSchema>>('schemata', schema);
+  }
+  public async createGame(game: Game): Promise<ApiResult<Envelope<Game>>> {
+    return await Api.post<Envelope<Game>>('games', game);
   }
 }();

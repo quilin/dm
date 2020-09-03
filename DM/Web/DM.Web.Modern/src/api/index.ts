@@ -9,7 +9,7 @@ import { BbRenderMode } from './bbRenderMode';
 const tokenKey = 'x-dm-auth-token';
 const renderKey = 'x-dm-bb-render-mode';
 
-const defautlHeaders: { [key: string]: string } = {
+const defaultHeaders: { [key: string]: string } = {
   'Cache-Control': 'no-cache',
   'Content-Type': 'application/json',
   [renderKey]: 'html',
@@ -17,12 +17,12 @@ const defautlHeaders: { [key: string]: string } = {
 
 const storedToken = localStorage.getItem(tokenKey);
 if (storedToken) {
-  defautlHeaders[tokenKey] = storedToken!;
+  defaultHeaders[tokenKey] = storedToken!;
 }
 
 const configuration: AxiosRequestConfig = {
   baseURL: 'http://localhost:5000/v1',
-  headers: defautlHeaders,
+  headers: defaultHeaders,
   responseType: 'json',
 };
 
@@ -63,9 +63,6 @@ class Api {
         const token = headers[tokenKey];
         this.axios.defaults.headers.common[tokenKey] = token;
         localStorage.setItem(tokenKey, token);
-      } else {
-        delete this.axios.defaults.headers.common[tokenKey];
-        localStorage.removeItem(tokenKey);
       }
       return {
         data: data as T,
@@ -77,6 +74,19 @@ class Api {
         error: {...err.response.data.error, code: err.response.status},
       };
     }
+  }
+
+  public restoreAuthentication() {
+    const token = localStorage.getItem(tokenKey);
+    if (token === null) return;
+
+    this.axios.defaults.headers.common[tokenKey] = token;
+    localStorage.setItem(tokenKey, token);
+  }
+
+  public logout() {
+    delete this.axios.defaults.headers.common[tokenKey];
+    localStorage.removeItem(tokenKey);
   }
 }
 

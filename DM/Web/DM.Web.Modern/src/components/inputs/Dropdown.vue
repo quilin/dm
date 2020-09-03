@@ -1,13 +1,14 @@
 <template>
-  <span :class="['container', popupShown && 'container_active']" ref="container">
+  <span :class="['container', popupShown && 'container_active']"
+    ref="container" @click="popupShown = !popupShown">
 
-    <span class="label" @click="popupShown = !popupShown">
+    <span class="label">
       {{selectedOption.label}}
     </span>
 
     <portal to="popup" v-if="popupShown">
       <div class="options" :style="{top, left}">
-        <div v-for="option in options" :key="option.value" class="option" @click="selectOption(option)">
+        <div v-for="option in options" :key="option.label" class="option" @click="selectOption(option)">
           <span class="option__label">{{option.label}}</span>
           <div v-if="option.description" class="option__description">{{option.description}}</div>
         </div>
@@ -33,13 +34,19 @@ export default class Dropdown extends PopupBase {
   private options!: DropdownOption[];
 
   @Prop()
+  private emptyLabel?: string;
+
+  @Prop()
   private value!: any;
 
-  private selectedOption: DropdownOption = this.options.find(o => o.value == this.value) ?? this.options[0];
+  private get selectedOption(): DropdownOption {
+    return this.options.find(o => o.value == this.value) ??
+      {value: this.value, label: this.emptyLabel} as DropdownOption ??
+      this.options[0];
+  }
 
   private selectOption(option: DropdownOption) {
     this.popupShown = false;
-    this.selectedOption = option;
     this.$emit('input', option.value);
   }
 }
@@ -48,23 +55,30 @@ export default class Dropdown extends PopupBase {
 <style scoped lang="stylus">
 .container
   display inline-block
+  overflow hidden
 
   border 1px solid
   border-radius $borderRadius
   theme(border-color, $border)
+  background transparent url('~@/assets/dds-arrow.gif') right center no-repeat
 
 .label
-  display inline-block
+  display block
+  overflow hidden
   box-sizing border-box
-  padding ($gridStep * 1.5) $medium ($gridStep * 1.5) $small
+  padding ($small + 1px) $medium ($small - 1px) $small
 
-  background transparent url('~@/assets/dds-arrow.gif') right center no-repeat
   cursor pointer
+  white-space nowrap
+  text-overflow ellipsis
+  vertical-align baseline
 
 .options
   position absolute
+  overflow auto
 
   margin-top $minor
+  max-height $gridStep * 30
 
   border 1px solid
   theme(border-color, $border)
@@ -72,7 +86,7 @@ export default class Dropdown extends PopupBase {
 
 .option
   padding ($gridStep * 1.5) $medium ($gridStep * 1.5) $small
-  theme(background, $background)
+  theme(background-color, $background)
   cursor pointer
   white-space nowrap
 

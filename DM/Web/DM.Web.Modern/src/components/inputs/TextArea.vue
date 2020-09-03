@@ -27,5 +27,6 @@ textarea
   display block
   height $large
   width 100%
+  min-width $gridStep * 100
   box-sizing border-box
 </style>

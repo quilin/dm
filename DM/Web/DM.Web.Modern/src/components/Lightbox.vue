@@ -1,6 +1,6 @@
 <template>
   <portal to="lightbox">
-    <modal :name="name" :adaptive="true" height="auto" width="452px">
+    <modal :name="name" :adaptive="true" height="auto" :width="width || 452">
       <div class="lightbox">
         <div class="page-title">
           <slot name="title" />
@@ -25,6 +25,9 @@ export default class Lightbox extends Vue {
 
   @Prop()
   private name!: string;
+
+  @Prop()
+  private width?: number | null;
 }
 </script>
 

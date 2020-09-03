@@ -1,14 +1,12 @@
 <template>
-  <div class="loader" :class="classMod"></div>
+  <div class="loader">&nbsp;</div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Loader extends Vue {
-  @Prop()
-  private classMod?: string;
 }
 </script>
 

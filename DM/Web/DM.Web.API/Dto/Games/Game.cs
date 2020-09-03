@@ -71,7 +71,7 @@ namespace DM.Web.API.Dto.Games
         /// <summary>
         /// Requesting user participates in game
         /// </summary>
-        public GameParticipation Participation { get; set; }
+        public IEnumerable<GameParticipation> Participation { get; set; }
 
         /// <summary>
         /// Game tags

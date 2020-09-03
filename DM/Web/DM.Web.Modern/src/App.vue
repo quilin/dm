@@ -69,6 +69,10 @@ body
   theme(background-color, $background)
 .v--modal-overlay
   theme(background-color, $overlayBackground)
+  overflow auto
+.v--modal-box
+  margin-top $big
+  margin-bottom $big
 
 .main
   height 100%

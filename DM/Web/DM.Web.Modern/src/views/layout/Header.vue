@@ -132,6 +132,8 @@ export default class DmHeader extends Vue {
     border 1px solid
     theme(background, $panelBackground)
     theme(border-color, $panelBackground)
+    &.router-link-exact-active
+      font-weight normal
     &:hover
       theme(border-color, $border)
 

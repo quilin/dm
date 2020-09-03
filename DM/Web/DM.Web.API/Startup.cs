@@ -11,6 +11,7 @@ using DM.Services.Forum;
 using DM.Services.Gaming;
 using DM.Services.Notifications;
 using DM.Services.Search;
+using DM.Web.API.Authentication;
 using DM.Web.API.Binding;
 using DM.Web.API.Configuration;
 using DM.Web.API.Middleware;
@@ -117,7 +118,7 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseCors(b => b
-                    .WithExposedHeaders("X-Dm-Auth-Token")
+                    .WithExposedHeaders(ApiCredentialsStorage.HttpAuthTokenHeader)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowAnyOrigin())

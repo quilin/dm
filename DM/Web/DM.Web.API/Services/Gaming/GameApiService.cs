@@ -55,6 +55,9 @@ namespace DM.Web.API.Services.Gaming
         }
 
         /// <inheritdoc />
+        public Task<ListEnvelope<Game>> GetPopular() => throw new NotImplementedException();
+
+        /// <inheritdoc />
         public async Task<Envelope<Game>> Get(Guid gameId)
         {
             var game = await readingService.GetGame(gameId);

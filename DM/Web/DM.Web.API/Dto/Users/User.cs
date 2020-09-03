@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.API.Dto.Users
 {
@@ -16,7 +17,7 @@ namespace DM.Web.API.Dto.Users
         /// <summary>
         /// Roles
         /// </summary>
-        public IEnumerable<string> Roles { get; set; }
+        public IEnumerable<UserRole> Roles { get; set; }
 
         /// <summary>
         /// Profile picture URL

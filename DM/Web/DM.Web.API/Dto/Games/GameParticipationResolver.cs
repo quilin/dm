@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Gaming.Dto;
@@ -10,8 +13,8 @@ namespace DM.Web.API.Dto.Games
     /// Resolver for current user participation
     /// </summary>
     public class GameParticipationResolver :
-        IValueResolver<ServiceGame, Game, GameParticipation>,
-        IValueResolver<GameExtended, Game, GameParticipation>
+        IValueResolver<ServiceGame, Game, IEnumerable<GameParticipation>>,
+        IValueResolver<GameExtended, Game, IEnumerable<GameParticipation>>
     {
         private readonly IIdentityProvider identityProvider;
 
@@ -23,13 +26,18 @@ namespace DM.Web.API.Dto.Games
         }
 
         /// <inheritdoc />
-        public GameParticipation Resolve(
-            ServiceGame source, Game destination, GameParticipation destMember, ResolutionContext context) =>
-            source.Participation(identityProvider.Current.User.UserId);
+        public IEnumerable<GameParticipation> Resolve(
+            ServiceGame source, Game destination, IEnumerable<GameParticipation> destMember, ResolutionContext context) =>
+            Flatten(source.Participation(identityProvider.Current.User.UserId));
 
         /// <inheritdoc />
-        public GameParticipation Resolve(
-            GameExtended source, Game destination, GameParticipation destMember, ResolutionContext context) =>
-            source.Participation(identityProvider.Current.User.UserId);
+        public IEnumerable<GameParticipation> Resolve(
+            GameExtended source, Game destination, IEnumerable<GameParticipation> destMember, ResolutionContext context) =>
+            Flatten(source.Participation(identityProvider.Current.User.UserId));
+
+        private static IEnumerable<GameParticipation> Flatten(GameParticipation participation) =>
+            Enum.GetValues(typeof(GameParticipation))
+                .Cast<GameParticipation>()
+                .Where(p => participation.HasFlag(p));
     }
 }

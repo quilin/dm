@@ -41,8 +41,10 @@ enum IconType {
 
   Edit = 0xe00f,
   Remove = 0xe022,
+  Settings = 0xe018,
   Closed = 0xe02e,
   Attached = 0xe073,
+  Reorder = 0xe01f,
 
   Blast = 0xe076,
   Hidden = 0xe043,

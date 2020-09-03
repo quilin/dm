@@ -25,6 +25,12 @@ namespace DM.Web.API.Services.Gaming
         Task<ListEnvelope<Game>> GetOwn();
 
         /// <summary>
+        /// Get most popular games
+        /// </summary>
+        /// <returns></returns>
+        Task<ListEnvelope<Game>> GetPopular();
+
+        /// <summary>
         /// Get certain game
         /// </summary>
         /// <param name="gameId">Game identifier</param>

@@ -30,9 +30,9 @@ export interface Tag {
 }
 
 export enum CommentariesAccessMode {
-  Public = 0,
-  Readonly = 1,
-  Private = 2,
+  Public = 'Public',
+  Readonly = 'Readonly',
+  Private = 'Private',
 }
 
 export interface GamePrivacySettings {
@@ -63,7 +63,7 @@ export interface Game {
 
   tags: Tag[];
   privacySettings: GamePrivacySettings;
-  schema: AttributeSchema;
+  schema: AttributeSchema | null;
 
   unreadPostsCount: number;
   unreadCommentsCount: number;
