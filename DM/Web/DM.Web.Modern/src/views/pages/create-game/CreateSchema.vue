@@ -123,7 +123,7 @@ export default class CreateSchema extends Vue {
 
   private constraintOptions = constraintOptions;
   private schema: AttributeSchema = defaultSchema as AttributeSchema;
-  private saving: boolean = false;
+  private saving = false;
 
   @Action('gaming/createSchema')
   private createSchema!: any;

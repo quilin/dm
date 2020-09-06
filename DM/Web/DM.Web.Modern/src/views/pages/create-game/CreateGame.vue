@@ -104,8 +104,8 @@ import TagSelector from '@/views/pages/create-game/TagSelector.vue';
 })
 export default class CreateGame extends Vue {
   private IconType: typeof IconType = IconType;
-  private extendedSettingsMode: boolean = false;
-  private creating: boolean = false;
+  private extendedSettingsMode = false;
+  private creating = false;
   private game: Game = {
     privacySettings: {
       commentariesAccess: CommentariesAccessMode.Public,
