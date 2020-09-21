@@ -7,6 +7,7 @@ import RootState from './../rootState';
 
 const state: GamingState = {
   ownGames: null,
+  popularGames: null,
   schemas: null,
   tags: null,
 };

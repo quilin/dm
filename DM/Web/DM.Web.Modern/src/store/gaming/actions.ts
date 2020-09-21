@@ -10,6 +10,11 @@ const actions: ActionTree<GamingState, RootState> = {
     commit('updateOwnGames', games);
   },
 
+  async fetchPopularGames({commit}): Promise<void> {
+    const { resources: games } = await gamingApi.getPopularGames();
+    commit('updatePopularGames', games);
+  },
+
   async fetchSchemas({ commit }): Promise<void> {
     const { resources: schemas } = await gamingApi.getSchemas();
     commit('updateSchemas', schemas);

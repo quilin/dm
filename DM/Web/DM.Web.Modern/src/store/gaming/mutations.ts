@@ -6,6 +6,9 @@ const mutations: MutationTree<GamingState> = {
   updateOwnGames(state, payload: Game[]) {
     state.ownGames = payload;
   },
+  updatePopularGames(state, payload: Game[]) {
+    state.popularGames = payload;
+  },
   updateSchemas(state, payload: AttributeSchema[]) {
     state.schemas = payload;
   },

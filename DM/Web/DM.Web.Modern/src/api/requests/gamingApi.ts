@@ -8,10 +8,16 @@ export default new class {
     return data!;
   }
 
+  public async getPopularGames(): Promise<ListEnvelope<Game>> {
+    const { data } = await Api.get<ListEnvelope<Game>>('games/popular');
+    return data!;
+  }
+
   public async getSchemas(): Promise<ListEnvelope<AttributeSchema>> {
     const { data } = await Api.get<ListEnvelope<AttributeSchema>>('schemata');
     return data!;
   }
+
   public async getTags(): Promise<ListEnvelope<Tag>> {
     const { data } = await Api.get<ListEnvelope<Tag>>('games/tags');
     return data!;
@@ -20,6 +26,7 @@ export default new class {
   public async createSchema(schema: AttributeSchema): Promise<ApiResult<Envelope<AttributeSchema>>> {
     return await Api.post<Envelope<AttributeSchema>>('schemata', schema);
   }
+
   public async createGame(game: Game): Promise<ApiResult<Envelope<Game>>> {
     return await Api.post<Envelope<Game>>('games', game);
   }
