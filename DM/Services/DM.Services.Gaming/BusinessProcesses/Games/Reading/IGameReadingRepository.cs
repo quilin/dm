@@ -71,5 +71,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<GameTag>> GetTags();
+        
+        /// <summary>
+        /// Get list of popular active games
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Game>> GetPopularGames(int gamesCount);
     }
 }
