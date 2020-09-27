@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <menu-block v-if="user" token="OwnGames">
-      <template v-slot:title>Мои игры</template>
+  <menu-block v-if="user" token="OwnGames">
+    <template v-slot:title>Мои игры</template>
 
-      <loader v-if="!ownGames" />
-      <menu-link v-else v-for="game in ownGames" :key="game.id" :game="game" :counters="true" />
+    <loader v-if="!ownGames" />
+    <menu-link v-else v-for="game in ownGames" :key="game.id" :game="game" :counters="true" />
 
-      <router-link :to="{name: 'games'}" class="menu-rest-link">
-        Все активные игры
-        <icon :font="IconType.Forward" />
-      </router-link>      
-    </menu-block>
-  </div>
+    <router-link :to="{name: 'games'}" class="menu-rest-link">
+      Все активные игры
+      <icon :font="IconType.Forward" />
+    </router-link>
+  </menu-block>
 </template>
 
 <script lang="ts">
