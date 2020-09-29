@@ -44,5 +44,11 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         /// <param name="gameId">Game identifier</param>
         /// <returns></returns>
         Task<GameExtended> GetGameDetails(Guid gameId);
+
+        /// <summary>
+        /// Get user games
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Game>> GetPopularGames();
     }
 }

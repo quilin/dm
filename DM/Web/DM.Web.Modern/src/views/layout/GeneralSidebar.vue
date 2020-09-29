@@ -2,7 +2,7 @@
   <div>
     <active-polls />
     <donate />
-    <most-read-games />
+    <popular-games />
   </div>
 </template>
 
@@ -11,13 +11,13 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import ActivePolls from '@/views/layout/sidebar/ActivePolls.vue';
 import Donate from '@/views/layout/sidebar/Donate.vue';
-import MostReadGames from '@/views/layout/sidebar/MostReadGames.vue';
+import PopularGames from '@/views/layout/sidebar/PopularGames.vue';
 
 @Component({
   components: {
     ActivePolls,
     Donate,
-    MostReadGames,
+    PopularGames,
   },
 })
 export default class GeneralMenu extends Vue {}

@@ -117,5 +117,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
                 .ProjectTo<GameTag>(mapper.ConfigurationProvider)
                 .ToArrayAsync();
         }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<Game>> GetPopularGames(int gamesCount)
+        {
+            return await dbContext.Games
+                .Where(g => g.Status == GameStatus.Active && !g.IsRemoved)
+                .OrderByDescending(g => g.Readers.Count)
+                .Take(gamesCount)
+                .ProjectTo<Game>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
         private readonly IIdentityProvider identityProvider;
 
         private const string TagListCacheKey = nameof(TagListCacheKey);
+        private const string PopularGamesCacheKey = nameof(PopularGamesCacheKey);
+        private const int PopularGamesLimit = 10;
 
         /// <inheritdoc />
         public GameReadingService(
@@ -154,6 +156,16 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
                 g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
 
             return game;
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<Game>> GetPopularGames()
+        {
+            return cache.GetOrCreateAsync(PopularGamesCacheKey, async e =>
+            {
+                e.SlidingExpiration = TimeSpan.FromDays(1);
+                return await repository.GetPopularGames(PopularGamesLimit);
+            });
         }
     }
 }
