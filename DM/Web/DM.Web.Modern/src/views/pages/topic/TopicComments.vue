@@ -3,7 +3,7 @@
     <div class="content-title">Комментарии</div>
     <loader v-if="loading" />
     <topic-comment
-        v-else-if="comments.resources.length"
+        v-else-if="comments && comments.resources.length"
         v-for="comment in comments.resources"
         :key="comment.id"
         :comment="comment"
@@ -13,7 +13,7 @@
     <div v-else>Здесь еще никто ничего не написал</div>
     <paging
         class="topic-сomments__paging"
-        v-if="comments.paging"
+        v-if="comments && comments.paging"
         :paging="comments.paging"
         :to="{name: 'topic', params: $route.params}"
     />
@@ -53,7 +53,7 @@ export default class TopicComments extends Vue {
         userIsHighAuthority(this.user);
   }
 
-  @Watch('paging.current')
+  @Watch('$route')
   private onRouteChanged(): void {
     this.fetchData();
   }
