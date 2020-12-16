@@ -12,7 +12,6 @@ namespace DM.Web.API.Dto.Games
         public CharacterProfile()
         {
             CreateMap<DM.Services.Gaming.Dto.Output.Character, Character>()
-                .ForMember(c => c.Id, s => s.MapFrom(c => c.Id.EncodeToReadable(c.Name)))
                 .ForMember(c => c.Privacy, s => s.MapFrom<AccessPolicyConverter>());
 
             CreateMap<DM.Services.Gaming.Dto.Output.CharacterAttribute, CharacterAttribute>()

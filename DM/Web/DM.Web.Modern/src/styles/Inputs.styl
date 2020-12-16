@@ -1,4 +1,4 @@
-$inputPadding = ($minor + 2px) $small ($minor + 1px)
+$inputPadding = ($minor + 1px) $small
 
 input()
   margin 0
@@ -16,7 +16,6 @@ input()
   font-family PT Sans
   font-size $fontSize
   theme(background-color, $inputBackground)
-  transition all $animationTime
 
   &:focus
     themeExtend(box-shadow, inset 0 0 $minor, $border)

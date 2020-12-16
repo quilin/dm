@@ -62,9 +62,8 @@ namespace DM.Web.API
             services
                 .AddAutoMapper(config => config.AllowNullCollections = true)
                 .AddMemoryCache()
-                .AddDbContext<DmDbContext>(options => options
-                        .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))),
-                    ServiceLifetime.Transient);
+                .AddDbContextPool<DmDbContext>(options => options
+                    .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
             services.AddHealthChecks();
 

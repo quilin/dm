@@ -21,11 +21,12 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.PictureUrl, s => s.MapFrom(c => c.Pictures
                     .Where(p => !p.IsRemoved)
                     .Select(p => p.FilePath)
-                    .FirstOrDefault()));
+                    .FirstOrDefault()))
+                .ForMember(d => d.TotalPostsCount, s => s.MapFrom(c => c.Posts
+                    .Count(p => !p.IsRemoved)));
 
             CreateMap<DbAttribute, CharacterAttribute>()
-                .ForMember(d => d.Id, s => s.MapFrom(a => a.AttributeId))
-                .ForMember(d => d.Value, s => s.MapFrom(a => a.Value));
+                .ForMember(d => d.Id, s => s.MapFrom(a => a.AttributeId));
 
             CreateMap<DbCharacter, CharacterToUpdate>()
                 .ForMember(d => d.GameMasterId, s => s.MapFrom(c => c.Game.MasterId))

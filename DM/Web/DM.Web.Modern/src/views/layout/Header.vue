@@ -84,7 +84,7 @@ export default class DmHeader extends Vue {
   display flex
   box-sizing border-box
 
-  padding $gridStep * 3 0
+  padding $small 0
   height 90px /// image size
 
   background-position left top

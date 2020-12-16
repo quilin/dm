@@ -11,8 +11,8 @@ namespace DM.Services.Gaming.Authorization
         public bool IsAllowed(AuthenticatedUser user, AttributeSchemaIntention intention, AttributeSchema target) =>
             intention switch
             {
-                AttributeSchemaIntention.Edit => (target.Author.UserId == user.UserId),
-                AttributeSchemaIntention.Delete => (target.Author.UserId == user.UserId),
+                AttributeSchemaIntention.Edit => target.Author.UserId == user.UserId,
+                AttributeSchemaIntention.Delete => target.Author.UserId == user.UserId,
                 _ => false
             };
     }

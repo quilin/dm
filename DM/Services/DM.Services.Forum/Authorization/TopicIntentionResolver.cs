@@ -13,10 +13,9 @@ namespace DM.Services.Forum.Authorization
         public bool IsAllowed(AuthenticatedUser user, TopicIntention intention, Topic target) => intention switch
         {
             TopicIntention.CreateComment when user.IsAuthenticated => !target.Closed,
-            TopicIntention.Edit when user.IsAuthenticated => (
-                target.Author.UserId == user.UserId && !target.Closed ||
-                target.Forum.ModeratorIds.Contains(user.UserId) || user.Role.HasFlag(UserRole.Administrator)),
-            TopicIntention.Like when user.IsAuthenticated => (target.Author.UserId != user.UserId),
+            TopicIntention.Edit when user.IsAuthenticated => target.Author.UserId == user.UserId && !target.Closed ||
+                                                             target.Forum.ModeratorIds.Contains(user.UserId) || user.Role.HasFlag(UserRole.Administrator),
+            TopicIntention.Like when user.IsAuthenticated => target.Author.UserId != user.UserId,
             _ => false
         };
     }

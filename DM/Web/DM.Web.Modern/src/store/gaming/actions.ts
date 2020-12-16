@@ -44,6 +44,60 @@ const actions: ActionTree<GamingState, RootState> = {
       $router.push({ name: 'game', params: { id: game.id } });
     }
   },
+  async createCharacter({ state }, { character, $router }): Promise<void> {
+    const { data, error } = await gamingApi.createCharacter(state.selectedGame!.id, character);
+    if (error) {
+      $router.push({ name: 'error', params: { code: error.code } });
+    } else {
+      const { resource: character } = data!;
+      $router.push({ name: 'game-characters', params: { id: state.selectedGame!.id, characterId: character.id } })
+    }
+  },
+
+  async selectGame({ commit }, { id, router }): Promise<void> {
+    commit('updateSelectedGame', null);
+
+    const { data, error } = await gamingApi.getGame(id);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code } });
+    } else {
+      const { resource: game } = data!;
+      commit('updateSelectedGame', game);
+    }
+  },
+  async fetchSelectedGameCharacters({ commit }, { id }): Promise<void> {
+    commit('updateSelectedGameCharacters', null);
+    const { resources: characters } = await gamingApi.getCharacters(id);
+    commit('updateSelectedGameCharacters', characters);
+  },
+  async fetchSelectedGameRooms({ commit }, { id }): Promise<void> {
+    commit('updateSelectedGameRooms', null);
+    const { resources: rooms } = await gamingApi.getRooms(id);
+    commit('updateSelectedGameRooms', rooms);
+  },
+  async fetchSelectedGameReaders({ commit }, { id }): Promise<void> {
+    commit('updateSelectedGameReaders', null);
+    const { resources: readers } = await gamingApi.getReaders(id);
+    commit('updateSelectedGameReaders', readers);
+  },
+
+  async subscribe({ commit, state }, { router }): Promise<void> {
+    const { data, error } = await gamingApi.subscribe(state.selectedGame!.id);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code }});
+    } else {
+      const { resource: reader } = data!;
+      commit('addReader', reader);
+    }
+  },
+  async unsubscribe({ commit, state, rootState }, { router }): Promise<void> {
+    const { error } = await gamingApi.unsubscribe(state.selectedGame!.id);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code }});
+    } else {
+      commit('removeReader', rootState.user);
+    }
+  },
 };
 
 export default actions;

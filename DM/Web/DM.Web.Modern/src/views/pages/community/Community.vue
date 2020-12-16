@@ -30,7 +30,7 @@ export default class Community extends Vue {
 
   private fetchData(): void {
     const { n } = this.$route.params;
-    this.fetchUsers({ n });
+    this.fetchUsers({ number: n, inactive: true });
   }
 }
 </script>

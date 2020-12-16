@@ -10,6 +10,11 @@ const state: GamingState = {
   popularGames: null,
   schemas: null,
   tags: null,
+
+  selectedGame: null,
+  selectedGameCharacters: null,
+  selectedGameRooms: null,
+  selectedGameReaders: null,
 };
 
 const gaming: Module<GamingState, RootState> = {

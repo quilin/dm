@@ -83,6 +83,6 @@ namespace DM.Services.Gaming.Authorization
         /// <summary>
         /// Create game character
         /// </summary>
-        CreateCharacter = 14
+        CreateCharacter = 15
     }
 }

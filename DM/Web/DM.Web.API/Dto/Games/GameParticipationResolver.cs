@@ -38,6 +38,6 @@ namespace DM.Web.API.Dto.Games
         private static IEnumerable<GameParticipation> Flatten(GameParticipation participation) =>
             Enum.GetValues(typeof(GameParticipation))
                 .Cast<GameParticipation>()
-                .Where(p => participation.HasFlag(p));
+                .Where(p => (p & participation) != GameParticipation.None);
     }
 }

@@ -13,7 +13,7 @@
       <div>Последнее сообщение</div>
     </div>
 
-    <loader v-if="loading" class="topics-loader" />
+    <loader v-if="loading" :big="true" />
     <template v-else-if="topics.length">
       <forum-topic v-for="topic in allTopics" :key="topic.id" :topic="topic" />
     </template>
@@ -85,9 +85,6 @@ export default class TopicsList extends Vue {
 .list
   gridHead($forumGridTemplate)
   margin-top $medium
-
-.topics-loader
-  margin $medium auto
 
 .nothing
   margin $medium

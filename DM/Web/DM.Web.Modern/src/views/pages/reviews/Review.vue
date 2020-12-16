@@ -3,11 +3,11 @@
     <div class="review-text" v-html="review.text" />
     <div class="review-info">
       <user-link :user="review.author" />
-      <div v-if="canAdministrate">
-        <span v-if="!review.approved">ожидает проверки</span>
+      <div v-if="canAdministrate" class="review-controls">
+        <span v-if="!review.approved">Ожидает проверки</span>
         <template v-if="!loading">
-          <a v-if="!review.approved" @click="approve"><icon :font="IconType.Tick" /></a>
-          <a @click="remove"><icon :font="IconType.Close" /></a>
+          <a v-if="!review.approved" @click="approve"><icon :font="IconType.Tick" /> Принять</a>
+          <a @click="remove"><icon :font="IconType.Close" /> Отклонить</a>
         </template>
         <loader v-else />
       </div>
@@ -91,4 +91,10 @@ export default class ReviewComponent extends Vue {
 .review-info
   display flex
   justify-content space-between
+
+.review-controls
+  secondary()
+  display flex
+  > *
+    margin-left $small
 </style>

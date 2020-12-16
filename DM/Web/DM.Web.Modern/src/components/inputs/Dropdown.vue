@@ -54,7 +54,7 @@ export default class Dropdown extends PopupBase {
 
 <style scoped lang="stylus">
 .container
-  display inline-block
+  display inline-flex
   overflow hidden
 
   border 1px solid
@@ -65,8 +65,8 @@ export default class Dropdown extends PopupBase {
 .label
   display block
   overflow hidden
-  box-sizing border-box
-  padding ($small + 1px) $medium ($small - 1px) $small
+  padding $inputPadding
+  padding-right $medium
 
   cursor pointer
   white-space nowrap

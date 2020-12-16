@@ -21,7 +21,7 @@ if (storedToken) {
 }
 
 const configuration: AxiosRequestConfig = {
-  baseURL: 'http://localhost:5000/v1',
+  baseURL: `${process.env.API_URL ?? 'http://localhost:5000'}/v1`,
   headers: defaultHeaders,
   responseType: 'json',
 };
@@ -40,7 +40,7 @@ class Api {
     return this.send(() => this.axios.get(url, { params, headers: {[renderKey]: bbRenderMode} }));
   }
 
-  public async post<T>(url: string, params: any): Promise<ApiResult<T>> {
+  public async post<T>(url: string, params?: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.post(url, params));
   }
 

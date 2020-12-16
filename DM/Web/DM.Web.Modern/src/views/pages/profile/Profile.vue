@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <loader v-if="!user" class="loader" />
+    <loader v-if="!user" :big="true" />
 
     <div v-else class="container">
 
@@ -102,10 +102,6 @@ export default class Profile extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.loader
-  square($big)
-  margin $big auto
-
 .title
   pageTitle()
 

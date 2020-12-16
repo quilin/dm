@@ -62,7 +62,7 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 1.2
+  line-height 1.3
   word-wrap break-word
 
 .v--modal

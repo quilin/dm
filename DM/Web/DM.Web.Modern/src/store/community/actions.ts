@@ -31,8 +31,8 @@ const actions: ActionTree<CommunityState, RootState> = {
     }
   },
 
-  async fetchUsers({ commit }, { n }): Promise<void> {
-    const users = await communityApi.getUsers(n);
+  async fetchUsers({ commit }, query): Promise<void> {
+    const users = await communityApi.getUsers(query);
     commit('updateUsers', users);
   },
 

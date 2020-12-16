@@ -1,12 +1,14 @@
 <template>
-  <div class="loader">&nbsp;</div>
+  <div :class="{ 'loader': true, 'big-loader': big }">&nbsp;</div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Loader extends Vue {
+  @Prop()
+  private big!: boolean;
 }
 </script>
 
@@ -14,4 +16,8 @@ export default class Loader extends Vue {
 .loader
   square($medium)
   background-image url('~@/assets/loader.gif')
+
+.big-loader
+  square($big)
+  margin $big auto
 </style>

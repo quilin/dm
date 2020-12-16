@@ -13,7 +13,7 @@
         Назад на форум "{{topic.forum.id}}"
       </router-link>
     </div>
-    <loader v-else class="topic-loader" />
+    <loader v-else :big="true" />
     <topic-comments />
     <create-comment-form />
   </div>
@@ -65,7 +65,4 @@ export default class TopicPage extends Vue {
 .data
   margin $small 0
   theme(color, $secondaryText)
-
-.topic-loader
-  margin-top $medium + $small
 </style>

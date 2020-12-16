@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import GeneralMenu from './views/layout/GeneralMenu.vue';
+import GameMenu from './views/pages/game/GameMenu.vue';
 import GeneralSidebar from './views/layout/GeneralSidebar.vue';
 
 Vue.use(Router);
@@ -11,8 +12,8 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
       name: 'home',
+      path: '/',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
@@ -20,8 +21,8 @@ export default new Router({
       },
     },
     {
-      path: '/error/:code',
       name: 'error',
+      path: '/error/:code',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
@@ -36,18 +37,25 @@ export default new Router({
         page: () => import('./views/pages/reviews/Reviews.vue'),
       },
       children: [{
-        path: ':n?',
         name: 'about',
+        path: ':n?',
         component: () => import('./views/pages/reviews/ReviewsList.vue'),
       }],
     },
     {
-      path: '/rules',
       name: 'rules',
+      path: '/rules',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
         page: () => import('./views/pages/rules/Rules.vue'),
+      },
+    },
+    {
+      name: 'donate',
+      path: '/donate',
+      components: {
+        menu: GeneralMenu,
       },
     },
     {
@@ -57,14 +65,14 @@ export default new Router({
         page: () => import('./views/pages/community/Community.vue'),
       },
       children: [{
-        path: ':n?',
         name: 'community',
+        path: ':n?',
         component: () => import('./views/pages/community/UsersList.vue'),
       }],
     },
     {
-      path: '/fm',
       name: 'chat',
+      path: '/fm',
       components: {
         menu: GeneralMenu,
       },
@@ -76,18 +84,18 @@ export default new Router({
         page: () => import('./views/pages/profile/Profile.vue'),
       },
       children: [{
-        path: '',
         name: 'profile',
+        path: '',
         component: () => import('./views/pages/profile/Information.vue'),
       }, {
-        path: 'games',
         name: 'profile-games',
+        path: 'games',
       }, {
-        path: 'characters',
         name: 'profile-characters',
+        path: 'characters',
       }, {
-        path: 'settings',
         name: 'profile-settings',
+        path: 'settings',
         component: () => import('./views/pages/profile/Settings.vue'),
       }],
     },
@@ -100,14 +108,14 @@ export default new Router({
         page: () => import('./views/pages/forum/Forum.vue'),
       },
       children: [{
-        path: ':n',
         name: 'forum',
+        path: ':n?',
         component: () => import('./views/pages/forum/TopicsList.vue'),
       }],
     },
     {
-      path: '/topic/:id/:n?',
       name: 'topic',
+      path: '/topic/:id/:n?',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
@@ -116,8 +124,16 @@ export default new Router({
     },
 
     {
-      path: '/create-game',
+      name: 'games',
+      path: '/games',
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+      },
+    },
+    {
       name: 'create-game',
+      path: '/create-game',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
@@ -125,19 +141,34 @@ export default new Router({
       },
     },
     {
-      path: '/games',
-      name: 'games',
+      path: '/game/:id',
       components: {
-        menu: GeneralMenu,
-        sidebar: GeneralSidebar,
+        menu: GameMenu,
+        page: () => import('./views/pages/game/Game.vue'),
       },
+      children: [{
+        name: 'game',
+        path: '',
+        component: () => import('./views/pages/game/Information.vue'),
+      }, {
+        name: 'game-comments',
+        path: 'out-of-session',
+      }, {
+        name: 'create-character',
+        path: 'create-character',
+        component: () => import('./views/pages/game/CreateCharacter.vue'),
+      }, {
+        name: 'game-characters',
+        path: 'characters/:characterId?',
+        component: () => import('./views/pages/game/Characters.vue'),
+      }, {
+        name: 'game-settings',
+        path: 'settings',
+      }],
     },
     {
-      path: '/game/:id',
-      name: 'game',
-      components: {
-        menu: GeneralMenu, // todo: game menu
-      },
-    }
+      name: 'game-room',
+      path: '/session/:id',
+    },
   ],
 });

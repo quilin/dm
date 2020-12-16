@@ -20,29 +20,33 @@ namespace DM.Web.API.Binding
             var converter = (JsonConverter) Activator.CreateInstance(
                 typeof(OptionalConverter<>).MakeGenericType(optionalType),
                 BindingFlags.Instance | BindingFlags.Public,
-                null, new object[] {options}, null);
+                null, new object[0], null);
             return converter;
         }
-        
-        private class OptionalConverter<TValue> : JsonConverter<Optional<TValue>> where TValue : struct
+    }
+
+    /// <inheritdoc />
+    public class OptionalConverter<TValue> : JsonConverter<Optional<TValue>> where TValue : struct
+    {
+        /// <inheritdoc />
+        public override Optional<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert,
+            JsonSerializerOptions options)
         {
-            public override Optional<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            var readerValue = reader.GetString();
+            if (readerValue == null)
             {
-                var readerValue = reader.GetString();
-                if (readerValue == null)
-                {
-                    return null;
-                }
-
-                var nullableValue = JsonSerializer.Deserialize<TValue>(ref reader, options);
-                return Optional<TValue>.WithValue(nullableValue);
+                return null;
             }
 
-            public override void Write(Utf8JsonWriter writer, Optional<TValue> value, JsonSerializerOptions options)
-            {
-                var resultValue = value.Value;
-                JsonSerializer.Serialize(writer, resultValue, options);
-            }
+            var nullableValue = JsonSerializer.Deserialize<TValue>(ref reader, options);
+            return Optional<TValue>.WithValue(nullableValue);
+        }
+
+        /// <inheritdoc />
+        public override void Write(Utf8JsonWriter writer, Optional<TValue> value, JsonSerializerOptions options)
+        {
+            var resultValue = value.Value;
+            JsonSerializer.Serialize(writer, resultValue, options);
         }
     }
 }

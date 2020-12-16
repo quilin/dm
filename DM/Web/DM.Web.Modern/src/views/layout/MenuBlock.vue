@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden': !show}">
+  <div :class="{'collapsed': !show}">
     <div class="title" @click="toggle">
       <slot name="title" />
     </div>
@@ -60,13 +60,13 @@ export default class MenuBlock extends Vue {
     icon()
     content ' '
 
-  .hidden &:after
+  .collapsed &:after
     content ' '
 
 .list
   overflow hidden
   transition height .2s
-  .hidden &
+  .collapsed &
     height 0
 
 </style>

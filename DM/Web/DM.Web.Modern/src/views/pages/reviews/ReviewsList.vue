@@ -5,7 +5,7 @@
       :paging="reviews.paging"
       :to="{ name: 'about', params: $route.params }" />
 
-    <loader v-if="reviews === null" class="reviews-loader" />
+    <loader v-if="reviews === null" :big="true" />
     <template v-else-if="reviews.resources.length">
       <review v-for="review in reviews.resources" :key="review.id"
         :review="review" :controls="true" />
@@ -34,6 +34,4 @@ export default class ReviewsList extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.reviews-loader
-  margin $medium auto
 </style>

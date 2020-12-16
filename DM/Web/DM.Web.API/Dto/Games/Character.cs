@@ -26,6 +26,11 @@ namespace DM.Web.API.Dto.Games
         public CharacterStatus? Status { get; set; }
 
         /// <summary>
+        /// Total characters posts count
+        /// </summary>
+        public int TotalPostsCount { get; set; }
+
+        /// <summary>
         /// Character name
         /// </summary>
         public string Name { get; set; }

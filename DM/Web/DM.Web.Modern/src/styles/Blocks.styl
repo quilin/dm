@@ -23,6 +23,7 @@ labeled-field()
     flex-shrink 0
     display inline-block
     min-width $gridStep * 30
+    theme(color, $secondaryText)
 
 .form-field
   labeled-field()
@@ -40,9 +41,9 @@ tab-links()
     margin-right $medium
     text-transform uppercase
 
-    &.router-link-exact-active
-      theme(color, $text)
-      font-weight bold
+a.router-link-exact-active
+  theme(color, $text)
+  font-weight bold
 
 square($size)
   width $size
@@ -77,7 +78,3 @@ $shakeDelta = $tiny
   display inline-block
   margin-right $medium
   text-transform uppercase
-
-  &.router-link-exact-active
-    theme(color, $text)
-    font-weight bold

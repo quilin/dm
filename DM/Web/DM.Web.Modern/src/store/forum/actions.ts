@@ -37,7 +37,7 @@ const actions: ActionTree<ForumState, RootState> = {
     commit('updateSelectedForum', id);
     const { error } = await forumApi.getForum(id);
     if (error !== null) {
-      router.push({ name: 'error', params: { code: 404 } });
+      router.push({ name: 'error', params: { code: error.code } });
     }
   },
   async createTopic(_0, { router, topic }): Promise<void> {

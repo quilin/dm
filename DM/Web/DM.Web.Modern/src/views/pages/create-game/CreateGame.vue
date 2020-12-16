@@ -26,10 +26,6 @@
             <dropdown v-model="game.privacySettings.commentariesAccess" id="commentaries-access"
               :options="commentariesAccessOptions" />
           </div>
-          <div class="form-field">
-            <label for="assistant">Ассистент</label>
-            <input id="assistant" v-model="game.assistant.login" />
-          </div>
         </div>
 
         <div class="create-game__extended-settings">

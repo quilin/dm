@@ -1,5 +1,5 @@
 <template>
-  <span class="container">
+  <span>
     <dropdown v-if="schemas && schemas.length" id="attribute-schema"
       :value="value" @input="changeSchema" :options="schemasList" />
     <loader v-else />
@@ -67,6 +67,4 @@ export default class SchemaSelector extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.container
-  display inherit
 </style>
