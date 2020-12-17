@@ -3,6 +3,7 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
 } from 'axios';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ApiResult } from '@/api/models/common';
 import { BbRenderMode } from './bbRenderMode';
 
@@ -20,14 +21,17 @@ if (storedToken) {
   defaultHeaders[tokenKey] = storedToken!;
 }
 
+const apiHost = `${process.env.API_URL ?? 'http://localhost:5000'}`;
+
 const configuration: AxiosRequestConfig = {
-  baseURL: `${process.env.API_URL ?? 'http://localhost:5000'}/v1`,
+  baseURL: `${apiHost}/v1`,
   headers: defaultHeaders,
   responseType: 'json',
 };
 
 class Api {
   private axios: AxiosInstance;
+  private authToken: string | null = null;
 
   constructor() {
     this.axios = axios.create(configuration);
@@ -62,6 +66,7 @@ class Api {
       if (tokenKey in headers) {
         const token = headers[tokenKey];
         this.axios.defaults.headers.common[tokenKey] = token;
+        this.authToken = token;
         localStorage.setItem(tokenKey, token);
       }
       return {
@@ -82,11 +87,25 @@ class Api {
 
     this.axios.defaults.headers.common[tokenKey] = token;
     localStorage.setItem(tokenKey, token);
+    this.authToken = token;
   }
 
   public logout() {
     delete this.axios.defaults.headers.common[tokenKey];
     localStorage.removeItem(tokenKey);
+    this.authToken = null;
+  }
+
+  public establishHubConnection(path: string): HubConnection {
+    const token = this.authToken;
+    return new HubConnectionBuilder()
+      .withUrl(`${apiHost}/${path}`, {
+        accessTokenFactory() {
+          return token!;
+        }
+      })
+      .withAutomaticReconnect()
+      .build();
   }
 }
 
