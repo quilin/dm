@@ -41,6 +41,7 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
                     c.GameId,
                     c.Game.Title,
                     c.Author.Login,
+                    c.Author.UserId,
                     c.Game.MasterId,
                     c.Game.AssistantId
                 })
@@ -49,6 +50,12 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
             if (data.AssistantId.HasValue)
             {
                 interestedUsers.Add(data.AssistantId.Value);
+            }
+
+            interestedUsers = interestedUsers.Where(u => u != data.UserId).ToList();
+            if (interestedUsers.Count == 0)
+            {
+                return new Notification[0];
             }
 
             return new[]
