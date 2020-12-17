@@ -38,10 +38,12 @@ namespace DM.Services.Notifications.Consumer.Implementation
                 .ToArray();
 
             await repository.Create(notifications.Select(n => n.notification));
-            await publisher.Publish(notifications.Select(n => n.userNotification), new MessagePublishConfiguration
-            {
-                ExchangeName = "dm.notifications.sent"
-            }, string.Empty);
+            await publisher.Publish(
+                notifications.Select(n => (n.userNotification, string.Empty)),
+                new MessagePublishConfiguration
+                {
+                    ExchangeName = "dm.notifications.sent"
+                });
 
             return ProcessResult.Success;
         }

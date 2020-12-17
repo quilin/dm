@@ -83,8 +83,9 @@ namespace DM.Services.Notifications.Consumer
                     EventType.NewForumTopic,
                     EventType.ChangedForumTopic,
                     EventType.DeletedForumTopic,
+                    EventType.NewCharacter
                 }.ToRoutingKeys(),
-                QueueName = "dm.search-engine"
+                QueueName = "dm.notifications"
             };
             consumer.Consume(configuration);
 
