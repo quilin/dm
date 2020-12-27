@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Notifications;
@@ -66,7 +67,12 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
                     CreateDate = dateTimeProvider.Now.DateTime,
                     UsersNotified = new List<Guid>(),
                     UsersInterested = interestedUsers,
-                    Metadata = new {AuthorLogin = data.Login, GameTitle = data.Title, data.GameId},
+                    Metadata = new
+                    {
+                        AuthorLogin = data.Login,
+                        GameTitle = data.Title,
+                        GameId = data.GameId.EncodeToReadable()
+                    },
                     EventType = EventType
                 }
             };

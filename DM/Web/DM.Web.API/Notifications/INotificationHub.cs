@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DM.Web.API.Dto.Notifications;
 
 namespace DM.Web.API.Notifications
 {
@@ -12,6 +13,6 @@ namespace DM.Web.API.Notifications
         /// </summary>
         /// <param name="notification"></param>
         /// <returns></returns>
-        Task Send(object notification);
+        Task Send(Notification notification);
     }
 }

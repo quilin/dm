@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Processing;
 using DM.Services.Notifications.Dto;
+using DM.Web.API.Dto.Notifications;
 using DM.Web.Core.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
@@ -28,11 +29,11 @@ namespace DM.Web.API.Notifications
                 .Where(connectedUsers.ContainsKey)
                 .SelectMany(id => connectedUsers[id])
                 .ToArray();
-            await hubContext.Clients.Clients(connectionIds).Send(new
+            await hubContext.Clients.Clients(connectionIds).Send(new Notification
             {
-                id = message.NotificationId,
-                eventType = message.EventType.ToString(),
-                data = message.Metadata
+                Id = message.NotificationId,
+                EventType = message.EventType,
+                Payload = message.Metadata
             });
             return ProcessResult.Success;
         }

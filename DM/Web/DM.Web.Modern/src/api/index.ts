@@ -3,6 +3,7 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
 } from 'axios';
+import qs from 'qs';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ApiResult } from '@/api/models/common';
 import { BbRenderMode } from './bbRenderMode';
@@ -27,6 +28,7 @@ const configuration: AxiosRequestConfig = {
   baseURL: `${apiHost}/v1`,
   headers: defaultHeaders,
   responseType: 'json',
+  paramsSerializer: params => qs.stringify(params),
 };
 
 class Api {

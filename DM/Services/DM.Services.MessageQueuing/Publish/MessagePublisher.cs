@@ -16,7 +16,7 @@ namespace DM.Services.MessageQueuing.Publish
         private readonly IConnectionFactory connectionFactory;
         private readonly ICorrelationTokenProvider correlationTokenProvider;
 
-        private readonly JsonSerializerOptions serializerOptions = new()
+        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
         };
