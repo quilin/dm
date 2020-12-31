@@ -6,7 +6,6 @@
       <icon v-if="topic.attached" :font="IconType.Attached" />
       <icon v-if="topic.closed" :font="IconType.Closed" />
       {{topic.title}}
-      <div class="description" v-html="topic.description"></div>
       <div v-if="topic.unreadCommentsCount" class="unread">
         <icon :font="IconType.CommentsUnread" />{{topic.unreadCommentsCount}}
       </div>
@@ -61,12 +60,9 @@ export default class ForumTopic extends Vue {
   .attached &
     font-weight bold
 
-.description
-  secondary()
-
 .unread
   position absolute
   right 100%
-  top $tiny
+  top 6px
   margin-right $minor
 </style>
