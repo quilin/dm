@@ -2,7 +2,9 @@
   <form ref="form" @submit.prevent="createComment">
     <div class="content-title">Добавить комментарий</div>
     <text-area :disabled="loading" v-model.trim="text" />
-    <button :disabled="loading" class="comment-form__submit" type="submit">Добавить</button>
+    <action-button class="comment-form__submit" type="submit" :loading="loading" :disabled="!text">
+      Добавить
+    </action-button>
   </form>
 </template>
 

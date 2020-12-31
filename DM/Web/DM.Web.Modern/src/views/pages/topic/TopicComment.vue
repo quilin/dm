@@ -25,7 +25,7 @@
         </div>
       </div>
     </template>
-    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" />
+    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" @canceled="hideEditForm" />
     <confirm-lightbox
         name="delete-comment"
         title="Удалить комментарий?"
