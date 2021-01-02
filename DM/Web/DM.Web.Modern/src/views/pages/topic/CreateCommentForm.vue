@@ -14,11 +14,9 @@ import { Action, Getter } from 'vuex-class';
 
 @Component({})
 export default class CreateCommentForm extends Vue {
-  public $refs!: {
-    form: HTMLFormElement;
-  };
-
   private text = '';
+
+  private loading = false;
 
   @Action('forum/createComment')
   private createCommentAction: any;
@@ -26,13 +24,7 @@ export default class CreateCommentForm extends Vue {
   @Getter('forum/selectedTopic')
   private selectedTopic!: string;
 
-  private loading = false;
-
   private async createComment() {
-    if (!this.text) { // todo validation
-      return;
-    }
-
     this.loading = true;
 
     await this.createCommentAction({
