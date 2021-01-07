@@ -19,10 +19,7 @@ namespace DM.Services.Common.Dto
             CreateMap<User, GeneralUser>()
                 .ForMember(
                     d => d.PictureUrl,
-                    s => s.MapFrom(u => u.ProfilePictures
-                        .Where(p => !p.IsRemoved)
-                        .Select(p => p.FilePath)
-                        .FirstOrDefault()));
+                    s => s.MapFrom(u => u.ProfilePictureUrl));
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(d => d.AccessRestrictionPolicies, s => s.MapFrom(
                     u => u.BansReceived
