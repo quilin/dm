@@ -1,6 +1,9 @@
+using System.IO;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
+using DM.Services.Common.BusinessProcesses.Uploads;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
+using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.RelationalStorage;
@@ -13,6 +16,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
     {
         private readonly IValidator<UpdateUser> validator;
         private readonly IUserReadingService userReadingService;
+        private readonly IUploadService uploadService;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IUserUpdatingRepository repository;
@@ -21,12 +25,14 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         public UserUpdatingService(
             IValidator<UpdateUser> validator,
             IUserReadingService userReadingService,
+            IUploadService uploadService,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             IUserUpdatingRepository repository)
         {
             this.validator = validator;
             this.userReadingService = userReadingService;
+            this.uploadService = uploadService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
@@ -58,6 +64,29 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
 
             await repository.UpdateUser(userUpdate, settingsUpdate);
             return await userReadingService.GetDetails(updateUser.Login);
+        }
+
+        /// <inheritdoc />
+        public async Task<GeneralUser> UploadPicture(string login, Stream uploadStream, string fileName,
+            string contentType)
+        {
+            var user = await userReadingService.Get(login);
+            var upload = await uploadService.Upload(new CreateUpload
+            {
+                EntityId = user.UserId,
+                FileName = fileName,
+                ContentType = contentType,
+                StreamAccessor = () => uploadStream
+            });
+
+            var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
+                .Field(u => u.ProfilePictureUrl, upload.FilePath);
+            var settingsUpdate = updateBuilderFactory.Create<UserSettings>(user.UserId);
+            await repository.UpdateUser(userUpdate, settingsUpdate);
+
+            // todo: remove previous profile picture uploads
+
+            return user;
         }
     }
 }

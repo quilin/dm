@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Services.Users
 {
@@ -37,5 +38,13 @@ namespace DM.Web.API.Services.Users
         /// <param name="user">User information</param>
         /// <returns></returns>
         Task<Envelope<UserDetails>> UpdateUser(string login, UserDetails user);
+
+        /// <summary>
+        /// Upload user profile picture
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <param name="files">Profile picture files</param>
+        /// <returns></returns>
+        Task<Envelope<User>> UploadProfilePicture(string login, IFormFileCollection files);
     }
 }

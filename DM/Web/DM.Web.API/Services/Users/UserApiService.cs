@@ -1,10 +1,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using DM.Services.Common.BusinessProcesses.Uploads;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using Microsoft.AspNetCore.Http;
 using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 
 namespace DM.Web.API.Services.Users
@@ -20,6 +22,7 @@ namespace DM.Web.API.Services.Users
         public UserApiService(
             IUserReadingService readingService,
             IUserUpdatingService updatingService,
+            IUploadService uploadService,
             IMapper mapper)
         {
             this.readingService = readingService;
@@ -55,6 +58,15 @@ namespace DM.Web.API.Services.Users
             updateUser.Login = login;
             var updatedUser = await updatingService.Update(updateUser);
             return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
+        }
+
+        /// <inheritdoc />
+        public async Task<Envelope<User>> UploadProfilePicture(string login, IFormFileCollection files)
+        {
+            var file = files.First();
+            await using var uploadStream = file.OpenReadStream();
+            var updatedUser = await updatingService.UploadPicture(login, uploadStream, file.Name, file.ContentType);
+            return new Envelope<User>(mapper.Map<User>(updatedUser));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
         /// <inheritdoc />
         public async Task<string> Upload(Func<Stream> fileStream, string fileName)
         {
-            using var stream = fileStream();
+            await using var stream = fileStream();
             var objectKey = $"{cdnConfiguration.Folder}/{fileName}";
             await client.Value.UploadObjectFromStreamAsync(cdnConfiguration.BucketName, objectKey, stream, null);
             return new UriBuilder(new Uri(cdnConfiguration.Url)) {Path = objectKey}.ToString();

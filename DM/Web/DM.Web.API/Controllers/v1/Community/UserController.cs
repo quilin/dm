@@ -1,9 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using DM.Web.API.Authentication;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
 using DM.Web.API.Services.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DM.Web.API.Controllers.v1.Community
@@ -78,8 +78,13 @@ namespace DM.Web.API.Controllers.v1.Community
         /// Post user profile picture
         /// </summary>
         /// <param name="login"></param>
+        /// <param name="files"></param>
         /// <response code="201"></response>
+        /// <response code="401">User must be authenticated</response>
+        /// <response code="403">User is not allowed to upload profile pictures to this user</response>
+        /// <response code="410">User not found</response>
         [HttpPost("{login}/uploads", Name = nameof(PostUserUpload))]
-        public Task<IActionResult> PostUserUpload(string login) => throw new NotImplementedException();
+        public async Task<IActionResult> PostUserUpload(string login, IFormFileCollection files) =>
+            Ok(await userApiService.UploadProfilePicture(login, files));
     }
 }
