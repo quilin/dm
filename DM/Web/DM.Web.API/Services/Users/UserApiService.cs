@@ -61,9 +61,9 @@ namespace DM.Web.API.Services.Users
         }
 
         /// <inheritdoc />
-        public async Task<Envelope<User>> UploadProfilePicture(string login, IFormFileCollection files)
+        public async Task<Envelope<User>> UploadProfilePicture(string login, IFormFile file)
         {
-            var file = files.First();
+            // todo: file validation
             await using var uploadStream = file.OpenReadStream();
             var updatedUser = await updatingService.UploadPicture(login, uploadStream, file.Name, file.ContentType);
             return new Envelope<User>(mapper.Map<User>(updatedUser));

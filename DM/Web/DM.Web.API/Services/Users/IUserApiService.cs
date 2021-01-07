@@ -45,6 +45,6 @@ namespace DM.Web.API.Services.Users
         /// <param name="login">User login</param>
         /// <param name="files">Profile picture files</param>
         /// <returns></returns>
-        Task<Envelope<User>> UploadProfilePicture(string login, IFormFileCollection files);
+        Task<Envelope<User>> UploadProfilePicture(string login, IFormFile files);
     }
 }
