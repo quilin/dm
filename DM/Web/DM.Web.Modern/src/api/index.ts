@@ -44,8 +44,8 @@ class Api {
     return this.send(() => this.axios.post(url, params));
   }
 
-  public async postFile<T>(url: string, params?: any, callback?: any): Promise<ApiResult<T>> {
-    return this.send(() => this.axios.post(url, params, { onUploadProgress: callback }));
+  public async postFile<T>(url: string, params?: any, progressCallback?: (event: ProgressEvent) => void): Promise<ApiResult<T>> {
+    return this.send(() => this.axios.post(url, params, { onUploadProgress: progressCallback }));
   }
 
   public async put<T>(url: string, params?: any): Promise<ApiResult<T>> {
