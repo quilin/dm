@@ -135,6 +135,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users
         /// Profile picture url
         /// For query optimization purposes
         /// </summary>
+        [MaxLength(200)]
         public string ProfilePictureUrl { get; set; }
 
         #region Profile navigations
