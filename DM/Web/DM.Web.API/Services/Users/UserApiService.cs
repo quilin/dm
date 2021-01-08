@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.Common.BusinessProcesses.Uploads;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Web.API.Dto.Contracts;
@@ -22,7 +21,6 @@ namespace DM.Web.API.Services.Users
         public UserApiService(
             IUserReadingService readingService,
             IUserUpdatingService updatingService,
-            IUploadService uploadService,
             IMapper mapper)
         {
             this.readingService = readingService;
