@@ -13,7 +13,7 @@ export interface Rating {
 export interface User {
   login: string;
   roles: UserRole[];
-  profilePictureUrl: string;
+  pictureUrl: string;
   rating: Rating;
   online: string;
   status: string;
