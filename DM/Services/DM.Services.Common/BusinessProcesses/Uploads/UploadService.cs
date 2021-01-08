@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
+using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using FluentValidation;
 
@@ -50,19 +51,19 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
 
         private static readonly IDictionary<string, string> FileExtensions = new Dictionary<string, string>
         {
-            {"image/gif", "gif"},
-            {"image/jpeg", "jpg"},
-            {"image/pjpeg", "jpg"},
-            {"image/png", "png"},
-            {"image/svg+xml", "svg"},
-            {"image/tiff", "tif"},
+            {FileMimeTypeNames.Image.Gif, "gif"},
+            {FileMimeTypeNames.Image.Jpeg, "jpg"},
+            {FileMimeTypeNames.Image.Pjpeg, "jpg"},
+            {FileMimeTypeNames.Image.Png, "png"},
+            {FileMimeTypeNames.Image.Svg, "svg"},
+            {FileMimeTypeNames.Image.Tiff, "tif"},
 
-            {"application/pdf", "pdf"},
-            {"application/zip", "zip"},
-            {"application/gzip", "gzip"},
+            {FileMimeTypeNames.Application.Pdf, "pdf"},
+            {FileMimeTypeNames.Application.Zip, "zip"},
+            {FileMimeTypeNames.Application.Gzip, "gzip"},
 
-            {"text/plain", "txt"},
-            {"text/html", "htm"}
+            {FileMimeTypeNames.Text.Plain, "txt"},
+            {FileMimeTypeNames.Text.Html, "htm"}
         };
 
         private string GenerateFileName(CreateUpload createUpload)
