@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using AutoMapper;
 using DM.Services.Common;
+using DM.Services.Common.Configuration;
 using DM.Services.Community;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
@@ -57,6 +58,8 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<CdnConfiguration>(
+                    Configuration.GetSection(nameof(CdnConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             services
