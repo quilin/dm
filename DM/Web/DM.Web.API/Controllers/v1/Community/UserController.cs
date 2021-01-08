@@ -66,7 +66,7 @@ namespace DM.Web.API.Controllers.v1.Community
         /// <response code="410">User not found</response>
         [HttpPatch("{login}/details", Name = nameof(PutUserDetails))]
         [AuthenticationRequired]
-        [ProducesResponseType(typeof(Envelope<User>), 200)]
+        [ProducesResponseType(typeof(Envelope<UserDetails>), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(typeof(GeneralError), 401)]
         [ProducesResponseType(typeof(GeneralError), 403)]
@@ -79,11 +79,16 @@ namespace DM.Web.API.Controllers.v1.Community
         /// </summary>
         /// <param name="login"></param>
         /// <param name="file"></param>
-        /// <response code="201"></response>
+        /// <response code="200"></response>
         /// <response code="401">User must be authenticated</response>
         /// <response code="403">User is not allowed to upload profile pictures to this user</response>
         /// <response code="410">User not found</response>
         [HttpPost("{login}/uploads", Name = nameof(PostUserUpload))]
+        [AuthenticationRequired]
+        [ProducesResponseType(typeof(Envelope<UserDetails>), 200)]
+        [ProducesResponseType(typeof(GeneralError), 401)]
+        [ProducesResponseType(typeof(GeneralError), 403)]
+        [ProducesResponseType(typeof(GeneralError), 410)]
         public async Task<IActionResult> PostUserUpload(string login, IFormFile file) =>
             Ok(await userApiService.UploadProfilePicture(login, file));
     }

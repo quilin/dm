@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.Uploads;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
-using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.RelationalStorage;
@@ -67,10 +66,12 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         }
 
         /// <inheritdoc />
-        public async Task<GeneralUser> UploadPicture(string login, Stream uploadStream, string fileName,
+        public async Task<UserDetails> UploadPicture(string login, Stream uploadStream, string fileName,
             string contentType)
         {
             var user = await userReadingService.Get(login);
+
+            // todo: batch upload && image modification
             var upload = await uploadService.Upload(new CreateUpload
             {
                 EntityId = user.UserId,
@@ -86,7 +87,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
 
             // todo: remove previous profile picture uploads
 
-            return user;
+            return await userReadingService.GetDetails(login);
         }
     }
 }

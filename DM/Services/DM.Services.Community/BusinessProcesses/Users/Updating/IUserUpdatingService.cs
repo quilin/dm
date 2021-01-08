@@ -1,7 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
-using DM.Services.Core.Dto;
 
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
 {
@@ -25,6 +24,6 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         /// <param name="fileName">File name</param>
         /// <param name="contentType">Content type</param>
         /// <returns></returns>
-        Task<GeneralUser> UploadPicture(string login, Stream uploadStream, string fileName, string contentType);
+        Task<UserDetails> UploadPicture(string login, Stream uploadStream, string fileName, string contentType);
     }
 }
