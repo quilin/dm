@@ -29,5 +29,18 @@ export default class Upload extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-
+.upload-input
+  position absolute
+  bottom 0
+  top 0
+  left 0
+  right 0
+  width 100%
+  padding 0
+  margin 0
+  opacity 0
+  font-size 2000px
+  border none
+  outline none
+  cursor pointer
 </style>

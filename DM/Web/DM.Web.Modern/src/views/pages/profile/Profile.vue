@@ -15,10 +15,7 @@
 
           <div class="picture-container">
             <div class="picture" :style="{ backgroundImage: user.pictureUrl ? `url(${user.pictureUrl})` : undefined }" />
-            <div class="picture-upload" v-if="canUploadPicture">
-              <icon :font="IconType.Upload" /> Загрузить изображение
-              <upload @uploading="uploadProfilePicture" />
-            </div>
+            <profile-picture v-if="canUploadPicture" :user="user" />
           </div>
 
           <profile-stat title="В сети"><online :user="user" :detailed="true" /></profile-stat>
@@ -55,8 +52,7 @@ import { Route } from 'vue-router';
 import { User, UserRole } from '@/api/models/community';
 
 import ProfileStat from './ProfileStat.vue';
-import IconType from '@/components/iconType';
-import communityApi from '@/api/requests/communityApi';
+import ProfilePicture from '@/views/pages/profile/ProfilePicture.vue';
 
 const roleNames: Record<string, string> = {
   [UserRole.Administrator]: 'Тролль',
@@ -67,12 +63,11 @@ const roleNames: Record<string, string> = {
 
 @Component({
   components: {
+    ProfilePicture,
     ProfileStat,
   },
 })
 export default class Profile extends Vue {
-  private IconType: typeof IconType = IconType;
-
   @Getter('user')
   private currentUser!: User;
 
@@ -101,14 +96,6 @@ export default class Profile extends Vue {
     return this.user!.roles
       .filter((r: UserRole) => r in roleNames)
       .map((r: UserRole) => roleNames[r]);
-  }
-
-  private uploadProfilePicture(formData: FormData): void {
-    communityApi.uploadUserPicture(this.user!.login, formData, this.onUploadProgress);
-  }
-
-  private onUploadProgress(data: any) {
-    console.log(data);
   }
 
   private mounted(): void {
@@ -150,16 +137,6 @@ export default class Profile extends Vue {
   background 0 0 no-repeat
   background-size cover
   background-image url('~@/assets/userpic.png')
-
-.picture-upload
-  position absolute
-  bottom 0
-  left 0
-  right 0
-  opacity 1
-
-  .picture:hover &
-    font-weight bold
 
 .details
   flex-grow 1
