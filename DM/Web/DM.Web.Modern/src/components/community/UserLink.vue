@@ -2,7 +2,7 @@
   <span :title="user.status">
 
     <router-link :to="{ name: 'profile', params: { login: user.login } }" class="user-link">
-      <span :style="{ backgroundImage: user.profilePictureUrl }" class="user-logo" />
+      <span :style="{ backgroundImage: user.pictureUrl ? `url(${user.pictureUrl})` : null }" class="user-logo" />
       {{user.login}}
     </router-link>
 
@@ -51,7 +51,7 @@ export default class UserLink extends Vue {
   margin-right $minor
   background url('~@/assets/userpic.png') 0 0 no-repeat
   vertical-align text-bottom
-  background-size contain
+  background-size cover
 
 .user-badge-container
   secondary()

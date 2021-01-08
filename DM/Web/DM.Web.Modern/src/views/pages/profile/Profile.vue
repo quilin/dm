@@ -14,7 +14,7 @@
         <div class="stats">
 
           <div class="picture-container">
-            <div class="picture" :style="{ backgroundImage: user.profilePictureUrl }" />
+            <div class="picture" :style="{ backgroundImage: `url(${user.pictureUrl})` }" />
           </div>
 
           <profile-stat title="В сети"><online :user="user" :detailed="true" /></profile-stat>
@@ -126,7 +126,9 @@ export default class Profile extends Vue {
   height $large
   border-radius $large
   themeExtend(box-shadow, inset 0 0 $minor, $border)
-  background url('~@/assets/userpic.png') 0 0 no-repeat
+  background 0 0 no-repeat
+  background-size cover
+  background-image url('~@/assets/userpic.png')
 
 .details
   flex-grow 1
