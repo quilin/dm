@@ -2,7 +2,7 @@
   <span :title="user.status">
 
     <router-link :to="{ name: 'profile', params: { login: user.login } }" class="user-link">
-      <span :style="{ backgroundImage: user.pictureUrl ? `url(${user.pictureUrl})` : null }" class="user-logo" />
+      <span :style="{ backgroundImage: user.smallPictureUrl ? `url(${user.smallPictureUrl})` : null }" class="user-logo" />
       {{user.login}}
     </router-link>
 

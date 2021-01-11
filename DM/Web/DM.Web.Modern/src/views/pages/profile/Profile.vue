@@ -14,7 +14,8 @@
         <div class="stats">
 
           <div class="picture-container">
-            <div class="picture" :style="{ backgroundImage: user.pictureUrl ? `url(${user.pictureUrl})` : undefined }" />
+            <a target="_blank" :href="user.originalPictureUrl" class="picture"
+              :style="{ backgroundImage: user.mediumPictureUrl ? `url(${user.mediumPictureUrl})` : undefined }" />
             <profile-picture v-if="canUploadPicture" :user="user" />
           </div>
 
@@ -129,6 +130,7 @@ export default class Profile extends Vue {
   margin-bottom $medium
 
 .picture
+  display block
   margin 0 auto
   width $large
   height $large
