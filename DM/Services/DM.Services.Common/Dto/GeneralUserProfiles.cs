@@ -17,9 +17,9 @@ namespace DM.Services.Common.Dto
         public GeneralUserProfiles()
         {
             CreateMap<User, GeneralUser>()
-                .ForMember(
-                    d => d.PictureUrl,
-                    s => s.MapFrom(u => u.ProfilePictureUrl));
+                .ForMember(d => d.OriginalPictureUrl, s => s.MapFrom(u => u.ProfilePictureUrl))
+                .ForMember(d => d.MediumPictureUrl, s => s.MapFrom(u => u.MediumProfilePictureUrl))
+                .ForMember(d => d.SmallPictureUrl, s => s.MapFrom(u => u.SmallProfilePictureUrl));
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(d => d.AccessRestrictionPolicies, s => s.MapFrom(
                     u => u.BansReceived

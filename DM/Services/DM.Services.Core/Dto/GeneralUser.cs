@@ -29,9 +29,19 @@ namespace DM.Services.Core.Dto
         public DateTimeOffset? LastVisitDate { get; set; }
 
         /// <summary>
-        /// URL of current profile picture
+        /// URL of current profile picture original file
         /// </summary>
-        public string PictureUrl { get; set; }
+        public string OriginalPictureUrl { get; set; }
+
+        /// <summary>
+        /// URL of current profile picture M-sized
+        /// </summary>
+        public string MediumPictureUrl { get; set; }
+
+        /// <summary>
+        /// URL of current profile picture S-sized
+        /// </summary>
+        public string SmallPictureUrl { get; set; }
 
         /// <summary>
         /// Status
