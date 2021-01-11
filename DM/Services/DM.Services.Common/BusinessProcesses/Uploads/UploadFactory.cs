@@ -20,7 +20,7 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
         }
 
         /// <inheritdoc />
-        public DbUpload Create(CreateUpload createUpload, string filePath, Guid userId) => new DbUpload
+        public DbUpload Create(CreateUpload createUpload, string filePath, Guid userId, bool original) => new DbUpload
         {
             UploadId = guidFactory.Create(),
             CreateDate = dateTimeProvider.Now,
@@ -28,6 +28,7 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
             EntityId = createUpload.EntityId,
             FileName = createUpload.FileName,
             FilePath = filePath,
+            Original = original,
             IsRemoved = false
         };
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -26,12 +27,25 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
         /// <inheritdoc />
         public async Task<Upload> Create(DbUpload upload)
         {
-            dbContext.Uploads.Add(upload);
+            await dbContext.Uploads.AddAsync(upload);
             await dbContext.SaveChangesAsync();
             return await dbContext.Uploads
                 .Where(u => u.UploadId == upload.UploadId)
                 .ProjectTo<Upload>(mapper.ConfigurationProvider)
                 .FirstAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<Upload>> Create(IEnumerable<DbUpload> uploads)
+        {
+            var savingUploads = uploads.ToArray();
+            await dbContext.Uploads.AddRangeAsync(savingUploads);
+            var uploadIds = savingUploads.Select(upload => upload.UploadId);
+            await dbContext.SaveChangesAsync();
+            return await dbContext.Uploads
+                .Where(u => uploadIds.Contains(u.UploadId))
+                .ProjectTo<Upload>(mapper.ConfigurationProvider)
+                .ToArrayAsync();
         }
     }
 }

@@ -71,8 +71,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         {
             var user = await userReadingService.Get(login);
 
-            // todo: batch upload && image modification
-            var upload = await uploadService.Upload(new CreateUpload
+            var imageUploadResult = await uploadService.UploadAndCropImage(new CreateUpload
             {
                 EntityId = user.UserId,
                 FileName = fileName,
@@ -81,11 +80,11 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
             });
 
             var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
-                .Field(u => u.ProfilePictureUrl, upload.FilePath);
+                .Field(u => u.ProfilePictureUrl, imageUploadResult.OriginalFilePath)
+                .Field(u => u.MediumProfilePictureUrl, imageUploadResult.MediumCroppedFilePath)
+                .Field(u => u.SmallProfilePictureUrl, imageUploadResult.SmallCroppedFilePath);
             var settingsUpdate = updateBuilderFactory.Create<UserSettings>(user.UserId);
             await repository.UpdateUser(userUpdate, settingsUpdate);
-
-            // todo: remove previous profile picture uploads
 
             return await userReadingService.GetDetails(login);
         }

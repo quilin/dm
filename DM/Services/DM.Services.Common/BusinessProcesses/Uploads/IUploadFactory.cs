@@ -14,7 +14,8 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
         /// <param name="createUpload"></param>
         /// <param name="filePath"></param>
         /// <param name="userId"></param>
+        /// <param name="original"></param>
         /// <returns></returns>
-        DbUpload Create(CreateUpload createUpload, string filePath, Guid userId);
+        DbUpload Create(CreateUpload createUpload, string filePath, Guid userId, bool original);
     }
 }
