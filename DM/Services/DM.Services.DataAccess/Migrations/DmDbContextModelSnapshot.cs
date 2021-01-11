@@ -292,6 +292,9 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("Original")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -952,6 +955,10 @@ namespace DM.Services.DataAccess.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
+                    b.Property<string>("MediumProfilePictureUrl")
+                        .HasColumnType("character varying(200)")
+                        .HasMaxLength(200);
+
                     b.Property<Guid?>("MergeRequested")
                         .HasColumnType("uuid");
 
@@ -989,6 +996,10 @@ namespace DM.Services.DataAccess.Migrations
                     b.Property<string>("Skype")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("SmallProfilePictureUrl")
+                        .HasColumnType("character varying(200)")
+                        .HasMaxLength(200);
 
                     b.Property<string>("Status")
                         .HasColumnType("character varying(200)")

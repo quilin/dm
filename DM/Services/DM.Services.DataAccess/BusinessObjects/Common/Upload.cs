@@ -37,6 +37,11 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public Guid UserId { get; set; }
 
         /// <summary>
+        /// Flag of file source: original or modified
+        /// </summary>
+        public bool Original { get; set; }
+
+        /// <summary>
         /// Path to download or view the file
         /// </summary>
         [MaxLength(200)]
