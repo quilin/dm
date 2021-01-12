@@ -12,9 +12,4 @@
         <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" PrivateAssets="All" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="AWSSDK.S3" Version="3.3.110.49" />
-      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
-    </ItemGroup>
-
 </Project>

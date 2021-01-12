@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
+using DM.Services.Uploading.Dto;
 
-namespace DM.Services.Common.BusinessProcesses.Uploads
+namespace DM.Services.Uploading.BusinessProcesses.Cdn
 {
-    internal class UploadNameGenerator : IUploadNameGenerator
+    /// <inheritdoc />
+    public class NameGenerator : INameGenerator
     {
         private readonly IGuidFactory guidFactory;
 
-        public UploadNameGenerator(
+        /// <inheritdoc />
+        public NameGenerator(
             IGuidFactory guidFactory)
         {
             this.guidFactory = guidFactory;
@@ -34,8 +38,9 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
             {FileMimeTypeNames.Text.Plain, "txt"},
             {FileMimeTypeNames.Text.Html, "htm"}
         };
-        
-        public (string name, string extension) Generate(CreateUpload createUpload)
+
+        /// <inheritdoc />
+        public Task<(string name, string extension)> Generate(CreateUpload createUpload)
         {
             var extension = FileExtensions.TryGetValue(createUpload.ContentType, out var matchingExtension)
                 ? $".{matchingExtension}"
@@ -45,7 +50,7 @@ namespace DM.Services.Common.BusinessProcesses.Uploads
             var saltHash = Convert.ToBase64String(guidFactory.Create().ToByteArray());
             var fileName = Regex.Replace(originalNameHash + saltHash, @"\W", string.Empty);
 
-            return (fileName, extension);
+            return Task.FromResult((fileName, extension));
         }
     }
 }

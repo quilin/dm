@@ -1,7 +1,7 @@
 using AutoMapper;
 using DbUpload = DM.Services.DataAccess.BusinessObjects.Common.Upload;
 
-namespace DM.Services.Common.BusinessProcesses.Uploads
+namespace DM.Services.Uploading.Dto
 {
     /// <summary>
     /// Profile for upload mapper

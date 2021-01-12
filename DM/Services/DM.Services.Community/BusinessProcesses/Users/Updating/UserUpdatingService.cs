@@ -1,11 +1,12 @@
 using System.IO;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
-using DM.Services.Common.BusinessProcesses.Uploads;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Uploading.BusinessProcesses.PublicImage;
+using DM.Services.Uploading.Dto;
 using FluentValidation;
 
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
@@ -15,7 +16,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
     {
         private readonly IValidator<UpdateUser> validator;
         private readonly IUserReadingService userReadingService;
-        private readonly IUploadService uploadService;
+        private readonly IPublicImageService imageService;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IUserUpdatingRepository repository;
@@ -24,14 +25,14 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         public UserUpdatingService(
             IValidator<UpdateUser> validator,
             IUserReadingService userReadingService,
-            IUploadService uploadService,
+            IPublicImageService imageService,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             IUserUpdatingRepository repository)
         {
             this.validator = validator;
             this.userReadingService = userReadingService;
-            this.uploadService = uploadService;
+            this.imageService = imageService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
@@ -71,7 +72,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
         {
             var user = await userReadingService.Get(login);
 
-            var imageUploadResult = await uploadService.UploadAndCropImage(new CreateUpload
+            var (original, medium, small) = await imageService.Upload(new CreateUpload
             {
                 EntityId = user.UserId,
                 FileName = fileName,
@@ -80,11 +81,13 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
             });
 
             var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
-                .Field(u => u.ProfilePictureUrl, imageUploadResult.OriginalFilePath)
-                .Field(u => u.MediumProfilePictureUrl, imageUploadResult.MediumCroppedFilePath)
-                .Field(u => u.SmallProfilePictureUrl, imageUploadResult.SmallCroppedFilePath);
+                .Field(u => u.ProfilePictureUrl, original.FilePath)
+                .Field(u => u.MediumProfilePictureUrl, medium.FilePath)
+                .Field(u => u.SmallProfilePictureUrl, small.FilePath);
             var settingsUpdate = updateBuilderFactory.Create<UserSettings>(user.UserId);
             await repository.UpdateUser(userUpdate, settingsUpdate);
+
+            await imageService.PrepareObsoleteForDeleting(user.UserId);
 
             return await userReadingService.GetDetails(login);
         }

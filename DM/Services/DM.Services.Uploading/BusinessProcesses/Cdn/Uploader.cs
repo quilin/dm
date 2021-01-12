@@ -2,30 +2,30 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
-using DM.Services.Common.Configuration;
+using DM.Services.Uploading.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace DM.Services.Common.BusinessProcesses.Uploads
+namespace DM.Services.Uploading.BusinessProcesses.Cdn
 {
     /// <inheritdoc />
     public class Uploader : IUploader
     {
-        private readonly Lazy<IAmazonS3> client;
         private readonly CdnConfiguration cdnConfiguration;
+        private readonly Lazy<IAmazonS3> client;
 
         /// <inheritdoc />
         public Uploader(
             IOptions<CdnConfiguration> cdnOptions,
             Lazy<IAmazonS3> client)
         {
-            this.client = client;
             cdnConfiguration = cdnOptions.Value;
+            this.client = client;
         }
 
         /// <inheritdoc />
-        public async Task<string> Upload(Func<Stream> fileStream, string fileName)
+        public async Task<string> Upload(Func<Stream> streamAccessor, string fileName)
         {
-            await using var stream = fileStream();
+            await using var stream = streamAccessor();
             var objectKey = $"{cdnConfiguration.Folder}/{fileName}";
             await client.Value.UploadObjectFromStreamAsync(cdnConfiguration.BucketName, objectKey, stream, null);
             return new UriBuilder(new Uri(cdnConfiguration.Url)) {Path = objectKey}.ToString();
