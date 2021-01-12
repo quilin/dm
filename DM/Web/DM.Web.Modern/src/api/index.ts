@@ -44,8 +44,19 @@ class Api {
     return this.send(() => this.axios.post(url, params));
   }
 
+  /*
+   Поскольку мы отслеживаем прогресс только отправки файла на сервер с клиента,
+   обработчик прогресса "зависает" на 99% до момента получения окончательного ответа от сервера.
+  */
   public async postFile<T>(url: string, params?: any, progressCallback?: (event: ProgressEvent) => void): Promise<ApiResult<T>> {
-    return this.send(() => this.axios.post(url, params, { onUploadProgress: progressCallback }));
+    const result = await this.send<T>(() => this.axios.post(url, params, {
+      onUploadProgress: progressCallback
+        ? (event: ProgressEvent) =>
+          progressCallback(event.loaded === event.total ? { loaded: 99, total: 100 } as ProgressEvent : event)
+        : undefined,
+    }));
+    progressCallback?.({ loaded: 1, total: 1 } as ProgressEvent);
+    return result;
   }
 
   public async put<T>(url: string, params?: any): Promise<ApiResult<T>> {
