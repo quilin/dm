@@ -16,7 +16,7 @@
           <div class="picture-container">
             <a target="_blank" :href="user.originalPictureUrl" class="picture"
               :style="{ backgroundImage: user.mediumPictureUrl ? `url(${user.mediumPictureUrl})` : undefined }" />
-            <profile-picture v-if="canUploadPicture" :user="user" />
+            <profile-picture v-if="canUploadPicture" />
           </div>
 
           <profile-stat title="В сети"><online :user="user" :detailed="true" /></profile-stat>

@@ -9,16 +9,15 @@
       </template>
       <progress-bar class="progress" v-else :current="loaded" :goal="total">{{ progress }}%</progress-bar>
     </span>
-    <upload @uploading="uploadProfilePicture" />
+    <upload @uploading="upload" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import communityApi from '@/api/requests/communityApi';
-import { User } from '@/api/models/community';
+import { Component, Vue } from 'vue-property-decorator';
 import IconType from '@/components/iconType';
 import ProgressBar from '@/components/ProgressBar.vue';
+import { Action } from 'vuex-class';
 
 @Component({
   components: {ProgressBar}
@@ -31,15 +30,15 @@ export default class ProfilePicture extends Vue {
   private loaded = 0;
   private total = 1;
 
+  @Action('community/uploadProfilePicture')
+  private uploadProfilePicture: any;
+
   private get progress() {
     return Math.floor(this.loaded / this.total * 100);
   }
 
-  @Prop()
-  private user!: User;
-
-  private async uploadProfilePicture(formData: FormData): Promise<void> {
-    await communityApi.uploadUserPicture(this.user!.login, formData, this.onUploadProgress);
+  private async upload(formData: FormData): Promise<void> {
+    this.uploadProfilePicture({ file: formData, progressCallback: this.onUploadProgress });
   }
 
   private onUploadProgress(progressEvent: ProgressEvent): void {
