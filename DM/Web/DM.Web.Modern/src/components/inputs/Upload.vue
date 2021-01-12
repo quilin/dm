@@ -39,7 +39,6 @@ export default class Upload extends Vue {
   padding 0
   margin 0
   opacity 0
-  font-size 2000px
   border none
   outline none
   cursor pointer

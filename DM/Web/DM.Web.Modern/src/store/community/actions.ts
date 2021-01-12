@@ -54,13 +54,13 @@ const actions: ActionTree<CommunityState, RootState> = {
     const user = state.selectedUser!.edit;
     await updateUserPart(commit, state, router, { settings: user.settings } as User);
   },
-  async uploadProfilePicture({ commit, state, rootState, dispatch }, { file, progressCallback }): Promise<void> {
+  async uploadProfilePicture({ commit, state, rootState }, { file, progressCallback }): Promise<void> {
     const user = state.selectedUser!.edit;
     const { resource } = await communityApi.uploadUserPicture(user.login, file, progressCallback);
     commit('updateSelectedUser', { ...state.selectedUser, view: resource });
 
     if (rootState.user!.login === user.login) {
-      dispatch('fetchUser', { root: true });
+      commit('updateUser', resource, { root: true });
     }
   },
 

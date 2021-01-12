@@ -56,7 +56,7 @@ export default class ProfilePicture extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.container
+.picture-container
   position absolute
   top 0
   bottom 0
@@ -78,7 +78,7 @@ pictureUploadLabel()
   opacity 0
   transition opacity $animationTime
 
-  .container:hover &
+  .picture-container:hover &
     opacity 1
 
 .status
