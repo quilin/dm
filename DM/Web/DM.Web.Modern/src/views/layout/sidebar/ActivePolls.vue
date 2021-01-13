@@ -2,9 +2,13 @@
   <div>
     <menu-block token="OpenPolls">
       <template v-slot:title>Опросы</template>
+
       <loader v-if="polls === null" />
-      <poll-component v-else-if="polls.length > 0" v-for="poll in polls" :key="poll.id" :poll="poll" />
+      <div v-else-if="polls.length">
+        <poll-component v-for="poll in polls" :key="poll.id" :poll="poll" />
+      </div>
       <div v-else class="nothing">Нет активных опросов</div>
+
       <router-link :to="{ name: 'polls' }" class="rest-link">
         К прошедшим опросам
         <icon :font="IconType.Forward" />
