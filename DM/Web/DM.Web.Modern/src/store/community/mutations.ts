@@ -7,6 +7,9 @@ const mutations: MutationTree<CommunityState> = {
   updateActivePolls(state, payload: Poll[]) {
     state.activePolls = payload;
   },
+  updatePolls(state, payload: ListEnvelope<Poll>) {
+    state.polls = payload;
+  },
   updatePoll(state, payload: Poll) {
     if (state.activePolls !== null) {
       const matchingActivePoll = state.activePolls.find((poll: Poll) => poll.id === payload.id);
@@ -15,6 +18,14 @@ const mutations: MutationTree<CommunityState> = {
     if (state.polls !== null) {
       const matchingPoll = state.polls!.resources.find((poll: Poll) => poll.id === payload.id);
       Object.assign(matchingPoll, payload);
+    }
+  },
+  addPoll(state, payload: Poll) {
+    if (state.activePolls !== null) {
+      state.activePolls.unshift(payload);
+    }
+    if (state.polls !== null) {
+      state.polls!.resources.unshift(payload);
     }
   },
 

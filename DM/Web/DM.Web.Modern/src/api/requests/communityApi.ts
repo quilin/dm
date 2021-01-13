@@ -8,9 +8,11 @@ export default new class CommunityApi {
     const { data } = await Api.get<ListEnvelope<Poll>>('polls', { ...q, onlyActive });
     return  data!;
   }
-
   public async postPollVote(pollId: string, optionId: string): Promise<ApiResult<Envelope<Poll>>> {
     return await Api.put<Envelope<Poll>>(`polls/${pollId}?optionId=${optionId}`);
+  }
+  public async postPoll(poll: Poll): Promise<ApiResult<Envelope<Poll>>> {
+    return await Api.post<Envelope<Poll>>('polls', poll);
   }
 
   public async getUsers(q: PagingQuery): Promise<ListEnvelope<User>> {

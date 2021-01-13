@@ -71,6 +71,18 @@ export default new Router({
       }],
     },
     {
+      path: '/polls',
+      components: {
+        menu: GeneralMenu,
+        page: () => import('./views/pages/polls/Polls.vue'),
+      },
+      children: [{
+        name: 'polls',
+        path: ':n?',
+        component: () => import('./views/pages/polls/PollsList.vue'),
+      }]
+    },
+    {
       name: 'chat',
       path: '/fm',
       components: {

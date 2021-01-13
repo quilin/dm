@@ -30,6 +30,18 @@ const actions: ActionTree<CommunityState, RootState> = {
       commit('updatePoll', data!.resource);
     }
   },
+  async fetchPolls({ commit }, { n }): Promise<void> {
+    const polls = await communityApi.getPolls({ number: n } as PagingQuery, false);
+    commit('updatePolls', polls);
+  },
+  async createPoll({ commit }, { router, poll }): Promise<void> {
+    const { data, error } = await communityApi.postPoll(poll);
+    if (error) {
+      router.push({ name: 'error', params: { code: error.code } });
+    } else {
+      commit('addPoll', data!.resource);
+    }
+  },
 
   async fetchUsers({ commit }, query): Promise<void> {
     const users = await communityApi.getUsers(query);

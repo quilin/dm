@@ -58,7 +58,7 @@ export interface UserSettings {
 }
 
 export interface Poll {
-  id: string;
+  id?: string;
   ends: string;
   title: string;
   options: PollOption[];
