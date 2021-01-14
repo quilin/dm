@@ -1,7 +1,8 @@
 import { MutationTree } from 'vuex';
 import GamingState from './gamingState';
-import {Game, AttributeSchema, Tag, Character, Room, GameParticipation} from '@/api/models/gaming';
+import { Game, AttributeSchema, Tag, Character, Room, GameParticipation, Comment } from '@/api/models/gaming';
 import {User} from '@/api/models/community';
+import { ListEnvelope } from '@/api/models/common';
 
 const mutations: MutationTree<GamingState> = {
   updateOwnGames(state, payload: Game[]) {
@@ -33,6 +34,9 @@ const mutations: MutationTree<GamingState> = {
   },
   updateSelectedGameReaders(state, payload: User[]) {
     state.selectedGameReaders = payload;
+  },
+  updateSelectedGameComments(state, payload: ListEnvelope<Comment>) {
+    state.selectedGameComments = payload;
   },
 
   addReader(state, payload: User) {

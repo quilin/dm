@@ -13,6 +13,7 @@ const getters: GetterTree<GamingState, RootState> = {
   selectedGameCharacters: (state) => state.selectedGameCharacters,
   selectedGameRooms: (state) => state.selectedGameRooms,
   selectedGameReaders: (state) => state.selectedGameReaders,
+  selectedGameComments: (state) => state.selectedGameComments,
 };
 
 export default getters;

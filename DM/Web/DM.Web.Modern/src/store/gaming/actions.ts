@@ -3,6 +3,7 @@ import gamingApi from '@/api/requests/gamingApi';
 import GamingState from './gamingState';
 import RootState from './../rootState';
 import { AttributeSchema } from '@/api/models/gaming';
+import { PagingQuery } from '@/api/models/common';
 
 const actions: ActionTree<GamingState, RootState> = {
   async fetchOwnGames({ commit }): Promise<void> {
@@ -79,6 +80,11 @@ const actions: ActionTree<GamingState, RootState> = {
     commit('updateSelectedGameReaders', null);
     const { resources: readers } = await gamingApi.getReaders(id);
     commit('updateSelectedGameReaders', readers);
+  },
+  async fetchSelectedGameComments({ commit }, { id, n }): Promise<void> {
+    commit('updateSelectedGameComments', null);
+    const data = await gamingApi.getComments(id, { number: n } as PagingQuery);
+    commit('updateSelectedGameComments', data!);
   },
 
   async subscribe({ commit, state }, { router }): Promise<void> {
