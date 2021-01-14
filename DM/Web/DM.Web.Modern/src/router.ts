@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import GeneralMenu from './views/layout/GeneralMenu.vue';
-import GameMenu from './views/pages/game/GameMenu.vue';
+import GameMenu from './views/pages/game/menu/GameMenu.vue';
 import GeneralSidebar from './views/layout/GeneralSidebar.vue';
 
 Vue.use(Router);
@@ -173,10 +173,15 @@ export default new Router({
       children: [{
         name: 'game',
         path: '',
-        component: () => import('./views/pages/game/Information.vue'),
+        component: () => import('./views/pages/game/information/Information.vue'),
       }, {
-        name: 'game-comments',
         path: 'out-of-session',
+        component: () => import('./views/pages/game/comments/GameComments.vue'),
+        children: [{
+          name: 'game-comments',
+          path: ':n?',
+          component: () => import('./views/pages/game/comments/GameCommentsList.vue'),
+        }],
       }, {
         name: 'create-character',
         path: 'create-character',

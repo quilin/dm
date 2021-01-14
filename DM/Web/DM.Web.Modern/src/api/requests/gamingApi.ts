@@ -1,5 +1,5 @@
-import { ApiResult, Envelope, ListEnvelope } from '@/api/models/common';
-import { Game, AttributeSchema, Tag, Character, Room } from '@/api/models/gaming';
+import { ApiResult, Envelope, ListEnvelope, PagingQuery } from '@/api/models/common';
+import { Game, AttributeSchema, Tag, Character, Room, Comment } from '@/api/models/gaming';
 import { User } from '@/api/models/community';
 import Api from '@/api';
 
@@ -30,6 +30,11 @@ export default new class {
 
   public async getReaders(gameId: string): Promise<ListEnvelope<User>> {
     const { data } = await Api.get<ListEnvelope<User>>(`games/${gameId}/readers`);
+    return data!;
+  }
+
+  public async getComments(gameId: string, query: PagingQuery): Promise<ListEnvelope<Comment>> {
+    const { data } = await Api.get<ListEnvelope<Comment>>(`games/${gameId}/comments`, query);
     return data!;
   }
 

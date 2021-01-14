@@ -1,5 +1,6 @@
-import {Game, AttributeSchema, Tag, Character, Room} from '@/api/models/gaming';
+import { Game, AttributeSchema, Tag, Character, Room, Comment } from '@/api/models/gaming';
 import {User} from '@/api/models/community';
+import { ListEnvelope } from '@/api/models/common';
 
 export default interface GamingState {
   ownGames: Game[] | null;
@@ -12,4 +13,5 @@ export default interface GamingState {
   selectedGameCharacters: Character[] | null;
   selectedGameRooms: Room[] | null;
   selectedGameReaders: User[] | null;
+  selectedGameComments: ListEnvelope<Comment> | null;
 }
