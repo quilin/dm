@@ -6,6 +6,7 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.Mail.Rendering;
 using DM.Services.Mail.Sender;
+using DM.Services.Uploading;
 
 namespace DM.Services.Community
 {
@@ -21,6 +22,7 @@ namespace DM.Services.Community
             builder.RegisterModuleOnce<CoreModule>();
             builder.RegisterModuleOnce<AuthenticationModule>();
             builder.RegisterModuleOnce<CommonModule>();
+            builder.RegisterModuleOnce<UploadingModule>();
             builder.RegisterModuleOnce<DataAccessModule>();
             builder.RegisterModuleOnce<MailSenderModule>();
             builder.RegisterModuleOnce<RenderingModule>();

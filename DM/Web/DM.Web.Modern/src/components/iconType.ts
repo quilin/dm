@@ -6,6 +6,8 @@ enum IconType {
   Message = 0xe011,
   Close = 0xe00e,
   Like = 0xe077,
+  Upload = 0xe02c,
+  Download = 0xe015,
 
   CornerTop = 0xe04d,
   CornerRight = 0xe04a,

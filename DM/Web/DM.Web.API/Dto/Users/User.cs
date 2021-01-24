@@ -20,9 +20,14 @@ namespace DM.Web.API.Dto.Users
         public IEnumerable<UserRole> Roles { get; set; }
 
         /// <summary>
-        /// Profile picture URL
+        /// Profile picture URL M-size
         /// </summary>
-        public string PictureUrl { get; set; }
+        public string MediumPictureUrl { get; set; }
+
+        /// <summary>
+        /// Profile picture URL S-size
+        /// </summary>
+        public string SmallPictureUrl { get; set; }
 
         /// <summary>
         /// User defined status

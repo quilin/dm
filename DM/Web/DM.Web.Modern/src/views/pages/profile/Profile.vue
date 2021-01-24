@@ -14,7 +14,9 @@
         <div class="stats">
 
           <div class="picture-container">
-            <div class="picture" :style="{ backgroundImage: user.profilePictureUrl }" />
+            <a target="_blank" :href="user.originalPictureUrl" class="picture"
+              :style="{ backgroundImage: user.mediumPictureUrl ? `url(${user.mediumPictureUrl})` : undefined }" />
+            <profile-picture v-if="canUploadPicture" />
           </div>
 
           <profile-stat title="В сети"><online :user="user" :detailed="true" /></profile-stat>
@@ -44,13 +46,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import { Route } from 'vue-router';
 
 import { User, UserRole } from '@/api/models/community';
 
 import ProfileStat from './ProfileStat.vue';
+import ProfilePicture from '@/views/pages/profile/ProfilePicture.vue';
 
 const roleNames: Record<string, string> = {
   [UserRole.Administrator]: 'Тролль',
@@ -61,6 +64,7 @@ const roleNames: Record<string, string> = {
 
 @Component({
   components: {
+    ProfilePicture,
     ProfileStat,
   },
 })
@@ -83,6 +87,10 @@ export default class Profile extends Vue {
 
   private get isOwnUser(): boolean {
     return this.user?.login === this.currentUser?.login;
+  }
+
+  private get canUploadPicture(): boolean {
+    return this.isOwnUser || this.currentUser?.roles.some(role => role === UserRole.Administrator);
   }
 
   private get userRoles(): string[] {
@@ -118,15 +126,19 @@ export default class Profile extends Vue {
   flex-shrink 0
 
 .picture-container
+  position relative
   margin-bottom $medium
 
 .picture
+  display block
   margin 0 auto
   width $large
   height $large
   border-radius $large
   themeExtend(box-shadow, inset 0 0 $minor, $border)
-  background url('~@/assets/userpic.png') 0 0 no-repeat
+  background 0 0 no-repeat
+  background-size cover
+  background-image url('~@/assets/userpic.png')
 
 .details
   flex-grow 1

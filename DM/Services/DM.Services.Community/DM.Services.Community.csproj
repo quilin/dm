@@ -14,6 +14,7 @@
         <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\DM.Services.Mail.Rendering\DM.Services.Mail.Rendering.csproj" />
         <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj" />
+        <ProjectReference Include="..\DM.Services.Uploading\DM.Services.Uploading.csproj" />
     </ItemGroup>
 
     <ItemGroup>

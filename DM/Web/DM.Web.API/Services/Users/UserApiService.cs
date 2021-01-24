@@ -5,6 +5,7 @@ using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using Microsoft.AspNetCore.Http;
 using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 
 namespace DM.Web.API.Services.Users
@@ -54,6 +55,14 @@ namespace DM.Web.API.Services.Users
             var updateUser = mapper.Map<UpdateUser>(user);
             updateUser.Login = login;
             var updatedUser = await updatingService.Update(updateUser);
+            return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
+        }
+
+        /// <inheritdoc />
+        public async Task<Envelope<UserDetails>> UploadProfilePicture(string login, IFormFile file)
+        {
+            await using var uploadStream = file.OpenReadStream();
+            var updatedUser = await updatingService.UploadPicture(login, uploadStream, file.Name, file.ContentType);
             return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
         }
     }
