@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Dto.Input;
 using Policy = DM.Services.Core.Dto.Enums.CharacterAccessPolicy;
 

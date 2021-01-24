@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using AutoMapper;
 using DM.Services.Common;
 using DM.Services.Community;
@@ -108,8 +109,17 @@ namespace DM.Web.API
         /// Configure application
         /// </summary>
         /// <param name="appBuilder"></param>
-        public void Configure(IApplicationBuilder appBuilder)
+        /// <param name="dbContextAccessor"></param>
+        public void Configure(IApplicationBuilder appBuilder,
+            Func<DmDbContext> dbContextAccessor)
         {
+            var dbMigrate = Environment.GetEnvironmentVariable("DM_MigrateDb");
+            if (dbMigrate != default)
+            {
+                using var dbContext = dbContextAccessor();
+                dbContext.Database.Migrate();
+            }
+
             appBuilder
                 .UseSwagger(c => c.Configure())
                 .UseSwaggerUI(c => c.ConfigureUi())
