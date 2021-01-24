@@ -12,6 +12,8 @@ using DM.Services.Forum;
 using DM.Services.Gaming;
 using DM.Services.Notifications;
 using DM.Services.Search;
+using DM.Services.Uploading;
+using DM.Services.Uploading.Configuration;
 using DM.Web.API.Authentication;
 using DM.Web.API.Binding;
 using DM.Web.API.Configuration;
@@ -58,6 +60,8 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(IntegrationSettings)).Bind)
                 .Configure<EmailConfiguration>(
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<CdnConfiguration>(
+                    Configuration.GetSection(nameof(CdnConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             services
@@ -94,6 +98,7 @@ namespace DM.Web.API
                 .AsImplementedInterfaces();
 
             builder.RegisterModuleOnce<CommonModule>();
+            builder.RegisterModuleOnce<UploadingModule>();
             builder.RegisterModuleOnce<DataAccessModule>();
 
             builder.RegisterModuleOnce<CommunityModule>();
