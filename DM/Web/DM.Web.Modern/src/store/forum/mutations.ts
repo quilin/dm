@@ -70,6 +70,33 @@ const mutations: MutationTree<ForumState> = {
 
     state.topic!.unreadCommentsCount = 0;
   },
+
+  addCommentLike(state, payload: { user: User; id: string}) {
+    const { user, id } = payload;
+    const comment = state.comments!.resources.find(comment => comment.id === id);
+    comment!.likes.push(user);
+  },
+  deleteCommentLike(state, payload: { user: User; id: string }) {
+    const { user, id } = payload;
+    const comment = state.comments!.resources.find(comment => comment.id === id);
+    const likedIndex = comment!.likes.findIndex(likedUser => likedUser.login === user.login);
+    if (likedIndex >= 0) {
+      comment!.likes.splice(likedIndex, 1);
+    }
+  },
+
+  addTopicLike(state, payload: { user: User }) {
+    const { user } = payload;
+    state.topic!.likes!.push(user);
+  },
+  deleteTopicLike(state, payload: { user: User }) {
+    const { user } = payload;
+    const likes = state.topic!.likes!;
+    const likedIndex = likes.findIndex(likedUser => likedUser.login === user.login);
+    if (likedIndex >= 0) {
+      likes.splice(likedIndex, 1);
+    }
+  },
 };
 
 export default mutations;

@@ -98,6 +98,23 @@ const actions: ActionTree<ForumState, RootState> = {
       commit('markTopicAsRead');
     }
   },
+  async addCommentLike({ commit, rootState }, { id }): Promise<void> {
+    commit('addCommentLike', { id, user: rootState.user });
+    await forumApi.postCommentLike(id);
+  },
+  async deleteCommentLike({ commit, rootState }, { id }): Promise<void> {
+    commit('deleteCommentLike', { id, user: rootState.user });
+    await forumApi.deleteCommentLike(id);
+  },
+  async addTopicLike({ commit, rootState }, { id }): Promise<void> {
+    commit('addTopicLike', { user: rootState.user });
+    await forumApi.postTopicLike(id);
+  },
+  async deleteTopicLike({ commit, rootState }, { id }): Promise<void> {
+    commit('deleteTopicLike', { user: rootState.user });
+    await forumApi.deleteTopicLike(id);
+  },
+
 };
 
 export default actions;
