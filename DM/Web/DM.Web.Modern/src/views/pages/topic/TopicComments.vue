@@ -49,7 +49,7 @@ export default class TopicComments extends Vue {
 
   private commentEditable(author: User) {
     return author.login === this.user?.login ||
-        this.moderators.some(moderator => moderator.login === author.login) ||
+        this.moderators.some(moderator => moderator.login === this.user?.login) ||
         userIsHighAuthority(this.user);
   }
 

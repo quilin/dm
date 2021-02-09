@@ -2,12 +2,22 @@
   <div>
     <div v-if="topic">
       <div class="page-title">{{topic.title}}</div>
-      <div class="description" v-html="topic.description"></div>
-      <div class="data">
-        <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>,
-        <human-timespan :date="topic.created" />
-        &nbsp;
-        <like :entity="topic" @liked="addLike({ id: topic.id })" @unliked="deleteLike({ id: topic.id })" />
+      <div class="topic">
+        <div class="description" v-html="topic.description"></div>
+        <div class="topic__meta">
+          <div>
+            <user-link :user="topic.author" />,
+            <human-timespan :date="topic.created" />
+            &nbsp;
+            <like :entity="topic" @liked="addLike({ id: topic.id })" @unliked="deleteLike({ id: topic.id })" />
+          </div>
+          <div class="topic__controls" v-if="topicEditable">
+            <a class="topic-__control" @click="showEditForm">
+              <icon :font="IconType.Edit" />
+              Редактировать
+            </a>
+          </div>
+        </div>
       </div>
       <router-link :to="{name: 'forum', params: {id: topic.forum.id}}">
         <icon :font="IconType.ArrowLeft" />
@@ -28,12 +38,16 @@ import IconType from '@/components/iconType';
 import TopicComments from './TopicComments.vue';
 import CreateCommentForm from './CreateCommentForm.vue';
 import Like from '@/components/shared/Like.vue';
+import { User } from '@/api/models/community';
+import { userIsHighAuthority } from '@/api/models/community/helpers';
 
 @Component({
   components: { CreateCommentForm, TopicComments, Like },
 })
 export default class TopicPage extends Vue {
   private IconType: typeof IconType = IconType;
+
+  private editMode = false;
 
   @Getter('forum/topic')
   private topic!: Topic;
@@ -53,6 +67,25 @@ export default class TopicPage extends Vue {
   @Action('forum/addTopicLike')
   private addLike: any;
 
+  @Getter('user')
+  private user!: User | null;
+
+  @Getter('forum/moderators')
+  private moderators!: User[];
+
+  private topicEditable(): boolean {
+    return this.moderators.some(moderator => moderator.login === this.user?.login) ||
+        userIsHighAuthority(this.user);
+  }
+
+  private showEditForm() {
+    this.editMode = true;
+  }
+
+  private hideEditForm() {
+    this.editMode = false;
+  }
+
   private mounted(): void {
     this.fetchData();
   }
@@ -70,7 +103,25 @@ export default class TopicPage extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.data
-  margin $small 0
-  theme(color, $secondaryText)
+.topic
+  panel()
+  padding $minor
+  border 1px solid
+  theme(border-color, $border)
+
+  &__meta
+    display flex
+    justify-content space-between
+    margin $minor 0
+    secondary()
+
+  &__controls
+    display none
+
+  &:hover &__controls
+    display block
+
+  &__control
+    margin-left $medium
+
 </style>
