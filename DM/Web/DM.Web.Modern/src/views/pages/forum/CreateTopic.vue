@@ -39,7 +39,7 @@ export default class CreateTopicComponent extends Vue {
   private description = '';
 
   private get formEmpty() {
-    return this.title === '' && this.description === '';
+    return this.title === '' || this.description === '';
   }
 
   @Getter('forum/selectedForum')
