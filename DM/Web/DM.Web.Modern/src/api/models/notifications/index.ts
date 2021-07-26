@@ -1,5 +1,6 @@
 export enum NotificationType {
-  NewCharacter = 361
+  NewCharacter = 361,
+  LikedTopic = 104,
 }
 
 export interface UserNotification {
@@ -12,4 +13,10 @@ export interface NewCharacterData {
   AuthorLogin: string;
   GameTitle: string;
   GameId: string;
+}
+
+export interface TopicLikedData {
+  AuthorLogin: string;
+  TopicTitle: string;
+  TopicId: string;
 }

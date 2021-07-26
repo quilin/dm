@@ -7,6 +7,7 @@
     <portal to="notifications" v-if="burningNotifications.length">
       <div class="notification" v-for="notification in burningNotifications" :key="notification.id" @click.right.prevent="hide(notification.id)">
         <new-character-notification v-if="notification.eventType === NotificationType.NewCharacter" :data="notification.payload" />
+        <topic-liked-notification v-else-if="notification.eventType === NotificationType.LikedTopic" :data="notification.payload" />
       </div>
     </portal>
   </div>
@@ -19,9 +20,10 @@ import { HubConnection } from '@microsoft/signalr';
 import { Action } from 'vuex-class';
 import { NotificationType, UserNotification } from '@/api/models/notifications';
 import NewCharacterNotification from '@/components/notifications/NewCharacterNotification.vue';
+import TopicLikedNotification from '@/components/notifications/TopicLikedNotification.vue';
 
 @Component({
-  components: {NewCharacterNotification}
+  components: {TopicLikedNotification, NewCharacterNotification}
 })
 export default class NotificationsComponent extends Vue {
   private connection: HubConnection | null = null;

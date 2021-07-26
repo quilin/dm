@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
 {
     /// <inheritdoc />
-    public class NewCharacterNotificationGenerator : BaseNotificationGenerator
+    public class TopicLikedNotificationGenerator : BaseNotificationGenerator
     {
         private readonly DmDbContext dbContext;
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;
 
         /// <inheritdoc />
-        public NewCharacterNotificationGenerator(
+        public TopicLikedNotificationGenerator(
             DmDbContext dbContext,
             IGuidFactory guidFactory,
             IDateTimeProvider dateTimeProvider)
@@ -30,34 +30,21 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
         }
 
         /// <inheritdoc />
-        protected override EventType EventType => EventType.NewCharacter;
+        protected override EventType EventType => EventType.LikedTopic;
 
         /// <inheritdoc />
         protected override async Task<IEnumerable<Notification>> GenerateNotifications(Guid entityId)
         {
-            var data = await dbContext.Characters
-                .Where(c => c.CharacterId == entityId)
-                .Select(c => new
+            var likedTopicData = await dbContext.Likes
+                .Where(like => like.LikeId == entityId)
+                .Select(like => new
                 {
-                    c.GameId,
-                    c.Game.Title,
-                    c.Author.Login,
-                    c.Author.UserId,
-                    c.Game.MasterId,
-                    c.Game.AssistantId
+                    like.User.Login,
+                    like.Topic.ForumTopicId,
+                    like.Topic.UserId,
+                    like.Topic.Title
                 })
                 .FirstAsync();
-            var interestedUsers = new List<Guid> {data.MasterId};
-            if (data.AssistantId.HasValue)
-            {
-                interestedUsers.Add(data.AssistantId.Value);
-            }
-
-            interestedUsers = interestedUsers.Where(u => u != data.UserId).ToList();
-            if (interestedUsers.Count == 0)
-            {
-                return new Notification[0];
-            }
 
             return new[]
             {
@@ -66,14 +53,13 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
                     NotificationId = guidFactory.Create(),
                     CreateDate = dateTimeProvider.Now.UtcDateTime,
                     UsersNotified = new List<Guid>(),
-                    UsersInterested = interestedUsers,
+                    UsersInterested = new[] {likedTopicData.UserId},
                     Metadata = new
                     {
-                        AuthorLogin = data.Login,
-                        GameTitle = data.Title,
-                        GameId = data.GameId.EncodeToReadable()
-                    },
-                    EventType = EventType
+                        AuthorLogin = likedTopicData.Login,
+                        TopicTitle = likedTopicData.Title,
+                        TopicId = likedTopicData.ForumTopicId.EncodeToReadable(likedTopicData.Title)
+                    }
                 }
             };
         }
