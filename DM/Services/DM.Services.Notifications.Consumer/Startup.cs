@@ -80,10 +80,15 @@ namespace DM.Services.Notifications.Consumer
                     EventType.NewForumComment,
                     EventType.ChangedForumComment,
                     EventType.DeletedForumComment,
+                    EventType.LikedForumComment,
                     EventType.NewForumTopic,
                     EventType.ChangedForumTopic,
                     EventType.DeletedForumTopic,
+<<<<<<< Updated upstream
                     EventType.NewCharacter
+=======
+                    EventType.LikedTopic
+>>>>>>> Stashed changes
                 }.ToRoutingKeys(),
                 QueueName = "dm.notifications"
             };

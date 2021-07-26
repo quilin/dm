@@ -39,4 +39,5 @@ export default class ProgressBar extends Vue {
 
 .progress-text
   position relative
+  theme(color, $text)
 </style>

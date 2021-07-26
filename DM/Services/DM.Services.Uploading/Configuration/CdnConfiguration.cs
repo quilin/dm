@@ -1,4 +1,4 @@
-namespace DM.Services.Common.Configuration
+namespace DM.Services.Uploading.Configuration
 {
     /// <summary>
     /// CDN configuration

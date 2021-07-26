@@ -4,14 +4,14 @@
       <div v-html="comment.text" />
       <div class="topic-comment__meta">
         <div>
-          <user-link :user="comment.author" />
-          ,
+          <user-link :user="comment.author" />,
           <human-timespan :date="comment.created" />
           <template v-if="comment.updated">
-            (изменен
-            <human-timespan :date="comment.updated" />
-            )
+            , (изменен
+            <human-timespan :date="comment.updated" />)
           </template>
+          &nbsp;
+          <like :entity="comment" @liked="addLike({ id: comment.id })" @unliked="deleteLike({ id: comment.id })" />
         </div>
         <div class="topic-comment__controls" v-if="editable">
           <a class="topic-comment__control" @click="showEditForm">
@@ -42,10 +42,11 @@ import { Comment } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 import EditCommentForm from '@/views/pages/topic/EditCommentForm.vue';
 import ConfirmLightbox from '@/components/ConfirmLightbox.vue';
+import Like from '@/components/shared/Like.vue';
 import { Action } from 'vuex-class';
 
 @Component({
-  components: { ConfirmLightbox, EditCommentForm },
+  components: { ConfirmLightbox, EditCommentForm, Like },
 })
 export default class TopicComment extends Vue {
   private IconType: typeof IconType = IconType;
@@ -60,6 +61,12 @@ export default class TopicComment extends Vue {
 
   @Action('forum/deleteComment')
   private deleteCommentAction: any;
+
+  @Action('forum/deleteCommentLike')
+  private deleteLike: any;
+
+  @Action('forum/addCommentLike')
+  private addLike: any;
 
   private showEditForm() {
     this.editMode = true;

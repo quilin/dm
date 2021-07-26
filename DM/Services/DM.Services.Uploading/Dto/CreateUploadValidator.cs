@@ -1,7 +1,7 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Common.BusinessProcesses.Uploads
+namespace DM.Services.Uploading.Dto
 {
     /// <inheritdoc />
     public class CreateUploadValidator : AbstractValidator<CreateUpload>

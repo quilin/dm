@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace DM.Services.Common.BusinessProcesses.Uploads
+namespace DM.Services.Uploading.Dto
 {
     /// <summary>
     /// DTO model for file upload

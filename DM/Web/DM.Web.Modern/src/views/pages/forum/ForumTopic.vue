@@ -1,6 +1,8 @@
 <template>
   <div class="row" :class="{ closed: topic.closed, attached: topic.attached }">
-    <router-link :to="{name: 'topic', params: {id: topic.id}}" class="link">
+    <router-link
+      :to="{ name: 'topic', params: { id: topic.id, n: topic.commentsCount - topic.unreadCommentsCount }}"
+      class="link">
       <icon v-if="topic.attached" :font="IconType.Attached" />
       <icon v-if="topic.closed" :font="IconType.Closed" />
       {{topic.title}}
@@ -11,16 +13,16 @@
     </router-link>
     <div>{{moment(topic.created).format("DD.MM.YYYY")}}</div>
     <div>
-      <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
+      <user-link :user="topic.author" />
     </div>
     <div>{{topic.commentsCount}}</div>
     <div>
-      <router-link
-        v-if="topic.lastComment"
-        :to="{name: 'user', params: {login: topic.author.login}}">
-        {{topic.lastComment.author.login}},
-        <human-timespan :date="topic.lastComment.created" />
-      </router-link>
+      <template v-if="topic.lastComment">
+        <user-link :user="topic.lastComment.author" />,
+        <router-link :to="{name: 'topic', params: { id: topic.id, n: topic.commentsCount }}">
+          <human-timespan :date="topic.lastComment.created" />
+        </router-link>
+      </template>
     </div>
   </div>
 </template>

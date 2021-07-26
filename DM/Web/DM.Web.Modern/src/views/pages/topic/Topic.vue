@@ -4,9 +4,10 @@
       <div class="page-title">{{topic.title}}</div>
       <div class="description" v-html="topic.description"></div>
       <div class="data">
-        <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>
-        ,
+        <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>,
         <human-timespan :date="topic.created" />
+        &nbsp;
+        <like :entity="topic" @liked="addLike({ id: topic.id })" @unliked="deleteLike({ id: topic.id })" />
       </div>
       <router-link :to="{name: 'forum', params: {id: topic.forum.id}}">
         <icon :font="IconType.ArrowLeft" />
@@ -26,9 +27,10 @@ import { Topic } from '@/api/models/forum';
 import IconType from '@/components/iconType';
 import TopicComments from './TopicComments.vue';
 import CreateCommentForm from './CreateCommentForm.vue';
+import Like from '@/components/shared/Like.vue';
 
 @Component({
-  components: { CreateCommentForm, TopicComments },
+  components: { CreateCommentForm, TopicComments, Like },
 })
 export default class TopicPage extends Vue {
   private IconType: typeof IconType = IconType;
@@ -44,6 +46,12 @@ export default class TopicPage extends Vue {
 
   @Getter('forum/selectedTopic')
   private selectedTopic!: string | null;
+
+  @Action('forum/deleteTopicLike')
+  private deleteLike: any;
+
+  @Action('forum/addTopicLike')
+  private addLike: any;
 
   private mounted(): void {
     this.fetchData();
