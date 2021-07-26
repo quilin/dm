@@ -37,6 +37,11 @@ namespace DM.Services.Notifications.Consumer.Implementation
                     .SelectManyAsync(async g => await g.Generate(message.EntityId)))
                 .ToArray();
 
+            if (!notifications.Any())
+            {
+                return ProcessResult.Success;
+            }
+
             await repository.Create(notifications.Select(n => n.notification));
             await publisher.Publish(
                 notifications.Select(n => (n.userNotification, string.Empty)),
