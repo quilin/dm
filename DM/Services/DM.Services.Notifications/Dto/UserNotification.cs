@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Services.Notifications.Dto
 {
@@ -11,6 +12,11 @@ namespace DM.Services.Notifications.Dto
         /// Notification identifier
         /// </summary>
         public Guid NotificationId { get; set; }
+
+        /// <summary>
+        /// Event type
+        /// </summary>
+        public EventType EventType { get; set; }
 
         /// <summary>
         /// Creation moment

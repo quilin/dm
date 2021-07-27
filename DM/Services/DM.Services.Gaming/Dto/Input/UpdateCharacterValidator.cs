@@ -36,12 +36,12 @@ namespace DM.Services.Gaming.Dto.Input
                 RuleForEach(c => c.Attributes)
                     .MustAsync(async (c, attribute, context, _) =>
                     {
-                        if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
-                            !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
+                        if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
+                            schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                         {
                             var schema = await validationRepository.GetCharacterSchema(c.CharacterId);
                             specifications = schema.Specifications.ToDictionary(s => s.Id);
-                            context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
+                            context.RootContextData[SchemaCacheKey] = specifications;
                         }
 
                         if (!specifications.TryGetValue(attribute.Id, out var specification))

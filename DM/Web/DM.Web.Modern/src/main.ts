@@ -18,6 +18,7 @@ import TextArea from '@/components/inputs/TextArea.vue';
 import ActionButton from '@/components/inputs/ActionButton.vue';
 import Dropdown from '@/components/inputs/Dropdown.vue';
 import SuggestInput from '@/components/inputs/SuggestInput.vue';
+import Upload from '@/components/inputs/Upload.vue';
 
 import Rating from '@/components/community/Rating.vue';
 import Online from '@/components/community/Online.vue';
@@ -46,6 +47,7 @@ Vue.component('textArea', TextArea);
 Vue.component('actionButton', ActionButton);
 Vue.component('dropdown', Dropdown);
 Vue.component('suggestInput', SuggestInput);
+Vue.component('upload', Upload);
 
 Vue.component('rating', Rating);
 Vue.component('online', Online);

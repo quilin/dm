@@ -18,6 +18,11 @@ namespace DM.Web.API.Dto.Users
         public string Skype { get; set; }
 
         /// <summary>
+        /// URL of profile picture original
+        /// </summary>
+        public string OriginalPictureUrl { get; set; }
+
+        /// <summary>
         /// User-defined extended information
         /// </summary>
         public InfoBbText Info { get; set; }

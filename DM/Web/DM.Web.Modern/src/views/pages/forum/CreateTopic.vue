@@ -5,22 +5,21 @@
       Создать тему
     </button>
 
-    <lightbox name="create-topic">
-      <template slot="title">Создать тему</template>
+    <confirm-lightbox
+        name="create-topic"
+        title="Создать тему"
+        accept-text="Создать"
+        :accept-disabled="formEmpty"
+        @accepted="createTopic"
+        @canceled="$modal.hide('create-topic')"
+    >
       <div class="form">
         <label class="field-label create-topic__label">Название</label>
         <input type="text" v-model="title" />
         <label class="field-label create-topic__label create-topic__description">Описание</label>
         <text-area v-model="description" />
       </div>
-      <template slot="controls">
-        <input type="button"
-               @click="createTopic"
-               :disabled="formEmpty"
-               value="Создать" />
-        <a @click="$modal.hide('create-topic')">Отменить</a>
-      </template>
-    </lightbox>
+    </confirm-lightbox>
   </div>
 </template>
 
@@ -28,8 +27,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import IconType from '@/components/iconType';
+import ConfirmLightbox from '@/components/ConfirmLightbox.vue';
 
-@Component({})
+@Component({
+  components: { ConfirmLightbox },
+})
 export default class CreateTopicComponent extends Vue {
   private IconType: typeof IconType = IconType;
 
@@ -37,7 +39,7 @@ export default class CreateTopicComponent extends Vue {
   private description = '';
 
   private get formEmpty() {
-    return this.title === '' && this.description === '';
+    return this.title === '' || this.description === '';
   }
 
   @Getter('forum/selectedForum')

@@ -21,12 +21,17 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
 
         /// <inheritdoc />
         public async Task<IEnumerable<(Notification notification, RealtimeNotification userNotification)>>
-            Generate(Guid entityId) =>
-            (await GenerateNotifications(entityId)).Select(n => (n, new RealtimeNotification
+            Generate(Guid entityId)
+        {
+            var notifications = await GenerateNotifications(entityId);
+            return notifications.Select(n => (n, new RealtimeNotification
             {
+                NotificationId = n.NotificationId,
                 RecipientIds = n.UsersInterested,
-                Metadata = n.Metadata
+                Metadata = n.Metadata,
+                EventType = EventType,
             }));
+        }
 
         /// <summary>
         /// Generate DAL models of notifications to be stored

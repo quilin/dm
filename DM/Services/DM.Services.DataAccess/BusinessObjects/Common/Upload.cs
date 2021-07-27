@@ -37,13 +37,20 @@ namespace DM.Services.DataAccess.BusinessObjects.Common
         public Guid UserId { get; set; }
 
         /// <summary>
+        /// Flag of file source: original or modified
+        /// </summary>
+        public bool Original { get; set; }
+
+        /// <summary>
         /// Path to download or view the file
         /// </summary>
+        [MaxLength(200)]
         public string FilePath { get; set; }
 
         /// <summary>
         /// Display name for the file
         /// </summary>
+        [MaxLength(100)]
         public string FileName { get; set; }
 
         /// <inheritdoc />

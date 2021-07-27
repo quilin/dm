@@ -80,11 +80,14 @@ namespace DM.Services.Notifications.Consumer
                     EventType.NewForumComment,
                     EventType.ChangedForumComment,
                     EventType.DeletedForumComment,
+                    EventType.LikedForumComment,
                     EventType.NewForumTopic,
                     EventType.ChangedForumTopic,
                     EventType.DeletedForumTopic,
+                    EventType.NewCharacter,
+                    EventType.LikedTopic
                 }.ToRoutingKeys(),
-                QueueName = "dm.search-engine"
+                QueueName = "dm.notifications"
             };
             consumer.Consume(configuration);
 

@@ -25,14 +25,14 @@ namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
                         return false;
                     }
 
-                    context.ParentContext.RootContextData[FoundUserKey] = user;
+                    context.RootContextData[FoundUserKey] = user;
                     return true;
                 }).WithMessage(ValidationError.Invalid);
 
             RuleFor(u => u.Password)
                 .NotEmpty().WithMessage(ValidationError.Empty)
                 .Must((model, password, context) =>
-                    context.ParentContext.RootContextData.TryGetValue(FoundUserKey, out var userWrapper) &&
+                    context.RootContextData.TryGetValue(FoundUserKey, out var userWrapper) &&
                     userWrapper is AuthenticatedUser user &&
                     securityManager.ComparePasswords(password, user.Salt, user.PasswordHash))
                 .WithMessage(ValidationError.Invalid);

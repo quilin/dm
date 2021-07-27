@@ -1,8 +1,9 @@
 <template>
   <lightbox :name="name">
     <template slot="title">{{title}}</template>
+    <slot />
     <template slot="controls">
-      <button @click="accept" class="confirm-lightbox__accept">{{acceptText}}</button>
+      <button @click="accept" :disabled="acceptDisabled" class="confirm-lightbox__accept">{{acceptText}}</button>
       <a @click="cancel">{{cancelText}}</a>
     </template>
   </lightbox>
@@ -21,6 +22,9 @@ export default class ConfirmLightbox extends Vue {
 
   @Prop()
   private acceptText!: string;
+
+  @Prop()
+  private acceptDisabled!: boolean;
 
   @Prop({ default: 'Отменить' })
   private cancelText!: string;

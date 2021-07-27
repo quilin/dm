@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using Newtonsoft.Json;
 
 namespace DM.Services.Common.Authorization
 {
@@ -32,7 +32,7 @@ namespace DM.Services.Common.Authorization
                 return result.ToString();
             }
 
-            result.Append($" with {JsonConvert.SerializeObject(target)}");
+            result.Append($" with {JsonSerializer.Serialize(target)}");
             return result.ToString();
         }
     }

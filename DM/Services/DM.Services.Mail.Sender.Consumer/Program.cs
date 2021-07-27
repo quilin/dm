@@ -24,6 +24,7 @@ namespace DM.Services.Mail.Sender.Consumer
                 {
                     webBuilder
                         .UseKestrel(options => options.AllowSynchronousIO = true)
+                        .UseUrls("http://localhost:5004")
                         .UseSerilog()
                         .UseStartup<Startup>();
                 });

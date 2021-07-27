@@ -24,6 +24,7 @@ namespace DM.Services.Search.Consumer
                 {
                     webBuilder
                         .UseKestrel(options => options.AllowSynchronousIO = true)
+                        .UseUrls("http://localhost:5002")
                         .UseSerilog()
                         .UseStartup<Startup>();
                 });

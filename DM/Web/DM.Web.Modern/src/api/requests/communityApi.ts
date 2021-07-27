@@ -30,6 +30,10 @@ export default new class CommunityApi {
   public async updateUser(login: string, user: User): Promise<ApiResult<Envelope<User>>> {
     return await Api.patch<Envelope<User>>(`users/${login}/details`, user);
   }
+  public async uploadUserPicture(login: string, files: FormData, progressCallback: (event: ProgressEvent) => void): Promise<Envelope<User>> {
+    const { data } = await Api.postFile<Envelope<User>>(`users/${login}/uploads`, files, progressCallback);
+    return data!;
+  }
 
   public async getReviews(q: PagingQuery, onlyApproved: boolean): Promise<ListEnvelope<Review>> {
     const { data } = await Api.get<ListEnvelope<Review>>('reviews', { ...q, onlyApproved });

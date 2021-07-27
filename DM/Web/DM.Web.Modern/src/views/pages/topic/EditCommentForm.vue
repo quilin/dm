@@ -1,7 +1,11 @@
 <template>
-  <form class="edit-comment-form" @submit.prevent="saveComment">
-    <text-area v-model="bbCommentText" :disabled="loading" />
-    <button class="edit-comment-form__save" type="submit" :disabled="loading">Сохранить</button>
+  <form @submit.prevent="saveComment">
+    <text-area v-model="text" />
+    <action-button class="submit" type="submit" :loading="loading" :disabled="!text">
+      Сохранить
+    </action-button>
+
+    <a @click="cancel" class="cancel">Отменить</a>
   </form>
 </template>
 
@@ -13,7 +17,7 @@ import forumApi from '@/api/requests/forumApi';
 
 @Component({})
 export default class EditCommentForm extends Vue {
-  private bbCommentText = '';
+  private text = '';
 
   private loading = false;
 
@@ -32,7 +36,7 @@ export default class EditCommentForm extends Vue {
 
     const commentForUpdate = await forumApi.getCommentForUpdate(this.comment.id);
 
-    this.bbCommentText = commentForUpdate.text;
+    this.text = commentForUpdate.text;
 
     this.loading = false;
   }
@@ -43,7 +47,7 @@ export default class EditCommentForm extends Vue {
     await this.updateComment({
       id: this.comment.id,
       comment: {
-        text: this.bbCommentText,
+        text: this.text,
       },
     })
 
@@ -51,11 +55,18 @@ export default class EditCommentForm extends Vue {
 
     this.$emit('edited');
   }
+
+  private cancel() {
+    this.$emit('canceled');
+  }
 }
 </script>
 
 <style scoped lang="stylus">
-.edit-comment-form
-  &__save
+.submit
     margin-top $minor
+    margin-right $medium
+
+.cancel
+    font-size 14px
 </style>

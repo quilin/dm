@@ -47,7 +47,6 @@ const actions: ActionTree<CommunityState, RootState> = {
     const users = await communityApi.getUsers(query);
     commit('updateUsers', users);
   },
-
   async selectUser({ commit }, { login, router }): Promise<void> {
     const { data, error } = await communityApi.getUser(login);
     if (error) {
@@ -63,10 +62,18 @@ const actions: ActionTree<CommunityState, RootState> = {
     const user = state.selectedUser!.edit;
     await updateUserPart(commit, state, router, { info: user.info } as User);
   },
-
   async updateSettings({ commit, state }, { router }): Promise<void> {
     const user = state.selectedUser!.edit;
     await updateUserPart(commit, state, router, { settings: user.settings } as User);
+  },
+  async uploadProfilePicture({ commit, state, rootState }, { file, progressCallback }): Promise<void> {
+    const user = state.selectedUser!.edit;
+    const { resource } = await communityApi.uploadUserPicture(user.login, file, progressCallback);
+    commit('updateSelectedUser', { ...state.selectedUser, view: resource });
+
+    if (rootState.user!.login === user.login) {
+      commit('updateUser', resource, { root: true });
+    }
   },
 
   async fetchReviews({ commit, rootState }, { n }): Promise<void> {

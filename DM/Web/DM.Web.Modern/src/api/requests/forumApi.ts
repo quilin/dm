@@ -62,4 +62,19 @@ export default new class ForumApi {
 
     return data!.resource;
   }
+
+  public async postCommentLike(id: string): Promise<ApiResult<Envelope<User>>> {
+    return await Api.post(`forum/comments/${id}/likes`);
+  }
+  public async deleteCommentLike(id: string): Promise<ApiResult<void>> {
+    return await Api.delete(`forum/comments/${id}/likes`);
+  }
+
+  public async postTopicLike(id: string): Promise<ApiResult<Envelope<User>>> {
+    return await Api.post(`topics/${id}/likes`);
+  }
+  public async deleteTopicLike(id: string): Promise<ApiResult<void>> {
+    return await Api.delete(`topics/${id}/likes`);
+  }
+
 }();

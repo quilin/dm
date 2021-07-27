@@ -1,6 +1,11 @@
 <template>
-  <lightbox name="login">
-    <template slot="title">Вход</template>
+  <confirm-lightbox
+      name="login"
+      title="Вход"
+      accept-text="Войти"
+      @accepted="signIn"
+      @canceled="$modal.hide('login')"
+  >
     <div class="form">
       <div class="form-field">
         <label class="form-field-label">Логин</label>
@@ -15,19 +20,18 @@
         Запомнить меня
       </label>
     </div>
-    <template slot="controls">
-      <action-button @click="signIn">Войти</action-button>
-      <a href="javascript:void(0)" @click="$modal.hide('login')">Отменить</a>
-    </template>
-  </lightbox>
+  </confirm-lightbox>
 </template>
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator';
 import Component from 'vue-class-component';
 import { Action } from 'vuex-class';
+import ConfirmLightbox from '@/components/ConfirmLightbox.vue';
 
-@Component({})
+@Component({
+  components: { ConfirmLightbox },
+})
 export default class Login extends Vue {
   private login = '';
   private password = '';

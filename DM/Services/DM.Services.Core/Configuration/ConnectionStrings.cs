@@ -28,37 +28,11 @@ namespace DM.Services.Core.Configuration
         /// <summary>
         /// Message queue connection string
         /// </summary>
-        public MessageQueueConnectionConfiguration MessageQueue { get; set; }
+        public string MessageQueue { get; set; }
 
         /// <summary>
         /// Logging storage connection string
         /// </summary>
         public string Logs { get; set; }
-    }
-
-    /// <summary>
-    /// Connection configuration for Message Queue endpoint
-    /// </summary>
-    public class MessageQueueConnectionConfiguration
-    {
-        /// <summary>
-        /// Endpoint url
-        /// </summary>
-        public string Endpoint { get; set; }
-
-        /// <summary>
-        /// User name
-        /// </summary>
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// Password
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
-        /// Virtual host name
-        /// </summary>
-        public string VirtualHost { get; set; }
     }
 }

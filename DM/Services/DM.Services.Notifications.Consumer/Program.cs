@@ -24,6 +24,7 @@ namespace DM.Services.Notifications.Consumer
                 {
                     webBuilder
                         .UseKestrel(options => options.AllowSynchronousIO = true)
+                        .UseUrls("http://localhost:5003")
                         .UseSerilog()
                         .UseStartup<Startup>();
                 });

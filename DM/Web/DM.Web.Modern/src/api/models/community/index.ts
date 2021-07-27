@@ -13,7 +13,8 @@ export interface Rating {
 export interface User {
   login: string;
   roles: UserRole[];
-  profilePictureUrl: string;
+  mediumPictureUrl: string;
+  smallPictureUrl: string;
   rating: Rating;
   online: string;
   status: string;
@@ -21,6 +22,7 @@ export interface User {
   location: string;
   skype: string;
 
+  originalPictureUrl: string;
   info: string;
   registration: string;
   settings?: UserSettings;

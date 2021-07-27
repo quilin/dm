@@ -20,6 +20,7 @@
       </div>
       <portal-target name="lightbox" />
       <portal-target name="popup" class="popup-container" />
+      <portal-target name="notifications" class="notifications-container" />
     </div>
   </div>
 </template>
@@ -143,4 +144,22 @@ a
   left 0
   z-index 1000
   theme(color, $text)
+
+.notifications-container
+  position absolute
+  bottom 0
+  right $medium
+  z-index 1000
+
+.quote
+  padding $small
+  theme(background-color, $quoteBackground)
+  themeExtend(border-left, $minor solid, $quoteOutline)
+
+.info-head
+  display inline-block
+  margin $medium 0 $small
+  font-size $titleFontSize
+  font-weight normal
+  theme(color, $highlightText)
 </style>
