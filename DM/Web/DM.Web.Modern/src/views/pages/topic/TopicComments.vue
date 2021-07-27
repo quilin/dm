@@ -48,12 +48,10 @@ export default class TopicComments extends Vue {
   }
 
   private async fetchData() {
-    const id = this.$route.params.id;
+    const { id, n } = this.$route.params;
 
     this.loading = true;
-
-    await this.fetchComments({ id, n: this.$route.params.n });
-
+    await this.fetchComments({ id, n });
     this.loading = false;
   }
 }

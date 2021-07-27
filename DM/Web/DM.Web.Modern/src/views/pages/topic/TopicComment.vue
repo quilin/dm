@@ -13,7 +13,7 @@
           &nbsp;
           <like :entity="comment" @liked="addLike({ id: comment.id })" @unliked="deleteLike({ id: comment.id })" />
         </div>
-        <div class="topic-comment__controls" v-if="commentEditable(comment.author)">
+        <div class="topic-comment__controls" v-if="canEdit">
           <a class="topic-comment__control" @click="showEditForm">
             <icon :font="IconType.Edit" />
             Редактировать
@@ -58,9 +58,6 @@ export default class TopicComment extends Vue {
   @Prop()
   private comment!: Comment;
 
-  @Prop()
-  private editable!: boolean;
-
   @Action('forum/deleteComment')
   private deleteCommentAction: any;
 
@@ -76,8 +73,8 @@ export default class TopicComment extends Vue {
   @Getter('user')
   private user!: User | null;
 
-  private commentEditable(author: User) {
-    return author.login === this.user?.login ||
+  private get canEdit() {
+    return this.comment.author.login === this.user?.login ||
         this.moderators.some(moderator => moderator.login === this.user?.login) ||
         userIsHighAuthority(this.user);
   }

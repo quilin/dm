@@ -57,7 +57,7 @@ const actions: ActionTree<ForumState, RootState> = {
     }
   },
   async fetchComments({ commit }, { id, n }): Promise<void> {
-    const { data, error } = await forumApi.getComments(id, { number: n, size: null, skip: null });
+    const { data, error } = await forumApi.getComments(id, { number: n } as PagingQuery);
 
     if (!error) {
       commit('updateComments', data!);
