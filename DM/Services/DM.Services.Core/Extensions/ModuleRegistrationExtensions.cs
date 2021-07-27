@@ -50,6 +50,7 @@ namespace DM.Services.Core.Extensions
             builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
                 .Where(t => t.IsClass)
                 .Where(t => t.GetConstructors().Any(c => c.IsPublic))
+                .Where(t => t.IsSubclassOf(typeof(Exception)))
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
