@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AutoMapper;
 using DM.Services.Common;
 using DM.Services.Community;
 using DM.Services.Core.Configuration;

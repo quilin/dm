@@ -34,14 +34,14 @@ namespace DM.Services.Gaming.Dto.Input
             WhenAsync(validationRepository.GameRequiresAttributes, () =>
             {
                 RuleFor(c => c.Attributes)
-                    .MustAsync(async (c, attributes, context, _) =>
+                    .MustAsync(async (c, _, context, _) =>
                     {
-                        if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
-                            !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
+                        if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
+                            schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                         {
                             var schema = await validationRepository.GetGameSchema(c.GameId);
                             specifications = schema.Specifications.ToDictionary(s => s.Id);
-                            context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
+                            context.RootContextData[SchemaCacheKey] = specifications;
                         }
 
                         var attributeIndex = c.Attributes.ToDictionary(a => a.Id);
@@ -58,12 +58,12 @@ namespace DM.Services.Gaming.Dto.Input
                 RuleForEach(c => c.Attributes)
                     .MustAsync(async (c, attribute, context, _) =>
                     {
-                        if (!context.ParentContext.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
-                            !(schemaWrapper is Dictionary<Guid, AttributeSpecification> specifications))
+                        if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
+                            schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                         {
                             var schema = await validationRepository.GetGameSchema(c.GameId);
                             specifications = schema.Specifications.ToDictionary(s => s.Id);
-                            context.ParentContext.RootContextData[SchemaCacheKey] = specifications;
+                            context.RootContextData[SchemaCacheKey] = specifications;
                         }
 
                         if (!specifications.TryGetValue(attribute.Id, out var specification))
