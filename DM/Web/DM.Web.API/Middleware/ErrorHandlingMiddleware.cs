@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -12,8 +13,6 @@ using DM.Web.API.Dto.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace DM.Web.API.Middleware
 {
@@ -24,9 +23,9 @@ namespace DM.Web.API.Middleware
     {
         private readonly RequestDelegate next;
 
-        private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        private readonly JsonSerializerOptions serializerSettings = new()
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
         /// <inheritdoc />
@@ -92,7 +91,7 @@ namespace DM.Web.API.Middleware
 
                 httpContext.Response.StatusCode = statusCode;
                 httpContext.Response.ContentType = MediaTypeNames.Application.Json;
-                var errorData = JsonConvert.SerializeObject(new {error}, Formatting.None, serializerSettings);
+                var errorData = JsonSerializer.Serialize(new {error}, serializerSettings);
                 await httpContext.Response.WriteAsync(errorData, Encoding.UTF8);
             }
         }

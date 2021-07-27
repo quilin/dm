@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.MongoIntegration;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -8,7 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Notifications
     /// <summary>
     /// DAL model for real-time notifications
     /// </summary>
-    [MongoCollectionName("UnreadCounters")]
+    [MongoCollectionName("RealtimeNotifications")]
     public class Notification
     {
         /// <summary>
@@ -36,5 +37,10 @@ namespace DM.Services.DataAccess.BusinessObjects.Notifications
         /// Notification metadata
         /// </summary>
         public object Metadata { get; set; }
+
+        /// <summary>
+        /// Event type
+        /// </summary>
+        public EventType EventType { get; set; }
     }
 }

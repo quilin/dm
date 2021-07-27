@@ -42,8 +42,9 @@
         Новая игра
       </router-link>
     </div>
-    <div class="controls" @click="toggleTheme">
-      Tumbler here!!!
+    <div class="controls">
+      <notifications v-if="user" />
+      <span @click="toggleTheme">Switch theme</span>
     </div>
 
     <login v-if="!user" />
@@ -56,9 +57,11 @@ import { Action, Getter } from 'vuex-class';
 import { User } from '@/api/models/community';
 import IconType from '@/components/iconType';
 import Login from './Login.vue';
+import Notifications from '@/components/notifications/Notifications.vue';
 
 @Component({
   components: {
+    Notifications,
     Login,
   },
 })

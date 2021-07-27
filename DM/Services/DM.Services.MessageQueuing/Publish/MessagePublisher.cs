@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Net.Mime;
-using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using DM.Services.Core.Implementation.CorrelationToken;
 using DM.Services.MessageQueuing.Configuration;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 
 namespace DM.Services.MessageQueuing.Publish
@@ -14,6 +15,11 @@ namespace DM.Services.MessageQueuing.Publish
     {
         private readonly IConnectionFactory connectionFactory;
         private readonly ICorrelationTokenProvider correlationTokenProvider;
+
+        private readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+        };
 
         /// <inheritdoc />
         public MessagePublisher(
@@ -38,7 +44,7 @@ namespace DM.Services.MessageQueuing.Publish
             basicProperties.ContentType = MediaTypeNames.Application.Json;
             basicProperties.CorrelationId = correlationTokenProvider.Current.ToString();
 
-            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+            var body = JsonSerializer.SerializeToUtf8Bytes(message, serializerOptions);
             channel.BasicPublish(configuration.ExchangeName, routingKey, basicProperties, body);
             return Task.CompletedTask;
         }
@@ -55,7 +61,7 @@ namespace DM.Services.MessageQueuing.Publish
             var basicPublishBatch = channel.CreateBasicPublishBatch();
             foreach (var (message, routingKey) in messages)
             {
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                var body = JsonSerializer.SerializeToUtf8Bytes(message, serializerOptions);
                 var basicProperties = channel.CreateBasicProperties();
                 basicProperties.Persistent = true;
                 basicProperties.ContentType = MediaTypeNames.Application.Json;
