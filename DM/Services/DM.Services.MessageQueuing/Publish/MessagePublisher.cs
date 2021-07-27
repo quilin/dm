@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text.Encodings.Web;
@@ -61,7 +62,7 @@ namespace DM.Services.MessageQueuing.Publish
             var basicPublishBatch = channel.CreateBasicPublishBatch();
             foreach (var (message, routingKey) in messages)
             {
-                var body = JsonSerializer.SerializeToUtf8Bytes(message, serializerOptions);
+                var body = new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(message, serializerOptions));
                 var basicProperties = channel.CreateBasicProperties();
                 basicProperties.Persistent = true;
                 basicProperties.ContentType = MediaTypeNames.Application.Json;
