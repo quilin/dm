@@ -8,19 +8,19 @@ namespace DM.Services.Authentication.Dto
         }
 
         /// <inheritdoc />
-        public AuthenticatedUser User { get; private set; }
+        public AuthenticatedUser User { get; private init; }
 
         /// <inheritdoc />
-        public Session Session { get; private set; }
+        public Session Session { get; private init; }
 
         /// <inheritdoc />
-        public UserSettings Settings { get; private set; }
+        public UserSettings Settings { get; private init; }
 
         /// <inheritdoc />
-        public AuthenticationError Error { get; private set; }
+        public AuthenticationError Error { get; private init; }
 
         /// <inheritdoc />
-        public string AuthenticationToken { get; private set; }
+        public string AuthenticationToken { get; private init; }
 
         /// <summary>
         /// Creates identity for an unauthenticated user
