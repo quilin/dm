@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
@@ -48,6 +49,7 @@ namespace DM.Services.Core.Extensions
         {
             builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
                 .Where(t => t.IsClass)
+                .Where(t => t.GetConstructors().Any(c => c.IsPublic))
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
