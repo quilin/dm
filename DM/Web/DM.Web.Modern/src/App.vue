@@ -20,6 +20,7 @@
       </div>
       <portal-target name="lightbox" />
       <portal-target name="popup" class="popup-container" />
+      <portal-target name="notifications" class="notifications-container" />
     </div>
   </div>
 </template>
@@ -62,13 +63,17 @@ html, body, #app
 body
   font-family PT Sans
   font-size $fontSize
-  line-height 1.2
+  line-height 1.3
   word-wrap break-word
 
 .v--modal
   theme(background-color, $background)
 .v--modal-overlay
   theme(background-color, $overlayBackground)
+  overflow auto
+.v--modal-box
+  margin-top $big
+  margin-bottom $big
 
 .main
   height 100%
@@ -112,6 +117,7 @@ body
 
 .content
   flex-grow 1
+  min-width 0 // fix inner overflow elements https://www.w3.org/TR/css-flexbox-1/#flex-common
   margin-left 0
   margin-right $big
 
@@ -138,4 +144,22 @@ a
   left 0
   z-index 1000
   theme(color, $text)
+
+.notifications-container
+  position absolute
+  bottom 0
+  right $medium
+  z-index 1000
+
+.quote
+  padding $small
+  theme(background-color, $quoteBackground)
+  themeExtend(border-left, $minor solid, $quoteOutline)
+
+.info-head
+  display inline-block
+  margin $medium 0 $small
+  font-size $titleFontSize
+  font-weight normal
+  theme(color, $highlightText)
 </style>

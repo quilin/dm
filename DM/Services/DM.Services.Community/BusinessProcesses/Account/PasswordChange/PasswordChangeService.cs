@@ -49,7 +49,8 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
                 .Field(u => u.PasswordHash, hash)
                 .Field(u => u.Salt, salt);
             var tokenUpdate = passwordChange.Token.HasValue
-                ? updateBuilderFactory.Create<Token>(passwordChange.Token.Value).Field(t => t.IsRemoved, true)
+                ? updateBuilderFactory.Create<Token>(passwordChange.Token.Value)
+                    .Field(t => t.IsRemoved, true)
                 : null;
 
             await repository.UpdatePassword(userUpdate, tokenUpdate);

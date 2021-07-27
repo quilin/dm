@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Dto.Input;
 using Policy = DM.Services.Core.Dto.Enums.CharacterAccessPolicy;
 
@@ -12,7 +11,6 @@ namespace DM.Web.API.Dto.Games
         public CharacterProfile()
         {
             CreateMap<DM.Services.Gaming.Dto.Output.Character, Character>()
-                .ForMember(c => c.Id, s => s.MapFrom(c => c.Id.EncodeToReadable(c.Name)))
                 .ForMember(c => c.Privacy, s => s.MapFrom<AccessPolicyConverter>());
 
             CreateMap<DM.Services.Gaming.Dto.Output.CharacterAttribute, CharacterAttribute>()
@@ -60,15 +58,12 @@ namespace DM.Web.API.Dto.Games
 
             public CharacterPrivacySettings Resolve(DM.Services.Gaming.Dto.Output.Character source,
                 Character destination, CharacterPrivacySettings destMember,
-                ResolutionContext context)
+                ResolutionContext context) => new CharacterPrivacySettings
             {
-                return new CharacterPrivacySettings
-                {
-                    IsNpc = source.IsNpc,
-                    EditByMaster = (source.AccessPolicy & Policy.EditAllowed) != Policy.NoAccess,
-                    EditPostByMaster = (source.AccessPolicy & Policy.PostEditAllowed) != Policy.NoAccess
-                };
-            }
+                IsNpc = source.IsNpc,
+                EditByMaster = (source.AccessPolicy & Policy.EditAllowed) != Policy.NoAccess,
+                EditPostByMaster = (source.AccessPolicy & Policy.PostEditAllowed) != Policy.NoAccess
+            };
         }
     }
 }

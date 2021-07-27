@@ -23,7 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             this.dbContext = dbContext;
             this.mapper = mapper;
         }
-        
+
         /// <inheritdoc />
         public async Task<GameExtended> Update(IUpdateBuilder<Game> updateGame)
         {

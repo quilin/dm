@@ -37,11 +37,18 @@ namespace DM.Services.Notifications.Consumer.Implementation
                     .SelectManyAsync(async g => await g.Generate(message.EntityId)))
                 .ToArray();
 
-            await repository.Create(notifications.Select(n => n.notification));
-            await publisher.Publish(notifications.Select(n => n.userNotification), new MessagePublishConfiguration
+            if (!notifications.Any())
             {
-                ExchangeName = "dm.notifications.sent"
-            }, string.Empty);
+                return ProcessResult.Success;
+            }
+
+            await repository.Create(notifications.Select(n => n.notification));
+            await publisher.Publish(
+                notifications.Select(n => (n.userNotification, string.Empty)),
+                new MessagePublishConfiguration
+                {
+                    ExchangeName = "dm.notifications.sent"
+                });
 
             return ProcessResult.Success;
         }

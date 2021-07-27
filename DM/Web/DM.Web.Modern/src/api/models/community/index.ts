@@ -13,7 +13,8 @@ export interface Rating {
 export interface User {
   login: string;
   roles: UserRole[];
-  profilePictureUrl: string;
+  mediumPictureUrl: string;
+  smallPictureUrl: string;
   rating: Rating;
   online: string;
   status: string;
@@ -21,6 +22,7 @@ export interface User {
   location: string;
   skype: string;
 
+  originalPictureUrl: string;
   info: string;
   registration: string;
   settings?: UserSettings;
@@ -58,7 +60,7 @@ export interface UserSettings {
 }
 
 export interface Poll {
-  id: string;
+  id?: string;
   ends: string;
   title: string;
   options: PollOption[];

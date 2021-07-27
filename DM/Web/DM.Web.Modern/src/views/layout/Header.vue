@@ -42,8 +42,9 @@
         Новая игра
       </router-link>
     </div>
-    <div class="controls" @click="toggleTheme">
-      Tumbler here!!!
+    <div class="controls">
+      <notifications v-if="user" />
+      <span @click="toggleTheme">Switch theme</span>
     </div>
 
     <login v-if="!user" />
@@ -56,9 +57,11 @@ import { Action, Getter } from 'vuex-class';
 import { User } from '@/api/models/community';
 import IconType from '@/components/iconType';
 import Login from './Login.vue';
+import Notifications from '@/components/notifications/Notifications.vue';
 
 @Component({
   components: {
+    Notifications,
     Login,
   },
 })
@@ -84,7 +87,7 @@ export default class DmHeader extends Vue {
   display flex
   box-sizing border-box
 
-  padding $gridStep * 3 0
+  padding $small 0
   height 90px /// image size
 
   background-position left top
@@ -132,6 +135,8 @@ export default class DmHeader extends Vue {
     border 1px solid
     theme(background, $panelBackground)
     theme(border-color, $panelBackground)
+    &.router-link-exact-active
+      font-weight normal
     &:hover
       theme(border-color, $border)
 

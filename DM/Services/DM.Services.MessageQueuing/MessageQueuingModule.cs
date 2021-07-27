@@ -20,13 +20,10 @@ namespace DM.Services.MessageQueuing
 
             builder.Register<IConnectionFactory>(x =>
                 {
-                    var mqConfiguration = x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue;
+                    var mqConnectionString = x.Resolve<IOptions<ConnectionStrings>>().Value.MessageQueue;
                     return new ConnectionFactory
                     {
-                        Endpoint = new AmqpTcpEndpoint(new Uri(mqConfiguration.Endpoint)),
-                        UserName = mqConfiguration.UserName,
-                        Password = mqConfiguration.Password,
-                        VirtualHost = mqConfiguration.VirtualHost
+                        Endpoint = new AmqpTcpEndpoint(new Uri(mqConnectionString)),
                     };
                 })
                 .AsImplementedInterfaces()

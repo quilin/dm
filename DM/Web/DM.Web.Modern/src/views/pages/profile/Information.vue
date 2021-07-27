@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <loader  v-if="!user" />
+    <loader v-if="!user" :big="true" />
 
     <template v-else>
       <a v-if="isOwnUser && !editMode" @click="editMode = true" class="edit-link"><icon :font="IconType.Edit" /></a>
@@ -10,7 +10,7 @@
       <form v-else @submit.prevent="save">
         <text-area v-model="editableUser.info" />
         <div class="edit-controls">
-          <action-button type="submit" label="Сохранить" :loading="saving" :disabled="unchanged" />
+          <action-button type="submit" :loading="saving" :disabled="unchanged">Сохранить</action-button>
           <a @click="editMode = false" class="edit-cancel-link">Отмена</a>
         </div>
       </form>
@@ -30,8 +30,8 @@ import { User } from '@/api/models/community';
 export default class ProfileInformation extends Vue {
   private IconType: typeof IconType = IconType;
 
-  private editMode: boolean = false;
-  private saving: boolean = false;
+  private editMode = false;
+  private saving = false;
   private savedInfo: string | null = null;
 
   @Action('community/updateInformation')

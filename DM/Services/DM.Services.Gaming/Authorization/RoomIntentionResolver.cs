@@ -36,15 +36,15 @@ namespace DM.Services.Gaming.Authorization
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, RoomToUpdate target) => intention switch
         {
-            RoomIntention.CreatePendingPost => (target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
-                target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority)),
+            RoomIntention.CreatePendingPost => target.Claims.Any(c => c.Character?.Author.UserId == user.UserId) ||
+                                               target.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority),
             _ => false
         };
 
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, RoomIntention intention, PendingPost target) => intention switch
         {
-            RoomIntention.DeletePending => (target.AwaitingUser.UserId == user.UserId),
+            RoomIntention.DeletePending => target.AwaitingUser.UserId == user.UserId,
             _ => false
         };
     }

@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Core.Extensions;
 
 namespace DM.Web.API.Dto.Games.Attributes
 {
@@ -10,10 +9,13 @@ namespace DM.Web.API.Dto.Games.Attributes
         public AttributeSchemaProfile()
         {
             CreateMap<DM.Services.Gaming.Dto.Shared.AttributeSchema, AttributeSchema>()
-                .ForMember(s => s.Id, d => d.MapFrom(s => s.Id.EncodeToReadable(s.Title)));
+                .ReverseMap();
 
             CreateMap<DM.Services.Gaming.Dto.Shared.AttributeSpecification, AttributeSpecification>()
-                .ForMember(s => s.Id, d => d.MapFrom(s => s.Id.EncodeToReadable(s.Title)));
+                .ReverseMap();
+
+            CreateMap<DM.Services.Gaming.Dto.Shared.ListValue, AttributeValueSpecification>()
+                .ReverseMap();
         }
     }
 }

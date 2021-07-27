@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DM.Web.API.BbRendering;
+using DM.Services.Core.Dto.Enums;
 
 namespace DM.Web.API.Dto.Users
 {
@@ -17,12 +17,17 @@ namespace DM.Web.API.Dto.Users
         /// <summary>
         /// Roles
         /// </summary>
-        public IEnumerable<string> Roles { get; set; }
+        public IEnumerable<UserRole> Roles { get; set; }
 
         /// <summary>
-        /// Profile picture URL
+        /// Profile picture URL M-size
         /// </summary>
-        public string PictureUrl { get; set; }
+        public string MediumPictureUrl { get; set; }
+
+        /// <summary>
+        /// Profile picture URL S-size
+        /// </summary>
+        public string SmallPictureUrl { get; set; }
 
         /// <summary>
         /// User defined status
@@ -53,26 +58,6 @@ namespace DM.Web.API.Dto.Users
         /// User registration moment
         /// </summary>
         public DateTimeOffset? Registration { get; set; }
-
-        /// <summary>
-        /// User ICQ number
-        /// </summary>
-        public string Icq { get; set; }
-
-        /// <summary>
-        /// User Skype login
-        /// </summary>
-        public string Skype { get; set; }
-
-        /// <summary>
-        /// User-defined extended information
-        /// </summary>
-        public InfoBbText Info { get; set; }
-
-        /// <summary>
-        /// User settings
-        /// </summary>
-        public UserSettings Settings { get; set; }
     }
 
     /// <summary>

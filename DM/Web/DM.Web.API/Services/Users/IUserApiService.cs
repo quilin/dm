@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace DM.Web.API.Services.Users
 {
@@ -24,11 +25,26 @@ namespace DM.Web.API.Services.Users
         Task<Envelope<User>> GetUser(string login);
 
         /// <summary>
+        /// Get community user details
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        Task<Envelope<UserDetails>> GetUserDetails(string login);
+
+        /// <summary>
         /// Update user
         /// </summary>
         /// <param name="login">User login</param>
         /// <param name="user">User information</param>
         /// <returns></returns>
-        Task<Envelope<User>> UpdateUser(string login, User user);
+        Task<Envelope<UserDetails>> UpdateUser(string login, UserDetails user);
+
+        /// <summary>
+        /// Upload user profile picture
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <param name="files">Profile picture files</param>
+        /// <returns></returns>
+        Task<Envelope<UserDetails>> UploadProfilePicture(string login, IFormFile files);
     }
 }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DM.Services.Gaming.Dto.Shared;
 using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
@@ -12,6 +13,6 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
         /// Create new attribute schema
         /// </summary>
         /// <returns></returns>
-        Task<DbAttributeSchema> Create(DbAttributeSchema schema);
+        Task<AttributeSchema> Create(DbAttributeSchema schema);
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <button :disabled="loading || disabled" :class="{loading}" @click="click">
-    <span>{{label}}</span>
+    <span><slot /></span>
   </button>
 </template>
 
@@ -14,9 +14,6 @@ export default class ActionButton extends Vue {
 
   @Prop()
   private disabled?: boolean;
-
-  @Prop()
-  private label!: string;
 
   private click() {
     this.$emit('click');

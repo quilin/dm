@@ -3,13 +3,15 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
 } from 'axios';
+import qs from 'qs';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ApiResult } from '@/api/models/common';
 import { BbRenderMode } from './bbRenderMode';
 
-const tokenKey: string = 'x-dm-auth-token';
-const renderKey: string = 'x-dm-bb-render-mode';
+const tokenKey = 'x-dm-auth-token';
+const renderKey = 'x-dm-bb-render-mode';
 
-const defautlHeaders: { [key: string]: string } = {
+const defaultHeaders: { [key: string]: string } = {
   'Cache-Control': 'no-cache',
   'Content-Type': 'application/json',
   [renderKey]: 'html',
@@ -17,17 +19,21 @@ const defautlHeaders: { [key: string]: string } = {
 
 const storedToken = localStorage.getItem(tokenKey);
 if (storedToken) {
-  defautlHeaders[tokenKey] = storedToken!;
+  defaultHeaders[tokenKey] = storedToken!;
 }
 
+const apiHost = `${process.env.API_URL ?? 'http://localhost:5000'}`;
+
 const configuration: AxiosRequestConfig = {
-  baseURL: 'http://localhost:5000/v1',
-  headers: defautlHeaders,
+  baseURL: `${apiHost}/v1`,
+  headers: defaultHeaders,
   responseType: 'json',
+  paramsSerializer: params => qs.stringify(params),
 };
 
 class Api {
   private axios: AxiosInstance;
+  private authToken: string | null = null;
 
   constructor() {
     this.axios = axios.create(configuration);
@@ -40,8 +46,23 @@ class Api {
     return this.send(() => this.axios.get(url, { params, headers: {[renderKey]: bbRenderMode} }));
   }
 
-  public async post<T>(url: string, params: any): Promise<ApiResult<T>> {
+  public async post<T>(url: string, params?: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.post(url, params));
+  }
+
+  /*
+   Поскольку мы отслеживаем прогресс только отправки файла на сервер с клиента,
+   обработчик прогресса "зависает" на 99% до момента получения окончательного ответа от сервера.
+  */
+  public async postFile<T>(url: string, params?: any, progressCallback?: (event: ProgressEvent) => void): Promise<ApiResult<T>> {
+    const result = await this.send<T>(() => this.axios.post(url, params, {
+      onUploadProgress: progressCallback
+        ? (event: ProgressEvent) =>
+          progressCallback(event.loaded === event.total ? { loaded: 99, total: 100 } as ProgressEvent : event)
+        : undefined,
+    }));
+    progressCallback?.({ loaded: 1, total: 1 } as ProgressEvent);
+    return result;
   }
 
   public async put<T>(url: string, params?: any): Promise<ApiResult<T>> {
@@ -62,10 +83,8 @@ class Api {
       if (tokenKey in headers) {
         const token = headers[tokenKey];
         this.axios.defaults.headers.common[tokenKey] = token;
+        this.authToken = token;
         localStorage.setItem(tokenKey, token);
-      } else {
-        delete this.axios.defaults.headers.common[tokenKey];
-        localStorage.removeItem(tokenKey);
       }
       return {
         data: data as T,
@@ -74,9 +93,36 @@ class Api {
     } catch (err) {
       return {
         data: null,
-        error: {...err.response.data.error, code: err.response.status},
+        error: err.response ? {...err.response.data.error, code: err.response.status} : err,
       };
     }
+  }
+
+  public restoreAuthentication() {
+    const token = localStorage.getItem(tokenKey);
+    if (token === null) return;
+
+    this.axios.defaults.headers.common[tokenKey] = token;
+    localStorage.setItem(tokenKey, token);
+    this.authToken = token;
+  }
+
+  public logout() {
+    delete this.axios.defaults.headers.common[tokenKey];
+    localStorage.removeItem(tokenKey);
+    this.authToken = null;
+  }
+
+  public establishHubConnection(path: string): HubConnection {
+    const token = this.authToken;
+    return new HubConnectionBuilder()
+      .withUrl(`${apiHost}/${path}`, {
+        accessTokenFactory() {
+          return token!;
+        }
+      })
+      .withAutomaticReconnect()
+      .build();
   }
 }
 

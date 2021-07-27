@@ -48,6 +48,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading
                 .Find(activeUntil.HasValue
                     ? Filter.Gte(p => p.EndDate, activeUntil.Value.UtcDateTime)
                     : Filter.Empty)
+                .Sort(Sort.Descending(p => p.StartDate))
                 .Skip(pagingData.Skip)
                 .Limit(pagingData.Take)
                 .Project(PollProjection)

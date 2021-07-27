@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <router-link :to="{name: 'forum', params: {id: 'Новости проекта'}}" class="news-rest">
+      <router-link :to="{name: 'forum', params: { id: 'Новости проекта'} }" class="news-rest">
         К остальным новостям <icon :font="IconType.Forward" />
       </router-link>
     </template>

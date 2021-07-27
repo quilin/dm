@@ -29,15 +29,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import IconType from '@/components/iconType';
 
-
 @Component({})
 export default class CreateTopicComponent extends Vue {
   private IconType: typeof IconType = IconType;
 
-  private title: string = '';
-  private description: string = '';
+  private title = '';
+  private description = '';
 
-  private get formEmpty(): boolean {
+  private get formEmpty() {
     return this.title === '' && this.description === '';
   }
 

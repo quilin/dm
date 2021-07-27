@@ -13,7 +13,7 @@
       <div>Последнее сообщение</div>
     </div>
 
-    <loader v-if="loading" class="topics-loader" />
+    <loader v-if="loading" :big="true" />
     <template v-else-if="topics.length">
       <forum-topic v-for="topic in allTopics" :key="topic.id" :topic="topic" />
     </template>
@@ -32,8 +32,6 @@ import { Topic } from '@/api/models/forum';
 
 import ForumTopic from './ForumTopic.vue';
 
-const namespace: string = 'forum';
-
 @Component({
   components: {
     ForumTopic,
@@ -42,13 +40,13 @@ const namespace: string = 'forum';
 export default class TopicsList extends Vue {
   private IconType: typeof IconType = IconType;
 
-  @Getter('topicsPaging', { namespace })
+  @Getter('forum/topicsPaging')
   private paging!: Paging | null;
 
-  @Getter('attachedTopics', { namespace })
+  @Getter('forum/attachedTopics')
   private attachedTopics!: Topic[];
 
-  @Getter('topics', { namespace })
+  @Getter('forum/topics')
   private topics!: Topic[];
 
   private get loading(): boolean {
@@ -63,7 +61,7 @@ export default class TopicsList extends Vue {
     return this.attachedTopics.concat(this.topics);
   }
 
-  @Action('fetchTopics', { namespace })
+  @Action('forum/fetchTopics')
   private fetchTopics: any;
 
   @Watch('$route')
@@ -87,9 +85,6 @@ export default class TopicsList extends Vue {
 .list
   gridHead($forumGridTemplate)
   margin-top $medium
-
-.topics-loader
-  margin $medium auto
 
 .nothing
   margin $medium

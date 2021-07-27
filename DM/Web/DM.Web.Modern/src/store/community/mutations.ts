@@ -17,6 +17,14 @@ const mutations: MutationTree<CommunityState> = {
       Object.assign(matchingPoll, payload);
     }
   },
+  addPoll(state, payload: Poll) {
+    if (state.activePolls !== null) {
+      state.activePolls.unshift(payload);
+    }
+    if (state.polls !== null) {
+      state.polls!.resources.unshift(payload);
+    }
+  },
 
   updateUsers(state, payload: ListEnvelope<User>) {
     state.users = payload;

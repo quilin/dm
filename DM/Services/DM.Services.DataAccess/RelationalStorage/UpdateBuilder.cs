@@ -69,6 +69,11 @@ namespace DM.Services.DataAccess.RelationalStorage
             {
                 throw new UpdateBuilderException($"No key property was found for entity {type.Name}");
             }
+            var attachedEntry = dbContext.Set<TEntity>().Local.FirstOrDefault(entry => id.Equals(primaryKeyProperty.GetValue(entry)));
+            if (attachedEntry != null)
+            {
+                dbContext.Entry(attachedEntry).State = EntityState.Detached;
+            }
 
             primaryKeyProperty.SetValue(entity, id);
 

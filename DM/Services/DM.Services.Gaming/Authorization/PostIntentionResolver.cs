@@ -17,7 +17,7 @@ namespace DM.Services.Gaming.Authorization
         {
             return intention switch
             {
-                PostIntention.Delete => (target.Author.UserId == user.UserId),
+                PostIntention.Delete => target.Author.UserId == user.UserId,
                 _ => false
             };
         }
@@ -28,15 +28,15 @@ namespace DM.Services.Gaming.Authorization
             var (post, room) = target;
             return intention switch
             {
-                PostIntention.EditText => (post.Author.UserId == user.UserId ||
-                    room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
-                    (post.Character == null || post.Character.IsNpc ||
-                        post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed))),
-                PostIntention.EditCharacter => (post.Author.UserId == user.UserId ||
-                    room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
-                    (post.Character == null || post.Character.IsNpc)),
-                PostIntention.EditMasterMessage => (room.Game.Participation(user.UserId)
-                    .HasFlag(GameParticipation.Authority) && (post.Character == null || post.Character.IsNpc)),
+                PostIntention.EditText => post.Author.UserId == user.UserId ||
+                                          room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
+                                          (post.Character == null || post.Character.IsNpc ||
+                                           post.Character.AccessPolicy.HasFlag(CharacterAccessPolicy.PostEditAllowed)),
+                PostIntention.EditCharacter => post.Author.UserId == user.UserId ||
+                                               room.Game.Participation(user.UserId).HasFlag(GameParticipation.Authority) &&
+                                               (post.Character == null || post.Character.IsNpc),
+                PostIntention.EditMasterMessage => room.Game.Participation(user.UserId)
+                    .HasFlag(GameParticipation.Authority) && (post.Character == null || post.Character.IsNpc),
                 _ => false
             };
         }

@@ -1,12 +1,18 @@
 import { GetterTree } from 'vuex';
 import GamingState from './gamingState';
 import RootState from './../rootState';
-import { Game } from '@/api/models/gaming/games';
 
 const getters: GetterTree<GamingState, RootState> = {
-  ownGames(state): Game[] | null {
-    return state.ownGames;
-  },
+  ownGames: (state) => state.ownGames,
+  popularGames: (state) => state.popularGames,
+
+  schemas: (state) => state.schemas,
+  tags: (state) => state.tags,
+
+  selectedGame: (state) => state.selectedGame,
+  selectedGameCharacters: (state) => state.selectedGameCharacters,
+  selectedGameRooms: (state) => state.selectedGameRooms,
+  selectedGameReaders: (state) => state.selectedGameReaders,
 };
 
 export default getters;

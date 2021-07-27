@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
@@ -10,7 +11,6 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
-using Newtonsoft.Json;
 using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Implementation
@@ -82,7 +82,7 @@ namespace DM.Services.Authentication.Implementation
             try
             {
                 var decryptedString = await cryptoService.Decrypt(authToken);
-                var authData = JsonConvert.DeserializeObject<Dictionary<string, Guid>>(decryptedString);
+                var authData = JsonSerializer.Deserialize<Dictionary<string, Guid>>(decryptedString);
                 userId = authData[UserIdKey];
                 sessionId = authData[SessionIdKey];
             }
@@ -166,7 +166,7 @@ namespace DM.Services.Authentication.Implementation
                 [UserIdKey] = user.UserId,
                 [SessionIdKey] = session.Id
             };
-            var token = await cryptoService.Encrypt(JsonConvert.SerializeObject(authData));
+            var token = await cryptoService.Encrypt(JsonSerializer.Serialize(authData));
             return Identity.Success(user, newSession, settings, token);
         }
     }

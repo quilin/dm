@@ -12,6 +12,7 @@ using DM.Web.API.Dto.Users;
 using DM.Web.Core.Authentication;
 using DM.Web.Core.Authentication.Credentials;
 using Microsoft.AspNetCore.Http;
+using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 
 namespace DM.Web.API.Services.Users
 {
@@ -74,10 +75,10 @@ namespace DM.Web.API.Services.Users
         public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutElsewhere(httpContext);
 
         /// <inheritdoc />
-        public async Task<Envelope<User>> GetCurrent()
+        public async Task<Envelope<UserDetails>> GetCurrent()
         {
             var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login);
-            return new Envelope<User>(mapper.Map<User>(userDetails));
+            return new Envelope<UserDetails>(mapper.Map<UserDetails>(userDetails));
         }
     }
 }

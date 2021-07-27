@@ -6,6 +6,8 @@ enum IconType {
   Message = 0xe011,
   Close = 0xe00e,
   Like = 0xe077,
+  Upload = 0xe02c,
+  Download = 0xe015,
 
   CornerTop = 0xe04d,
   CornerRight = 0xe04a,
@@ -41,8 +43,10 @@ enum IconType {
 
   Edit = 0xe00f,
   Remove = 0xe022,
+  Settings = 0xe018,
   Closed = 0xe02e,
   Attached = 0xe073,
+  Reorder = 0xe01f,
 
   Blast = 0xe076,
   Hidden = 0xe043,

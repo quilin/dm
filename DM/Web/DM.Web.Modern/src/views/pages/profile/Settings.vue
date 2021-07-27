@@ -4,27 +4,27 @@
     <div class="settings-block">
       <span class="settings-title">Количество сообщений на странице</span>
       <div class="settings-per-page">
-        <suggest-input v-model="user.settings.paging.postsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
+        <suggest-input v-model.number="user.settings.paging.postsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
         &ndash; в играх
       </div>
       <div class="settings-per-page">
-        <suggest-input v-model="user.settings.paging.commentsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
+        <suggest-input v-model.number="user.settings.paging.commentsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
         &ndash; в обсуждениях, новостях и на форуме
       </div>
       <div class="settings-per-page">
-        <suggest-input v-model="user.settings.paging.messagesPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
+        <suggest-input v-model.number="user.settings.paging.messagesPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
         &ndash; в личных сообщениях
       </div>
     </div>
     <div class="settings-block">
       <span class="settings-title">Количество тем на странице форума</span>
       &ndash;
-      <suggest-input v-model="user.settings.paging.topicsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
+      <suggest-input v-model.number="user.settings.paging.topicsPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
     </div>
     <div class="settings-block">
       <span class="settings-title">Размер списков игр, пользователей и прочих</span>
       &ndash;
-      <suggest-input v-model="user.settings.paging.entitiesPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
+      <suggest-input v-model.number="user.settings.paging.entitiesPerPage" :suggestions="pagingSuggestions" size="3" maxlength="3" />
     </div>
 
     <div class="settings-block">
@@ -33,12 +33,14 @@
       <dropdown v-model="user.settings.colorSchema" :options="colorSchemaOptions" />
     </div>
 
-    <div v-if="user.roles.some(r => r === 'NannyModerator')" class="settings-block">
+    <div v-if="userIsNanny" class="settings-block">
       Приветственное письмо от няни
       <text-area v-model="user.settings.nannyGreetingsMessage" />
     </div>
 
-    <action-button type="submit" :loading="saving" :disabled="unchanged" label="Сохранить" />
+    <action-button type="submit" :loading="saving" :disabled="unchanged">
+      Сохранить
+    </action-button>
   </form>
 
 </template>
@@ -49,6 +51,7 @@ import { Action, Getter } from 'vuex-class';
 import { cloneDeep, isEqual } from 'lodash';
 
 import { User, ColorSchema, UserSettings } from '@/api/models/community';
+import { userIsNanny } from '@/api/models/community/helpers';
 
 const colorSchemaOptions = [{
   value: ColorSchema.Modern,
@@ -86,7 +89,7 @@ export default class ProfileSettings extends Vue {
   private pagingSuggestions: any = pagingSuggestions;
   private colorSchemaOptions: any = colorSchemaOptions;
 
-  private saving: boolean = false;
+  private saving = false;
   private savedSettings: UserSettings | null = null;
 
   @Getter('community/editableUser')
@@ -94,7 +97,7 @@ export default class ProfileSettings extends Vue {
 
   @Action('community/updateSettings')
   private updateSettings: any;
-  
+
   @Action('ui/updateTheme')
   private updateTheme: any;
 
@@ -115,6 +118,10 @@ export default class ProfileSettings extends Vue {
   private get unchanged(): boolean {
     return this.savedSettings === null || this.user === null ||
       isEqual(this.savedSettings, this.user!.settings);
+  }
+
+  private get userIsNanny(): boolean {
+    return userIsNanny(this.user);
   }
 
   private async save(): Promise<void> {

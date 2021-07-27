@@ -56,7 +56,11 @@ export default class PollComponent extends Vue {
 
 <style scoped lang="stylus">
 .poll
-  margin $small 0
+  margin $small 0 $big
+  max-width $gridStep * 61
+
+  &:last-child
+    margin-bottom 0
 
 .poll-name
   margin $small 0

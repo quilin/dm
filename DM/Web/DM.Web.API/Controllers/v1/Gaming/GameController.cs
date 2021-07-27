@@ -53,6 +53,14 @@ namespace DM.Web.API.Controllers.v1.Gaming
         /// Get list of all game tags
         /// </summary>
         /// <response code="200"></response>
+        [HttpGet("popular", Name = nameof(GetPopularGames))]
+        [ProducesResponseType(typeof(ListEnvelope<Game>), 200)]
+        public async Task<IActionResult> GetPopularGames() => Ok(await gameApiService.GetPopular());
+
+        /// <summary>
+        /// Get list of all game tags
+        /// </summary>
+        /// <response code="200"></response>
         [HttpGet("tags")]
         [ProducesResponseType(typeof(ListEnvelope<Tag>), 200)]
         public async Task<IActionResult> GetTags() => Ok(await gameApiService.GetTags());

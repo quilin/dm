@@ -1,14 +1,14 @@
 import { User } from '@/api/models/community';
 
 export enum AttributeSchemaType {
-  Public = 0,
-  Private = 1,
+  Public = 'Public',
+  Private = 'Private',
 }
 
 export enum AttributeSpecificationType {
-  Number = 0,
-  String = 1,
-  List = 2,
+  Number = 'Number',
+  String = 'String',
+  List = 'List',
 }
 
 export interface AttributeValueSpecification {
@@ -21,16 +21,16 @@ export interface AttributeSpecification {
   title: string;
   required: boolean;
   type: AttributeSpecificationType;
-  minValue: number | null;
-  maxValue: number | null;
-  maxLength: number | null;
-  values: AttributeValueSpecification[] | null;
+  minValue: number | null | undefined;
+  maxValue: number | null | undefined;
+  maxLength: number | null | undefined;
+  values: AttributeValueSpecification[] | null | undefined;
 }
 
 export interface AttributeSchema {
-  id: string;
+  id: string | null;
   title: string;
   author: User | null;
   type: AttributeSchemaType;
-  specification: AttributeSpecification[];
+  specifications: AttributeSpecification[];
 }

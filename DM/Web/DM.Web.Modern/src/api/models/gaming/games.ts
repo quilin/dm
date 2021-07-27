@@ -3,24 +3,24 @@ import { User } from '@/api/models/community';
 import { AttributeSchema } from '@/api/models/gaming/attributes';
 
 export enum GameStatus {
-  Closed = 0,
-  Finished = 1,
-  Frozen = 2,
-  Requirement = 3,
-  Draft = 4,
-  Active = 5,
-  RequiresModeration = 6,
-  Moderation = 7,
+  Closed = 'Closed',
+  Finished = 'Finished',
+  Frozen = 'Frozen',
+  Requirement = 'Requirement',
+  Draft = 'Draft',
+  Active = 'Active',
+  RequiresModeration = 'RequiresModeration',
+  Moderation = 'Moderation',
 }
 
 export enum GameParticipation {
-  None = 0,
-  Reader = 1 << 0,
-  Player = 1 << 1,
-  Moderator = 1 << 2,
-  PendingAssistant = 1 << 3,
-  Authority = 1 << 4,
-  Owner = 1 << 5,
+  None = 'None',
+  Reader = 'Reader',
+  Player = 'Player',
+  Moderator = 'Moderator',
+  PendingAssistant = 'PendingAssistant',
+  Authority = 'Authority',
+  Owner = 'Owner',
 }
 
 export interface Tag {
@@ -30,9 +30,9 @@ export interface Tag {
 }
 
 export enum CommentariesAccessMode {
-  Public = 0,
-  Readonly = 1,
-  Private = 2,
+  Public = 'Public',
+  Readonly = 'Readonly',
+  Private = 'Private',
 }
 
 export interface GamePrivacySettings {
@@ -51,7 +51,7 @@ export interface Game {
   system: string;
   setting: string;
   status: GameStatus;
-  participation: GameParticipation;
+  participation: GameParticipation[];
   released: string;
 
   master: User;
@@ -63,7 +63,7 @@ export interface Game {
 
   tags: Tag[];
   privacySettings: GamePrivacySettings;
-  schema: AttributeSchema;
+  schema: AttributeSchema | null;
 
   unreadPostsCount: number;
   unreadCommentsCount: number;

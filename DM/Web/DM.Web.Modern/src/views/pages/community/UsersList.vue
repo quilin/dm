@@ -14,7 +14,7 @@
       <div>Местоположение</div>
     </div>
 
-    <loader v-if="users === null" class="community-loader" />
+    <loader v-if="!users" :big="true" />
     <template v-else-if="users.resources.length">
       <community-user v-for="(user, number) in users.resources" :key="user.login"
         :user="user"
@@ -50,7 +50,4 @@ export default class UsersList extends Vue {
 .list
   gridHead($communityGridTemplate)
   margin-top $medium
-
-.community-loader
-  margin $medium auto
 </style>

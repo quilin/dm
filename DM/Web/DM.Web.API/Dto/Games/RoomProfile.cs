@@ -1,5 +1,4 @@
 using AutoMapper;
-using DM.Services.Core.Extensions;
 using DM.Services.Gaming.Dto.Input;
 
 namespace DM.Web.API.Dto.Games
@@ -17,8 +16,7 @@ namespace DM.Web.API.Dto.Games
             CreateMap<Room, CreateRoom>();
             CreateMap<Room, UpdateRoom>();
 
-            CreateMap<DM.Services.Gaming.Dto.Output.RoomClaim, RoomClaim>()
-                .ForMember(d => d.Id, s => s.MapFrom(r => r.Id.EncodeToReadable(string.Empty)));
+            CreateMap<DM.Services.Gaming.Dto.Output.RoomClaim, RoomClaim>();
 
             CreateMap<RoomClaim, CreateRoomClaim>()
                 .ForMember(d => d.CharacterId, s => s.MapFrom(r => r.Character.Id))
@@ -27,7 +25,6 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.ClaimId, s => s.MapFrom(r => r.Id));
 
             CreateMap<DM.Services.Gaming.Dto.Output.PendingPost, PendingPost>()
-                .ForMember(d => d.Id, s => s.MapFrom(p => p.Id.EncodeToReadable(string.Empty)))
                 .ForMember(d => d.Awaiting, s => s.MapFrom(p => p.AwaitingUser))
                 .ForMember(d => d.Pending, s => s.MapFrom(p => p.PendingUser));
 

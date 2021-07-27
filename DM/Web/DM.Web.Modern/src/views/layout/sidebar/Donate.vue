@@ -3,7 +3,7 @@
     <div class="title">
        <icon :font="IconType.Ruble" /> Помочь проекту
     </div>
-    <progress-bar :current="current" :goal="goal">{{current}} / {{goal}} р.</progress-bar>    
+    <progress-bar :current="current" :goal="goal">{{current}} / {{goal}} р.</progress-bar>
     dm.am &ndash; некоммерческий проект.<br />
     <router-link :to="{ name: 'donate' }">Помогите нам</router-link> хотя бы не испортить его!
   </div>
@@ -22,8 +22,8 @@ import ProgressBar from '@/components/ProgressBar.vue';
 export default class Donate extends Vue {
   private IconType: typeof IconType = IconType;
 
-  private current: number = 24332;
-  private goal: number = 60000;
+  private current = 24332;
+  private goal = 60000;
 }
 </script>
 

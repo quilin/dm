@@ -6,8 +6,10 @@
       :class="{ selected: activeForumRoute && forum.id === selectedForum }">
       <router-link :to="{name: 'forum', params: {id: forum.id, n: 1}}">
         {{forum.id}}
-        <icon v-if="forum.unreadTopicsCount" :font="IconType.CommentsUnread" />
-        <template v-if="forum.unreadTopicsCount">{{forum.unreadTopicsCount}}</template>
+        <template v-if="forum.unreadTopicsCount">
+          <icon :font="IconType.CommentsUnread" />
+          {{forum.unreadTopicsCount}}
+        </template>
       </router-link>
     </div>
   </menu-block>

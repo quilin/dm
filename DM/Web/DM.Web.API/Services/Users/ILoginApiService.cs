@@ -38,6 +38,6 @@ namespace DM.Web.API.Services.Users
         /// Get current user
         /// </summary>
         /// <returns>Current user</returns>
-        Task<Envelope<User>> GetCurrent();
+        Task<Envelope<UserDetails>> GetCurrent();
     }
 }

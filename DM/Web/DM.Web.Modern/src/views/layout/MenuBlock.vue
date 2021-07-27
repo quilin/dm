@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden': !show}">
+  <div :class="{'collapsed': !show}">
     <div class="title" @click="toggle">
       <slot name="title" />
     </div>
@@ -21,13 +21,13 @@ export default class MenuBlock extends Vue {
   @Prop()
   private token!: string;
 
-  private get storageKey(): string {
+  private get storageKey() {
     return `__HideLeftMenuModules__${ this.token }__`;
   }
 
-  private show: boolean = true;
+  private show = true;
 
-  private toggle(): void {
+  private toggle() {
     localStorage.setItem(this.storageKey, (this.show = !this.show).toString());
     const content = this.$refs.content;
     if (this.show) {
@@ -60,13 +60,13 @@ export default class MenuBlock extends Vue {
     icon()
     content ' '
 
-  .hidden &:after
+  .collapsed &:after
     content ' '
 
 .list
   overflow hidden
   transition height .2s
-  .hidden &
+  .collapsed &
     height 0
 
 </style>

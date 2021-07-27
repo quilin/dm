@@ -24,18 +24,18 @@ namespace DM.Services.Gaming.Authorization
             return intention switch
             {
                 CharacterIntention.Edit when characterOwned => gameActive,
-                CharacterIntention.Edit when gameOwned => (target.IsNpc ||
-                    target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed)),
+                CharacterIntention.Edit when gameOwned => target.IsNpc ||
+                                                          target.AccessPolicy.HasFlag(CharacterAccessPolicy.EditAllowed),
                 CharacterIntention.EditPrivacySettings when characterOwned => gameActive,
                 CharacterIntention.EditMasterSettings when gameOwned => true,
                 CharacterIntention.Delete when characterOwned => gameActive,
-                CharacterIntention.Accept when gameOwned => (target.Status == CharacterStatus.Registration ||
-                    target.Status == CharacterStatus.Declined),
-                CharacterIntention.Decline when gameOwned => (target.Status == CharacterStatus.Registration),
-                CharacterIntention.Kill when gameOwned => (target.Status == CharacterStatus.Active),
-                CharacterIntention.Resurrect when gameOwned => (target.Status == CharacterStatus.Dead),
-                CharacterIntention.Leave when characterOwned => (target.Status == CharacterStatus.Active),
-                CharacterIntention.Return when characterOwned => (target.Status == CharacterStatus.Left),
+                CharacterIntention.Accept when gameOwned => target.Status == CharacterStatus.Registration ||
+                                                            target.Status == CharacterStatus.Declined,
+                CharacterIntention.Decline when gameOwned => target.Status == CharacterStatus.Registration,
+                CharacterIntention.Kill when gameOwned => target.Status == CharacterStatus.Active,
+                CharacterIntention.Resurrect when gameOwned => target.Status == CharacterStatus.Dead,
+                CharacterIntention.Leave when characterOwned => target.Status == CharacterStatus.Active,
+                CharacterIntention.Return when characterOwned => target.Status == CharacterStatus.Left,
                 _ => false
             };
         }

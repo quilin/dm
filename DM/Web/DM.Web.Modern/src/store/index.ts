@@ -4,9 +4,10 @@ import RootState from './rootState';
 import forum from './forum';
 import community from './community';
 import gaming from './gaming';
+import notifications from './notifications';
 import ui from './ui';
 import accountApi from '@/api/requests/accountApi';
-import { ColorSchema } from '@/api/models/community';
+import { ColorSchema, LoginCredentials } from '@/api/models/community';
 
 Vue.use(Vuex);
 
@@ -26,7 +27,14 @@ export default new Vuex.Store<RootState>({
     },
   },
   actions: {
-    authenticate({ commit }, user): void {
+    async authenticate({ commit }, credentials: LoginCredentials): Promise<void> {
+      const { data, error } = await accountApi.signIn(credentials);
+      if (error) {
+        // todo
+        return;
+      }
+
+      const { resource: user } = data!;
       commit('updateUser', user);
       commit('ui/updateTheme', user?.settings?.colorSchema ?? ColorSchema.Modern);
     },
@@ -36,9 +44,15 @@ export default new Vuex.Store<RootState>({
     },
     async fetchUser({ commit }): Promise<void> {
       const serializedUser = localStorage.getItem('user');
-      if (serializedUser) {
-        commit('updateUser', JSON.parse(serializedUser));
-        const { data } = await accountApi.fetchUser();
+      if (!serializedUser) return;
+
+      accountApi.restoreUser();
+      commit('updateUser', JSON.parse(serializedUser));
+      const { data, error } = await accountApi.fetchUser();
+      if (error) {
+        commit('updateUser', null);
+        commit('ui/updateTheme', ColorSchema.Modern);
+      } else {
         const user = data!.resource;
         commit('updateUser', data!.resource);
         commit('ui/updateTheme', user.settings?.colorSchema ?? ColorSchema.Modern);
@@ -54,5 +68,6 @@ export default new Vuex.Store<RootState>({
     forum,
     community,
     gaming,
+    notifications,
   },
 });

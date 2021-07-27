@@ -36,6 +36,11 @@ namespace DM.Services.Gaming.Dto.Output
         public CharacterStatus Status { get; set; }
 
         /// <summary>
+        /// Total characters posts count
+        /// </summary>
+        public int TotalPostsCount { get; set; }
+
+        /// <summary>
         /// Character author
         /// </summary>
         public GeneralUser Author { get; set; }
