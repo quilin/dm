@@ -126,15 +126,18 @@ export default new Router({
       }],
     },
     {
-      name: 'topic',
       path: '/topic/:id/:n?',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
         page: () => import('./views/pages/topic/Topic.vue'),
       },
+      children: [{
+        name: 'topic',
+        path: ':n?',
+        component: () => import('./views/pages/topic/TopicComments.vue'),
+      }],
     },
-
     {
       name: 'games',
       path: '/games',
