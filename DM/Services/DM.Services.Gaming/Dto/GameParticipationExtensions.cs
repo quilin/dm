@@ -28,7 +28,7 @@ namespace DM.Services.Gaming.Dto
                 participation |= GameParticipation.Authority;
             }
 
-            if (game.PendingAssistant.FirstOrDefault()?.UserId == userId)
+            if (game.PendingAssistant?.UserId == userId)
             {
                 participation |= GameParticipation.PendingAssistant;
             }

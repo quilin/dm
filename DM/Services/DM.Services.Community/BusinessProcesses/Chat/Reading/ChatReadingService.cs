@@ -9,7 +9,7 @@ using DM.Services.Core.Exceptions;
 namespace DM.Services.Community.BusinessProcesses.Chat.Reading
 {
     /// <inheritdoc />
-    public class ChatReadingService : IChatReadingService
+    internal class ChatReadingService : IChatReadingService
     {
         private readonly IChatReadingRepository repository;
         private readonly IIdentityProvider identityProvider;

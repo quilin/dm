@@ -6,7 +6,7 @@ using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Character
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
 {
     /// <inheritdoc />
-    public class SchemaUpdatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaUpdatingRepository
+    internal class SchemaUpdatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaUpdatingRepository
     {
         /// <inheritdoc />
         public SchemaUpdatingRepository(DmMongoClient client) : base(client)

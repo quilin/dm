@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
 {
     /// <inheritdoc />
-    public class UserRepository : IUserRepository
+    internal class UserRepository : IUserRepository
     {
         private readonly DmDbContext dbContext;
 

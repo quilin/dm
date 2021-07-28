@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Games.Links;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
 {
     /// <inheritdoc />
-    public class BlacklistLinkFactory : IBlacklistLinkFactory
+    internal class BlacklistLinkFactory : IBlacklistLinkFactory
     {
         private readonly IGuidFactory guidFactory;
 

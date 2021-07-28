@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
 {
     /// <inheritdoc />
-    public class RoomClaimsReadingRepository : IRoomClaimsReadingRepository
+    internal class RoomClaimsReadingRepository : IRoomClaimsReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

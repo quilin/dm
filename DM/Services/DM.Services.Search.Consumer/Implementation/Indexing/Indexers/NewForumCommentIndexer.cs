@@ -13,7 +13,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
     /// <summary>
     /// Indexer for new forum commentaries
     /// </summary>
-    public class NewForumCommentIndexer : BaseIndexer
+    internal class NewForumCommentIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;

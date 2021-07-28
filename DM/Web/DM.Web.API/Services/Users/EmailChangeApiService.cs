@@ -7,7 +7,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class EmailChangeApiService : IEmailChangeApiService
+    internal class EmailChangeApiService : IEmailChangeApiService
     {
         private readonly IEmailChangeService service;
         private readonly IMapper mapper;

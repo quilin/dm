@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange.Confirmation
 {
     /// <inheritdoc />
-    public class EmailChangeMailSender : IEmailChangeMailSender
+    internal class EmailChangeMailSender : IEmailChangeMailSender
     {
         private readonly IRenderer renderer;
         private readonly IMailSender mailSender;

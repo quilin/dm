@@ -8,7 +8,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
 {
     /// <inheritdoc />
-    public class UserPasswordChangeValidator : AbstractValidator<UserPasswordChange>
+    internal class UserPasswordChangeValidator : AbstractValidator<UserPasswordChange>
     {
         /// <inheritdoc />
         public UserPasswordChangeValidator(

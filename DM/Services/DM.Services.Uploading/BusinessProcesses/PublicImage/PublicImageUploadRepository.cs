@@ -13,7 +13,7 @@ using DbUpload = DM.Services.DataAccess.BusinessObjects.Common.Upload;
 namespace DM.Services.Uploading.BusinessProcesses.PublicImage
 {
     /// <inheritdoc />
-    public class PublicImageUploadRepository : IPublicImageUploadRepository
+    internal class PublicImageUploadRepository : IPublicImageUploadRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

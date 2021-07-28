@@ -14,7 +14,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
 {
     /// <inheritdoc />
-    public class TopicDeletingService : ITopicDeletingService
+    internal class TopicDeletingService : ITopicDeletingService
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly IIntentionManager intentionManager;

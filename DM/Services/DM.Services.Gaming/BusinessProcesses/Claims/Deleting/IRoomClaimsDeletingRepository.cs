@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
     /// <summary>
     /// Storage for room claims deleting
     /// </summary>
-    public interface IRoomClaimsDeletingRepository
+    internal interface IRoomClaimsDeletingRepository
     {
         /// <summary>
         /// Delete existing link

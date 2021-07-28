@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
     /// <summary>
     /// Game updating storage
     /// </summary>
-    public interface IGameUpdatingRepository
+    internal interface IGameUpdatingRepository
     {
         /// <summary>
         /// Save game changes

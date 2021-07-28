@@ -6,7 +6,7 @@ using DM.Services.DataAccess.MongoIntegration;
 namespace DM.Services.Notifications.BusinessProcesses.Creating
 {
     /// <inheritdoc cref="INotificationCreatingRepository" />
-    public class NotificationCreatingRepository : MongoCollectionRepository<Notification>, INotificationCreatingRepository
+    internal class NotificationCreatingRepository : MongoCollectionRepository<Notification>, INotificationCreatingRepository
     {
         /// <inheritdoc />
         public NotificationCreatingRepository(DmMongoClient client) : base(client)

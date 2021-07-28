@@ -7,7 +7,7 @@ using RabbitMQ.Client.Events;
 namespace DM.Services.MessageQueuing.Consume
 {
     /// <inheritdoc cref="IMessageConsumer{TMessage}" />
-    public class MessageConsumer<TMessage> : IDisposable, IMessageConsumer<TMessage>
+    internal class MessageConsumer<TMessage> : IDisposable, IMessageConsumer<TMessage>
         where TMessage : class
     {
         private readonly IConnectionFactory connectionFactory;

@@ -5,7 +5,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating
     /// <summary>
     /// Factory for DAL poll model
     /// </summary>
-    public interface IPollFactory
+    internal interface IPollFactory
     {
         /// <summary>
         /// Create new poll DAL model

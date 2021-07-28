@@ -10,7 +10,7 @@ using Nest;
 namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
-    public class IndexingRepository : IIndexingRepository
+    internal class IndexingRepository : IIndexingRepository
     {
         private readonly IElasticClient client;
 

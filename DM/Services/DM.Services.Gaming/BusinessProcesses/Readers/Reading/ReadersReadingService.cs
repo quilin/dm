@@ -8,7 +8,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 namespace DM.Services.Gaming.BusinessProcesses.Readers.Reading
 {
     /// <inheritdoc />
-    public class ReadersReadingService : IReadersReadingService
+    internal class ReadersReadingService : IReadersReadingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IReadersReadingRepository repository;

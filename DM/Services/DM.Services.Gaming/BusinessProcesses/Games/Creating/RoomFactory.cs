@@ -6,7 +6,7 @@ using DM.Services.DataAccess.BusinessObjects.Games.Posts;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
     /// <inheritdoc />
-    public class RoomFactory : IRoomFactory
+    internal class RoomFactory : IRoomFactory
     {
         private readonly IGuidFactory guidFactory;
 

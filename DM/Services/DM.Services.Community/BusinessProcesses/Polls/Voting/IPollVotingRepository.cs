@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Voting
     /// <summary>
     /// Storage for poll voting
     /// </summary>
-    public interface IPollVotingRepository
+    internal interface IPollVotingRepository
     {
         /// <summary>
         /// Vote for the poll option

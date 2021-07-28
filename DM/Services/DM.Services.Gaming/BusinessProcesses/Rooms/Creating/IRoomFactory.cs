@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
     /// <summary>
     /// Factory for room DAL model
     /// </summary>
-    public interface IRoomFactory
+    internal interface IRoomFactory
     {
         /// <summary>
         /// Create room out of DTO model

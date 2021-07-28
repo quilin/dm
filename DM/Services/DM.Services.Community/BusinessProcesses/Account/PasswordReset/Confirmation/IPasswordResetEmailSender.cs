@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset.Confirma
     /// <summary>
     /// Password resetting email sender
     /// </summary>
-    public interface IPasswordResetEmailSender
+    internal interface IPasswordResetEmailSender
     {
         /// <summary>
         /// Sends the password reset confirmation letter to registered user

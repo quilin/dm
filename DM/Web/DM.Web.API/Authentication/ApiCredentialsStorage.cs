@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.Authentication
 {
     /// <inheritdoc />
-    public class ApiCredentialsStorage : ICredentialsStorage
+    internal class ApiCredentialsStorage : ICredentialsStorage
     {
         /// <summary>
         /// Authentication HTTP header key

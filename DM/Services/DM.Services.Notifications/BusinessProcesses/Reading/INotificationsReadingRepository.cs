@@ -9,7 +9,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Reading
     /// <summary>
     /// Notifications reading storage
     /// </summary>
-    public interface INotificationsReadingRepository
+    internal interface INotificationsReadingRepository
     {
         /// <summary>
         /// Counts user notifications

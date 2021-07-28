@@ -19,7 +19,7 @@ namespace DM.Web.API.Middleware
     /// <summary>
     /// Middleware for exceptions handling
     /// </summary>
-    public class ErrorHandlingMiddleware
+    internal class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
 

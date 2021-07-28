@@ -7,7 +7,7 @@ using DM.Services.DataAccess.BusinessObjects.Fora;
 namespace DM.Services.Community.BusinessProcesses.Polls.Creating
 {
     /// <inheritdoc />
-    public class PollFactory : IPollFactory
+    internal class PollFactory : IPollFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

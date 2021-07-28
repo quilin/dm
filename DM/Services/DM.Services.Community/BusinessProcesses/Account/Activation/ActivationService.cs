@@ -11,7 +11,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Community.BusinessProcesses.Account.Activation
 {
     /// <inheritdoc />
-    public class ActivationService : IActivationService
+    internal class ActivationService : IActivationService
     {
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

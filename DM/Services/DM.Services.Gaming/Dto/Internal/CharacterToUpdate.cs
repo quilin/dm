@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.Dto.Internal
     /// <summary>
     /// Internal DTO model for character updating
     /// </summary>
-    public class CharacterToUpdate
+    internal class CharacterToUpdate
     {
         /// <summary>
         /// Character author identifier

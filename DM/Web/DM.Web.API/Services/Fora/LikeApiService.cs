@@ -8,7 +8,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Fora
 {
     /// <inheritdoc />
-    public class LikeApiService : ILikeApiService
+    internal class LikeApiService : ILikeApiService
     {
         private readonly ILikeService likeService;
         private readonly IMapper mapper;

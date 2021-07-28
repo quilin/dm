@@ -10,7 +10,7 @@ using AttributeSpecification = DM.Services.DataAccess.BusinessObjects.Games.Char
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
-    public class SchemaFactory : ISchemaFactory
+    internal class SchemaFactory : ISchemaFactory
     {
         private readonly IGuidFactory guidFactory;
 

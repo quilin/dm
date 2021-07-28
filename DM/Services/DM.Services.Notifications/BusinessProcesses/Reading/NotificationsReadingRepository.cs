@@ -9,7 +9,7 @@ using MongoDB.Driver;
 namespace DM.Services.Notifications.BusinessProcesses.Reading
 {
     /// <inheritdoc cref="INotificationsReadingRepository" />
-    public class NotificationsReadingRepository : NotificationQueriesRepository, INotificationsReadingRepository
+    internal class NotificationsReadingRepository : NotificationQueriesRepository, INotificationsReadingRepository
     {
         /// <inheritdoc />
         public NotificationsReadingRepository(DmMongoClient client) : base(client)

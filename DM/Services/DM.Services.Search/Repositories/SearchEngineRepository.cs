@@ -11,7 +11,7 @@ using Nest;
 namespace DM.Services.Search.Repositories
 {
     /// <inheritdoc />
-    public class SearchEngineRepository : ISearchEngineRepository
+    internal class SearchEngineRepository : ISearchEngineRepository
     {
         private readonly IElasticClient client;
 

@@ -6,7 +6,7 @@ namespace DM.Services.Authentication.Implementation.UserIdentity
     /// <summary>
     /// Current user identity storage
     /// </summary>
-    public class IdentityProvider : IIdentitySetter, IIdentityProvider
+    internal class IdentityProvider : IIdentitySetter, IIdentityProvider
     {
         private IIdentity identity;
 

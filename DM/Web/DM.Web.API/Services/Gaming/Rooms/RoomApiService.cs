@@ -13,7 +13,7 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming.Rooms
 {
     /// <inheritdoc />
-    public class RoomApiService : IRoomApiService
+    internal class RoomApiService : IRoomApiService
     {
         private readonly IRoomReadingService readingService;
         private readonly IRoomCreatingService creatingService;

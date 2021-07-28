@@ -7,7 +7,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing
     /// <summary>
     /// Certain indexer for search engine
     /// </summary>
-    public interface IIndexer
+    internal interface IIndexer
     {
         /// <summary>
         /// Tells if this event entity can be indexed

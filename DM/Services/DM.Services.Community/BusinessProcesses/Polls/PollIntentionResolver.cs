@@ -9,7 +9,7 @@ using DM.Services.Core.Implementation;
 namespace DM.Services.Community.BusinessProcesses.Polls
 {
     /// <inheritdoc />
-    public class PollIntentionResolver :
+    internal class PollIntentionResolver :
         IIntentionResolver<PollIntention>,
         IIntentionResolver<PollIntention, (Poll poll, Guid optionId)>
     {

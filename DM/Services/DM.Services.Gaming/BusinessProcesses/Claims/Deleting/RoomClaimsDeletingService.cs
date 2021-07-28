@@ -13,7 +13,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
 {
     /// <inheritdoc />
-    public class RoomClaimsDeletingService : IRoomClaimsDeletingService
+    internal class RoomClaimsDeletingService : IRoomClaimsDeletingService
     {
         private readonly IRoomClaimsDeletingRepository repository;
         private readonly IRoomClaimsReadingRepository readingRepository;

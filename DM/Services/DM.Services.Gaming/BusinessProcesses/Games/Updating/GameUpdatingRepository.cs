@@ -10,7 +10,7 @@ using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
 {
     /// <inheritdoc />
-    public class GameUpdatingRepository : IGameUpdatingRepository
+    internal class GameUpdatingRepository : IGameUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using DM.Services.Core.Configuration;
+using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -27,7 +28,11 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Mongo collection</returns>
-        public IMongoCollection<T> GetCollection<T>() =>
-            Database.GetCollection<T>(typeof(T).GetCustomAttribute<MongoCollectionNameAttribute>().CollectionName);
+        public IMongoCollection<T> GetCollection<T>()
+        {
+            var mongoCollectionNameAttribute = typeof(T).GetCustomAttribute<MongoCollectionNameAttribute>() ??
+                throw new AttributeNotFoundException(typeof(MongoCollectionNameAttribute));
+            return Database.GetCollection<T>(mongoCollectionNameAttribute.CollectionName);
+        }
     }
 }

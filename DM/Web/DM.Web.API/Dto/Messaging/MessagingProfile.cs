@@ -8,7 +8,7 @@ using DtoChatMessage = DM.Services.Community.BusinessProcesses.Chat.Reading.Chat
 namespace DM.Web.API.Dto.Messaging
 {
     /// <inheritdoc />
-    public class MessagingProfile : Profile
+    internal class MessagingProfile : Profile
     {
         /// <inheritdoc />
         public MessagingProfile()

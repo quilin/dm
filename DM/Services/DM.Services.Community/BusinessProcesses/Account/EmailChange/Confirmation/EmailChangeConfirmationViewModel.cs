@@ -3,7 +3,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.EmailChange.Confirmati
     /// <summary>
     /// View model for registration confirmation letter
     /// </summary>
-    public class EmailChangeConfirmationViewModel
+    internal class EmailChangeConfirmationViewModel
     {
         /// <summary>
         /// Registered user login

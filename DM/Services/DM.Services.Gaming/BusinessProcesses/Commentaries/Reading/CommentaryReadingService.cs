@@ -16,7 +16,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
 {
     /// <inheritdoc />
-    public class CommentaryReadingService : ICommentaryReadingService
+    internal class CommentaryReadingService : ICommentaryReadingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IGameReadingService gameReadingService;

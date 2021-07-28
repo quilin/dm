@@ -9,7 +9,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Reading
 {
     /// <inheritdoc />
-    public class BlacklistReadingService : IBlacklistReadingService
+    internal class BlacklistReadingService : IBlacklistReadingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IIntentionManager intentionManager;

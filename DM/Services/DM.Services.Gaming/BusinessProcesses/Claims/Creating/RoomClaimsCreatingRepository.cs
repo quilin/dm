@@ -10,7 +10,7 @@ using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
 {
     /// <inheritdoc />
-    public class RoomClaimsCreatingRepository : IRoomClaimsCreatingRepository
+    internal class RoomClaimsCreatingRepository : IRoomClaimsCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

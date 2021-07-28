@@ -7,7 +7,7 @@ namespace DM.Web.API.Dto.Fora
     /// <summary>
     /// Mapping profile from Service DTO to API DTO for topics
     /// </summary>
-    public class TopicProfile : Profile
+    internal class TopicProfile : Profile
     {
         /// <inheritdoc />
         public TopicProfile()

@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.Dto.Input
     /// <summary>
     /// Validator for game creation DTO model
     /// </summary>
-    public class CreateGameValidator : AbstractValidator<CreateGame>
+    internal class CreateGameValidator : AbstractValidator<CreateGame>
     {
         /// <inheritdoc />
         public CreateGameValidator(

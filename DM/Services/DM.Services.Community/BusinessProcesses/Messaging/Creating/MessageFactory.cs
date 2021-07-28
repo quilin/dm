@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Messaging;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
 {
     /// <inheritdoc />
-    public class MessageFactory : IMessageFactory
+    internal class MessageFactory : IMessageFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

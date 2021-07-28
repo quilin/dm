@@ -7,7 +7,7 @@ using DM.Services.Core.Dto;
 namespace DM.Web.API.Binding
 {
     /// <inheritdoc />
-    public class OptionalConverterFactory : JsonConverterFactory
+    internal class OptionalConverterFactory : JsonConverterFactory
     {
         /// <inheritdoc />
         public override bool CanConvert(Type typeToConvert) =>
@@ -26,7 +26,7 @@ namespace DM.Web.API.Binding
     }
 
     /// <inheritdoc />
-    public class OptionalConverter<TValue> : JsonConverter<Optional<TValue>> where TValue : struct
+    internal class OptionalConverter<TValue> : JsonConverter<Optional<TValue>> where TValue : struct
     {
         /// <inheritdoc />
         public override Optional<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert,

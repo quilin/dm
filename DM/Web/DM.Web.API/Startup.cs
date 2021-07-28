@@ -34,7 +34,7 @@ namespace DM.Web.API
     /// <summary>
     /// Application
     /// </summary>
-    public class Startup
+    internal class Startup
     {
         /// <inheritdoc />
         public Startup(IConfiguration configuration)

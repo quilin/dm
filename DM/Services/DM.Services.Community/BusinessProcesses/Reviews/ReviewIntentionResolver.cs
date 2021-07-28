@@ -6,7 +6,7 @@ using DM.Services.Core.Dto.Enums;
 namespace DM.Services.Community.BusinessProcesses.Reviews
 {
     /// <inheritdoc />
-    public class ReviewIntentionResolver :
+    internal class ReviewIntentionResolver :
         IIntentionResolver<ReviewIntention>,
         IIntentionResolver<ReviewIntention, Review>
     {

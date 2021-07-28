@@ -5,7 +5,7 @@ using Policy = DM.Services.Core.Dto.Enums.CharacterAccessPolicy;
 namespace DM.Web.API.Dto.Games
 {
     /// <inheritdoc />
-    public class CharacterProfile : Profile
+    internal class CharacterProfile : Profile
     {
         /// <inheritdoc />
         public CharacterProfile()

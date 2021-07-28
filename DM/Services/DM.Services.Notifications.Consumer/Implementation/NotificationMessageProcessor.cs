@@ -14,7 +14,7 @@ using DM.Services.Notifications.Dto;
 namespace DM.Services.Notifications.Consumer.Implementation
 {
     /// <inheritdoc />
-    public class NotificationMessageProcessor : IMessageProcessor<InvokedEvent>
+    internal class NotificationMessageProcessor : IMessageProcessor<InvokedEvent>
     {
         private readonly IEnumerable<INotificationGenerator> generators;
         private readonly INotificationCreatingService service;

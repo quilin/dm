@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace DM.Web.API.Notifications
 {
     /// <inheritdoc />
-    public class NotificationHub : Hub<INotificationHub>
+    internal class NotificationHub : Hub<INotificationHub>
     {
         private readonly IUserConnectionService connectionService;
 

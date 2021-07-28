@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
     /// <summary>
     /// Storage for attribute schema updating
     /// </summary>
-    public interface ISchemaUpdatingRepository
+    internal interface ISchemaUpdatingRepository
     {
         /// <summary>
         /// Update existing attribute schema

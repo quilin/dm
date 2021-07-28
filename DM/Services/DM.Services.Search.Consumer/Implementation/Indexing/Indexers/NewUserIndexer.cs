@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <inheritdoc />
-    public class NewUserIndexer : BaseIndexer
+    internal class NewUserIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IIndexingRepository repository;

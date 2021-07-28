@@ -20,7 +20,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
 {
     /// <inheritdoc />
-    public class GameReadingService : IGameReadingService
+    internal class GameReadingService : IGameReadingService
     {
         private readonly IValidator<GamesQuery> validator;
         private readonly IIntentionManager intentionManager;

@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration.Confirmat
     /// <summary>
     /// Registration confirmation email sender
     /// </summary>
-    public interface IRegistrationMailSender
+    internal interface IRegistrationMailSender
     {
         /// <summary>
         /// Sends the registration confirmation letter to newly registered user

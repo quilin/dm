@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
 {
     /// <inheritdoc />
-    public class PostReadingRepository : IPostReadingRepository
+    internal class PostReadingRepository : IPostReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

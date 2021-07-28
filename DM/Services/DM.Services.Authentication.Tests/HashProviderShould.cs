@@ -1,6 +1,5 @@
 using System;
 using DM.Services.Authentication.Implementation.Security;
-using DM.Services.Core.Implementation;
 using FluentAssertions;
 using Xunit;
 

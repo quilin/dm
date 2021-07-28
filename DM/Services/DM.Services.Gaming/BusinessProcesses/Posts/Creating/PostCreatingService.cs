@@ -20,7 +20,7 @@ using PendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPo
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
 {
     /// <inheritdoc />
-    public class PostCreatingService : IPostCreatingService
+    internal class PostCreatingService : IPostCreatingService
     {
         private readonly IValidator<CreatePost> validator;
         private readonly IRoomUpdatingRepository roomUpdatingRepository;

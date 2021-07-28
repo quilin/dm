@@ -11,7 +11,7 @@ using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class UserApiService : IUserApiService
+    internal class UserApiService : IUserApiService
     {
         private readonly IUserReadingService readingService;
         private readonly IUserUpdatingService updatingService;

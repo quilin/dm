@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Updating
     /// <summary>
     /// Storage for user updating
     /// </summary>
-    public interface IUserUpdatingRepository
+    internal interface IUserUpdatingRepository
     {
         /// <summary>
         /// Save user changes

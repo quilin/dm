@@ -7,7 +7,7 @@ using DM.Services.Notifications.Dto;
 namespace DM.Services.Notifications.BusinessProcesses.Creating
 {
     /// <inheritdoc />
-    public class NotificationFactory : INotificationFactory
+    internal class NotificationFactory : INotificationFactory
     {
         private readonly IGuidFactory guidFactory;
 

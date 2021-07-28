@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
     /// <summary>
     /// Storage for review creating
     /// </summary>
-    public interface IReviewCreatingRepository
+    internal interface IReviewCreatingRepository
     {
         /// <summary>
         /// Create new review

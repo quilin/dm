@@ -9,7 +9,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading
     /// <summary>
     /// Forum comments storage
     /// </summary>
-    public interface ICommentaryReadingRepository
+    internal interface ICommentaryReadingRepository
     {
         /// <summary>
         /// Count comments of the game

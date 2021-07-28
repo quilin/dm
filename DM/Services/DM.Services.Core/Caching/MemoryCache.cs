@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace DM.Services.Core.Caching
 {
     /// <inheritdoc />
-    public class MemoryCache : ICache
+    internal class MemoryCache : ICache
     {
         private readonly IMemoryCache memoryCache;
 

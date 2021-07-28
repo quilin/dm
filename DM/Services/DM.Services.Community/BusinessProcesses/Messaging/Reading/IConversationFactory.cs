@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
     /// <summary>
     /// Factory for DAL conversation models
     /// </summary>
-    public interface IConversationFactory
+    internal interface IConversationFactory
     {
         /// <summary>
         /// Create DAL entities for visavi conversation

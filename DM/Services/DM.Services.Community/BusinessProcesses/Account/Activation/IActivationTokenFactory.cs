@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Activation
     /// <summary>
     /// Factory for activation tokens
     /// </summary>
-    public interface IActivationTokenFactory
+    internal interface IActivationTokenFactory
     {
         /// <summary>
         /// Create new activation token for account

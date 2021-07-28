@@ -6,7 +6,7 @@ namespace DM.Services.Uploading.BusinessProcesses.Cdn
     /// <summary>
     /// Upload name generator
     /// </summary>
-    public interface INameGenerator
+    internal interface INameGenerator
     {
         /// <summary>
         /// Generate upload name and extension

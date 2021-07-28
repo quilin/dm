@@ -16,7 +16,7 @@ namespace DM.Services.Gaming.Dto
     /// <summary>
     /// Profile for game DTO and DAL mapping
     /// </summary>
-    public class GameProfile : Profile
+    internal class GameProfile : Profile
     {
         /// <inheritdoc />
         public GameProfile()
@@ -28,7 +28,7 @@ namespace DM.Services.Gaming.Dto
                 .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.Tokens
                     .Where(t => !t.IsRemoved && t.Type == TokenType.AssistantAssignment)
                     .Select(t => t.User)
-                    .Take(1)))
+                    .FirstOrDefault()))
                 .ForMember(d => d.ActiveCharacterUserIds, s => s.MapFrom(g => g.Characters
                     .Where(c => !c.IsRemoved && c.Status == CharacterStatus.Active)
                     .Select(c => c.CharacterId)))

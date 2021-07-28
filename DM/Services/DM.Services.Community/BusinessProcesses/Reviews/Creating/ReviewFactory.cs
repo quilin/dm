@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
 {
     /// <inheritdoc />
-    public class ReviewFactory : IReviewFactory
+    internal class ReviewFactory : IReviewFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

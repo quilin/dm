@@ -14,7 +14,7 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 {
     /// <inheritdoc />
-    public class RoomUpdatingRepository : IRoomUpdatingRepository
+    internal class RoomUpdatingRepository : IRoomUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Creating
     /// <summary>
     /// Factory for chat message DAL model
     /// </summary>
-    public interface IChatMessageFactory
+    internal interface IChatMessageFactory
     {
         /// <summary>
         /// Create new DAL model

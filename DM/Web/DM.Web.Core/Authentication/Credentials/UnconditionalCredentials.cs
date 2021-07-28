@@ -5,7 +5,7 @@ namespace DM.Web.Core.Authentication.Credentials
     /// <summary>
     /// Unconditional login credentials
     /// </summary>
-    public class UnconditionalCredentials : AuthCredentials
+    internal class UnconditionalCredentials : AuthCredentials
     {
         /// <summary>
         /// User identifier

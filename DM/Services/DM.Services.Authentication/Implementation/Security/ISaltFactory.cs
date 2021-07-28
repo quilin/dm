@@ -1,9 +1,9 @@
-namespace DM.Services.Core.Implementation
+namespace DM.Services.Authentication.Implementation.Security
 {
     /// <summary>
     /// Factory for a password salt
     /// </summary>
-    public interface ISaltFactory
+    internal interface ISaltFactory
     {
         /// <summary>
         /// Generates password salt of given length

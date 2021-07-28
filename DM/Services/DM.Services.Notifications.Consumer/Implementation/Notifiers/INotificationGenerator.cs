@@ -8,7 +8,7 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
     /// <summary>
     /// Generates notification for certain event
     /// </summary>
-    public interface INotificationGenerator
+    internal interface INotificationGenerator
     {
         /// <summary>
         /// Tells if resolver can process the certain event type

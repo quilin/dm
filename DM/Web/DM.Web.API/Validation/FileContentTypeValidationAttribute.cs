@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.Validation
 {
     /// <inheritdoc />
-    public class FileContentTypeValidationAttribute : ValidationAttribute
+    internal class FileContentTypeValidationAttribute : ValidationAttribute
     {
         private readonly HashSet<string> contentTypes;
 

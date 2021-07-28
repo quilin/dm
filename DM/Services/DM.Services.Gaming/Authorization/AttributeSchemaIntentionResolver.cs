@@ -5,7 +5,7 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.Authorization
 {
     /// <inheritdoc />
-    public class AttributeSchemaIntentionResolver : IIntentionResolver<AttributeSchemaIntention, AttributeSchema>
+    internal class AttributeSchemaIntentionResolver : IIntentionResolver<AttributeSchemaIntention, AttributeSchema>
     {
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, AttributeSchemaIntention intention, AttributeSchema target) =>

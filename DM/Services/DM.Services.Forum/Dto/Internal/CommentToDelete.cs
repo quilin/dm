@@ -5,7 +5,7 @@ namespace DM.Services.Forum.Dto.Internal
     /// <summary>
     /// DTO to remove the commentary
     /// </summary>
-    public class CommentToDelete : Comment
+    internal class CommentToDelete : Comment
     {
         /// <summary>
         /// Tells if the comment is last comment of its parent topic

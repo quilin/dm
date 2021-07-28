@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
     /// <summary>
     /// Assistant assignment storage
     /// </summary>
-    public interface IAssignmentRepository
+    internal interface IAssignmentRepository
     {
         /// <summary>
         /// Get token for assignment

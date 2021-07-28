@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Reading
     /// <summary>
     /// Storage for reading chat messages
     /// </summary>
-    public interface IChatReadingRepository
+    internal interface IChatReadingRepository
     {
         /// <summary>
         /// Count chat messages

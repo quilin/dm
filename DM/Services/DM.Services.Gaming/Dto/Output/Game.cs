@@ -59,7 +59,7 @@ namespace DM.Services.Gaming.Dto.Output
         /// Pending assistant if any
         /// <remarks>Due to some issues in EFCore 3.1.5 had to move to IEnumerable, but make no mistake - that is a single assistant every time!</remarks>
         /// </summary>
-        public IEnumerable<GeneralUser> PendingAssistant { get; set; }
+        public GeneralUser PendingAssistant { get; set; }
 
         /// <summary>
         /// Active game character author ids

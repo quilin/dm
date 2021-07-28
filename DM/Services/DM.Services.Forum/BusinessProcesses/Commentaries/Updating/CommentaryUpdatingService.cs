@@ -13,7 +13,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
 {
     /// <inheritdoc />
-    public class CommentaryUpdatingService : ICommentaryUpdatingService
+    internal class CommentaryUpdatingService : ICommentaryUpdatingService
     {
         private readonly IValidator<UpdateComment> validator;
         private readonly ICommentaryReadingService commentaryReadingService;

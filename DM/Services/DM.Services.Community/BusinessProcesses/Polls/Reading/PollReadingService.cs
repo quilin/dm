@@ -10,7 +10,7 @@ using DM.Services.Core.Implementation;
 namespace DM.Services.Community.BusinessProcesses.Polls.Reading
 {
     /// <inheritdoc />
-    public class PollReadingService : IPollReadingService
+    internal class PollReadingService : IPollReadingService
     {
         private readonly IPollReadingRepository repository;
         private readonly IDateTimeProvider dateTimeProvider;

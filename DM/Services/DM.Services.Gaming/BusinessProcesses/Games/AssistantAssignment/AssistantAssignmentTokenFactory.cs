@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
     /// <inheritdoc />
-    public class AssistantAssignmentTokenFactory : IAssistantAssignmentTokenFactory
+    internal class AssistantAssignmentTokenFactory : IAssistantAssignmentTokenFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

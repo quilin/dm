@@ -7,7 +7,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
     /// <summary>
     /// Indexer for removed topic
     /// </summary>
-    public class TopicDeletedIndexer : BaseIndexer
+    internal class TopicDeletedIndexer : BaseIndexer
     {
         private readonly IIndexingRepository repository;
 

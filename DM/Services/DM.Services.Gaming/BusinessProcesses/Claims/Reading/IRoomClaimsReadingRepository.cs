@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
     /// <summary>
     /// Storage for room claims reading
     /// </summary>
-    public interface IRoomClaimsReadingRepository
+    internal interface IRoomClaimsReadingRepository
     {
         /// <summary>
         /// Get all game claims

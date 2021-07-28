@@ -5,7 +5,7 @@ using DM.Services.DataAccess.MongoIntegration;
 namespace DM.Services.Notifications.BusinessProcesses.Flushing
 {
     /// <inheritdoc cref="INotificationsFlushingRepository" />
-    public class NotificationsFlushingRepository : NotificationQueriesRepository, INotificationsFlushingRepository
+    internal class NotificationsFlushingRepository : NotificationQueriesRepository, INotificationsFlushingRepository
     {
         /// <inheritdoc />
         public NotificationsFlushingRepository(DmMongoClient client) : base(client)

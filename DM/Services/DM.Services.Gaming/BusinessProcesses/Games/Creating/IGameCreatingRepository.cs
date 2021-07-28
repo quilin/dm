@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
     /// <summary>
     /// Storage for game creating
     /// </summary>
-    public interface IGameCreatingRepository
+    internal interface IGameCreatingRepository
     {
         /// <summary>
         /// Save new game and its first room

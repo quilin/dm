@@ -20,7 +20,7 @@ using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
     /// <inheritdoc />
-    public class GameCreatingService : IGameCreatingService
+    internal class GameCreatingService : IGameCreatingService
     {
         private readonly IValidator<CreateGame> validator;
         private readonly IIntentionManager intentionManager;

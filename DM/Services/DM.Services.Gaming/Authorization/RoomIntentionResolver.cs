@@ -9,7 +9,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.Authorization
 {
     /// <inheritdoc />
-    public class RoomIntentionResolver :
+    internal class RoomIntentionResolver :
         IIntentionResolver<RoomIntention, (RoomToUpdate, Guid?)>,
         IIntentionResolver<RoomIntention, RoomToUpdate>,
         IIntentionResolver<RoomIntention, PendingPost>

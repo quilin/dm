@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
     /// <summary>
     /// Factory for room claim DAL model
     /// </summary>
-    public interface IRoomClaimFactory
+    internal interface IRoomClaimFactory
     {
         /// <summary>
         /// Create DAL model

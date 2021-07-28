@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace DM.Web.API.BbRendering
 {
     /// <inheritdoc />
-    public class BbRenderModeSwaggerFilter : IOperationFilter
+    internal class BbRenderModeSwaggerFilter : IOperationFilter
     {
         /// <inheritdoc />
         public void Apply(OpenApiOperation operation, OperationFilterContext context)

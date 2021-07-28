@@ -15,7 +15,7 @@ using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversa
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class ConversationReadingRepository : IConversationReadingRepository
+    internal class ConversationReadingRepository : IConversationReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

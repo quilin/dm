@@ -7,7 +7,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
 {
     /// <inheritdoc />
-    public class PasswordResetService : IPasswordResetService
+    internal class PasswordResetService : IPasswordResetService
     {
         private readonly IValidator<UserPasswordReset> validator;
         private readonly IPasswordResetTokenFactory tokenFactory;

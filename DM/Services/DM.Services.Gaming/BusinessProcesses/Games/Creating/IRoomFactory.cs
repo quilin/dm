@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
     /// <summary>
     /// Factory for room DAL model
     /// </summary>
-    public interface IRoomFactory
+    internal interface IRoomFactory
     {
         /// <summary>
         /// Creates a DAL model for the default room in game

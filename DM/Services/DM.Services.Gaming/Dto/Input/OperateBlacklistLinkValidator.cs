@@ -5,7 +5,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.Dto.Input
 {
     /// <inheritdoc />
-    public class OperateBlacklistLinkValidator : AbstractValidator<OperateBlacklistLink>
+    internal class OperateBlacklistLinkValidator : AbstractValidator<OperateBlacklistLink>
     {
         /// <inheritdoc />
         public OperateBlacklistLinkValidator(

@@ -17,7 +17,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
 {
     /// <inheritdoc />
-    public class PendingPostCreatingService : IPendingPostCreatingService
+    internal class PendingPostCreatingService : IPendingPostCreatingService
     {
         private readonly IValidator<CreatePendingPost> validator;
         private readonly IRoomReadingService roomReadingService;

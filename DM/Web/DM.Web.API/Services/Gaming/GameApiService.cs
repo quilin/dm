@@ -16,7 +16,7 @@ using GamesQuery = DM.Services.Gaming.Dto.Input.GamesQuery;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class GameApiService : IGameApiService
+    internal class GameApiService : IGameApiService
     {
         private readonly IGameReadingService readingService;
         private readonly IGameCreatingService creatingService;

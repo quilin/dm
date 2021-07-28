@@ -13,7 +13,7 @@ using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Character
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
-    public class SchemaCreatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaCreatingRepository
+    internal class SchemaCreatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

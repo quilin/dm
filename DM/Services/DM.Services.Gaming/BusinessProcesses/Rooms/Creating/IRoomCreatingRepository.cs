@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
     /// <summary>
     /// Game room creating storage
     /// </summary>
-    public interface IRoomCreatingRepository
+    internal interface IRoomCreatingRepository
     {
         /// <summary>
         /// Create new room

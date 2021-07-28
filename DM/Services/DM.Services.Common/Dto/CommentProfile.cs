@@ -6,7 +6,7 @@ namespace DM.Services.Common.Dto
     /// <summary>
     /// Profile for comment mapping
     /// </summary>
-    public class CommentProfile : Profile
+    internal class CommentProfile : Profile
     {
         /// <inheritdoc />
         public CommentProfile()

@@ -3,7 +3,7 @@ using FluentValidation;
 namespace DM.Services.Mail.Sender
 {
     /// <inheritdoc />
-    public class MailLetterValidator : AbstractValidator<MailLetter>
+    internal class MailLetterValidator : AbstractValidator<MailLetter>
     {
         /// <inheritdoc />
         public MailLetterValidator()

@@ -6,7 +6,7 @@ namespace DM.Services.Uploading.Dto
     /// <summary>
     /// Profile for upload mapper
     /// </summary>
-    public class UploadProfile : Profile
+    internal class UploadProfile : Profile
     {
         /// <inheritdoc />
         public UploadProfile()

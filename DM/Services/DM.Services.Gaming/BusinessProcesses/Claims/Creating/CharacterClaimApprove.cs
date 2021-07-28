@@ -8,7 +8,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
 {
     /// <inheritdoc />
-    public class CharacterClaimApprove : ICharacterClaimApprove
+    internal class CharacterClaimApprove : ICharacterClaimApprove
     {
         private readonly IRoomClaimsCreatingRepository repository;
 

@@ -13,7 +13,7 @@ using Review = DM.Web.API.Dto.Community.Review;
 namespace DM.Web.API.Services.Community
 {
     /// <inheritdoc />
-    public class ReviewApiService : IReviewApiService
+    internal class ReviewApiService : IReviewApiService
     {
         private readonly IReviewReadingService readingService;
         private readonly IReviewCreatingService creatingService;

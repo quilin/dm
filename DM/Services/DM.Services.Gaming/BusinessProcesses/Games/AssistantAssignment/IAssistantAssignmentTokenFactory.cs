@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
     /// <summary>
     /// Factory for assistant assignment token
     /// </summary>
-    public interface IAssistantAssignmentTokenFactory
+    internal interface IAssistantAssignmentTokenFactory
     {
         /// <summary>
         /// Create token for game assistant request

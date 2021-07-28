@@ -11,7 +11,7 @@ using DM.Services.Uploading.Dto;
 namespace DM.Services.Uploading.BusinessProcesses.Cdn
 {
     /// <inheritdoc />
-    public class NameGenerator : INameGenerator
+    internal class NameGenerator : INameGenerator
     {
         private readonly IGuidFactory guidFactory;
 

@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration
 {
     /// <inheritdoc />
-    public class UserFactory : IUserFactory
+    internal class UserFactory : IUserFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

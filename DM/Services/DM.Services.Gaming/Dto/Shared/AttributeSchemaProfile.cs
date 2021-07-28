@@ -6,7 +6,7 @@ using DbListValue = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attr
 namespace DM.Services.Gaming.Dto.Shared
 {
     /// <inheritdoc />
-    public class AttributeSchemaProfile : Profile
+    internal class AttributeSchemaProfile : Profile
     {
         /// <inheritdoc />
         public AttributeSchemaProfile()

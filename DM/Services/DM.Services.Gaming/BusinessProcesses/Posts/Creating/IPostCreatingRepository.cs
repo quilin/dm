@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
     /// <summary>
     /// Storage for post creating
     /// </summary>
-    public interface IPostCreatingRepository
+    internal interface IPostCreatingRepository
     {
         /// <summary>
         /// Create new game post

@@ -7,7 +7,7 @@ using DM.Services.Core.Exceptions;
 namespace DM.Services.Community.BusinessProcesses.Account.Verification
 {
     /// <inheritdoc />
-    public class TokenVerificationService : ITokenVerificationService
+    internal class TokenVerificationService : ITokenVerificationService
     {
         private readonly ITokenVerificationRepository repository;
 

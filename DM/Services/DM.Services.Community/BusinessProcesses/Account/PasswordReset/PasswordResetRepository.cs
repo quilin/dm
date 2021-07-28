@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
 {
     /// <inheritdoc />
-    public class PasswordResetRepository : IPasswordResetRepository
+    internal class PasswordResetRepository : IPasswordResetRepository
     {
         private readonly DmDbContext dbContext;
 

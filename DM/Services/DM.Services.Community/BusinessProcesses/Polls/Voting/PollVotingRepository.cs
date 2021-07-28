@@ -8,7 +8,7 @@ using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 namespace DM.Services.Community.BusinessProcesses.Polls.Voting
 {
     /// <inheritdoc />
-    public class PollVotingRepository : MongoCollectionRepository<DbPoll>, IPollVotingRepository
+    internal class PollVotingRepository : MongoCollectionRepository<DbPoll>, IPollVotingRepository
     {
         /// <inheritdoc />
         public PollVotingRepository(DmMongoClient client) : base(client)

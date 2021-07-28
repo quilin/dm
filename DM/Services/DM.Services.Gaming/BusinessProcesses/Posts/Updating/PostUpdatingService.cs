@@ -17,7 +17,7 @@ using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
 {
     /// <inheritdoc />
-    public class PostUpdatingService : IPostUpdatingService
+    internal class PostUpdatingService : IPostUpdatingService
     {
         private readonly IValidator<UpdatePost> validator;
         private readonly IIntentionManager intentionManager;

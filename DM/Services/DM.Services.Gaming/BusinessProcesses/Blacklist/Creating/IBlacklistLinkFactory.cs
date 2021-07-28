@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
     /// <summary>
     /// Factory for blacklist link DAL model
     /// </summary>
-    public interface IBlacklistLinkFactory
+    internal interface IBlacklistLinkFactory
     {
         /// <summary>
         /// Create DAL model

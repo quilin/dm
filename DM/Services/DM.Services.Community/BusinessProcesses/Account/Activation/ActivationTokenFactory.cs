@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Community.BusinessProcesses.Account.Activation
 {
     /// <inheritdoc />
-    public class ActivationTokenFactory : IActivationTokenFactory
+    internal class ActivationTokenFactory : IActivationTokenFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

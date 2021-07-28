@@ -7,7 +7,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Creating
     /// <summary>
     /// Notifications storage
     /// </summary>
-    public interface INotificationCreatingRepository
+    internal interface INotificationCreatingRepository
     {
         /// <summary>
         /// Create new notification

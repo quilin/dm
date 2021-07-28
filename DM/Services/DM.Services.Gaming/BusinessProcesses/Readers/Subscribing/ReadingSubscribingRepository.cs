@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
 {
     /// <inheritdoc />
-    public class ReadingSubscribingRepository : IReadingSubscribingRepository
+    internal class ReadingSubscribingRepository : IReadingSubscribingRepository
     {
         private readonly DmDbContext dbContext;
 

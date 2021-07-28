@@ -7,7 +7,7 @@ namespace DM.Services.Uploading.BusinessProcesses.Cdn
     /// <summary>
     /// CDN uploader
     /// </summary>
-    public interface IUploader
+    internal interface IUploader
     {
         /// <summary>
         /// Upload file

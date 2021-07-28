@@ -17,7 +17,7 @@ using Session = DM.Services.Authentication.Dto.Session;
 namespace DM.Services.Authentication.Repositories
 {
     /// <inheritdoc cref="IAuthenticationRepository" />
-    public class AuthenticationRepository : MongoRepository, IAuthenticationRepository
+    internal class AuthenticationRepository : MongoRepository, IAuthenticationRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

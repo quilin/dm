@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset.Confirmation
 {
     /// <inheritdoc />
-    public class PasswordResetEmailSender : IPasswordResetEmailSender
+    internal class PasswordResetEmailSender : IPasswordResetEmailSender
     {
         private readonly IRenderer renderer;
         private readonly IMailSender mailSender;

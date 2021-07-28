@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
     /// <summary>
     /// Factory for character DAL model
     /// </summary>
-    public interface ICharacterFactory
+    internal interface ICharacterFactory
     {
         /// <summary>
         /// Create character from DTO model

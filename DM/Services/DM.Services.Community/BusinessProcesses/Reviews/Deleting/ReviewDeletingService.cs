@@ -9,7 +9,7 @@ using Review = DM.Services.DataAccess.BusinessObjects.Common.Review;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Deleting
 {
     /// <inheritdoc />
-    public class ReviewDeletingService : IReviewDeletingService
+    internal class ReviewDeletingService : IReviewDeletingService
     {
         private readonly IReviewReadingService reviewReadingService;
         private readonly IIntentionManager intentionManager;

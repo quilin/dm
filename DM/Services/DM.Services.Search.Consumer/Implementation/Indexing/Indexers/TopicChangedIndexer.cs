@@ -13,7 +13,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
     /// <summary>
     /// Indexer for modified topic
     /// </summary>
-    public class TopicChangedIndexer : BaseIndexer
+    internal class TopicChangedIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;

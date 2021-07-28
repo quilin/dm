@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace DM.Web.API.Binding
 {
     /// <inheritdoc />
-    public class ReadableGuidBinderProvider : IModelBinderProvider
+    internal class ReadableGuidBinderProvider : IModelBinderProvider
     {
         /// <inheritdoc />
         public IModelBinder GetBinder(ModelBinderProviderContext context)

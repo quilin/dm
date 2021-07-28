@@ -12,7 +12,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
 {
     /// <inheritdoc />
-    public class RoomClaimsCreatingService : IRoomClaimsCreatingService
+    internal class RoomClaimsCreatingService : IRoomClaimsCreatingService
     {
         private readonly IValidator<CreateRoomClaim> validator;
         private readonly IRoomUpdatingRepository updatingRepository;

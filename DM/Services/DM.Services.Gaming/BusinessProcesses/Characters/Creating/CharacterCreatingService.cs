@@ -15,7 +15,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
 {
     /// <inheritdoc />
-    public class CharacterCreatingService : ICharacterCreatingService
+    internal class CharacterCreatingService : ICharacterCreatingService
     {
         private readonly IValidator<CreateCharacter> validator;
         private readonly IGameReadingService gameReadingService;

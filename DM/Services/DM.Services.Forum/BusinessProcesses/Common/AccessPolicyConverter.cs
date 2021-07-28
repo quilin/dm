@@ -3,7 +3,7 @@ using DM.Services.Core.Dto.Enums;
 namespace DM.Services.Forum.BusinessProcesses.Common
 {
     /// <inheritdoc />
-    public class AccessPolicyConverter : IAccessPolicyConverter
+    internal class AccessPolicyConverter : IAccessPolicyConverter
     {
         /// <inheritdoc />
         public ForumAccessPolicy Convert(UserRole role)

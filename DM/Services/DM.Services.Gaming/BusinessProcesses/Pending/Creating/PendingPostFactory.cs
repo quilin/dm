@@ -6,7 +6,7 @@ using DM.Services.Gaming.Dto.Input;
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
 {
     /// <inheritdoc />
-    public class PendingPostFactory : IPendingPostFactory
+    internal class PendingPostFactory : IPendingPostFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

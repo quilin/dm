@@ -7,7 +7,7 @@ using DM.Services.Community.BusinessProcesses.Polls.Reading;
 namespace DM.Services.Community.BusinessProcesses.Polls.Voting
 {
     /// <inheritdoc />
-    public class PollVotingService : IPollVotingService
+    internal class PollVotingService : IPollVotingService
     {
         private readonly IPollReadingService readingService;
         private readonly IPollVotingRepository repository;

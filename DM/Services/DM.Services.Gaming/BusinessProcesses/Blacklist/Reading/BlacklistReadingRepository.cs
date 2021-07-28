@@ -6,7 +6,7 @@ using DM.Services.Core.Dto;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Reading
 {
     /// <inheritdoc />
-    public class BlacklistReadingRepository : IBlacklistReadingRepository
+    internal class BlacklistReadingRepository : IBlacklistReadingRepository
     {
         /// <inheritdoc />
         public Task<IEnumerable<GeneralUser>> Get(Guid gameId)

@@ -3,7 +3,7 @@ using AutoMapper;
 namespace DM.Web.API.BbRendering
 {
     /// <inheritdoc />
-    public class BbTextProfile : Profile
+    internal class BbTextProfile : Profile
     {
         /// <inheritdoc />
         public BbTextProfile()

@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.EmailChange.Confirmati
     /// <summary>
     /// Registration confirmation email sender
     /// </summary>
-    public interface IEmailChangeMailSender
+    internal interface IEmailChangeMailSender
     {
         /// <summary>
         /// Sends the email change confirmation letter to newly registered user

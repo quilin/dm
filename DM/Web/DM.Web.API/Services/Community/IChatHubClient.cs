@@ -6,7 +6,7 @@ namespace DM.Web.API.Services.Community
     /// <summary>
     /// Hub service for community chat
     /// </summary>
-    public interface IChatHubClient
+    internal interface IChatHubClient
     {
         /// <summary>
         /// Send new message to all connected users

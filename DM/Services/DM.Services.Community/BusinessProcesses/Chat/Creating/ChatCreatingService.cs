@@ -9,7 +9,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Chat.Creating
 {
     /// <inheritdoc />
-    public class ChatCreatingService : IChatCreatingService
+    internal class ChatCreatingService : IChatCreatingService
     {
         private readonly IValidator<CreateChatMessage> validator;
         private readonly IIntentionManager intentionManager;

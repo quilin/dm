@@ -7,7 +7,7 @@ using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Deleting
 {
     /// <inheritdoc />
-    public class SchemaDeletingService : ISchemaDeletingService
+    internal class SchemaDeletingService : ISchemaDeletingService
     {
         private readonly ISchemaReadingService readingService;
         private readonly IIntentionManager intentionManager;

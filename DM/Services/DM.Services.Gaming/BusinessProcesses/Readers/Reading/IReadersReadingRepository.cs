@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Reading
     /// <summary>
     /// Storage for game readers
     /// </summary>
-    public interface IReadersReadingRepository
+    internal interface IReadersReadingRepository
     {
         /// <summary>
         /// Get game readers

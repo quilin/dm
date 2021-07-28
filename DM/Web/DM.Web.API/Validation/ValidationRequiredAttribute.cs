@@ -10,7 +10,7 @@ namespace DM.Web.API.Validation
     /// <summary>
     /// Validation required attribute
     /// </summary>
-    public class ValidationRequiredAttribute : TypeFilterAttribute
+    internal class ValidationRequiredAttribute : TypeFilterAttribute
     {
         /// <inheritdoc />
         public ValidationRequiredAttribute() : base(typeof(ValidationRequiredFilter))

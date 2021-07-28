@@ -6,7 +6,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
 {
     /// <inheritdoc />
-    public class UserEmailChangeValidator : AbstractValidator<UserEmailChange>
+    internal class UserEmailChangeValidator : AbstractValidator<UserEmailChange>
     {
         private const string FoundUserKey = nameof(FoundUserKey);
 

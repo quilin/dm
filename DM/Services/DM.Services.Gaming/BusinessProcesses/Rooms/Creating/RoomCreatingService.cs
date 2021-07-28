@@ -15,7 +15,7 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 {
     /// <inheritdoc />
-    public class RoomCreatingService : IRoomCreatingService
+    internal class RoomCreatingService : IRoomCreatingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IValidator<CreateRoom> validator;

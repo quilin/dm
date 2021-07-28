@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
     /// <summary>
     /// Converter for character status into associated intention
     /// </summary>
-    public interface ICharacterIntentionConverter
+    internal interface ICharacterIntentionConverter
     {
         /// <summary>
         /// Convert character status to associated intention

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Moderation
 {
     /// <inheritdoc />
-    public class ModeratorRepository : IModeratorRepository
+    internal class ModeratorRepository : IModeratorRepository
     {
         private readonly DmDbContext dmDbContext;
         private readonly IMapper mapper;

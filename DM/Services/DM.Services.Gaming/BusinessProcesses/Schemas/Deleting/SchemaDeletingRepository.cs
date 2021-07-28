@@ -6,7 +6,7 @@ using DM.Services.DataAccess.MongoIntegration;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Deleting
 {
     /// <inheritdoc />
-    public class SchemaDeletingRepository : MongoCollectionRepository<AttributeSchema>, ISchemaDeletingRepository
+    internal class SchemaDeletingRepository : MongoCollectionRepository<AttributeSchema>, ISchemaDeletingRepository
     {
         /// <inheritdoc />
         public SchemaDeletingRepository(DmMongoClient client) : base(client)

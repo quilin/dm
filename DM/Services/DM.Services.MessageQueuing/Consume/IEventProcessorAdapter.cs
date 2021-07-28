@@ -7,7 +7,7 @@ namespace DM.Services.MessageQueuing.Consume
     /// <summary>
     /// Adapter for incoming messages event consumer
     /// </summary>
-    public interface IEventProcessorAdapter<in TMessage>
+    internal interface IEventProcessorAdapter<in TMessage>
         where TMessage : class
     {
         /// <summary>

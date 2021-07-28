@@ -6,7 +6,7 @@ namespace DM.Services.DataAccess.BusinessObjects.DataContracts
     /// <summary>
     /// Administrative activity contract
     /// </summary>
-    public interface IAdministrated : IRemovable
+    internal interface IAdministrated : IRemovable
     {
         /// <summary>
         /// Administrative activity object identifier

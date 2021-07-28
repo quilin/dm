@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.BbRendering
 {
     /// <inheritdoc />
-    public class BbConverterFactory : JsonConverterFactory
+    internal class BbConverterFactory : JsonConverterFactory
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IBbParserProvider bbParserProvider;

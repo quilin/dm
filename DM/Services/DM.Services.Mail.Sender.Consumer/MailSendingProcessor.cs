@@ -17,7 +17,7 @@ using Polly.Retry;
 namespace DM.Services.Mail.Sender.Consumer
 {
     /// <inheritdoc />
-    public class MailSendingProcessor : IMessageProcessor<MailLetter>
+    internal class MailSendingProcessor : IMessageProcessor<MailLetter>
     {
         private readonly ILogger<MailSendingProcessor> logger;
         private readonly ICorrelationTokenProvider correlationTokenProvider;

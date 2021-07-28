@@ -9,7 +9,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class ActivationApiService : IActivationApiService
+    internal class ActivationApiService : IActivationApiService
     {
         private readonly IActivationService activationService;
         private readonly IAuthenticationService authenticationService;

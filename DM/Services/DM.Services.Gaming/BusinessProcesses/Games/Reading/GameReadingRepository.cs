@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
 {
     /// <inheritdoc />
-    public class GameReadingRepository : IGameReadingRepository
+    internal class GameReadingRepository : IGameReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

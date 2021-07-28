@@ -12,7 +12,7 @@ namespace DM.Web.API.Dto.Games
     /// <summary>
     /// Resolver for current user participation
     /// </summary>
-    public class GameParticipationResolver :
+    internal class GameParticipationResolver :
         IValueResolver<ServiceGame, Game, IEnumerable<GameParticipation>>,
         IValueResolver<GameExtended, Game, IEnumerable<GameParticipation>>
     {

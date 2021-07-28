@@ -9,7 +9,7 @@ namespace DM.Services.Uploading.BusinessProcesses.PublicImage
     /// <summary>
     /// Storage for public image uploads
     /// </summary>
-    public interface IPublicImageUploadRepository
+    internal interface IPublicImageUploadRepository
     {
         /// <summary>
         /// Save image uploads

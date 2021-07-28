@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Community.BusinessProcesses.Users.Reading
 {
     /// <inheritdoc />
-    public class ReadingProfile : Profile
+    internal class ReadingProfile : Profile
     {
         /// <inheritdoc />
         public ReadingProfile()

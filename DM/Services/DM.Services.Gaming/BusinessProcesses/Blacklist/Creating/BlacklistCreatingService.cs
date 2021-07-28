@@ -15,7 +15,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
 {
     /// <inheritdoc />
-    public class BlacklistCreatingService : IBlacklistCreatingService
+    internal class BlacklistCreatingService : IBlacklistCreatingService
     {
         private readonly IValidator<OperateBlacklistLink> validator;
         private readonly IGameReadingService gameReadingService;

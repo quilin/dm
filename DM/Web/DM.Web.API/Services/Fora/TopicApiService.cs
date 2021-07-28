@@ -15,7 +15,7 @@ using Topic = DM.Web.API.Dto.Fora.Topic;
 namespace DM.Web.API.Services.Fora
 {
     /// <inheritdoc />
-    public class TopicApiService : ITopicApiService
+    internal class TopicApiService : ITopicApiService
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly ITopicCreatingService topicCreatingService;

@@ -10,7 +10,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
 {
     /// <inheritdoc />
-    public class PasswordChangeService : IPasswordChangeService
+    internal class PasswordChangeService : IPasswordChangeService
     {
         private readonly IValidator<UserPasswordChange> validator;
         private readonly IPasswordChangeRepository repository;

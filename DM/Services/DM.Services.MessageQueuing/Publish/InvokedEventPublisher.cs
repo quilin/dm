@@ -10,7 +10,7 @@ using DM.Services.MessageQueuing.Dto;
 namespace DM.Services.MessageQueuing.Publish
 {
     /// <inheritdoc />
-    public class InvokedEventPublisher : IInvokedEventPublisher
+    internal class InvokedEventPublisher : IInvokedEventPublisher
     {
         private readonly IMessagePublisher messagePublisher;
         private readonly MessagePublishConfiguration configuration;

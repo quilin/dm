@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.Validation
 {
     /// <inheritdoc />
-    public class FileSizeValidationAttribute : ValidationAttribute
+    internal class FileSizeValidationAttribute : ValidationAttribute
     {
         private readonly long maxSize;
 

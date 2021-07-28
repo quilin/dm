@@ -10,7 +10,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
     /// <summary>
     /// Forum topics storage
     /// </summary>
-    public interface ITopicReadingRepository
+    internal interface ITopicReadingRepository
     {
         /// <summary>
         /// Get number of forum topics

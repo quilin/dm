@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
     /// <summary>
     /// Factory for game DAL model
     /// </summary>
-    public interface IGameFactory
+    internal interface IGameFactory
     {
         /// <summary>
         /// Create game and its initial room out of DTO model

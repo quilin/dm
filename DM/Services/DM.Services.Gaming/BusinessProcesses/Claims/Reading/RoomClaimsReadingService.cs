@@ -9,7 +9,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading
 {
     /// <inheritdoc />
-    public class RoomClaimsReadingService : IRoomClaimsReadingService
+    internal class RoomClaimsReadingService : IRoomClaimsReadingService
     {
         private readonly IRoomClaimsReadingRepository repository;
         private readonly IIdentityProvider identityProvider;

@@ -16,7 +16,7 @@ using DbAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attr
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
 {
     /// <inheritdoc />
-    public class CharacterUpdatingService : ICharacterUpdatingService
+    internal class CharacterUpdatingService : ICharacterUpdatingService
     {
         private readonly IValidator<UpdateCharacter> validator;
         private readonly IIntentionManager intentionManager;

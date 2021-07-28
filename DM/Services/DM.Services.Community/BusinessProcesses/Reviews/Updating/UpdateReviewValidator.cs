@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Updating
 {
     /// <inheritdoc />
-    public class UpdateReviewValidator : AbstractValidator<UpdateReview>
+    internal class UpdateReviewValidator : AbstractValidator<UpdateReview>
     {
         /// <inheritdoc />
         public UpdateReviewValidator()

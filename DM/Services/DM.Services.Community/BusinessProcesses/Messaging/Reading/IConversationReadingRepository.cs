@@ -10,7 +10,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
     /// <summary>
     /// Storage for reading user conversations
     /// </summary>
-    public interface IConversationReadingRepository
+    internal interface IConversationReadingRepository
     {
         /// <summary>
         /// Count user participated conversations

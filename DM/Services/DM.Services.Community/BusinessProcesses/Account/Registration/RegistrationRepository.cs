@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration
 {
     /// <inheritdoc />
-    public class RegistrationRepository : IRegistrationRepository
+    internal class RegistrationRepository : IRegistrationRepository
     {
         private readonly DmDbContext dbContext;
 

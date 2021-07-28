@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace DM.Web.API.Binding
 {
     /// <inheritdoc />
-    public class ReadableGuidBinder : IModelBinder
+    internal class ReadableGuidBinder : IModelBinder
     {
         /// <inheritdoc />
         public Task BindModelAsync(ModelBindingContext bindingContext)

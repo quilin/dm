@@ -5,7 +5,7 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 namespace DM.Services.Notifications.BusinessProcesses.Flushing
 {
     /// <inheritdoc />
-    public class NotificationsFlushingService : INotificationsFlushingService
+    internal class NotificationsFlushingService : INotificationsFlushingService
     {
         private readonly IIdentityProvider identityProvider;
         private readonly INotificationsFlushingRepository repository;

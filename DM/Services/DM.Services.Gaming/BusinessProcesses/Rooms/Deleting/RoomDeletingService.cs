@@ -14,7 +14,7 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
 {
     /// <inheritdoc />
-    public class RoomDeletingService : IRoomDeletingService
+    internal class RoomDeletingService : IRoomDeletingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

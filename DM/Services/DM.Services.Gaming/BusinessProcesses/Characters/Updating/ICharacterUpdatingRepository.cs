@@ -12,7 +12,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
     /// <summary>
     /// Character updating storage
     /// </summary>
-    public interface ICharacterUpdatingRepository
+    internal interface ICharacterUpdatingRepository
     {
         /// <summary>
         /// Get character for updating

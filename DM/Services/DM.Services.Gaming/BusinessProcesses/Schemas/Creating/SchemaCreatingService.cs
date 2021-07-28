@@ -8,7 +8,7 @@ using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Character
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
-    public class SchemaCreatingService : ISchemaCreatingService
+    internal class SchemaCreatingService : ISchemaCreatingService
     {
         private readonly ISchemaCreatingValidator validator;
         private readonly IIntentionManager intentionManager;

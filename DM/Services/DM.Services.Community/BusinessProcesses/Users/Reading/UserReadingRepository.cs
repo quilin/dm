@@ -17,7 +17,7 @@ using MongoDB.Driver;
 namespace DM.Services.Community.BusinessProcesses.Users.Reading
 {
     /// <inheritdoc />
-    public class UserReadingRepository : MongoCollectionRepository<UserSettings>, IUserReadingRepository
+    internal class UserReadingRepository : MongoCollectionRepository<UserSettings>, IUserReadingRepository
     {
         private readonly DmDbContext dmDbContext;
         private readonly IDateTimeProvider dateTimeProvider;

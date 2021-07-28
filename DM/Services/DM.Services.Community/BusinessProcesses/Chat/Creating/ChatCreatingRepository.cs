@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Chat.Creating
 {
     /// <inheritdoc />
-    public class ChatCreatingRepository : IChatCreatingRepository
+    internal class ChatCreatingRepository : IChatCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

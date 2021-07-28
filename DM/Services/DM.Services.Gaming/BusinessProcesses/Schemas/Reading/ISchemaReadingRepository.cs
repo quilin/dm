@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
     /// <summary>
     /// Storage for attribute schemas
     /// </summary>
-    public interface ISchemaReadingRepository
+    internal interface ISchemaReadingRepository
     {
         /// <summary>
         /// Get list of available schemas

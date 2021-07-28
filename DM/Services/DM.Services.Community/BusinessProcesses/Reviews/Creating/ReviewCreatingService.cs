@@ -7,7 +7,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
 {
     /// <inheritdoc />
-    public class ReviewCreatingService : IReviewCreatingService
+    internal class ReviewCreatingService : IReviewCreatingService
     {
         private readonly IValidator<CreateReview> validator;
         private readonly IIntentionManager intentionManager;

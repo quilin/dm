@@ -6,7 +6,7 @@ using DM.Services.Core.Dto.Enums;
 namespace DM.Services.Forum.Authorization
 {
     /// <inheritdoc />
-    public class CommentIntentionResolver : IIntentionResolver<CommentIntention, Comment>
+    internal class CommentIntentionResolver : IIntentionResolver<CommentIntention, Comment>
     {
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, CommentIntention intention, Comment target) => intention switch

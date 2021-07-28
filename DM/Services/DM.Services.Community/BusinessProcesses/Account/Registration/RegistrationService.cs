@@ -9,7 +9,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration
 {
     /// <inheritdoc />
-    public class RegistrationService : IRegistrationService
+    internal class RegistrationService : IRegistrationService
     {
         private readonly IValidator<UserRegistration> validator;
         private readonly ISecurityManager securityManager;

@@ -13,7 +13,7 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Reading
 {
     /// <inheritdoc />
-    public class RoomReadingRepository : IRoomReadingRepository
+    internal class RoomReadingRepository : IRoomReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

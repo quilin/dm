@@ -9,7 +9,7 @@ namespace DM.Services.Search.Consumer.Implementation
     /// <summary>
     /// Wrapper over the ElasticSearch indexing mechanism
     /// </summary>
-    public interface IIndexingRepository
+    internal interface IIndexingRepository
     {
         /// <summary>
         /// Store searchable entities in index

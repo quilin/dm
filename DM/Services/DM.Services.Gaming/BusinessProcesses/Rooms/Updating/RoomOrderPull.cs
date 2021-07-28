@@ -5,7 +5,7 @@ using DM.Services.Gaming.Dto.Internal;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 {
     /// <inheritdoc />
-    public class RoomOrderPull : IRoomOrderPull
+    internal class RoomOrderPull : IRoomOrderPull
     {
         private readonly IUpdateBuilderFactory updateBuilderFactory;
 

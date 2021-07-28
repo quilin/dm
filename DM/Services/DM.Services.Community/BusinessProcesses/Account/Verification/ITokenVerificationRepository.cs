@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Verification
     /// <summary>
     /// Storage for token verification
     /// </summary>
-    public interface ITokenVerificationRepository
+    internal interface ITokenVerificationRepository
     {
         /// <summary>
         /// Get user that token was generated for

@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
     /// <summary>
     /// Factory for message DAL model
     /// </summary>
-    public interface IMessageFactory
+    internal interface IMessageFactory
     {
         /// <summary>
         /// Create new message DAL model

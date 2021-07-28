@@ -6,7 +6,7 @@ using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 namespace DM.Services.Community.BusinessProcesses.Messaging
 {
     /// <inheritdoc />
-    public class ConversationIntentionResolver : IIntentionResolver<ConversationIntention, Conversation>
+    internal class ConversationIntentionResolver : IIntentionResolver<ConversationIntention, Conversation>
     {
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, ConversationIntention intention, Conversation target) =>

@@ -13,7 +13,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Reading
 {
     /// <inheritdoc />
-    public class RoomReadingService : IRoomReadingService
+    internal class RoomReadingService : IRoomReadingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IRoomReadingRepository repository;
