@@ -126,7 +126,7 @@ export default new Router({
       }],
     },
     {
-      path: '/topic/:id/:n?',
+      path: '/topic/:id',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,
