@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DM.Services.Core.Extensions;
+using AutoMapper;
 using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Configuration;
 using DM.Services.MessageQueuing.Dto;
 using DM.Services.MessageQueuing.Processing;
 using DM.Services.MessageQueuing.Publish;
+using DM.Services.Notifications.BusinessProcesses.Creating;
 using DM.Services.Notifications.Consumer.Implementation.Notifiers;
+using DM.Services.Notifications.Dto;
 
 namespace DM.Services.Notifications.Consumer.Implementation
 {
@@ -15,40 +17,47 @@ namespace DM.Services.Notifications.Consumer.Implementation
     public class NotificationMessageProcessor : IMessageProcessor<InvokedEvent>
     {
         private readonly IEnumerable<INotificationGenerator> generators;
-        private readonly INotificationRepository repository;
+        private readonly INotificationCreatingService service;
+        private readonly IMapper mapper;
         private readonly IMessagePublisher publisher;
 
         /// <inheritdoc />
         public NotificationMessageProcessor(
             IEnumerable<INotificationGenerator> generators,
-            INotificationRepository repository,
+            INotificationCreatingService service,
+            IMapper mapper,
             IMessagePublisher publisher)
         {
             this.generators = generators;
-            this.repository = repository;
+            this.service = service;
+            this.mapper = mapper;
             this.publisher = publisher;
         }
 
         /// <inheritdoc />
         public async Task<ProcessResult> Process(InvokedEvent message)
         {
-            var notifications = (await generators
-                    .Where(g => g.CanResolve(message.Type))
-                    .SelectManyAsync(async g => await g.Generate(message.EntityId)))
-                .ToArray();
+            var notificationsToCreate = new List<CreateNotification>();
+            foreach (var generator in generators.Where(g => g.CanResolve(message.Type)))
+            {
+                await foreach (var createNotification in generator.Generate(message.EntityId))
+                {
+                    notificationsToCreate.Add(createNotification with {EventType = message.Type});
+                }
+            }
 
-            if (!notifications.Any())
+            if (!notificationsToCreate.Any())
             {
                 return ProcessResult.Success;
             }
 
-            await repository.Create(notifications.Select(n => n.notification));
-            await publisher.Publish(
-                notifications.Select(n => (n.userNotification, string.Empty)),
-                new MessagePublishConfiguration
-                {
-                    ExchangeName = "dm.notifications.sent"
-                });
+            var notifications = await service.Create(notificationsToCreate);
+            await publisher.Publish(notifications
+                .Select(mapper.Map<RealtimeNotification>)
+                .Select(n => (n, string.Empty)), new MessagePublishConfiguration
+            {
+                ExchangeName = "dm.notifications.sent"
+            });
 
             return ProcessResult.Success;
         }

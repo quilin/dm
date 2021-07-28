@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Notifications;
 
-namespace DM.Services.Notifications.Consumer.Implementation
+namespace DM.Services.Notifications.BusinessProcesses.Creating
 {
     /// <summary>
     /// Notifications storage
     /// </summary>
-    public interface INotificationRepository
+    public interface INotificationCreatingRepository
     {
         /// <summary>
         /// Create new notification

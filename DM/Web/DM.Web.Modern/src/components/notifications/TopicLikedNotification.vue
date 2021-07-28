@@ -1,10 +1,10 @@
 <template>
   <div>
     Пользователю
-    <router-link :to="{ name: 'profile', params: { login: data.AuthorLogin } }">{{ data.AuthorLogin }}</router-link>
+    <router-link :to="{ name: 'profile', params: { login: data.authorLogin } }">{{ data.authorLogin }}</router-link>
     понравилась ваша тема на форуме
-    <router-link :to="{ name: 'topic', params: { id: data.TopicId } }">
-      {{ data.TopicTitle }}
+    <router-link :to="{ name: 'topic', params: { id: data.topicId } }">
+      {{ data.topicTitle }}
     </router-link>
   </div>
 </template>

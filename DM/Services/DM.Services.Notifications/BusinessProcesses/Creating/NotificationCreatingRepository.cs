@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Notifications;
 using DM.Services.DataAccess.MongoIntegration;
 
-namespace DM.Services.Notifications.Consumer.Implementation
+namespace DM.Services.Notifications.BusinessProcesses.Creating
 {
-    /// <inheritdoc cref="INotificationRepository" />
-    public class NotificationRepository : MongoCollectionRepository<Notification>, INotificationRepository
+    /// <inheritdoc cref="INotificationCreatingRepository" />
+    public class NotificationCreatingRepository : MongoCollectionRepository<Notification>, INotificationCreatingRepository
     {
         /// <inheritdoc />
-        public NotificationRepository(DmMongoClient client) : base(client)
+        public NotificationCreatingRepository(DmMongoClient client) : base(client)
         {
         }
 
