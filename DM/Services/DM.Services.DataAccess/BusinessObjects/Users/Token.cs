@@ -9,13 +9,14 @@ namespace DM.Services.DataAccess.BusinessObjects.Users;
 /// <summary>
 /// DAL model for authorization token
 /// </summary>
-public class Token : IRemovable
-{
-    /// <summary>
-    /// Token identifier
-    /// </summary>
-    [Key]
-    public Guid TokenId { get; set; }
+[Table("Tokens")]
+    public class Token : IRemovable
+    {
+        /// <summary>
+        /// Token identifier
+        /// </summary>
+        [Key]
+        public Guid TokenId { get; set; }
 
     /// <summary>
     /// Authorised user identifier

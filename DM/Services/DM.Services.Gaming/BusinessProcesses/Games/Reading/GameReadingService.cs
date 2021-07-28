@@ -88,7 +88,7 @@ internal class GameReadingService : IGameReadingService
             var gameRoomIds = roomIds.ToArray();
             game.UnreadPostsCount = gameRoomIds.Sum(id =>
                 unreadPostCounters.TryGetValue(id, out var count) ? count : 0);
-            game.Pendings = pendingPosts.Where(p => gameRoomIds.Contains(p.RoomId));
+            game.PendingPosts = pendingPosts.Where(p => gameRoomIds.Contains(p.RoomId));
         }
 
         return games;
