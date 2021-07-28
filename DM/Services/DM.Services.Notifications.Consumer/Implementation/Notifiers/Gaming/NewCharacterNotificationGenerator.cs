@@ -46,8 +46,8 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers.Gaming
                 usersInterested.Add(data.AssistantId.Value);
             }
 
-            usersInterested = usersInterested.Where(u => u != data.UserId).ToList();
-            if (usersInterested.Count == 0)
+            usersInterested.Remove(data.UserId);
+            if (!usersInterested.Any())
             {
                 yield break;
             }
