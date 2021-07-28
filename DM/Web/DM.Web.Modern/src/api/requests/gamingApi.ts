@@ -56,15 +56,19 @@ export default new class {
     return await Api.post<Envelope<Game>>('games', game);
   }
 
-  public async createCharacter(id: string, character: Character): Promise<ApiResult<Envelope<Character>>> {
-    return await Api.post<Envelope<Character>>(`games/${id}/characters`, character);
+  public async createCharacter(gameId: string, character: Character): Promise<ApiResult<Envelope<Character>>> {
+    return await Api.post<Envelope<Character>>(`games/${gameId}/characters`, character);
   }
 
-  public async subscribe(id: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.post<Envelope<User>>(`games/${id}/readers`);
+  public async createComment(gameId: string, comment: Comment): Promise<ApiResult<Envelope<Comment>>> {
+    return await Api.post<Envelope<Comment>>(`games/${gameId}/comments`, comment);
   }
 
-  public async unsubscribe(id: string): Promise<ApiResult<void>> {
-    return await Api.delete(`games/${id}/readers`);
+  public async subscribe(gameId: string): Promise<ApiResult<Envelope<User>>> {
+    return await Api.post<Envelope<User>>(`games/${gameId}/readers`);
+  }
+
+  public async unsubscribe(gameId: string): Promise<ApiResult<void>> {
+    return await Api.delete(`games/${gameId}/readers`);
   }
 }();

@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import GamingState from './gamingState';
 import { Game, AttributeSchema, Tag, Character, Room, GameParticipation, Comment } from '@/api/models/gaming';
-import {User} from '@/api/models/community';
+import { User } from '@/api/models/community';
 import { ListEnvelope } from '@/api/models/common';
 
 const mutations: MutationTree<GamingState> = {

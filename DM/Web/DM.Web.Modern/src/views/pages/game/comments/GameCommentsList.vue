@@ -1,15 +1,14 @@
 <template>
   <div>
 
-    <loader v-if="comments === null" :big="true" />
+    <loader v-if="!comments" :big="true" />
 
-    <div v-else-if="comments.resources.length === 0">Пока никто ничего не написал</div>
-
-    <template v-else>
+    <template v-else-if="comments.resources.length">
       <paging :paging="comments.paging" :to="{ name: 'game-comments', params: $route.params }" />
-
       <game-comment v-for="comment in comments.resources" :key="comment.id" :comment="comment" />
     </template>
+
+    <div v-else>Пока никто ничего не написал</div>
 
   </div>
 </template>
