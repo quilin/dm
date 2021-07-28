@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.DataAccess.BusinessObjects.Notifications;
 using DM.Services.Notifications.Dto;
 
 namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
@@ -20,10 +18,10 @@ namespace DM.Services.Notifications.Consumer.Implementation.Notifiers
         bool CanResolve(EventType eventType);
 
         /// <summary>
-        /// Prepares notifications for users
+        /// Generate notifications off the event
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
-        /// <returns>List of notifications to invoke</returns>
-        Task<IEnumerable<(Notification notification, RealtimeNotification userNotification)>> Generate(Guid entityId);
+        /// <returns></returns>
+        IAsyncEnumerable<CreateNotification> Generate(Guid entityId);
     }
 }
