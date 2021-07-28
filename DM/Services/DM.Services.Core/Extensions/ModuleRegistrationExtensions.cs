@@ -48,9 +48,16 @@ namespace DM.Services.Core.Extensions
         public static ContainerBuilder RegisterDefaultTypes(this ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
-                .Where(t => t.IsClass)
-                .Where(t => t.GetConstructors().Any(c => c.IsPublic))
-                .Where(t => t.IsSubclassOf(typeof(Exception)))
+                // Only non-abstract classes should be registered automatically
+                .Where(t => t.IsClass && !t.IsAbstract)
+                .Where(t =>
+                {
+                    // Classes that only declared private constructors should not be registered
+                    var declaredConstructors = t.GetDeclaredConstructors();
+                    return !declaredConstructors.Any() || declaredConstructors.All(d => d.IsPublic);
+                })
+                // Exceptions should not be registered automatically
+                .Where(t => !t.IsSubclassOf(typeof(Exception)))
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerDependency();

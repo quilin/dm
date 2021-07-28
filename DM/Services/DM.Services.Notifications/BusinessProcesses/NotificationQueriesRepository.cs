@@ -6,7 +6,7 @@ using MongoDB.Driver;
 namespace DM.Services.Notifications.BusinessProcesses
 {
     /// <inheritdoc />
-    public class NotificationQueriesRepository : MongoCollectionRepository<Notification>
+    public abstract class NotificationQueriesRepository : MongoCollectionRepository<Notification>
     {
         /// <inheritdoc />
         protected NotificationQueriesRepository(DmMongoClient client) : base(client)

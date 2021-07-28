@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.Configuration;
@@ -30,11 +31,11 @@ namespace DM.Services.MessageQueuing.Tests
             connection.Setup(c => c.CreateModel()).Returns(channel.Object);
             connection.Setup(c => c.Close());
 
-            var saltFactory = Mock<ISaltFactory>();
-            saltFactory.Setup(f => f.Create(It.IsAny<int>())).Returns("testSalt");
+            var guidFactory = Mock<IGuidFactory>();
+            guidFactory.Setup(f => f.Create()).Returns(Guid.NewGuid);
 
             consumer = new MessageConsumer<TestMessage>(
-                connectionFactory.Object, saltFactory.Object, null);
+                connectionFactory.Object, guidFactory.Object, null);
         }
 
         [Fact]
@@ -57,7 +58,10 @@ namespace DM.Services.MessageQueuing.Tests
             consumer.Consume(configuration);
 
             channel.Verify(c => c
-                .BasicConsume("queue.name", false, "consumerTag.testSalt", false, false, null,
+                .BasicConsume(
+                    "queue.name", false,
+                    It.Is<string>(s => s.StartsWith("consumerTag")),
+                    false, false, null,
                     It.IsAny<EventingBasicConsumer>()), Times.Once);
             channel.Verify(c => c.QueueDeclare("queue.name", true, false, false, queueArguments), Times.Once);
             channel.Verify(c => c.ExchangeDeclare("exchange.name", "topic", true, false, null));
