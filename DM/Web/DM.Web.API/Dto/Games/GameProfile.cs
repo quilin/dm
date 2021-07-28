@@ -22,7 +22,6 @@ namespace DM.Web.API.Dto.Games
                 .ForMember(d => d.System, s => s.MapFrom(g => g.SystemName))
                 .ForMember(d => d.Setting, s => s.MapFrom(g => g.SettingName))
                 .ForMember(d => d.Released, s => s.MapFrom(g => g.ReleaseDate ?? g.CreateDate))
-                .ForMember(d => d.PendingAssistant, s => s.MapFrom(g => g.PendingAssistant.FirstOrDefault()))
                 .ForMember(d => d.Participation, s => s.MapFrom<GameParticipationResolver>());
 
             CreateMap<GameExtended, Game>()

@@ -15,6 +15,7 @@ const state: GamingState = {
   selectedGameCharacters: null,
   selectedGameRooms: null,
   selectedGameReaders: null,
+  selectedGameComments: null,
 };
 
 const gaming: Module<GamingState, RootState> = {

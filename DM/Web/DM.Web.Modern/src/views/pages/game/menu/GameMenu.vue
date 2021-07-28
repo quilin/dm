@@ -82,8 +82,8 @@ import {User} from '@/api/models/community';
 import {CommentariesAccessMode, Game, GameParticipation, Room} from '@/api/models/gaming';
 import IconType from '@/components/iconType';
 
-import OwnGames from '../../layout/menu/OwnGames.vue';
-import Fora from '../../layout/menu/Fora.vue';
+import OwnGames from '../../../layout/menu/OwnGames.vue';
+import Fora from '../../../layout/menu/Fora.vue';
 import {Route} from 'vue-router';
 
 @Component({
