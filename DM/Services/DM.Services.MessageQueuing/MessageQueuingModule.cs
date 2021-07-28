@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using DM.Services.Core;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.MessageQueuing.Consume;
@@ -38,6 +39,8 @@ namespace DM.Services.MessageQueuing
             builder.RegisterGeneric(typeof(MessageConsumer<>))
                 .AsImplementedInterfaces()
                 .SingleInstance();
+
+            builder.RegisterModuleOnce<CoreModule>();
 
             base.Load(builder);
         }
