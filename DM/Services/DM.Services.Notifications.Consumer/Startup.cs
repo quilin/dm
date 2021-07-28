@@ -89,7 +89,7 @@ namespace DM.Services.Notifications.Consumer
                 }.ToRoutingKeys(),
                 QueueName = "dm.notifications"
             };
-            // consumer.Consume(configuration);
+            consumer.Consume(configuration);
 
             Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");
 
