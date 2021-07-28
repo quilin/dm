@@ -97,11 +97,8 @@ export default class TopicComment extends Vue {
 
 <style scoped lang="stylus">
 .topic-comment
-  panel()
-
-  padding $minor
-  border 1px solid
-  theme(border-color, $border)
+  font-size $textFontSize
+  margin $medium 0
 
   &__meta
     display flex

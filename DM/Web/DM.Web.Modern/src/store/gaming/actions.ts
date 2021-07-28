@@ -2,7 +2,7 @@ import { ActionTree } from 'vuex';
 import gamingApi from '@/api/requests/gamingApi';
 import GamingState from './gamingState';
 import RootState from './../rootState';
-import { AttributeSchema } from '@/api/models/gaming';
+import {AttributeSchema, Comment} from '@/api/models/gaming';
 import { PagingQuery } from '@/api/models/common';
 
 const actions: ActionTree<GamingState, RootState> = {
@@ -108,6 +108,15 @@ const actions: ActionTree<GamingState, RootState> = {
 
     const data = await gamingApi.getComments(id, { size: 0, number: 0, skip: 0 });
     $router.push({ name: 'game-comments', params: { id, n: data.paging!.total } });
+  },
+  async updateComment({ commit }, { id, comment }): Promise<void> {
+    const { data, error } = await gamingApi.updateComment(id, comment as Comment);
+    if (!error) {
+      commit('updateComment', data!.resource);
+    }
+  },
+  async deleteComment(_, { id }) {
+    await gamingApi.deleteComment(id);
   },
 
   async fetchSelectedGameRooms({ commit }, { id }): Promise<void> {

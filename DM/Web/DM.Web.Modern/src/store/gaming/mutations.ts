@@ -38,6 +38,15 @@ const mutations: MutationTree<GamingState> = {
   updateSelectedGameComments(state, payload: ListEnvelope<Comment>) {
     state.selectedGameComments = payload;
   },
+  updateComment(state, payload: Comment) {
+    state.selectedGameComments!.resources = state.selectedGameComments!.resources.map(comment => {
+      if (comment.id === payload.id) {
+        return payload;
+      }
+
+      return comment;
+    });
+  },
 
   addReader(state, payload: User) {
     if (state.selectedGame === null || state.selectedGameReaders === null) return;

@@ -71,4 +71,12 @@ export default new class {
   public async unsubscribe(gameId: string): Promise<ApiResult<void>> {
     return await Api.delete(`games/${gameId}/readers`);
   }
+
+  public async updateComment(commentId: string, comment: Comment): Promise<ApiResult<Envelope<Comment>>> {
+    return await Api.patch<Envelope<Comment>>(`games/comments/${commentId}`, comment);
+  }
+
+  public async deleteComment(commentId: string): Promise<ApiResult<void>> {
+    return await Api.delete(`games/comments/${commentId}`);
+  }
 }();
