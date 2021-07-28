@@ -72,7 +72,7 @@ export default class TopicPage extends Vue {
   @Getter('forum/moderators')
   private moderators!: User[];
 
-  private topicEditable(): boolean {
+  private get topicEditable() {
     return this.moderators.some(moderator => moderator.login === this.user?.login) ||
         userIsHighAuthority(this.user);
   }
