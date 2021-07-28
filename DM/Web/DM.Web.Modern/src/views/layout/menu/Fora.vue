@@ -3,7 +3,7 @@
     <template v-slot:title>Форумы</template>
     <loader v-if="!fora.length" />
     <div v-else v-for="forum in fora" :key="forum.id" class="menu-item"
-      :class="{ selected: activeForumRoute && forum.id === selectedForum }">
+      :class="{ selected: activeForumRoute && forum.id === selectedForumId }">
       <router-link :to="{name: 'forum', params: {id: forum.id, n: 1}}">
         {{forum.id}}
         <template v-if="forum.unreadTopicsCount">
@@ -41,8 +41,13 @@ export default class ForaList extends Vue {
   @Getter('forum/selectedForum')
   private selectedForum!: string | null;
 
-  private get activeForumRoute(): boolean {
+  private get selectedForumId() {
+    return this.selectedForum;
+  }
+
+  private get activeForumRoute() {
     const name = this.$route.name;
+
     return name === 'forum' || name === 'topic' || name === 'topics';
   }
 
@@ -61,4 +66,7 @@ export default class ForaList extends Vue {
 </script>
 
 <style scoped lang="stylus">
+  .selected a
+    font-weight bold
+    theme(color, $text)
 </style>

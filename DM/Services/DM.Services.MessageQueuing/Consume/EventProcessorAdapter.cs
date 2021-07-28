@@ -1,9 +1,8 @@
 using System;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing.Processing;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -14,23 +13,24 @@ namespace DM.Services.MessageQueuing.Consume
         where TMessage : class
     {
         private readonly Func<IMessageProcessorWrapper<TMessage>> processorFactory;
-        private readonly ILogger<IMessageProcessorWrapper<TMessage>> logger;
+        private readonly ILogger<EventProcessorAdapter<TMessage>> logger;
 
         /// <inheritdoc />
         public EventProcessorAdapter(
             Func<IMessageProcessorWrapper<TMessage>> processorFactory,
-            ILogger<IMessageProcessorWrapper<TMessage>> logger)
+            ILogger<EventProcessorAdapter<TMessage>> logger)
         {
             this.processorFactory = processorFactory;
             this.logger = logger;
         }
-        
+
         /// <inheritdoc />
         public async Task ProcessEvent(BasicDeliverEventArgs eventArgs, IModel channel)
         {
             try
             {
-                var message = JsonConvert.DeserializeObject<TMessage>(Encoding.UTF8.GetString(eventArgs.Body.ToArray()));
+                var message = JsonSerializer.Deserialize<TMessage>(
+                    eventArgs.Body.ToArray(), SerializationSettings.ForMessage);
                 var processor = processorFactory();
                 var result = await processor.ProcessWithCorrelation(message, eventArgs.BasicProperties.CorrelationId);
                 switch (result)
@@ -51,7 +51,7 @@ namespace DM.Services.MessageQueuing.Consume
             }
             catch (Exception e)
             {
-                logger.LogError(e, e.Message);
+                logger.LogError(e, "Ошибка при обработке сообщения");
                 channel.BasicNack(eventArgs.DeliveryTag, false, false);
             }
         }

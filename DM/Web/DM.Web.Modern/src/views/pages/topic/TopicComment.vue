@@ -13,7 +13,7 @@
           &nbsp;
           <like :entity="comment" @liked="addLike({ id: comment.id })" @unliked="deleteLike({ id: comment.id })" />
         </div>
-        <div class="topic-comment__controls" v-if="editable">
+        <div class="topic-comment__controls" v-if="canEdit">
           <a class="topic-comment__control" @click="showEditForm">
             <icon :font="IconType.Edit" />
             Редактировать
@@ -25,7 +25,7 @@
         </div>
       </div>
     </template>
-    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" />
+    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" @canceled="hideEditForm" />
     <confirm-lightbox
         name="delete-comment"
         title="Удалить комментарий?"
@@ -43,7 +43,9 @@ import IconType from '@/components/iconType';
 import EditCommentForm from '@/views/pages/topic/EditCommentForm.vue';
 import ConfirmLightbox from '@/components/ConfirmLightbox.vue';
 import Like from '@/components/shared/Like.vue';
-import { Action } from 'vuex-class';
+import { Action, Getter } from 'vuex-class';
+import { User } from '@/api/models/community';
+import { userIsHighAuthority } from '@/api/models/community/helpers';
 
 @Component({
   components: { ConfirmLightbox, EditCommentForm, Like },
@@ -56,9 +58,6 @@ export default class TopicComment extends Vue {
   @Prop()
   private comment!: Comment;
 
-  @Prop()
-  private editable!: boolean;
-
   @Action('forum/deleteComment')
   private deleteCommentAction: any;
 
@@ -67,6 +66,18 @@ export default class TopicComment extends Vue {
 
   @Action('forum/addCommentLike')
   private addLike: any;
+
+  @Getter('forum/moderators')
+  private moderators!: User[];
+
+  @Getter('user')
+  private user!: User | null;
+
+  private get canEdit() {
+    return this.comment.author.login === this.user?.login ||
+        this.moderators.some(moderator => moderator.login === this.user?.login) ||
+        userIsHighAuthority(this.user);
+  }
 
   private showEditForm() {
     this.editMode = true;

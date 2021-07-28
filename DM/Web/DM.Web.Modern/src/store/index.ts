@@ -4,6 +4,7 @@ import RootState from './rootState';
 import forum from './forum';
 import community from './community';
 import gaming from './gaming';
+import notifications from './notifications';
 import ui from './ui';
 import accountApi from '@/api/requests/accountApi';
 import { ColorSchema, LoginCredentials } from '@/api/models/community';
@@ -67,5 +68,6 @@ export default new Vuex.Store<RootState>({
     forum,
     community,
     gaming,
+    notifications,
   },
 });

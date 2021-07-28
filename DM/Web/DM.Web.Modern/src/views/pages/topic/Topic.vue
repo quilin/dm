@@ -25,7 +25,7 @@
       </router-link>
     </div>
     <loader v-else :big="true" />
-    <topic-comments />
+    <router-view />
     <create-comment-form />
   </div>
 </template>
@@ -35,14 +35,13 @@ import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 import { Topic } from '@/api/models/forum';
 import IconType from '@/components/iconType';
-import TopicComments from './TopicComments.vue';
 import CreateCommentForm from './CreateCommentForm.vue';
 import Like from '@/components/shared/Like.vue';
 import { User } from '@/api/models/community';
 import { userIsHighAuthority } from '@/api/models/community/helpers';
 
 @Component({
-  components: { CreateCommentForm, TopicComments, Like },
+  components: { CreateCommentForm, Like },
 })
 export default class TopicPage extends Vue {
   private IconType: typeof IconType = IconType;

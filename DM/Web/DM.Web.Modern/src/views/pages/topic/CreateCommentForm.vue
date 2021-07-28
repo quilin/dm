@@ -2,7 +2,9 @@
   <form ref="form" @submit.prevent="createComment">
     <div class="content-title">Добавить комментарий</div>
     <text-area :disabled="loading" v-model.trim="text" />
-    <button :disabled="loading" class="comment-form__submit" type="submit">Добавить</button>
+    <action-button class="comment-form__submit" type="submit" :loading="loading" :disabled="!text">
+      Добавить
+    </action-button>
   </form>
 </template>
 
@@ -12,11 +14,9 @@ import { Action, Getter } from 'vuex-class';
 
 @Component({})
 export default class CreateCommentForm extends Vue {
-  public $refs!: {
-    form: HTMLFormElement;
-  };
-
   private text = '';
+
+  private loading = false;
 
   @Action('forum/createComment')
   private createCommentAction: any;
@@ -24,13 +24,7 @@ export default class CreateCommentForm extends Vue {
   @Getter('forum/selectedTopic')
   private selectedTopic!: string;
 
-  private loading = false;
-
   private async createComment() {
-    if (!this.text) { // todo validation
-      return;
-    }
-
     this.loading = true;
 
     await this.createCommentAction({

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AutoMapper;
 using DM.Services.Common;
 using DM.Services.Community;
 using DM.Services.Core.Configuration;
@@ -9,7 +8,10 @@ using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.Forum;
 using DM.Services.Gaming;
+using DM.Services.MessageQueuing.Configuration;
+using DM.Services.MessageQueuing.Consume;
 using DM.Services.Notifications;
+using DM.Services.Notifications.Dto;
 using DM.Services.Search;
 using DM.Services.Uploading;
 using DM.Services.Uploading.Configuration;
@@ -17,6 +19,7 @@ using DM.Web.API.Authentication;
 using DM.Web.API.Binding;
 using DM.Web.API.Configuration;
 using DM.Web.API.Middleware;
+using DM.Web.API.Notifications;
 using DM.Web.API.Swagger;
 using DM.Web.Core;
 using DM.Web.Core.Middleware;
@@ -74,6 +77,8 @@ namespace DM.Web.API
             httpContextAccessor = new HttpContextAccessor();
             bbParserProvider = new BbParserProvider();
 
+            services.AddSignalR();
+
             services
                 .AddSwaggerGen(c => c.ConfigureGen())
                 .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
@@ -113,7 +118,9 @@ namespace DM.Web.API
         /// Configure application
         /// </summary>
         /// <param name="appBuilder"></param>
-        public void Configure(IApplicationBuilder appBuilder)
+        /// <param name="notificationConsumer"></param>
+        public void Configure(IApplicationBuilder appBuilder,
+            IMessageConsumer<RealtimeNotification> notificationConsumer)
         {
             appBuilder
                 .UseSwagger(c => c.Configure())
@@ -122,13 +129,28 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseCors(b => b
+                    .WithOrigins("http://localhost:8080")
                     .WithExposedHeaders(ApiCredentialsStorage.HttpAuthTokenHeader)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowAnyOrigin())
+                    .AllowCredentials())
                 .UseRouting()
                 .UseHealthChecks("/_health")
-                .UseEndpoints(c => c.MapControllers());
+                .UseEndpoints(c =>
+                {
+                    c.MapControllers();
+                    c.MapHub<NotificationHub>("/whatsup");
+                });
+
+            notificationConsumer.Consume(new MessageConsumeConfiguration
+            {
+                ExchangeName = "dm.notifications.sent",
+                QueueName = "dm.notifications.api",
+                RoutingKeys = new[] {"#"},
+                PrefetchCount = 1,
+                Exclusive = true,
+                ConsumerTag = "dm.api"
+            });
         }
     }
 }

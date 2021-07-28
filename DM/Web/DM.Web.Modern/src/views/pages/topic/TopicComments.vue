@@ -7,7 +7,6 @@
         v-for="comment in comments.resources"
         :key="comment.id"
         :comment="comment"
-        :editable="commentEditable(comment.author)"
         @deleted="fetchData"
     />
     <div v-else>Здесь еще никто ничего не написал</div>
@@ -26,8 +25,6 @@ import { Action, Getter } from 'vuex-class';
 import { Comment } from '@/api/models/forum';
 import { ListEnvelope } from '@/api/models/common';
 import TopicComment from './TopicComment.vue';
-import { User } from '@/api/models/community';
-import { userIsHighAuthority } from '@/api/models/community/helpers';
 
 @Component({
   components: { TopicComment },
@@ -38,20 +35,8 @@ export default class TopicComments extends Vue {
   @Getter('forum/comments')
   private comments!: ListEnvelope<Comment>;
 
-  @Getter('user')
-  private user!: User | null;
-
-  @Getter('forum/moderators')
-  private moderators!: User[];
-
   @Action('forum/fetchComments')
   private fetchComments: any;
-
-  private commentEditable(author: User) {
-    return author.login === this.user?.login ||
-        this.moderators.some(moderator => moderator.login === this.user?.login) ||
-        userIsHighAuthority(this.user);
-  }
 
   @Watch('$route')
   private onRouteChanged(): void {
@@ -63,12 +48,10 @@ export default class TopicComments extends Vue {
   }
 
   private async fetchData() {
-    const id = this.$route.params.id;
+    const { id, n } = this.$route.params;
 
     this.loading = true;
-
-    await this.fetchComments({ id, n: this.$route.params.n });
-
+    await this.fetchComments({ id, n });
     this.loading = false;
   }
 }

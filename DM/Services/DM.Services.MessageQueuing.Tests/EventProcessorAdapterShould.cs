@@ -22,15 +22,15 @@ namespace DM.Services.MessageQueuing.Tests
 
         public EventProcessorAdapterShould()
         {
-            channel = Mock<IModel>(MockBehavior.Loose);
+            channel = Mock<IModel>();
             channel.Setup(c => c.BasicAck(It.IsAny<ulong>(), It.IsAny<bool>()));
             channel.Setup(c => c.BasicNack(It.IsAny<ulong>(), It.IsAny<bool>(), It.IsAny<bool>()));
             channel.Setup(c => c.BasicReject(It.IsAny<ulong>(), It.IsAny<bool>()));
 
-            processor = Mock<IMessageProcessorWrapper<TestMessage>>(MockBehavior.Loose);
+            processor = Mock<IMessageProcessorWrapper<TestMessage>>();
             processSetup = processor.Setup(p => p.ProcessWithCorrelation(It.IsAny<TestMessage>(), It.IsAny<string>()));
 
-            var logger = Mock<ILogger<IMessageProcessorWrapper<TestMessage>>>(MockBehavior.Loose);
+            var logger = Mock<ILogger<EventProcessorAdapter<TestMessage>>>();
             logger.Setup(l => l.Log(
                 It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<object>(),
                 It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()));
@@ -59,7 +59,7 @@ namespace DM.Services.MessageQueuing.Tests
             basicProperties.Setup(p => p.CorrelationId).Returns("correlationId");
             var basicDeliverEventArgs = new BasicDeliverEventArgs
             {
-                Body = Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}"),
+                Body = new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes("{\"id\":\"ddc9186e-b48f-4298-942a-9f45e3d976e6\"}")),
                 DeliveryTag = 45,
                 BasicProperties = basicProperties.Object
             };
