@@ -11,7 +11,7 @@ namespace DM.Services.MessageQueuing.Consume
         where TMessage : class
     {
         private readonly IConnectionFactory connectionFactory;
-        private readonly ISaltFactory saltFactory;
+        private readonly IGuidFactory guidFactory;
         private readonly IEventProcessorAdapter<TMessage> eventProcessorAdapter;
         private IConnection connection;
         private IModel channel;
@@ -20,11 +20,11 @@ namespace DM.Services.MessageQueuing.Consume
         /// <inheritdoc />
         public MessageConsumer(
             IConnectionFactory connectionFactory,
-            ISaltFactory saltFactory,
+            IGuidFactory guidFactory,
             IEventProcessorAdapter<TMessage> eventProcessorAdapter)
         {
             this.connectionFactory = connectionFactory;
-            this.saltFactory = saltFactory;
+            this.guidFactory = guidFactory;
             this.eventProcessorAdapter = eventProcessorAdapter;
         }
 
@@ -41,7 +41,7 @@ namespace DM.Services.MessageQueuing.Consume
             var consumerTagBody = string.IsNullOrEmpty(configuration.ConsumerTag)
                 ? GetType().Name
                 : configuration.ConsumerTag;
-            consumerTag = $"{consumerTagBody}.{saltFactory.Create(6)}";
+            consumerTag = $"{consumerTagBody}.{guidFactory.Create()}";
 
             channel.BasicConsume(consumer, configuration.QueueName, false, consumerTag);
         }
