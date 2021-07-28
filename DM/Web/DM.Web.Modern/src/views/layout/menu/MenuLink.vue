@@ -3,7 +3,7 @@
     <router-link :to="{ name: 'game', params: { id: game.id } }">
       {{ game.title }}
     </router-link>
-    <span v-if="counters">
+    <span v-if="counters" class="menu-game-item__counters">
       <router-link :to="{ name: 'game-first-unread-post', params: { id: game.id } }">
         <icon :font="game.unreadPostsCount ? IconType.PostsUnread : IconType.PostsNoUnread" />
         <template v-if="game.unreadPostsCount">{{ game.unreadPostsCount }}</template>
@@ -49,6 +49,10 @@ export default class MenuLink extends Vue {
 
   & a.router-link-active
     theme(color, $text)
+    font-weight bold
+
+.menu-game-item__counters
+  white-space nowrap
 
 .menu-game-item-separator
   display inline-block
