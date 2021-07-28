@@ -1,5 +1,5 @@
 import { Game, AttributeSchema, Tag, Character, Room, Comment } from '@/api/models/gaming';
-import {User} from '@/api/models/community';
+import { User } from '@/api/models/community';
 import { ListEnvelope } from '@/api/models/common';
 
 export default interface GamingState {
