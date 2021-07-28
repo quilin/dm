@@ -10,13 +10,13 @@ export interface UserNotification {
 }
 
 export interface NewCharacterData {
-  AuthorLogin: string;
-  GameTitle: string;
-  GameId: string;
+  authorLogin: string;
+  gameTitle: string;
+  gameId: string;
 }
 
 export interface TopicLikedData {
-  AuthorLogin: string;
-  TopicTitle: string;
-  TopicId: string;
+  authorLogin: string;
+  topicTitle: string;
+  topicId: string;
 }

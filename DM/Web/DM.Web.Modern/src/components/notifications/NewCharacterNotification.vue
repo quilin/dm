@@ -1,10 +1,10 @@
 <template>
   <div>
     Игрок
-    <router-link :to="{ name: 'profile', params: { login: data.AuthorLogin } }">{{ data.AuthorLogin }}</router-link>
+    <router-link :to="{ name: 'profile', params: { login: data.authorLogin } }">{{ data.authorLogin }}</router-link>
     подал заявку в вашу игру
-    <router-link :to="{ name: 'game', params: { id: data.GameId } }">
-      {{ data.GameTitle }}
+    <router-link :to="{ name: 'game', params: { id: data.gameId } }">
+      {{ data.gameTitle }}
     </router-link>
   </div>
 </template>
