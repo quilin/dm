@@ -6,7 +6,7 @@ namespace DM.Web.API.Notifications
     /// <summary>
     /// Realtime notifications SignalR hub
     /// </summary>
-    internal interface INotificationHub
+    public interface INotificationHub
     {
         /// <summary>
         /// Send notification
