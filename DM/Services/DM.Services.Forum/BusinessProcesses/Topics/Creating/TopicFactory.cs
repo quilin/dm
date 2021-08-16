@@ -6,7 +6,7 @@ using DM.Services.Forum.Dto.Input;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
 {
     /// <inheritdoc />
-    public class TopicFactory : ITopicFactory
+    internal class TopicFactory : ITopicFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

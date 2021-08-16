@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Notifications.Consumer.Implementation.Notifiers.Gaming
 {
     /// <inheritdoc />
-    public class NewCharacterNotificationGenerator : BaseNotificationGenerator
+    internal class NewCharacterNotificationGenerator : BaseNotificationGenerator
     {
         private readonly DmDbContext dbContext;
 

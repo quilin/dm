@@ -5,7 +5,7 @@ using DM.Services.Core.Dto;
 namespace DM.Services.Community.BusinessProcesses.Users
 {
     /// <inheritdoc />
-    public class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>
+    internal class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>
     {
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target) => intention switch

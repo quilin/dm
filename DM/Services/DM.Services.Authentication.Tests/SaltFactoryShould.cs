@@ -1,8 +1,8 @@
-using DM.Services.Core.Implementation;
+using DM.Services.Authentication.Implementation.Security;
 using FluentAssertions;
 using Xunit;
 
-namespace DM.Services.Core.Tests
+namespace DM.Services.Authentication.Tests
 {
     public class SaltFactoryShould
     {

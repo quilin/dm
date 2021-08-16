@@ -14,7 +14,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting
 {
     /// <inheritdoc />
-    public class PostDeletingService : IPostDeletingService
+    internal class PostDeletingService : IPostDeletingService
     {
         private readonly IPostReadingService postReadingService;
         private readonly IIntentionManager intentionManager;

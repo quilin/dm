@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.Activation
 {
     /// <inheritdoc />
-    public class ActivationRepository : IActivationRepository
+    internal class ActivationRepository : IActivationRepository
     {
         private readonly DmDbContext dbContext;
 

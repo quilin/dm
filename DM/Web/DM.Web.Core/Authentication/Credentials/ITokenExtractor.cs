@@ -6,7 +6,7 @@ namespace DM.Web.Core.Authentication.Credentials
     /// <summary>
     /// Authentication token extractor
     /// </summary>
-    public interface ITokenExtractor
+    internal interface ITokenExtractor
     {
         /// <summary>
         /// Extract token from request

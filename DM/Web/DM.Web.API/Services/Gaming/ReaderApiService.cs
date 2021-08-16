@@ -10,7 +10,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class ReaderApiService : IReaderApiService
+    internal class ReaderApiService : IReaderApiService
     {
         private readonly IReadersReadingService readingService;
         private readonly IReadingSubscribingService subscribingService;

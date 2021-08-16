@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
 {
     /// <inheritdoc />
-    public class ReviewReadingRepository : IReviewReadingRepository
+    internal class ReviewReadingRepository : IReviewReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

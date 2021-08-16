@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace DM.Services.DataAccess.Design
 {
     /// <inheritdoc />
-    public class DmDbContextFactory : IDesignTimeDbContextFactory<DmDbContext>
+    internal class DmDbContextFactory : IDesignTimeDbContextFactory<DmDbContext>
     {
         /// <inheritdoc />
         public DmDbContext CreateDbContext(string[] args)

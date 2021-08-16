@@ -10,7 +10,7 @@ using DM.Services.Core.Exceptions;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
 {
     /// <inheritdoc />
-    public class ReviewReadingService : IReviewReadingService
+    internal class ReviewReadingService : IReviewReadingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IReviewReadingRepository repository;

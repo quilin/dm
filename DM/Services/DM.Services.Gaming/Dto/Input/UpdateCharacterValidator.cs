@@ -9,7 +9,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.Dto.Input
 {
     /// <inheritdoc />
-    public class UpdateCharacterValidator : AbstractValidator<UpdateCharacter>
+    internal class UpdateCharacterValidator : AbstractValidator<UpdateCharacter>
     {
         private const string ErrorMessage = nameof(ErrorMessage);
         private const string SchemaCacheKey = nameof(SchemaCacheKey);

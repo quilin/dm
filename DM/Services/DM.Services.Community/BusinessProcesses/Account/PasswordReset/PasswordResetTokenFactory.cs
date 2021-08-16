@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
 {
     /// <inheritdoc />
-    public class PasswordResetTokenFactory : IPasswordResetTokenFactory
+    internal class PasswordResetTokenFactory : IPasswordResetTokenFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

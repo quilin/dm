@@ -7,7 +7,7 @@ using DM.Services.Gaming.Dto.Input;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
     /// <inheritdoc />
-    public class GameFactory : IGameFactory
+    internal class GameFactory : IGameFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

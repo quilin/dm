@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Reading
     /// <summary>
     /// Storage for game blacklist
     /// </summary>
-    public interface IBlacklistReadingRepository
+    internal interface IBlacklistReadingRepository
     {
         /// <summary>
         /// Get blacklisted users

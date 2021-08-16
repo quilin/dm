@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
 {
     /// <inheritdoc />
-    public class CreateMessageValidator : AbstractValidator<CreateMessage>
+    internal class CreateMessageValidator : AbstractValidator<CreateMessage>
     {
         /// <inheritdoc />
         public CreateMessageValidator()

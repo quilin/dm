@@ -11,7 +11,7 @@ using DM.Services.Search.Repositories;
 namespace DM.Services.Search.BusinessProcesses
 {
     /// <inheritdoc />
-    public class SearchService : ISearchService
+    internal class SearchService : ISearchService
     {
         private readonly ISearchEngineRepository searchEngineRepository;
         private readonly IIdentityProvider identityProvider;

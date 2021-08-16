@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Users.Reading
     /// <summary>
     /// Community users storage
     /// </summary>
-    public interface IUserReadingRepository
+    internal interface IUserReadingRepository
     {
         /// <summary>
         /// Count community users by filter

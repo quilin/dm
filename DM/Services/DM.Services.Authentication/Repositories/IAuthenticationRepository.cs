@@ -11,7 +11,7 @@ namespace DM.Services.Authentication.Repositories
     /// <summary>
     /// Authentication information storage
     /// </summary>
-    public interface IAuthenticationRepository
+    internal interface IAuthenticationRepository
     {
         /// <summary>
         /// Search for user by its login

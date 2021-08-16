@@ -5,7 +5,7 @@ using DM.Services.Community.BusinessProcesses.Reviews.Updating;
 namespace DM.Web.API.Dto.Community
 {
     /// <inheritdoc />
-    public class ReviewProfile : Profile
+    internal class ReviewProfile : Profile
     {
         /// <inheritdoc />
         public ReviewProfile()

@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Reading
     /// <summary>
     /// Storage for reading rooms
     /// </summary>
-    public interface IRoomReadingRepository
+    internal interface IRoomReadingRepository
     {
         /// <summary>
         /// Get list of available rooms in game

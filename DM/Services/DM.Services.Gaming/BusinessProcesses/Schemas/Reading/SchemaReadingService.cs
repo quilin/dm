@@ -9,7 +9,7 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
 {
     /// <inheritdoc />
-    public class SchemaReadingService : ISchemaReadingService
+    internal class SchemaReadingService : ISchemaReadingService
     {
         private readonly ISchemaReadingRepository repository;
         private readonly IIdentityProvider identityProvider;

@@ -3,7 +3,7 @@ using System;
 namespace DM.Services.Core.Implementation
 {
     /// <inheritdoc />
-    public class RandomNumberGenerator : IRandomNumberGenerator
+    internal class RandomNumberGenerator : IRandomNumberGenerator
     {
         private static readonly Lazy<Random> Random = new Lazy<Random>(() => new Random());
 

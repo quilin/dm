@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Chat.Creating
 {
     /// <inheritdoc />
-    public class CreateChatMessageValidator : AbstractValidator<CreateChatMessage>
+    internal class CreateChatMessageValidator : AbstractValidator<CreateChatMessage>
     {
         /// <inheritdoc />
         public CreateChatMessageValidator()

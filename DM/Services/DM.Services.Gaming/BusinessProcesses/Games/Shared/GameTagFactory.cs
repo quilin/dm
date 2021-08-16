@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Games.Links;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
 {
     /// <inheritdoc />
-    public class GameTagFactory : IGameTagFactory
+    internal class GameTagFactory : IGameTagFactory
     {
         private readonly IGuidFactory guidFactory;
 

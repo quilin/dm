@@ -5,7 +5,7 @@ namespace DM.Services.Gaming.Dto.Internal
     /// <summary>
     /// Internal DTO model for room updating
     /// </summary>
-    public class RoomToUpdate : Room
+    internal class RoomToUpdate : Room
     {
         /// <summary>
         /// Room parent game

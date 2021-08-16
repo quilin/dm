@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
 {
     /// <inheritdoc />
-    public class UpdateUserValidator : AbstractValidator<UpdateUser>
+    internal class UpdateUserValidator : AbstractValidator<UpdateUser>
     {
         /// <inheritdoc />
         public UpdateUserValidator()

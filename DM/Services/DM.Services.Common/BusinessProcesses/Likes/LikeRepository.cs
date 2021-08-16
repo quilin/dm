@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <inheritdoc />
-    public class LikeRepository : ILikeRepository
+    internal class LikeRepository : ILikeRepository
     {
         private readonly DmDbContext dbContext;
 

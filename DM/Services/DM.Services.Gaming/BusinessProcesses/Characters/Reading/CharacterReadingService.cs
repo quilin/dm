@@ -14,7 +14,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
 {
     /// <inheritdoc />
-    public class CharacterReadingService : ICharacterReadingService
+    internal class CharacterReadingService : ICharacterReadingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly ICharacterReadingRepository readingRepository;

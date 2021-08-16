@@ -6,7 +6,7 @@ namespace DM.Services.Core.Implementation.CorrelationToken
     /// <summary>
     /// Correlation token storage
     /// </summary>
-    public class CorrelationTokenProvider : ICorrelationTokenProvider, ICorrelationTokenSetter
+    internal class CorrelationTokenProvider : ICorrelationTokenProvider, ICorrelationTokenSetter
     {
         private Lazy<Guid> token;
 

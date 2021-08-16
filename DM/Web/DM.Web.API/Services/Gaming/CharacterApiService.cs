@@ -13,7 +13,7 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class CharacterApiService : ICharacterApiService
+    internal class CharacterApiService : ICharacterApiService
     {
         private readonly ICharacterReadingService readingService;
         private readonly ICharacterCreatingService creatingService;

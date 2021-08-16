@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
     /// <summary>
     /// Validate and decide reader participant in room claim
     /// </summary>
-    public interface IReaderClaimApprove
+    internal interface IReaderClaimApprove
     {
         /// <summary>
         /// Decide reader participant identifier

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 {
     /// <inheritdoc />
-    public class TopicUpdatingRepository : ITopicUpdatingRepository
+    internal class TopicUpdatingRepository : ITopicUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

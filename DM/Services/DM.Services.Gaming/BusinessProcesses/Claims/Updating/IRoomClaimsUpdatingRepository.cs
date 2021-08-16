@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
     /// <summary>
     /// Storage for room claims updating
     /// </summary>
-    public interface IRoomClaimsUpdatingRepository
+    internal interface IRoomClaimsUpdatingRepository
     {
         /// <summary>
         /// Update room claim

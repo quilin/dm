@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
 {
     /// <inheritdoc />
-    public class PendingPostCreatingRepository : IPendingPostCreatingRepository
+    internal class PendingPostCreatingRepository : IPendingPostCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

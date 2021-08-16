@@ -11,7 +11,7 @@ namespace DM.Services.Gaming.Dto.Input
     /// <summary>
     /// Validator for character creation DTO
     /// </summary>
-    public class CreateCharacterValidator : AbstractValidator<CreateCharacter>
+    internal class CreateCharacterValidator : AbstractValidator<CreateCharacter>
     {
         private const string SchemaCacheKey = nameof(SchemaCacheKey);
         private const string ErrorMessage = nameof(ErrorMessage);

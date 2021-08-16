@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
     /// <summary>
     /// Storage for blacklist link creating
     /// </summary>
-    public interface IBlacklistCreatingRepository
+    internal interface IBlacklistCreatingRepository
     {
         /// <summary>
         /// Save new link

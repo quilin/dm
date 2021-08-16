@@ -11,7 +11,7 @@ using DbRoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
 {
     /// <inheritdoc />
-    public class RoomClaimsUpdatingRepository : IRoomClaimsUpdatingRepository
+    internal class RoomClaimsUpdatingRepository : IRoomClaimsUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

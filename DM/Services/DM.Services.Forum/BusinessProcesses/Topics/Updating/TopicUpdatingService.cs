@@ -16,7 +16,7 @@ using FluentValidation;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
 {
     /// <inheritdoc />
-    public class TopicUpdatingService : ITopicUpdatingService
+    internal class TopicUpdatingService : ITopicUpdatingService
     {
         private readonly IValidator<UpdateTopic> validator;
         private readonly ITopicReadingService topicReadingService;

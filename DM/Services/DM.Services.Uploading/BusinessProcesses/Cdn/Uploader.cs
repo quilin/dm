@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace DM.Services.Uploading.BusinessProcesses.Cdn
 {
     /// <inheritdoc />
-    public class Uploader : IUploader
+    internal class Uploader : IUploader
     {
         private readonly CdnConfiguration cdnConfiguration;
         private readonly Lazy<IAmazonS3> client;

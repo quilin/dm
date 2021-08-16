@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading
     /// <summary>
     /// Storage for character reading
     /// </summary>
-    public interface ICharacterReadingRepository
+    internal interface ICharacterReadingRepository
     {
         /// <summary>
         /// Get all game characters

@@ -12,7 +12,7 @@ using DbPendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.Pending
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
 {
     /// <inheritdoc />
-    public class PendingPostDeletingRepository : IPendingPostDeletingRepository
+    internal class PendingPostDeletingRepository : IPendingPostDeletingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

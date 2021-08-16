@@ -6,7 +6,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Common.BusinessProcesses.Commentaries
 {
     /// <inheritdoc />
-    public class CommentaryFactory : ICommentaryFactory
+    internal class CommentaryFactory : ICommentaryFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

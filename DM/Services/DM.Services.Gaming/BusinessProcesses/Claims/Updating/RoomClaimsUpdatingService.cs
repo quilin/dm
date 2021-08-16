@@ -16,7 +16,7 @@ using DbRoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
 {
     /// <inheritdoc />
-    public class RoomClaimsUpdatingService : IRoomClaimsUpdatingService
+    internal class RoomClaimsUpdatingService : IRoomClaimsUpdatingService
     {
         private readonly IValidator<UpdateRoomClaim> validator;
         private readonly IRoomClaimsUpdatingRepository repository;

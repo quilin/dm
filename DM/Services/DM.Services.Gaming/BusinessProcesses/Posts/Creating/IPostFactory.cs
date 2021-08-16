@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
     /// <summary>
     /// Factory for post DAL model
     /// </summary>
-    public interface IPostFactory
+    internal interface IPostFactory
     {
         /// <summary>
         /// Create new game post

@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
     /// <summary>
     /// Factory for attribute schema DAL model
     /// </summary>
-    public interface ISchemaFactory
+    internal interface ISchemaFactory
     {
         /// <summary>
         /// Create new DAL model for schema creating

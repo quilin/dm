@@ -13,7 +13,7 @@ using DtoAttributeSchema = DM.Services.Gaming.Dto.Shared.AttributeSchema;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class SchemaApiService : ISchemaApiService
+    internal class SchemaApiService : ISchemaApiService
     {
         private readonly ISchemaReadingService readingService;
         private readonly ISchemaCreatingService creatingService;

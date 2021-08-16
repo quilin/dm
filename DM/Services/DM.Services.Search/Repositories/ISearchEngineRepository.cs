@@ -10,7 +10,7 @@ namespace DM.Services.Search.Repositories
     /// <summary>
     /// Searchable entities storage
     /// </summary>
-    public interface ISearchEngineRepository
+    internal interface ISearchEngineRepository
     {
         /// <summary>
         /// Search entities in index by text

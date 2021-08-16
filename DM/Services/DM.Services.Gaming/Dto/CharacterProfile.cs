@@ -11,7 +11,7 @@ namespace DM.Services.Gaming.Dto
     /// <summary>
     /// Profile for character DTO and DAL mapping
     /// </summary>
-    public class CharacterProfile : Profile
+    internal class CharacterProfile : Profile
     {
         /// <inheritdoc />
         public CharacterProfile()

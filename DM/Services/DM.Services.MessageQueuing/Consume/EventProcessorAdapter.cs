@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 namespace DM.Services.MessageQueuing.Consume
 {
     /// <inheritdoc />
-    public class EventProcessorAdapter<TMessage> : IEventProcessorAdapter<TMessage>
+    internal class EventProcessorAdapter<TMessage> : IEventProcessorAdapter<TMessage>
         where TMessage : class
     {
         private readonly Func<IMessageProcessorWrapper<TMessage>> processorFactory;

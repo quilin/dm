@@ -14,7 +14,7 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class PostApiService : IPostApiService
+    internal class PostApiService : IPostApiService
     {
         private readonly IPostReadingService readingService;
         private readonly IPostCreatingService creatingService;

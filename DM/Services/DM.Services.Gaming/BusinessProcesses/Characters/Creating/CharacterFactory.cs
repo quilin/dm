@@ -10,7 +10,7 @@ using DM.Services.Gaming.Dto.Input;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
 {
     /// <inheritdoc />
-    public class CharacterFactory : ICharacterFactory
+    internal class CharacterFactory : ICharacterFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

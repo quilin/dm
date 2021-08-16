@@ -8,7 +8,7 @@ namespace DM.Web.API.Binding
     /// <summary>
     /// Converter for readable guid fields 
     /// </summary>
-    public class ReadableGuidConverter : JsonConverter<Guid>
+    internal class ReadableGuidConverter : JsonConverter<Guid>
     {
         /// <inheritdoc />
         public override Guid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -29,7 +29,7 @@ namespace DM.Web.API.Binding
     /// <summary>
     /// Converter for readable but nullable fields
     /// </summary>
-    public class ReadableNullableGuidConverter : JsonConverter<Guid?>
+    internal class ReadableNullableGuidConverter : JsonConverter<Guid?>
     {
         /// <inheritdoc />
         public override Guid? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

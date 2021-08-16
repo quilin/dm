@@ -10,7 +10,7 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating
 {
     /// <inheritdoc />
-    public class SchemaUpdatingService : ISchemaUpdatingService
+    internal class SchemaUpdatingService : ISchemaUpdatingService
     {
         private readonly ISchemaCreatingValidator validator;
         private readonly ISchemaReadingService readingService;

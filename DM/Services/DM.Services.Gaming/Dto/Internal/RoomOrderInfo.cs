@@ -5,7 +5,7 @@ namespace DM.Services.Gaming.Dto.Internal
     /// <summary>
     /// DTO model for rooms linked list
     /// </summary>
-    public class RoomOrderInfo
+    internal class RoomOrderInfo
     {
         /// <summary>
         /// Room identifier

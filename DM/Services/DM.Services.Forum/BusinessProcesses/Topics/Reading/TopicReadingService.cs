@@ -16,7 +16,7 @@ using DM.Services.Forum.Dto.Output;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Reading
 {
     /// <inheritdoc />
-    public class TopicReadingService : ITopicReadingService
+    internal class TopicReadingService : ITopicReadingService
     {
         private readonly IForumReadingService forumReadingService;
         private readonly IAccessPolicyConverter accessPolicyConverter;

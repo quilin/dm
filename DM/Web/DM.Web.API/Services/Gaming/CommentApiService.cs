@@ -14,7 +14,7 @@ using Comment = DM.Web.API.Dto.Shared.Comment;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class CommentApiService : ICommentApiService
+    internal class CommentApiService : ICommentApiService
     {
         private readonly ICommentaryReadingService readingService;
         private readonly ICommentaryCreatingService creatingService;

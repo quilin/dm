@@ -14,7 +14,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 {
     /// <inheritdoc />
-    public class CommentaryReadingService : ICommentaryReadingService
+    internal class CommentaryReadingService : ICommentaryReadingService
     {
         private readonly ITopicReadingService topicReadingService;
         private readonly IForumReadingService forumReadingService;

@@ -6,7 +6,7 @@ namespace DM.Services.MessageQueuing.Processing
     /// Wrapper for <see cref="IMessageProcessor{TMessage}"/> to append correlation token
     /// </summary>
     /// <typeparam name="TMessage">Received message</typeparam>
-    public interface IMessageProcessorWrapper<in TMessage>
+    internal interface IMessageProcessorWrapper<in TMessage>
     {
         /// <summary>
         /// Save correlation token and proceed with message processing

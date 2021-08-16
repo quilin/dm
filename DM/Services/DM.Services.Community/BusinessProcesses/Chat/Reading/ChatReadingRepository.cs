@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Chat.Reading
 {
     /// <inheritdoc />
-    public class ChatReadingRepository : IChatReadingRepository
+    internal class ChatReadingRepository : IChatReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

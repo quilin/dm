@@ -8,7 +8,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Polls.Creating
 {
     /// <inheritdoc />
-    public class PollCreatingService : IPollCreatingService
+    internal class PollCreatingService : IPollCreatingService
     {
         private readonly IValidator<CreatePoll> validator;
         private readonly IIntentionManager intentionManager;

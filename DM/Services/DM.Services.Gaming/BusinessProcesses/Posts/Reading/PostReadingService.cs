@@ -15,7 +15,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
 {
     /// <inheritdoc />
-    public class PostReadingService : IPostReadingService
+    internal class PostReadingService : IPostReadingService
     {
         private readonly IRoomReadingService roomReadingService;
         private readonly IIntentionManager intentionManager;

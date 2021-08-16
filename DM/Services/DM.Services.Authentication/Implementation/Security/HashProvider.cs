@@ -6,7 +6,7 @@ using System.Text;
 namespace DM.Services.Authentication.Implementation.Security
 {
     /// <inheritdoc />
-    public class HashProvider : IHashProvider
+    internal class HashProvider : IHashProvider
     {
         private readonly Lazy<SHA256> sha256 = new Lazy<SHA256>(SHA256.Create);
 

@@ -9,7 +9,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
     /// <summary>
     /// Storage for character attributes validation
     /// </summary>
-    public interface ICharacterValidationRepository
+    internal interface ICharacterValidationRepository
     {
         /// <summary>
         /// Game requires attributes

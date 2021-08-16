@@ -1,11 +1,10 @@
 using System;
 using System.Text;
-using DM.Services.Core.Implementation;
 
 namespace DM.Services.Authentication.Implementation.Security
 {
     /// <inheritdoc />
-    public class SecurityManager : ISecurityManager
+    internal class SecurityManager : ISecurityManager
     {
         private readonly ISaltFactory saltFactory;
         private readonly IHashProvider hashProvider;

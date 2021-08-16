@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
     /// <summary>
     /// Factory for pending post DAL model
     /// </summary>
-    public interface IPendingPostFactory
+    internal interface IPendingPostFactory
     {
         /// <summary>
         /// Create new

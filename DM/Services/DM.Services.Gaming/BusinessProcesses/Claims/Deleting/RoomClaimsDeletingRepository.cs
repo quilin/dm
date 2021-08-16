@@ -6,7 +6,7 @@ using DM.Services.DataAccess.RelationalStorage;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
 {
     /// <inheritdoc />
-    public class RoomClaimsDeletingRepository : IRoomClaimsDeletingRepository
+    internal class RoomClaimsDeletingRepository : IRoomClaimsDeletingRepository
     {
         private readonly DmDbContext dbContext;
 

@@ -9,7 +9,7 @@ namespace DM.Web.API
     /// <summary>
     /// Hosting
     /// </summary>
-    public class Program
+    internal class Program
     {
         /// <summary>
         /// Main

@@ -7,7 +7,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
     /// <summary>
     /// Factory for topic DAL model
     /// </summary>
-    public interface ITopicFactory
+    internal interface ITopicFactory
     {
         /// <summary>
         /// Create topic DAL for topic creation

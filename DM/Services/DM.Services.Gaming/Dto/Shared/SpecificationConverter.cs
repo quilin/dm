@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes;
 namespace DM.Services.Gaming.Dto.Shared
 {
     /// <inheritdoc />
-    public class SpecificationConverter : ITypeConverter<
+    internal class SpecificationConverter : ITypeConverter<
         DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSpecification, AttributeSpecification>
     {
         /// <inheritdoc />

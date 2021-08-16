@@ -10,7 +10,7 @@ using DbComment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class CommentaryCreatingRepository : ICommentaryCreatingRepository
+    internal class CommentaryCreatingRepository : ICommentaryCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

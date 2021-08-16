@@ -8,7 +8,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.Authorization
 {
     /// <inheritdoc />
-    public class PostIntentionResolver :
+    internal class PostIntentionResolver :
         IIntentionResolver<PostIntention, Post>,
         IIntentionResolver<PostIntention, (Post, RoomToUpdate)>
     {

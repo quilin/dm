@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace DM.Web.API.Authentication
 {
     /// <inheritdoc />
-    public class AuthenticationRequiredAttribute : TypeFilterAttribute
+    internal class AuthenticationRequiredAttribute : TypeFilterAttribute
     {
         /// <inheritdoc />
         public AuthenticationRequiredAttribute() : base(typeof(AuthenticationRequiredFilter))

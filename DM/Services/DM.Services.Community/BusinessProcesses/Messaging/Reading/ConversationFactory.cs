@@ -8,7 +8,7 @@ using DbConversationLink = DM.Services.DataAccess.BusinessObjects.Messaging.User
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class ConversationFactory : IConversationFactory
+    internal class ConversationFactory : IConversationFactory
     {
         private readonly IGuidFactory guidFactory;
 

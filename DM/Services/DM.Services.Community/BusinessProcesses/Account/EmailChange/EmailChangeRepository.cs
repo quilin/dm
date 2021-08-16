@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
 {
     /// <inheritdoc />
-    public class EmailChangeRepository : IEmailChangeRepository
+    internal class EmailChangeRepository : IEmailChangeRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

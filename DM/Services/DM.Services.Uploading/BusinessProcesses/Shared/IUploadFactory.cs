@@ -7,7 +7,7 @@ namespace DM.Services.Uploading.BusinessProcesses.Shared
     /// <summary>
     /// Factory for DAL upload model
     /// </summary>
-    public interface IUploadFactory
+    internal interface IUploadFactory
     {
         /// <summary>
         /// Create new upload DAL

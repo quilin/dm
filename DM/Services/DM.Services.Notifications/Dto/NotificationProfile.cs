@@ -4,7 +4,7 @@ using DM.Services.DataAccess.BusinessObjects.Notifications;
 namespace DM.Services.Notifications.Dto
 {
     /// <inheritdoc />
-    public class NotificationProfile : Profile
+    internal class NotificationProfile : Profile
     {
         /// <inheritdoc />
         public NotificationProfile()

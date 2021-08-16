@@ -5,7 +5,7 @@ namespace DM.Services.Mail.Rendering.Rendering
     /// <summary>
     /// Razor template renderer
     /// </summary>
-    public interface ITemplateRenderer
+    internal interface ITemplateRenderer
     {
         /// <summary>
         /// Render template against model

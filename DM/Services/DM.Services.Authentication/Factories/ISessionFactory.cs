@@ -5,7 +5,7 @@ namespace DM.Services.Authentication.Factories
     /// <summary>
     /// Factory for a user session
     /// </summary>
-    public interface ISessionFactory
+    internal interface ISessionFactory
     {
         /// <summary>
         /// Creates a session to be stored in DB

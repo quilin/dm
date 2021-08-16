@@ -17,7 +17,7 @@ using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class LoginApiService : ILoginApiService
+    internal class LoginApiService : ILoginApiService
     {
         private readonly IWebAuthenticationService authenticationService;
         private readonly IIdentityProvider identityProvider;

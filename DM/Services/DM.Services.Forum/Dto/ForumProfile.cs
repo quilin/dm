@@ -6,7 +6,7 @@ namespace DM.Services.Forum.Dto
     /// <summary>
     /// Profile for forum DTO and DAL mapping
     /// </summary>
-    public class ForumProfile : Profile
+    internal class ForumProfile : Profile
     {
         /// <inheritdoc />
         public ForumProfile()

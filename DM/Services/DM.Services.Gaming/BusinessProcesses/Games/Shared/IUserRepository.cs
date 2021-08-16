@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
     /// <summary>
     /// User storage
     /// </summary>
-    public interface IUserRepository
+    internal interface IUserRepository
     {
         /// <summary>
         /// Try find user by login

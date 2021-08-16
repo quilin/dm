@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
     /// <summary>
     /// Factory for a reader DAL
     /// </summary>
-    public interface IReaderFactory
+    internal interface IReaderFactory
     {
         /// <summary>
         /// Create reader DAL

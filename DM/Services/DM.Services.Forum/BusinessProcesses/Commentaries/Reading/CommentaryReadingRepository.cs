@@ -14,7 +14,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading
 
 {
     /// <inheritdoc />
-    public class CommentaryReadingRepository : ICommentaryReadingRepository
+    internal class CommentaryReadingRepository : ICommentaryReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

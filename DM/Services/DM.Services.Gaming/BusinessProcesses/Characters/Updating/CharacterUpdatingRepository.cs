@@ -14,7 +14,7 @@ using CharacterAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characte
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
 {
     /// <inheritdoc />
-    public class CharacterUpdatingRepository : ICharacterUpdatingRepository
+    internal class CharacterUpdatingRepository : ICharacterUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

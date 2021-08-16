@@ -12,7 +12,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting
 {
     /// <inheritdoc />
-    public class GameDeletingService : IGameDeletingService
+    internal class GameDeletingService : IGameDeletingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IIntentionManager intentionManager;

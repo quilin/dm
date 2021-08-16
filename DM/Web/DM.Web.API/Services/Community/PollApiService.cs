@@ -12,7 +12,7 @@ using Poll = DM.Web.API.Dto.Community.Poll;
 namespace DM.Web.API.Services.Community
 {
     /// <inheritdoc />
-    public class PollApiService : IPollApiService
+    internal class PollApiService : IPollApiService
     {
         private readonly IPollReadingService readingService;
         private readonly IPollCreatingService creatingService;

@@ -12,7 +12,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
 {
     /// <inheritdoc />
-    public class UserUpdatingService : IUserUpdatingService
+    internal class UserUpdatingService : IUserUpdatingService
     {
         private readonly IValidator<UpdateUser> validator;
         private readonly IUserReadingService userReadingService;

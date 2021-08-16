@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 namespace DM.Services.Community.BusinessProcesses.Chat.Creating
 {
     /// <inheritdoc />
-    public class ChatMessageFactory : IChatMessageFactory
+    internal class ChatMessageFactory : IChatMessageFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

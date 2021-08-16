@@ -13,7 +13,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class ConversationReadingService : IConversationReadingService
+    internal class ConversationReadingService : IConversationReadingService
     {
         private readonly IConversationFactory factory;
         private readonly IConversationReadingRepository repository;

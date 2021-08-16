@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <inheritdoc />
-    public class CommentChangedIndexer : BaseIndexer
+    internal class CommentChangedIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider bbParserProvider;

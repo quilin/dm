@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
     /// <summary>
     /// Storage for message creating
     /// </summary>
-    public interface IMessageCreatingRepository
+    internal interface IMessageCreatingRepository
     {
         /// <summary>
         /// Save message

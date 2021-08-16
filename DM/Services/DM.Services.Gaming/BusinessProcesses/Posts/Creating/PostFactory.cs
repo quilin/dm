@@ -6,7 +6,7 @@ using DM.Services.Gaming.Dto.Input;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
 {
     /// <inheritdoc />
-    public class PostFactory : IPostFactory
+    internal class PostFactory : IPostFactory
     {
         private readonly IGuidFactory guidFactory;
         private readonly IDateTimeProvider dateTimeProvider;

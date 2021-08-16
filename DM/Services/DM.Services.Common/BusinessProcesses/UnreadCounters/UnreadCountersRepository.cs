@@ -10,7 +10,7 @@ using MongoDB.Driver;
 namespace DM.Services.Common.BusinessProcesses.UnreadCounters
 {
     /// <inheritdoc cref="IUnreadCountersRepository" />
-    public class UnreadCountersRepository : MongoCollectionRepository<UnreadCounter>, IUnreadCountersRepository
+    internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounter>, IUnreadCountersRepository
     {
         private readonly IDateTimeProvider dateTimeProvider;
 

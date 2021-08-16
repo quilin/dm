@@ -7,7 +7,7 @@ using Poll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 namespace DM.Services.Community.BusinessProcesses.Polls.Creating
 {
     /// <inheritdoc />
-    public class PollCreatingRepository : MongoCollectionRepository<Poll>, IPollCreatingRepository
+    internal class PollCreatingRepository : MongoCollectionRepository<Poll>, IPollCreatingRepository
     {
         /// <inheritdoc />
         public PollCreatingRepository(DmMongoClient client) : base(client)

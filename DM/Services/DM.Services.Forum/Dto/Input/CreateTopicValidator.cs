@@ -6,7 +6,7 @@ namespace DM.Services.Forum.Dto.Input
     /// <summary>
     /// Validator for topic creation DTO model
     /// </summary>
-    public class CreateTopicValidator : AbstractValidator<CreateTopic>
+    internal class CreateTopicValidator : AbstractValidator<CreateTopic>
     {
         /// <inheritdoc />
         public CreateTopicValidator()

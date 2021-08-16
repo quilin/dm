@@ -9,7 +9,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading
     /// <summary>
     /// Storage for reading game posts
     /// </summary>
-    public interface IPostReadingRepository
+    internal interface IPostReadingRepository
     {
         /// <summary>
         /// Count posts in a room

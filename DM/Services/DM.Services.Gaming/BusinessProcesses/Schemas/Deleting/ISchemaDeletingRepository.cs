@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Deleting
     /// <summary>
     /// Storage for attribute schema deleting
     /// </summary>
-    public interface ISchemaDeletingRepository
+    internal interface ISchemaDeletingRepository
     {
         /// <summary>
         /// Delete existing attribute schema

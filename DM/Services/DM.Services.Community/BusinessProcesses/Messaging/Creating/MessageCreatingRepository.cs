@@ -12,7 +12,7 @@ using DbMessage = DM.Services.DataAccess.BusinessObjects.Messaging.Message;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
 {
     /// <inheritdoc />
-    public class MessageCreatingRepository : IMessageCreatingRepository
+    internal class MessageCreatingRepository : IMessageCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

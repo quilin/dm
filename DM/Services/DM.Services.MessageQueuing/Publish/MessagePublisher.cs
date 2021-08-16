@@ -11,7 +11,7 @@ using RabbitMQ.Client;
 namespace DM.Services.MessageQueuing.Publish
 {
     /// <inheritdoc />
-    public class MessagePublisher : IMessagePublisher
+    internal class MessagePublisher : IMessagePublisher
     {
         private readonly IConnectionFactory connectionFactory;
         private readonly ICorrelationTokenProvider correlationTokenProvider;

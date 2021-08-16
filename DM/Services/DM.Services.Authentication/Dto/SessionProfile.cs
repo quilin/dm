@@ -3,7 +3,7 @@ using AutoMapper;
 namespace DM.Services.Authentication.Dto
 {
     /// <inheritdoc />
-    public class SessionProfile : Profile
+    internal class SessionProfile : Profile
     {
         /// <inheritdoc />
         public SessionProfile()

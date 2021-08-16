@@ -13,7 +13,7 @@ using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
 {
     /// <inheritdoc />
-    public class PostCreatingRepository : IPostCreatingRepository
+    internal class PostCreatingRepository : IPostCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

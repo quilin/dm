@@ -8,7 +8,7 @@ using DM.Services.Notifications.Dto;
 namespace DM.Services.Notifications.BusinessProcesses.Creating
 {
     /// <inheritdoc />
-    public class NotificationCreatingService : INotificationCreatingService
+    internal class NotificationCreatingService : INotificationCreatingService
     {
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly INotificationFactory factory;

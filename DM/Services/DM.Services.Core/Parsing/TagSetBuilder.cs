@@ -6,7 +6,7 @@ namespace DM.Services.Core.Parsing
     /// <summary>
     /// BBCode parser tag set
     /// </summary>
-    public class TagSetBuilder
+    internal class TagSetBuilder
     {
         private readonly List<Tag> set;
 

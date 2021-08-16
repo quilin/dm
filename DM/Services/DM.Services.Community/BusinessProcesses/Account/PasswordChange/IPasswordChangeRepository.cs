@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
     /// <summary>
     /// Storage for password change
     /// </summary>
-    public interface IPasswordChangeRepository
+    internal interface IPasswordChangeRepository
     {
         /// <summary>
         /// Find existing user

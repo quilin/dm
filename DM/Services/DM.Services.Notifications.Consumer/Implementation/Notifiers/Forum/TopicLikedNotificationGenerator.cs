@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Notifications.Consumer.Implementation.Notifiers.Forum
 {
     /// <inheritdoc />
-    public class TopicLikedNotificationGenerator : BaseNotificationGenerator
+    internal class TopicLikedNotificationGenerator : BaseNotificationGenerator
     {
         private readonly DmDbContext dbContext;
 

@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
     /// <summary>
     /// Storage for pending post creating
     /// </summary>
-    public interface IPendingPostCreatingRepository
+    internal interface IPendingPostCreatingRepository
     {
         /// <summary>
         /// Save new pending post

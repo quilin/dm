@@ -11,7 +11,7 @@ using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
 {
     /// <inheritdoc />
-    public class PostUpdatingRepository : IPostUpdatingRepository
+    internal class PostUpdatingRepository : IPostUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

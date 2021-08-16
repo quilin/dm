@@ -10,7 +10,7 @@ using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 namespace DM.Services.Gaming.Dto
 {
     /// <inheritdoc />
-    public class RoomProfile : Profile
+    internal class RoomProfile : Profile
     {
         /// <inheritdoc />
         public RoomProfile()

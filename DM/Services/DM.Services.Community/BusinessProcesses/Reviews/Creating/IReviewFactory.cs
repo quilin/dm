@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
     /// <summary>
     /// Factory for review DAL model
     /// </summary>
-    public interface IReviewFactory
+    internal interface IReviewFactory
     {
         /// <summary>
         /// Create review DAL model

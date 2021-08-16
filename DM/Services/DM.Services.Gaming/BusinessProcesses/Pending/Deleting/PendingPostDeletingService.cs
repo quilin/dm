@@ -10,7 +10,7 @@ using DM.Services.Gaming.Authorization;
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
 {
     /// <inheritdoc />
-    public class PendingPostDeletingService : IPendingPostDeletingService
+    internal class PendingPostDeletingService : IPendingPostDeletingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

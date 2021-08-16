@@ -13,7 +13,7 @@ using Message = DM.Web.API.Dto.Messaging.Message;
 namespace DM.Web.API.Services.Community
 {
     /// <inheritdoc />
-    public class MessagingApiService : IMessagingApiService
+    internal class MessagingApiService : IMessagingApiService
     {
         private readonly IConversationReadingService conversationReadingService;
         private readonly IMessageReadingService messageReadingService;

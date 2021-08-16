@@ -9,7 +9,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
     /// <summary>
     /// Storage for pending post deleting
     /// </summary>
-    public interface IPendingPostDeletingRepository
+    internal interface IPendingPostDeletingRepository
     {
         /// <summary>
         /// Get pending post

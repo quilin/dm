@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DM.Services.Common.Authorization
 {
     /// <inheritdoc />
-    public class IntentionManager : IIntentionManager
+    internal class IntentionManager : IIntentionManager
     {
         private readonly IIdentityProvider identityProvider;
         private readonly IEnumerable<IIntentionResolver> resolvers;

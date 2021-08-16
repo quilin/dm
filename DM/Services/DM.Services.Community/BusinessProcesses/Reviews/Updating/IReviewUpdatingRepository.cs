@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Updating
     /// <summary>
     /// Storage for updating review
     /// </summary>
-    public interface IReviewUpdatingRepository
+    internal interface IReviewUpdatingRepository
     {
         /// <summary>
         /// Update review

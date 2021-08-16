@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
     /// <inheritdoc />
-    public class AssignmentRepository : IAssignmentRepository
+    internal class AssignmentRepository : IAssignmentRepository
     {
         private readonly DmDbContext dbContext;
 

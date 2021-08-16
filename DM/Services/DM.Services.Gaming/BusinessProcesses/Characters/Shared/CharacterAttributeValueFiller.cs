@@ -9,7 +9,7 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
 {
     /// <inheritdoc />
-    public class CharacterAttributeValueFiller : ICharacterAttributeValueFiller
+    internal class CharacterAttributeValueFiller : ICharacterAttributeValueFiller
     {
         private readonly ISchemaReadingService schemaReadingService;
         private readonly IAttributeValueValidator attributeValueValidator;

@@ -6,7 +6,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Polls.Creating
 {
     /// <inheritdoc />
-    public class CreatePollValidator : AbstractValidator<CreatePoll>
+    internal class CreatePollValidator : AbstractValidator<CreatePoll>
     {
         /// <inheritdoc />
         public CreatePollValidator(

@@ -13,7 +13,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
     /// <inheritdoc />
-    public class AssignmentService : IAssignmentService
+    internal class AssignmentService : IAssignmentService
     {
         private readonly IIdentityProvider identityProvider;
         private readonly IAssistantAssignmentTokenFactory tokenFactory;

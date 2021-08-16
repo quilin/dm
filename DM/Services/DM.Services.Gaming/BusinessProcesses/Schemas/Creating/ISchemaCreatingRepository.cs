@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
     /// <summary>
     /// Storage for attribute schema creating
     /// </summary>
-    public interface ISchemaCreatingRepository
+    internal interface ISchemaCreatingRepository
     {
         /// <summary>
         /// Create new attribute schema

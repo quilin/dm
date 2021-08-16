@@ -13,7 +13,7 @@ using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversa
 namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
 {
     /// <inheritdoc />
-    public class MessageCreatingService : IMessageCreatingService
+    internal class MessageCreatingService : IMessageCreatingService
     {
         private readonly IConversationReadingService conversationReadingService;
         private readonly IValidator<CreateMessage> validator;

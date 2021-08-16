@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.Dto.Input
 {
     /// <inheritdoc />
-    public class CreatePostValidator : AbstractValidator<CreatePost>
+    internal class CreatePostValidator : AbstractValidator<CreatePost>
     {
         /// <inheritdoc />
         public CreatePostValidator()

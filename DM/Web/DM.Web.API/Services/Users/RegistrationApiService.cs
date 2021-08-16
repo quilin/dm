@@ -6,7 +6,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Users
 {
     /// <inheritdoc />
-    public class RegistrationApiService : IRegistrationApiService
+    internal class RegistrationApiService : IRegistrationApiService
     {
         private readonly IRegistrationService registrationService;
         private readonly IMapper mapper;

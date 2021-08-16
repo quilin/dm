@@ -1,10 +1,10 @@
 using System;
 using System.Security.Cryptography;
 
-namespace DM.Services.Core.Implementation
+namespace DM.Services.Authentication.Implementation.Security
 {
     /// <inheritdoc />
-    public class SaltFactory : ISaltFactory
+    internal class SaltFactory : ISaltFactory
     {
         private readonly Lazy<RNGCryptoServiceProvider> rngCryptoServiceProvider = new Lazy<RNGCryptoServiceProvider>(
             () => new RNGCryptoServiceProvider());

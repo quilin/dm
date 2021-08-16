@@ -11,7 +11,7 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming.Rooms
 {
     /// <inheritdoc />
-    public class RoomClaimApiService : IRoomClaimApiService
+    internal class RoomClaimApiService : IRoomClaimApiService
     {
         private readonly IRoomClaimsCreatingService creatingService;
         private readonly IRoomClaimsUpdatingService updatingService;

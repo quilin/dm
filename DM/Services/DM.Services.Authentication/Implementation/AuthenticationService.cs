@@ -16,7 +16,7 @@ using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 namespace DM.Services.Authentication.Implementation
 {
     /// <inheritdoc />
-    public class AuthenticationService : IAuthenticationService
+    internal class AuthenticationService : IAuthenticationService
     {
         private readonly ISecurityManager securityManager;
         private readonly ISymmetricCryptoService cryptoService;

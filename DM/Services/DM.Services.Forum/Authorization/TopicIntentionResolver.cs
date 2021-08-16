@@ -7,7 +7,7 @@ using DM.Services.Forum.Dto.Output;
 namespace DM.Services.Forum.Authorization
 {
     /// <inheritdoc />
-    public class TopicIntentionResolver : IIntentionResolver<TopicIntention, Topic>
+    internal class TopicIntentionResolver : IIntentionResolver<TopicIntention, Topic>
     {
         /// <inheritdoc />
         public bool IsAllowed(AuthenticatedUser user, TopicIntention intention, Topic target) => intention switch

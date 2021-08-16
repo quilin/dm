@@ -8,7 +8,7 @@ using FluentValidation.Results;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
 {
     /// <inheritdoc />
-    public class SchemaCreatingValidator : ISchemaCreatingValidator
+    internal class SchemaCreatingValidator : ISchemaCreatingValidator
     {
         /// <inheritdoc />
         public void ValidateAndThrow(AttributeSchema attributeSchema)

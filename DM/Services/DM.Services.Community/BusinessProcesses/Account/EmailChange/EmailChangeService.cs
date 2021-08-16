@@ -9,7 +9,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange
 {
     /// <inheritdoc />
-    public class EmailChangeService : IEmailChangeService
+    internal class EmailChangeService : IEmailChangeService
     {
         private readonly IValidator<UserEmailChange> validator;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

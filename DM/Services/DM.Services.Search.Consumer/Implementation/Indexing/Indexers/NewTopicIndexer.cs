@@ -13,7 +13,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
     /// <summary>
     /// Indexer for newly created topics
     /// </summary>
-    public class NewTopicIndexer : BaseIndexer
+    internal class NewTopicIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider parserProvider;

@@ -11,7 +11,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
 {
     /// <inheritdoc />
-    public class ReadingSubscribingService : IReadingSubscribingService
+    internal class ReadingSubscribingService : IReadingSubscribingService
     {
         private readonly IGameReadingService gameReadingService;
         private readonly IReaderFactory readerFactory;

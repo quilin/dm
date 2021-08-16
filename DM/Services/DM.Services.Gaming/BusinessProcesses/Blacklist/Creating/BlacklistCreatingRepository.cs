@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
 {
     /// <inheritdoc />
-    public class BlacklistCreatingRepository : IBlacklistCreatingRepository
+    internal class BlacklistCreatingRepository : IBlacklistCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

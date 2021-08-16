@@ -12,7 +12,7 @@ using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Char
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
 {
     /// <inheritdoc />
-    public class CharacterCreatingRepository : ICharacterCreatingRepository
+    internal class CharacterCreatingRepository : ICharacterCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

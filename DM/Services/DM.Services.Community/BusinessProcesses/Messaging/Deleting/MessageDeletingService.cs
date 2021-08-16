@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Deleting
 {
     /// <inheritdoc />
-    public class MessageDeletingService : IMessageDeletingService
+    internal class MessageDeletingService : IMessageDeletingService
     {
         /// <inheritdoc />
         public Task Delete(Guid messageId)

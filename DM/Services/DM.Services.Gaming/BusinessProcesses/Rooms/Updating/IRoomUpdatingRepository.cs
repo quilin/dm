@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
     /// <summary>
     /// Storage for room updates
     /// </summary>
-    public interface IRoomUpdatingRepository
+    internal interface IRoomUpdatingRepository
     {
         /// <summary>
         /// Get room for update

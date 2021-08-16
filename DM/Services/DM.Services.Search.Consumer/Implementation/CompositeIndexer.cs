@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
-    public class CompositeIndexer : IMessageProcessor<InvokedEvent>
+    internal class CompositeIndexer : IMessageProcessor<InvokedEvent>
     {
         private readonly IEnumerable<IIndexer> indexers;
         private readonly ILogger<IMessageProcessor<InvokedEvent>> logger;
@@ -18,7 +18,7 @@ namespace DM.Services.Search.Consumer.Implementation
         /// <inheritdoc />
         public CompositeIndexer(
             IEnumerable<IIndexer> indexers,
-            ILogger<IMessageProcessor<InvokedEvent>> logger)
+            ILogger<CompositeIndexer> logger)
         {
             this.indexers = indexers;
             this.logger = logger;
@@ -30,7 +30,7 @@ namespace DM.Services.Search.Consumer.Implementation
             await Task.WhenAll(indexers
                 .Where(i => i.CanIndex(message.Type))
                 .Select(i => i.Index(message)));
-            logger.LogInformation("DM.Event {eventType} for entity {entityId} is indexed",
+            logger.LogInformation("DM.Event {EventType} for entity {EntityId} is indexed",
                 message.Type, message.EntityId);
             return ProcessResult.Success;
         }

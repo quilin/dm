@@ -9,7 +9,7 @@ using DM.Services.Core.Exceptions;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class MessageReadingService : IMessageReadingService
+    internal class MessageReadingService : IMessageReadingService
     {
         private readonly IConversationReadingService conversationReadingService;
         private readonly IMessageReadingRepository repository;

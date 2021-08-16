@@ -6,7 +6,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.Dto.Input
 {
     /// <inheritdoc />
-    public class CreateRoomClaimValidator : AbstractValidator<CreateRoomClaim>
+    internal class CreateRoomClaimValidator : AbstractValidator<CreateRoomClaim>
     {
         /// <inheritdoc />
         public CreateRoomClaimValidator(

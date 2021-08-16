@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
     /// <summary>
     /// Converter for game status into associated intention
     /// </summary>
-    public interface IGameIntentionConverter
+    internal interface IGameIntentionConverter
     {
         /// <summary>
         /// Converts game status to associated intention

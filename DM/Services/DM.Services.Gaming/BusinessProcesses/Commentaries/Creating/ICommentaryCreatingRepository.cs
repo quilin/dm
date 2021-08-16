@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
     /// <summary>
     /// Creating commentaries storage
     /// </summary>
-    public interface ICommentaryCreatingRepository
+    internal interface ICommentaryCreatingRepository
     {
         /// <summary>
         /// Create comment from DAL

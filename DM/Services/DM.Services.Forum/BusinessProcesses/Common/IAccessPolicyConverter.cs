@@ -5,7 +5,7 @@ namespace DM.Services.Forum.BusinessProcesses.Common
     /// <summary>
     /// User role to forum policy converter
     /// </summary>
-    public interface IAccessPolicyConverter
+    internal interface IAccessPolicyConverter
     {
         /// <summary>
         /// Converts given user role into available composite forum access policy

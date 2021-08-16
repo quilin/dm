@@ -8,7 +8,7 @@ using DM.Services.DataAccess.RelationalStorage;
 namespace DM.Services.Community.BusinessProcesses.Users.Updating
 {
     /// <inheritdoc />
-    public class UserUpdatingRepository : MongoCollectionRepository<UserSettings>, IUserUpdatingRepository
+    internal class UserUpdatingRepository : MongoCollectionRepository<UserSettings>, IUserUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly DmMongoClient mongoClient;

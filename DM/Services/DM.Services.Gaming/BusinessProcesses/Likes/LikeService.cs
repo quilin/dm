@@ -14,7 +14,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
     /// <summary>
     /// Forum like service
     /// </summary>
-    public class LikeService : LikeServiceBase, ILikeService
+    internal class LikeService : LikeServiceBase, ILikeService
     {
         private readonly ICommentaryReadingService commentaryReadingService;
         private readonly IIntentionManager intentionManager;

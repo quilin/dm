@@ -4,7 +4,7 @@ using DbReview = DM.Services.DataAccess.BusinessObjects.Common.Review;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Reading
 {
     /// <inheritdoc />
-    public class ReviewProfile : Profile
+    internal class ReviewProfile : Profile
     {
         /// <inheritdoc />
         public ReviewProfile()

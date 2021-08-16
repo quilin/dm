@@ -6,7 +6,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
 {
     /// <inheritdoc />
-    public class UserPasswordResetValidator : AbstractValidator<UserPasswordReset>
+    internal class UserPasswordResetValidator : AbstractValidator<UserPasswordReset>
     {
         private const string FoundEmailKey = nameof(FoundEmailKey);
 

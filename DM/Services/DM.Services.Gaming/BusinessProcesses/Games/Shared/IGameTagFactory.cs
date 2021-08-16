@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Shared
     /// <summary>
     /// Creates DAL model for game tag
     /// </summary>
-    public interface IGameTagFactory
+    internal interface IGameTagFactory
     {
         /// <summary>
         /// Create game tag DAL model

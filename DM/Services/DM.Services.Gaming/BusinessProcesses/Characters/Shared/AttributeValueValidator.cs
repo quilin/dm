@@ -5,7 +5,7 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
 {
     /// <inheritdoc />
-    public class AttributeValueValidator : IAttributeValueValidator
+    internal class AttributeValueValidator : IAttributeValueValidator
     {
         /// <inheritdoc />
         public (bool valid, string error) Validate(string value, AttributeSpecification specification)

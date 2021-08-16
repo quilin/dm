@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
 {
     /// <inheritdoc />
-    public class CreateReviewValidator : AbstractValidator<CreateReview>
+    internal class CreateReviewValidator : AbstractValidator<CreateReview>
     {
         /// <inheritdoc />
         public CreateReviewValidator()

@@ -15,7 +15,7 @@ using DbUpload = DM.Services.DataAccess.BusinessObjects.Common.Upload;
 namespace DM.Services.Uploading.BusinessProcesses.PublicImage
 {
     /// <inheritdoc />
-    public class PublicImageService : IPublicImageService
+    internal class PublicImageService : IPublicImageService
     {
         private readonly IValidator<CreateUpload> validator;
         private readonly INameGenerator nameGenerator;

@@ -15,7 +15,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class CommentaryCreatingService : ICommentaryCreatingService
+    internal class CommentaryCreatingService : ICommentaryCreatingService
     {
         private readonly IValidator<CreateComment> validator;
         private readonly IGameReadingService gameReadingService;

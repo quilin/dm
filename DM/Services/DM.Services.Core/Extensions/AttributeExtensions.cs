@@ -65,7 +65,7 @@ namespace DM.Services.Core.Extensions
     /// <summary>
     /// More than one attribute found
     /// </summary>
-    public class AmbiguousAttributesException : Exception
+    internal class AmbiguousAttributesException : Exception
     {
         /// <inheritdoc />
         public AmbiguousAttributesException(Type attrType)
@@ -83,7 +83,12 @@ namespace DM.Services.Core.Extensions
         public AttributeNotFoundException(Type attrType, Type enumType)
             : base($"Attribute of type {attrType.FullName} not found at enum {enumType.FullName}.")
         {
+        }
 
+        /// <inheritdoc />
+        public AttributeNotFoundException(Type attrType)
+            : base($"Attribute of type {attrType.FullName} not found")
+        {
         }
     }
 }

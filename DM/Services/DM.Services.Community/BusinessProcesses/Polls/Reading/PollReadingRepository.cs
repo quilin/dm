@@ -10,7 +10,7 @@ using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 namespace DM.Services.Community.BusinessProcesses.Polls.Reading
 {
     /// <inheritdoc />
-    public class PollReadingRepository : MongoCollectionRepository<DbPoll>, IPollReadingRepository
+    internal class PollReadingRepository : MongoCollectionRepository<DbPoll>, IPollReadingRepository
     {
         /// <summary>
         /// Projection for poll

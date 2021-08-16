@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.Verification
 {
     /// <inheritdoc />
-    public class TokenVerificationRepository : ITokenVerificationRepository
+    internal class TokenVerificationRepository : ITokenVerificationRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

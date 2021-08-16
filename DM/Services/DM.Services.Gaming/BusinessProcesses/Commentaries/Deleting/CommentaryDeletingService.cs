@@ -14,7 +14,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
 {
     /// <inheritdoc />
-    public class CommentaryDeletingService : ICommentaryDeletingService
+    internal class CommentaryDeletingService : ICommentaryDeletingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

@@ -6,7 +6,7 @@ using DbMessage = DM.Services.DataAccess.BusinessObjects.Messaging.Message;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class MessagingProfile : Profile
+    internal class MessagingProfile : Profile
     {
         /// <inheritdoc />
         public MessagingProfile()

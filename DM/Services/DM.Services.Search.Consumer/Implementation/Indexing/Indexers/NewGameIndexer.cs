@@ -12,7 +12,7 @@ namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
     /// <summary>
     /// Indexer for new games
     /// </summary>
-    public class NewGameIndexer : BaseIndexer
+    internal class NewGameIndexer : BaseIndexer
     {
         private readonly DmDbContext dbContext;
         private readonly IBbParserProvider bbParserProvider;

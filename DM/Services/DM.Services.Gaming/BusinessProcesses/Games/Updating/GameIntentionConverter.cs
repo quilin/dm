@@ -4,7 +4,7 @@ using DM.Services.Gaming.Authorization;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
 {
     /// <inheritdoc />
-    public class GameIntentionConverter : IGameIntentionConverter
+    internal class GameIntentionConverter : IGameIntentionConverter
     {
         /// <inheritdoc />
         public (GameIntention intention, EventType eventType) Convert(GameStatus gameStatus) => gameStatus switch

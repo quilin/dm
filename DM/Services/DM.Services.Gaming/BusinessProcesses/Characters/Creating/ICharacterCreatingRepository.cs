@@ -9,7 +9,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
     /// <summary>
     /// Character creating storage
     /// </summary>
-    public interface ICharacterCreatingRepository
+    internal interface ICharacterCreatingRepository
     {
         /// <summary>
         /// Save new character

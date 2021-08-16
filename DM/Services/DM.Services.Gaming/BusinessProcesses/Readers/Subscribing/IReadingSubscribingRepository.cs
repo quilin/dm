@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
     /// <summary>
     /// Storage for game subscriptions
     /// </summary>
-    public interface IReadingSubscribingRepository
+    internal interface IReadingSubscribingRepository
     {
         /// <summary>
         /// Check if user has a game subscription

@@ -6,7 +6,7 @@ using DbUpload = DM.Services.DataAccess.BusinessObjects.Common.Upload;
 namespace DM.Services.Uploading.BusinessProcesses.Shared
 {
     /// <inheritdoc />
-    public class UploadFactory : IUploadFactory
+    internal class UploadFactory : IUploadFactory
     {
         private readonly IGuidFactory guidFactory;
 

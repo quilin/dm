@@ -6,7 +6,7 @@ using DM.Services.Gaming.Dto.Input;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 {
     /// <inheritdoc />
-    public class RoomFactory : IRoomFactory
+    internal class RoomFactory : IRoomFactory
     {
         private readonly IGuidFactory guidFactory;
 

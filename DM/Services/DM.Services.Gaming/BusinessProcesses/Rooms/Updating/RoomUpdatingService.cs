@@ -15,7 +15,7 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating
 {
     /// <inheritdoc />
-    public class RoomUpdatingService : IRoomUpdatingService
+    internal class RoomUpdatingService : IRoomUpdatingService
     {
         private readonly IValidator<UpdateRoom> validator;
         private readonly IIntentionManager intentionManager;

@@ -5,7 +5,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
     /// <summary>
     /// Creates new user DAL models
     /// </summary>
-    public interface IUserFactory
+    internal interface IUserFactory
     {
         /// <summary>
         /// Create new user from registration model

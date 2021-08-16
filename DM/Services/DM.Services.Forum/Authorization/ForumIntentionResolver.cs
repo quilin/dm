@@ -7,7 +7,7 @@ using DM.Services.Forum.BusinessProcesses.Common;
 namespace DM.Services.Forum.Authorization
 {
     /// <inheritdoc />
-    public class ForumIntentionResolver : IIntentionResolver<ForumIntention, Dto.Output.Forum>
+    internal class ForumIntentionResolver : IIntentionResolver<ForumIntention, Dto.Output.Forum>
     {
         private readonly IAccessPolicyConverter accessPolicyConverter;
 

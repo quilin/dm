@@ -8,7 +8,7 @@ using DM.Web.API.Dto.Fora;
 namespace DM.Web.API.Services.Fora
 {
     /// <inheritdoc />
-    public class ForumApiService : IForumApiService
+    internal class ForumApiService : IForumApiService
     {
         private readonly IForumReadingService forumService;
         private readonly IMapper mapper;

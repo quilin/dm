@@ -13,7 +13,7 @@ using DM.Services.Forum.BusinessProcesses.Common;
 namespace DM.Services.Forum.BusinessProcesses.Fora
 {
     /// <inheritdoc />
-    public class ForumReadingService : IForumReadingService
+    internal class ForumReadingService : IForumReadingService
     {
         private readonly IIdentityProvider identityProvider;
         private readonly IAccessPolicyConverter accessPolicyConverter;

@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Games.Links;
 namespace DM.Services.Gaming.BusinessProcesses.Readers.Subscribing
 {
     /// <inheritdoc />
-    public class ReaderFactory : IReaderFactory
+    internal class ReaderFactory : IReaderFactory
     {
         private readonly IGuidFactory guidFactory;
 

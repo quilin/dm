@@ -7,7 +7,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Creating
     /// <summary>
     /// Factory for notifications DAL model
     /// </summary>
-    public interface INotificationFactory
+    internal interface INotificationFactory
     {
         /// <summary>
         /// Create new notification DAL model

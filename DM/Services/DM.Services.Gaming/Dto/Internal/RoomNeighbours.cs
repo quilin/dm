@@ -3,7 +3,7 @@ namespace DM.Services.Gaming.Dto.Internal
     /// <summary>
     /// DTO model for neighbour rooms
     /// </summary>
-    public class RoomNeighbours
+    internal class RoomNeighbours
     {
         /// <summary>
         /// Previous room info

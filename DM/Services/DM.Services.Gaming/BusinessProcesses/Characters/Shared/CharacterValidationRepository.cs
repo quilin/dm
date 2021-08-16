@@ -14,7 +14,7 @@ using DbSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attribu
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
 {
     /// <inheritdoc />
-    public class CharacterValidationRepository : MongoCollectionRepository<DbSchema>, ICharacterValidationRepository
+    internal class CharacterValidationRepository : MongoCollectionRepository<DbSchema>, ICharacterValidationRepository
     {
         private readonly IMapper mapper;
         private readonly DmDbContext dbContext;

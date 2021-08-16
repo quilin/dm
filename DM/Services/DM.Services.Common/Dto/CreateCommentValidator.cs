@@ -6,7 +6,7 @@ namespace DM.Services.Common.Dto
     /// <summary>
     /// Validator for commentary creation DTO model
     /// </summary>
-    public class CreateCommentValidator : AbstractValidator<CreateComment>
+    internal class CreateCommentValidator : AbstractValidator<CreateComment>
     {
         /// <inheritdoc />
         public CreateCommentValidator()

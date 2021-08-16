@@ -6,7 +6,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
     /// <summary>
     /// Argument out of range exception for game status
     /// </summary>
-    public class GameIntentionConverterException : Exception
+    internal class GameIntentionConverterException : Exception
     {
         /// <inheritdoc />
         public GameIntentionConverterException(GameStatus gameStatus)

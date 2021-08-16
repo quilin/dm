@@ -16,7 +16,7 @@ namespace DM.Web.API.Dto.Users
     /// <summary>
     /// Mapping profile from Service DTO to API DTO for users
     /// </summary>
-    public class UserProfile : Profile
+    internal class UserProfile : Profile
     {
         /// <inheritdoc />
         public UserProfile()

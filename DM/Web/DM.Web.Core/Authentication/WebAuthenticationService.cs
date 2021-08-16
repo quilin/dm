@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace DM.Web.Core.Authentication
 {
     /// <inheritdoc />
-    public class WebAuthenticationService : IWebAuthenticationService
+    internal class WebAuthenticationService : IWebAuthenticationService
     {
         private readonly IAuthenticationService authenticationService;
         private readonly ICredentialsStorage credentialsStorage;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DM.Services.Authentication.Implementation.Security
 {
     /// <inheritdoc />
-    public class TripleDesSymmetricCryptoService : ISymmetricCryptoService
+    internal class TripleDesSymmetricCryptoService : ISymmetricCryptoService
     {
         private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
         private const string Iv = "dtEzMsz2ogg=";

@@ -6,7 +6,7 @@ namespace DM.Services.Mail.Rendering.Rendering
     /// <summary>
     /// Template rendering exception
     /// </summary>
-    public class TemplateRenderException : Exception
+    internal class TemplateRenderException : Exception
     {
         /// <inheritdoc />
         public TemplateRenderException(string templatePath, IEnumerable<string> searchedLocations)

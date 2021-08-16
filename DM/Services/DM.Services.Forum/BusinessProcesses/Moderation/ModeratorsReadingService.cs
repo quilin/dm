@@ -6,7 +6,7 @@ using DM.Services.Forum.BusinessProcesses.Fora;
 namespace DM.Services.Forum.BusinessProcesses.Moderation
 {
     /// <inheritdoc />
-    public class ModeratorsReadingService : IModeratorsReadingService
+    internal class ModeratorsReadingService : IModeratorsReadingService
     {
         private readonly IForumReadingService forumReadingService;
         private readonly IModeratorRepository moderatorRepository;

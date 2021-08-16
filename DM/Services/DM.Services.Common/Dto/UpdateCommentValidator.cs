@@ -6,7 +6,7 @@ namespace DM.Services.Common.Dto
     /// <summary>
     /// Validator for commentary updating DTO model
     /// </summary>
-    public class UpdateCommentValidator : AbstractValidator<UpdateComment>
+    internal class UpdateCommentValidator : AbstractValidator<UpdateComment>
     {
         /// <inheritdoc />
         public UpdateCommentValidator()

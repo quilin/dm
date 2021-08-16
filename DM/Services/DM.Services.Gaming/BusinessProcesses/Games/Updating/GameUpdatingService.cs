@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -20,7 +19,7 @@ using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
 {
     /// <inheritdoc />
-    public class GameUpdatingService : IGameUpdatingService
+    internal class GameUpdatingService : IGameUpdatingService
     {
         private readonly IValidator<UpdateGame> validator;
         private readonly IIntentionManager intentionManager;
@@ -83,7 +82,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
                 .MaybeField(c => c.DisableAlignment, updateGame.DisableAlignment)
                 .MaybeField(c => c.Notepad, updateGame.Notepad);
 
-            var oldAssistant = game.Assistant ?? game.PendingAssistant.FirstOrDefault();
+            var oldAssistant = game.Assistant ?? game.PendingAssistant;
             if (updateGame.AssistantLogin != default &&
                 !updateGame.AssistantLogin.Equals(oldAssistant?.Login, StringComparison.InvariantCultureIgnoreCase))
             {

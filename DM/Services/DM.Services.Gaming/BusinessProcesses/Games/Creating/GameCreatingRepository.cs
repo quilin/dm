@@ -13,7 +13,7 @@ using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
 {
     /// <inheritdoc />
-    public class GameCreatingRepository : IGameCreatingRepository
+    internal class GameCreatingRepository : IGameCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

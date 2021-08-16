@@ -6,7 +6,7 @@ using FluentValidation;
 namespace DM.Services.Mail.Sender
 {
     /// <inheritdoc />
-    public class MailSender : IMailSender
+    internal class MailSender : IMailSender
     {
         private readonly IValidator<MailLetter> validator;
         private readonly IMessagePublisher publisher;

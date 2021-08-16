@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
 {
     /// <inheritdoc />
-    public class MessageReadingRepository : IMessageReadingRepository
+    internal class MessageReadingRepository : IMessageReadingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

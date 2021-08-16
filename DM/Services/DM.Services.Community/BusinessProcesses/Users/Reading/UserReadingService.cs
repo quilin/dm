@@ -8,7 +8,7 @@ using DM.Services.Core.Exceptions;
 namespace DM.Services.Community.BusinessProcesses.Users.Reading
 {
     /// <inheritdoc />
-    public class UserReadingService : IUserReadingService
+    internal class UserReadingService : IUserReadingService
     {
         private readonly IIdentityProvider identityProvider;
         private readonly IUserReadingRepository readingRepository;

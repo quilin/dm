@@ -16,7 +16,7 @@ using MongoDB.Driver;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading
 {
     /// <inheritdoc cref="ISchemaReadingRepository" />
-    public class SchemaReadingRepository :
+    internal class SchemaReadingRepository :
         MongoCollectionRepository<DbSchema>,
         ISchemaReadingRepository
     {

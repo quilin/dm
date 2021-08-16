@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DM.Services.Uploading.Dto
 {
     /// <inheritdoc />
-    public class CreateUploadValidator : AbstractValidator<CreateUpload>
+    internal class CreateUploadValidator : AbstractValidator<CreateUpload>
     {
         /// <inheritdoc />
         public CreateUploadValidator()

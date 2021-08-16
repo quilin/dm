@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation
 {
     /// <inheritdoc />
-    public class RegistrationMailSender : IRegistrationMailSender
+    internal class RegistrationMailSender : IRegistrationMailSender
     {
         private readonly IRenderer renderer;
         private readonly IMailSender mailSender;

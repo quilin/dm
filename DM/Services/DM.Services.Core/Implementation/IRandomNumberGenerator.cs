@@ -3,7 +3,7 @@ namespace DM.Services.Core.Implementation
     /// <summary>
     /// Generates random integer numbers
     /// </summary>
-    public interface IRandomNumberGenerator
+    internal interface IRandomNumberGenerator
     {
         /// <summary>
         /// Generate random integer number in range

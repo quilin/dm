@@ -6,7 +6,7 @@ namespace DM.Services.Notifications.BusinessProcesses.Flushing
     /// <summary>
     /// Notifications storage
     /// </summary>
-    public interface INotificationsFlushingRepository
+    internal interface INotificationsFlushingRepository
     {
         /// <summary>
         /// Mark single notification as read by user

@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
     /// <summary>
     /// Storage for blacklist link deleting
     /// </summary>
-    public interface IBlacklistDeletingRepository
+    internal interface IBlacklistDeletingRepository
     {
         /// <summary>
         /// Delete existing blacklist link

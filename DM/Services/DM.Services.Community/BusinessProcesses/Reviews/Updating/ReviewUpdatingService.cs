@@ -8,7 +8,7 @@ using DbReview = DM.Services.DataAccess.BusinessObjects.Common.Review;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Updating
 {
     /// <inheritdoc />
-    public class ReviewUpdatingService : IReviewUpdatingService
+    internal class ReviewUpdatingService : IReviewUpdatingService
     {
         private readonly IValidator<UpdateReview> validator;
         private readonly IReviewReadingService readingService;

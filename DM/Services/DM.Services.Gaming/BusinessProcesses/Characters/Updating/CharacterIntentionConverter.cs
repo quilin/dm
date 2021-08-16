@@ -4,7 +4,7 @@ using DM.Services.Gaming.Authorization;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
 {
     /// <inheritdoc />
-    public class CharacterIntentionConverter : ICharacterIntentionConverter
+    internal class CharacterIntentionConverter : ICharacterIntentionConverter
     {
         /// <inheritdoc />
         public (CharacterIntention intention, EventType eventType) Convert(

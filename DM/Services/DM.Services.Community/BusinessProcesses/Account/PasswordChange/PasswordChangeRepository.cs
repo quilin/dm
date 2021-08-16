@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange
 {
     /// <inheritdoc />
-    public class PasswordChangeRepository : IPasswordChangeRepository
+    internal class PasswordChangeRepository : IPasswordChangeRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

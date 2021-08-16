@@ -5,7 +5,7 @@ using DM.Services.MessageQueuing.Dto;
 namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {
     /// <inheritdoc />
-    public class CommentDeletedIndexer : BaseIndexer
+    internal class CommentDeletedIndexer : BaseIndexer
     {
         private readonly IIndexingRepository indexingRepository;
 

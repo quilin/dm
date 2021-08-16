@@ -6,7 +6,7 @@ using DM.Services.DataAccess.RelationalStorage;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
 {
     /// <inheritdoc />
-    public class BlacklistDeletingRepository : IBlacklistDeletingRepository
+    internal class BlacklistDeletingRepository : IBlacklistDeletingRepository
     {
         private readonly DmDbContext dbContext;
 

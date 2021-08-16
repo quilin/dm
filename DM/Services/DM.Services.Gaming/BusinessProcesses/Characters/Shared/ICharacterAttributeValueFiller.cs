@@ -8,7 +8,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
     /// <summary>
     /// Filler for character attribute values
     /// </summary>
-    public interface ICharacterAttributeValueFiller
+    internal interface ICharacterAttributeValueFiller
     {
         /// <summary>
         /// Fill character attribute values with needed metadata from game attribute schema

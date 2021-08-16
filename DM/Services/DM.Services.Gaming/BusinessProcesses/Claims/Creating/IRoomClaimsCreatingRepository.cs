@@ -7,7 +7,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
     /// <summary>
     /// Storage for room claims creating
     /// </summary>
-    public interface IRoomClaimsCreatingRepository
+    internal interface IRoomClaimsCreatingRepository
     {
         /// <summary>
         /// Save room claim

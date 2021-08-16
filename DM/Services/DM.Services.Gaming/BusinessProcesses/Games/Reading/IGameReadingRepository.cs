@@ -10,7 +10,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Reading
     /// <summary>
     /// Game reading storage
     /// </summary>
-    public interface IGameReadingRepository
+    internal interface IGameReadingRepository
     {
         /// <summary>
         /// Count games that match the query

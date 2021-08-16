@@ -11,7 +11,7 @@ using ChatMessage = DM.Web.API.Dto.Messaging.ChatMessage;
 namespace DM.Web.API.Services.Community
 {
     /// <inheritdoc />
-    public class ChatApiService : IChatApiService
+    internal class ChatApiService : IChatApiService
     {
         private readonly IChatReadingService readingService;
         private readonly IChatCreatingService creatingService;

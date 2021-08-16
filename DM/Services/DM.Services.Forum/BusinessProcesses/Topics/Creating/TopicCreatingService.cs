@@ -14,7 +14,7 @@ using FluentValidation;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
 {
     /// <inheritdoc />
-    public class TopicCreatingService : ITopicCreatingService
+    internal class TopicCreatingService : ITopicCreatingService
     {
         private readonly IValidator<CreateTopic> validator;
         private readonly IForumReadingService forumReadingService;

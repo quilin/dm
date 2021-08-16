@@ -3,7 +3,7 @@ using AutoMapper;
 namespace DM.Web.API.Dto.Games.Attributes
 {
     /// <inheritdoc />
-    public class AttributeSchemaProfile : Profile
+    internal class AttributeSchemaProfile : Profile
     {
         /// <inheritdoc />
         public AttributeSchemaProfile()

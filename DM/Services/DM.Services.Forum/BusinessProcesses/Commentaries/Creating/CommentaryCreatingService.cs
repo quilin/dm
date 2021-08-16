@@ -17,7 +17,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
 {
     /// <inheritdoc />
-    public class CommentaryCreatingService : ICommentaryCreatingService
+    internal class CommentaryCreatingService : ICommentaryCreatingService
     {
         private readonly IValidator<CreateComment> validator;
         private readonly ITopicReadingService topicReadingService;

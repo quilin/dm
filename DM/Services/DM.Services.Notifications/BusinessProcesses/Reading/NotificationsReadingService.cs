@@ -7,7 +7,7 @@ using DM.Services.Notifications.Dto;
 namespace DM.Services.Notifications.BusinessProcesses.Reading
 {
     /// <inheritdoc />
-    public class NotificationsReadingService : INotificationsReadingService
+    internal class NotificationsReadingService : INotificationsReadingService
     {
         private readonly IIdentityProvider identityProvider;
         private readonly INotificationsReadingRepository repository;

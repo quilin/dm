@@ -9,7 +9,7 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.Authorization
 {
     /// <inheritdoc cref="IIntentionResolver" />
-    public class GameIntentionResolver :
+    internal class GameIntentionResolver :
         IIntentionResolver<GameIntention>,
         IIntentionResolver<GameIntention, Game>
     {

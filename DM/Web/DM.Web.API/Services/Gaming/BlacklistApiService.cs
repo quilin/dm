@@ -12,7 +12,7 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Gaming
 {
     /// <inheritdoc />
-    public class BlacklistApiService : IBlacklistApiService
+    internal class BlacklistApiService : IBlacklistApiService
     {
         private readonly IBlacklistReadingService readingService;
         private readonly IBlacklistCreatingService creatingService;

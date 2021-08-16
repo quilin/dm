@@ -6,7 +6,7 @@ using DM.Services.Core.Implementation.CorrelationToken;
 namespace DM.Services.MessageQueuing.Processing
 {
     /// <inheritdoc />
-    public class MessageProcessorWrapper<TMessage> : IMessageProcessorWrapper<TMessage>
+    internal class MessageProcessorWrapper<TMessage> : IMessageProcessorWrapper<TMessage>
     {
         private readonly ICorrelationTokenSetter correlationTokenSetter;
         private readonly IGuidFactory guidFactory;

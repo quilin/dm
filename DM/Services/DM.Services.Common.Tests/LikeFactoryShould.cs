@@ -7,7 +7,7 @@ using FluentAssertions;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
+namespace DM.Services.Common.Tests
 {
     public class LikeFactoryShould : UnitTestBase
     {

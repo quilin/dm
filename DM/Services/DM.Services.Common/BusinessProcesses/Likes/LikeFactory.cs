@@ -5,7 +5,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 namespace DM.Services.Common.BusinessProcesses.Likes
 {
     /// <inheritdoc />
-    public class LikeFactory : ILikeFactory
+    internal class LikeFactory : ILikeFactory
     {
         private readonly IGuidFactory guidFactory;
 

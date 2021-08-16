@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using DM.Services.Authentication.Implementation.Security;
-using DM.Services.Core.Implementation;
 using DM.Tests.Core;
 using FluentAssertions;
 using Moq;

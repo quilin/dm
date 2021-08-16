@@ -15,7 +15,7 @@ using DM.Services.MessageQueuing.Publish;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
 {
     /// <inheritdoc />
-    public class CharacterDeletingService : ICharacterDeletingService
+    internal class CharacterDeletingService : ICharacterDeletingService
     {
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;

@@ -16,7 +16,7 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
 {
     /// <inheritdoc />
-    public class BlacklistDeletingService : IBlacklistDeletingService
+    internal class BlacklistDeletingService : IBlacklistDeletingService
     {
         private readonly IValidator<OperateBlacklistLink> validator;
         private readonly IUserRepository userRepository;

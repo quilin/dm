@@ -5,7 +5,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared
     /// <summary>
     /// Validator for character attribute value
     /// </summary>
-    public interface IAttributeValueValidator
+    internal interface IAttributeValueValidator
     {
         /// <summary>
         /// Validate value against specification

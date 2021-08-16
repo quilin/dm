@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
 {
     /// <inheritdoc />
-    public class TopicCreatingRepository : ITopicCreatingRepository
+    internal class TopicCreatingRepository : ITopicCreatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

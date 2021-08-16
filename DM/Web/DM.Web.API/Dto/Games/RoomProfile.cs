@@ -6,7 +6,7 @@ namespace DM.Web.API.Dto.Games
     /// <summary>
     /// Mapping profile for game models
     /// </summary>
-    public class RoomProfile : Profile
+    internal class RoomProfile : Profile
     {
         /// <inheritdoc />
         public RoomProfile()

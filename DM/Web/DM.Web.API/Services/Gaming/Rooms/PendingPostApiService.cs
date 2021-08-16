@@ -10,7 +10,7 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming.Rooms
 {
     /// <inheritdoc />
-    public class PendingPostApiService : IPendingPostApiService
+    internal class PendingPostApiService : IPendingPostApiService
     {
         private readonly IPendingPostCreatingService creatingService;
         private readonly IPendingPostDeletingService deletingService;

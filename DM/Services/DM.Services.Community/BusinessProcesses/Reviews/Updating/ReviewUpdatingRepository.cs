@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Updating
 {
     /// <inheritdoc />
-    public class ReviewUpdatingRepository : IReviewUpdatingRepository
+    internal class ReviewUpdatingRepository : IReviewUpdatingRepository
     {
         private readonly DmDbContext dbContext;
         private readonly IMapper mapper;

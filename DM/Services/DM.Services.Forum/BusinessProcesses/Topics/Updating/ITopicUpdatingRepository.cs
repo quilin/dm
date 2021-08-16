@@ -8,7 +8,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
     /// <summary>
     /// Updating topics storage
     /// </summary>
-    public interface ITopicUpdatingRepository
+    internal interface ITopicUpdatingRepository
     {
         /// <summary>
         /// Update existing topic

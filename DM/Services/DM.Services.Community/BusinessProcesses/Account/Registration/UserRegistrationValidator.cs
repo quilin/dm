@@ -6,7 +6,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
     /// <summary>
     /// Validator for user registration DTO model
     /// </summary>
-    public class UserRegistrationValidator : AbstractValidator<UserRegistration>
+    internal class UserRegistrationValidator : AbstractValidator<UserRegistration>
     {
         /// <inheritdoc />
         public UserRegistrationValidator(
