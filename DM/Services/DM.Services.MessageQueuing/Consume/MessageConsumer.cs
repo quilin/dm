@@ -1,4 +1,5 @@
 using System;
+using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.Configuration;
 using RabbitMQ.Client;
@@ -41,7 +42,7 @@ namespace DM.Services.MessageQueuing.Consume
             var consumerTagBody = string.IsNullOrEmpty(configuration.ConsumerTag)
                 ? GetType().Name
                 : configuration.ConsumerTag;
-            consumerTag = $"{consumerTagBody}.{guidFactory.Create()}";
+            consumerTag = $"{consumerTagBody}.{guidFactory.Create().EncodeToReadable()}";
 
             channel.BasicConsume(consumer, configuration.QueueName, false, consumerTag);
         }
