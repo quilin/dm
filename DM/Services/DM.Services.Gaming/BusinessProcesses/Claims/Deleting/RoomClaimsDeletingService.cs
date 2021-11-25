@@ -8,7 +8,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Claims.Reading;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
 {

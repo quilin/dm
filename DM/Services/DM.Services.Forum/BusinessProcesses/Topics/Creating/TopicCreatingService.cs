@@ -8,7 +8,7 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics.Creating

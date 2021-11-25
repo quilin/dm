@@ -4,7 +4,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.MessageQueuing.Dto;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Search.Extensions;
 using Microsoft.EntityFrameworkCore;
 

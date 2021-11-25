@@ -16,7 +16,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;

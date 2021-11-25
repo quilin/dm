@@ -6,7 +6,7 @@ using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 

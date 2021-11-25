@@ -13,7 +13,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 

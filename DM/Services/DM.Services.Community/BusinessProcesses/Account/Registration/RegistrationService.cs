@@ -3,7 +3,7 @@ using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Community.BusinessProcesses.Account.Registration

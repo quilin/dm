@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
-using DM.Services.MessageQueuing.Dto;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers
 {

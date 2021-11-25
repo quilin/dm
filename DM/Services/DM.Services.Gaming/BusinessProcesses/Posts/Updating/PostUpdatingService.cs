@@ -10,7 +10,7 @@ using DM.Services.Gaming.BusinessProcesses.Posts.Reading;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 

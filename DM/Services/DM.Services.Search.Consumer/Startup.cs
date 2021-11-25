@@ -8,10 +8,10 @@ using DM.Services.Core.Implementation;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Consume;
-using DM.Services.MessageQueuing.Dto;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.Building;
+using DM.Services.MessageQueuing.GeneralBus;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
+using DM.Services.Search.Consumer.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,8 +37,6 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<MessageConsumeConfiguration>(
-                    configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
 
             services
@@ -65,13 +63,13 @@ namespace DM.Services.Search.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumer"></param>
+        /// <param name="consumerBuilder"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IMessageConsumer<InvokedEvent> consumer)
+            IConsumerBuilder<InvokedEvent> consumerBuilder)
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
 
-            var configuration = new MessageConsumeConfiguration
+            var parameters = new RabbitConsumerParameters("dm.search-engine", ProcessingOrder.Unmanaged)
             {
                 ExchangeName = InvokedEventsTransport.ExchangeName,
                 RoutingKeys = new[]
@@ -86,9 +84,9 @@ namespace DM.Services.Search.Consumer
                 }.ToRoutingKeys(),
                 QueueName = "dm.search-engine"
             };
-            consumer.Consume(configuration);
+            consumerBuilder.BuildRabbit<CompositeIndexer>(parameters).Start();
 
-            Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");
+            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
 
             applicationBuilder
                 .UseRouting()

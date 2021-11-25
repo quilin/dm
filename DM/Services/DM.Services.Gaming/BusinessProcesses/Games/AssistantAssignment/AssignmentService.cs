@@ -8,7 +8,7 @@ using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {

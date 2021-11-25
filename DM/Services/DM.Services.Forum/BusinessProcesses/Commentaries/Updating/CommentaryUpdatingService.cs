@@ -6,7 +6,7 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 

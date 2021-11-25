@@ -8,8 +8,8 @@ using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.Forum;
 using DM.Services.Gaming;
-using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Consume;
+using DM.Services.MessageQueuing.Building;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using DM.Services.Notifications;
 using DM.Services.Notifications.Dto;
 using DM.Services.Search;
@@ -118,9 +118,9 @@ namespace DM.Web.API
         /// Configure application
         /// </summary>
         /// <param name="appBuilder"></param>
-        /// <param name="notificationConsumer"></param>
+        /// <param name="consumerBuilder"></param>
         public void Configure(IApplicationBuilder appBuilder,
-            IMessageConsumer<RealtimeNotification> notificationConsumer)
+            IConsumerBuilder<RealtimeNotification> consumerBuilder)
         {
             appBuilder
                 .UseSwagger(c => c.Configure())
@@ -142,15 +142,14 @@ namespace DM.Web.API
                     c.MapHub<NotificationHub>("/whatsup");
                 });
 
-            notificationConsumer.Consume(new MessageConsumeConfiguration
+            var parameters = new RabbitConsumerParameters("dm.api", ProcessingOrder.Sequential)
             {
                 ExchangeName = "dm.notifications.sent",
                 QueueName = "dm.notifications.api",
                 RoutingKeys = new[] {"#"},
-                PrefetchCount = 1,
-                Exclusive = true,
-                ConsumerTag = "dm.api"
-            });
+                Exclusive = true
+            };
+            consumerBuilder.BuildRabbit<NotificationHandler>(parameters).Start();
         }
     }
 }

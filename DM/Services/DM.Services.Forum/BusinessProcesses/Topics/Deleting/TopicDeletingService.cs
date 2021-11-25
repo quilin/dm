@@ -9,7 +9,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
 {

@@ -9,7 +9,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Forum.Dto.Internal;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using Moq;
 using Moq.Language.Flow;

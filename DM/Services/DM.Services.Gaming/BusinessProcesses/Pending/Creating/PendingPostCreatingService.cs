@@ -11,7 +11,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating

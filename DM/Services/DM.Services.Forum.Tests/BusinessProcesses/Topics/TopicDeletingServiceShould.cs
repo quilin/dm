@@ -11,7 +11,7 @@ using DM.Services.Forum.BusinessProcesses.Topics.Deleting;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using Moq;
 using Moq.Language.Flow;

@@ -8,7 +8,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Updating;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting

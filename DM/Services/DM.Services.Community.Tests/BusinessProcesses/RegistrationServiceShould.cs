@@ -7,7 +7,7 @@ using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;
