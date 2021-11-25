@@ -25,7 +25,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ITopicUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public TopicUpdatingService(
@@ -36,7 +36,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             IUpdateBuilderFactory updateBuilderFactory,
             ITopicUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.topicReadingService = topicReadingService;
@@ -45,7 +45,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
         }
 
         /// <inheritdoc />
@@ -77,7 +77,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Updating
             }
 
             var topic = await repository.Update(changes);
-            await invokedEventPublisher.Publish(EventType.ChangedForumTopic, topic.Id);
+            await invokedEventProducer.Send(EventType.ChangedForumTopic, topic.Id);
 
             return topic;
         }

@@ -24,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IRoomCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public RoomCreatingService(
@@ -35,7 +35,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
             IUpdateBuilderFactory updateBuilderFactory,
             IRoomCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.gameReadingService = gameReadingService;
             this.validator = validator;
@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -65,7 +65,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating
 
             var room = await repository.Create(roomToCreate, updateLastRoom);
             await unreadCountersRepository.Create(room.Id, game.Id, UnreadEntryType.Message);
-            await publisher.Publish(EventType.NewRoom, room.Id);
+            await producer.Send(EventType.NewRoom, room.Id);
 
             return room;
         }

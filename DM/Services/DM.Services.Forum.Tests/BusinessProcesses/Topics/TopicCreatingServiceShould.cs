@@ -32,7 +32,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
         private readonly Mock<ITopicCreatingRepository> creatingRepository;
         private readonly ISetup<ITopicCreatingRepository, Task<Topic>> saveTopicSetup;
         private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
-        private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IInvokedEventProducer> publisher;
         private readonly TopicCreatingService service;
 
         public TopicCreatingServiceShould()
@@ -67,9 +67,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
                 .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
                 .Returns(Task.CompletedTask);
 
-            publisher = Mock<IInvokedEventPublisher>();
+            publisher = Mock<IInvokedEventProducer>();
             publisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             service = new TopicCreatingService(validator.Object,
@@ -146,7 +146,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             await service.CreateTopic(createTopic);
 
-            publisher.Verify(p => p.Publish(EventType.NewForumTopic, forumTopicId), Times.Once);
+            publisher.Verify(p => p.Send(EventType.NewForumTopic, forumTopicId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

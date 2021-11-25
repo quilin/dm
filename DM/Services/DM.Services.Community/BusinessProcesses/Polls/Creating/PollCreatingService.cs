@@ -14,7 +14,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IPollFactory factory;
         private readonly IPollCreatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public PollCreatingService(
@@ -22,13 +22,13 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating
             IIntentionManager intentionManager,
             IPollFactory factory,
             IPollCreatingRepository repository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
             this.factory = factory;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
         
         /// <inheritdoc />
@@ -39,7 +39,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating
 
             var poll = factory.Create(createPoll);
             var result = await repository.Create(poll);
-            await publisher.Publish(EventType.NewPoll, result.Id);
+            await producer.Send(EventType.NewPoll, result.Id);
 
             return result;
         }

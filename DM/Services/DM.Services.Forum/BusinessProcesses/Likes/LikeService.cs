@@ -29,7 +29,7 @@ namespace DM.Services.Forum.BusinessProcesses.Likes
             IIdentityProvider identityProvider,
             ILikeFactory likeFactory,
             ILikeRepository likeRepository,
-            IInvokedEventPublisher invokedEventProducer)
+            IInvokedEventProducer invokedEventProducer)
             : base(identityProvider, likeFactory, likeRepository, invokedEventProducer)
         {
             this.topicReadingService = topicReadingService;

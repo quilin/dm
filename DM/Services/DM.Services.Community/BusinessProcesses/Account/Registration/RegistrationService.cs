@@ -17,7 +17,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
         private readonly IActivationTokenFactory activationTokenFactory;
         private readonly IRegistrationRepository repository;
         private readonly IRegistrationMailSender mailSender;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public RegistrationService(
@@ -27,7 +27,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
             IActivationTokenFactory activationTokenFactory,
             IRegistrationRepository repository,
             IRegistrationMailSender mailSender,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.validator = validator;
             this.securityManager = securityManager;
@@ -35,7 +35,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
             this.activationTokenFactory = activationTokenFactory;
             this.repository = repository;
             this.mailSender = mailSender;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration
 
             await repository.AddUser(user, token);
             await mailSender.Send(user.Email, user.Login, token.TokenId);
-            await publisher.Publish(EventType.NewUser, user.UserId);
+            await producer.Send(EventType.NewUser, user.UserId);
         }
     }
 }

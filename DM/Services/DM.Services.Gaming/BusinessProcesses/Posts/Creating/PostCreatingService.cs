@@ -29,7 +29,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IPostCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -41,7 +41,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
             IUpdateBuilderFactory updateBuilderFactory,
             IPostCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -51,7 +51,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -83,7 +83,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating
 
             var createdPost = await repository.Create(post, pendingPostUpdates);
             await unreadCountersRepository.Increment(createdPost.RoomId, UnreadEntryType.Message);
-            await publisher.Publish(events, createdPost.Id);
+            await producer.Send(events, createdPost.Id);
 
             return createdPost;
         }

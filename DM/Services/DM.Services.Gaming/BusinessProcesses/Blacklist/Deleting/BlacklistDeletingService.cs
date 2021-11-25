@@ -24,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IBlacklistDeletingRepository repository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public BlacklistDeletingService(
@@ -34,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             IBlacklistDeletingRepository repository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.userRepository = userRepository;
@@ -42,7 +42,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
         }
         
         /// <inheritdoc />
@@ -61,7 +61,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting
 
             var updateBuilder = updateBuilderFactory.Create<BlackListLink>(blacklistedLink.LinkId).Delete();
             await repository.Delete(updateBuilder);
-            await invokedEventPublisher.Publish(EventType.ChangedGame, game.Id);
+            await invokedEventProducer.Send(EventType.ChangedGame, game.Id);
         }
     }
 }

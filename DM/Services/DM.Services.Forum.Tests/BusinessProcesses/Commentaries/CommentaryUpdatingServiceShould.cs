@@ -29,7 +29,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly Mock<IUpdateBuilder<Comment>> commentUpdateBuilder;
         private readonly Mock<ICommentaryUpdatingRepository> commentRepository;
         private readonly ISetup<ICommentaryUpdatingRepository, Task<Common.Dto.Comment>> updateCommentSetup;
-        private readonly Mock<IInvokedEventPublisher> eventPublisher;
+        private readonly Mock<IInvokedEventProducer> eventPublisher;
         private readonly CommentaryUpdatingService service;
 
         public CommentaryUpdatingServiceShould()
@@ -65,9 +65,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentRepository = Mock<ICommentaryUpdatingRepository>();
             updateCommentSetup = commentRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<Comment>>()));
 
-            eventPublisher = Mock<IInvokedEventPublisher>();
+            eventPublisher = Mock<IInvokedEventProducer>();
             eventPublisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             service = new CommentaryUpdatingService(
@@ -125,7 +125,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty});
 
-            eventPublisher.Verify(p => p.Publish(EventType.ChangedForumComment, commentId), Times.Once);
+            eventPublisher.Verify(p => p.Send(EventType.ChangedForumComment, commentId), Times.Once);
         }
     }
 }

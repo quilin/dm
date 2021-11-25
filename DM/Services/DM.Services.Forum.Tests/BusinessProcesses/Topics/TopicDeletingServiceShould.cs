@@ -26,7 +26,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
         private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
         private readonly Mock<ITopicUpdatingRepository> updatingRepository;
         private readonly ISetup<ITopicUpdatingRepository, Task<Topic>> updateSetup;
-        private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IInvokedEventProducer> publisher;
         private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
         private readonly TopicDeletingService service;
 
@@ -51,9 +51,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
             updatingRepository = Mock<ITopicUpdatingRepository>();
             updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
-            publisher = Mock<IInvokedEventPublisher>();
+            publisher = Mock<IInvokedEventProducer>();
             publisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             unreadCountersRepository = Mock<IUnreadCountersRepository>();
@@ -121,7 +121,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
 
             await service.DeleteTopic(topicId);
 
-            publisher.Verify(p => p.Publish(EventType.DeletedForumTopic, topicId), Times.Once);
+            publisher.Verify(p => p.Send(EventType.DeletedForumTopic, topicId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

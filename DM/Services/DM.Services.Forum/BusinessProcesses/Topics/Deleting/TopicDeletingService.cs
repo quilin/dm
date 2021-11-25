@@ -20,7 +20,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ITopicUpdatingRepository repository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
         private readonly IUnreadCountersRepository unreadCountersRepository;
 
         /// <inheritdoc />
@@ -29,14 +29,14 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             ITopicUpdatingRepository repository,
-            IInvokedEventPublisher invokedEventPublisher,
+            IInvokedEventProducer invokedEventProducer,
             IUnreadCountersRepository unreadCountersRepository)
         {
             this.topicReadingService = topicReadingService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
             this.unreadCountersRepository = unreadCountersRepository;
         }
 
@@ -48,7 +48,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting
 
             await repository.Update(updateBuilderFactory.Create<ForumTopic>(topicId).Field(t => t.IsRemoved, true));
             await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message);
-            await invokedEventPublisher.Publish(EventType.DeletedForumTopic, topicId);
+            await invokedEventProducer.Send(EventType.DeletedForumTopic, topicId);
         }
     }
 }

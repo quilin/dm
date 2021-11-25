@@ -18,7 +18,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IGameUpdatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public GameDeletingService(
@@ -26,13 +26,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
             IGameUpdatingRepository repository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.gameReadingService = gameReadingService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting
             var updateBuilder = updateBuilderFactory.Create<Game>(gameId)
                 .Field(g => g.IsRemoved, true);
             await repository.Update(updateBuilder);
-            await publisher.Publish(EventType.DeletedGame, gameId);
+            await producer.Send(EventType.DeletedGame, gameId);
         }
     }
 }

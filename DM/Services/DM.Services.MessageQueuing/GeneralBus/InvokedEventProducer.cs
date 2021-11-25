@@ -10,11 +10,11 @@ using DM.Services.MessageQueuing.RabbitMq.Configuration;
 
 namespace DM.Services.MessageQueuing.GeneralBus
 {
-    internal class InvokedEventPublisher : IInvokedEventPublisher
+    internal class InvokedEventProducer : IInvokedEventProducer
     {
         private readonly IProducer<string, InvokedEvent> producer;
 
-        public InvokedEventPublisher(
+        public InvokedEventProducer(
             IProducerBuilder<string, InvokedEvent> producerBuilder)
         {
             producer = producerBuilder.BuildRabbit(new RabbitProducerParameters
@@ -26,14 +26,14 @@ namespace DM.Services.MessageQueuing.GeneralBus
             });
         }
 
-        public Task Publish(EventType eventType, Guid entityId) =>
+        public Task Send(EventType eventType, Guid entityId) =>
             producer.Send(GetRoutingKey(eventType), new InvokedEvent
             {
                 Type = eventType,
                 EntityId = entityId
             }, CancellationToken.None);
 
-        public Task Publish(IEnumerable<EventType> eventTypes, Guid entityId) =>
+        public Task Send(IEnumerable<EventType> eventTypes, Guid entityId) =>
             producer.Send(eventTypes.Select(t => (GetRoutingKey(t), new InvokedEvent
             {
                 Type = t,

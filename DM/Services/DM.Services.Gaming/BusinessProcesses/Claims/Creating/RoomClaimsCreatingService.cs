@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
         private readonly ICharacterClaimApprove characterClaimApprove;
         private readonly IReaderClaimApprove readerClaimApprove;
         private readonly IRoomClaimsCreatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
             ICharacterClaimApprove characterClaimApprove,
             IReaderClaimApprove readerClaimApprove,
             IRoomClaimsCreatingRepository repository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
             this.characterClaimApprove = characterClaimApprove;
             this.readerClaimApprove = readerClaimApprove;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -60,7 +60,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Creating
             ;
             var link = factory.Create(createRoomClaim, participantId);
             var result = await repository.Create(link);
-            await publisher.Publish(EventType.ChangedRoom, link.RoomId);
+            await producer.Send(EventType.ChangedRoom, link.RoomId);
 
             return result;
         }

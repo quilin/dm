@@ -26,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
             IIdentityProvider identityProvider,
             ILikeFactory likeFactory,
             ILikeRepository likeRepository,
-            IInvokedEventPublisher invokedEventProducer)
+            IInvokedEventProducer invokedEventProducer)
             : base(identityProvider, likeFactory, likeRepository, invokedEventProducer)
         {
             this.commentaryReadingService = commentaryReadingService;

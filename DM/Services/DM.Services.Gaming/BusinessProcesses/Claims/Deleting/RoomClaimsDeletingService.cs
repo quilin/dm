@@ -20,7 +20,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
         private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IIntentionManager intentionManager;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -30,7 +30,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
             IRoomUpdatingRepository roomUpdatingRepository,
             IIntentionManager intentionManager,
             IUpdateBuilderFactory updateBuilderFactory,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.repository = repository;
@@ -38,7 +38,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
             this.roomUpdatingRepository = roomUpdatingRepository;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -52,7 +52,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting
 
             var updateBuilder = updateBuilderFactory.Create<RoomClaim>(claimId).Delete();
             await repository.Delete(updateBuilder);
-            await publisher.Publish(EventType.ChangedRoom, room.Id);
+            await producer.Send(EventType.ChangedRoom, room.Id);
         }
     }
 }

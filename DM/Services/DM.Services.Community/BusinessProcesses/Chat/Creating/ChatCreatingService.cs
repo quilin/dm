@@ -15,7 +15,7 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Creating
         private readonly IIntentionManager intentionManager;
         private readonly IChatMessageFactory factory;
         private readonly IChatCreatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -24,14 +24,14 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Creating
             IIntentionManager intentionManager,
             IChatMessageFactory factory,
             IChatCreatingRepository repository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
             this.factory = factory;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
         
@@ -43,7 +43,7 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Creating
 
             var chatMessage = factory.Create(createChatMessage, identityProvider.Current.User.UserId);
             var result = await repository.Create(chatMessage);
-            await publisher.Publish(EventType.NewChatMessage, chatMessage.ChatMessageId);
+            await producer.Send(EventType.NewChatMessage, chatMessage.ChatMessageId);
 
             return result;
         }

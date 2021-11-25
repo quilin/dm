@@ -24,7 +24,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly Mock<IUpdateBuilder<ForumTopic>> topicUpdateBuilder;
         private readonly Mock<ICommentaryDeletingRepository> commentaryRepository;
         private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
-        private readonly Mock<IInvokedEventPublisher> eventPublisher;
+        private readonly Mock<IInvokedEventProducer> eventPublisher;
         private readonly CommentaryDeletingService service;
         private readonly ISetup<ICommentaryDeletingRepository, Task<CommentToDelete>> getCommentSetup;
         private readonly Mock<IUpdateBuilder<Comment>> commentUpdateBuilder;
@@ -55,7 +55,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             getCommentSetup = commentaryRepository.Setup(r => r.GetForDelete(It.IsAny<Guid>()));
 
             unreadCountersRepository = Mock<IUnreadCountersRepository>();
-            eventPublisher = Mock<IInvokedEventPublisher>();
+            eventPublisher = Mock<IInvokedEventProducer>();
 
             service = new CommentaryDeletingService(
                 intentionManager.Object, updateBuilderFactory.Object,
@@ -138,7 +138,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await service.Delete(commentId);
 
-            eventPublisher.Verify(p => p.Publish(EventType.DeletedForumComment, commentId));
+            eventPublisher.Verify(p => p.Send(EventType.DeletedForumComment, commentId));
         }
     }
 }

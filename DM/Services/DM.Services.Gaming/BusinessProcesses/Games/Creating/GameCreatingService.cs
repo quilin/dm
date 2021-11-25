@@ -34,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
         private readonly IUserRepository userRepository;
         private readonly ISchemaReadingRepository schemaRepository;
         private readonly IUnreadCountersRepository countersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public GameCreatingService(
@@ -50,7 +50,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             IUserRepository userRepository,
             ISchemaReadingRepository schemaRepository,
             IUnreadCountersRepository countersRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
@@ -64,7 +64,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             this.userRepository = userRepository;
             this.schemaRepository = schemaRepository;
             this.countersRepository = countersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -123,7 +123,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Creating
             await countersRepository.Create(game.GameId, UnreadEntryType.Message);
             await countersRepository.Create(game.GameId, UnreadEntryType.Character);
 
-            await publisher.Publish(EventType.NewGame, game.GameId);
+            await producer.Send(EventType.NewGame, game.GameId);
             return createdGame;
         }
     }

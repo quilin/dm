@@ -33,7 +33,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
         private readonly ISetup<IIdentity, AuthenticatedUser> currentUser;
         private readonly Mock<ILikeFactory> factory;
         private readonly Mock<ILikeRepository> likeRepository;
-        private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IInvokedEventProducer> publisher;
 
         public LikeServiceForCommentsShould()
         {
@@ -50,7 +50,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
 
             factory = Mock<ILikeFactory>();
             likeRepository = Mock<ILikeRepository>();
-            publisher = Mock<IInvokedEventPublisher>();
+            publisher = Mock<IInvokedEventProducer>();
             service = new LikeService(Mock<ITopicReadingService>().Object, commentReadingService.Object,
                 intentionManager.Object, identityProvider.Object, factory.Object,
                 likeRepository.Object, publisher.Object);
@@ -101,7 +101,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                 .Setup(r => r.Add(It.IsAny<Like>()))
                 .Returns(Task.CompletedTask);
             publisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             var actual = await service.LikeComment(commentId);
@@ -110,7 +110,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             likeRepository.Verify(r => r.Add(like), Times.Once);
             likeRepository.VerifyNoOtherCalls();
 
-            publisher.Verify(p => p.Publish(EventType.LikedForumComment, likeId), Times.Once);
+            publisher.Verify(p => p.Send(EventType.LikedForumComment, likeId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
 

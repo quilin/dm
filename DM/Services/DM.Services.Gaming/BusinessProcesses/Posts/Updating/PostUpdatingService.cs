@@ -26,7 +26,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
         private readonly IPostReadingService postReadingService;
         private readonly IRoomUpdatingRepository roomUpdatingRepository;
         private readonly IPostUpdatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             IPostReadingService postReadingService,
             IRoomUpdatingRepository roomUpdatingRepository,
             IPostUpdatingRepository repository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -48,7 +48,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             this.postReadingService = postReadingService;
             this.roomUpdatingRepository = roomUpdatingRepository;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -89,7 +89,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
             }
 
             var updatedPost = await repository.Update(updateBuilder);
-            await publisher.Publish(EventType.ChangedPost, post.Id);
+            await producer.Send(EventType.ChangedPost, post.Id);
 
             return updatedPost;
         }

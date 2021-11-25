@@ -19,7 +19,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryDeletingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public CommentaryDeletingService(
@@ -27,13 +27,13 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryDeletingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
         }
         
         /// <inheritdoc />
@@ -54,7 +54,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
             await repository.Delete(updateComment, updateTopic);
             await unreadCountersRepository.Decrement(comment.EntityId, UnreadEntryType.Message, comment.CreateDate);
 
-            await invokedEventPublisher.Publish(EventType.DeletedForumComment, commentId);
+            await invokedEventProducer.Send(EventType.DeletedForumComment, commentId);
         }
     }
 }

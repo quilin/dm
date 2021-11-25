@@ -21,7 +21,7 @@ namespace DM.Services.Community.Tests
         private readonly ActivationService activationService;
         private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
         private readonly Mock<IActivationRepository> activationRepository;
-        private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IInvokedEventProducer> publisher;
         private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
         private readonly Mock<IUpdateBuilder<Token>> tokenUpdateBuilder;
 
@@ -37,9 +37,9 @@ namespace DM.Services.Community.Tests
             var dateTimeProvider = Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(p => p.Now).Returns(new DateTime(2019, 01, 02));
 
-            publisher = Mock<IInvokedEventPublisher>();
+            publisher = Mock<IInvokedEventProducer>();
             publisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             userUpdateBuilder = Mock<IUpdateBuilder<User>>();
@@ -116,7 +116,7 @@ namespace DM.Services.Community.Tests
 
             await activationService.Activate(tokenId);
 
-            publisher.Verify(p => p.Publish(EventType.ActivatedUser, userId), Times.Once);
+            publisher.Verify(p => p.Send(EventType.ActivatedUser, userId), Times.Once);
         }
     }
 }

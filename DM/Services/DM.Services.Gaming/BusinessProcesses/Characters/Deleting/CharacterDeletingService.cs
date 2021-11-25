@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICharacterUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public CharacterDeletingService(
@@ -29,13 +29,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
             IUpdateBuilderFactory updateBuilderFactory,
             ICharacterUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting
 
             await repository.Update(updateCharacter, updateAttributes);
             await unreadCountersRepository.Decrement(character.GameId, UnreadEntryType.Character, character.CreateDate);
-            await publisher.Publish(EventType.DeletedCharacter, characterId);
+            await producer.Send(EventType.DeletedCharacter, characterId);
         }
     }
 }

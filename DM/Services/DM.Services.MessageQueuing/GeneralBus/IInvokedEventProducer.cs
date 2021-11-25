@@ -8,7 +8,7 @@ namespace DM.Services.MessageQueuing.GeneralBus
     /// <summary>
     /// Продюсер событий общей шины
     /// </summary>
-    public interface IInvokedEventPublisher
+    public interface IInvokedEventProducer
     {
         /// <summary>
         /// Опубликовать событие с сущностью
@@ -16,7 +16,7 @@ namespace DM.Services.MessageQueuing.GeneralBus
         /// <param name="eventType">Тип события</param>
         /// <param name="entityId">Идентификатор сущности</param>
         /// <returns></returns>
-        Task Publish(EventType eventType, Guid entityId);
+        Task Send(EventType eventType, Guid entityId);
 
         /// <summary>
         /// Опубликовать набор событий с сущностью
@@ -24,6 +24,6 @@ namespace DM.Services.MessageQueuing.GeneralBus
         /// <param name="eventTypes">Типы событий</param>
         /// <param name="entityId">Идентификатор сущности</param>
         /// <returns></returns>
-        Task Publish(IEnumerable<EventType> eventTypes, Guid entityId);
+        Task Send(IEnumerable<EventType> eventTypes, Guid entityId);
     }
 }

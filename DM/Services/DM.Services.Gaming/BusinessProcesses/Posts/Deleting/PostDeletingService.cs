@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IPostUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public PostDeletingService(
@@ -30,14 +30,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting
             IUpdateBuilderFactory updateBuilderFactory,
             IPostUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.postReadingService = postReadingService;
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
         
         /// <inheritdoc />
@@ -50,7 +50,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting
 
             await repository.Update(updateBuilder);
             await unreadCountersRepository.Decrement(post.RoomId, UnreadEntryType.Message, post.CreateDate);
-            await publisher.Publish(EventType.DeletedPost, postId);
+            await producer.Send(EventType.DeletedPost, postId);
         }
     }
 }

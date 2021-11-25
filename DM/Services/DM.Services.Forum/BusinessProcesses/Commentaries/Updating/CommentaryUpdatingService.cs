@@ -21,7 +21,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryUpdatingRepository repository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public CommentaryUpdatingService(
@@ -31,7 +31,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             IDateTimeProvider dateTimeProvider,
             IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryUpdatingRepository repository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.commentaryReadingService = commentaryReadingService;
@@ -39,7 +39,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             this.dateTimeProvider = dateTimeProvider;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
         }
 
         /// <inheritdoc />
@@ -58,7 +58,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
             }
 
             var updatedComment = await repository.Update(updateBuilder);
-            await invokedEventPublisher.Publish(EventType.ChangedForumComment, updateComment.CommentId);
+            await invokedEventProducer.Send(EventType.ChangedForumComment, updateComment.CommentId);
             return updatedComment;
         }
     }

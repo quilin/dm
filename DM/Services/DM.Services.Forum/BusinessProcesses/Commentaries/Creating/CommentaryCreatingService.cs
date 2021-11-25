@@ -27,7 +27,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICommentaryCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public CommentaryCreatingService(
@@ -39,7 +39,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             IUpdateBuilderFactory updateBuilderFactory,
             ICommentaryCreatingRepository repository,
             IUnreadCountersRepository countersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.topicReadingService = topicReadingService;
@@ -48,7 +48,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.countersRepository = countersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
             this.identityProvider = identityProvider;
         }
 
@@ -65,7 +65,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
                 .Field(t => t.LastCommentId, comment.CommentId);
             var createdComment = await repository.Create(comment, topicUpdate);
             await countersRepository.Increment(topic.Id, UnreadEntryType.Message);
-            await invokedEventPublisher.Publish(EventType.NewForumComment, comment.CommentId);
+            await invokedEventProducer.Send(EventType.NewForumComment, comment.CommentId);
 
             return createdComment;
         }
