@@ -6,7 +6,7 @@ using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 
@@ -22,7 +22,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IMessageCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             IUpdateBuilderFactory updateBuilderFactory,
             IMessageCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.conversationReadingService = conversationReadingService;
@@ -44,7 +44,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -61,7 +61,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
 
             var result = await repository.Create(message, updateConversation);
             await unreadCountersRepository.Increment(conversation.Id, UnreadEntryType.Message);
-            await publisher.Publish(EventType.NewMessage, message.MessageId);
+            await producer.Send(EventType.NewMessage, message.MessageId);
 
             return result;
         }

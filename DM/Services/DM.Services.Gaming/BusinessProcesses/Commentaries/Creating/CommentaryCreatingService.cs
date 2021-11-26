@@ -8,7 +8,7 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using Comment = DM.Services.Common.Dto.Comment;
 
@@ -24,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
         private readonly ICommentaryFactory commentaryFactory;
         private readonly ICommentaryCreatingRepository repository;
         private readonly IUnreadCountersRepository countersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public CommentaryCreatingService(
@@ -35,7 +35,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             ICommentaryFactory commentaryFactory,
             ICommentaryCreatingRepository repository,
             IUnreadCountersRepository countersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.gameReadingService = gameReadingService;
@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             this.commentaryFactory = commentaryFactory;
             this.repository = repository;
             this.countersRepository = countersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
             this.identityProvider = identityProvider;
         }
 
@@ -58,7 +58,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating
             var comment = commentaryFactory.Create(createComment, identityProvider.Current.User.UserId);
             var createdComment = await repository.Create(comment);
             await countersRepository.Increment(game.Id, UnreadEntryType.Message);
-            await invokedEventPublisher.Publish(EventType.NewGameComment, comment.CommentId);
+            await invokedEventProducer.Send(EventType.NewGameComment, comment.CommentId);
 
             return createdComment;
         }

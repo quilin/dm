@@ -6,7 +6,7 @@ using DM.Services.Common.Dto;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Common.BusinessProcesses.Likes
 {
@@ -18,19 +18,19 @@ namespace DM.Services.Common.BusinessProcesses.Likes
         private readonly IIdentityProvider identityProvider;
         private readonly ILikeFactory likeFactory;
         private readonly ILikeRepository likeRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         protected LikeServiceBase(
             IIdentityProvider identityProvider,
             ILikeFactory likeFactory,
             ILikeRepository likeRepository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.identityProvider = identityProvider;
             this.likeFactory = likeFactory;
             this.likeRepository = likeRepository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
         
         /// <summary>
@@ -50,7 +50,7 @@ namespace DM.Services.Common.BusinessProcesses.Likes
 
             var like = likeFactory.Create(entity.Id, currentUser.UserId);
             await likeRepository.Add(like);
-            await publisher.Publish(eventType, like.LikeId);
+            await producer.Send(eventType, like.LikeId);
             return currentUser;
         }
 

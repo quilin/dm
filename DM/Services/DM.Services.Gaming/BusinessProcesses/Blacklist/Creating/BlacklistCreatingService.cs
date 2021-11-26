@@ -9,7 +9,7 @@ using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
@@ -23,7 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
         private readonly IBlacklistLinkFactory factory;
         private readonly IUserRepository userRepository;
         private readonly IBlacklistCreatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public BlacklistCreatingService(
@@ -33,7 +33,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
             IBlacklistLinkFactory factory,
             IUserRepository userRepository,
             IBlacklistCreatingRepository repository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.validator = validator;
             this.gameReadingService = gameReadingService;
@@ -41,7 +41,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
             this.factory = factory;
             this.userRepository = userRepository;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -65,7 +65,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
 
             var blackListLink = factory.Create(game.Id, userId);
             var blacklistedUser = await repository.Create(blackListLink);
-            await publisher.Publish(EventType.ChangedGame, game.Id);
+            await producer.Send(EventType.ChangedGame, game.Id);
 
             return blacklistedUser;
         }

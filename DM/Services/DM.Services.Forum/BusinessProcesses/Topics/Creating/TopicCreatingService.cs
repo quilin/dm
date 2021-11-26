@@ -8,7 +8,7 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
@@ -22,7 +22,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
         private readonly ITopicFactory topicFactory;
         private readonly ITopicCreatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             ITopicFactory topicFactory,
             ITopicCreatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.validator = validator;
             this.forumReadingService = forumReadingService;
@@ -42,7 +42,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             this.topicFactory = topicFactory;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
             this.identityProvider = identityProvider;
         }
 
@@ -58,7 +58,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
             var topic = await repository.Create(topicToCreate);
 
             await Task.WhenAll(
-                invokedEventPublisher.Publish(EventType.NewForumTopic, topic.Id),
+                invokedEventProducer.Send(EventType.NewForumTopic, topic.Id),
                 unreadCountersRepository.Create(topic.Id, forum.Id, UnreadEntryType.Message));
 
             return topic;

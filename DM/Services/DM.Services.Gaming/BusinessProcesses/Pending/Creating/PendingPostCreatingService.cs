@@ -11,7 +11,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
@@ -25,7 +25,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
         private readonly IPendingPostFactory factory;
         private readonly IUserRepository userRepository;
         private readonly IPendingPostCreatingRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             IPendingPostFactory factory,
             IUserRepository userRepository,
             IPendingPostCreatingRepository repository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -45,7 +45,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             this.factory = factory;
             this.userRepository = userRepository;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -77,7 +77,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating
             var pendingPostToCreate = factory.Create(createPendingPost, currentUserId, pendingUserId);
 
             var pendingPost = await repository.Create(pendingPostToCreate);
-            await publisher.Publish(EventType.RoomPendingCreated, pendingPost.Id);
+            await producer.Send(EventType.RoomPendingCreated, pendingPost.Id);
 
             return pendingPost;
         }

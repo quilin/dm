@@ -16,7 +16,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;
@@ -38,7 +38,7 @@ namespace DM.Services.Gaming.Tests
         private readonly Mock<IGameCreatingRepository> gameRepository;
         private readonly Mock<IGameFactory> gameFactory;
         private readonly Mock<IIntentionManager> intentionManager;
-        private readonly Mock<IInvokedEventPublisher> publisher;
+        private readonly Mock<IInvokedEventProducer> publisher;
         private readonly GameCreatingService service;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly Mock<IUserRepository> userRepository;
@@ -91,9 +91,9 @@ namespace DM.Services.Gaming.Tests
 
             var schemaRepository = Mock<ISchemaReadingRepository>();
 
-            publisher = Mock<IInvokedEventPublisher>();
+            publisher = Mock<IInvokedEventProducer>();
             publisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             service = new GameCreatingService(validator.Object,
@@ -261,7 +261,7 @@ namespace DM.Services.Gaming.Tests
 
             await service.Create(new CreateGame());
 
-            publisher.Verify(p => p.Publish(EventType.NewGame, gameId), Times.Once);
+            publisher.Verify(p => p.Send(EventType.NewGame, gameId), Times.Once);
             publisher.VerifyNoOtherCalls();
         }
     }

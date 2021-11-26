@@ -12,7 +12,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.BusinessProcesses.Games.Shared;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 
@@ -30,7 +30,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IGameUpdatingRepository updatingRepository;
         private readonly IGameIntentionConverter intentionConverter;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             IDateTimeProvider dateTimeProvider,
             IGameUpdatingRepository updatingRepository,
             IGameIntentionConverter intentionConverter,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -56,7 +56,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             this.dateTimeProvider = dateTimeProvider;
             this.updatingRepository = updatingRepository;
             this.intentionConverter = intentionConverter;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
 
@@ -120,7 +120,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.Updating
             }
 
             var result = await updatingRepository.Update(changes);
-            await publisher.Publish(invokedEvents, game.Id);
+            await producer.Send(invokedEvents, game.Id);
             return result;
         }
     }

@@ -9,7 +9,7 @@ using DM.Services.Gaming.BusinessProcesses.Games.Reading;
 using DM.Services.Gaming.Dto;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
@@ -23,7 +23,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
         private readonly ICharacterFactory factory;
         private readonly ICharacterCreatingRepository creatingRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             ICharacterFactory factory,
             ICharacterCreatingRepository creatingRepository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.validator = validator;
@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             this.factory = factory;
             this.creatingRepository = creatingRepository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
         
@@ -69,7 +69,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating
             var createdCharacter = await creatingRepository.Create(character, attributes);
 
             await unreadCountersRepository.Increment(createCharacter.GameId, UnreadEntryType.Character);
-            await publisher.Publish(EventType.NewCharacter, createdCharacter.Id);
+            await producer.Send(EventType.NewCharacter, createdCharacter.Id);
 
             return createdCharacter;
         }

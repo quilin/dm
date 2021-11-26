@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using Autofac;
 using DM.Services.Core;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Consume;
+using DM.Services.MessageQueuing.Building;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,26 +55,22 @@ namespace DM.Services.Mail.Sender.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumer"></param>
+        /// <param name="consumerBuilder"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IMessageConsumer<MailLetter> consumer)
+            IConsumerBuilder<MailLetter> consumerBuilder)
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
 
-            var configuration = new MessageConsumeConfiguration
+            var parameters = new RabbitConsumerParameters("dm.mail.sender", ProcessingOrder.Sequential)
             {
                 ExchangeName = "dm.mail.sending",
-                RoutingKeys = new[] {"#"},
+                RoutingKeys = new[] { "#" },
                 QueueName = "dm.mail.sending",
-                Arguments = new Dictionary<string, object>
-                {
-                    ["x-dead-letter-exchange"] = "dm.mail.unsent"
-                },
-                PrefetchCount = 1
+                DeadLetterExchange = "dm.mail.unsent"
             };
-            consumer.Consume(configuration);
+            consumerBuilder.BuildRabbit<MailSendingHandler>(parameters).Start();
 
-            Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");
+            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
 
             applicationBuilder
                 .UseRouting()

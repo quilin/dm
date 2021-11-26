@@ -7,7 +7,7 @@ using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Gaming.BusinessProcesses.Likes
 {
@@ -26,8 +26,8 @@ namespace DM.Services.Gaming.BusinessProcesses.Likes
             IIdentityProvider identityProvider,
             ILikeFactory likeFactory,
             ILikeRepository likeRepository,
-            IInvokedEventPublisher invokedEventPublisher)
-            : base(identityProvider, likeFactory, likeRepository, invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
+            : base(identityProvider, likeFactory, likeRepository, invokedEventProducer)
         {
             this.commentaryReadingService = commentaryReadingService;
             this.intentionManager = intentionManager;

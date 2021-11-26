@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Dto;
-using DM.Services.MessageQueuing.Processing;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Search.Consumer.Implementation.Indexing;
 using Microsoft.Extensions.Logging;
 
 namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
-    internal class CompositeIndexer : IMessageProcessor<InvokedEvent>
+    internal class CompositeIndexer : IMessageHandler<InvokedEvent>
     {
         private readonly IEnumerable<IIndexer> indexers;
-        private readonly ILogger<IMessageProcessor<InvokedEvent>> logger;
+        private readonly ILogger<CompositeIndexer> logger;
 
         /// <inheritdoc />
         public CompositeIndexer(
@@ -25,7 +25,7 @@ namespace DM.Services.Search.Consumer.Implementation
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Process(InvokedEvent message)
+        public async Task<ProcessResult> Handle(InvokedEvent message, CancellationToken cancellationToken)
         {
             await Task.WhenAll(indexers
                 .Where(i => i.CanIndex(message.Type))

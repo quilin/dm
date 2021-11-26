@@ -8,7 +8,7 @@ using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.BusinessObjects.Games;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
 {
@@ -19,7 +19,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
         private readonly IAssistantAssignmentTokenFactory tokenFactory;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IAssignmentRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public AssignmentService(
@@ -27,13 +27,13 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
             IAssistantAssignmentTokenFactory tokenFactory,
             IUpdateBuilderFactory updateBuilderFactory,
             IAssignmentRepository repository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.identityProvider = identityProvider;
             this.tokenFactory = tokenFactory;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -43,7 +43,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
                 .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));
             var token = tokenFactory.Create(userId, gameId);
             await repository.InvalidateAndCreate(updates, token);
-            await publisher.Publish(EventType.AssignmentRequestCreated, token.TokenId);
+            await producer.Send(EventType.AssignmentRequestCreated, token.TokenId);
         }
 
         /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
             }
 
             await repository.AssignAssistant(updateGame, updateToken);
-            await publisher.Publish(eventType, tokenId);
+            await producer.Send(eventType, tokenId);
         }
     }
 }

@@ -15,7 +15,7 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using FluentAssertions;
 using FluentValidation;
@@ -36,7 +36,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
         private readonly Mock<ICommentaryCreatingRepository> commentRepository;
         private readonly Mock<IUnreadCountersRepository> countersRepository;
         private readonly CommentaryCreatingService service;
-        private readonly Mock<IInvokedEventPublisher> invokedEventPublisher;
+        private readonly Mock<IInvokedEventProducer> invokedEventPublisher;
         private readonly Mock<IIntentionManager> intentionManager;
         private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
 
@@ -68,9 +68,9 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
             commentaryCreateSetup = commentRepository.Setup(r =>
                 r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
-            invokedEventPublisher = Mock<IInvokedEventPublisher>();
+            invokedEventPublisher = Mock<IInvokedEventProducer>();
             invokedEventPublisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             countersRepository = Mock<IUnreadCountersRepository>();
@@ -155,7 +155,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries
 
             await service.Create(new CreateComment());
 
-            invokedEventPublisher.Verify(p => p.Publish(EventType.NewForumComment, commentId));
+            invokedEventPublisher.Verify(p => p.Send(EventType.NewForumComment, commentId));
             invokedEventPublisher.VerifyNoOtherCalls();
         }
     }

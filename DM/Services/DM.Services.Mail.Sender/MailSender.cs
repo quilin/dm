@@ -1,6 +1,8 @@
+using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing;
+using DM.Services.MessageQueuing.Building;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using FluentValidation;
 
 namespace DM.Services.Mail.Sender
@@ -9,25 +11,26 @@ namespace DM.Services.Mail.Sender
     internal class MailSender : IMailSender
     {
         private readonly IValidator<MailLetter> validator;
-        private readonly IMessagePublisher publisher;
+        private readonly IProducer<string, MailLetter> producer;
 
         /// <inheritdoc />
         public MailSender(
             IValidator<MailLetter> validator,
-            IMessagePublisher publisher)
+            IProducerBuilder<string, MailLetter> producerBuilder)
         {
             this.validator = validator;
-            this.publisher = publisher;
+            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters
+            {
+                ExchangeName = "dm.mail.sending",
+                ExchangeType = ExchangeType.Topic,
+            });
         }
 
         /// <inheritdoc />
         public async Task Send(MailLetter letter)
         {
             await validator.ValidateAndThrowAsync(letter);
-            await publisher.Publish(letter, new MessagePublishConfiguration
-            {
-                ExchangeName = "dm.mail.sending"
-            }, string.Empty);
+            await producer.Send(string.Empty, letter, CancellationToken.None);
         }
     }
 }

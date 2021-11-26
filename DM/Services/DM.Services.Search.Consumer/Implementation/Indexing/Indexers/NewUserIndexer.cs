@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.SearchEngine;
-using DM.Services.MessageQueuing.Dto;
+using DM.Services.MessageQueuing.GeneralBus;
 using Microsoft.EntityFrameworkCore;
 
 namespace DM.Services.Search.Consumer.Implementation.Indexing.Indexers

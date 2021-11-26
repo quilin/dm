@@ -6,7 +6,7 @@ using DM.Services.Core.Exceptions;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 
 namespace DM.Services.Community.BusinessProcesses.Account.Activation
 {
@@ -16,19 +16,19 @@ namespace DM.Services.Community.BusinessProcesses.Account.Activation
         private readonly IDateTimeProvider dateTimeProvider;
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly IActivationRepository repository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public ActivationService(
             IDateTimeProvider dateTimeProvider,
             IUpdateBuilderFactory updateBuilderFactory,
             IActivationRepository repository,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.dateTimeProvider = dateTimeProvider;
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
-            this.publisher = publisher;
+            this.producer = producer;
         }
         
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Activation
             var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
             await repository.ActivateUser(updateUser, updateToken);
 
-            await publisher.Publish(EventType.ActivatedUser, userId.Value);
+            await producer.Send(EventType.ActivatedUser, userId.Value);
             return userId.Value;
         }
     }

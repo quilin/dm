@@ -8,7 +8,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
 using DbAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.CharacterAttribute;
@@ -24,7 +24,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
         private readonly IUpdateBuilderFactory updateBuilderFactory;
         private readonly ICharacterUpdatingRepository repository;
         private readonly ICharacterIntentionConverter intentionConverter;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
 
         /// <inheritdoc />
         public CharacterUpdatingService(
@@ -34,7 +34,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
             IUpdateBuilderFactory updateBuilderFactory,
             ICharacterUpdatingRepository repository,
             ICharacterIntentionConverter intentionConverter,
-            IInvokedEventPublisher publisher)
+            IInvokedEventProducer producer)
         {
             this.validator = validator;
             this.intentionManager = intentionManager;
@@ -42,7 +42,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
             this.updateBuilderFactory = updateBuilderFactory;
             this.repository = repository;
             this.intentionConverter = intentionConverter;
-            this.publisher = publisher;
+            this.producer = producer;
         }
 
         /// <inheritdoc />
@@ -102,7 +102,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
             }
 
             var character = await repository.Update(changes, attributeChanges);
-            await publisher.Publish(invokedEvents, updateCharacter.CharacterId);
+            await producer.Send(invokedEvents, updateCharacter.CharacterId);
             return character;
         }
     }

@@ -7,7 +7,7 @@ using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;
@@ -26,7 +26,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
         private readonly Mock<IActivationTokenFactory> tokenFactory;
         private readonly Mock<IRegistrationRepository> registrationRepository;
         private readonly Mock<IRegistrationMailSender> mailSender;
-        private readonly Mock<IInvokedEventPublisher> eventPublisher;
+        private readonly Mock<IInvokedEventProducer> eventPublisher;
         private readonly RegistrationService service;
         private readonly Mock<ISecurityManager> securityManager;
 
@@ -58,9 +58,9 @@ namespace DM.Services.Community.Tests.BusinessProcesses
                 .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
-            eventPublisher = Mock<IInvokedEventPublisher>();
+            eventPublisher = Mock<IInvokedEventProducer>();
             eventPublisher
-                .Setup(p => p.Publish(It.IsAny<EventType>(), It.IsAny<Guid>()))
+                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
                 .Returns(Task.CompletedTask);
 
             service = new RegistrationService(validator.Object,
@@ -138,7 +138,7 @@ namespace DM.Services.Community.Tests.BusinessProcesses
 
             await service.Register(new UserRegistration {Email = "email", Login = "login"});
 
-            eventPublisher.Verify(p => p.Publish(EventType.NewUser, userId));
+            eventPublisher.Verify(p => p.Send(EventType.NewUser, userId));
         }
     }
 }

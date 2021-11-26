@@ -8,10 +8,10 @@ using DM.Services.Core.Implementation;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Configuration;
-using DM.Services.MessageQueuing.Consume;
-using DM.Services.MessageQueuing.Dto;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.Building;
+using DM.Services.MessageQueuing.GeneralBus;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
+using DM.Services.Notifications.Consumer.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +36,6 @@ namespace DM.Services.Notifications.Consumer
             services
                 .AddOptions()
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<MessageConsumeConfiguration>(configuration.GetSection(nameof(MessageConsumeConfiguration)).Bind)
                 .AddDmLogging("DM.Notifications.Consumer");
 
             services.AddHealthChecks();
@@ -65,13 +64,13 @@ namespace DM.Services.Notifications.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumer"></param>
+        /// <param name="consumerBuilder"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IMessageConsumer<InvokedEvent> consumer)
+            IConsumerBuilder<InvokedEvent> consumerBuilder)
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
 
-            var configuration = new MessageConsumeConfiguration
+            var parameters = new RabbitConsumerParameters("dm.notifications", ProcessingOrder.Unmanaged)
             {
                 ExchangeName = InvokedEventsTransport.ExchangeName,
                 RoutingKeys = new[]
@@ -89,9 +88,9 @@ namespace DM.Services.Notifications.Consumer
                 }.ToRoutingKeys(),
                 QueueName = "dm.notifications"
             };
-            consumer.Consume(configuration);
+            consumerBuilder.BuildRabbit<NotificationMessageHandler>(parameters).Start();
 
-            Console.WriteLine($"[👂] Consumer is listening to {configuration.QueueName} queue");
+            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
 
             applicationBuilder
                 .UseRouting()

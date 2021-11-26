@@ -8,7 +8,7 @@ using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
         private readonly IRoomOrderPull roomOrderPull;
         private readonly IRoomUpdatingRepository repository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher publisher;
+        private readonly IInvokedEventProducer producer;
         private readonly IIdentityProvider identityProvider;
 
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             IRoomOrderPull roomOrderPull,
             IRoomUpdatingRepository repository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher publisher,
+            IInvokedEventProducer producer,
             IIdentityProvider identityProvider)
         {
             this.intentionManager = intentionManager;
@@ -39,7 +39,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
             this.roomOrderPull = roomOrderPull;
             this.repository = repository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.publisher = publisher;
+            this.producer = producer;
             this.identityProvider = identityProvider;
         }
         
@@ -54,7 +54,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting
 
             await repository.Update(updateRoom, updateOldNextRoom, updateOldPreviousRoom);
             await unreadCountersRepository.Delete(roomId, UnreadEntryType.Message);
-            await publisher.Publish(EventType.DeletedRoom, roomId);
+            await producer.Send(EventType.DeletedRoom, roomId);
         }
     }
 }

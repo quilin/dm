@@ -8,7 +8,7 @@ using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Authorization;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Gaming.BusinessProcesses.Commentaries.Updating;
-using DM.Services.MessageQueuing.Publish;
+using DM.Services.MessageQueuing.GeneralBus;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
@@ -21,7 +21,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
         private readonly ICommentaryReadingService readingService;
         private readonly ICommentaryUpdatingRepository updatingRepository;
         private readonly IUnreadCountersRepository unreadCountersRepository;
-        private readonly IInvokedEventPublisher invokedEventPublisher;
+        private readonly IInvokedEventProducer invokedEventProducer;
 
         /// <inheritdoc />
         public CommentaryDeletingService(
@@ -30,14 +30,14 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
             ICommentaryReadingService readingService,
             ICommentaryUpdatingRepository updatingRepository,
             IUnreadCountersRepository unreadCountersRepository,
-            IInvokedEventPublisher invokedEventPublisher)
+            IInvokedEventProducer invokedEventProducer)
         {
             this.intentionManager = intentionManager;
             this.updateBuilderFactory = updateBuilderFactory;
             this.readingService = readingService;
             this.updatingRepository = updatingRepository;
             this.unreadCountersRepository = unreadCountersRepository;
-            this.invokedEventPublisher = invokedEventPublisher;
+            this.invokedEventProducer = invokedEventProducer;
         }
 
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Deleting
             await updatingRepository.Update(updateComment);
             await unreadCountersRepository.Decrement(comment.EntityId, UnreadEntryType.Message, comment.CreateDate);
 
-            await invokedEventPublisher.Publish(EventType.DeletedGameComment, commentId);
+            await invokedEventProducer.Send(EventType.DeletedGameComment, commentId);
         }
     }
 }
