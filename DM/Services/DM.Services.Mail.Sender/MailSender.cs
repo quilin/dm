@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing;
@@ -24,8 +23,6 @@ namespace DM.Services.Mail.Sender
             {
                 ExchangeName = "dm.mail.sending",
                 ExchangeType = ExchangeType.Topic,
-                PublishingTimeout = TimeSpan.FromSeconds(1),
-                RetryCount = 3
             });
         }
 

@@ -26,6 +26,6 @@ namespace DM.Services.MessageQueuing.RabbitMq.Configuration
         /// Время ожидания подтверждения получения сообщения от брокера
         /// Мы не ждем ответа от обработчиков, но ждем, что RMQ получил и смог маршрутизировать сообщени
         /// </summary>
-        public TimeSpan? PublishingTimeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan? PublishingTimeout { get; set; } = TimeSpan.FromSeconds(1);
     }
 }

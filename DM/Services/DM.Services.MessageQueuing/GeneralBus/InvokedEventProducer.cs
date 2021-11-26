@@ -21,8 +21,6 @@ namespace DM.Services.MessageQueuing.GeneralBus
             {
                 ExchangeName = InvokedEventsTransport.ExchangeName,
                 ExchangeType = ExchangeType.Topic,
-                PublishingTimeout = TimeSpan.FromSeconds(1),
-                RetryCount = 5
             });
         }
 

@@ -37,7 +37,7 @@ namespace DM.Services.MessageQueuing.RabbitMq.Producing
 
             channelAccessor = CreateChannelAccessor();
             sendRetryPolicy = Policy.Handle<Exception>()
-                .WaitAndRetry(5, attempt => TimeSpan.FromSeconds(1 << attempt),
+                .WaitAndRetry(parameters.RetryCount, attempt => TimeSpan.FromSeconds(1 << attempt),
                     (e, interval) =>
                         logger.LogWarning(e, $"Не удалось отправить сообщение, повторная попытка через {interval}"));
         }
