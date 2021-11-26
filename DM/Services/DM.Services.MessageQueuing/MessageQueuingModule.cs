@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
+using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.RabbitMq;
 using DM.Services.MessageQueuing.RabbitMq.Connection;
 using DM.Services.MessageQueuing.RabbitMq.Consuming;
@@ -34,7 +35,7 @@ namespace DM.Services.MessageQueuing
                     var assemblyDescription = ThisAssembly.GetName();
                     return new ConnectionFactory
                     {
-                        Endpoint = new AmqpTcpEndpoint(connectionStrings.MessageQueue),
+                        Endpoint = new AmqpTcpEndpoint(new Uri(connectionStrings.MessageQueue)),
                         AutomaticRecoveryEnabled = true,
                         DispatchConsumersAsync = true,
                         ClientProperties = new Dictionary<string, object>
@@ -63,7 +64,16 @@ namespace DM.Services.MessageQueuing
             builder
                 .RegisterGeneric(typeof(RabbitProducer<>))
                 .AsSelf();
-            
+
+            builder
+                .RegisterGeneric(typeof(ConsumerBuilder<>))
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder
+                .RegisterGeneric(typeof(ProducerBuilder<,>))
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
             base.Load(builder);
         }
     }
