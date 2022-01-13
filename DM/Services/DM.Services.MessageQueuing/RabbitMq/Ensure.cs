@@ -15,7 +15,7 @@ namespace DM.Services.MessageQueuing.RabbitMq
 
             var queueArgs = new Dictionary<string, object>();
             var queueName = parameters.Exclusive
-                ? $"{parameters.QueueName}_{Guid.NewGuid()}"
+                ? $"{parameters.QueueName}_{Convert.ToBase64String(Guid.NewGuid().ToByteArray())}"
                 : parameters.QueueName;
 
             if (parameters.DeadLetterExchange is not null)
