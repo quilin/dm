@@ -75,7 +75,14 @@ services:
       ELASTICSEARCH_HOSTS: 'http://dm-es:9200'
     depends_on:
       - 'elasticsearch'
-      
+
+  mailhog:
+    container_name: "dm-mailhog"
+    image: "mailhog/mailhog"
+    ports:
+      - '1025:1025'
+      - '5025:8025'
+
   dmapi:
     container_name: "dm-api"
     image: "quilin/dm-api:latest"
@@ -106,8 +113,8 @@ services:
     ports:
       - '5053:5050'
     environment:
-      DM_EmailConfiguration__ServerHost: "smtp.mailtrap.io"
-      DM_EmailConfiguration__ServerPort: "2525"
+      DM_EmailConfiguration__ServerHost: "dm-mailhog"
+      DM_EmailConfiguration__ServerPort: "1025"
       DM_EmailConfiguration__Username: ""
       DM_EmailConfiguration__Password: ""
       DM_EmailConfiguration__FromAddress: "info@dm.am"
