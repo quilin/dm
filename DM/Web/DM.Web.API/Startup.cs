@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DM.Web.API
 {
@@ -119,8 +120,14 @@ namespace DM.Web.API
         /// </summary>
         /// <param name="appBuilder"></param>
         /// <param name="consumerBuilder"></param>
+        /// <param name="configuration"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public void Configure(IApplicationBuilder appBuilder,
-            IConsumerBuilder<RealtimeNotification> consumerBuilder)
+            IConsumerBuilder<RealtimeNotification> consumerBuilder,
+            IConfiguration configuration,
+            DmDbContext dbContext,
+            ILogger<Startup> logger)
         {
             appBuilder
                 .UseSwagger(c => c.Configure())
@@ -141,6 +148,12 @@ namespace DM.Web.API
                     c.MapControllers();
                     c.MapHub<NotificationHub>("/whatsup");
                 });
+
+            if (configuration.GetValue<bool>("MigrationOnStart"))
+            {
+                logger.LogInformation("[💨] Initiating database migration");
+                dbContext.Database.Migrate();
+            }
 
             var parameters = new RabbitConsumerParameters("dm.api", ProcessingOrder.Sequential)
             {
