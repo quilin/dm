@@ -2,17 +2,24 @@ version: "3.9"
 
 networks:
   default:
-    name: "dm"
+    name: "dm-full-app"
 
 volumes:
   backups:
 
-x-common-variables: &workload-variables
+x-workload-env: &workload-env
   DM_ConnectionStrings__Rdb: "Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;"
   DM_ConnectionStrings__Mongo: "mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000"
   DM_ConnectionStrings__SearchIndex: "http://dm-es:9200"
   DM_ConnectionStrings__MessageQueue: "amqp://guest:guest@dm-rmq:5672/"
   DM_ConnectionStrings__Logs: "http://dm-es:9200"
+  PORT: "5050"
+
+x-app-depends-on: &dm-app-depends-on
+  - 'elasticsearch'
+  - 'postgres'
+  - 'mongo'
+  - 'rabbitmq'
 
 services:
   postgres:
@@ -68,3 +75,43 @@ services:
       ELASTICSEARCH_HOSTS: 'http://dm-es:9200'
     depends_on:
       - 'elasticsearch'
+      
+  dmapi:
+    container_name: "dm-api"
+    image: "quilin/dm-api:latest"
+    ports:
+      - '5050:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmsearchengineconsumer:
+    container_name: 'dm-search-engine-consumer'
+    image: "quilin/dm-search-engine-consumer:latest"
+    ports:
+      - '5051:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmnotificationsconsumer:
+    container_name: 'dm-notifications-consumer'
+    image: "quilin/dm-notifications-consumer:latest"
+    ports:
+      - '5052:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmemailsenderconsumer:
+    container_name: 'dm-email-sender-consumer'
+    image: "quilin/dm-email-sender-consumer:latest"
+    ports:
+      - '5053:5050'
+    environment:
+      DM_EmailConfiguration__ServerHost: "smtp.mailtrap.io"
+      DM_EmailConfiguration__ServerPort: "2525"
+      DM_EmailConfiguration__Username: ""
+      DM_EmailConfiguration__Password: ""
+      DM_EmailConfiguration__FromAddress: "info@dm.am"
+      DM_EmailConfiguration__FromDisplayName: "DM.am"
+      DM_EmailConfiguration__ReplyToAddress: "test@dm.am"
+      <<: *workload-env
+    depends_on: *dm-app-depends-on
