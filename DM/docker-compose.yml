@@ -9,11 +9,25 @@ volumes:
   minio:
 
 x-workload-env: &workload-env
-  DM_ConnectionStrings__Rdb: "Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;"
-  DM_ConnectionStrings__Mongo: "mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000"
-  DM_ConnectionStrings__SearchIndex: "http://dm-es:9200"
-  DM_ConnectionStrings__MessageQueue: "amqp://guest:guest@dm-rmq:5672/"
-  DM_ConnectionStrings__Logs: "http://dm-es:9200"
+  DM_ConnectionStrings__Rdb: Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;
+  DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
+  DM_ConnectionStrings__SearchIndex: http://dm-es:9200
+  DM_ConnectionStrings__MessageQueue: amqp://guest:guest@dm-rmq:5672/
+  DM_ConnectionStrings__Logs: http://dm-es:9200
+  DM_CdnConfiguration__Url: http://dm-minio:9000
+  DM_CdnConfiguration__Region: us-east-1
+  DM_CdnConfiguration__BucketName: dm-uploads
+  DM_CdnConfiguration__AccessKey: minio
+  DM_CdnConfiguration__SecretKey: miniokey
+  DM_CdnConfiguration__Folder: ""
+  DM_CdnConfiguration__Provider: Minio
+  DM_EmailConfiguration__ServerHost: dm-mailhog
+  DM_EmailConfiguration__ServerPort: 1025
+  DM_EmailConfiguration__Username: ""
+  DM_EmailConfiguration__Password: ""
+  DM_EmailConfiguration__FromAddress: info@dm.am
+  DM_EmailConfiguration__FromDisplayName: DM.am
+  DM_EmailConfiguration__ReplyToAddress: test@dm.am
   PORT: "5050"
 
 x-app-depends-on: &dm-app-depends-on
@@ -98,28 +112,34 @@ services:
     volumes:
       - minio:/minio
 
+  dmfront:
+    container_name: "dm-front"
+    image: "quilin/dm-front:latest"
+    ports:
+      - '5050:8080'
+    environment:
+      API_URL: http://localhost:5051
+      BASE_URL: http://localhost:5050
+
   dmapi:
     container_name: "dm-api"
     image: "quilin/dm-api:latest"
     ports:
-      - '5050:5050'
+      - '5051:5050'
     environment:
       <<: *workload-env
-      DM_CdnConfiguration__Url: "http://dm-minio:9000"
-      DM_CdnConfiguration__Region: "us-east-1"
-      DM_CdnConfiguration__BucketName: "dm-uploads"
-      DM_CdnConfiguration__AccessKey: "minio"
-      DM_CdnConfiguration__SecretKey: "miniokey"
-      DM_CdnConfiguration__Folder: ""
-      DM_CdnConfiguration__Provider: "Minio"
-      MigrationOnStart: "true"
+      DM_IntegrationSettings__WebUrl: http://localhost:5050
+      DM_IntegrationSettings__ApiUrl: http://localhost:5051
+      DM_IntegrationSettings__AdminUrl:
+      DM_IntegrationSettings__MobileUrl:
+      MigrationOnStart: true
     depends_on: *dm-app-depends-on
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
     image: "quilin/dm-consumer-search:latest"
     ports:
-      - '5051:5050'
+      - '5052:5050'
     environment: *workload-env
     depends_on: *dm-app-depends-on
 
@@ -127,7 +147,7 @@ services:
     container_name: 'dm-notifications-consumer'
     image: "quilin/dm-consumer-notification:latest"
     ports:
-      - '5052:5050'
+      - '5053:5050'
     environment: *workload-env
     depends_on: *dm-app-depends-on
 
@@ -135,14 +155,6 @@ services:
     container_name: 'dm-email-sender-consumer'
     image: "quilin/dm-consumer-mail:latest"
     ports:
-      - '5053:5050'
-    environment:
-      <<: *workload-env
-      DM_EmailConfiguration__ServerHost: "dm-mailhog"
-      DM_EmailConfiguration__ServerPort: "1025"
-      DM_EmailConfiguration__Username: ""
-      DM_EmailConfiguration__Password: ""
-      DM_EmailConfiguration__FromAddress: "info@dm.am"
-      DM_EmailConfiguration__FromDisplayName: "DM.am"
-      DM_EmailConfiguration__ReplyToAddress: "test@dm.am"
+      - '5054:5050'
+    environment: *workload-env
     depends_on: *dm-app-depends-on

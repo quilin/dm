@@ -7,6 +7,7 @@ import qs from 'qs';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ApiResult } from '@/api/models/common';
 import { BbRenderMode } from './bbRenderMode';
+import Config from '@/config.json';
 
 const tokenKey = 'x-dm-auth-token';
 const renderKey = 'x-dm-bb-render-mode';
@@ -22,7 +23,7 @@ if (storedToken) {
   defaultHeaders[tokenKey] = storedToken!;
 }
 
-const apiHost = `${process.env.API_URL ?? 'http://localhost:5000'}`;
+const apiHost = Config.API_URL ?? process.env.API_URL;
 
 const configuration: AxiosRequestConfig = {
   baseURL: `${apiHost}/v1`,
