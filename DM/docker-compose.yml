@@ -112,6 +112,7 @@ services:
       DM_CdnConfiguration__SecretKey: "miniokey"
       DM_CdnConfiguration__Folder: ""
       DM_CdnConfiguration__Provider: "Minio"
+      MigrationOnStart: "true"
     depends_on: *dm-app-depends-on
 
   dmsearchengineconsumer:
