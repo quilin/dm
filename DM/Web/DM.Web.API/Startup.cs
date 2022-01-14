@@ -29,6 +29,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DM.Web.API
 {
@@ -120,11 +121,13 @@ namespace DM.Web.API
         /// </summary>
         /// <param name="appBuilder"></param>
         /// <param name="consumerBuilder"></param>
+        /// <param name="integrationOptions"></param>
         /// <param name="configuration"></param>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
         public void Configure(IApplicationBuilder appBuilder,
             IConsumerBuilder<RealtimeNotification> consumerBuilder,
+            IOptions<IntegrationSettings> integrationOptions,
             IConfiguration configuration,
             DmDbContext dbContext,
             ILogger<Startup> logger)
@@ -136,7 +139,10 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseCors(b => b
-                    .WithOrigins("http://localhost:8080")
+                    .WithOrigins(
+                        integrationOptions.Value.WebUrl,
+                        integrationOptions.Value.MobileUrl,
+                        integrationOptions.Value.AdminUrl)
                     .WithExposedHeaders(ApiCredentialsStorage.HttpAuthTokenHeader)
                     .AllowAnyHeader()
                     .AllowAnyMethod()

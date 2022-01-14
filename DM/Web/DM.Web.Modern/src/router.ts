@@ -5,13 +5,10 @@ import GeneralMenu from './views/layout/GeneralMenu.vue';
 import GameMenu from './views/pages/game/GameMenu.vue';
 import GeneralSidebar from './views/layout/GeneralSidebar.vue';
 
-import Config from './config.json';
-
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: Config.BASE_URL ?? process.env.BASE_URL,
   routes: [
     {
       name: 'home',

@@ -3,15 +3,19 @@ using System;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DM.Services.DataAccess.Migrations
 {
+    /// <inheritdoc />
     [DbContext(typeof(DmDbContext))]
-    partial class DmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220114152946_TestUserData")]
+    partial class TestUserData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
