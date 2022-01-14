@@ -34,5 +34,10 @@ namespace DM.Services.Uploading.Configuration
         /// Relative file destination
         /// </summary>
         public string Folder { get; set; }
+
+        /// <summary>
+        /// CDN is MinIO
+        /// </summary>
+        public S3Provider Provider { get; set; }
     }
 }

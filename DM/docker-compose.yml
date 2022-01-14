@@ -6,6 +6,7 @@ networks:
 
 volumes:
   backups:
+  minio:
 
 x-workload-env: &workload-env
   DM_ConnectionStrings__Rdb: "Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;"
@@ -82,18 +83,40 @@ services:
     ports:
       - '1025:1025'
       - '5025:8025'
+        
+  minio:
+    container_name: "dm-minio"
+    image: "quay.io/minio/minio"
+    command: server --console-address ":9001" /data/
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: "minio"
+      MINIO_ROOT_PASSWORD: "miniokey"
+      MINIO_REGION: "us-east-1"
+    volumes:
+      - minio:/minio
 
   dmapi:
     container_name: "dm-api"
     image: "quilin/dm-api:latest"
     ports:
       - '5050:5050'
-    environment: *workload-env
+    environment:
+      <<: *workload-env
+      DM_CdnConfiguration__Url: "http://dm-minio:9000"
+      DM_CdnConfiguration__Region: "us-east-1"
+      DM_CdnConfiguration__BucketName: "dm-uploads"
+      DM_CdnConfiguration__AccessKey: "minio"
+      DM_CdnConfiguration__SecretKey: "miniokey"
+      DM_CdnConfiguration__Folder: ""
+      DM_CdnConfiguration__Provider: "Minio"
     depends_on: *dm-app-depends-on
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: "quilin/dm-search-engine-consumer:latest"
+    image: "quilin/dm-consumer-search:latest"
     ports:
       - '5051:5050'
     environment: *workload-env
@@ -101,7 +124,7 @@ services:
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'
-    image: "quilin/dm-notifications-consumer:latest"
+    image: "quilin/dm-consumer-notification:latest"
     ports:
       - '5052:5050'
     environment: *workload-env
@@ -109,10 +132,11 @@ services:
 
   dmemailsenderconsumer:
     container_name: 'dm-email-sender-consumer'
-    image: "quilin/dm-email-sender-consumer:latest"
+    image: "quilin/dm-consumer-mail:latest"
     ports:
       - '5053:5050'
     environment:
+      <<: *workload-env
       DM_EmailConfiguration__ServerHost: "dm-mailhog"
       DM_EmailConfiguration__ServerPort: "1025"
       DM_EmailConfiguration__Username: ""
@@ -120,5 +144,4 @@ services:
       DM_EmailConfiguration__FromAddress: "info@dm.am"
       DM_EmailConfiguration__FromDisplayName: "DM.am"
       DM_EmailConfiguration__ReplyToAddress: "test@dm.am"
-      <<: *workload-env
     depends_on: *dm-app-depends-on
