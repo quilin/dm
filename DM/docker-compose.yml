@@ -20,13 +20,13 @@ x-workload-env: &workload-env
   DM_CdnConfiguration__BucketName: dm-uploads
   DM_CdnConfiguration__AccessKey: minio
   DM_CdnConfiguration__SecretKey: miniokey
-  DM_CdnConfiguration__Folder: ""
+  DM_CdnConfiguration__Folder:
   DM_CdnConfiguration__Provider: Minio
 
   DM_EmailConfiguration__ServerHost: dm-mailhog
   DM_EmailConfiguration__ServerPort: 1025
-  DM_EmailConfiguration__Username: ""
-  DM_EmailConfiguration__Password: ""
+  DM_EmailConfiguration__Username:
+  DM_EmailConfiguration__Password:
   DM_EmailConfiguration__FromAddress: info@dm.am
   DM_EmailConfiguration__FromDisplayName: DM.am
   DM_EmailConfiguration__ReplyToAddress: test@dm.am
@@ -35,7 +35,7 @@ x-workload-env: &workload-env
   DM_IntegrationSettings__ApiUrl: http://localhost:5051
   DM_IntegrationSettings__AdminUrl:
   DM_IntegrationSettings__MobileUrl:
-  PORT: "5050"
+  PORT: 5050
 
 x-app-depends-on: &dm-app-depends-on
   - 'elasticsearch'
