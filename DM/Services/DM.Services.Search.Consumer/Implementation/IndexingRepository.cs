@@ -65,7 +65,8 @@ namespace DM.Services.Search.Consumer.Implementation
 
         private async Task DeclareIndex()
         {
-            if ((await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName)).Exists)
+            var indexExistsResult = await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName);
+            if (indexExistsResult is { IsValid: true, Exists: true })
             {
                 return;
             }
