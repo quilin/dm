@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Configuration;
+using Microsoft.Extensions.Logging;
 using Nest;
 
 namespace DM.Services.Search.Consumer.Implementation
@@ -13,12 +14,15 @@ namespace DM.Services.Search.Consumer.Implementation
     internal class IndexingRepository : IIndexingRepository
     {
         private readonly IElasticClient client;
+        private readonly ILogger<IndexingRepository> logger;
 
         /// <inheritdoc />
         public IndexingRepository(
-            IElasticClient client)
+            IElasticClient client,
+            ILogger<IndexingRepository> logger)
         {
             this.client = client;
+            this.logger = logger;
         }
 
         /// <inheritdoc />
@@ -65,23 +69,24 @@ namespace DM.Services.Search.Consumer.Implementation
 
         private async Task DeclareIndex()
         {
-            var indexExistsResult = await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName);
-            if (indexExistsResult is { IsValid: true, Exists: true })
+            var indexExistsResponse = await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName);
+            if (indexExistsResponse is { IsValid: true, Exists: true })
             {
                 return;
             }
 
-            await client.Indices.CreateAsync(SearchEngineConfiguration.IndexName, i => i
+            logger.LogInformation("Search index was not created, creating it!");
+            var createIndexResponse = await client.Indices.CreateAsync(SearchEngineConfiguration.IndexName, i => i
                 .Settings(s => s
                     .Analysis(a => a
                         .Analyzers(an => an
                             .Custom("dm_analyzer", ca => ca
                                 .CharFilters("html_strip")
                                 .Tokenizer("standard")
-                                .Filters("standard", "lowercase", "stop"))
+                                .Filters("lowercase", "stop"))
                             .Custom("dm_search_analyzer", ca => ca
                                 .Tokenizer("standard")
-                                .Filters("standard", "lowercase", "stop")))))
+                                .Filters("lowercase", "stop")))))
                 .Map<SearchEntity>(m => m
                     .AutoMap()
                     .Properties(p => p
@@ -89,6 +94,12 @@ namespace DM.Services.Search.Consumer.Implementation
                             .Name(n => n.Text)
                             .Analyzer("dm_analyzer")
                             .SearchAnalyzer("dm_search_analyzer")))));
+            if (createIndexResponse is not { IsValid: true, Index: SearchEngineConfiguration.IndexName })
+            {
+                logger.LogError(createIndexResponse.OriginalException, 
+                    "Unable to create search index for reason: {Reason}",
+                    createIndexResponse.ServerError.Error.Reason);
+            }
         }
     }
 }
