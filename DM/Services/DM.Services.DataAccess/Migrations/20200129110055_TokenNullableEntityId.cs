@@ -16,6 +16,10 @@ namespace DM.Services.DataAccess.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"
+DELETE FROM ""Tokens""
+WHERE ""EntityId"" is null;
+");
             migrationBuilder.AlterColumn<Guid>(
                 name: "EntityId",
                 table: "Tokens",
