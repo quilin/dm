@@ -12,8 +12,11 @@ x-workload-env: &workload-env
   DM_ConnectionStrings__Rdb: Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;
   DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
   DM_ConnectionStrings__SearchEngine: http://dm-es:9200
-  DM_ConnectionStrings__MessageQueue: amqp://guest:guest@dm-rmq:5672/
   DM_ConnectionStrings__Logs: http://dm-es:9200
+
+  DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672/
+  DM_RabbitMqConfiguration__UserName: guest
+  DM_RabbitMqConfiguration__Password: guest
 
   DM_CdnConfiguration__Url: http://dm-minio:9000
   DM_CdnConfiguration__Region: us-east-1
