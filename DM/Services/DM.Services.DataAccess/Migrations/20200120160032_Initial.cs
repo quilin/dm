@@ -1382,14 +1382,6 @@ namespace DM.Services.DataAccess.Migrations
                 name: "FK_Games_Users_NannyId",
                 table: "Games");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_Games_EntityId",
-                table: "Comments");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Comments_ForumTopics_EntityId",
-                table: "Comments");
-
             migrationBuilder.DropTable(
                 name: "Bans");
 

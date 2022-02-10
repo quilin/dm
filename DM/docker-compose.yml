@@ -11,7 +11,7 @@ volumes:
 x-workload-env: &workload-env
   DM_ConnectionStrings__Rdb: Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;
   DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
-  DM_ConnectionStrings__SearchIndex: http://dm-es:9200
+  DM_ConnectionStrings__SearchEngine: http://dm-es:9200
   DM_ConnectionStrings__MessageQueue: amqp://guest:guest@dm-rmq:5672/
   DM_ConnectionStrings__Logs: http://dm-es:9200
 
@@ -150,7 +150,7 @@ services:
       - '5051:5050'
     environment:
       <<: *workload-env
-      MigrationOnStart: 'true'
+      MigrationOnStart: "true"
     depends_on: *dm-app-depends-on
 
   dmfront:
