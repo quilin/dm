@@ -40,6 +40,8 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<RabbitMqConfiguration>(
+                    configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
 
             services

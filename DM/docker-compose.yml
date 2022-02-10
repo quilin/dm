@@ -150,7 +150,7 @@ services:
       - '5051:5050'
     environment:
       <<: *workload-env
-      MigrationOnStart: true
+      MigrationOnStart: 'true'
     depends_on: *dm-app-depends-on
 
   dmfront:

@@ -66,6 +66,8 @@ namespace DM.Web.API
                     Configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<CdnConfiguration>(
                     Configuration.GetSection(nameof(CdnConfiguration)).Bind)
+                .Configure<RabbitMqConfiguration>(
+                    Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             services
