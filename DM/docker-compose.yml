@@ -121,7 +121,7 @@ services:
 
   dmemailsenderconsumer:
     container_name: 'dm-email-sender-consumer'
-    image: "quilin/dm-consumer-mail:latest"
+    image: "quilin/dm-consumer-mail:0.6-local"
     ports:
       - '5054:5050'
     environment: *workload-env
@@ -129,7 +129,7 @@ services:
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: "quilin/dm-consumer-search:latest"
+    image: "quilin/dm-consumer-search:0.6-local"
     ports:
       - '5052:5050'
     environment: *workload-env
@@ -137,7 +137,7 @@ services:
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'
-    image: "quilin/dm-consumer-notification:latest"
+    image: "quilin/dm-consumer-notification:0.6-local"
     ports:
       - '5053:5050'
     environment: *workload-env
@@ -145,7 +145,7 @@ services:
 
   dmapi:
     container_name: "dm-api"
-    image: "quilin/dm-api:latest"
+    image: "quilin/dm-api:0.6-local"
     ports:
       - '5051:5050'
     environment:
