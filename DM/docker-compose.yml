@@ -158,7 +158,7 @@ services:
 
   dmfront:
     container_name: "dm-front"
-    image: "quilin/dm-front:0.1-local"
+    image: "quilin/dm-front:0.2-local"
     ports:
       - '5050:80'
     environment:
