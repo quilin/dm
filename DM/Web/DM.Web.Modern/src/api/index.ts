@@ -18,11 +18,6 @@ const defaultHeaders: { [key: string]: string } = {
   [renderKey]: 'html',
 };
 
-const storedToken = localStorage.getItem(tokenKey);
-if (storedToken) {
-  defaultHeaders[tokenKey] = storedToken!;
-}
-
 const apiHost = Config.API_URL ?? process.env.API_URL;
 
 const configuration: AxiosRequestConfig = {
@@ -34,10 +29,18 @@ const configuration: AxiosRequestConfig = {
 
 class Api {
   private axios: AxiosInstance;
-  private authToken: string | null = null;
 
   constructor() {
     this.axios = axios.create(configuration);
+
+    const token = localStorage.getItem(tokenKey);
+    if (token) {
+      this.updateAuthenticationInfo(token);
+    }
+  }
+
+  public isAuthenticated(): boolean {
+    return (tokenKey in this.axios.defaults.headers.common);
   }
 
   public async get<T>(
@@ -82,10 +85,7 @@ class Api {
     try {
       const { data, headers } = await sender();
       if (tokenKey in headers) {
-        const token = headers[tokenKey];
-        this.axios.defaults.headers.common[tokenKey] = token;
-        this.authToken = token;
-        localStorage.setItem(tokenKey, token);
+        this.updateAuthenticationInfo(headers[tokenKey]);
       }
       return {
         data: data as T,
@@ -99,23 +99,12 @@ class Api {
     }
   }
 
-  public restoreAuthentication() {
-    const token = localStorage.getItem(tokenKey);
-    if (token === null) return;
-
-    this.axios.defaults.headers.common[tokenKey] = token;
-    localStorage.setItem(tokenKey, token);
-    this.authToken = token;
-  }
-
   public logout() {
-    delete this.axios.defaults.headers.common[tokenKey];
-    localStorage.removeItem(tokenKey);
-    this.authToken = null;
+    this.clearAuthenticationInfo();
   }
 
   public establishHubConnection(path: string): HubConnection {
-    const token = this.authToken;
+    const token = this.axios.defaults.headers.common[tokenKey];
     return new HubConnectionBuilder()
       .withUrl(`${apiHost}/${path}`, {
         accessTokenFactory() {
@@ -124,6 +113,16 @@ class Api {
       })
       .withAutomaticReconnect()
       .build();
+  }
+
+  private updateAuthenticationInfo(token: string): void {
+    this.axios.defaults.headers.common[tokenKey] = token;
+    localStorage.setItem(tokenKey, token);
+  }
+
+  private clearAuthenticationInfo(): void {
+    delete this.axios.defaults.headers.common[tokenKey];
+    localStorage.removeItem(tokenKey);
   }
 }
 

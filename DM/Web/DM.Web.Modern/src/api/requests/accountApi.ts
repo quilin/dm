@@ -14,7 +14,7 @@ export default new class AccountApi {
     Api.logout();
     return result;
   }
-  public restoreUser(): void {
-    Api.restoreAuthentication();
+  public isAuthenticated(): boolean {
+    return Api.isAuthenticated();
   }
 }();
