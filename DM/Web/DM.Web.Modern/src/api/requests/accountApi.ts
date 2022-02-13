@@ -10,8 +10,9 @@ export default new class AccountApi {
     return await Api.get('account');
   }
   public async signOut(): Promise<ApiResult<void>> {
+    const result = await Api.delete<void>('account/login');
     Api.logout();
-    return await Api.delete('account/login');
+    return result;
   }
   public restoreUser(): void {
     Api.restoreAuthentication();
