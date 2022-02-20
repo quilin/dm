@@ -38,6 +38,8 @@ x-workload-env: &workload-env
   DM_IntegrationSettings__ApiUrl: http://localhost:5051
   DM_IntegrationSettings__AdminUrl:
   DM_IntegrationSettings__MobileUrl:
+  DM_IntegrationSettings__CorsUrls__0: http://localhost:5050
+  DM_IntegrationSettings__CorsUrls__1: http://localhost:8080
   PORT: 5050
 
 x-app-depends-on: &dm-app-depends-on
@@ -148,7 +150,7 @@ services:
 
   dmapi:
     container_name: "dm-api"
-    image: "quilin/dm-api:0.8-local"
+    image: "quilin/dm-api:0.9-local"
     ports:
       - '5051:5050'
     environment:

@@ -141,10 +141,7 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseCors(b => b
-                    .WithOrigins(
-                        integrationOptions.Value.WebUrl,
-                        integrationOptions.Value.MobileUrl,
-                        integrationOptions.Value.AdminUrl)
+                    .WithOrigins(integrationOptions.Value.CorsUrls)
                     .WithExposedHeaders(ApiCredentialsStorage.HttpAuthTokenHeader)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
