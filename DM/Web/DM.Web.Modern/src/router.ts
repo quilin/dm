@@ -30,6 +30,16 @@ export default new Router({
     },
 
     {
+      name: 'activate',
+      path: '/activate/:token',
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import('./views/pages/activate/Activate.vue'),
+      }
+    },
+
+    {
       path: '/about',
       components: {
         menu: GeneralMenu,

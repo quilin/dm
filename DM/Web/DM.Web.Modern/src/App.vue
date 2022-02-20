@@ -18,8 +18,8 @@
         </div>
         <dm-footer />
       </div>
-      <portal-target name="lightbox" />
-      <portal-target name="popup" class="popup-container" />
+      <portal-target name="lightbox" multiple />
+      <portal-target name="popup" class="popup-container" multiple />
       <portal-target name="notifications" class="notifications-container" />
     </div>
   </div>
