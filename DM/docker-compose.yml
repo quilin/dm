@@ -148,7 +148,7 @@ services:
 
   dmapi:
     container_name: "dm-api"
-    image: "quilin/dm-api:0.7-local"
+    image: "quilin/dm-api:0.8-local"
     ports:
       - '5051:5050'
     environment:
