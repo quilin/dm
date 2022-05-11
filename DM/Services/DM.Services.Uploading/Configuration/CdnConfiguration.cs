@@ -11,6 +11,11 @@ namespace DM.Services.Uploading.Configuration
         public string Url { get; set; }
 
         /// <summary>
+        /// Public CDN URL
+        /// </summary>
+        public string PublicUrl { get; set; }
+
+        /// <summary>
         /// AWS region
         /// </summary>
         public string Region { get; set; }

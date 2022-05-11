@@ -19,42 +19,42 @@ namespace DM.Services.Core.Parsing
         private const string PrivateClassName = "private-message";
         private const string PrivateHeaderClassName = "private-message-header";
 
-        private static readonly Tag Strong = new Tag("b", "<strong>", "</strong>");
-        private static readonly Tag Italic = new Tag("i", "<em>", "</em>");
-        private static readonly Tag Underlined = new Tag("u", "<u>", "</u>");
-        private static readonly Tag Strike = new Tag("s", "<s>", "</s>");
-        private static readonly Tag Preformatted = new Tag("pre", $"<pre class=\"{CodeClassName}\">", "</pre>");
-        private static readonly ListTag OrderedList = new ListTag("ol", "<ol>", "</ol>");
-        private static readonly ListTag UnorderedList = new ListTag("ul", "<ul>", "</ul>");
-        private static readonly Tag ListItem = new Tag("li", "<li>", "</li>");
+        private static readonly Tag Strong = new("b", "<strong>", "</strong>");
+        private static readonly Tag Italic = new("i", "<em>", "</em>");
+        private static readonly Tag Underlined = new("u", "<u>", "</u>");
+        private static readonly Tag Strike = new("s", "<s>", "</s>");
+        private static readonly Tag Preformatted = new("pre", $"<pre class=\"{CodeClassName}\">", "</pre>");
+        private static readonly ListTag OrderedList = new("ol", "<ol>", "</ol>");
+        private static readonly ListTag UnorderedList = new("ul", "<ul>", "</ul>");
+        private static readonly Tag ListItem = new("li", "<li>", "</li>");
 
-        private static readonly Tag Head = new Tag("head", $"<h4 class=\"{HeaderClassName}\">", "</h4>");
+        private static readonly Tag Head = new("head", $"<h4 class=\"{HeaderClassName}\">", "</h4>");
 
-        private static readonly Tag Spoiler = new Tag("spoiler",
+        private static readonly Tag Spoiler = new("spoiler",
             $"<a href=\"javascript:void(0)\" class=\"{SpoilerHeadClassName}\" data-swaptext=\"Скрыть содержимое\">Показать содержимое</a><div class=\"{SpoilerClassName}\">",
             "</div>");
 
-        private static readonly Tag Quote = new Tag("quote",
+        private static readonly Tag Quote = new("quote",
             $"<div class=\"{QuoteClassName}\"><div class=\"{QuoteHeaderClassName}\">{{value}}</div>", "</div>", true,
             false);
 
-        private static readonly Tag Image = new Tag("img",
+        private static readonly Tag Image = new("img",
             $"<a href=\"{{value}}\" target=\"_blank\"><img src=\"{{value}}\" class=\"{ImageClassName}\" /></a>", true);
 
-        private static readonly Tag Link = new Tag("link", "<a href=\"{value}\">", "</a>", true);
+        private static readonly Tag Link = new("link", "<a href=\"{value}\">", "</a>", true);
 
-        private static readonly Tag SafeImage = new Tag("img",
+        private static readonly Tag SafeImage = new("img",
             $"<a href=\"javascript:void(0)\" class=\"{SpoilerHeadClassName}\" data-swaptext=\"Скрыть изображение\">Показать изображение</a><div class=\"{SpoilerClassName}\"><a href=\"{{value}}\" target=\"_blank\"><img src=\"{{value}}\" class=\"{ImageClassName}\" /></a></div>",
             true);
 
-        private static readonly Tag Tab = new Tag("tab", "&nbsp;&nbsp;&nbsp;");
+        private static readonly Tag Tab = new("tab", "&nbsp;&nbsp;&nbsp;");
 
-        private static readonly CodeTag Code = new CodeTag("code", $"<pre class=\"{CodeClassName}\">", "</pre>");
+        private static readonly CodeTag Code = new("code", $"<pre class=\"{CodeClassName}\">", "</pre>");
 
-        private static readonly Tag Private = new Tag("private", $"<div class=\"{PrivateClassName}\">",
+        private static readonly Tag Private = new("private", $"<div class=\"{PrivateClassName}\">",
             $"</div><div class=\"{PrivateHeaderClassName}\">Получатели: {{value}}</div>", true, false);
 
-        private static readonly Dictionary<string, string> CommonSubstitutions = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> CommonSubstitutions = new()
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
@@ -62,13 +62,13 @@ namespace DM.Services.Core.Parsing
         };
 
         private static readonly Dictionary<string, string> ConversationMessageSubstitutions =
-            new Dictionary<string, string>
+            new()
             {
                 {"---", "&mdash;"},
                 {"--", "&ndash;"},
             };
 
-        private static readonly Dictionary<string, string> InfoSubstitutions = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> InfoSubstitutions = new()
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
@@ -76,14 +76,14 @@ namespace DM.Services.Core.Parsing
             {"\n", "<br />"},
         };
 
-        private static readonly Dictionary<string, string> SafeSubstitutions = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> SafeSubstitutions = new()
         {
             {"---", "&mdash;"},
             {"--", "&ndash;"},
             {"\n", "<br />"}
         };
 
-        private static TagSetBuilder DefaultTags => new TagSetBuilder(new[]
+        private static TagSetBuilder DefaultTags => new(new[]
         {
             Strong, Italic, Underlined, Strike,
             Preformatted, Spoiler, Quote, Image,
@@ -93,31 +93,31 @@ namespace DM.Services.Core.Parsing
 
         private static TagSetBuilder DefaultSafeTags => DefaultTags.Without(Preformatted, Image).With(SafeImage);
 
-        private static readonly Lazy<IBbParser> CommonParser = new Lazy<IBbParser>(() =>
+        private static readonly Lazy<IBbParser> CommonParser = new(() =>
             new BbParser(DefaultTags.Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
-        private static readonly Lazy<IBbParser> PostParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> PostParser = new(
             new BbParser(DefaultTags.With(Private).Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
-        private static readonly Lazy<IBbParser> InfoParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> InfoParser = new(
             new BbParser(DefaultTags.With(Head).Build(),
                 BbParser.SecuritySubstitutions, InfoSubstitutions));
 
-        private static readonly Lazy<IBbParser> ConversationMessageParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> ConversationMessageParser = new(
             new BbParser(DefaultTags.Build(),
                 BbParser.SecuritySubstitutions, ConversationMessageSubstitutions));
 
-        private static readonly Lazy<IBbParser> GeneralChatMessageParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> GeneralChatMessageParser = new(
             new BbParser(DefaultSafeTags.With(Preformatted).Build(),
                 BbParser.SecuritySubstitutions, CommonSubstitutions));
 
-        private static readonly Lazy<IBbParser> SafePostParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> SafePostParser = new(
             new BbParser(DefaultSafeTags.With(Private).Build(),
                 BbParser.SecuritySubstitutions, SafeSubstitutions));
 
-        private static readonly Lazy<IBbParser> SafeRatingParser = new Lazy<IBbParser>(
+        private static readonly Lazy<IBbParser> SafeRatingParser = new(
             new BbParser(DefaultSafeTags.Build(),
                 BbParser.SecuritySubstitutions, SafeSubstitutions));
 

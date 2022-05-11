@@ -44,8 +44,8 @@ namespace DM.Services.Uploading.BusinessProcesses.PublicImage
             this.identityProvider = identityProvider;
         }
 
-        private static readonly Size MediumSize = new Size(200, 200);
-        private static readonly Size SmallSize = new Size(100, 100);
+        private static readonly Size MediumSize = new(200, 200);
+        private static readonly Size SmallSize = new(100, 100);
 
         /// <inheritdoc />
         public async Task<(Upload original, Upload medium, Upload small)> Upload(CreateUpload createUpload)

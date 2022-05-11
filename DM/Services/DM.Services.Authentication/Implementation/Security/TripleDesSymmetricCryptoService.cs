@@ -12,7 +12,7 @@ namespace DM.Services.Authentication.Implementation.Security
         private const string Key = "QkEeenXpHqgP6tOWwpUetAFvUUZiMb4f";
         private const string Iv = "dtEzMsz2ogg=";
         private readonly Lazy<TripleDESCryptoServiceProvider> tripleDesService =
-            new Lazy<TripleDESCryptoServiceProvider>(() => new TripleDESCryptoServiceProvider());
+            new(() => new TripleDESCryptoServiceProvider());
 
         /// <inheritdoc />
         public async Task<string> Encrypt(string valueToEncrypt)

@@ -26,11 +26,11 @@ namespace DM.Services.Uploading.BusinessProcesses.Cdn
         public async Task<string> Upload(Func<Stream> streamAccessor, string fileName)
         {
             var stream = streamAccessor();
-            var objectKey = cdnConfiguration.Folder is null or ""
+            var objectKey = string.IsNullOrEmpty(cdnConfiguration.Folder)
                 ? fileName
                 : $"{cdnConfiguration.Folder}/{fileName}";
             await client.Value.UploadObjectFromStreamAsync(cdnConfiguration.BucketName, objectKey, stream, null);
-            return new UriBuilder(new Uri(cdnConfiguration.Url)) {Path = objectKey}.ToString();
+            return new UriBuilder(new Uri(cdnConfiguration.PublicUrl)) {Path = objectKey}.ToString();
         }
     }
 }

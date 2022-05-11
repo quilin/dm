@@ -8,7 +8,7 @@ namespace DM.Services.Authentication.Implementation.Security
     /// <inheritdoc />
     internal class HashProvider : IHashProvider
     {
-        private readonly Lazy<SHA256> sha256 = new Lazy<SHA256>(SHA256.Create);
+        private readonly Lazy<SHA256> sha256 = new(SHA256.Create);
 
         /// <inheritdoc />
         public byte[] ComputeSha256(string plainText, string salt)

@@ -75,7 +75,7 @@ namespace DM.Services.Core.Extensions
             return result.ToString();
         }
 
-        private static readonly Dictionary<string, string> TransliterationReplacements = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> TransliterationReplacements = new()
         {
             {" ", "-"}, {"а", "a"}, {"б", "b"}, {"в", "v"}, {"г", "g"}, {"д", "d"}, {"е", "e"}, {"ё", "yo"},
             {"ж", "zh"}, {"з", "z"}, {"и", "i"}, {"й", "y"}, {"к", "k"}, {"л", "l"}, {"м", "m"}, {"н", "n"},
