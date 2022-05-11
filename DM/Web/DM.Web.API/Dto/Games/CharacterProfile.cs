@@ -53,12 +53,12 @@ namespace DM.Web.API.Dto.Games
             public Policy? Resolve(Character source, UpdateCharacter destination, Policy? destMember,
                 ResolutionContext context) =>
                 source.Privacy == null
-                    ? (Policy?) null
+                    ? null
                     : Resolve(source.Privacy);
 
             public CharacterPrivacySettings Resolve(DM.Services.Gaming.Dto.Output.Character source,
                 Character destination, CharacterPrivacySettings destMember,
-                ResolutionContext context) => new CharacterPrivacySettings
+                ResolutionContext context) => new()
             {
                 IsNpc = source.IsNpc,
                 EditByMaster = (source.AccessPolicy & Policy.EditAllowed) != Policy.NoAccess,
