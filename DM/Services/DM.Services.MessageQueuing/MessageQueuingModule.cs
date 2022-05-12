@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.RabbitMq;
+using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using DM.Services.MessageQueuing.RabbitMq.Connection;
 using DM.Services.MessageQueuing.RabbitMq.Consuming;
 using DM.Services.MessageQueuing.RabbitMq.Producing;
@@ -31,11 +31,15 @@ namespace DM.Services.MessageQueuing
             builder
                 .Register(ctx =>
                 {
-                    var connectionStrings = ctx.Resolve<IOptions<ConnectionStrings>>().Value;
+                    var connectionParameters = ctx.Resolve<IOptions<RabbitMqConfiguration>>().Value;
                     var assemblyDescription = ThisAssembly.GetName();
+
+                    var endpointUri = new Uri(connectionParameters.Endpoint);
                     return new ConnectionFactory
                     {
-                        Endpoint = new AmqpTcpEndpoint(new Uri(connectionStrings.MessageQueue)),
+                        Endpoint = new AmqpTcpEndpoint(endpointUri),
+                        UserName = connectionParameters.UserName,
+                        Password = connectionParameters.Password,
                         AutomaticRecoveryEnabled = true,
                         DispatchConsumersAsync = true,
                         ClientProperties = new Dictionary<string, object>

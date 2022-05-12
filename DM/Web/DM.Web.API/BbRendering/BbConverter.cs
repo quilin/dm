@@ -50,8 +50,8 @@ namespace DM.Web.API.BbRendering
                 this.bbParserProvider = bbParserProvider;
             }
             
-            public override TBbText Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-                new TBbText {Value = reader.GetString()};
+            public override TBbText Read(ref Utf8JsonReader reader, Type typeToConvert,
+                JsonSerializerOptions options) => new() {Value = reader.GetString()};
 
             public override void Write(Utf8JsonWriter writer, TBbText bbText, JsonSerializerOptions options)
             {

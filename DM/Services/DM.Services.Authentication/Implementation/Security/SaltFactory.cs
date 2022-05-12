@@ -6,7 +6,7 @@ namespace DM.Services.Authentication.Implementation.Security
     /// <inheritdoc />
     internal class SaltFactory : ISaltFactory
     {
-        private readonly Lazy<RNGCryptoServiceProvider> rngCryptoServiceProvider = new Lazy<RNGCryptoServiceProvider>(
+        private readonly Lazy<RNGCryptoServiceProvider> rngCryptoServiceProvider = new(
             () => new RNGCryptoServiceProvider());
 
         /// <inheritdoc />

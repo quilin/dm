@@ -44,6 +44,6 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Basic guest user (unauthenticated)
         /// </summary>
-        public static readonly AuthenticatedUser Guest = new AuthenticatedUser();
+        public static readonly AuthenticatedUser Guest = new();
     }
 }

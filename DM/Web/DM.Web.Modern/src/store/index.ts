@@ -7,7 +7,7 @@ import gaming from './gaming';
 import notifications from './notifications';
 import ui from './ui';
 import accountApi from '@/api/requests/accountApi';
-import { ColorSchema, LoginCredentials } from '@/api/models/community';
+import { ColorSchema, LoginCredentials, User } from '@/api/models/community';
 
 Vue.use(Vuex);
 
@@ -19,10 +19,10 @@ export default new Vuex.Store<RootState>({
   mutations: {
     updateUser(state, user): void {
       state.user = user;
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
+      if (user === null) {
         localStorage.removeItem('user');
+      } else {
+        localStorage.setItem('user', JSON.stringify(user));
       }
     },
   },
@@ -43,11 +43,18 @@ export default new Vuex.Store<RootState>({
       commit('updateUser', null);
     },
     async fetchUser({ commit }): Promise<void> {
-      const serializedUser = localStorage.getItem('user');
-      if (!serializedUser) return;
+      if (!accountApi.isAuthenticated()) {
+        return;
+      }
 
-      accountApi.restoreUser();
-      commit('updateUser', JSON.parse(serializedUser));
+      const serializedUser = localStorage.getItem('user');
+      if (serializedUser) {
+        console.info('Fetching cached user, but still requesting it from server');
+        const storedUser = JSON.parse(serializedUser) as User;
+        commit('updateUser', storedUser);
+        commit('ui/updateTheme', storedUser.settings?.colorSchema ?? ColorSchema.Modern);
+      }
+
       const { data, error } = await accountApi.fetchUser();
       if (error) {
         commit('updateUser', null);

@@ -19,7 +19,7 @@ namespace DM.Services.Uploading.BusinessProcesses.Shared
 
         /// <inheritdoc />
         public DbUpload Create(CreateUpload createUpload, string filePath, Guid userId, bool original,
-            DateTimeOffset createdAt) => new DbUpload
+            DateTimeOffset createdAt) => new()
         {
             UploadId = guidFactory.Create(),
             CreateDate = createdAt,

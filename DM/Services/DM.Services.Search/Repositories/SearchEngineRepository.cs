@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
+using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Dto;
+using Microsoft.Extensions.Logging;
 using Nest;
 
 namespace DM.Services.Search.Repositories
@@ -14,12 +17,15 @@ namespace DM.Services.Search.Repositories
     internal class SearchEngineRepository : ISearchEngineRepository
     {
         private readonly IElasticClient client;
+        private readonly ILogger<SearchEngineRepository> logger;
 
         /// <inheritdoc />
         public SearchEngineRepository(
-            IElasticClient client)
+            IElasticClient client,
+            ILogger<SearchEngineRepository> logger)
         {
             this.client = client;
+            this.logger = logger;
         }
 
         private static readonly Fuzziness SearchFuzziness = Fuzziness.EditDistance(1);
@@ -72,6 +78,13 @@ namespace DM.Services.Search.Repositories
                             .PostTags("</mark>")))
                 .From(pagingData.Skip)
                 .Size(pagingData.Take));
+
+            if (searchResponse is not { IsValid: true })
+            {
+                logger.LogError(searchResponse.OriginalException,
+                    "The search for query {SearchQuery} has resulted in error", query);
+                throw new HttpException(HttpStatusCode.InternalServerError, "Search engine error!");
+            }
 
             return (searchResponse.Hits
                 .Select(h => new FoundEntity

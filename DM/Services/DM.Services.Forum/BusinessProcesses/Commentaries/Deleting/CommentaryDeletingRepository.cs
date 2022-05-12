@@ -53,7 +53,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
                 .Skip(1)
                 .Select(c => c.CommentId)
                 .FirstOrDefaultAsync();
-            return result == default ? (Guid?) null : result;
+            return result == default ? null : result;
         }
     }
 }

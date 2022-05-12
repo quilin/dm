@@ -39,7 +39,7 @@ namespace DM.Web.API.Binding
                 ? simpleGuid
                 : readerValue.TryDecodeFromReadableGuid(out var decodedGuid)
                     ? decodedGuid
-                    : (Guid?) null;
+                    : null;
         }
 
         /// <inheritdoc />

@@ -53,7 +53,7 @@ namespace DM.Services.MessageQueuing.RabbitMq.Consuming
                 cancellationTokenSource = new CancellationTokenSource();
 
                 connectionAccessor = CreateConnectionAccessor();
-                Ensure.Consume(channelAccessor(), parameters);
+                parameters.DeclaredQueueName = Ensure.Consume(channelAccessor(), parameters).QueueName;
                 Consume();
 
                 running = true;
@@ -64,7 +64,7 @@ namespace DM.Services.MessageQueuing.RabbitMq.Consuming
         {
             lock (sync)
             {
-                if (!running || connectionAccessor == null || !connectionAccessor.IsValueCreated)
+                if (!running || connectionAccessor is not { IsValueCreated: true })
                 {
                     return;
                 }
@@ -133,7 +133,7 @@ namespace DM.Services.MessageQueuing.RabbitMq.Consuming
 
         private void CloseCurrentConnection(bool connectionIsDisrupted)
         {
-            if (connectionAccessor == null || !connectionAccessor.IsValueCreated)
+            if (connectionAccessor is not { IsValueCreated: true })
             {
                 return;
             }
@@ -173,7 +173,7 @@ namespace DM.Services.MessageQueuing.RabbitMq.Consuming
             {
                 var connectionState = connectionAccessor.Value;
                 channelAccessor().BasicConsume(
-                    parameters.QueueName,
+                    parameters.DeclaredQueueName,
                     false,
                     connectionState.ConsumerTag,
                     connectionState.Consumer);

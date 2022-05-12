@@ -31,6 +31,7 @@ namespace DM.Services.Mail.Sender.Consumer
                 .AddOptions()
                 .Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)).Bind)
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.MailSender.Consumer");
 
             services.AddHealthChecks();

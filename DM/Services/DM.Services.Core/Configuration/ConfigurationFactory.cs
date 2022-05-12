@@ -9,7 +9,7 @@ namespace DM.Services.Core.Configuration
     /// </summary>
     public static class ConfigurationFactory
     {
-        private static readonly Lazy<IConfigurationRoot> Factory = new Lazy<IConfigurationRoot>(() =>
+        private static readonly Lazy<IConfigurationRoot> Factory = new(() =>
             new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true)

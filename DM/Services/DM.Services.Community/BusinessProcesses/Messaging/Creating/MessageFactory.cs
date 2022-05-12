@@ -20,7 +20,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
         }
 
         /// <inheritdoc />
-        public Message Create(CreateMessage createMessage, Guid userId) => new Message
+        public Message Create(CreateMessage createMessage, Guid userId) => new()
         {
             MessageId = guidFactory.Create(),
             ConversationId = createMessage.ConversationId,

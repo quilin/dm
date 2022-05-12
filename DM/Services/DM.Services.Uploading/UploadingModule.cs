@@ -1,13 +1,11 @@
-using Amazon;
-using Amazon.Runtime;
-using Amazon.S3;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using DM.Services.Authentication;
 using DM.Services.Core;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.Uploading.Configuration;
-using Microsoft.Extensions.Options;
 using Module = Autofac.Module;
 
 namespace DM.Services.Uploading
@@ -20,16 +18,13 @@ namespace DM.Services.Uploading
         {
             builder.RegisterDefaultTypes();
             builder.RegisterMapper();
-            builder.Register<IAmazonS3>(ctx =>
+            builder.Register(ctx =>
                 {
-                    var cdnConfiguration = ctx.Resolve<IOptions<CdnConfiguration>>().Value;
-                    return new AmazonS3Client(
-                        new BasicAWSCredentials(cdnConfiguration.AccessKey, cdnConfiguration.SecretKey),
-                        new AmazonS3Config
-                        {
-                            ServiceURL = cdnConfiguration.Url,
-                            RegionEndpoint = RegionEndpoint.GetBySystemName(cdnConfiguration.Region)
-                        });
+                    var amazonS3ClientProviders = ctx
+                        .Resolve<IEnumerable<IAmazonS3ClientProvider>>();
+                    return amazonS3ClientProviders
+                        .First(p => p.CanBeUsed())
+                        .GetClient();
                 })
                 .AsSelf()
                 .SingleInstance();

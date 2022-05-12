@@ -54,7 +54,7 @@ namespace DM.Services.Core.Dto
         /// <summary>
         /// Empty paging result
         /// </summary>
-        public static PagingResult Empty(int pageSize) => new PagingResult
+        public static PagingResult Empty(int pageSize) => new()
         {
             TotalPagesCount = 0,
             TotalEntitiesCount = 0,

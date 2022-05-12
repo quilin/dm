@@ -12,7 +12,7 @@ namespace DM.Tests.Core
     {
         protected static IMapper GetMapper() => new Mapper(new MapperConfiguration(c => { }));
 
-        protected static DmDbContext GetRdb(string name) => new DmDbContext(
+        protected static DmDbContext GetRdb(string name) => new(
             new DbContextOptionsBuilder<DmDbContext>().UseInMemoryDatabase(name).Options);
 
         protected MongoDbWrapper GetMongoClient(string name)

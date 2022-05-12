@@ -36,6 +36,7 @@ namespace DM.Services.Notifications.Consumer
             services
                 .AddOptions()
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Notifications.Consumer");
 
             services.AddHealthChecks();

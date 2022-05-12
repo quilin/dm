@@ -38,7 +38,7 @@ namespace DM.Services.Mail.Sender.Consumer
             {
                 var smtpClient = new SmtpClient();
                 smtpClient.Connect(this.configuration.ServerHost, this.configuration.ServerPort,
-                    SecureSocketOptions.StartTls);
+                    SecureSocketOptions.StartTlsWhenAvailable);
                 smtpClient.Authenticate(this.configuration.Username, this.configuration.Password);
                 smtpClient.NoOp();
                 return smtpClient;
@@ -51,7 +51,7 @@ namespace DM.Services.Mail.Sender.Consumer
         /// <inheritdoc />
         public async Task<ProcessResult> Handle(MailLetter message, CancellationToken cancellationToken)
         {
-            logger.LogInformation($"Sending letter to {message.Address.Obfuscate()}");
+            logger.LogInformation("Sending letter to {Address}", message.Address.Obfuscate());
             var policyResult = await retryPolicy.ExecuteAndCaptureAsync(() => client.Value.SendAsync(new MimeMessage
             {
                 From = {new MailboxAddress(configuration.FromDisplayName, configuration.FromAddress)},

@@ -20,21 +20,21 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        protected static FilterDefinitionBuilder<TEntity> Filter<TEntity>() => new FilterDefinitionBuilder<TEntity>();
+        protected static FilterDefinitionBuilder<TEntity> Filter<TEntity>() => new();
 
         /// <summary>
         /// Create update definition builder
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        protected static UpdateDefinitionBuilder<TEntity> Update<TEntity>() => new UpdateDefinitionBuilder<TEntity>();
+        protected static UpdateDefinitionBuilder<TEntity> Update<TEntity>() => new();
 
         /// <summary>
         /// Create sort definition builder
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        protected static SortDefinitionBuilder<TEntity> Sort<TEntity>() => new SortDefinitionBuilder<TEntity>();
+        protected static SortDefinitionBuilder<TEntity> Sort<TEntity>() => new();
 
         /// <summary>
         /// Create projection definition builder
@@ -42,7 +42,7 @@ namespace DM.Services.DataAccess.MongoIntegration
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
         protected static ProjectionDefinitionBuilder<TEntity> Project<TEntity>() =>
-            new ProjectionDefinitionBuilder<TEntity>();
+            new();
 
         /// <summary>
         /// Get collection

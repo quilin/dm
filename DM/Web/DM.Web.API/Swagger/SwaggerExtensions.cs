@@ -24,7 +24,7 @@ namespace DM.Web.API.Swagger
         private static readonly IEnumerable<string> ApiGroups = Assembly.GetExecutingAssembly().GetTypes()
             .Where(t => t.IsSubclassOf(typeof(ControllerBase)))
             .Select(t => t.GetCustomAttribute<ApiExplorerSettingsAttribute>())
-            .Where(t => t != null && !t.IgnoreApi)
+            .Where(t => t is {IgnoreApi: false})
             .Select(t => t.GroupName)
             .Distinct();
         

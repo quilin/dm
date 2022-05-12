@@ -19,16 +19,12 @@
             <icon :font="unread ? IconType.MessagesUnread : IconType.MessagesNoUnread" /> Сообщения
           </a>
           |
-          <a href="javascript:void(0)" @click="signOut">
-            <icon :font="IconType.Logout" /> Выйти
-          </a>
+          <a @click="signOut"><icon :font="IconType.Logout" /> Выйти</a>
         </template>
         <template v-else>
-          <a href="javascript:void(0)" @click="$modal.show('login')">
-            <icon :font="IconType.User" /> Вход
-          </a>
+          <a @click="$modal.show('login')"><icon :font="IconType.User" /> Вход</a>
           |
-          <a href="javascript:void(0)">Регистрация</a>
+          <a @click="$modal.show('register')">Регистрация</a>
         </template>
       </div>
     </div>
@@ -47,7 +43,10 @@
       <span @click="toggleTheme">Switch theme</span>
     </div>
 
-    <login v-if="!user" />
+    <template v-if="!user">
+      <login />
+      <register />
+    </template>
   </div>
 </template>
 
@@ -58,9 +57,11 @@ import { User } from '@/api/models/community';
 import IconType from '@/components/iconType';
 import Login from './Login.vue';
 import Notifications from '@/components/notifications/Notifications.vue';
+import Register from '@/views/layout/Register.vue';
 
 @Component({
   components: {
+    Register,
     Notifications,
     Login,
   },

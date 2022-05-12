@@ -31,7 +31,7 @@ namespace DM.Services.Authentication.Dto
         /// <summary>
         /// Default user settings for a guest or a newbie
         /// </summary>
-        public static readonly UserSettings Default = new UserSettings
+        public static readonly UserSettings Default = new()
         {
             Paging = new PagingSettings
             {

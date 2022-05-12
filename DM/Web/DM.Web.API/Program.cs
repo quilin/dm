@@ -1,8 +1,6 @@
-﻿using System;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
+﻿using Autofac.Extensions.DependencyInjection;
+using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 
 namespace DM.Web.API
 {
@@ -29,20 +27,7 @@ namespace DM.Web.API
         {
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder
-                        .UseKestrel(options => options.AllowSynchronousIO = true)
-                        .UseSerilog()
-                        .UseStartup<Startup>();
-
-                    // For heroku deployment, where only available port is defined in runtime by the environment variable
-                    var predefinedPort = Environment.GetEnvironmentVariable("PORT");
-                    if (!string.IsNullOrEmpty(predefinedPort))
-                    {
-                        webBuilder.UseUrls($"http://*:{predefinedPort}");
-                    }
-                });
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
         }
     }
 }

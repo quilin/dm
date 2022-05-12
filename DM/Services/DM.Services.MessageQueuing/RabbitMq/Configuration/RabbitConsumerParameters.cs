@@ -29,8 +29,14 @@ namespace DM.Services.MessageQueuing.RabbitMq.Configuration
 
         /// <summary>
         /// Имя очереди
+        /// Для эксклюзивных очередей к имени автоматически прибавляется уникальный суффикс
         /// </summary>
         public string QueueName { get; set; }
+
+        /// <summary>
+        /// Имя задекларированной очереди (внутреннее использование)
+        /// </summary>
+        internal string DeclaredQueueName { get; set; }
 
         /// <summary>
         /// Ключи маршрутизации для привязки очереди к точке обмена

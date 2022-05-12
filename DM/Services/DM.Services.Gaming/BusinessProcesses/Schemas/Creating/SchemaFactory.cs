@@ -50,7 +50,7 @@ namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
         {
             return specification.Type switch
             {
-                AttributeSpecificationType.Number => (AttributeConstraints) new NumberAttributeConstraints
+                AttributeSpecificationType.Number => new NumberAttributeConstraints
                 {
                     Required = specification.Required,
                     MinValue = specification.MinValue,
