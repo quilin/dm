@@ -30,7 +30,10 @@ namespace DM.Services.Uploading.BusinessProcesses.Cdn
                 ? fileName
                 : $"{cdnConfiguration.Folder}/{fileName}";
             await client.Value.UploadObjectFromStreamAsync(cdnConfiguration.BucketName, objectKey, stream, null);
-            return new UriBuilder(new Uri(cdnConfiguration.PublicUrl)) {Path = objectKey}.ToString();
+            return new UriBuilder(new Uri(cdnConfiguration.PublicUrl))
+            {
+                Path = $"{cdnConfiguration.BucketName}/{objectKey}"
+            }.ToString();
         }
     }
 }
