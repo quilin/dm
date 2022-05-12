@@ -19,6 +19,7 @@ x-workload-env: &workload-env
   DM_RabbitMqConfiguration__Password: guest
 
   DM_CdnConfiguration__Url: http://dm-minio:9000
+  DM_CdnConfiguration__PublicUrl: http://localhost:9000
   DM_CdnConfiguration__Region: us-east-1
   DM_CdnConfiguration__BucketName: dm-uploads
   DM_CdnConfiguration__AccessKey: minio
