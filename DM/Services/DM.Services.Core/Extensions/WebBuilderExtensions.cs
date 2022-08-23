@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 
 namespace DM.Services.Core.Extensions
@@ -9,20 +10,38 @@ namespace DM.Services.Core.Extensions
     /// </summary>
     public static class WebBuilderExtensions
     {
-        /// <summary>
-        /// Подключиться к заданному через переменные окружения порту
-        /// <remarks>Необходимо для Heroku, где порт задается в рантайме и именно такой переменной</remarks>
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IWebHostBuilder UseCustomPort(this IWebHostBuilder builder)
+        private const int DefaultPort = 5000;
+
+        private static int ExtractPort()
         {
             // For heroku deployment, where only available port is defined in runtime by the environment variable
             var predefinedPort = Environment.GetEnvironmentVariable("PORT");
-            return string.IsNullOrEmpty(predefinedPort)
-                ? builder
-                : builder.UseUrls($"http://*:{predefinedPort}");
+            return string.IsNullOrEmpty(predefinedPort) || !int.TryParse(predefinedPort, out var port)
+                ? DefaultPort
+                : port;
         }
+
+        private static IWebHostBuilder UseCustomPort(this IWebHostBuilder builder) => builder
+            .UseUrls($"http://+:{ExtractPort()}");
+
+        private static IWebHostBuilder UseCustomGrpcPort(this IWebHostBuilder builder) => builder
+            .UseKestrel(options =>
+            {
+                options.AllowSynchronousIO = true;
+                options.ListenAnyIP(ExtractPort(), cfg => cfg.Protocols = HttpProtocols.Http2);
+            });
+
+        /// <summary>
+        /// Настроить grpc-сервер по-умолчанию
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <typeparam name="TStartup"></typeparam>
+        /// <returns></returns>
+        public static IWebHostBuilder UseDefaultGrpc<TStartup>(this IWebHostBuilder builder)
+            where TStartup : class => builder
+            .UseStartup<TStartup>()
+            .UseSerilog()
+            .UseCustomGrpcPort();
 
         /// <summary>
         /// Настроить веб-сервер по-умолчанию
@@ -32,9 +51,8 @@ namespace DM.Services.Core.Extensions
         /// <returns></returns>
         public static IWebHostBuilder UseDefault<TStartup>(this IWebHostBuilder builder)
             where TStartup : class => builder
-            .UseKestrel(options => options.AllowSynchronousIO = true)
-            .UseSerilog()
             .UseStartup<TStartup>()
+            .UseSerilog()
             .UseCustomPort();
     }
 }

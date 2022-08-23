@@ -12,7 +12,6 @@ using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using DM.Services.Notifications;
 using DM.Services.Notifications.Dto;
-using DM.Services.Search;
 using DM.Services.Uploading;
 using DM.Services.Uploading.Configuration;
 using DM.Web.API.Authentication;
@@ -58,16 +57,12 @@ namespace DM.Web.API
 
             services
                 .AddOptions()
-                .Configure<ConnectionStrings>(
-                    Configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<IntegrationSettings>(
-                    Configuration.GetSection(nameof(IntegrationSettings)).Bind)
-                .Configure<EmailConfiguration>(
-                    Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<CdnConfiguration>(
-                    Configuration.GetSection(nameof(CdnConfiguration)).Bind)
-                .Configure<RabbitMqConfiguration>(
-                    Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+                .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
+                .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<CdnConfiguration>(Configuration.GetSection(nameof(CdnConfiguration)).Bind)
+                .Configure<RabbitMqConfiguration>(Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+                .Configure<SearchServiceConfiguration>(Configuration.GetSection(nameof(SearchServiceConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             services
@@ -113,7 +108,6 @@ namespace DM.Web.API
             builder.RegisterModuleOnce<ForumModule>();
             builder.RegisterModuleOnce<GamingModule>();
             builder.RegisterModuleOnce<NotificationsModule>();
-            builder.RegisterModuleOnce<SearchEngineModule>();
 
             builder.RegisterModuleOnce<WebCoreModule>();
         }

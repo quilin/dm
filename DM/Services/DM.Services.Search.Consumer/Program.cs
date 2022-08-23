@@ -10,7 +10,7 @@ namespace DM.Services.Search.Consumer
         {
             CreateWebHostBuilder(args).Build().Run();
         }
-        
+
         /// <summary>
         /// Create web host builder
         /// </summary>
@@ -19,6 +19,7 @@ namespace DM.Services.Search.Consumer
         public static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
+                .ConfigureWebHostDefaults(webBuilder => webBuilder
+                    .UseDefaultGrpc<Startup>());
     }
 }

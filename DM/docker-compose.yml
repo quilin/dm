@@ -35,6 +35,8 @@ x-workload-env: &workload-env
   DM_EmailConfiguration__FromDisplayName: DM.am
   DM_EmailConfiguration__ReplyToAddress: test@dm.am
 
+  DM_SearchServiceConfiguration__GrpcEndpoint: http://dm-search-engine-consumer:5052
+
   DM_IntegrationSettings__WebUrl: http://localhost:5050
   DM_IntegrationSettings__ApiUrl: http://localhost:5051
   DM_IntegrationSettings__AdminUrl:
@@ -72,7 +74,7 @@ services:
     ports:
       - '9200:9200'
       - '9300:9300'
-    environment: 
+    environment:
       discovery.type: 'single-node'
 
   rabbitmq:
@@ -135,7 +137,7 @@ services:
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: "quilin/dm-consumer-search:0.6-local"
+    image: "dm-search-consumer:grpc-test"
     ports:
       - '5052:5050'
     environment: *workload-env
@@ -151,7 +153,7 @@ services:
 
   dmapi:
     container_name: "dm-api"
-    image: "quilin/dm-api:0.9-local"
+    image: "dm-api:grpc-test"
     ports:
       - '5051:5050'
     environment:

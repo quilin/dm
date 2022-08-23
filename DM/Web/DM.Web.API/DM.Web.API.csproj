@@ -8,6 +8,12 @@
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.47.0" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.47.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.48.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
@@ -22,8 +28,11 @@
         <ProjectReference Include="..\..\Services\DM.Services.Forum\DM.Services.Forum.csproj" />
         <ProjectReference Include="..\..\Services\DM.Services.Gaming\DM.Services.Gaming.csproj" />
         <ProjectReference Include="..\..\Services\DM.Services.Notifications\DM.Services.Notifications.csproj" />
-        <ProjectReference Include="..\..\Services\DM.Services.Search\DM.Services.Search.csproj" />
         <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="../../Services/DM.Services.Search.Consumer/Protos/search.proto" />
     </ItemGroup>
 
     <ItemGroup>
