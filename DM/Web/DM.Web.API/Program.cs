@@ -1,6 +1,7 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace DM.Web.API
 {
@@ -27,6 +28,7 @@ namespace DM.Web.API
         {
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
         }
     }

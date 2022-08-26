@@ -26,7 +26,7 @@ namespace DM.Web.API.Configuration
             config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 
-            config.JsonSerializerOptions.IgnoreNullValues = true;
+            config.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
             config.JsonSerializerOptions.Converters.Insert(0, new JsonStringEnumConverter());
             config.JsonSerializerOptions.Converters.Insert(0, new OptionalConverterFactory());

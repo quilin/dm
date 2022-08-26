@@ -11,7 +11,7 @@ namespace DM.Services.Core.Tests
         public void ProvideCurrentMomentUtcDate()
         {
             var actual = new DateTimeProvider().Now;
-            actual.Should().BeCloseTo(DateTime.UtcNow);
+            actual.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         }
     }
 }

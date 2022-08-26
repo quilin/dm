@@ -1,6 +1,7 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace DM.Services.Search.Consumer
 {
@@ -19,6 +20,7 @@ namespace DM.Services.Search.Consumer
         public static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                     .UseDefaultGrpc<Startup>());
     }

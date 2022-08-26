@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Serilog;
 
 namespace DM.Services.Core.Extensions
 {
@@ -40,7 +39,6 @@ namespace DM.Services.Core.Extensions
         public static IWebHostBuilder UseDefaultGrpc<TStartup>(this IWebHostBuilder builder)
             where TStartup : class => builder
             .UseStartup<TStartup>()
-            .UseSerilog()
             .UseCustomGrpcPort();
 
         /// <summary>
@@ -52,7 +50,6 @@ namespace DM.Services.Core.Extensions
         public static IWebHostBuilder UseDefault<TStartup>(this IWebHostBuilder builder)
             where TStartup : class => builder
             .UseStartup<TStartup>()
-            .UseSerilog()
             .UseCustomPort();
     }
 }
