@@ -1,15 +1,16 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using DM.Services.Core;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Building;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using RMQ.Client.Abstractions;
+using RMQ.Client.Abstractions.Consuming;
+using RMQ.Client.DependencyInjection;
 using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Mail.Sender.Consumer
@@ -34,6 +35,13 @@ namespace DM.Services.Mail.Sender.Consumer
                 .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.MailSender.Consumer");
 
+            services.AddRmqClient(sp =>
+            {
+                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+            }, consumerBuilderDefaults: builder => builder.WithMiddleware<ConsumerRetryMiddleware>());
+            services.AddHostedService<MailSendingConsumer>();
+
             services.AddHealthChecks();
 
             services.AddMvc();
@@ -56,23 +64,8 @@ namespace DM.Services.Mail.Sender.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumerBuilder"></param>
-        public void Configure(IApplicationBuilder applicationBuilder,
-            IConsumerBuilder<MailLetter> consumerBuilder)
+        public void Configure(IApplicationBuilder applicationBuilder)
         {
-            Console.WriteLine("[🚴] Starting search engine consumer");
-
-            var parameters = new RabbitConsumerParameters("dm.mail.sender", ProcessingOrder.Sequential)
-            {
-                ExchangeName = "dm.mail.sending",
-                RoutingKeys = new[] { "#" },
-                QueueName = "dm.mail.sending",
-                DeadLetterExchange = "dm.mail.unsent"
-            };
-            consumerBuilder.BuildRabbit<MailSendingHandler>(parameters).Start();
-
-            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
-
             applicationBuilder
                 .UseRouting()
                 .UseHealthChecks("/_health")

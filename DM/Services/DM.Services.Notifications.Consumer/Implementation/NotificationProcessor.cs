@@ -3,42 +3,39 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using DM.Services.Notifications.BusinessProcesses.Creating;
 using DM.Services.Notifications.Consumer.Implementation.Notifiers;
 using DM.Services.Notifications.Dto;
+using RMQ.Client.Abstractions;
+using RMQ.Client.Abstractions.Consuming;
+using RMQ.Client.Abstractions.Producing;
 
 namespace DM.Services.Notifications.Consumer.Implementation
 {
     /// <inheritdoc />
-    internal class NotificationMessageHandler : IMessageHandler<InvokedEvent>
+    internal class NotificationProcessor : IProcessor<InvokedEvent>
     {
         private readonly IEnumerable<INotificationGenerator> generators;
         private readonly INotificationCreatingService service;
         private readonly IMapper mapper;
-        private readonly IProducer<string, RealtimeNotification> producer;
+        private readonly IProducer producer;
 
         /// <inheritdoc />
-        public NotificationMessageHandler(
+        public NotificationProcessor(
             IEnumerable<INotificationGenerator> generators,
             INotificationCreatingService service,
             IMapper mapper,
-            IProducerBuilder<string, RealtimeNotification> producerBuilder)
+            IProducerBuilder producerBuilder)
         {
             this.generators = generators;
             this.service = service;
             this.mapper = mapper;
-            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters
-            {
-                ExchangeName = "dm.notifications.sent"
-            });
+            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters("dm.notifications.sent"));
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Handle(InvokedEvent message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(InvokedEvent message, CancellationToken cancellationToken)
         {
             var notificationsToCreate = new List<CreateNotification>();
             foreach (var generator in generators.Where(g => g.CanResolve(message.Type)))
@@ -56,9 +53,10 @@ namespace DM.Services.Notifications.Consumer.Implementation
             }
 
             var notifications = await service.Create(notificationsToCreate);
-            await producer.Send(notifications
-                .Select(mapper.Map<RealtimeNotification>)
-                .Select(n => (string.Empty, n)), CancellationToken.None);
+            foreach (var notification in notifications.Select(mapper.Map<RealtimeNotification>))
+            {
+                await producer.Send(string.Empty, notification, cancellationToken);
+            }
 
             return ProcessResult.Success;
         }

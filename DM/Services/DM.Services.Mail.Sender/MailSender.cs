@@ -1,9 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Building;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using FluentValidation;
+using RMQ.Client.Abstractions;
+using RMQ.Client.Abstractions.Producing;
 
 namespace DM.Services.Mail.Sender
 {
@@ -11,19 +10,15 @@ namespace DM.Services.Mail.Sender
     internal class MailSender : IMailSender
     {
         private readonly IValidator<MailLetter> validator;
-        private readonly IProducer<string, MailLetter> producer;
+        private readonly IProducer producer;
 
         /// <inheritdoc />
         public MailSender(
             IValidator<MailLetter> validator,
-            IProducerBuilder<string, MailLetter> producerBuilder)
+            IProducerBuilder producerBuilder)
         {
             this.validator = validator;
-            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters
-            {
-                ExchangeName = "dm.mail.sending",
-                ExchangeType = ExchangeType.Topic,
-            });
+            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters("dm.mail.sending"));
         }
 
         /// <inheritdoc />

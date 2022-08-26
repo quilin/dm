@@ -1,28 +1,32 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DM.Services.MessageQueuing;
 using DM.Services.Notifications.Dto;
 using DM.Web.API.Dto.Notifications;
 using DM.Web.Core.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Web.API.Notifications
 {
-    internal class NotificationHandler : IMessageHandler<RealtimeNotification>
+    internal class RealtimeNotificationProcessor : IProcessor<RealtimeNotification>
     {
+        private readonly ILogger<RealtimeNotificationProcessor> logger;
         private readonly IUserConnectionService connectionService;
         private readonly IHubContext<NotificationHub, INotificationHub> hubContext;
 
-        public NotificationHandler(
+        public RealtimeNotificationProcessor(
+            ILogger<RealtimeNotificationProcessor> logger,
             IUserConnectionService connectionService,
             IHubContext<NotificationHub, INotificationHub> hubContext)
         {
+            this.logger = logger;
             this.connectionService = connectionService;
             this.hubContext = hubContext;
         }
 
-        public async Task<ProcessResult> Handle(RealtimeNotification message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(RealtimeNotification message, CancellationToken cancellationToken)
         {
             var connectedUsers = connectionService.GetConnectedUsers();
             var connectionIds = message.RecipientIds
@@ -35,6 +39,7 @@ namespace DM.Web.API.Notifications
                 EventType = message.EventType,
                 Payload = message.Metadata
             });
+            logger.LogDebug("Message published: {Message} for users {Users}", message.Metadata, message.RecipientIds);
             return ProcessResult.Success;
         }
     }

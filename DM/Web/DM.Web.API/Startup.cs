@@ -8,10 +8,8 @@ using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.Forum;
 using DM.Services.Gaming;
-using DM.Services.MessageQueuing.Building;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
+using DM.Services.MessageQueuing;
 using DM.Services.Notifications;
-using DM.Services.Notifications.Dto;
 using DM.Services.Uploading;
 using DM.Services.Uploading.Configuration;
 using DM.Web.API.Authentication;
@@ -29,6 +27,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RMQ.Client.Abstractions;
+using RMQ.Client.DependencyInjection;
 
 namespace DM.Web.API
 {
@@ -37,7 +37,6 @@ namespace DM.Web.API
     /// </summary>
     internal class Startup
     {
-        /// <inheritdoc />
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -70,6 +69,13 @@ namespace DM.Web.API
                 .AddMemoryCache()
                 .AddDbContextPool<DmDbContext>(options => options
                     .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
+
+            services.AddRmqClient(sp =>
+            {
+                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+            });
+            services.AddHostedService<RealtimeNotificationConsumer>();
 
             services.AddHealthChecks();
 
@@ -116,13 +122,11 @@ namespace DM.Web.API
         /// Configure application
         /// </summary>
         /// <param name="appBuilder"></param>
-        /// <param name="consumerBuilder"></param>
         /// <param name="integrationOptions"></param>
         /// <param name="configuration"></param>
         /// <param name="dbContext"></param>
         /// <param name="logger"></param>
         public void Configure(IApplicationBuilder appBuilder,
-            IConsumerBuilder<RealtimeNotification> consumerBuilder,
             IOptions<IntegrationSettings> integrationOptions,
             IConfiguration configuration,
             DmDbContext dbContext,
@@ -153,15 +157,6 @@ namespace DM.Web.API
                 logger.LogInformation("[💨] Initiating database migration");
                 dbContext.Database.Migrate();
             }
-
-            var parameters = new RabbitConsumerParameters("dm.api", ProcessingOrder.Sequential)
-            {
-                ExchangeName = "dm.notifications.sent",
-                QueueName = "dm.notifications.api",
-                RoutingKeys = new[] {"#"},
-                Exclusive = true
-            };
-            consumerBuilder.BuildRabbit<NotificationHandler>(parameters).Start();
         }
     }
 }
