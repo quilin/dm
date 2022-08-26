@@ -59,7 +59,7 @@ namespace DM.Services.Authentication.Tests
         }
 
         [Fact]
-        public void RemoveAllActiveSessionsAndCreateNewSimilarToCurrent()
+        public async Task RemoveAllActiveSessionsAndCreateNewSimilarToCurrent()
         {
             var userId = Guid.NewGuid();
             var user = new AuthenticatedUser {UserId = userId};
@@ -84,7 +84,7 @@ namespace DM.Services.Authentication.Tests
                 .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>()))
                 .ReturnsAsync(newSession);
 
-            service.Invoking(async s => await s.LogoutElsewhere()).Should().NotThrow();
+            await service.Invoking(s => s.LogoutElsewhere()).Should().NotThrowAsync();
 
             authenticationRepository.Verify(r => r.RemoveSessionsExcept(userId, sessionId), Times.Once);
             authenticationRepository.VerifyNoOtherCalls();

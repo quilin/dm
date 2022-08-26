@@ -1,5 +1,5 @@
 ﻿using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
+using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -20,13 +20,7 @@ namespace DM.Services.Notifications.Consumer
         public static IHostBuilder CreateWebHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder
-                        .UseKestrel(options => options.AllowSynchronousIO = true)
-                        .UseUrls("http://localhost:5003")
-                        .UseSerilog()
-                        .UseStartup<Startup>();
-                });
+                .UseSerilog()
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
     }
 }

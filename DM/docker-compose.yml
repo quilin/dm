@@ -2,17 +2,54 @@ version: "3.9"
 
 networks:
   default:
-    name: "dm"
+    name: "dm-full-app"
 
 volumes:
   backups:
+  minio:
 
-x-common-variables: &workload-variables
-  DM_ConnectionStrings__Rdb: "Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;"
-  DM_ConnectionStrings__Mongo: "mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000"
-  DM_ConnectionStrings__SearchIndex: "http://dm-es:9200"
-  DM_ConnectionStrings__MessageQueue: "amqp://guest:guest@dm-rmq:5672/"
-  DM_ConnectionStrings__Logs: "http://dm-es:9200"
+x-workload-env: &workload-env
+  DM_ConnectionStrings__Rdb: Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;
+  DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
+  DM_ConnectionStrings__SearchEngine: http://dm-es:9200
+  DM_ConnectionStrings__Logs: http://dm-es:9200
+
+  DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672/
+  DM_RabbitMqConfiguration__UserName: guest
+  DM_RabbitMqConfiguration__Password: guest
+
+  DM_CdnConfiguration__Url: http://dm-minio:9000
+  DM_CdnConfiguration__PublicUrl: http://localhost:9000
+  DM_CdnConfiguration__Region: us-east-1
+  DM_CdnConfiguration__BucketName: dm-uploads
+  DM_CdnConfiguration__AccessKey: minio
+  DM_CdnConfiguration__SecretKey: miniokey
+  DM_CdnConfiguration__Folder:
+  DM_CdnConfiguration__Provider: Minio
+
+  DM_EmailConfiguration__ServerHost: dm-mailhog
+  DM_EmailConfiguration__ServerPort: 1025
+  DM_EmailConfiguration__Username:
+  DM_EmailConfiguration__Password:
+  DM_EmailConfiguration__FromAddress: info@dm.am
+  DM_EmailConfiguration__FromDisplayName: DM.am
+  DM_EmailConfiguration__ReplyToAddress: test@dm.am
+
+  DM_SearchServiceConfiguration__GrpcEndpoint: http://dm-search-engine-consumer:5052
+
+  DM_IntegrationSettings__WebUrl: http://localhost:5050
+  DM_IntegrationSettings__ApiUrl: http://localhost:5051
+  DM_IntegrationSettings__AdminUrl:
+  DM_IntegrationSettings__MobileUrl:
+  DM_IntegrationSettings__CorsUrls__0: http://localhost:5050
+  DM_IntegrationSettings__CorsUrls__1: http://localhost:8080
+  PORT: 5050
+
+x-app-depends-on: &dm-app-depends-on
+  - 'elasticsearch'
+  - 'postgres'
+  - 'mongo'
+  - 'rabbitmq'
 
 services:
   postgres:
@@ -37,7 +74,7 @@ services:
     ports:
       - '9200:9200'
       - '9300:9300'
-    environment: 
+    environment:
       discovery.type: 'single-node'
 
   rabbitmq:
@@ -68,3 +105,68 @@ services:
       ELASTICSEARCH_HOSTS: 'http://dm-es:9200'
     depends_on:
       - 'elasticsearch'
+
+  mailhog:
+    container_name: "dm-mailhog"
+    image: "mailhog/mailhog"
+    ports:
+      - '1025:1025'
+      - '5025:8025'
+        
+  minio:
+    container_name: "dm-minio"
+    image: "quay.io/minio/minio"
+    command: server --console-address ":9001" /data/
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: "minio"
+      MINIO_ROOT_PASSWORD: "miniokey"
+      MINIO_REGION: "us-east-1"
+    volumes:
+      - minio:/minio
+
+  dmemailsenderconsumer:
+    container_name: 'dm-email-sender-consumer'
+    image: "quilin/dm-consumer-mail:0.6-local"
+    ports:
+      - '5054:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmsearchengineconsumer:
+    container_name: 'dm-search-engine-consumer'
+    image: "dm-search-consumer:grpc-test"
+    ports:
+      - '5052:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmnotificationsconsumer:
+    container_name: 'dm-notifications-consumer'
+    image: "quilin/dm-consumer-notification:0.6-local"
+    ports:
+      - '5053:5050'
+    environment: *workload-env
+    depends_on: *dm-app-depends-on
+
+  dmapi:
+    container_name: "dm-api"
+    image: "dm-api:grpc-test"
+    ports:
+      - '5051:5050'
+    environment:
+      <<: *workload-env
+      MigrationOnStart: "true"
+    depends_on: *dm-app-depends-on
+
+  dmfront:
+    container_name: "dm-front"
+    image: "quilin/dm-front:0.3-local"
+    ports:
+      - '5050:80'
+    environment:
+      API_URL: http://localhost:5051
+    depends_on:
+      - dmapi

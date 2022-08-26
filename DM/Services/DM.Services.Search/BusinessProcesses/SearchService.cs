@@ -16,7 +16,6 @@ namespace DM.Services.Search.BusinessProcesses
         private readonly ISearchEngineRepository searchEngineRepository;
         private readonly IIdentityProvider identityProvider;
 
-        /// <inheritdoc />
         public SearchService(
             ISearchEngineRepository searchEngineRepository,
             IIdentityProvider identityProvider)
@@ -24,7 +23,7 @@ namespace DM.Services.Search.BusinessProcesses
             this.searchEngineRepository = searchEngineRepository;
             this.identityProvider = identityProvider;
         }
-        
+
         /// <inheritdoc />
         public async Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query,
             IEnumerable<SearchEntityType> types, PagingQuery pagingQuery)
@@ -35,13 +34,12 @@ namespace DM.Services.Search.BusinessProcesses
             {
                 return (Enumerable.Empty<FoundEntity>(), PagingResult.Empty(pageSize));
             }
-        
+
             var pagingData = new PagingData(pagingQuery, pageSize, int.MaxValue);
-            var userRoles = Enum.GetValues(typeof(UserRole)).Cast<UserRole>()
-                .Where(r => identity.User.Role.HasFlag(r));
+            var userRoles = Enum.GetValues<UserRole>().Where(r => identity.User.Role.HasFlag(r));
             var (entities, totalCount) = await searchEngineRepository.Search(
                 query, types, pagingData, userRoles, identity.User.UserId);
-            
+
             pagingData = new PagingData(pagingQuery, pageSize, totalCount);
             return (entities, pagingData.Result);
         }

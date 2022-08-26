@@ -29,43 +29,35 @@ namespace DM.Services.Search.Consumer.Implementation
         }
 
         /// <inheritdoc />
-        public Task Delete(Guid entityId)
-        {
-            return client.DeleteAsync<SearchEntity>(entityId);
-        }
+        public Task Delete(Guid entityId) => client.DeleteAsync<SearchEntity>(entityId);
 
         /// <inheritdoc />
-        public Task DeleteByParent(Guid parentEntityId)
-        {
-            return client.DeleteByQueryAsync<SearchEntity>(d => d.Query(q => q
+        public Task DeleteByParent(Guid parentEntityId) =>
+            client.DeleteByQueryAsync<SearchEntity>(d => d.Query(q => q
                 .Term(t => t
                     .Field(f => f.ParentEntityId)
                     .Value(parentEntityId))));
-        }
 
         /// <inheritdoc />
-        public Task UpdateByParent(Guid parentEntityId, IEnumerable<UserRole> roles)
-        {
-            return client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
+        public Task UpdateByParent(Guid parentEntityId, IEnumerable<UserRole> roles) =>
+            client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
                     .Term(t => t
                         .Field(f => f.ParentEntityId)
                         .Value(parentEntityId)))
                 .Script($"ctx._source.authorizedRoles = [{string.Join(",", roles.Cast<int>())}]"));
-        }
 
         /// <inheritdoc />
-        public Task UpdateByParent(Guid parentEntityId, IEnumerable<Guid> userIds)
-        {
-            return client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
+        public Task UpdateByParent(Guid parentEntityId, IEnumerable<Guid> userIds) =>
+            client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
                     .Term(t => t
                         .Field(f => f.ParentEntityId)
                         .Value(parentEntityId)))
                 .Script($"ctx._source.authorizedUsers = [{string.Join(",", userIds)}]"));
-        }
 
         private async Task DeclareIndex()
         {
-            if ((await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName)).Exists)
+            var existsResponse = await client.Indices.ExistsAsync(SearchEngineConfiguration.IndexName);
+            if (existsResponse is { IsValid: true, Exists: true })
             {
                 return;
             }

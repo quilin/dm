@@ -34,7 +34,8 @@ namespace DM.Services.MessageQueuing.RabbitMq.Connection
 
             connectionRetryPolicy = Policy.Handle<Exception>()
                 .WaitAndRetry(10, attempt => TimeSpan.FromSeconds(1 << attempt),
-                    (e, interval) => logger.LogWarning($"Не удалось открыть соединение, повторная попытка через {interval}", e));
+                    (e, interval) => logger.LogWarning(e, "Не удалось открыть соединение, повторная попытка через {Interval}",
+                        interval.ToString("g")));
         }
         
         public IChannelAdapter Get()

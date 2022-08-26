@@ -26,11 +26,9 @@ namespace DM.Web.API.Configuration
             config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 
-            config.JsonSerializerOptions.IgnoreNullValues = true;
-            
+            config.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+
             config.JsonSerializerOptions.Converters.Insert(0, new JsonStringEnumConverter());
-            config.JsonSerializerOptions.Converters.Insert(0, new ReadableGuidConverter());
-            config.JsonSerializerOptions.Converters.Insert(0, new ReadableNullableGuidConverter());
             config.JsonSerializerOptions.Converters.Insert(0, new OptionalConverterFactory());
             config.JsonSerializerOptions.Converters.Insert(0, new BbConverterFactory(httpContextAccessor, bbParserProvider));
         }

@@ -23,7 +23,7 @@ namespace DM.Web.API.Dto.Community
             var currentUser = identityProvider.Current.User;
             return currentUser.IsAuthenticated
                 ? source.UserIds.Contains(currentUser.UserId)
-                : (bool?) null;
+                : null;
         }
     }
 }

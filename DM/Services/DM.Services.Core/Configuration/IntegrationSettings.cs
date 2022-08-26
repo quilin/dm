@@ -24,5 +24,10 @@ namespace DM.Services.Core.Configuration
         /// DM mobile site URL
         /// </summary>
         public string MobileUrl { get; set; }
+
+        /// <summary>
+        /// External URLs for CORS policies
+        /// </summary>
+        public string[] CorsUrls { get; set; }
     }
 }

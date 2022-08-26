@@ -18,7 +18,7 @@ namespace DM.Services.Authentication.Tests
 
         public SecurityManagerShould()
         {
-            saltFactory = Mock<ISaltFactory>(MockBehavior.Loose);
+            saltFactory = Mock<ISaltFactory>();
 
             hashProvider = Mock<IHashProvider>();
             computeHashSetup = hashProvider.Setup(p => p.ComputeSha256(It.IsAny<string>(), It.IsAny<string>()));

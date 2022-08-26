@@ -65,8 +65,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             {
                 Likes = new List<GeneralUser>
                 {
-                    new GeneralUser {UserId = userId},
-                    new GeneralUser {UserId = Guid.NewGuid()}
+                    new() {UserId = userId},
+                    new() {UserId = Guid.NewGuid()}
                 }
             });
             currentUser.Returns(Create.User(userId).Please);
@@ -85,8 +85,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                 Id = commentId,
                 Likes = new List<GeneralUser>
                 {
-                    new GeneralUser {UserId = Guid.NewGuid()},
-                    new GeneralUser {UserId = Guid.NewGuid()}
+                    new() {UserId = Guid.NewGuid()},
+                    new() {UserId = Guid.NewGuid()}
                 }
             });
             var user = Create.User().Please();
@@ -122,7 +122,7 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
             {
                 Likes = new List<GeneralUser>
                 {
-                    new GeneralUser {UserId = Guid.NewGuid()}
+                    new() {UserId = Guid.NewGuid()}
                 }
             });
             currentUser.Returns(Create.User().Please);
@@ -142,8 +142,8 @@ namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
                 Id = commentId,
                 Likes = new List<GeneralUser>
                 {
-                    new GeneralUser {UserId = userId},
-                    new GeneralUser {UserId = Guid.NewGuid()}
+                    new() {UserId = userId},
+                    new() {UserId = Guid.NewGuid()}
                 }
             });
             var user = Create.User(userId).Please();

@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "DM.Services.Search.Grpc";
+
+service SearchEngine {
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
+
+enum SearchEntityType {
+  UNKNOWN = 0;
+  FORUM_TOPIC = 1;
+  FORUM_COMMENT = 2;
+  GAME = 3;
+  USER = 4;
+}
+
+message SearchRequest {
+  string query = 1;
+  repeated SearchEntityType searchAcross = 2;
+  int32 skip = 3;
+  int32 size = 4;
+}
+
+message SearchResponse {
+  int32 total = 1;
+  repeated SearchResultEntity entities = 2;
+
+  message SearchResultEntity {
+    string id = 1;
+    SearchEntityType type = 2;
+    string foundTitle = 3;
+    string originalTitle = 4;
+    string foundText = 5;
+  }
+}

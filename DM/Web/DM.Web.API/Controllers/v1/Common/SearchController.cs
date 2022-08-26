@@ -1,10 +1,11 @@
-using System.Linq;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
-using DM.Services.Core.Dto.Enums;
-using DM.Services.Search.BusinessProcesses;
+using DM.Services.Search.Grpc;
+using DM.Web.API.Configuration;
 using DM.Web.API.Dto.Contracts;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DM.Web.API.Controllers.v1.Common
 {
@@ -14,13 +15,13 @@ namespace DM.Web.API.Controllers.v1.Common
     [ApiExplorerSettings(GroupName = "Common")]
     public class SearchController : ControllerBase
     {
-        private readonly ISearchService service;
+        private readonly SearchServiceConfiguration searchServiceConfiguration;
 
         /// <inheritdoc />
         public SearchController(
-            ISearchService service)
+            IOptions<SearchServiceConfiguration> options)
         {
-            this.service = service;
+            searchServiceConfiguration = options.Value;
         }
 
         /// <summary>
@@ -30,9 +31,17 @@ namespace DM.Web.API.Controllers.v1.Common
         [HttpGet]
         public async Task<ListEnvelope<object>> Search([FromQuery] string query, [FromQuery] PagingQuery q)
         {
-            // TODO: Move to service and massage it
-            var (entities, paging) = await service.Search(query, Enumerable.Empty<SearchEntityType>(), q);
-            return new ListEnvelope<object>(entities, new Paging(paging));
+            using var channel = GrpcChannel.ForAddress(searchServiceConfiguration.GrpcEndpoint);
+            var client = new SearchEngine.SearchEngineClient(channel);
+            var searchResponse = await client.SearchAsync(new SearchRequest
+            {
+                Query = query,
+                Skip = q.Skip ?? 0,
+                Size = q.Size ?? 10,
+                SearchAcross = { },
+            });
+            var paging = new Paging(PagingResult.Create(searchResponse.Total, (q.Skip ?? 0) + 1, q.Size ?? 0));
+            return new ListEnvelope<object>(searchResponse.Entities, paging);
         }
     }
 }

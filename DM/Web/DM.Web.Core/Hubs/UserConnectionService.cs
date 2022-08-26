@@ -17,7 +17,7 @@ namespace DM.Web.Core.Hubs
             this.authenticationService = authenticationService;
         }
 
-        private static readonly ConcurrentDictionary<Guid, HashSet<string>> Connections = new ConcurrentDictionary<Guid, HashSet<string>>();
+        private static readonly ConcurrentDictionary<Guid, HashSet<string>> Connections = new();
 
         public async Task Add(string authToken, string connectionId)
         {

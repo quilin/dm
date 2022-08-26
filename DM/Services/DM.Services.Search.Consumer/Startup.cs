@@ -11,11 +11,15 @@ using DM.Services.MessageQueuing;
 using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.MessageQueuing.RabbitMq.Configuration;
+using DM.Services.Search.Configuration;
 using DM.Services.Search.Consumer.Implementation;
+using DM.Services.Search.Consumer.Interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Nest;
 using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Search.Consumer
@@ -37,12 +41,15 @@ namespace DM.Services.Search.Consumer
                 .AddOptions()
                 .Configure<ConnectionStrings>(
                     configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<RabbitMqConfiguration>(
+                    configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
 
-            services
-                .AddDbContext<DmDbContext>(options => options
-                    .UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))))
-                .AddMvc();
+            services.AddDbContext<DmDbContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
+
+            services.AddMvc();
+            services.AddGrpc(options => options.Interceptors.Add<IdentityInterceptor>());
         }
 
         /// <summary>
@@ -52,6 +59,7 @@ namespace DM.Services.Search.Consumer
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterDefaultTypes();
+            builder.RegisterMapper();
 
             builder.RegisterModuleOnce<CoreModule>();
             builder.RegisterModuleOnce<DataAccessModule>();
@@ -64,10 +72,25 @@ namespace DM.Services.Search.Consumer
         /// </summary>
         /// <param name="applicationBuilder"></param>
         /// <param name="consumerBuilder"></param>
+        /// <param name="elasticClient"></param>
+        /// <param name="logger"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IConsumerBuilder<InvokedEvent> consumerBuilder)
+            IConsumerBuilder<InvokedEvent> consumerBuilder,
+            IElasticClient elasticClient,
+            ILogger<Startup> logger)
         {
             Console.WriteLine("[🚴] Starting search engine consumer");
+
+            var existsResponse = elasticClient.Indices.Exists(SearchEngineConfiguration.IndexName);
+            if (existsResponse is not { IsValid: true, Exists: true })
+            {
+                logger.LogInformation($"Создаем поисковый индекс {SearchEngineConfiguration.IndexName}");
+                var createIndexResponse = elasticClient.Indices.Create(SearchEngineConfiguration.IndexName);
+                if (createIndexResponse is not { IsValid: true, Index: SearchEngineConfiguration.IndexName })
+                {
+                    logger.LogError("Не удалось создать поисковый индекс на старте консюмера");
+                }
+            }
 
             var parameters = new RabbitConsumerParameters("dm.search-engine", ProcessingOrder.Unmanaged)
             {
@@ -90,7 +113,10 @@ namespace DM.Services.Search.Consumer
 
             applicationBuilder
                 .UseRouting()
-                .UseEndpoints(route => route.MapControllers());
+                .UseEndpoints(route =>
+                {
+                    route.MapGrpcService<SearchEngineService>();
+                });
         }
     }
 }

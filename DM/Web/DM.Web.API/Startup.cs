@@ -12,7 +12,6 @@ using DM.Services.MessageQueuing.Building;
 using DM.Services.MessageQueuing.RabbitMq.Configuration;
 using DM.Services.Notifications;
 using DM.Services.Notifications.Dto;
-using DM.Services.Search;
 using DM.Services.Uploading;
 using DM.Services.Uploading.Configuration;
 using DM.Web.API.Authentication;
@@ -28,6 +27,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DM.Web.API
 {
@@ -56,14 +57,12 @@ namespace DM.Web.API
 
             services
                 .AddOptions()
-                .Configure<ConnectionStrings>(
-                    Configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<IntegrationSettings>(
-                    Configuration.GetSection(nameof(IntegrationSettings)).Bind)
-                .Configure<EmailConfiguration>(
-                    Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-                .Configure<CdnConfiguration>(
-                    Configuration.GetSection(nameof(CdnConfiguration)).Bind)
+                .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
+                .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
+                .Configure<CdnConfiguration>(Configuration.GetSection(nameof(CdnConfiguration)).Bind)
+                .Configure<RabbitMqConfiguration>(Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+                .Configure<SearchServiceConfiguration>(Configuration.GetSection(nameof(SearchServiceConfiguration)).Bind)
                 .AddDmLogging("DM.API");
 
             services
@@ -109,7 +108,6 @@ namespace DM.Web.API
             builder.RegisterModuleOnce<ForumModule>();
             builder.RegisterModuleOnce<GamingModule>();
             builder.RegisterModuleOnce<NotificationsModule>();
-            builder.RegisterModuleOnce<SearchEngineModule>();
 
             builder.RegisterModuleOnce<WebCoreModule>();
         }
@@ -119,8 +117,16 @@ namespace DM.Web.API
         /// </summary>
         /// <param name="appBuilder"></param>
         /// <param name="consumerBuilder"></param>
+        /// <param name="integrationOptions"></param>
+        /// <param name="configuration"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="logger"></param>
         public void Configure(IApplicationBuilder appBuilder,
-            IConsumerBuilder<RealtimeNotification> consumerBuilder)
+            IConsumerBuilder<RealtimeNotification> consumerBuilder,
+            IOptions<IntegrationSettings> integrationOptions,
+            IConfiguration configuration,
+            DmDbContext dbContext,
+            ILogger<Startup> logger)
         {
             appBuilder
                 .UseSwagger(c => c.Configure())
@@ -129,7 +135,7 @@ namespace DM.Web.API
                 .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseMiddleware<AuthenticationMiddleware>()
                 .UseCors(b => b
-                    .WithOrigins("http://localhost:8080")
+                    .WithOrigins(integrationOptions.Value.CorsUrls)
                     .WithExposedHeaders(ApiCredentialsStorage.HttpAuthTokenHeader)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
@@ -141,6 +147,12 @@ namespace DM.Web.API
                     c.MapControllers();
                     c.MapHub<NotificationHub>("/whatsup");
                 });
+
+            if (configuration.GetValue<bool>("MigrationOnStart"))
+            {
+                logger.LogInformation("[💨] Initiating database migration");
+                dbContext.Database.Migrate();
+            }
 
             var parameters = new RabbitConsumerParameters("dm.api", ProcessingOrder.Sequential)
             {

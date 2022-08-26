@@ -9,7 +9,6 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes: [
     {
       name: 'home',
@@ -28,6 +27,16 @@ export default new Router({
         sidebar: GeneralSidebar,
         page: () => import('./views/pages/error/Error.vue'),
       },
+    },
+
+    {
+      name: 'activate',
+      path: '/activate/:token',
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import('./views/pages/activate/Activate.vue'),
+      }
     },
 
     {
@@ -126,7 +135,7 @@ export default new Router({
       }],
     },
     {
-      path: '/topic/:id/:n?',
+      path: '/topic/:id',
       components: {
         menu: GeneralMenu,
         sidebar: GeneralSidebar,

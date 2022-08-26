@@ -1,8 +1,8 @@
 <template>
   <lightbox :name="name">
-    <template slot="title">{{title}}</template>
+    <template v-slot:title>{{title}}</template>
     <slot />
-    <template slot="controls">
+    <template v-slot:controls>
       <button @click="accept" :disabled="acceptDisabled" class="confirm-lightbox__accept">{{acceptText}}</button>
       <a @click="cancel">{{cancelText}}</a>
     </template>
