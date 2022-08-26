@@ -1,17 +1,10 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using DM.Services.Core;
 using DM.Services.Core.Configuration;
-using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
-using DM.Services.Core.Implementation;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Building;
-using DM.Services.MessageQueuing.GeneralBus;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
-using DM.Services.Search.Configuration;
 using DM.Services.Search.Consumer.Implementation;
 using DM.Services.Search.Consumer.Interceptors;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nest;
+using Microsoft.Extensions.Options;
+using RMQ.Client.Abstractions;
+using RMQ.Client.DependencyInjection;
 using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Search.Consumer
@@ -39,11 +34,16 @@ namespace DM.Services.Search.Consumer
             var configuration = ConfigurationFactory.Default;
             services
                 .AddOptions()
-                .Configure<ConnectionStrings>(
-                    configuration.GetSection(nameof(ConnectionStrings)).Bind)
-                .Configure<RabbitMqConfiguration>(
-                    configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+                .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
+                .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
+
+            services.AddRmqClient(sp =>
+            {
+                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+            });
+            services.AddHostedService<SearchEngineConsumer>();
 
             services.AddDbContext<DmDbContext>(options => options
                 .UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
@@ -71,52 +71,13 @@ namespace DM.Services.Search.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumerBuilder"></param>
-        /// <param name="elasticClient"></param>
         /// <param name="logger"></param>
         public void Configure(IApplicationBuilder applicationBuilder,
-            IConsumerBuilder<InvokedEvent> consumerBuilder,
-            IElasticClient elasticClient,
             ILogger<Startup> logger)
         {
-            Console.WriteLine("[🚴] Starting search engine consumer");
-
-            var existsResponse = elasticClient.Indices.Exists(SearchEngineConfiguration.IndexName);
-            if (existsResponse is not { IsValid: true, Exists: true })
-            {
-                logger.LogInformation($"Создаем поисковый индекс {SearchEngineConfiguration.IndexName}");
-                var createIndexResponse = elasticClient.Indices.Create(SearchEngineConfiguration.IndexName);
-                if (createIndexResponse is not { IsValid: true, Index: SearchEngineConfiguration.IndexName })
-                {
-                    logger.LogError("Не удалось создать поисковый индекс на старте консюмера");
-                }
-            }
-
-            var parameters = new RabbitConsumerParameters("dm.search-engine", ProcessingOrder.Unmanaged)
-            {
-                ExchangeName = InvokedEventsTransport.ExchangeName,
-                RoutingKeys = new[]
-                {
-                    EventType.ActivatedUser,
-                    EventType.NewForumComment,
-                    EventType.ChangedForumComment,
-                    EventType.DeletedForumComment,
-                    EventType.NewForumTopic,
-                    EventType.ChangedForumTopic,
-                    EventType.DeletedForumTopic,
-                }.ToRoutingKeys(),
-                QueueName = "dm.search-engine"
-            };
-            consumerBuilder.BuildRabbit<CompositeIndexer>(parameters).Start();
-
-            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
-
             applicationBuilder
                 .UseRouting()
-                .UseEndpoints(route =>
-                {
-                    route.MapGrpcService<SearchEngineService>();
-                });
+                .UseEndpoints(route => route.MapGrpcService<SearchEngineService>());
         }
     }
 }

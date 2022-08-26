@@ -1,21 +1,17 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using DM.Services.Core;
 using DM.Services.Core.Configuration;
-using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
-using DM.Services.Core.Implementation;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
-using DM.Services.MessageQueuing.Building;
-using DM.Services.MessageQueuing.GeneralBus;
-using DM.Services.MessageQueuing.RabbitMq.Configuration;
-using DM.Services.Notifications.Consumer.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using RMQ.Client.Abstractions;
+using RMQ.Client.DependencyInjection;
 using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Notifications.Consumer
@@ -38,6 +34,13 @@ namespace DM.Services.Notifications.Consumer
                 .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
                 .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Notifications.Consumer");
+
+            services.AddRmqClient(sp =>
+            {
+                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+            });
+            services.AddHostedService<NotificationConsumer>();
 
             services.AddHealthChecks();
 
@@ -65,34 +68,8 @@ namespace DM.Services.Notifications.Consumer
         /// Ready to work
         /// </summary>
         /// <param name="applicationBuilder"></param>
-        /// <param name="consumerBuilder"></param>
-        public void Configure(IApplicationBuilder applicationBuilder,
-            IConsumerBuilder<InvokedEvent> consumerBuilder)
+        public void Configure(IApplicationBuilder applicationBuilder)
         {
-            Console.WriteLine("[🚴] Starting search engine consumer");
-
-            var parameters = new RabbitConsumerParameters("dm.notifications", ProcessingOrder.Unmanaged)
-            {
-                ExchangeName = InvokedEventsTransport.ExchangeName,
-                RoutingKeys = new[]
-                {
-                    EventType.ActivatedUser,
-                    EventType.NewForumComment,
-                    EventType.ChangedForumComment,
-                    EventType.DeletedForumComment,
-                    EventType.LikedForumComment,
-                    EventType.NewForumTopic,
-                    EventType.ChangedForumTopic,
-                    EventType.DeletedForumTopic,
-                    EventType.NewCharacter,
-                    EventType.LikedTopic
-                }.ToRoutingKeys(),
-                QueueName = "dm.notifications"
-            };
-            consumerBuilder.BuildRabbit<NotificationMessageHandler>(parameters).Start();
-
-            Console.WriteLine($"[👂] Consumer is listening to {parameters.QueueName} queue");
-
             applicationBuilder
                 .UseRouting()
                 .UseHealthChecks("/_health")

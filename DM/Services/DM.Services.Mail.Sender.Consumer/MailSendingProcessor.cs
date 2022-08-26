@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Implementation.CorrelationToken;
-using DM.Services.MessageQueuing;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -11,24 +10,22 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using Polly;
-using Polly.Retry;
+using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Mail.Sender.Consumer
 {
     /// <inheritdoc />
-    internal class MailSendingHandler : IMessageHandler<MailLetter>
+    internal class MailSendingProcessor : IProcessor<MailLetter>
     {
-        private readonly ILogger<MailSendingHandler> logger;
+        private readonly ILogger<MailSendingProcessor> logger;
         private readonly ICorrelationTokenProvider correlationTokenProvider;
         private readonly EmailConfiguration configuration;
         private readonly Lazy<IMailTransport> client;
-        private readonly AsyncRetryPolicy retryPolicy;
 
         /// <inheritdoc />
-        public MailSendingHandler(
+        public MailSendingProcessor(
             IOptions<EmailConfiguration> configuration,
-            ILogger<MailSendingHandler> logger,
+            ILogger<MailSendingProcessor> logger,
             ICorrelationTokenProvider correlationTokenProvider)
         {
             this.logger = logger;
@@ -43,16 +40,13 @@ namespace DM.Services.Mail.Sender.Consumer
                 smtpClient.NoOp();
                 return smtpClient;
             });
-            retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(5,
-                attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
-                (exception, _, __) => logger.LogWarning(exception, "Something is wrong with mail sending"));
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Handle(MailLetter message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(MailLetter message, CancellationToken cancellationToken)
         {
             logger.LogInformation("Sending letter to {Address}", message.Address.Obfuscate());
-            var policyResult = await retryPolicy.ExecuteAndCaptureAsync(() => client.Value.SendAsync(new MimeMessage
+            await client.Value.SendAsync(new MimeMessage
             {
                 From = {new MailboxAddress(configuration.FromDisplayName, configuration.FromAddress)},
                 ReplyTo = {new MailboxAddress(configuration.FromDisplayName, configuration.ReplyToAddress)},
@@ -60,10 +54,8 @@ namespace DM.Services.Mail.Sender.Consumer
                 Subject = message.Subject,
                 Body = new TextPart(TextFormat.Html) {Text = message.Body},
                 MessageId = correlationTokenProvider.Current.ToString()
-            }, cancellationToken));
-            return policyResult.Outcome == OutcomeType.Successful
-                ? ProcessResult.Success
-                : ProcessResult.Fail;
+            }, cancellationToken);
+            return ProcessResult.Success;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using AutoMapper;
+using Microsoft.Extensions.Hosting;
 
 namespace DM.Services.Core.Extensions
 {
@@ -58,6 +59,7 @@ namespace DM.Services.Core.Extensions
                 })
                 // Exceptions should not be registered automatically
                 .Where(t => !t.IsSubclassOf(typeof(Exception)))
+                .Where(t => !t.IsAssignableTo(typeof(IHostedService)))
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
