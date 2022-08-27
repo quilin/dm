@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
@@ -8,8 +9,11 @@ using DM.Services.Search.Consumer.Implementation;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nest;
+using Polly;
+using Polly.Retry;
 using RMQ.Client.Abstractions;
 using RMQ.Client.Abstractions.Consuming;
+using Policy = Polly.Policy;
 
 namespace DM.Services.Search.Consumer;
 
@@ -18,6 +22,7 @@ internal class SearchEngineConsumer : BackgroundService
     private readonly ILogger<SearchEngineConsumer> logger;
     private readonly IElasticClient elasticClient;
     private readonly IConsumerBuilder consumerBuilder;
+    private readonly RetryPolicy consumeRetryPolicy;
 
     public SearchEngineConsumer(
         ILogger<SearchEngineConsumer> logger,
@@ -27,6 +32,9 @@ internal class SearchEngineConsumer : BackgroundService
         this.logger = logger;
         this.elasticClient = elasticClient;
         this.consumerBuilder = consumerBuilder;
+        consumeRetryPolicy = Policy.Handle<Exception>().WaitAndRetry(5,
+            attempt => TimeSpan.FromSeconds(1 << attempt),
+            (exception, _) => logger.LogWarning(exception, "Could not subscribe to the queue"));
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -59,7 +67,7 @@ internal class SearchEngineConsumer : BackgroundService
             }.ToRoutingKeys(),
         };
         var consumer = consumerBuilder.BuildRabbit<CompositeIndexer, InvokedEvent>(parameters);
-        consumer.Subscribe();
+        consumeRetryPolicy.Execute(consumer.Subscribe);
 
         logger.LogDebug("[👂] Search engine consumer is listening to {QueueName} queue", parameters.QueueName);
         return Task.CompletedTask;

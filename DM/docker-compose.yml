@@ -1,8 +1,8 @@
-version: "3.9"
+version: '3.9'
 
 networks:
   default:
-    name: "dm-full-app"
+    name: 'dm-full-app'
 
 volumes:
   backups:
@@ -15,7 +15,7 @@ x-workload-env: &workload-env
   DM_ConnectionStrings__Logs: http://dm-es:9200
 
   DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672/
-  DM_RabbitMqConfiguration__UserName: guest
+  DM_RabbitMqConfiguration__Username: guest
   DM_RabbitMqConfiguration__Password: guest
 
   DM_CdnConfiguration__Url: http://dm-minio:9000
@@ -45,16 +45,10 @@ x-workload-env: &workload-env
   DM_IntegrationSettings__CorsUrls__1: http://localhost:8080
   PORT: 5050
 
-x-app-depends-on: &dm-app-depends-on
-  - 'elasticsearch'
-  - 'postgres'
-  - 'mongo'
-  - 'rabbitmq'
-
 services:
   postgres:
-    container_name: "dm-pg"
-    image: "postgres:latest"
+    container_name: 'dm-pg'
+    image: 'postgres:latest'
     ports:
       - '5432:5432'
     environment:
@@ -63,42 +57,38 @@ services:
       - backups:/var/backups
 
   mongo:
-    container_name: "dm-mongo"
-    image: "mongo:latest"
+    container_name: 'dm-mongo'
+    image: 'mongo:latest'
     ports:
       - '27017:27017'
+    depends_on:
+      - 'postgres'
 
   elasticsearch:
-    container_name: "dm-es"
-    image: "docker.elastic.co/elasticsearch/elasticsearch:7.6.2"
+    container_name: 'dm-es'
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.4.0'
     ports:
       - '9200:9200'
       - '9300:9300'
     environment:
       discovery.type: 'single-node'
+      xpack.security.enabled: 'false'
+    depends_on:
+      - 'mongo'
 
   rabbitmq:
-    container_name: "dm-rmq"
-    image: "rabbitmq:3-management"
-    hostname: "dm-rmq"
+    container_name: 'dm-rmq'
+    image: 'rabbitmq:3-management'
+    hostname: 'dm-rmq'
     ports: 
       - '15672:15672'
       - '5672:5672'
-    
-  pgadmin:
-    container_name: "dm-pgadmin"
-    image: "dpage/pgadmin4:latest"
-    ports:
-      - '5555:80'
-    environment:
-      PGADMIN_DEFAULT_EMAIL: 'admin@dm.am'
-      PGADMIN_DEFAULT_PASSWORD: 'admin'
     depends_on:
-      - 'postgres'
+      - 'elasticsearch'
 
   kibana:
-    container_name: "dm-kibana"
-    image: "docker.elastic.co/kibana/kibana:7.6.2"
+    container_name: 'dm-kibana'
+    image: 'docker.elastic.co/kibana/kibana:8.4.0'
     ports:
       - '5601:5601'
     environment: 
@@ -107,63 +97,67 @@ services:
       - 'elasticsearch'
 
   mailhog:
-    container_name: "dm-mailhog"
-    image: "mailhog/mailhog"
+    container_name: 'dm-mailhog'
+    image: 'mailhog/mailhog'
     ports:
       - '1025:1025'
       - '5025:8025'
-        
+
   minio:
-    container_name: "dm-minio"
-    image: "quay.io/minio/minio"
-    command: server --console-address ":9001" /data/
+    container_name: 'dm-minio'
+    image: 'quay.io/minio/minio'
+    command: server --console-address ':9001' /data/
     ports:
       - '9000:9000'
       - '9001:9001'
     environment:
-      MINIO_ROOT_USER: "minio"
-      MINIO_ROOT_PASSWORD: "miniokey"
-      MINIO_REGION: "us-east-1"
+      MINIO_ROOT_USER: 'minio'
+      MINIO_ROOT_PASSWORD: 'miniokey'
+      MINIO_REGION: 'us-east-1'
     volumes:
       - minio:/minio
 
   dmemailsenderconsumer:
     container_name: 'dm-email-sender-consumer'
-    image: "quilin/dm-consumer-mail:0.6-local"
+    image: 'quilin/dm-consumer-mail:0.15-local'
     ports:
       - '5054:5050'
     environment: *workload-env
-    depends_on: *dm-app-depends-on
+    depends_on:
+      - 'rabbitmq'
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: "dm-search-consumer:grpc-test"
+    image: 'quilin/dm-consumer-search:0.15-local'
     ports:
       - '5052:5050'
     environment: *workload-env
-    depends_on: *dm-app-depends-on
+    depends_on:
+      - 'rabbitmq'
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'
-    image: "quilin/dm-consumer-notification:0.6-local"
+    image: 'quilin/dm-consumer-notification:0.15-local'
     ports:
       - '5053:5050'
     environment: *workload-env
-    depends_on: *dm-app-depends-on
+    depends_on:
+      - 'rabbitmq'
 
   dmapi:
-    container_name: "dm-api"
-    image: "dm-api:grpc-test"
+    container_name: 'dm-api'
+    image: 'quilin/dm-api:0.15-local'
     ports:
       - '5051:5050'
     environment:
       <<: *workload-env
-      MigrationOnStart: "true"
-    depends_on: *dm-app-depends-on
+      MigrationOnStart: 'true'
+    depends_on:
+      - 'rabbitmq'
 
   dmfront:
-    container_name: "dm-front"
-    image: "quilin/dm-front:0.3-local"
+    container_name: 'dm-front'
+    image: 'quilin/dm-front:0.3-local'
     ports:
       - '5050:80'
     environment:
