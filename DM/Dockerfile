@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . ./
 RUN dotnet publish Web/DM.Web.API -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
 
