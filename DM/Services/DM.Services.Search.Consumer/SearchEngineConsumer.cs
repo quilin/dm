@@ -6,13 +6,13 @@ using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Search.Configuration;
 using DM.Services.Search.Consumer.Implementation;
+using Jamq.Client.Abstractions.Consuming;
+using Jamq.Client.Rabbit.Consuming;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nest;
 using Polly;
 using Polly.Retry;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Consuming;
 using Policy = Polly.Policy;
 
 namespace DM.Services.Search.Consumer;
@@ -66,7 +66,7 @@ internal class SearchEngineConsumer : BackgroundService
                 EventType.DeletedForumTopic,
             }.ToRoutingKeys(),
         };
-        var consumer = consumerBuilder.BuildRabbit<CompositeIndexer, InvokedEvent>(parameters);
+        var consumer = consumerBuilder.BuildRabbit<InvokedEvent, CompositeIndexer>(parameters);
         consumeRetryPolicy.Execute(consumer.Subscribe);
 
         logger.LogDebug("[👂] Search engine consumer is listening to {QueueName} queue", parameters.QueueName);

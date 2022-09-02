@@ -2,12 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Notifications.Dto;
+using Jamq.Client.Abstractions.Consuming;
+using Jamq.Client.Rabbit.Consuming;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Web.API.Notifications;
 
@@ -38,7 +38,7 @@ internal class RealtimeNotificationConsumer : BackgroundService
             RoutingKeys = new[] { "#" },
             Exclusive = true
         };
-        var consumer = consumerBuilder.BuildRabbit<RealtimeNotificationProcessor, RealtimeNotification>(parameters);
+        var consumer = consumerBuilder.BuildRabbit<RealtimeNotification, RealtimeNotificationProcessor>(parameters);
         consumeRetryPolicy.Execute(consumer.Subscribe);
 
         logger.LogDebug("[👂] Realtime notifications consumer is listening to {QueueName} queue",

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Jamq.Client.Abstractions.Consuming;
+using Jamq.Client.Rabbit.Consuming;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Mail.Sender.Consumer;
 
@@ -37,7 +37,7 @@ internal class MailSendingConsumer : BackgroundService
             RoutingKeys = new[] { "#" },
             DeadLetterExchange = "dm.mail.unsent"
         };
-        var consumer = consumerBuilder.BuildRabbit<MailSendingProcessor, MailLetter>(parameters);
+        var consumer = consumerBuilder.BuildRabbit<MailLetter, MailSendingProcessor>(parameters);
         consumeRetryPolicy.Execute(consumer.Subscribe);
 
         logger.LogDebug("[👂] Mail sending consumer is listening to {QueueName} queue", parameters.QueueName);

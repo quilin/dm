@@ -20,6 +20,9 @@ using DM.Web.API.Notifications;
 using DM.Web.API.Swagger;
 using DM.Web.Core;
 using DM.Web.Core.Middleware;
+using Jamq.Client.DependencyInjection;
+using Jamq.Client.Rabbit;
+using Jamq.Client.Rabbit.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -27,8 +30,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RMQ.Client.Abstractions;
-using RMQ.Client.DependencyInjection;
 
 namespace DM.Web.API
 {
@@ -70,11 +71,12 @@ namespace DM.Web.API
                 .AddDbContextPool<DmDbContext>(options => options
                     .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
-            services.AddRmqClient(sp =>
-            {
-                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
-                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
-            });
+            services.AddJamqClient(config => config
+                .UseRabbit(sp =>
+                {
+                    var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                    return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+                }));
             services.AddHostedService<RealtimeNotificationConsumer>();
 
             services.AddHealthChecks();

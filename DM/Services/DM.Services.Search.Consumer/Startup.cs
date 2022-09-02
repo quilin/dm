@@ -7,14 +7,15 @@ using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 using DM.Services.Search.Consumer.Implementation;
 using DM.Services.Search.Consumer.Interceptors;
+using Jamq.Client.DependencyInjection;
+using Jamq.Client.Rabbit;
+using Jamq.Client.Rabbit.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RMQ.Client.Abstractions;
-using RMQ.Client.DependencyInjection;
 using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Search.Consumer
@@ -38,11 +39,12 @@ namespace DM.Services.Search.Consumer
                 .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
                 .AddDmLogging("DM.Search.Consumer");
 
-            services.AddRmqClient(sp =>
-            {
-                var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
-                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
-            });
+            services.AddJamqClient(config => config
+                .UseRabbit(sp =>
+                {
+                    var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+                    return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+                }));
             services.AddHostedService<SearchEngineConsumer>();
 
             services.AddDbContext<DmDbContext>(options => options

@@ -4,13 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Search.Consumer.Implementation.Indexing;
+using Jamq.Client.Abstractions.Consuming;
 using Microsoft.Extensions.Logging;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Search.Consumer.Implementation
 {
     /// <inheritdoc />
-    internal class CompositeIndexer : IProcessor<InvokedEvent>
+    internal class CompositeIndexer : IProcessor<string, InvokedEvent>
     {
         private readonly IEnumerable<IIndexer> indexers;
         private readonly ILogger<CompositeIndexer> logger;
@@ -25,7 +25,7 @@ namespace DM.Services.Search.Consumer.Implementation
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Process(InvokedEvent message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(string key, InvokedEvent message, CancellationToken cancellationToken)
         {
             await Task.WhenAll(indexers
                 .Where(i => i.CanIndex(message.Type))

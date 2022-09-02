@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Implementation.CorrelationToken;
+using Jamq.Client.Abstractions.Consuming;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -10,12 +11,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Mail.Sender.Consumer
 {
     /// <inheritdoc />
-    internal class MailSendingProcessor : IProcessor<MailLetter>
+    internal class MailSendingProcessor : IProcessor<string, MailLetter>
     {
         private readonly ILogger<MailSendingProcessor> logger;
         private readonly ICorrelationTokenProvider correlationTokenProvider;
@@ -43,7 +43,7 @@ namespace DM.Services.Mail.Sender.Consumer
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Process(MailLetter message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(string key, MailLetter message, CancellationToken cancellationToken)
         {
             logger.LogInformation("Sending letter to {Address}", message.Address.Obfuscate());
             await client.Value.SendAsync(new MimeMessage

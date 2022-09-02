@@ -5,12 +5,12 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Notifications.Consumer.Implementation;
+using Jamq.Client.Abstractions.Consuming;
+using Jamq.Client.Rabbit.Consuming;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Notifications.Consumer;
 
@@ -52,7 +52,7 @@ internal class NotificationConsumer : BackgroundService
                 EventType.LikedTopic
             }.ToRoutingKeys(),
         };
-        var consumer = consumerBuilder.BuildRabbit<NotificationProcessor, InvokedEvent>(parameters);
+        var consumer = consumerBuilder.BuildRabbit<InvokedEvent, NotificationProcessor>(parameters);
         consumeRetryPolicy.Execute(consumer.Subscribe);
 
         logger.LogDebug("[👂] Notifications consumer is listening to {QueueName} queue", parameters.QueueName);
