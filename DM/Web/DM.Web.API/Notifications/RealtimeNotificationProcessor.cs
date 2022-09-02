@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using DM.Services.Notifications.Dto;
 using DM.Web.API.Dto.Notifications;
 using DM.Web.Core.Hubs;
+using Jamq.Client.Abstractions.Consuming;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Web.API.Notifications
 {
-    internal class RealtimeNotificationProcessor : IProcessor<RealtimeNotification>
+    internal class RealtimeNotificationProcessor : IProcessor<string, RealtimeNotification>
     {
         private readonly ILogger<RealtimeNotificationProcessor> logger;
         private readonly IUserConnectionService connectionService;
@@ -26,7 +26,8 @@ namespace DM.Web.API.Notifications
             this.hubContext = hubContext;
         }
 
-        public async Task<ProcessResult> Process(RealtimeNotification message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(
+            string key, RealtimeNotification message, CancellationToken cancellationToken)
         {
             var connectedUsers = connectionService.GetConnectedUsers();
             var connectionIds = message.RecipientIds

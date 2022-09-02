@@ -4,19 +4,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Extensions;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Producing;
+using Jamq.Client.Abstractions.Producing;
+using Jamq.Client.Rabbit.Producing;
 
 namespace DM.Services.MessageQueuing.GeneralBus
 {
     internal class InvokedEventProducer : IInvokedEventProducer
     {
-        private readonly IProducer producer;
+        private readonly IProducer<string, InvokedEvent> producer;
 
         public InvokedEventProducer(
             IProducerBuilder producerBuilder)
         {
-            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters(InvokedEventsTransport.ExchangeName));
+            producer = producerBuilder.BuildRabbit<InvokedEvent>(
+                new RabbitProducerParameters(InvokedEventsTransport.ExchangeName));
         }
 
         public Task Send(EventType eventType, Guid entityId) =>

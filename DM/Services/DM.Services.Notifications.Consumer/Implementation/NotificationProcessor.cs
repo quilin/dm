@@ -7,19 +7,19 @@ using DM.Services.MessageQueuing.GeneralBus;
 using DM.Services.Notifications.BusinessProcesses.Creating;
 using DM.Services.Notifications.Consumer.Implementation.Notifiers;
 using DM.Services.Notifications.Dto;
-using RMQ.Client.Abstractions;
-using RMQ.Client.Abstractions.Consuming;
-using RMQ.Client.Abstractions.Producing;
+using Jamq.Client.Abstractions.Consuming;
+using Jamq.Client.Abstractions.Producing;
+using Jamq.Client.Rabbit.Producing;
 
 namespace DM.Services.Notifications.Consumer.Implementation
 {
     /// <inheritdoc />
-    internal class NotificationProcessor : IProcessor<InvokedEvent>
+    internal class NotificationProcessor : IProcessor<string, InvokedEvent>
     {
         private readonly IEnumerable<INotificationGenerator> generators;
         private readonly INotificationCreatingService service;
         private readonly IMapper mapper;
-        private readonly IProducer producer;
+        private readonly IProducer<string, RealtimeNotification> producer;
 
         /// <inheritdoc />
         public NotificationProcessor(
@@ -31,11 +31,12 @@ namespace DM.Services.Notifications.Consumer.Implementation
             this.generators = generators;
             this.service = service;
             this.mapper = mapper;
-            producer = producerBuilder.BuildRabbit(new RabbitProducerParameters("dm.notifications.sent"));
+            producer = producerBuilder.BuildRabbit<RealtimeNotification>(
+                new RabbitProducerParameters("dm.notifications.sent"));
         }
 
         /// <inheritdoc />
-        public async Task<ProcessResult> Process(InvokedEvent message, CancellationToken cancellationToken)
+        public async Task<ProcessResult> Process(string key, InvokedEvent message, CancellationToken cancellationToken)
         {
             var notificationsToCreate = new List<CreateNotification>();
             foreach (var generator in generators.Where(g => g.CanResolve(message.Type)))

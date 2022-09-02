@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Jamq.Client.Abstractions.Consuming;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
-using RMQ.Client.Abstractions.Consuming;
 
 namespace DM.Services.Mail.Sender.Consumer;
 
