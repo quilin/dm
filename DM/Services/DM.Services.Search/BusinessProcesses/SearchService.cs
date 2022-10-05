@@ -8,40 +8,39 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Search.Dto;
 using DM.Services.Search.Repositories;
 
-namespace DM.Services.Search.BusinessProcesses
+namespace DM.Services.Search.BusinessProcesses;
+
+/// <inheritdoc />
+internal class SearchService : ISearchService
 {
-    /// <inheritdoc />
-    internal class SearchService : ISearchService
+    private readonly ISearchEngineRepository searchEngineRepository;
+    private readonly IIdentityProvider identityProvider;
+
+    public SearchService(
+        ISearchEngineRepository searchEngineRepository,
+        IIdentityProvider identityProvider)
     {
-        private readonly ISearchEngineRepository searchEngineRepository;
-        private readonly IIdentityProvider identityProvider;
+        this.searchEngineRepository = searchEngineRepository;
+        this.identityProvider = identityProvider;
+    }
 
-        public SearchService(
-            ISearchEngineRepository searchEngineRepository,
-            IIdentityProvider identityProvider)
+    /// <inheritdoc />
+    public async Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query,
+        IEnumerable<SearchEntityType> types, PagingQuery pagingQuery)
+    {
+        var identity = identityProvider.Current;
+        var pageSize = identity.Settings.Paging.EntitiesPerPage;
+        if (string.IsNullOrWhiteSpace(query))
         {
-            this.searchEngineRepository = searchEngineRepository;
-            this.identityProvider = identityProvider;
+            return (Enumerable.Empty<FoundEntity>(), PagingResult.Empty(pageSize));
         }
 
-        /// <inheritdoc />
-        public async Task<(IEnumerable<FoundEntity> results, PagingResult paging)> Search(string query,
-            IEnumerable<SearchEntityType> types, PagingQuery pagingQuery)
-        {
-            var identity = identityProvider.Current;
-            var pageSize = identity.Settings.Paging.EntitiesPerPage;
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                return (Enumerable.Empty<FoundEntity>(), PagingResult.Empty(pageSize));
-            }
+        var pagingData = new PagingData(pagingQuery, pageSize, int.MaxValue);
+        var userRoles = Enum.GetValues<UserRole>().Where(r => identity.User.Role.HasFlag(r));
+        var (entities, totalCount) = await searchEngineRepository.Search(
+            query, types, pagingData, userRoles, identity.User.UserId);
 
-            var pagingData = new PagingData(pagingQuery, pageSize, int.MaxValue);
-            var userRoles = Enum.GetValues<UserRole>().Where(r => identity.User.Role.HasFlag(r));
-            var (entities, totalCount) = await searchEngineRepository.Search(
-                query, types, pagingData, userRoles, identity.User.UserId);
-
-            pagingData = new PagingData(pagingQuery, pageSize, totalCount);
-            return (entities, pagingData.Result);
-        }
+        pagingData = new PagingData(pagingQuery, pageSize, totalCount);
+        return (entities, pagingData.Result);
     }
 }

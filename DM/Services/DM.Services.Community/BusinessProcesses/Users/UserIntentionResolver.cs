@@ -2,17 +2,16 @@ using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.BusinessProcesses.Users
+namespace DM.Services.Community.BusinessProcesses.Users;
+
+/// <inheritdoc />
+internal class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>
 {
     /// <inheritdoc />
-    internal class UserIntentionResolver : IIntentionResolver<UserIntention, GeneralUser>
+    public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target) => intention switch
     {
-        /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, UserIntention intention, GeneralUser target) => intention switch
-        {
-            UserIntention.Edit => target.UserId == user.UserId,
-            UserIntention.WriteMessage => target.UserId != user.UserId,
-            _ => false
-        };
-    }
+        UserIntention.Edit => target.UserId == user.UserId,
+        UserIntention.WriteMessage => target.UserId != user.UserId,
+        _ => false
+    };
 }

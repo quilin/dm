@@ -9,115 +9,114 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.Authorization
+namespace DM.Services.Forum.Tests.Authorization;
+
+public class ForumIntentionResolverShould : UnitTestBase
 {
-    public class ForumIntentionResolverShould : UnitTestBase
+    private readonly Mock<IAccessPolicyConverter> policyConverter;
+    private readonly ForumIntentionResolver resolver;
+
+    public ForumIntentionResolverShould()
     {
-        private readonly Mock<IAccessPolicyConverter> policyConverter;
-        private readonly ForumIntentionResolver resolver;
+        policyConverter = Mock<IAccessPolicyConverter>();
+        resolver = new ForumIntentionResolver(policyConverter.Object);
+    }
 
-        public ForumIntentionResolverShould()
-        {
-            policyConverter = Mock<IAccessPolicyConverter>();
-            resolver = new ForumIntentionResolver(policyConverter.Object);
-        }
-
-        [Fact]
-        public void ForbidCreateTopicWhenCreatePolicyMatchesNotUserRole()
-        {
-            policyConverter
-                .Setup(c => c.Convert(UserRole.Administrator))
-                .Returns(
-                    ForumAccessPolicy.ForumModerator |
-                    ForumAccessPolicy.Player |
-                    ForumAccessPolicy.NannyModerator);
+    [Fact]
+    public void ForbidCreateTopicWhenCreatePolicyMatchesNotUserRole()
+    {
+        policyConverter
+            .Setup(c => c.Convert(UserRole.Administrator))
+            .Returns(
+                ForumAccessPolicy.ForumModerator |
+                ForumAccessPolicy.Player |
+                ForumAccessPolicy.NannyModerator);
             
-            var actual = resolver.IsAllowed(
-                Create.User().WithRole(UserRole.Administrator).Please(),
-                ForumIntention.CreateTopic,
-                new Dto.Output.Forum
+        var actual = resolver.IsAllowed(
+            Create.User().WithRole(UserRole.Administrator).Please(),
+            ForumIntention.CreateTopic,
+            new Dto.Output.Forum
             {
                 CreateTopicPolicy = ForumAccessPolicy.Guest | ForumAccessPolicy.SeniorModerator
             });
-            actual.Should().BeFalse();
-        }
+        actual.Should().BeFalse();
+    }
 
-        [Fact]
-        public void ForbidCreateTopicWhenUserNotAuthenticated()
-        {
-            resolver.IsAllowed(
-                    Create.User().Please(),
-                    ForumIntention.CreateTopic,
-                    new Dto.Output.Forum())
-                .Should().BeFalse();
-        }
-
-        [Fact]
-        public void AllowCreateTopicWhenCreatePolicyMatchUserRole()
-        {
-            policyConverter
-                .Setup(c => c.Convert(UserRole.Administrator | UserRole.Player))
-                .Returns(
-                    ForumAccessPolicy.Guest |
-                    ForumAccessPolicy.Player |
-                    ForumAccessPolicy.Administrator);
-            
-            var actual = resolver.IsAllowed(
-                Create.User().WithRole(UserRole.Administrator | UserRole.Player).Please(),
+    [Fact]
+    public void ForbidCreateTopicWhenUserNotAuthenticated()
+    {
+        resolver.IsAllowed(
+                Create.User().Please(),
                 ForumIntention.CreateTopic,
-                new Dto.Output.Forum
-                {
-                    CreateTopicPolicy = ForumAccessPolicy.Administrator | ForumAccessPolicy.SeniorModerator
-                });
-            actual.Should().BeTrue();
-        }
+                new Dto.Output.Forum())
+            .Should().BeFalse();
+    }
 
-        [Fact]
-        public void ForbidTopicAdministrationWhenUserNotAdministratorOrLocalModerator()
-        {
-            var actual = resolver.IsAllowed(
-                Create.User().WithRole(UserRole.Player | UserRole.RegularModerator).Please(),
-                ForumIntention.AdministrateTopics,
-                new Dto.Output.Forum
-                {
-                    ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
-                });
-            actual.Should().BeFalse();
-        }
+    [Fact]
+    public void AllowCreateTopicWhenCreatePolicyMatchUserRole()
+    {
+        policyConverter
+            .Setup(c => c.Convert(UserRole.Administrator | UserRole.Player))
+            .Returns(
+                ForumAccessPolicy.Guest |
+                ForumAccessPolicy.Player |
+                ForumAccessPolicy.Administrator);
+            
+        var actual = resolver.IsAllowed(
+            Create.User().WithRole(UserRole.Administrator | UserRole.Player).Please(),
+            ForumIntention.CreateTopic,
+            new Dto.Output.Forum
+            {
+                CreateTopicPolicy = ForumAccessPolicy.Administrator | ForumAccessPolicy.SeniorModerator
+            });
+        actual.Should().BeTrue();
+    }
 
-        [Fact]
-        public void AllowTopicAdministrationWhenUserAdministrator()
-        {
-            var actual = resolver.IsAllowed(
-                Create.User().WithRole(UserRole.NannyModerator | UserRole.Administrator).Please(),
-                ForumIntention.AdministrateTopics,
-                new Dto.Output.Forum
-                {
-                    ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
-                });
-            actual.Should().BeTrue();
-        }
+    [Fact]
+    public void ForbidTopicAdministrationWhenUserNotAdministratorOrLocalModerator()
+    {
+        var actual = resolver.IsAllowed(
+            Create.User().WithRole(UserRole.Player | UserRole.RegularModerator).Please(),
+            ForumIntention.AdministrateTopics,
+            new Dto.Output.Forum
+            {
+                ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
+            });
+        actual.Should().BeFalse();
+    }
 
-        [Fact]
-        public void AllowTopicAdministrationWhenUserLocalModerator()
-        {
-            var userId = Guid.NewGuid();
-            var actual = resolver.IsAllowed(
-                Create.User(userId).WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
-                ForumIntention.AdministrateTopics,
-                new Dto.Output.Forum
-                {
-                    ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid(), userId}
-                });
-            actual.Should().BeTrue();
-        }
+    [Fact]
+    public void AllowTopicAdministrationWhenUserAdministrator()
+    {
+        var actual = resolver.IsAllowed(
+            Create.User().WithRole(UserRole.NannyModerator | UserRole.Administrator).Please(),
+            ForumIntention.AdministrateTopics,
+            new Dto.Output.Forum
+            {
+                ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid()}
+            });
+        actual.Should().BeTrue();
+    }
 
-        [Theory]
-        [InlineData(ForumIntention.CreateTopic)]
-        [InlineData(ForumIntention.AdministrateTopics)]
-        public void AllowNothingWhenUserGuest(ForumIntention intention)
-        {
-            resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Output.Forum()).Should().BeFalse();
-        }
+    [Fact]
+    public void AllowTopicAdministrationWhenUserLocalModerator()
+    {
+        var userId = Guid.NewGuid();
+        var actual = resolver.IsAllowed(
+            Create.User(userId).WithRole(UserRole.NannyModerator | UserRole.SeniorModerator).Please(),
+            ForumIntention.AdministrateTopics,
+            new Dto.Output.Forum
+            {
+                ModeratorIds = new [] {Guid.NewGuid(), Guid.NewGuid(), userId}
+            });
+        actual.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(ForumIntention.CreateTopic)]
+    [InlineData(ForumIntention.AdministrateTopics)]
+    public void AllowNothingWhenUserGuest(ForumIntention intention)
+    {
+        resolver.IsAllowed(AuthenticatedUser.Guest, intention, new Dto.Output.Forum()).Should().BeFalse();
     }
 }

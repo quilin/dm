@@ -7,44 +7,43 @@ using DM.Services.Core.Extensions;
 using Jamq.Client.Abstractions.Producing;
 using Jamq.Client.Rabbit.Producing;
 
-namespace DM.Services.MessageQueuing.GeneralBus
+namespace DM.Services.MessageQueuing.GeneralBus;
+
+internal class InvokedEventProducer : IInvokedEventProducer
 {
-    internal class InvokedEventProducer : IInvokedEventProducer
+    private readonly IProducer<string, InvokedEvent> producer;
+
+    public InvokedEventProducer(
+        IProducerBuilder producerBuilder)
     {
-        private readonly IProducer<string, InvokedEvent> producer;
+        producer = producerBuilder.BuildRabbit<InvokedEvent>(
+            new RabbitProducerParameters(InvokedEventsTransport.ExchangeName));
+    }
 
-        public InvokedEventProducer(
-            IProducerBuilder producerBuilder)
+    public Task Send(EventType eventType, Guid entityId) =>
+        producer.Send(GetRoutingKey(eventType), new InvokedEvent
         {
-            producer = producerBuilder.BuildRabbit<InvokedEvent>(
-                new RabbitProducerParameters(InvokedEventsTransport.ExchangeName));
-        }
+            Type = eventType,
+            EntityId = entityId
+        }, CancellationToken.None);
 
-        public Task Send(EventType eventType, Guid entityId) =>
-            producer.Send(GetRoutingKey(eventType), new InvokedEvent
-            {
-                Type = eventType,
-                EntityId = entityId
-            }, CancellationToken.None);
-
-        public async Task Send(IEnumerable<EventType> eventTypes, Guid entityId)
+    public async Task Send(IEnumerable<EventType> eventTypes, Guid entityId)
+    {
+        foreach (var eventType in eventTypes)
         {
-            foreach (var eventType in eventTypes)
-            {
-                await Send(eventType, entityId);
-            }
+            await Send(eventType, entityId);
         }
+    }
 
-        private static string GetRoutingKey(EventType eventType)
-        {
-            var name = Enum.GetName(eventType.GetType(), eventType) ??
-                       throw new InvokedEventException($"Отсутствует имя перечисления {eventType}");
-            var field = eventType.GetType().GetField(name) ??
-                        throw new InvokedEventException($"Не найдено поле перечисления {eventType}");
-            var attribute = Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
-            return attribute is EventRoutingKeyAttribute eventRoutingKeyAttribute
-                ? eventRoutingKeyAttribute.RoutingKey
-                : throw new InvokedEventException($"Отсутствует аттрибут {nameof(EventRoutingKeyAttribute)}");
-        }
+    private static string GetRoutingKey(EventType eventType)
+    {
+        var name = Enum.GetName(eventType.GetType(), eventType) ??
+                   throw new InvokedEventException($"Отсутствует имя перечисления {eventType}");
+        var field = eventType.GetType().GetField(name) ??
+                    throw new InvokedEventException($"Не найдено поле перечисления {eventType}");
+        var attribute = Attribute.GetCustomAttribute(field, typeof(EventRoutingKeyAttribute));
+        return attribute is EventRoutingKeyAttribute eventRoutingKeyAttribute
+            ? eventRoutingKeyAttribute.RoutingKey
+            : throw new InvokedEventException($"Отсутствует аттрибут {nameof(EventRoutingKeyAttribute)}");
     }
 }

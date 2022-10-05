@@ -3,24 +3,23 @@ using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace DM.Services.Notifications.Consumer
+namespace DM.Services.Notifications.Consumer;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-        
-        /// <summary>
-        /// Create web host builder
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
+        CreateWebHostBuilder(args).Build().Run();
     }
+        
+    /// <summary>
+    /// Create web host builder
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseSerilog()
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseDefault<Startup>());
 }

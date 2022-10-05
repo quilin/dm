@@ -1,13 +1,12 @@
-namespace DM.Services.Community.BusinessProcesses.Chat.Creating
+namespace DM.Services.Community.BusinessProcesses.Chat.Creating;
+
+/// <summary>
+/// DTO model for chat message creating
+/// </summary>
+public class CreateChatMessage
 {
     /// <summary>
-    /// DTO model for chat message creating
+    /// Message text
     /// </summary>
-    public class CreateChatMessage
-    {
-        /// <summary>
-        /// Message text
-        /// </summary>
-        public string Text { get; set; }
-    }
+    public string Text { get; set; }
 }

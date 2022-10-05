@@ -1,17 +1,16 @@
 using Autofac;
 using DM.Services.Core.Extensions;
 
-namespace DM.Services.Mail.Rendering
+namespace DM.Services.Mail.Rendering;
+
+/// <inheritdoc />
+public class RenderingModule : Module
 {
     /// <inheritdoc />
-    public class RenderingModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
+        builder.RegisterDefaultTypes();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

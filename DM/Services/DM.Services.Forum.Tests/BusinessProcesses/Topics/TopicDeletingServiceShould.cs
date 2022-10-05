@@ -17,112 +17,111 @@ using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
+namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
+
+public class TopicDeletingServiceShould : UnitTestBase
 {
-    public class TopicDeletingServiceShould : UnitTestBase
+    private readonly ISetup<ITopicReadingService, Task<Topic>> getTopicSetup;
+    private readonly Mock<IIntentionManager> intentionManager;
+    private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
+    private readonly Mock<ITopicUpdatingRepository> updatingRepository;
+    private readonly ISetup<ITopicUpdatingRepository, Task<Topic>> updateSetup;
+    private readonly Mock<IInvokedEventProducer> publisher;
+    private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
+    private readonly TopicDeletingService service;
+
+    public TopicDeletingServiceShould()
     {
-        private readonly ISetup<ITopicReadingService, Task<Topic>> getTopicSetup;
-        private readonly Mock<IIntentionManager> intentionManager;
-        private readonly Mock<IUpdateBuilder<ForumTopic>> updateBuilder;
-        private readonly Mock<ITopicUpdatingRepository> updatingRepository;
-        private readonly ISetup<ITopicUpdatingRepository, Task<Topic>> updateSetup;
-        private readonly Mock<IInvokedEventProducer> publisher;
-        private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
-        private readonly TopicDeletingService service;
+        var readingService = Mock<ITopicReadingService>();
+        getTopicSetup = readingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
-        public TopicDeletingServiceShould()
-        {
-            var readingService = Mock<ITopicReadingService>();
-            getTopicSetup = readingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
+        intentionManager = Mock<IIntentionManager>();
+        intentionManager
+            .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()));
 
-            intentionManager = Mock<IIntentionManager>();
-            intentionManager
-                .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()));
+        updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+        updateBuilder
+            .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
+            .Returns(updateBuilder.Object);
+        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+        updateBuilderFactory
+            .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
+            .Returns(updateBuilder.Object);
 
-            updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
-            updateBuilder
-                .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
-                .Returns(updateBuilder.Object);
-            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-            updateBuilderFactory
-                .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
-                .Returns(updateBuilder.Object);
+        updatingRepository = Mock<ITopicUpdatingRepository>();
+        updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
-            updatingRepository = Mock<ITopicUpdatingRepository>();
-            updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>()));
+        publisher = Mock<IInvokedEventProducer>();
+        publisher
+            .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
+            .Returns(Task.CompletedTask);
 
-            publisher = Mock<IInvokedEventProducer>();
-            publisher
-                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
-                .Returns(Task.CompletedTask);
+        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        unreadCountersRepository
+            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+            .Returns(Task.CompletedTask);
 
-            unreadCountersRepository = Mock<IUnreadCountersRepository>();
-            unreadCountersRepository
-                .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
-                .Returns(Task.CompletedTask);
+        service = new TopicDeletingService(readingService.Object,
+            intentionManager.Object, updateBuilderFactory.Object,
+            updatingRepository.Object, publisher.Object,
+            unreadCountersRepository.Object);
+    }
 
-            service = new TopicDeletingService(readingService.Object,
-                intentionManager.Object, updateBuilderFactory.Object,
-                updatingRepository.Object, publisher.Object,
-                unreadCountersRepository.Object);
-        }
+    [Fact]
+    public async Task AuthorizeDeletingAction()
+    {
+        var topicId = Guid.NewGuid();
+        var forum = new Dto.Output.Forum();
+        var topic = new Topic {Forum = forum};
+        getTopicSetup.ReturnsAsync(topic);
+        updateSetup.ReturnsAsync(new Topic());
 
-        [Fact]
-        public async Task AuthorizeDeletingAction()
-        {
-            var topicId = Guid.NewGuid();
-            var forum = new Dto.Output.Forum();
-            var topic = new Topic {Forum = forum};
-            getTopicSetup.ReturnsAsync(topic);
-            updateSetup.ReturnsAsync(new Topic());
+        await service.DeleteTopic(topicId);
 
-            await service.DeleteTopic(topicId);
+        intentionManager.Verify(m => m.ThrowIfForbidden(ForumIntention.AdministrateTopics, forum), Times.Once);
+    }
 
-            intentionManager.Verify(m => m.ThrowIfForbidden(ForumIntention.AdministrateTopics, forum), Times.Once);
-        }
+    [Fact]
+    public async Task OnlyUpdateRemovedField()
+    {
+        var topicId = Guid.NewGuid();
+        var topic = new Topic();
+        getTopicSetup.ReturnsAsync(topic);
+        updateSetup.ReturnsAsync(new Topic());
 
-        [Fact]
-        public async Task OnlyUpdateRemovedField()
-        {
-            var topicId = Guid.NewGuid();
-            var topic = new Topic();
-            getTopicSetup.ReturnsAsync(topic);
-            updateSetup.ReturnsAsync(new Topic());
+        await service.DeleteTopic(topicId);
 
-            await service.DeleteTopic(topicId);
+        updateBuilder.Verify(b => b.Field(t => t.IsRemoved, true), Times.Once);
+        updateBuilder.VerifyNoOtherCalls();
+        updatingRepository.Verify(r => r.Update(updateBuilder.Object), Times.Once);
+        updatingRepository.VerifyNoOtherCalls();
+    }
 
-            updateBuilder.Verify(b => b.Field(t => t.IsRemoved, true), Times.Once);
-            updateBuilder.VerifyNoOtherCalls();
-            updatingRepository.Verify(r => r.Update(updateBuilder.Object), Times.Once);
-            updatingRepository.VerifyNoOtherCalls();
-        }
+    [Fact]
+    public async Task DeleteUnreadCounters()
+    {
+        var topicId = Guid.NewGuid();
+        var topic = new Topic();
+        getTopicSetup.ReturnsAsync(topic);
+        updateSetup.ReturnsAsync(new Topic());
 
-        [Fact]
-        public async Task DeleteUnreadCounters()
-        {
-            var topicId = Guid.NewGuid();
-            var topic = new Topic();
-            getTopicSetup.ReturnsAsync(topic);
-            updateSetup.ReturnsAsync(new Topic());
+        await service.DeleteTopic(topicId);
 
-            await service.DeleteTopic(topicId);
+        unreadCountersRepository.Verify(r => r.Delete(topicId, UnreadEntryType.Message), Times.Once);
+        unreadCountersRepository.VerifyNoOtherCalls();
+    }
 
-            unreadCountersRepository.Verify(r => r.Delete(topicId, UnreadEntryType.Message), Times.Once);
-            unreadCountersRepository.VerifyNoOtherCalls();
-        }
+    [Fact]
+    public async Task PublishEvent()
+    {
+        var topicId = Guid.NewGuid();
+        var topic = new Topic();
+        getTopicSetup.ReturnsAsync(topic);
+        updateSetup.ReturnsAsync(new Topic());
 
-        [Fact]
-        public async Task PublishEvent()
-        {
-            var topicId = Guid.NewGuid();
-            var topic = new Topic();
-            getTopicSetup.ReturnsAsync(topic);
-            updateSetup.ReturnsAsync(new Topic());
+        await service.DeleteTopic(topicId);
 
-            await service.DeleteTopic(topicId);
-
-            publisher.Verify(p => p.Send(EventType.DeletedForumTopic, topicId), Times.Once);
-            publisher.VerifyNoOtherCalls();
-        }
+        publisher.Verify(p => p.Send(EventType.DeletedForumTopic, topicId), Times.Once);
+        publisher.VerifyNoOtherCalls();
     }
 }

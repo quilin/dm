@@ -1,13 +1,12 @@
-namespace DM.Services.Community.BusinessProcesses.Reviews.Creating
+namespace DM.Services.Community.BusinessProcesses.Reviews.Creating;
+
+/// <summary>
+/// DTO model for review creating
+/// </summary>
+public class CreateReview
 {
     /// <summary>
-    /// DTO model for review creating
+    /// Review text
     /// </summary>
-    public class CreateReview
-    {
-        /// <summary>
-        /// Review text
-        /// </summary>
-        public string Text { get; set; }
-    }
+    public string Text { get; set; }
 }

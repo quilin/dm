@@ -19,92 +19,91 @@ using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Topics
+namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
+
+public class TopicReadingServiceShould : UnitTestBase
 {
-    public class TopicReadingServiceShould : UnitTestBase
+    private readonly TopicReadingService service;
+    private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
+    private readonly Mock<ITopicReadingRepository> topicRepository;
+    private readonly Mock<IAccessPolicyConverter> accessPolicyConverter;
+    private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
+
+    public TopicReadingServiceShould()
     {
-        private readonly TopicReadingService service;
-        private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
-        private readonly Mock<ITopicReadingRepository> topicRepository;
-        private readonly Mock<IAccessPolicyConverter> accessPolicyConverter;
-        private readonly Mock<IUnreadCountersRepository> unreadCountersRepository;
+        var identityProvider = Mock<IIdentityProvider>();
+        var identity = Mock<IIdentity>();
+        identityProvider.Setup(p => p.Current).Returns(identity.Object);
+        currentUserSetup = identity.Setup(i => i.User);
+        topicRepository = Mock<ITopicReadingRepository>();
+        accessPolicyConverter = Mock<IAccessPolicyConverter>();
+        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        service = new TopicReadingService(identityProvider.Object,
+            Mock<IForumReadingService>().Object, accessPolicyConverter.Object,
+            topicRepository.Object, unreadCountersRepository.Object);
+    }
 
-        public TopicReadingServiceShould()
-        {
-            var identityProvider = Mock<IIdentityProvider>();
-            var identity = Mock<IIdentity>();
-            identityProvider.Setup(p => p.Current).Returns(identity.Object);
-            currentUserSetup = identity.Setup(i => i.User);
-            topicRepository = Mock<ITopicReadingRepository>();
-            accessPolicyConverter = Mock<IAccessPolicyConverter>();
-            unreadCountersRepository = Mock<IUnreadCountersRepository>();
-            service = new TopicReadingService(identityProvider.Object,
-                Mock<IForumReadingService>().Object, accessPolicyConverter.Object,
-                topicRepository.Object, unreadCountersRepository.Object);
-        }
+    [Fact]
+    public void ThrowHttpExceptionWhenAvailableTopicNotFound()
+    {
+        var topicId = Guid.NewGuid();
+        currentUserSetup.Returns(Create.User().Please);
+        accessPolicyConverter
+            .Setup(c => c.Convert(It.IsAny<UserRole>()))
+            .Returns(ForumAccessPolicy.SeniorModerator);
 
-        [Fact]
-        public void ThrowHttpExceptionWhenAvailableTopicNotFound()
-        {
-            var topicId = Guid.NewGuid();
-            currentUserSetup.Returns(Create.User().Please);
-            accessPolicyConverter
-                .Setup(c => c.Convert(It.IsAny<UserRole>()))
-                .Returns(ForumAccessPolicy.SeniorModerator);
+        topicRepository
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .ReturnsAsync((Topic) null);
 
-            topicRepository
-                .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
-                .ReturnsAsync((Topic) null);
+        service.Invoking(s => s.GetTopic(topicId).Wait())
+            .Should().Throw<HttpException>()
+            .And.StatusCode.Should().Be(HttpStatusCode.Gone);
 
-            service.Invoking(s => s.GetTopic(topicId).Wait())
-                .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.Gone);
+        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
+        topicRepository.VerifyNoOtherCalls();
+    }
 
-            topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
-            topicRepository.VerifyNoOtherCalls();
-        }
+    [Fact]
+    public async Task ReturnFoundTopic()
+    {
+        var topicId = Guid.NewGuid();
+        var expected = new Topic();
+        topicRepository
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .ReturnsAsync(expected);
+        accessPolicyConverter
+            .Setup(c => c.Convert(It.IsAny<UserRole>()))
+            .Returns(ForumAccessPolicy.Player);
+        currentUserSetup.Returns(Create.User().Please);
 
-        [Fact]
-        public async Task ReturnFoundTopic()
-        {
-            var topicId = Guid.NewGuid();
-            var expected = new Topic();
-            topicRepository
-                .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
-                .ReturnsAsync(expected);
-            accessPolicyConverter
-                .Setup(c => c.Convert(It.IsAny<UserRole>()))
-                .Returns(ForumAccessPolicy.Player);
-            currentUserSetup.Returns(Create.User().Please);
+        var actual = await service.GetTopic(topicId);
 
-            var actual = await service.GetTopic(topicId);
+        actual.Should().Be(expected);
+        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player), Times.Once);
+    }
 
-            actual.Should().Be(expected);
-            topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player), Times.Once);
-        }
+    [Fact]
+    public async Task FillUnreadCountersWhenUserAuthenticated()
+    {
+        var topicId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var expected = new Topic();
+        topicRepository
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .ReturnsAsync(expected);
+        accessPolicyConverter
+            .Setup(c => c.Convert(It.IsAny<UserRole>()))
+            .Returns(ForumAccessPolicy.Player);
+        currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
+        unreadCountersRepository
+            .Setup(r => r.SelectByEntities(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid[]>()))
+            .ReturnsAsync(new Dictionary<Guid, int>{[topicId] = 22});
 
-        [Fact]
-        public async Task FillUnreadCountersWhenUserAuthenticated()
-        {
-            var topicId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            var expected = new Topic();
-            topicRepository
-                .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
-                .ReturnsAsync(expected);
-            accessPolicyConverter
-                .Setup(c => c.Convert(It.IsAny<UserRole>()))
-                .Returns(ForumAccessPolicy.Player);
-            currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
-            unreadCountersRepository
-                .Setup(r => r.SelectByEntities(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid[]>()))
-                .ReturnsAsync(new Dictionary<Guid, int>{[topicId] = 22});
+        var actual = await service.GetTopic(topicId);
 
-            var actual = await service.GetTopic(topicId);
-
-            actual.Should().Be(expected);
-            actual.UnreadCommentsCount.Should().Be(22);
-            unreadCountersRepository.Verify(r => r.SelectByEntities(userId, UnreadEntryType.Message, topicId), Times.Once);
-        }
+        actual.Should().Be(expected);
+        actual.UnreadCommentsCount.Should().Be(22);
+        unreadCountersRepository.Verify(r => r.SelectByEntities(userId, UnreadEntryType.Message, topicId), Times.Once);
     }
 }

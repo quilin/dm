@@ -1,23 +1,22 @@
-namespace DM.Services.DataAccess.BusinessObjects.Users
+namespace DM.Services.DataAccess.BusinessObjects.Users;
+
+/// <summary>
+/// Authorised action type
+/// </summary>
+public enum TokenType
 {
     /// <summary>
-    /// Authorised action type
+    /// User registration password setting
     /// </summary>
-    public enum TokenType
-    {
-        /// <summary>
-        /// User registration password setting
-        /// </summary>
-        Activation = 0,
+    Activation = 0,
 
-        /// <summary>
-        /// Password restoration
-        /// </summary>
-        PasswordChange = 1,
+    /// <summary>
+    /// Password restoration
+    /// </summary>
+    PasswordChange = 1,
 
-        /// <summary>
-        /// Game assistant assignment
-        /// </summary>
-        AssistantAssignment = 2
-    }
+    /// <summary>
+    /// Game assistant assignment
+    /// </summary>
+    AssistantAssignment = 2
 }

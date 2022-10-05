@@ -1,14 +1,13 @@
 using FluentValidation;
 
-namespace DM.Services.Gaming.Dto.Input
+namespace DM.Services.Gaming.Dto.Input;
+
+/// <inheritdoc />
+internal class GamesQueryValidator : AbstractValidator<GamesQuery>
 {
     /// <inheritdoc />
-    internal class GamesQueryValidator : AbstractValidator<GamesQuery>
+    public GamesQueryValidator()
     {
-        /// <inheritdoc />
-        public GamesQueryValidator()
-        {
             
-        }
     }
 }

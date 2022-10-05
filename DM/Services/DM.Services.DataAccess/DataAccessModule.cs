@@ -2,24 +2,23 @@ using Autofac;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.DataAccess.RelationalStorage;
 
-namespace DM.Services.DataAccess
+namespace DM.Services.DataAccess;
+
+/// <inheritdoc />
+public class DataAccessModule : Module
 {
     /// <inheritdoc />
-    public class DataAccessModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<DmMongoClient>()
-                .AsSelf()
-                .AsImplementedInterfaces();
+        builder.RegisterType<DmMongoClient>()
+            .AsSelf()
+            .AsImplementedInterfaces();
 
-            builder.RegisterType<UpdateBuilderFactory>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .SingleInstance();
+        builder.RegisterType<UpdateBuilderFactory>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .SingleInstance();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

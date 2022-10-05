@@ -14,109 +14,108 @@ using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Community.Tests
+namespace DM.Services.Community.Tests;
+
+public class ActivationServiceShould : UnitTestBase
 {
-    public class ActivationServiceShould : UnitTestBase
+    private readonly ActivationService activationService;
+    private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
+    private readonly Mock<IActivationRepository> activationRepository;
+    private readonly Mock<IInvokedEventProducer> publisher;
+    private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
+    private readonly Mock<IUpdateBuilder<Token>> tokenUpdateBuilder;
+
+    public ActivationServiceShould()
     {
-        private readonly ActivationService activationService;
-        private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
-        private readonly Mock<IActivationRepository> activationRepository;
-        private readonly Mock<IInvokedEventProducer> publisher;
-        private readonly Mock<IUpdateBuilder<User>> userUpdateBuilder;
-        private readonly Mock<IUpdateBuilder<Token>> tokenUpdateBuilder;
+        activationRepository = Mock<IActivationRepository>();
+        findUserSetup = activationRepository
+            .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
+        activationRepository
+            .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
+            .Returns(Task.CompletedTask);
 
-        public ActivationServiceShould()
-        {
-            activationRepository = Mock<IActivationRepository>();
-            findUserSetup = activationRepository
-                .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
-            activationRepository
-                .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
-                .Returns(Task.CompletedTask);
+        var dateTimeProvider = Mock<IDateTimeProvider>();
+        dateTimeProvider.Setup(p => p.Now).Returns(new DateTime(2019, 01, 02));
 
-            var dateTimeProvider = Mock<IDateTimeProvider>();
-            dateTimeProvider.Setup(p => p.Now).Returns(new DateTime(2019, 01, 02));
+        publisher = Mock<IInvokedEventProducer>();
+        publisher
+            .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
+            .Returns(Task.CompletedTask);
 
-            publisher = Mock<IInvokedEventProducer>();
-            publisher
-                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
-                .Returns(Task.CompletedTask);
+        userUpdateBuilder = Mock<IUpdateBuilder<User>>();
+        userUpdateBuilder
+            .Setup(b => b.Field(u => u.Activated, It.IsAny<bool>()))
+            .Returns(userUpdateBuilder.Object);
+        tokenUpdateBuilder = Mock<IUpdateBuilder<Token>>();
+        tokenUpdateBuilder
+            .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
+            .Returns(tokenUpdateBuilder.Object);
+        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+        updateBuilderFactory
+            .Setup(f => f.Create<User>(It.IsAny<Guid>()))
+            .Returns(userUpdateBuilder.Object);
+        updateBuilderFactory
+            .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
+            .Returns(tokenUpdateBuilder.Object);
 
-            userUpdateBuilder = Mock<IUpdateBuilder<User>>();
-            userUpdateBuilder
-                .Setup(b => b.Field(u => u.Activated, It.IsAny<bool>()))
-                .Returns(userUpdateBuilder.Object);
-            tokenUpdateBuilder = Mock<IUpdateBuilder<Token>>();
-            tokenUpdateBuilder
-                .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
-                .Returns(tokenUpdateBuilder.Object);
-            var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-            updateBuilderFactory
-                .Setup(f => f.Create<User>(It.IsAny<Guid>()))
-                .Returns(userUpdateBuilder.Object);
-            updateBuilderFactory
-                .Setup(f => f.Create<Token>(It.IsAny<Guid>()))
-                .Returns(tokenUpdateBuilder.Object);
+        activationService = new ActivationService(dateTimeProvider.Object,
+            updateBuilderFactory.Object,
+            activationRepository.Object, publisher.Object);
+    }
 
-            activationService = new ActivationService(dateTimeProvider.Object,
-                updateBuilderFactory.Object,
-                activationRepository.Object, publisher.Object);
-        }
+    [Fact]
+    public async Task SearchLastTwoDaysTokens()
+    {
+        var tokenId = Guid.NewGuid();
+        findUserSetup.ReturnsAsync(Guid.NewGuid());
+        await activationService.Activate(tokenId);
+        activationRepository.Verify(r => r.FindUserToActivate(tokenId, new DateTime(2018, 12, 31)), Times.Once);
+    }
 
-        [Fact]
-        public async Task SearchLastTwoDaysTokens()
-        {
-            var tokenId = Guid.NewGuid();
-            findUserSetup.ReturnsAsync(Guid.NewGuid());
-            await activationService.Activate(tokenId);
-            activationRepository.Verify(r => r.FindUserToActivate(tokenId, new DateTime(2018, 12, 31)), Times.Once);
-        }
+    [Fact]
+    public void ThrowGoneException_WhenTokenInvalid()
+    {
+        findUserSetup.ReturnsAsync((Guid?) null);
+        activationService
+            .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
+            .Should().Throw<HttpException>()
+            .And.StatusCode.Should().Be(HttpStatusCode.Gone);
+    }
 
-        [Fact]
-        public void ThrowGoneException_WhenTokenInvalid()
-        {
-            findUserSetup.ReturnsAsync((Guid?) null);
-            activationService
-                .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
-                .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.Gone);
-        }
+    [Fact]
+    public async Task ReturnActivatedUserId_WhenTokenValid()
+    {
+        var tokenId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        findUserSetup.ReturnsAsync(userId);
 
-        [Fact]
-        public async Task ReturnActivatedUserId_WhenTokenValid()
-        {
-            var tokenId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            findUserSetup.ReturnsAsync(userId);
+        var actual = await activationService.Activate(tokenId);
+        actual.Should().Be(userId);
+    }
 
-            var actual = await activationService.Activate(tokenId);
-            actual.Should().Be(userId);
-        }
+    [Fact]
+    public async Task ActivateFoundUser_WhenTokenValid()
+    {
+        var tokenId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        findUserSetup.ReturnsAsync(userId);
 
-        [Fact]
-        public async Task ActivateFoundUser_WhenTokenValid()
-        {
-            var tokenId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            findUserSetup.ReturnsAsync(userId);
+        await activationService.Activate(tokenId);
 
-            await activationService.Activate(tokenId);
+        activationRepository.Verify(r => r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object));
+        userUpdateBuilder.Verify(b => b.Field(u => u.Activated, true));
+        tokenUpdateBuilder.Verify(b => b.Field(t => t.IsRemoved, true));
+    }
 
-            activationRepository.Verify(r => r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object));
-            userUpdateBuilder.Verify(b => b.Field(u => u.Activated, true));
-            tokenUpdateBuilder.Verify(b => b.Field(t => t.IsRemoved, true));
-        }
+    [Fact]
+    public async Task PublishActivationMessage_WhenTokenValid()
+    {
+        var tokenId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        findUserSetup.ReturnsAsync(userId);
 
-        [Fact]
-        public async Task PublishActivationMessage_WhenTokenValid()
-        {
-            var tokenId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            findUserSetup.ReturnsAsync(userId);
+        await activationService.Activate(tokenId);
 
-            await activationService.Activate(tokenId);
-
-            publisher.Verify(p => p.Send(EventType.ActivatedUser, userId), Times.Once);
-        }
+        publisher.Verify(p => p.Send(EventType.ActivatedUser, userId), Times.Once);
     }
 }

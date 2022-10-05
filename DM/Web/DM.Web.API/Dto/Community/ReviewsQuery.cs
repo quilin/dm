@@ -1,15 +1,14 @@
 using DM.Services.Core.Dto;
 
-namespace DM.Web.API.Dto.Community
+namespace DM.Web.API.Dto.Community;
+
+/// <summary>
+/// Input DTO for reviews filtering
+/// </summary>
+public class ReviewsQuery : PagingQuery
 {
     /// <summary>
-    /// Input DTO for reviews filtering
+    /// Only return approved reviews
     /// </summary>
-    public class ReviewsQuery : PagingQuery
-    {
-        /// <summary>
-        /// Only return approved reviews
-        /// </summary>
-        public bool OnlyApproved { get; set; }
-    }
+    public bool OnlyApproved { get; set; }
 }

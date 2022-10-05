@@ -1,31 +1,30 @@
 using System;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Reading
+namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
+
+/// <summary>
+/// Service DTO of message
+/// </summary>
+public class Message
 {
     /// <summary>
-    /// Service DTO of message
+    /// Message identifier
     /// </summary>
-    public class Message
-    {
-        /// <summary>
-        /// Message identifier
-        /// </summary>
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        /// <summary>
-        /// Creating moment
-        /// </summary>
-        public DateTimeOffset CreateDate { get; set; }
+    /// <summary>
+    /// Creating moment
+    /// </summary>
+    public DateTimeOffset CreateDate { get; set; }
 
-        /// <summary>
-        /// Message author
-        /// </summary>
-        public GeneralUser Author { get; set; }
+    /// <summary>
+    /// Message author
+    /// </summary>
+    public GeneralUser Author { get; set; }
 
-        /// <summary>
-        /// Message content
-        /// </summary>
-        public string Text { get; set; }
-    }
+    /// <summary>
+    /// Message content
+    /// </summary>
+    public string Text { get; set; }
 }

@@ -10,69 +10,68 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.MessageQueuing.GeneralBus;
 
-namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment
+namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
+
+/// <inheritdoc />
+internal class AssignmentService : IAssignmentService
 {
+    private readonly IIdentityProvider identityProvider;
+    private readonly IAssistantAssignmentTokenFactory tokenFactory;
+    private readonly IUpdateBuilderFactory updateBuilderFactory;
+    private readonly IAssignmentRepository repository;
+    private readonly IInvokedEventProducer producer;
+
     /// <inheritdoc />
-    internal class AssignmentService : IAssignmentService
+    public AssignmentService(
+        IIdentityProvider identityProvider,
+        IAssistantAssignmentTokenFactory tokenFactory,
+        IUpdateBuilderFactory updateBuilderFactory,
+        IAssignmentRepository repository,
+        IInvokedEventProducer producer)
     {
-        private readonly IIdentityProvider identityProvider;
-        private readonly IAssistantAssignmentTokenFactory tokenFactory;
-        private readonly IUpdateBuilderFactory updateBuilderFactory;
-        private readonly IAssignmentRepository repository;
-        private readonly IInvokedEventProducer producer;
+        this.identityProvider = identityProvider;
+        this.tokenFactory = tokenFactory;
+        this.updateBuilderFactory = updateBuilderFactory;
+        this.repository = repository;
+        this.producer = producer;
+    }
 
-        /// <inheritdoc />
-        public AssignmentService(
-            IIdentityProvider identityProvider,
-            IAssistantAssignmentTokenFactory tokenFactory,
-            IUpdateBuilderFactory updateBuilderFactory,
-            IAssignmentRepository repository,
-            IInvokedEventProducer producer)
+    /// <inheritdoc />
+    public async Task CreateAssignment(Guid gameId, Guid userId)
+    {
+        var updates = (await repository.FindAssignments(gameId))
+            .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));
+        var token = tokenFactory.Create(userId, gameId);
+        await repository.InvalidateAndCreate(updates, token);
+        await producer.Send(EventType.AssignmentRequestCreated, token.TokenId);
+    }
+
+    /// <inheritdoc />
+    public Task AcceptAssignment(Guid tokenId) => Assign(tokenId, true);
+
+    /// <inheritdoc />
+    public Task RejectAssignment(Guid tokenId) => Assign(tokenId, false);
+
+    private async Task Assign(Guid tokenId, bool accept)
+    {
+        var userId = identityProvider.Current.User.UserId;
+        var gameId = await repository.FindGameToAssign(tokenId, userId);
+        if (!gameId.HasValue)
         {
-            this.identityProvider = identityProvider;
-            this.tokenFactory = tokenFactory;
-            this.updateBuilderFactory = updateBuilderFactory;
-            this.repository = repository;
-            this.producer = producer;
+            throw new HttpException(HttpStatusCode.Gone,
+                "Activation token is invalid! Address the technical support for further assistance");
         }
 
-        /// <inheritdoc />
-        public async Task CreateAssignment(Guid gameId, Guid userId)
+        var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
+        var updateGame = updateBuilderFactory.Create<Game>(gameId.Value);
+        var eventType = EventType.AssignmentRequestRejected;
+        if (accept)
         {
-            var updates = (await repository.FindAssignments(gameId))
-                .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));
-            var token = tokenFactory.Create(userId, gameId);
-            await repository.InvalidateAndCreate(updates, token);
-            await producer.Send(EventType.AssignmentRequestCreated, token.TokenId);
+            updateGame = updateGame.Field(g => g.AssistantId, userId);
+            eventType = EventType.AssignmentRequestAccepted;
         }
 
-        /// <inheritdoc />
-        public Task AcceptAssignment(Guid tokenId) => Assign(tokenId, true);
-
-        /// <inheritdoc />
-        public Task RejectAssignment(Guid tokenId) => Assign(tokenId, false);
-
-        private async Task Assign(Guid tokenId, bool accept)
-        {
-            var userId = identityProvider.Current.User.UserId;
-            var gameId = await repository.FindGameToAssign(tokenId, userId);
-            if (!gameId.HasValue)
-            {
-                throw new HttpException(HttpStatusCode.Gone,
-                    "Activation token is invalid! Address the technical support for further assistance");
-            }
-
-            var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
-            var updateGame = updateBuilderFactory.Create<Game>(gameId.Value);
-            var eventType = EventType.AssignmentRequestRejected;
-            if (accept)
-            {
-                updateGame = updateGame.Field(g => g.AssistantId, userId);
-                eventType = EventType.AssignmentRequestAccepted;
-            }
-
-            await repository.AssignAssistant(updateGame, updateToken);
-            await producer.Send(eventType, tokenId);
-        }
+        await repository.AssignAssistant(updateGame, updateToken);
+        await producer.Send(eventType, tokenId);
     }
 }

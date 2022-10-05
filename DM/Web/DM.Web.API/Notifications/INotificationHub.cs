@@ -1,18 +1,17 @@
 ﻿using System.Threading.Tasks;
 using DM.Web.API.Dto.Notifications;
 
-namespace DM.Web.API.Notifications
+namespace DM.Web.API.Notifications;
+
+/// <summary>
+/// Realtime notifications SignalR hub
+/// </summary>
+public interface INotificationHub
 {
     /// <summary>
-    /// Realtime notifications SignalR hub
+    /// Send notification
     /// </summary>
-    public interface INotificationHub
-    {
-        /// <summary>
-        /// Send notification
-        /// </summary>
-        /// <param name="notification"></param>
-        /// <returns></returns>
-        Task Send(Notification notification);
-    }
+    /// <param name="notification"></param>
+    /// <returns></returns>
+    Task Send(Notification notification);
 }

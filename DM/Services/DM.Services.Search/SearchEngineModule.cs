@@ -11,35 +11,34 @@ using Microsoft.Extensions.Options;
 using Nest;
 using Module = Autofac.Module;
 
-namespace DM.Services.Search
+namespace DM.Services.Search;
+
+/// <inheritdoc />
+public class SearchEngineModule : Module
 {
     /// <inheritdoc />
-    public class SearchEngineModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
-            builder.RegisterMapper();
+        builder.RegisterDefaultTypes();
+        builder.RegisterMapper();
 
-            builder.Register(x =>
-                {
-                    var connectionStrings = x.Resolve<IOptions<ConnectionStrings>>().Value;
-                    return new ConnectionSettings(new Uri(connectionStrings.SearchEngine))
-                        .DefaultMappingFor<SearchEntity>(m => m
-                            .IndexName(SearchEngineConfiguration.IndexName));
-                })
-                .SingleInstance();
+        builder.Register(x =>
+            {
+                var connectionStrings = x.Resolve<IOptions<ConnectionStrings>>().Value;
+                return new ConnectionSettings(new Uri(connectionStrings.SearchEngine))
+                    .DefaultMappingFor<SearchEntity>(m => m
+                        .IndexName(SearchEngineConfiguration.IndexName));
+            })
+            .SingleInstance();
 
-            builder.Register(x => new ElasticClient(x.Resolve<ConnectionSettings>()))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+        builder.Register(x => new ElasticClient(x.Resolve<ConnectionSettings>()))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
 
-            builder.RegisterModuleOnce<CoreModule>();
-            builder.RegisterModuleOnce<DataAccessModule>();
-            builder.RegisterModuleOnce<AuthenticationModule>();
+        builder.RegisterModuleOnce<CoreModule>();
+        builder.RegisterModuleOnce<DataAccessModule>();
+        builder.RegisterModuleOnce<AuthenticationModule>();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

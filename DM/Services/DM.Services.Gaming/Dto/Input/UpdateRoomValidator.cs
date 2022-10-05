@@ -1,21 +1,20 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Gaming.Dto.Input
+namespace DM.Services.Gaming.Dto.Input;
+
+/// <inheritdoc />
+internal class UpdateRoomValidator : AbstractValidator<UpdateRoom>
 {
     /// <inheritdoc />
-    internal class UpdateRoomValidator : AbstractValidator<UpdateRoom>
+    public UpdateRoomValidator()
     {
-        /// <inheritdoc />
-        public UpdateRoomValidator()
-        {
-            RuleFor(r => r.RoomId)
-                .NotEmpty().WithMessage(ValidationError.Empty);
+        RuleFor(r => r.RoomId)
+            .NotEmpty().WithMessage(ValidationError.Empty);
 
-            When(r => r.Title != default, () =>
-                RuleFor(r => r.Title)
-                    .NotEmpty().WithMessage(ValidationError.Empty)
-                    .MaximumLength(100).WithMessage(ValidationError.Long));
-        }
+        When(r => r.Title != default, () =>
+            RuleFor(r => r.Title)
+                .NotEmpty().WithMessage(ValidationError.Empty)
+                .MaximumLength(100).WithMessage(ValidationError.Long));
     }
 }

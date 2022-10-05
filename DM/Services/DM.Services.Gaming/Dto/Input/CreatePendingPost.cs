@@ -1,20 +1,19 @@
 using System;
 
-namespace DM.Services.Gaming.Dto.Input
+namespace DM.Services.Gaming.Dto.Input;
+
+/// <summary>
+/// DTO model for creating pending posts
+/// </summary>
+public class CreatePendingPost
 {
     /// <summary>
-    /// DTO model for creating pending posts
+    /// Room identifier
     /// </summary>
-    public class CreatePendingPost
-    {
-        /// <summary>
-        /// Room identifier
-        /// </summary>
-        public Guid RoomId { get; set; }
+    public Guid RoomId { get; set; }
 
-        /// <summary>
-        /// Pending user login
-        /// </summary>
-        public string PendingUserLogin { get; set; }
-    }
+    /// <summary>
+    /// Pending user login
+    /// </summary>
+    public string PendingUserLogin { get; set; }
 }

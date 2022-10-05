@@ -7,41 +7,40 @@ using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace DM.Web.API.Controllers.v1.Common
+namespace DM.Web.API.Controllers.v1.Common;
+
+/// <inheritdoc />
+[ApiController]
+[Route("v1/search")]
+[ApiExplorerSettings(GroupName = "Common")]
+public class SearchController : ControllerBase
 {
+    private readonly SearchServiceConfiguration searchServiceConfiguration;
+
     /// <inheritdoc />
-    [ApiController]
-    [Route("v1/search")]
-    [ApiExplorerSettings(GroupName = "Common")]
-    public class SearchController : ControllerBase
+    public SearchController(
+        IOptions<SearchServiceConfiguration> options)
     {
-        private readonly SearchServiceConfiguration searchServiceConfiguration;
+        searchServiceConfiguration = options.Value;
+    }
 
-        /// <inheritdoc />
-        public SearchController(
-            IOptions<SearchServiceConfiguration> options)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<ListEnvelope<object>> Search([FromQuery] string query, [FromQuery] PagingQuery q)
+    {
+        using var channel = GrpcChannel.ForAddress(searchServiceConfiguration.GrpcEndpoint);
+        var client = new SearchEngine.SearchEngineClient(channel);
+        var searchResponse = await client.SearchAsync(new SearchRequest
         {
-            searchServiceConfiguration = options.Value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<ListEnvelope<object>> Search([FromQuery] string query, [FromQuery] PagingQuery q)
-        {
-            using var channel = GrpcChannel.ForAddress(searchServiceConfiguration.GrpcEndpoint);
-            var client = new SearchEngine.SearchEngineClient(channel);
-            var searchResponse = await client.SearchAsync(new SearchRequest
-            {
-                Query = query,
-                Skip = q.Skip ?? 0,
-                Size = q.Size ?? 10,
-                SearchAcross = { },
-            });
-            var paging = new Paging(PagingResult.Create(searchResponse.Total, (q.Skip ?? 0) + 1, q.Size ?? 0));
-            return new ListEnvelope<object>(searchResponse.Entities, paging);
-        }
+            Query = query,
+            Skip = q.Skip ?? 0,
+            Size = q.Size ?? 10,
+            SearchAcross = { },
+        });
+        var paging = new Paging(PagingResult.Create(searchResponse.Total, (q.Skip ?? 0) + 1, q.Size ?? 0));
+        return new ListEnvelope<object>(searchResponse.Entities, paging);
     }
 }

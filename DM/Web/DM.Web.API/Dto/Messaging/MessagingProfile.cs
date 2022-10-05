@@ -5,20 +5,19 @@ using DtoConversation = DM.Services.Community.BusinessProcesses.Messaging.Readin
 using DtoMessage = DM.Services.Community.BusinessProcesses.Messaging.Reading.Message;
 using DtoChatMessage = DM.Services.Community.BusinessProcesses.Chat.Reading.ChatMessage;
 
-namespace DM.Web.API.Dto.Messaging
+namespace DM.Web.API.Dto.Messaging;
+
+/// <inheritdoc />
+internal class MessagingProfile : Profile
 {
     /// <inheritdoc />
-    internal class MessagingProfile : Profile
+    public MessagingProfile()
     {
-        /// <inheritdoc />
-        public MessagingProfile()
-        {
-            CreateMap<DtoConversation, Conversation>();
-            CreateMap<DtoMessage, Message>();
-            CreateMap<Message, CreateMessage>();
+        CreateMap<DtoConversation, Conversation>();
+        CreateMap<DtoMessage, Message>();
+        CreateMap<Message, CreateMessage>();
 
-            CreateMap<DtoChatMessage, ChatMessage>();
-            CreateMap<ChatMessage, CreateChatMessage>();
-        }
+        CreateMap<DtoChatMessage, ChatMessage>();
+        CreateMap<ChatMessage, CreateChatMessage>();
     }
 }

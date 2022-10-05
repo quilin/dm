@@ -1,18 +1,17 @@
-namespace DM.Services.Community.BusinessProcesses.Polls
+namespace DM.Services.Community.BusinessProcesses.Polls;
+
+/// <summary>
+/// List of poll actions that require authorization
+/// </summary>
+public enum PollIntention
 {
     /// <summary>
-    /// List of poll actions that require authorization
+    /// Create new polls
     /// </summary>
-    public enum PollIntention
-    {
-        /// <summary>
-        /// Create new polls
-        /// </summary>
-        Create = 0,
+    Create = 0,
 
-        /// <summary>
-        /// Take a vote in an active poll
-        /// </summary>
-        Vote = 1
-    }
+    /// <summary>
+    /// Take a vote in an active poll
+    /// </summary>
+    Vote = 1
 }

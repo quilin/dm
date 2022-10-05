@@ -7,61 +7,60 @@ using DM.Services.DataAccess;
 using DM.Services.Notifications.Dto;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Notifications.Consumer.Implementation.Notifiers.Gaming
+namespace DM.Services.Notifications.Consumer.Implementation.Notifiers.Gaming;
+
+/// <inheritdoc />
+internal class NewCharacterNotificationGenerator : BaseNotificationGenerator
 {
+    private readonly DmDbContext dbContext;
+
     /// <inheritdoc />
-    internal class NewCharacterNotificationGenerator : BaseNotificationGenerator
+    public NewCharacterNotificationGenerator(
+        DmDbContext dbContext)
     {
-        private readonly DmDbContext dbContext;
+        this.dbContext = dbContext;
+    }
 
-        /// <inheritdoc />
-        public NewCharacterNotificationGenerator(
-            DmDbContext dbContext)
+    /// <inheritdoc />
+    protected override EventType EventType => EventType.NewCharacter;
+
+    /// <inheritdoc />
+    public override async IAsyncEnumerable<CreateNotification> Generate(Guid entityId)
+    {
+        var data = await dbContext.Characters
+            .Where(c => c.CharacterId == entityId)
+            .Select(c => new
+            {
+                c.GameId,
+                c.Game.Title,
+                c.Author.Login,
+                c.Author.UserId,
+                c.Game.MasterId,
+                c.Game.AssistantId
+            })
+            .FirstAsync();
+
+        var usersInterested = new List<Guid> {data.MasterId};
+        if (data.AssistantId.HasValue)
         {
-            this.dbContext = dbContext;
+            usersInterested.Add(data.AssistantId.Value);
         }
 
-        /// <inheritdoc />
-        protected override EventType EventType => EventType.NewCharacter;
-
-        /// <inheritdoc />
-        public override async IAsyncEnumerable<CreateNotification> Generate(Guid entityId)
+        usersInterested.Remove(data.UserId);
+        if (!usersInterested.Any())
         {
-            var data = await dbContext.Characters
-                .Where(c => c.CharacterId == entityId)
-                .Select(c => new
-                {
-                    c.GameId,
-                    c.Game.Title,
-                    c.Author.Login,
-                    c.Author.UserId,
-                    c.Game.MasterId,
-                    c.Game.AssistantId
-                })
-                .FirstAsync();
-
-            var usersInterested = new List<Guid> {data.MasterId};
-            if (data.AssistantId.HasValue)
-            {
-                usersInterested.Add(data.AssistantId.Value);
-            }
-
-            usersInterested.Remove(data.UserId);
-            if (!usersInterested.Any())
-            {
-                yield break;
-            }
-
-            yield return new CreateNotification
-            {
-                UsersInterested = usersInterested,
-                Metadata = new
-                {
-                    AuthorLogin = data.Login,
-                    GameTitle = data.Title,
-                    GameId = data.GameId.EncodeToReadable()
-                }
-            };
+            yield break;
         }
+
+        yield return new CreateNotification
+        {
+            UsersInterested = usersInterested,
+            Metadata = new
+            {
+                AuthorLogin = data.Login,
+                GameTitle = data.Title,
+                GameId = data.GameId.EncodeToReadable()
+            }
+        };
     }
 }

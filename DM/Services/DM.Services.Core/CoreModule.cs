@@ -2,22 +2,21 @@ using Autofac;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation.CorrelationToken;
 
-namespace DM.Services.Core
+namespace DM.Services.Core;
+
+/// <inheritdoc />
+public class CoreModule : Module
 {
     /// <inheritdoc />
-    public class CoreModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
+        builder.RegisterDefaultTypes();
 
-            builder.RegisterType<CorrelationTokenProvider>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+        builder.RegisterType<CorrelationTokenProvider>()
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

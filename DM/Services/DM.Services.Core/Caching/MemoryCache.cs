@@ -2,29 +2,28 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace DM.Services.Core.Caching
+namespace DM.Services.Core.Caching;
+
+/// <inheritdoc />
+internal class MemoryCache : ICache
 {
+    private readonly IMemoryCache memoryCache;
+
     /// <inheritdoc />
-    internal class MemoryCache : ICache
+    public MemoryCache(
+        IMemoryCache memoryCache)
     {
-        private readonly IMemoryCache memoryCache;
+        this.memoryCache = memoryCache;
+    }
 
-        /// <inheritdoc />
-        public MemoryCache(
-            IMemoryCache memoryCache)
-        {
-            this.memoryCache = memoryCache;
-        }
+    /// <inheritdoc />
+    public Task<TEntry> GetOrCreate<TEntry>(object key, Func<Task<TEntry>> create) =>
+        memoryCache.GetOrCreateAsync(key, _ => create());
 
-        /// <inheritdoc />
-        public Task<TEntry> GetOrCreate<TEntry>(object key, Func<Task<TEntry>> create) =>
-            memoryCache.GetOrCreateAsync(key, _ => create());
-
-        /// <inheritdoc />
-        public Task Invalidate(object key)
-        {
-            memoryCache.Remove(key);
-            return Task.CompletedTask;
-        }
+    /// <inheritdoc />
+    public Task Invalidate(object key)
+    {
+        memoryCache.Remove(key);
+        return Task.CompletedTask;
     }
 }

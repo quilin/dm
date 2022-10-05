@@ -8,26 +8,25 @@ using DM.Services.Mail.Rendering;
 using DM.Services.Mail.Sender;
 using DM.Services.Uploading;
 
-namespace DM.Services.Community
+namespace DM.Services.Community;
+
+/// <inheritdoc />
+public class CommunityModule : Module
 {
     /// <inheritdoc />
-    public class CommunityModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
-            builder.RegisterMapper();
+        builder.RegisterDefaultTypes();
+        builder.RegisterMapper();
 
-            builder.RegisterModuleOnce<CoreModule>();
-            builder.RegisterModuleOnce<AuthenticationModule>();
-            builder.RegisterModuleOnce<CommonModule>();
-            builder.RegisterModuleOnce<UploadingModule>();
-            builder.RegisterModuleOnce<DataAccessModule>();
-            builder.RegisterModuleOnce<MailSenderModule>();
-            builder.RegisterModuleOnce<RenderingModule>();
+        builder.RegisterModuleOnce<CoreModule>();
+        builder.RegisterModuleOnce<AuthenticationModule>();
+        builder.RegisterModuleOnce<CommonModule>();
+        builder.RegisterModuleOnce<UploadingModule>();
+        builder.RegisterModuleOnce<DataAccessModule>();
+        builder.RegisterModuleOnce<MailSenderModule>();
+        builder.RegisterModuleOnce<RenderingModule>();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

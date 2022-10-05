@@ -10,43 +10,42 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
-namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating
+namespace DM.Services.Gaming.BusinessProcesses.Schemas.Creating;
+
+/// <inheritdoc />
+internal class SchemaCreatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaCreatingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class SchemaCreatingRepository : MongoCollectionRepository<DbAttributeSchema>, ISchemaCreatingRepository
+    public SchemaCreatingRepository(
+        DmMongoClient client,
+        DmDbContext dbContext,
+        IMapper mapper) : base(client)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public SchemaCreatingRepository(
-            DmMongoClient client,
-            DmDbContext dbContext,
-            IMapper mapper) : base(client)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
+    /// <inheritdoc />
+    public async Task<AttributeSchema> Create(DbAttributeSchema schema)
+    {
+        await Collection.InsertOneAsync(schema);
+        var createdSchema = await Collection
+            .Find(Filter.Eq(s => s.Id, schema.Id))
+            .FirstAsync();
 
-        /// <inheritdoc />
-        public async Task<AttributeSchema> Create(DbAttributeSchema schema)
+        var result = mapper.Map<AttributeSchema>(createdSchema);
+        if (createdSchema.UserId.HasValue)
         {
-            await Collection.InsertOneAsync(schema);
-            var createdSchema = await Collection
-                .Find(Filter.Eq(s => s.Id, schema.Id))
+            var author = await dbContext.Users
+                .Where(u => u.UserId == createdSchema.UserId.Value)
+                .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
                 .FirstAsync();
-
-            var result = mapper.Map<AttributeSchema>(createdSchema);
-            if (createdSchema.UserId.HasValue)
-            {
-                var author = await dbContext.Users
-                    .Where(u => u.UserId == createdSchema.UserId.Value)
-                    .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-                    .FirstAsync();
-                result.Author = author;
-            }
-
-            return result;
+            result.Author = author;
         }
+
+        return result;
     }
 }

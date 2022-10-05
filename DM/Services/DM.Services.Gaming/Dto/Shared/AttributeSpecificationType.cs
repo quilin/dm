@@ -1,23 +1,22 @@
-namespace DM.Services.Gaming.Dto.Shared
+namespace DM.Services.Gaming.Dto.Shared;
+
+/// <summary>
+/// Specification constraints type
+/// </summary>
+public enum AttributeSpecificationType
 {
     /// <summary>
-    /// Specification constraints type
+    /// Number
     /// </summary>
-    public enum AttributeSpecificationType
-    {
-        /// <summary>
-        /// Number
-        /// </summary>
-        Number = 0,
+    Number = 0,
 
-        /// <summary>
-        /// String
-        /// </summary>
-        String = 1,
+    /// <summary>
+    /// String
+    /// </summary>
+    String = 1,
 
-        /// <summary>
-        /// List
-        /// </summary>
-        List = 2
-    }
+    /// <summary>
+    /// List
+    /// </summary>
+    List = 2
 }

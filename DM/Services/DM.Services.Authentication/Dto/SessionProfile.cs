@@ -1,14 +1,13 @@
 using AutoMapper;
 
-namespace DM.Services.Authentication.Dto
+namespace DM.Services.Authentication.Dto;
+
+/// <inheritdoc />
+internal class SessionProfile : Profile
 {
     /// <inheritdoc />
-    internal class SessionProfile : Profile
+    public SessionProfile()
     {
-        /// <inheritdoc />
-        public SessionProfile()
-        {
-            CreateMap<DataAccess.BusinessObjects.Users.Session, Session>();
-        }
+        CreateMap<DataAccess.BusinessObjects.Users.Session, Session>();
     }
 }

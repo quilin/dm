@@ -1,18 +1,17 @@
-namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
+namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset;
+
+/// <summary>
+/// DTO model for password reset
+/// </summary>
+public class UserPasswordReset
 {
     /// <summary>
-    /// DTO model for password reset
+    /// User login
     /// </summary>
-    public class UserPasswordReset
-    {
-        /// <summary>
-        /// User login
-        /// </summary>
-        public string Login { get; set; }
+    public string Login { get; set; }
 
-        /// <summary>
-        /// User email
-        /// </summary>
-        public string Email { get; set; }
-    }
+    /// <summary>
+    /// User email
+    /// </summary>
+    public string Email { get; set; }
 }

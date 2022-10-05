@@ -8,32 +8,31 @@ using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 using DbRoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
 
-namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating
+namespace DM.Services.Gaming.BusinessProcesses.Claims.Updating;
+
+/// <inheritdoc />
+internal class RoomClaimsUpdatingRepository : IRoomClaimsUpdatingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class RoomClaimsUpdatingRepository : IRoomClaimsUpdatingRepository
+    public RoomClaimsUpdatingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public RoomClaimsUpdatingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
-
-        /// <inheritdoc />
-        public async Task<RoomClaim> Update(IUpdateBuilder<DbRoomClaim> updateClaim)
-        {
-            var linkId = updateClaim.AttachTo(dbContext);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.RoomClaims
-                .Where(l => l.RoomClaimId == linkId)
-                .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
-                .FirstAsync();
-        }
+    /// <inheritdoc />
+    public async Task<RoomClaim> Update(IUpdateBuilder<DbRoomClaim> updateClaim)
+    {
+        var linkId = updateClaim.AttachTo(dbContext);
+        await dbContext.SaveChangesAsync();
+        return await dbContext.RoomClaims
+            .Where(l => l.RoomClaimId == linkId)
+            .ProjectTo<RoomClaim>(mapper.ConfigurationProvider)
+            .FirstAsync();
     }
 }

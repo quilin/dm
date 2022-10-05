@@ -7,34 +7,33 @@ using DM.Services.Gaming.Dto.Output;
 using CharacterAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.CharacterAttribute;
 using DbCharacter = DM.Services.DataAccess.BusinessObjects.Games.Characters.Character;
 
-namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating
+namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating;
+
+/// <summary>
+/// Character updating storage
+/// </summary>
+internal interface ICharacterUpdatingRepository
 {
     /// <summary>
-    /// Character updating storage
+    /// Get character for updating
     /// </summary>
-    internal interface ICharacterUpdatingRepository
-    {
-        /// <summary>
-        /// Get character for updating
-        /// </summary>
-        /// <param name="characterId">Character identifier</param>
-        /// <returns></returns>
-        Task<CharacterToUpdate> Get(Guid characterId);
+    /// <param name="characterId">Character identifier</param>
+    /// <returns></returns>
+    Task<CharacterToUpdate> Get(Guid characterId);
 
-        /// <summary>
-        /// Update character
-        /// </summary>
-        /// <param name="updateCharacter">Update builder</param>
-        /// <param name="attributeChanges"></param>
-        /// <returns></returns>
-        Task<Character> Update(IUpdateBuilder<DbCharacter> updateCharacter,
-            IEnumerable<IUpdateBuilder<CharacterAttribute>> attributeChanges);
+    /// <summary>
+    /// Update character
+    /// </summary>
+    /// <param name="updateCharacter">Update builder</param>
+    /// <param name="attributeChanges"></param>
+    /// <returns></returns>
+    Task<Character> Update(IUpdateBuilder<DbCharacter> updateCharacter,
+        IEnumerable<IUpdateBuilder<CharacterAttribute>> attributeChanges);
 
-        /// <summary>
-        /// Get list of character attribute value ids
-        /// </summary>
-        /// <param name="characterId">Character identifier</param>
-        /// <returns></returns>
-        Task<IDictionary<Guid, Guid>> GetAttributeIds(Guid characterId);
-    }
+    /// <summary>
+    /// Get list of character attribute value ids
+    /// </summary>
+    /// <param name="characterId">Character identifier</param>
+    /// <returns></returns>
+    Task<IDictionary<Guid, Guid>> GetAttributeIds(Guid characterId);
 }

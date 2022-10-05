@@ -8,32 +8,31 @@ using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 
-namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating
+namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating;
+
+/// <inheritdoc />
+internal class PostUpdatingRepository : IPostUpdatingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class PostUpdatingRepository : IPostUpdatingRepository
+    public PostUpdatingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public PostUpdatingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
-
-        /// <inheritdoc />
-        public async Task<Post> Update(IUpdateBuilder<DbPost> updatePost)
-        {
-            var postId = updatePost.AttachTo(dbContext);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.Posts
-                .Where(p => p.PostId == postId)
-                .ProjectTo<Post>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-        }
+    /// <inheritdoc />
+    public async Task<Post> Update(IUpdateBuilder<DbPost> updatePost)
+    {
+        var postId = updatePost.AttachTo(dbContext);
+        await dbContext.SaveChangesAsync();
+        return await dbContext.Posts
+            .Where(p => p.PostId == postId)
+            .ProjectTo<Post>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
     }
 }

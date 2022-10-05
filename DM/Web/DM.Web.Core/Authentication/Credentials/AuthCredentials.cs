@@ -1,9 +1,8 @@
-namespace DM.Web.Core.Authentication.Credentials
+namespace DM.Web.Core.Authentication.Credentials;
+
+/// <summary>
+/// Authentication credentials
+/// </summary>
+public abstract class AuthCredentials
 {
-    /// <summary>
-    /// Authentication credentials
-    /// </summary>
-    public abstract class AuthCredentials
-    {
-    }
 }

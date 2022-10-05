@@ -1,13 +1,12 @@
-namespace DM.Services.Authentication.Implementation.Security
+namespace DM.Services.Authentication.Implementation.Security;
+
+/// <summary>
+/// Provides password hash
+/// </summary>
+internal interface IHashProvider
 {
     /// <summary>
-    /// Provides password hash
+    /// Generates a byte sequence based on plain password text and its salt
     /// </summary>
-    internal interface IHashProvider
-    {
-        /// <summary>
-        /// Generates a byte sequence based on plain password text and its salt
-        /// </summary>
-        byte[] ComputeSha256(string plainText, string salt);
-    }
+    byte[] ComputeSha256(string plainText, string salt);
 }

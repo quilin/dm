@@ -12,62 +12,61 @@ using DM.Services.Gaming.Dto.Input;
 using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 
-namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating
+namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating;
+
+/// <inheritdoc />
+internal class BlacklistCreatingService : IBlacklistCreatingService
 {
+    private readonly IValidator<OperateBlacklistLink> validator;
+    private readonly IGameReadingService gameReadingService;
+    private readonly IIntentionManager intentionManager;
+    private readonly IBlacklistLinkFactory factory;
+    private readonly IUserRepository userRepository;
+    private readonly IBlacklistCreatingRepository repository;
+    private readonly IInvokedEventProducer producer;
+
     /// <inheritdoc />
-    internal class BlacklistCreatingService : IBlacklistCreatingService
+    public BlacklistCreatingService(
+        IValidator<OperateBlacklistLink> validator,
+        IGameReadingService gameReadingService,
+        IIntentionManager intentionManager,
+        IBlacklistLinkFactory factory,
+        IUserRepository userRepository,
+        IBlacklistCreatingRepository repository,
+        IInvokedEventProducer producer)
     {
-        private readonly IValidator<OperateBlacklistLink> validator;
-        private readonly IGameReadingService gameReadingService;
-        private readonly IIntentionManager intentionManager;
-        private readonly IBlacklistLinkFactory factory;
-        private readonly IUserRepository userRepository;
-        private readonly IBlacklistCreatingRepository repository;
-        private readonly IInvokedEventProducer producer;
+        this.validator = validator;
+        this.gameReadingService = gameReadingService;
+        this.intentionManager = intentionManager;
+        this.factory = factory;
+        this.userRepository = userRepository;
+        this.repository = repository;
+        this.producer = producer;
+    }
 
-        /// <inheritdoc />
-        public BlacklistCreatingService(
-            IValidator<OperateBlacklistLink> validator,
-            IGameReadingService gameReadingService,
-            IIntentionManager intentionManager,
-            IBlacklistLinkFactory factory,
-            IUserRepository userRepository,
-            IBlacklistCreatingRepository repository,
-            IInvokedEventProducer producer)
+    /// <inheritdoc />
+    public async Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink)
+    {
+        await validator.ValidateAndThrowAsync(operateBlacklistLink);
+        var game = await gameReadingService.GetGame(operateBlacklistLink.GameId);
+        intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
+
+        var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
+        if (game.BlacklistedUsers.Any(l => l.UserId == userId))
         {
-            this.validator = validator;
-            this.gameReadingService = gameReadingService;
-            this.intentionManager = intentionManager;
-            this.factory = factory;
-            this.userRepository = userRepository;
-            this.repository = repository;
-            this.producer = producer;
+            throw new HttpException(HttpStatusCode.Conflict, "User already blacklisted");
         }
 
-        /// <inheritdoc />
-        public async Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink)
+        if (game.Master.UserId == userId || game.Nanny.UserId == userId)
         {
-            await validator.ValidateAndThrowAsync(operateBlacklistLink);
-            var game = await gameReadingService.GetGame(operateBlacklistLink.GameId);
-            intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
-
-            var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
-            if (game.BlacklistedUsers.Any(l => l.UserId == userId))
-            {
-                throw new HttpException(HttpStatusCode.Conflict, "User already blacklisted");
-            }
-
-            if (game.Master.UserId == userId || game.Nanny.UserId == userId)
-            {
-                throw new HttpException(HttpStatusCode.Forbidden,
-                    "Game owner and game moderator cannot be blacklisted");
-            }
-
-            var blackListLink = factory.Create(game.Id, userId);
-            var blacklistedUser = await repository.Create(blackListLink);
-            await producer.Send(EventType.ChangedGame, game.Id);
-
-            return blacklistedUser;
+            throw new HttpException(HttpStatusCode.Forbidden,
+                "Game owner and game moderator cannot be blacklisted");
         }
+
+        var blackListLink = factory.Create(game.Id, userId);
+        var blacklistedUser = await repository.Create(blackListLink);
+        await producer.Send(EventType.ChangedGame, game.Id);
+
+        return blacklistedUser;
     }
 }

@@ -24,139 +24,138 @@ using Moq.Language.Flow;
 using Xunit;
 using Comment = DM.Services.Common.Dto.Comment;
 
-namespace DM.Services.Forum.Tests.BusinessProcesses.Likes
+namespace DM.Services.Forum.Tests.BusinessProcesses.Likes;
+
+public class LikeServiceForCommentsShould : UnitTestBase
 {
-    public class LikeServiceForCommentsShould : UnitTestBase
+    private readonly LikeService service;
+    private readonly ISetup<ICommentaryReadingService, Task<Comment>> commentReading;
+    private readonly ISetup<IIdentity, AuthenticatedUser> currentUser;
+    private readonly Mock<ILikeFactory> factory;
+    private readonly Mock<ILikeRepository> likeRepository;
+    private readonly Mock<IInvokedEventProducer> publisher;
+
+    public LikeServiceForCommentsShould()
     {
-        private readonly LikeService service;
-        private readonly ISetup<ICommentaryReadingService, Task<Comment>> commentReading;
-        private readonly ISetup<IIdentity, AuthenticatedUser> currentUser;
-        private readonly Mock<ILikeFactory> factory;
-        private readonly Mock<ILikeRepository> likeRepository;
-        private readonly Mock<IInvokedEventProducer> publisher;
+        var commentReadingService = Mock<ICommentaryReadingService>();
+        commentReading = commentReadingService.Setup(s => s.Get(It.IsAny<Guid>()));
 
-        public LikeServiceForCommentsShould()
+        var intentionManager = Mock<IIntentionManager>();
+        intentionManager
+            .Setup(m => m.ThrowIfForbidden(TopicIntention.Like, It.IsAny<Topic>()));
+        var identityProvider = Mock<IIdentityProvider>();
+        var identity = Mock<IIdentity>();
+        currentUser = identity.Setup(i => i.User);
+        identityProvider.Setup(p => p.Current).Returns(identity.Object);
+
+        factory = Mock<ILikeFactory>();
+        likeRepository = Mock<ILikeRepository>();
+        publisher = Mock<IInvokedEventProducer>();
+        service = new LikeService(Mock<ITopicReadingService>().Object, commentReadingService.Object,
+            intentionManager.Object, identityProvider.Object, factory.Object,
+            likeRepository.Object, publisher.Object);
+    }
+
+    [Fact]
+    public void ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
+    {
+        var commentId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        commentReading.ReturnsAsync(new Comment
         {
-            var commentReadingService = Mock<ICommentaryReadingService>();
-            commentReading = commentReadingService.Setup(s => s.Get(It.IsAny<Guid>()));
-
-            var intentionManager = Mock<IIntentionManager>();
-            intentionManager
-                .Setup(m => m.ThrowIfForbidden(TopicIntention.Like, It.IsAny<Topic>()));
-            var identityProvider = Mock<IIdentityProvider>();
-            var identity = Mock<IIdentity>();
-            currentUser = identity.Setup(i => i.User);
-            identityProvider.Setup(p => p.Current).Returns(identity.Object);
-
-            factory = Mock<ILikeFactory>();
-            likeRepository = Mock<ILikeRepository>();
-            publisher = Mock<IInvokedEventProducer>();
-            service = new LikeService(Mock<ITopicReadingService>().Object, commentReadingService.Object,
-                intentionManager.Object, identityProvider.Object, factory.Object,
-                likeRepository.Object, publisher.Object);
-        }
-
-        [Fact]
-        public void ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
-        {
-            var commentId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            commentReading.ReturnsAsync(new Comment
+            Likes = new List<GeneralUser>
             {
-                Likes = new List<GeneralUser>
-                {
-                    new() {UserId = userId},
-                    new() {UserId = Guid.NewGuid()}
-                }
-            });
-            currentUser.Returns(Create.User(userId).Please);
+                new() {UserId = userId},
+                new() {UserId = Guid.NewGuid()}
+            }
+        });
+        currentUser.Returns(Create.User(userId).Please);
 
-            service.Invoking(s => s.LikeComment(commentId).Wait())
-                .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
-        }
+        service.Invoking(s => s.LikeComment(commentId).Wait())
+            .Should().Throw<HttpException>()
+            .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
 
-        [Fact]
-        public async Task SaveInRepositoryAndPublishMessageAndReturnUserWhenLikes()
+    [Fact]
+    public async Task SaveInRepositoryAndPublishMessageAndReturnUserWhenLikes()
+    {
+        var commentId = Guid.NewGuid();
+        commentReading.ReturnsAsync(new Comment
         {
-            var commentId = Guid.NewGuid();
-            commentReading.ReturnsAsync(new Comment
+            Id = commentId,
+            Likes = new List<GeneralUser>
             {
-                Id = commentId,
-                Likes = new List<GeneralUser>
-                {
-                    new() {UserId = Guid.NewGuid()},
-                    new() {UserId = Guid.NewGuid()}
-                }
-            });
-            var user = Create.User().Please();
-            currentUser.Returns(user);
+                new() {UserId = Guid.NewGuid()},
+                new() {UserId = Guid.NewGuid()}
+            }
+        });
+        var user = Create.User().Please();
+        currentUser.Returns(user);
 
-            var likeId = Guid.NewGuid();
-            var like = new Like {LikeId = likeId};
-            factory
-                .Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .Returns(like);
-            likeRepository
-                .Setup(r => r.Add(It.IsAny<Like>()))
-                .Returns(Task.CompletedTask);
-            publisher
-                .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
-                .Returns(Task.CompletedTask);
+        var likeId = Guid.NewGuid();
+        var like = new Like {LikeId = likeId};
+        factory
+            .Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Returns(like);
+        likeRepository
+            .Setup(r => r.Add(It.IsAny<Like>()))
+            .Returns(Task.CompletedTask);
+        publisher
+            .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
+            .Returns(Task.CompletedTask);
 
-            var actual = await service.LikeComment(commentId);
-            actual.Should().Be(user);
+        var actual = await service.LikeComment(commentId);
+        actual.Should().Be(user);
 
-            likeRepository.Verify(r => r.Add(like), Times.Once);
-            likeRepository.VerifyNoOtherCalls();
+        likeRepository.Verify(r => r.Add(like), Times.Once);
+        likeRepository.VerifyNoOtherCalls();
 
-            publisher.Verify(p => p.Send(EventType.LikedForumComment, likeId), Times.Once);
-            publisher.VerifyNoOtherCalls();
-        }
+        publisher.Verify(p => p.Send(EventType.LikedForumComment, likeId), Times.Once);
+        publisher.VerifyNoOtherCalls();
+    }
 
-        [Fact]
-        public void ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
+    [Fact]
+    public void ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
+    {
+        var commentId = Guid.NewGuid();
+        commentReading.ReturnsAsync(new Comment
         {
-            var commentId = Guid.NewGuid();
-            commentReading.ReturnsAsync(new Comment
+            Likes = new List<GeneralUser>
             {
-                Likes = new List<GeneralUser>
-                {
-                    new() {UserId = Guid.NewGuid()}
-                }
-            });
-            currentUser.Returns(Create.User().Please);
+                new() {UserId = Guid.NewGuid()}
+            }
+        });
+        currentUser.Returns(Create.User().Please);
 
-            service.Invoking(s => s.DislikeComment(commentId).Wait())
-                .Should().Throw<HttpException>()
-                .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
-        }
+        service.Invoking(s => s.DislikeComment(commentId).Wait())
+            .Should().Throw<HttpException>()
+            .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
 
-        [Fact]
-        public async Task SaveInRepositoryWhenDislikes()
+    [Fact]
+    public async Task SaveInRepositoryWhenDislikes()
+    {
+        var commentId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        commentReading.ReturnsAsync(new Comment
         {
-            var commentId = Guid.NewGuid();
-            var userId = Guid.NewGuid();
-            commentReading.ReturnsAsync(new Comment
+            Id = commentId,
+            Likes = new List<GeneralUser>
             {
-                Id = commentId,
-                Likes = new List<GeneralUser>
-                {
-                    new() {UserId = userId},
-                    new() {UserId = Guid.NewGuid()}
-                }
-            });
-            var user = Create.User(userId).Please();
-            currentUser.Returns(user);
+                new() {UserId = userId},
+                new() {UserId = Guid.NewGuid()}
+            }
+        });
+        var user = Create.User(userId).Please();
+        currentUser.Returns(user);
 
-            likeRepository
-                .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .Returns(Task.CompletedTask);
+        likeRepository
+            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Returns(Task.CompletedTask);
 
-            await service.DislikeComment(commentId);
+        await service.DislikeComment(commentId);
 
-            likeRepository.Verify(r => r.Delete(commentId, userId), Times.Once);
-            likeRepository.VerifyNoOtherCalls();
-        }
+        likeRepository.Verify(r => r.Delete(commentId, userId), Times.Once);
+        likeRepository.VerifyNoOtherCalls();
     }
 }

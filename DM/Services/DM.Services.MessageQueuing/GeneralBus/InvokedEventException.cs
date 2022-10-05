@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace DM.Services.MessageQueuing.GeneralBus
+namespace DM.Services.MessageQueuing.GeneralBus;
+
+/// <inheritdoc />
+public class InvokedEventException : Exception
 {
     /// <inheritdoc />
-    public class InvokedEventException : Exception
+    public InvokedEventException(string message) : base(message)
     {
-        /// <inheritdoc />
-        public InvokedEventException(string message) : base(message)
-        {
-        }
     }
 }

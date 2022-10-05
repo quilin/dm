@@ -8,31 +8,30 @@ using DM.Services.Core.Dto;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Moderation
+namespace DM.Services.Forum.BusinessProcesses.Moderation;
+
+/// <inheritdoc />
+internal class ModeratorRepository : IModeratorRepository
 {
+    private readonly DmDbContext dmDbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class ModeratorRepository : IModeratorRepository
+    public ModeratorRepository(
+        DmDbContext dmDbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dmDbContext;
-        private readonly IMapper mapper;
+        this.dmDbContext = dmDbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public ModeratorRepository(
-            DmDbContext dmDbContext,
-            IMapper mapper)
-        {
-            this.dmDbContext = dmDbContext;
-            this.mapper = mapper;
-        }
-
-        /// <inheritdoc />
-        public async Task<IEnumerable<GeneralUser>> Get(Guid forumId)
-        {
-            return await dmDbContext.ForumModerators
-                .Where(m => m.ForumId == forumId)
-                .Select(m => m.User)
-                .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-                .ToArrayAsync();
-        }
+    /// <inheritdoc />
+    public async Task<IEnumerable<GeneralUser>> Get(Guid forumId)
+    {
+        return await dmDbContext.ForumModerators
+            .Where(m => m.ForumId == forumId)
+            .Select(m => m.User)
+            .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
+            .ToArrayAsync();
     }
 }
