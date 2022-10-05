@@ -3,19 +3,18 @@ using DM.Services.Core.Extensions;
 using DM.Services.MessageQueuing;
 using Module = Autofac.Module;
 
-namespace DM.Services.Mail.Sender
+namespace DM.Services.Mail.Sender;
+
+/// <inheritdoc />
+public class MailSenderModule : Module
 {
     /// <inheritdoc />
-    public class MailSenderModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
+        builder.RegisterDefaultTypes();
 
-            builder.RegisterModuleOnce<MessageQueuingModule>();
+        builder.RegisterModuleOnce<MessageQueuingModule>();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

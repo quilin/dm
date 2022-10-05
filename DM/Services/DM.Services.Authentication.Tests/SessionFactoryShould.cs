@@ -7,55 +7,54 @@ using FluentAssertions;
 using Moq.Language.Flow;
 using Xunit;
 
-namespace DM.Services.Authentication.Tests
+namespace DM.Services.Authentication.Tests;
+
+public class SessionFactoryShould : UnitTestBase
 {
-    public class SessionFactoryShould : UnitTestBase
+    private readonly ISetup<IGuidFactory, Guid> createIdSetup;
+    private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMoment;
+    private readonly SessionFactory sessionFactory;
+
+    public SessionFactoryShould()
     {
-        private readonly ISetup<IGuidFactory, Guid> createIdSetup;
-        private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMoment;
-        private readonly SessionFactory sessionFactory;
+        var guidFactory = Mock<IGuidFactory>();
+        createIdSetup = guidFactory.Setup(f => f.Create());
+        var dateTimeProvider = Mock<IDateTimeProvider>();
+        currentMoment = dateTimeProvider.Setup(p => p.Now);
+        sessionFactory = new SessionFactory(guidFactory.Object, dateTimeProvider.Object);
+    }
 
-        public SessionFactoryShould()
+    [Fact]
+    public void CreatePersistentSession()
+    {
+        var sessionId = Guid.NewGuid();
+        createIdSetup.Returns(sessionId);
+        currentMoment.Returns(new DateTimeOffset(2017, 12, 5, 0, 0, 0, TimeSpan.Zero));
+
+        var actual = sessionFactory.Create(true, false);
+        actual.Should().BeEquivalentTo(new Session
         {
-            var guidFactory = Mock<IGuidFactory>();
-            createIdSetup = guidFactory.Setup(f => f.Create());
-            var dateTimeProvider = Mock<IDateTimeProvider>();
-            currentMoment = dateTimeProvider.Setup(p => p.Now);
-            sessionFactory = new SessionFactory(guidFactory.Object, dateTimeProvider.Object);
-        }
+            Id = sessionId,
+            Persistent = true,
+            Invisible = false,
+            ExpirationDate = new DateTime(2018, 1, 5)
+        });
+    }
 
-        [Fact]
-        public void CreatePersistentSession()
+    [Fact]
+    public void CreateNonPersistentSession()
+    {
+        var sessionId = Guid.NewGuid();
+        createIdSetup.Returns(sessionId);
+        currentMoment.Returns(new DateTimeOffset(2017, 7, 13, 0, 0, 0, TimeSpan.Zero));
+
+        var actual = sessionFactory.Create(false, true);
+        actual.Should().BeEquivalentTo(new Session
         {
-            var sessionId = Guid.NewGuid();
-            createIdSetup.Returns(sessionId);
-            currentMoment.Returns(new DateTimeOffset(2017, 12, 5, 0, 0, 0, TimeSpan.Zero));
-
-            var actual = sessionFactory.Create(true, false);
-            actual.Should().BeEquivalentTo(new Session
-            {
-                Id = sessionId,
-                Persistent = true,
-                Invisible = false,
-                ExpirationDate = new DateTime(2018, 1, 5)
-            });
-        }
-
-        [Fact]
-        public void CreateNonPersistentSession()
-        {
-            var sessionId = Guid.NewGuid();
-            createIdSetup.Returns(sessionId);
-            currentMoment.Returns(new DateTimeOffset(2017, 7, 13, 0, 0, 0, TimeSpan.Zero));
-
-            var actual = sessionFactory.Create(false, true);
-            actual.Should().BeEquivalentTo(new Session
-            {
-                Id = sessionId,
-                Persistent = false,
-                Invisible = true,
-                ExpirationDate = new DateTime(2017, 7, 14)
-            });
-        }
+            Id = sessionId,
+            Persistent = false,
+            Invisible = true,
+            ExpirationDate = new DateTime(2017, 7, 14)
+        });
     }
 }

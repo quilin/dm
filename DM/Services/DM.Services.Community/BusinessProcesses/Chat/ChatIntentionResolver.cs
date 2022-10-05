@@ -1,16 +1,15 @@
 using DM.Services.Authentication.Dto;
 using DM.Services.Common.Authorization;
 
-namespace DM.Services.Community.BusinessProcesses.Chat
+namespace DM.Services.Community.BusinessProcesses.Chat;
+
+/// <inheritdoc />
+internal class ChatIntentionResolver : IIntentionResolver<ChatIntention>
 {
     /// <inheritdoc />
-    internal class ChatIntentionResolver : IIntentionResolver<ChatIntention>
+    public bool IsAllowed(AuthenticatedUser user, ChatIntention intention) => intention switch
     {
-        /// <inheritdoc />
-        public bool IsAllowed(AuthenticatedUser user, ChatIntention intention) => intention switch
-        {
-            ChatIntention.CreateMessage => user.IsAuthenticated,
-            _ => false
-        };
-    }
+        ChatIntention.CreateMessage => user.IsAuthenticated,
+        _ => false
+    };
 }

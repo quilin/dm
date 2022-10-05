@@ -2,29 +2,28 @@ using DM.Services.Core.Implementation;
 using FluentAssertions;
 using Xunit;
 
-namespace DM.Services.Core.Tests
+namespace DM.Services.Core.Tests;
+
+public class RandomNumberGeneratorShould
 {
-    public class RandomNumberGeneratorShould
+    private readonly RandomNumberGenerator generator;
+
+    public RandomNumberGeneratorShould()
     {
-        private readonly RandomNumberGenerator generator;
+        generator = new RandomNumberGenerator();
+    }
 
-        public RandomNumberGeneratorShould()
-        {
-            generator = new RandomNumberGenerator();
-        }
+    [Fact]
+    public void GenerateNumberInRange()
+    {
+        var actual = generator.Generate(5, 10);
+        actual.Should().BeInRange(5, 10);
+    }
 
-        [Fact]
-        public void GenerateNumberInRange()
-        {
-            var actual = generator.Generate(5, 10);
-            actual.Should().BeInRange(5, 10);
-        }
-
-        [Fact]
-        public void GenerateDieRoll()
-        {
-            var actual = generator.Generate(10);
-            actual.Should().BeInRange(1, 10);
-        }
+    [Fact]
+    public void GenerateDieRoll()
+    {
+        var actual = generator.Generate(10);
+        actual.Should().BeInRange(1, 10);
     }
 }

@@ -1,15 +1,14 @@
 using AutoMapper;
 using DbMessage = DM.Services.DataAccess.BusinessObjects.Common.ChatMessage;
 
-namespace DM.Services.Community.BusinessProcesses.Chat.Reading
+namespace DM.Services.Community.BusinessProcesses.Chat.Reading;
+
+/// <inheritdoc />
+internal class ChatMessageProfile : Profile
 {
     /// <inheritdoc />
-    internal class ChatMessageProfile : Profile
+    public ChatMessageProfile()
     {
-        /// <inheritdoc />
-        public ChatMessageProfile()
-        {
-            CreateMap<DbMessage, ChatMessage>();
-        }
+        CreateMap<DbMessage, ChatMessage>();
     }
 }

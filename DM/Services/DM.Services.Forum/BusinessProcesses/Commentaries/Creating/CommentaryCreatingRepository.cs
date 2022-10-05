@@ -8,33 +8,32 @@ using DM.Services.DataAccess.RelationalStorage;
 using Microsoft.EntityFrameworkCore;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
+
+/// <inheritdoc />
+internal class CommentaryCreatingRepository : ICommentaryCreatingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class CommentaryCreatingRepository : ICommentaryCreatingRepository
+    public CommentaryCreatingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public CommentaryCreatingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
-
-        /// <inheritdoc />
-        public async Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate)
-        {
-            dbContext.Comments.Add(comment);
-            topicUpdate.AttachTo(dbContext);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.Comments
-                .Where(c => c.CommentId == comment.CommentId)
-                .ProjectTo<Services.Common.Dto.Comment>(mapper.ConfigurationProvider)
-                .FirstAsync();
-        }
+    /// <inheritdoc />
+    public async Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate)
+    {
+        dbContext.Comments.Add(comment);
+        topicUpdate.AttachTo(dbContext);
+        await dbContext.SaveChangesAsync();
+        return await dbContext.Comments
+            .Where(c => c.CommentId == comment.CommentId)
+            .ProjectTo<Services.Common.Dto.Comment>(mapper.ConfigurationProvider)
+            .FirstAsync();
     }
 }

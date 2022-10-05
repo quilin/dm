@@ -4,28 +4,27 @@ using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
 
-namespace DM.Services.Authentication.Tests
+namespace DM.Services.Authentication.Tests;
+
+public class AuthenticatedUserShould : UnitTestBase
 {
-    public class AuthenticatedUserShould : UnitTestBase
+    [Fact]
+    public void ComputeGeneralAccessPolicy()
     {
-        [Fact]
-        public void ComputeGeneralAccessPolicy()
+        var authenticatedUser = new AuthenticatedUser
         {
-            var authenticatedUser = new AuthenticatedUser
+            AccessRestrictionPolicies = new[]
             {
-                AccessRestrictionPolicies = new[]
-                {
-                    AccessPolicy.ChatBan,
-                    AccessPolicy.DemocraticBan,
-                    AccessPolicy.RestrictContentEditing
-                },
-                AccessPolicy = AccessPolicy.DemocraticBan
-            };
-            var actual = authenticatedUser.GeneralAccessPolicy;
-            actual.Should().Be(
-                AccessPolicy.ChatBan |
-                AccessPolicy.DemocraticBan |
-                AccessPolicy.RestrictContentEditing);
-        }
+                AccessPolicy.ChatBan,
+                AccessPolicy.DemocraticBan,
+                AccessPolicy.RestrictContentEditing
+            },
+            AccessPolicy = AccessPolicy.DemocraticBan
+        };
+        var actual = authenticatedUser.GeneralAccessPolicy;
+        actual.Should().Be(
+            AccessPolicy.ChatBan |
+            AccessPolicy.DemocraticBan |
+            AccessPolicy.RestrictContentEditing);
     }
 }

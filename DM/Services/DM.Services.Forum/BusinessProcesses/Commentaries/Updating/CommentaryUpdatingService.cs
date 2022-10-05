@@ -10,56 +10,55 @@ using DM.Services.MessageQueuing.GeneralBus;
 using FluentValidation;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
+
+/// <inheritdoc />
+internal class CommentaryUpdatingService : ICommentaryUpdatingService
 {
+    private readonly IValidator<UpdateComment> validator;
+    private readonly ICommentaryReadingService commentaryReadingService;
+    private readonly IIntentionManager intentionManager;
+    private readonly IDateTimeProvider dateTimeProvider;
+    private readonly IUpdateBuilderFactory updateBuilderFactory;
+    private readonly ICommentaryUpdatingRepository repository;
+    private readonly IInvokedEventProducer invokedEventProducer;
+
     /// <inheritdoc />
-    internal class CommentaryUpdatingService : ICommentaryUpdatingService
+    public CommentaryUpdatingService(
+        IValidator<UpdateComment> validator,
+        ICommentaryReadingService commentaryReadingService,
+        IIntentionManager intentionManager,
+        IDateTimeProvider dateTimeProvider,
+        IUpdateBuilderFactory updateBuilderFactory,
+        ICommentaryUpdatingRepository repository,
+        IInvokedEventProducer invokedEventProducer)
     {
-        private readonly IValidator<UpdateComment> validator;
-        private readonly ICommentaryReadingService commentaryReadingService;
-        private readonly IIntentionManager intentionManager;
-        private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IUpdateBuilderFactory updateBuilderFactory;
-        private readonly ICommentaryUpdatingRepository repository;
-        private readonly IInvokedEventProducer invokedEventProducer;
+        this.validator = validator;
+        this.commentaryReadingService = commentaryReadingService;
+        this.intentionManager = intentionManager;
+        this.dateTimeProvider = dateTimeProvider;
+        this.updateBuilderFactory = updateBuilderFactory;
+        this.repository = repository;
+        this.invokedEventProducer = invokedEventProducer;
+    }
 
-        /// <inheritdoc />
-        public CommentaryUpdatingService(
-            IValidator<UpdateComment> validator,
-            ICommentaryReadingService commentaryReadingService,
-            IIntentionManager intentionManager,
-            IDateTimeProvider dateTimeProvider,
-            IUpdateBuilderFactory updateBuilderFactory,
-            ICommentaryUpdatingRepository repository,
-            IInvokedEventProducer invokedEventProducer)
+    /// <inheritdoc />
+    public async Task<Services.Common.Dto.Comment> Update(UpdateComment updateComment)
+    {
+        await validator.ValidateAndThrowAsync(updateComment);
+        var comment = await commentaryReadingService.Get(updateComment.CommentId);
+
+        intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
+        var updateBuilder = updateBuilderFactory.Create<Comment>(updateComment.CommentId)
+            .MaybeField(f => f.Text, updateComment.Text?.Trim());
+
+        if (updateBuilder.HasChanges())
         {
-            this.validator = validator;
-            this.commentaryReadingService = commentaryReadingService;
-            this.intentionManager = intentionManager;
-            this.dateTimeProvider = dateTimeProvider;
-            this.updateBuilderFactory = updateBuilderFactory;
-            this.repository = repository;
-            this.invokedEventProducer = invokedEventProducer;
+            updateBuilder.Field(f => f.LastUpdateDate, dateTimeProvider.Now);
         }
 
-        /// <inheritdoc />
-        public async Task<Services.Common.Dto.Comment> Update(UpdateComment updateComment)
-        {
-            await validator.ValidateAndThrowAsync(updateComment);
-            var comment = await commentaryReadingService.Get(updateComment.CommentId);
-
-            intentionManager.ThrowIfForbidden(CommentIntention.Edit, comment);
-            var updateBuilder = updateBuilderFactory.Create<Comment>(updateComment.CommentId)
-                .MaybeField(f => f.Text, updateComment.Text?.Trim());
-
-            if (updateBuilder.HasChanges())
-            {
-                updateBuilder.Field(f => f.LastUpdateDate, dateTimeProvider.Now);
-            }
-
-            var updatedComment = await repository.Update(updateBuilder);
-            await invokedEventProducer.Send(EventType.ChangedForumComment, updateComment.CommentId);
-            return updatedComment;
-        }
+        var updatedComment = await repository.Update(updateBuilder);
+        await invokedEventProducer.Send(EventType.ChangedForumComment, updateComment.CommentId);
+        return updatedComment;
     }
 }

@@ -6,42 +6,41 @@ using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace DM.Tests.Core
+namespace DM.Tests.Core;
+
+public abstract class DbTestBase : UnitTestBase
 {
-    public abstract class DbTestBase : UnitTestBase
+    protected static IMapper GetMapper() => new Mapper(new MapperConfiguration(c => { }));
+
+    protected static DmDbContext GetRdb(string name) => new(
+        new DbContextOptionsBuilder<DmDbContext>().UseInMemoryDatabase(name).Options);
+
+    protected MongoDbWrapper GetMongoClient(string name)
     {
-        protected static IMapper GetMapper() => new Mapper(new MapperConfiguration(c => { }));
+        var connectionStrings = Mock<IOptions<ConnectionStrings>>();
+        connectionStrings
+            .Setup(s => s.Value)
+            .Returns(new ConnectionStrings
+            {
+                Mongo = $"mongodb://localhost:27017/integration_tests_{name}"
+            });
+        return new MongoDbWrapper(name, new DmMongoClient(connectionStrings.Object));
+    }
 
-        protected static DmDbContext GetRdb(string name) => new(
-            new DbContextOptionsBuilder<DmDbContext>().UseInMemoryDatabase(name).Options);
+    public class MongoDbWrapper : IDisposable
+    {
+        private readonly string name;
+        public readonly DmMongoClient Client;
 
-        protected MongoDbWrapper GetMongoClient(string name)
+        public MongoDbWrapper(string name, DmMongoClient client)
         {
-            var connectionStrings = Mock<IOptions<ConnectionStrings>>();
-            connectionStrings
-                .Setup(s => s.Value)
-                .Returns(new ConnectionStrings
-                {
-                    Mongo = $"mongodb://localhost:27017/integration_tests_{name}"
-                });
-            return new MongoDbWrapper(name, new DmMongoClient(connectionStrings.Object));
+            this.name = name;
+            Client = client;
         }
-
-        public class MongoDbWrapper : IDisposable
-        {
-            private readonly string name;
-            public readonly DmMongoClient Client;
-
-            public MongoDbWrapper(string name, DmMongoClient client)
-            {
-                this.name = name;
-                Client = client;
-            }
             
-            public void Dispose()
-            {
-                Client?.DropDatabase($"integration_tests_{name}");
-            }
+        public void Dispose()
+        {
+            Client?.DropDatabase($"integration_tests_{name}");
         }
     }
 }

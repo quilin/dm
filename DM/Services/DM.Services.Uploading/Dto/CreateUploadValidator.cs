@@ -1,16 +1,15 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Uploading.Dto
+namespace DM.Services.Uploading.Dto;
+
+/// <inheritdoc />
+internal class CreateUploadValidator : AbstractValidator<CreateUpload>
 {
     /// <inheritdoc />
-    internal class CreateUploadValidator : AbstractValidator<CreateUpload>
+    public CreateUploadValidator()
     {
-        /// <inheritdoc />
-        public CreateUploadValidator()
-        {
-            RuleFor(u => u.FileName)
-                .NotEmpty().WithMessage(ValidationError.Empty);
-        }
+        RuleFor(u => u.FileName)
+            .NotEmpty().WithMessage(ValidationError.Empty);
     }
 }

@@ -1,11 +1,10 @@
 using System;
 
-namespace DM.Services.Core.Implementation
+namespace DM.Services.Core.Implementation;
+
+/// <inheritdoc />
+internal class GuidFactory : IGuidFactory
 {
     /// <inheritdoc />
-    internal class GuidFactory : IGuidFactory
-    {
-        /// <inheritdoc />
-        public Guid Create() => Guid.NewGuid();
-    }
+    public Guid Create() => Guid.NewGuid();
 }

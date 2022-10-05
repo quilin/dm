@@ -7,93 +7,92 @@ using Autofac.Core;
 using AutoMapper;
 using Microsoft.Extensions.Hosting;
 
-namespace DM.Services.Core.Extensions
+namespace DM.Services.Core.Extensions;
+
+/// <summary>
+/// Extensions for autofac registration
+/// </summary>
+public static class ModuleRegistrationExtensions
 {
+    private const string RegisteredModulesKey = nameof(RegisteredModulesKey);
+
     /// <summary>
-    /// Extensions for autofac registration
+    /// Register module, but only if not registered
     /// </summary>
-    public static class ModuleRegistrationExtensions
+    /// <param name="builder"></param>
+    /// <typeparam name="TModule"></typeparam>
+    /// <returns></returns>
+    public static ContainerBuilder RegisterModuleOnce<TModule>(this ContainerBuilder builder)
+        where TModule : IModule, new()
     {
-        private const string RegisteredModulesKey = nameof(RegisteredModulesKey);
+        var registeredModules = builder.Properties.TryGetValue(RegisteredModulesKey, out var modulesWrapper) &&
+                                modulesWrapper is HashSet<Type> modules
+            ? modules
+            : new HashSet<Type>();
 
-        /// <summary>
-        /// Register module, but only if not registered
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <typeparam name="TModule"></typeparam>
-        /// <returns></returns>
-        public static ContainerBuilder RegisterModuleOnce<TModule>(this ContainerBuilder builder)
-            where TModule : IModule, new()
+        if (registeredModules.Contains(typeof(TModule)))
         {
-            var registeredModules = builder.Properties.TryGetValue(RegisteredModulesKey, out var modulesWrapper) &&
-                modulesWrapper is HashSet<Type> modules
-                    ? modules
-                    : new HashSet<Type>();
+            return builder;
+        }
 
-            if (registeredModules.Contains(typeof(TModule)))
+        builder.RegisterModule<TModule>();
+        registeredModules.Add(typeof(TModule));
+        builder.Properties[RegisteredModulesKey] = registeredModules;
+        return builder;
+    }
+
+    /// <summary>
+    /// Register default types of the calling assembly
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static ContainerBuilder RegisterDefaultTypes(this ContainerBuilder builder)
+    {
+        builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
+            // Only non-abstract classes should be registered automatically
+            .Where(t => t.IsClass && !t.IsAbstract)
+            .Where(t =>
             {
-                return builder;
-            }
+                // Classes that only declared private constructors should not be registered
+                var declaredConstructors = t.GetDeclaredConstructors();
+                return !declaredConstructors.Any() || declaredConstructors.All(d => d.IsPublic);
+            })
+            // Exceptions should not be registered automatically
+            .Where(t => !t.IsSubclassOf(typeof(Exception)))
+            .Where(t => !t.IsAssignableTo(typeof(IHostedService)))
+            .AsSelf()
+            .AsImplementedInterfaces()
+            .InstancePerDependency();
 
-            builder.RegisterModule<TModule>();
-            registeredModules.Add(typeof(TModule));
-            builder.Properties[RegisteredModulesKey] = registeredModules;
-            return builder;
-        }
+        return builder;
+    }
 
-        /// <summary>
-        /// Register default types of the calling assembly
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static ContainerBuilder RegisterDefaultTypes(this ContainerBuilder builder)
-        {
-            builder.RegisterAssemblyTypes(Assembly.GetCallingAssembly())
-                // Only non-abstract classes should be registered automatically
-                .Where(t => t.IsClass && !t.IsAbstract)
-                .Where(t =>
-                {
-                    // Classes that only declared private constructors should not be registered
-                    var declaredConstructors = t.GetDeclaredConstructors();
-                    return !declaredConstructors.Any() || declaredConstructors.All(d => d.IsPublic);
-                })
-                // Exceptions should not be registered automatically
-                .Where(t => !t.IsSubclassOf(typeof(Exception)))
-                .Where(t => !t.IsAssignableTo(typeof(IHostedService)))
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerDependency();
+    /// <summary>
+    /// Register mappings from the calling assembly
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static ContainerBuilder RegisterMapper(this ContainerBuilder builder)
+    {
+        var callingAssembly = Assembly.GetCallingAssembly();
+        builder.RegisterAssemblyTypes(callingAssembly)
+            .Where(t => t.IsClass && t.IsSubclassOf(typeof(Profile)))
+            .As<Profile>();
 
-            return builder;
-        }
+        builder
+            .Register<IConfigurationProvider>(ctx =>
+                new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>())))
+            .SingleInstance();
 
-        /// <summary>
-        /// Register mappings from the calling assembly
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static ContainerBuilder RegisterMapper(this ContainerBuilder builder)
-        {
-            var callingAssembly = Assembly.GetCallingAssembly();
-            builder.RegisterAssemblyTypes(callingAssembly)
-                .Where(t => t.IsClass && t.IsSubclassOf(typeof(Profile)))
-                .As<Profile>();
+        builder
+            .Register(ctx =>
+            {
+                var context = ctx.Resolve<IComponentContext>();
+                var configuration = context.Resolve<IConfigurationProvider>();
+                return configuration.CreateMapper(context.Resolve);
+            })
+            .InstancePerLifetimeScope();
 
-            builder
-                .Register<IConfigurationProvider>(ctx =>
-                    new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>())))
-                .SingleInstance();
-
-            builder
-                .Register(ctx =>
-                {
-                    var context = ctx.Resolve<IComponentContext>();
-                    var configuration = context.Resolve<IConfigurationProvider>();
-                    return configuration.CreateMapper(context.Resolve);
-                })
-                .InstancePerLifetimeScope();
-
-            return builder;
-        }
+        return builder;
     }
 }

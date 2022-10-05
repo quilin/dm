@@ -1,15 +1,14 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Deleting
+namespace DM.Services.Community.BusinessProcesses.Messaging.Deleting;
+
+/// <inheritdoc />
+internal class MessageDeletingService : IMessageDeletingService
 {
     /// <inheritdoc />
-    internal class MessageDeletingService : IMessageDeletingService
+    public Task Delete(Guid messageId)
     {
-        /// <inheritdoc />
-        public Task Delete(Guid messageId)
-        {
-            throw new NotImplementedException("Messages deleting is not available so far");
-        }
+        throw new NotImplementedException("Messages deleting is not available so far");
     }
 }

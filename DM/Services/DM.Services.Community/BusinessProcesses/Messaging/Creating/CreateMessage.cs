@@ -1,20 +1,19 @@
 using System;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Creating
+namespace DM.Services.Community.BusinessProcesses.Messaging.Creating;
+
+/// <summary>
+/// DTO for creating message
+/// </summary>
+public class CreateMessage
 {
     /// <summary>
-    /// DTO for creating message
+    /// Conversation identifier
     /// </summary>
-    public class CreateMessage
-    {
-        /// <summary>
-        /// Conversation identifier
-        /// </summary>
-        public Guid ConversationId { get; set; }
+    public Guid ConversationId { get; set; }
 
-        /// <summary>
-        /// Message content
-        /// </summary>
-        public string Text { get; set; }
-    }
+    /// <summary>
+    /// Message content
+    /// </summary>
+    public string Text { get; set; }
 }

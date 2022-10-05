@@ -1,18 +1,17 @@
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
-namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset
+namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset;
+
+/// <summary>
+/// Service for password resetting
+/// </summary>
+public interface IPasswordResetService
 {
     /// <summary>
-    /// Service for password resetting
+    /// Reset user password
     /// </summary>
-    public interface IPasswordResetService
-    {
-        /// <summary>
-        /// Reset user password
-        /// </summary>
-        /// <param name="passwordReset"></param>
-        /// <returns></returns>
-        Task<GeneralUser> Reset(UserPasswordReset passwordReset);
-    }
+    /// <param name="passwordReset"></param>
+    /// <returns></returns>
+    Task<GeneralUser> Reset(UserPasswordReset passwordReset);
 }

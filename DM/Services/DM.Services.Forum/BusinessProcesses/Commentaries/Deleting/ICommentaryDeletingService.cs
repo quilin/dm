@@ -1,18 +1,17 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting
+namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
+
+/// <summary>
+/// Service for deleting forum commentaries
+/// </summary>
+public interface ICommentaryDeletingService
 {
     /// <summary>
-    /// Service for deleting forum commentaries
+    /// Delete commentary by identifier
     /// </summary>
-    public interface ICommentaryDeletingService
-    {
-        /// <summary>
-        /// Delete commentary by identifier
-        /// </summary>
-        /// <param name="commentId">Commentary identifier</param>
-        /// <returns></returns>
-        Task Delete(Guid commentId);
-    }
+    /// <param name="commentId">Commentary identifier</param>
+    /// <returns></returns>
+    Task Delete(Guid commentId);
 }

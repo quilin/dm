@@ -1,15 +1,14 @@
 using System;
 
-namespace DM.Web.Core.Authentication.Credentials
+namespace DM.Web.Core.Authentication.Credentials;
+
+/// <summary>
+/// Unconditional login credentials
+/// </summary>
+internal class UnconditionalCredentials : AuthCredentials
 {
     /// <summary>
-    /// Unconditional login credentials
+    /// User identifier
     /// </summary>
-    internal class UnconditionalCredentials : AuthCredentials
-    {
-        /// <summary>
-        /// User identifier
-        /// </summary>
-        public Guid UserId { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

@@ -9,47 +9,46 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.BusinessProcesses.Chat.Reading
+namespace DM.Services.Community.BusinessProcesses.Chat.Reading;
+
+/// <inheritdoc />
+internal class ChatReadingRepository : IChatReadingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class ChatReadingRepository : IChatReadingRepository
+    public ChatReadingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
 
-        /// <inheritdoc />
-        public ChatReadingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
+    /// <inheritdoc />
+    public Task<int> Count() => dbContext.ChatMessages.CountAsync();
 
-        /// <inheritdoc />
-        public Task<int> Count() => dbContext.ChatMessages.CountAsync();
+    /// <inheritdoc />
+    public async Task<IEnumerable<ChatMessage>> Get(PagingData pagingData) => await dbContext.ChatMessages
+        .OrderByDescending(m => m.CreateDate)
+        .Page(pagingData)
+        .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
+        .OrderBy(m => m.CreateDate)
+        .ToArrayAsync();
 
-        /// <inheritdoc />
-        public async Task<IEnumerable<ChatMessage>> Get(PagingData pagingData) => await dbContext.ChatMessages
+    /// <inheritdoc />
+    public async Task<IEnumerable<ChatMessage>> Get(DateTimeOffset since) =>
+        await dbContext.ChatMessages
             .OrderByDescending(m => m.CreateDate)
-            .Page(pagingData)
+            .Where(m => m.CreateDate >= since)
             .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
             .OrderBy(m => m.CreateDate)
             .ToArrayAsync();
 
-        /// <inheritdoc />
-        public async Task<IEnumerable<ChatMessage>> Get(DateTimeOffset since) =>
-            await dbContext.ChatMessages
-                .OrderByDescending(m => m.CreateDate)
-                .Where(m => m.CreateDate >= since)
-                .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
-                .OrderBy(m => m.CreateDate)
-                .ToArrayAsync();
-
-        /// <inheritdoc />
-        public async Task<ChatMessage> Get(Guid id) => await dbContext.ChatMessages
-            .Where(m => m.ChatMessageId == id)
-            .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+    /// <inheritdoc />
+    public async Task<ChatMessage> Get(Guid id) => await dbContext.ChatMessages
+        .Where(m => m.ChatMessageId == id)
+        .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
+        .FirstOrDefaultAsync();
 }

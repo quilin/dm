@@ -1,13 +1,12 @@
 using System;
 
-namespace DM.Services.DataAccess.RelationalStorage
+namespace DM.Services.DataAccess.RelationalStorage;
+
+/// <inheritdoc />
+internal class UpdateBuilderException : Exception
 {
     /// <inheritdoc />
-    internal class UpdateBuilderException : Exception
+    public UpdateBuilderException(string message) : base(message)
     {
-        /// <inheritdoc />
-        public UpdateBuilderException(string message) : base(message)
-        {
-        }
     }
 }

@@ -4,25 +4,24 @@ using DM.Services.Core;
 using DM.Services.Core.Extensions;
 using DM.Web.Core.Hubs;
 
-namespace DM.Web.Core
+namespace DM.Web.Core;
+
+/// <inheritdoc />
+public class WebCoreModule : Module
 {
     /// <inheritdoc />
-    public class WebCoreModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
+        builder.RegisterDefaultTypes();
 
-            // Should be singleton for it is the API state storage that traces active WS user connections
-            builder.RegisterType<UserConnectionService>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
+        // Should be singleton for it is the API state storage that traces active WS user connections
+        builder.RegisterType<UserConnectionService>()
+            .AsImplementedInterfaces()
+            .SingleInstance();
 
-            builder.RegisterModuleOnce<CoreModule>();
-            builder.RegisterModuleOnce<AuthenticationModule>();
+        builder.RegisterModuleOnce<CoreModule>();
+        builder.RegisterModuleOnce<AuthenticationModule>();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

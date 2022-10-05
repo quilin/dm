@@ -6,24 +6,23 @@ using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
 
-namespace DM.Services.Forum
+namespace DM.Services.Forum;
+
+/// <inheritdoc />
+public class ForumModule : Module
 {
     /// <inheritdoc />
-    public class ForumModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
-            builder.RegisterMapper();
+        builder.RegisterDefaultTypes();
+        builder.RegisterMapper();
 
-            builder.RegisterModuleOnce<CoreModule>();
-            builder.RegisterModuleOnce<DataAccessModule>();
-            builder.RegisterModuleOnce<AuthenticationModule>();
-            builder.RegisterModuleOnce<CommonModule>();
-            builder.RegisterModuleOnce<MessageQueuingModule>();
+        builder.RegisterModuleOnce<CoreModule>();
+        builder.RegisterModuleOnce<DataAccessModule>();
+        builder.RegisterModuleOnce<AuthenticationModule>();
+        builder.RegisterModuleOnce<CommonModule>();
+        builder.RegisterModuleOnce<MessageQueuingModule>();
 
-            base.Load(builder);
-        }
+        base.Load(builder);
     }
 }

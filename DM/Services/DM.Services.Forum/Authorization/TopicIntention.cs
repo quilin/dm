@@ -1,23 +1,22 @@
-namespace DM.Services.Forum.Authorization
+namespace DM.Services.Forum.Authorization;
+
+/// <summary>
+/// List of topic actions that requires authorization
+/// </summary>
+public enum TopicIntention
 {
     /// <summary>
-    /// List of topic actions that requires authorization
+    /// Create a comment on the topic
     /// </summary>
-    public enum TopicIntention
-    {
-        /// <summary>
-        /// Create a comment on the topic
-        /// </summary>
-        CreateComment = 0,
+    CreateComment = 0,
 
-        /// <summary>
-        /// Edit topic title or description
-        /// </summary>
-        Edit = 1,
+    /// <summary>
+    /// Edit topic title or description
+    /// </summary>
+    Edit = 1,
 
-        /// <summary>
-        /// Like the topic
-        /// </summary>
-        Like = 2
-    }
+    /// <summary>
+    /// Like the topic
+    /// </summary>
+    Like = 2
 }

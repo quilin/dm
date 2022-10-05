@@ -1,19 +1,18 @@
-namespace DM.Web.API.Dto.Contracts
+namespace DM.Web.API.Dto.Contracts;
+
+/// <summary>
+/// General error DTO model
+/// </summary>
+public class GeneralError
 {
-    /// <summary>
-    /// General error DTO model
-    /// </summary>
-    public class GeneralError
+    /// <inheritdoc />
+    public GeneralError(string message)
     {
-        /// <inheritdoc />
-        public GeneralError(string message)
-        {
-            Message = message;
-        }
-        
-        /// <summary>
-        /// Client message
-        /// </summary>
-        public string Message { get; }
+        Message = message;
     }
+        
+    /// <summary>
+    /// Client message
+    /// </summary>
+    public string Message { get; }
 }

@@ -1,16 +1,15 @@
 ﻿using Autofac;
 using DM.Services.Core.Extensions;
 
-namespace DM.Services.MessageQueuing
+namespace DM.Services.MessageQueuing;
+
+/// <inheritdoc />
+public class MessageQueuingModule : Module
 {
     /// <inheritdoc />
-    public class MessageQueuingModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        /// <inheritdoc />
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterDefaultTypes();
-            base.Load(builder);
-        }
+        builder.RegisterDefaultTypes();
+        base.Load(builder);
     }
 }

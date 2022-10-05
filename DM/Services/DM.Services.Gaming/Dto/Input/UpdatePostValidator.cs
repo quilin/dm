@@ -1,19 +1,18 @@
 using DM.Services.Core.Exceptions;
 using FluentValidation;
 
-namespace DM.Services.Gaming.Dto.Input
+namespace DM.Services.Gaming.Dto.Input;
+
+/// <inheritdoc />
+internal class UpdatePostValidator : AbstractValidator<UpdatePost>
 {
     /// <inheritdoc />
-    internal class UpdatePostValidator : AbstractValidator<UpdatePost>
+    public UpdatePostValidator()
     {
-        /// <inheritdoc />
-        public UpdatePostValidator()
-        {
-            RuleFor(p => p.PostId)
-                .NotEmpty().WithMessage(ValidationError.Empty);
-            When(p => p.Text != default, () =>
-                RuleFor(p => p.Text)
-                    .NotEmpty().WithMessage(ValidationError.Empty));
-        }
+        RuleFor(p => p.PostId)
+            .NotEmpty().WithMessage(ValidationError.Empty);
+        When(p => p.Text != default, () =>
+            RuleFor(p => p.Text)
+                .NotEmpty().WithMessage(ValidationError.Empty));
     }
 }

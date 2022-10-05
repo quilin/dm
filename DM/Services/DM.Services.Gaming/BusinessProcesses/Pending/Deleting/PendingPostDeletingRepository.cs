@@ -9,37 +9,36 @@ using DM.Services.Gaming.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 using DbPendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPost;
 
-namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting
+namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting;
+
+/// <inheritdoc />
+internal class PendingPostDeletingRepository : IPendingPostDeletingRepository
 {
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
     /// <inheritdoc />
-    internal class PendingPostDeletingRepository : IPendingPostDeletingRepository
+    public PendingPostDeletingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
     {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
-
-        /// <inheritdoc />
-        public PendingPostDeletingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
         
-        /// <inheritdoc />
-        public Task<PendingPost> Get(Guid pendingPostId)
-        {
-            return dbContext.PendingPosts
-                .Where(p => p.PendingPostId == pendingPostId)
-                .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-        }
+    /// <inheritdoc />
+    public Task<PendingPost> Get(Guid pendingPostId)
+    {
+        return dbContext.PendingPosts
+            .Where(p => p.PendingPostId == pendingPostId)
+            .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+    }
 
-        /// <inheritdoc />
-        public Task Delete(IUpdateBuilder<DbPendingPost> updateBuilder)
-        {
-            updateBuilder.AttachTo(dbContext);
-            return dbContext.SaveChangesAsync();
-        }
+    /// <inheritdoc />
+    public Task Delete(IUpdateBuilder<DbPendingPost> updateBuilder)
+    {
+        updateBuilder.AttachTo(dbContext);
+        return dbContext.SaveChangesAsync();
     }
 }

@@ -1,46 +1,45 @@
-namespace DM.Web.API.BbRendering
+namespace DM.Web.API.BbRendering;
+
+/// <summary>
+/// BB text
+/// </summary>
+public abstract class BbText
 {
     /// <summary>
-    /// BB text
+    /// Text
     /// </summary>
-    public abstract class BbText
-    {
-        /// <summary>
-        /// Text
-        /// </summary>
-        public string Value { get; set; }
+    public string Value { get; set; }
 
-        /// <summary>
-        /// Parse mode
-        /// </summary>
-        public abstract BbParseMode ParseMode { get; }
-    }
+    /// <summary>
+    /// Parse mode
+    /// </summary>
+    public abstract BbParseMode ParseMode { get; }
+}
 
+/// <inheritdoc />
+public class ChatBbText : BbText
+{
     /// <inheritdoc />
-    public class ChatBbText : BbText
-    {
-        /// <inheritdoc />
-        public override BbParseMode ParseMode => BbParseMode.Chat;
-    }
+    public override BbParseMode ParseMode => BbParseMode.Chat;
+}
 
+/// <inheritdoc />
+public class PostBbText : BbText
+{
     /// <inheritdoc />
-    public class PostBbText : BbText
-    {
-        /// <inheritdoc />
-        public override BbParseMode ParseMode => BbParseMode.Post;
-    }
+    public override BbParseMode ParseMode => BbParseMode.Post;
+}
 
+/// <inheritdoc />
+public class CommonBbText : BbText
+{
     /// <inheritdoc />
-    public class CommonBbText : BbText
-    {
-        /// <inheritdoc />
-        public override BbParseMode ParseMode => BbParseMode.Common;
-    }
+    public override BbParseMode ParseMode => BbParseMode.Common;
+}
 
+/// <inheritdoc />
+public class InfoBbText : BbText
+{
     /// <inheritdoc />
-    public class InfoBbText : BbText
-    {
-        /// <inheritdoc />
-        public override BbParseMode ParseMode => BbParseMode.Info;
-    }
+    public override BbParseMode ParseMode => BbParseMode.Info;
 }

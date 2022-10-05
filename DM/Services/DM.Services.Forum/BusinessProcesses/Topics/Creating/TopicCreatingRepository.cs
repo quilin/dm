@@ -7,32 +7,31 @@ using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics.Creating
-{
-    /// <inheritdoc />
-    internal class TopicCreatingRepository : ITopicCreatingRepository
-    {
-        private readonly DmDbContext dbContext;
-        private readonly IMapper mapper;
+namespace DM.Services.Forum.BusinessProcesses.Topics.Creating;
 
-        /// <inheritdoc />
-        public TopicCreatingRepository(
-            DmDbContext dbContext,
-            IMapper mapper)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-        }
+/// <inheritdoc />
+internal class TopicCreatingRepository : ITopicCreatingRepository
+{
+    private readonly DmDbContext dbContext;
+    private readonly IMapper mapper;
+
+    /// <inheritdoc />
+    public TopicCreatingRepository(
+        DmDbContext dbContext,
+        IMapper mapper)
+    {
+        this.dbContext = dbContext;
+        this.mapper = mapper;
+    }
         
-        /// <inheritdoc />
-        public async Task<Topic> Create(ForumTopic forumTopic)
-        {
-            dbContext.ForumTopics.Add(forumTopic);
-            await dbContext.SaveChangesAsync();
-            return await dbContext.ForumTopics
-                .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
-                .ProjectTo<Topic>(mapper.ConfigurationProvider)
-                .FirstAsync();
-        }
+    /// <inheritdoc />
+    public async Task<Topic> Create(ForumTopic forumTopic)
+    {
+        dbContext.ForumTopics.Add(forumTopic);
+        await dbContext.SaveChangesAsync();
+        return await dbContext.ForumTopics
+            .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
+            .ProjectTo<Topic>(mapper.ConfigurationProvider)
+            .FirstAsync();
     }
 }

@@ -3,42 +3,41 @@ using DM.Services.Forum.BusinessProcesses.Common;
 using FluentAssertions;
 using Xunit;
 
-namespace DM.Services.Forum.Tests.Authorization
+namespace DM.Services.Forum.Tests.Authorization;
+
+public class AccessPolicyConverterShould
 {
-    public class AccessPolicyConverterShould
+    private readonly AccessPolicyConverter converter;
+
+    public AccessPolicyConverterShould()
     {
-        private readonly AccessPolicyConverter converter;
+        converter = new AccessPolicyConverter();
+    }
 
-        public AccessPolicyConverterShould()
-        {
-            converter = new AccessPolicyConverter();
-        }
+    [Fact]
+    public void ReturnGuestPolicyForGuestUser()
+    {
+        converter.Convert(UserRole.Guest).Should().Be(ForumAccessPolicy.Guest);
+    }
 
-        [Fact]
-        public void ReturnGuestPolicyForGuestUser()
-        {
-            converter.Convert(UserRole.Guest).Should().Be(ForumAccessPolicy.Guest);
-        }
+    [Theory]
+    [InlineData(UserRole.Player, ForumAccessPolicy.Player)]
+    [InlineData(UserRole.Administrator, ForumAccessPolicy.Administrator)]
+    [InlineData(UserRole.SeniorModerator, ForumAccessPolicy.SeniorModerator)]
+    [InlineData(UserRole.RegularModerator, ForumAccessPolicy.RegularModerator)]
+    [InlineData(UserRole.NannyModerator, ForumAccessPolicy.NannyModerator)]
+    public void MapRolesAndPoliciesAccordingly(UserRole role, ForumAccessPolicy policy)
+    {
+        converter.Convert(role).Should().HaveFlag(policy);
+    }
 
-        [Theory]
-        [InlineData(UserRole.Player, ForumAccessPolicy.Player)]
-        [InlineData(UserRole.Administrator, ForumAccessPolicy.Administrator)]
-        [InlineData(UserRole.SeniorModerator, ForumAccessPolicy.SeniorModerator)]
-        [InlineData(UserRole.RegularModerator, ForumAccessPolicy.RegularModerator)]
-        [InlineData(UserRole.NannyModerator, ForumAccessPolicy.NannyModerator)]
-        public void MapRolesAndPoliciesAccordingly(UserRole role, ForumAccessPolicy policy)
-        {
-            converter.Convert(role).Should().HaveFlag(policy);
-        }
-
-        [Theory]
-        [InlineData(UserRole.Player)]
-        [InlineData(UserRole.SeniorModerator)]
-        [InlineData(UserRole.Administrator | UserRole.NannyModerator)]
-        [InlineData(UserRole.RegularModerator | UserRole.Player)]
-        public void ContainGuestAccessForNonGuestUsers(UserRole role)
-        {
-            converter.Convert(role).Should().HaveFlag(ForumAccessPolicy.Guest);
-        }
+    [Theory]
+    [InlineData(UserRole.Player)]
+    [InlineData(UserRole.SeniorModerator)]
+    [InlineData(UserRole.Administrator | UserRole.NannyModerator)]
+    [InlineData(UserRole.RegularModerator | UserRole.Player)]
+    public void ContainGuestAccessForNonGuestUsers(UserRole role)
+    {
+        converter.Convert(role).Should().HaveFlag(ForumAccessPolicy.Guest);
     }
 }
