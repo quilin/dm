@@ -12,6 +12,8 @@
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
       <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+      <PackageReference Include="MongoDB.Driver.Core.Extensions.DiagnosticSources" Version="1.2.0" />
+      <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
     </ItemGroup>
 

@@ -1,6 +1,9 @@
 using DM.Services.Core.Configuration;
+using Jamq.Client.OpenTelemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Filters;
 
@@ -17,10 +20,7 @@ public static class LoggingConfiguration
     public static IServiceCollection AddDmLogging(this IServiceCollection services,
         string applicationName, IConfigurationRoot configuration = null)
     {
-        if (configuration == null)
-        {
-            configuration = ConfigurationFactory.Default;
-        }
+        configuration ??= ConfigurationFactory.Default;
 
         var connectionStrings = new ConnectionStrings();
         configuration.GetSection(nameof(ConnectionStrings)).Bind(connectionStrings);
@@ -39,6 +39,17 @@ public static class LoggingConfiguration
             .WriteTo.Logger(lc => lc
                 .WriteTo.Console())
             .CreateLogger();
+
+        services.AddOpenTelemetryTracing(builder => builder
+            .ConfigureResource(r => r.AddService(applicationName))
+            .AddAspNetCoreInstrumentation()
+            .AddGrpcClientInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation(opts => opts.SetDbStatementForText = true)
+            .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources") // MongoDb is not too fancy
+            .AddJamqClientInstrumentation()
+            .AddConsoleExporter()
+            .AddJaegerExporter());
 
         return services.AddLogging(b => b.AddSerilog());
     }

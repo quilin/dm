@@ -31,6 +31,7 @@ internal class ForumRepository : IForumRepository
     public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
     {
         var forums = await cache.GetOrCreate("Fora", () => dmDbContext.Fora
+            .TagWith()
             .OrderBy(f => f.Order)
             .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
             .ToArrayAsync());
