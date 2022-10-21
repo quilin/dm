@@ -98,7 +98,7 @@ public class CommentaryReadingServiceShould : UnitTestBase
 
         var (actualList, actualPaging) = await readingService.Get(topicId, new PagingQuery());
 
-        actualList.Should().BeEquivalentTo((IEnumerable<Comment>) expected);
+        actualList.Should().BeSameAs(expected);
         actualPaging.Should().NotBeNull();
     }
 

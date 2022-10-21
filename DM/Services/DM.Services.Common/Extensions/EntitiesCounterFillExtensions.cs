@@ -50,8 +50,7 @@ public static class EntitiesCounterFillExtensions
         Func<TEntity, Guid> getId, Func<Guid, UnreadEntryType, Guid[], Task<IDictionary<Guid, int>>> getCounters,
         Expression<Func<TEntity, int>> counterField, UnreadEntryType entryType = UnreadEntryType.Message)
     {
-        if (counterField.Body is MemberExpression memberExpression &&
-            memberExpression.Member is PropertyInfo property)
+        if (counterField.Body is MemberExpression {Member: PropertyInfo property})
         {
             var counters = await getCounters(userId, entryType, entities.Select(getId).ToArray());
             foreach (var entity in entities)
