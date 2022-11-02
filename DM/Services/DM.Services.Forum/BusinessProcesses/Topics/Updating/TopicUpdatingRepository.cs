@@ -31,6 +31,7 @@ internal class TopicUpdatingRepository : ITopicUpdatingRepository
         var topicId = updateBuilder.AttachTo(dbContext);
         await dbContext.SaveChangesAsync();
         return await dbContext.ForumTopics
+            .TagWith("DM.Forum.UpdatedTopic")
             .Where(t => t.ForumTopicId == topicId)
             .ProjectTo<Topic>(mapper.ConfigurationProvider)
             .FirstAsync();

@@ -30,6 +30,7 @@ internal class TopicCreatingRepository : ITopicCreatingRepository
         dbContext.ForumTopics.Add(forumTopic);
         await dbContext.SaveChangesAsync();
         return await dbContext.ForumTopics
+            .TagWith("DM.Forum.CreatedTopic")
             .Where(t => t.ForumTopicId == forumTopic.ForumTopicId)
             .ProjectTo<Topic>(mapper.ConfigurationProvider)
             .FirstAsync();

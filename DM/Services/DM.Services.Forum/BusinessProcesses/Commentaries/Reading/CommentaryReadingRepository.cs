@@ -29,12 +29,14 @@ internal class CommentaryReadingRepository : ICommentaryReadingRepository
 
     /// <inheritdoc />
     public Task<int> Count(Guid topicId) => dbContext.Comments
+        .TagWith("DM.Forum.CommentsCount")
         .CountAsync(c => !c.IsRemoved && c.EntityId == topicId);
 
     /// <inheritdoc />
     public async Task<IEnumerable<Comment>> Get(Guid topicId, PagingData paging)
     {
         return await dbContext.Comments
+            .TagWith("DM.Forum.CommentsList")
             .Where(c => !c.IsRemoved && c.EntityId == topicId)
             .OrderBy(c => c.CreateDate)
             .Page(paging)
@@ -46,6 +48,7 @@ internal class CommentaryReadingRepository : ICommentaryReadingRepository
     public Task<Comment> Get(Guid commentId)
     {
         return dbContext.Comments
+            .TagWith("DM.Forum.Comment")
             .Where(c => !c.IsRemoved && c.CommentId == commentId)
             .ProjectTo<Comment>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
