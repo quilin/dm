@@ -1,3 +1,4 @@
+using System;
 using DM.Services.Core.Configuration;
 using Jamq.Client.OpenTelemetry;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,7 @@ public static class LoggingConfiguration
             .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources") // MongoDb is not too fancy
             .AddJamqClientInstrumentation()
             .AddConsoleExporter()
-            .AddJaegerExporter());
+            .AddJaegerExporter(options => options.Endpoint = new Uri(connectionStrings.TracingEndpoint)));
 
         return services.AddLogging(b => b.AddSerilog());
     }

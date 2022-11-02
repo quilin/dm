@@ -29,6 +29,7 @@ internal class ModeratorRepository : IModeratorRepository
     public async Task<IEnumerable<GeneralUser>> Get(Guid forumId)
     {
         return await dmDbContext.ForumModerators
+            .TagWith("DM.Forum.ModeratorsList")
             .Where(m => m.ForumId == forumId)
             .Select(m => m.User)
             .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)

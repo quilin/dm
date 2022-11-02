@@ -34,4 +34,9 @@ public class ConnectionStrings
     /// Logging storage connection string
     /// </summary>
     public string Logs { get; set; }
+
+    /// <summary>
+    /// Jaeger sink for Tracing
+    /// </summary>
+    public string TracingEndpoint { get; set; }
 }

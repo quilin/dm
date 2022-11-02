@@ -31,13 +31,15 @@ internal class TopicReadingRepository : ITopicReadingRepository
     private static readonly Guid ErrorsForumId = Guid.Parse("00000000-0000-0000-0000-000000000006");
 
     /// <inheritdoc />
-    public Task<int> Count(Guid forumId) =>
-        dbContext.ForumTopics.CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
+    public Task<int> Count(Guid forumId) => dbContext.ForumTopics
+        .TagWith("DM.Forum.TopicsCount")
+        .CountAsync(t => !t.IsRemoved && t.ForumId == forumId && !t.Attached);
 
     /// <inheritdoc />
     public async Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached)
     {
         var query = dbContext.ForumTopics
+            .TagWith("DM.Forum.TopicsList")
             .Where(t => !t.IsRemoved && t.ForumId == forumId && t.Attached == attached)
             .ProjectTo<Topic>(mapper.ConfigurationProvider);
 
@@ -62,6 +64,7 @@ internal class TopicReadingRepository : ITopicReadingRepository
     public async Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy)
     {
         return await dbContext.ForumTopics
+            .TagWith("DM.Forum.Topic")
             .Where(t => !t.IsRemoved && t.ForumTopicId == topicId &&
                         (t.Forum.ViewPolicy & accessPolicy) != ForumAccessPolicy.NoOne)
             .ProjectTo<Topic>(mapper.ConfigurationProvider)

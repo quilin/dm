@@ -13,6 +13,7 @@ x-workload-env: &workload-env
   DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
   DM_ConnectionStrings__SearchEngine: http://dm-es:9200
   DM_ConnectionStrings__Logs: http://dm-es:9200
+  DM_ConnectionStrings__TracingEndpoint: http://localhost:14268/api/traces
 
   DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672/
   DM_RabbitMqConfiguration__Username: guest
@@ -117,9 +118,29 @@ services:
     volumes:
       - minio:/minio
 
+  jaeger:
+    container_name: 'dm-jaeger'
+    image: jaegertracing/all-in-one:1.6
+    ports:
+      - '5775:5775/udp'
+      - '6831:6831/udp'
+      - '6832:6832/udp'
+      - '5778:5778'
+      - '16686:16686'
+      - '14268:14268'
+      - '9411:9411'
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+
   dmemailsenderconsumer:
     container_name: 'dm-email-sender-consumer'
-    image: 'quilin/dm-consumer-mail:0.15-local'
+    image: 'dm-consumer-mail:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: Services
+        PROJECT_NAME: DM.Services.Mail.Sender.Consumer
     ports:
       - '5054:5050'
     environment: *workload-env
@@ -128,7 +149,13 @@ services:
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: 'quilin/dm-consumer-search:0.15-local'
+    image: 'dm-consumer-search:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: Services
+        PROJECT_NAME: DM.Services.Search.Consumer
     ports:
       - '5052:5050'
     environment: *workload-env
@@ -137,7 +164,13 @@ services:
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'
-    image: 'quilin/dm-consumer-notification:0.15-local'
+    image: 'dm-consumer-notification:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: Services
+        PROJECT_NAME: DM.Services.Notifications.Consumer
     ports:
       - '5053:5050'
     environment: *workload-env
@@ -146,18 +179,23 @@ services:
 
   dmapi:
     container_name: 'dm-api'
-    image: 'quilin/dm-api:0.15-local'
+    image: 'dm-api:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: Web
+        PROJECT_NAME: DM.Web.API
     ports:
       - '5051:5050'
-    environment:
-      <<: *workload-env
-      MigrationOnStart: 'true'
+    environment: *workload-env
     depends_on:
       - 'rabbitmq'
 
   dmfront:
     container_name: 'dm-front'
     image: 'quilin/dm-front:0.3-local'
+    # todo: build
     ports:
       - '5050:80'
     environment:

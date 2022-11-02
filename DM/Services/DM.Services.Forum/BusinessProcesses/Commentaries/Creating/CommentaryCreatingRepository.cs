@@ -32,6 +32,7 @@ internal class CommentaryCreatingRepository : ICommentaryCreatingRepository
         topicUpdate.AttachTo(dbContext);
         await dbContext.SaveChangesAsync();
         return await dbContext.Comments
+            .TagWith("DM.Forum.CreatedComment")
             .Where(c => c.CommentId == comment.CommentId)
             .ProjectTo<Services.Common.Dto.Comment>(mapper.ConfigurationProvider)
             .FirstAsync();

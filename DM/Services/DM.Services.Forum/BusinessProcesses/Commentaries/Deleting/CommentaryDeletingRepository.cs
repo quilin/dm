@@ -31,6 +31,7 @@ internal class CommentaryDeletingRepository : ICommentaryDeletingRepository
     public Task<CommentToDelete> GetForDelete(Guid commentId)
     {
         return dbContext.Comments
+            .TagWith("DM.Forum.CommentToDelete")
             .Where(c => !c.IsRemoved && c.CommentId == commentId)
             .ProjectTo<CommentToDelete>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
@@ -48,6 +49,7 @@ internal class CommentaryDeletingRepository : ICommentaryDeletingRepository
     public async Task<Guid?> GetSecondLastCommentId(Guid topicId)
     {
         var result = await dbContext.Comments
+            .TagWith("DM.Forum.SecondLastCommentAfterDelete")
             .Where(c => !c.IsRemoved && c.EntityId == topicId)
             .OrderByDescending(c => c.CreateDate)
             .Skip(1)
