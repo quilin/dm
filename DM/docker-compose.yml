@@ -49,8 +49,6 @@ x-workload-env: &workload-env
   DM_IntegrationSettings__CorsUrls__1: http://localhost:8080
   PORT: 5050
 
-  DM_MigrationOnStart: true
-
 services:
   postgres:
     container_name: 'dm-pg'
@@ -62,6 +60,16 @@ services:
     volumes: 
       - backups:/var/backups
       - pgdata:/var/lib/postgresql/data
+
+  migration:
+    container_name: 'dm-migration'
+    image: 'dm-migration:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
+    environment: *workload-env
+    depends_on:
+      - postgres
 
   mongo:
     container_name: 'dm-mongo'

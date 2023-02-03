@@ -85,6 +85,7 @@ ProjectSection(SolutionItems) = preProject
 	..\README.md = ..\README.md
 	Directory.Build.props = Directory.Build.props
 	..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
+	Dockerfile.migration = Dockerfile.migration
 EndProjectSection
 EndProject
 Global
