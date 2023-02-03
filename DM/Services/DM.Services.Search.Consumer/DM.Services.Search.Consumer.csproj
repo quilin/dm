@@ -9,8 +9,9 @@
         <PackageReference Include="Autofac" Version="6.4.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="2.0.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.48.0" />
-        <PackageReference Include="Grpc.Tools" Version="2.48.0">
+        <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.51.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.51.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
