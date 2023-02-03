@@ -126,12 +126,10 @@ internal class Startup
     /// <param name="appBuilder"></param>
     /// <param name="integrationOptions"></param>
     /// <param name="configuration"></param>
-    /// <param name="dbContext"></param>
     /// <param name="logger"></param>
     public void Configure(IApplicationBuilder appBuilder,
         IOptions<IntegrationSettings> integrationOptions,
         IConfiguration configuration,
-        DmDbContext dbContext,
         ILogger<Startup> logger)
     {
         appBuilder
@@ -153,11 +151,5 @@ internal class Startup
                 c.MapControllers();
                 c.MapHub<NotificationHub>("/whatsup");
             });
-
-        if (configuration.GetValue<bool>("MigrationOnStart"))
-        {
-            logger.LogInformation("[💨] Initiating database migration");
-            dbContext.Database.Migrate();
-        }
     }
 }
