@@ -18,6 +18,10 @@ internal class BbRenderModeSwaggerFilter : IOperationFilter
                 Name = "X-Dm-Bb-Render-Mode",
                 In = ParameterLocation.Header,
                 Required = false,
+                Schema = new OpenApiSchema
+                {
+                    Type = "string"
+                },
                 Description = "Requests with user defined texts that allows usage of BB-codes may be" +
                               $" rendered differently by passing the {"X-Dm-Bb-Render-Mode"} header" +
                               $" of one of following values {string.Join(", ", Enum.GetValues(typeof(BbRenderMode)).Cast<BbRenderMode>())}"
