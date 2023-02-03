@@ -52,6 +52,7 @@ public class Startup
 
         services.AddMvc();
         services.AddGrpc(options => options.Interceptors.Add<IdentityInterceptor>());
+        services.AddGrpcReflection();
     }
 
     /// <summary>
@@ -79,6 +80,10 @@ public class Startup
     {
         applicationBuilder
             .UseRouting()
-            .UseEndpoints(route => route.MapGrpcService<SearchEngineService>());
+            .UseEndpoints(route =>
+            {
+                route.MapGrpcService<SearchEngineService>();
+                route.MapGrpcReflectionService();
+            });
     }
 }
