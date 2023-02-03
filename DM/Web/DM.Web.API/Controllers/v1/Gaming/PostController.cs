@@ -34,7 +34,7 @@ public class PostController : ControllerBase
     [HttpGet("rooms/{id}/posts", Name = nameof(GetPosts))]
     [ProducesResponseType(typeof(ListEnvelope<Post>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetPosts(Guid id, [FromBody] PagingQuery q) =>
+    public async Task<IActionResult> GetPosts(Guid id, [FromQuery] PagingQuery q) =>
         Ok(await postApiService.Get(id, q));
 
     /// <summary>

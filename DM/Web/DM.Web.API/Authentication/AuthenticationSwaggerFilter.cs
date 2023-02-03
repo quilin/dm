@@ -24,6 +24,10 @@ public class AuthenticationSwaggerFilter : IOperationFilter
                 Name = ApiCredentialsStorage.HttpAuthTokenHeader,
                 In = ParameterLocation.Header,
                 Required = context.MethodInfo.GetCustomAttribute<AuthenticationRequiredAttribute>() != null,
+                Schema = new OpenApiSchema
+                {
+                    Type = "string",
+                },
                 Description = $"Authenticated requests require {ApiCredentialsStorage.HttpAuthTokenHeader} header. " +
                               "You can get the data from POST /account/ method, " +
                               "sending login and password in \"token\" response field"
