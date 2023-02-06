@@ -39,7 +39,7 @@ x-workload-env: &workload-env
   DM_EmailConfiguration__FromDisplayName: DM.am
   DM_EmailConfiguration__ReplyToAddress: test@dm.am
 
-  DM_SearchServiceConfiguration__GrpcEndpoint: http://dm-search-engine-consumer:5052
+  DM_SearchServiceConfiguration__GrpcEndpoint: http://dm-search-engine-consumer:5050
 
   DM_IntegrationSettings__WebUrl: http://localhost:5050
   DM_IntegrationSettings__ApiUrl: http://localhost:5051
@@ -61,16 +61,6 @@ services:
       - backups:/var/backups
       - pgdata:/var/lib/postgresql/data
 
-  migration:
-    container_name: 'dm-migration'
-    image: 'dm-migration:local-latest'
-    build:
-      context: .
-      dockerfile: Dockerfile.migration
-    environment: *workload-env
-    depends_on:
-      - postgres
-
   mongo:
     container_name: 'dm-mongo'
     image: 'mongo:latest'
@@ -78,6 +68,22 @@ services:
       - '27017:27017'
     volumes:
       - mongodata:/data/db
+        
+  migration:
+    container_name: 'dm-migration'
+    image: 'dm-api:local-latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT_DIR: Web
+        PROJECT_NAME: DM.Web.API
+    environment: 
+      <<: *workload-env
+      DM_MigrateOnStart: true 
+    depends_on:
+      - mongo
+      - postgres
 
   elasticsearch:
     container_name: 'dm-es'
@@ -205,9 +211,8 @@ services:
       - '5051:5050'
     environment: *workload-env
     depends_on:
+      - migration
       - rabbitmq
-      - mongo
-      - postgres
 
   dmfront:
     container_name: 'dm-front'
