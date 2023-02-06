@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using DM.Services.Common;
 using DM.Services.Community;
 using DM.Services.Core.Configuration;
@@ -30,6 +31,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Mongo.Migration.Startup;
+using Mongo.Migration.Startup.DotNetCore;
+using MongoDB.Driver;
 
 namespace DM.Web.API;
 
@@ -46,6 +50,7 @@ internal class Startup
     private IConfiguration Configuration { get; set; }
     private IHttpContextAccessor httpContextAccessor;
     private IBbParserProvider bbParserProvider;
+    private bool migrateOnStart;
 
     /// <summary>
     /// Configure application services
@@ -54,6 +59,7 @@ internal class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         Configuration = ConfigurationFactory.Default;
+        migrateOnStart = Configuration.GetValue<bool>("MigrateOnStart");
 
         services
             .AddOptions()
@@ -90,6 +96,17 @@ internal class Startup
             .AddSwaggerGen(c => c.ConfigureGen())
             .AddMvc(config => config.ModelBinderProviders.Insert(0, new ReadableGuidBinderProvider()))
             .AddJsonOptions(config => config.Setup(httpContextAccessor, bbParserProvider));
+
+        if (migrateOnStart)
+        {
+            var mongoConnection = Configuration.GetConnectionString(nameof(ConnectionStrings.Mongo));
+            services.AddMigration(new MongoMigrationSettings
+            {
+                ConnectionString = mongoConnection,
+                ClientSettings = MongoClientSettings.FromConnectionString(mongoConnection),
+                Database = new Uri(mongoConnection).AbsolutePath.Trim('/'),
+            });
+        }
     }
 
     /// <summary>
@@ -126,12 +143,20 @@ internal class Startup
     /// <param name="appBuilder"></param>
     /// <param name="integrationOptions"></param>
     /// <param name="configuration"></param>
+    /// <param name="dbContext"></param>
     /// <param name="logger"></param>
     public void Configure(IApplicationBuilder appBuilder,
         IOptions<IntegrationSettings> integrationOptions,
         IConfiguration configuration,
+        DmDbContext dbContext,
         ILogger<Startup> logger)
     {
+        if (migrateOnStart)
+        {
+            dbContext.Database.Migrate();
+            throw new Exception("Migration is complete");
+        }
+
         appBuilder
             .UseSwagger(c => c.Configure())
             .UseSwaggerUI(c => c.ConfigureUi())

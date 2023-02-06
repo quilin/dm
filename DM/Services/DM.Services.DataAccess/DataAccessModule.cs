@@ -1,6 +1,7 @@
 using Autofac;
 using DM.Services.Core.Configuration;
 using DM.Services.DataAccess.MongoIntegration;
+using DM.Services.DataAccess.MongoIntegration.Migrations;
 using DM.Services.DataAccess.RelationalStorage;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -29,6 +30,10 @@ public class DataAccessModule : Module
             .AsSelf()
             .AsImplementedInterfaces()
             .SingleInstance();
+
+        builder.RegisterType<AttributeSchemataInitialMigration>()
+            .AsSelf()
+            .AsImplementedInterfaces();
 
         base.Load(builder);
     }
