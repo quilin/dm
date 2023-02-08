@@ -9,6 +9,7 @@ namespace DM.Services.DataAccess.BusinessObjects.Users;
 /// <summary>
 /// DAL model for authorization token
 /// </summary>
+[Table("Tokens")]
 public class Token : IRemovable
 {
     /// <summary>

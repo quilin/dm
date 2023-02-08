@@ -47,7 +47,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
-import IconType from '@/components/iconType';
 import { Game, Character, CharacterStatus } from '@/api/models/gaming';
 
 const characterStatuses: { [key: string]: { displayText: string; displayClass: string } } = {
@@ -60,7 +59,6 @@ const characterStatuses: { [key: string]: { displayText: string; displayClass: s
 
 @Component({})
 export default class CharactersList extends Vue {
-  private IconType: typeof IconType = IconType;
   private statuses = characterStatuses;
 
   @Action('gaming/fetchSelectedGameCharacters')

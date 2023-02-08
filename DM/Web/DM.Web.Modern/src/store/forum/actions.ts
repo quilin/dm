@@ -83,7 +83,7 @@ const actions: ActionTree<ForumState, RootState> = {
       commit('updateComment', data?.resource);
     }
   },
-  async deleteComment(_0, { id }): Promise<void> {
+  async deleteComment(_, { id }): Promise<void> {
     await forumApi.deleteComment(id);
   },
   async markAllTopicsAsRead({ commit }, { id }): Promise<void> {

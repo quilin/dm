@@ -57,7 +57,6 @@ public class Game
 
     /// <summary>
     /// Pending assistant if any
-    /// <remarks>Due to some issues in EFCore 3.1.5 had to move to IEnumerable, but make no mistake - that is a single assistant every time!</remarks>
     /// </summary>
     public GeneralUser PendingAssistant { get; set; }
 
@@ -79,7 +78,7 @@ public class Game
     /// <summary>
     /// Game pending posts
     /// </summary>
-    public IEnumerable<PendingPost> Pendings { get; set; }
+    public IEnumerable<PendingPost> PendingPosts { get; set; }
 
     /// <summary>
     /// Game title

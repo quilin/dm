@@ -1,5 +1,5 @@
-import { ApiResult, Envelope, ListEnvelope } from '@/api/models/common';
-import { Game, AttributeSchema, Tag, Character, Room } from '@/api/models/gaming';
+import { ApiResult, Envelope, ListEnvelope, PagingQuery } from '@/api/models/common';
+import { Game, AttributeSchema, Tag, Character, Room, Comment } from '@/api/models/gaming';
 import { User } from '@/api/models/community';
 import Api from '@/api';
 
@@ -33,6 +33,11 @@ export default new class {
     return data!;
   }
 
+  public async getComments(gameId: string, query: PagingQuery): Promise<ListEnvelope<Comment>> {
+    const { data } = await Api.get<ListEnvelope<Comment>>(`games/${gameId}/comments`, query);
+    return data!;
+  }
+
   public async getSchemas(): Promise<ListEnvelope<AttributeSchema>> {
     const { data } = await Api.get<ListEnvelope<AttributeSchema>>('schemata');
     return data!;
@@ -51,15 +56,27 @@ export default new class {
     return await Api.post<Envelope<Game>>('games', game);
   }
 
-  public async createCharacter(id: string, character: Character): Promise<ApiResult<Envelope<Character>>> {
-    return await Api.post<Envelope<Character>>(`games/${id}/characters`, character);
+  public async createCharacter(gameId: string, character: Character): Promise<ApiResult<Envelope<Character>>> {
+    return await Api.post<Envelope<Character>>(`games/${gameId}/characters`, character);
   }
 
-  public async subscribe(id: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.post<Envelope<User>>(`games/${id}/readers`);
+  public async createComment(gameId: string, comment: Comment): Promise<ApiResult<Envelope<Comment>>> {
+    return await Api.post<Envelope<Comment>>(`games/${gameId}/comments`, comment);
   }
 
-  public async unsubscribe(id: string): Promise<ApiResult<void>> {
-    return await Api.delete(`games/${id}/readers`);
+  public async subscribe(gameId: string): Promise<ApiResult<Envelope<User>>> {
+    return await Api.post<Envelope<User>>(`games/${gameId}/readers`);
+  }
+
+  public async unsubscribe(gameId: string): Promise<ApiResult<void>> {
+    return await Api.delete(`games/${gameId}/readers`);
+  }
+
+  public async updateComment(commentId: string, comment: Comment): Promise<ApiResult<Envelope<Comment>>> {
+    return await Api.patch<Envelope<Comment>>(`games/comments/${commentId}`, comment);
+  }
+
+  public async deleteComment(commentId: string): Promise<ApiResult<void>> {
+    return await Api.delete(`games/comments/${commentId}`);
   }
 }();
