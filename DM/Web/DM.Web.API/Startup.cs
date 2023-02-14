@@ -154,7 +154,7 @@ internal class Startup
         if (migrateOnStart)
         {
             dbContext.Database.Migrate();
-            throw new Exception("Migration is complete");
+            Environment.Exit(0);
         }
 
         appBuilder
