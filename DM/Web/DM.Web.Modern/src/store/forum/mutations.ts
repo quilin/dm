@@ -74,14 +74,14 @@ const mutations: MutationTree<ForumState> = {
   addCommentLike(state, payload: { user: User; id: string}) {
     const { user, id } = payload;
     const comment = state.comments!.resources.find(comment => comment.id === id);
-    comment!.likes.push(user);
+    comment!.likes!.push(user);
   },
   deleteCommentLike(state, payload: { user: User; id: string }) {
     const { user, id } = payload;
     const comment = state.comments!.resources.find(comment => comment.id === id);
-    const likedIndex = comment!.likes.findIndex(likedUser => likedUser.login === user.login);
+    const likedIndex = comment!.likes!.findIndex(likedUser => likedUser.login === user.login);
     if (likedIndex >= 0) {
-      comment!.likes.splice(likedIndex, 1);
+      comment!.likes!.splice(likedIndex, 1);
     }
   },
 

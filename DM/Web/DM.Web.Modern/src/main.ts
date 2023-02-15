@@ -5,7 +5,6 @@ import PortalVue from 'portal-vue';
 import App from './App.vue';
 
 import Icon from '@/components/Icon.vue';
-
 import Lightbox from '@/components/Lightbox.vue';
 
 import HumanTimespan from '@/components/dates/HumanTimespan.vue';

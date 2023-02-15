@@ -1,4 +1,5 @@
 import { User } from '@/api/models/community';
+import { Likeable } from '@/api/models/common';
 
 export interface Forum {
   id: string;
@@ -10,7 +11,7 @@ export interface LastComment {
   author: User;
 }
 
-export interface Topic {
+export interface Topic extends Likeable {
   id?: string;
   author?: User;
   created?: string;
@@ -25,7 +26,7 @@ export interface Topic {
   likes?: User[];
 }
 
-export interface Comment {
+export interface Comment extends Likeable {
   id: string;
   author: User;
   created: string;

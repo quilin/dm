@@ -1,5 +1,5 @@
 <template>
-  <span>{{humanDate}}</span>
+  <span :title="localMoment">{{humanDate}}</span>
 </template>
 
 <script lang="ts">
@@ -13,6 +13,10 @@ export default class HumanTimespan extends Vue {
 
   private get humanDate(): string {
     return moment(this.date).fromNow();
+  }
+
+  private get localMoment(): string {
+    return moment(this.date).format('DD MMMM YYYY HH:mm:SS');
   }
 }
 </script>

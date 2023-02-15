@@ -54,17 +54,11 @@ export default class DmApp extends Vue {
 }
 </script>
 
-<style lang="stylus">
-html, body, #app
+<style scoped lang="stylus">
+#app
   height 100%
   margin 0
   overflow hidden
-
-body
-  font-family PT Sans
-  font-size $fontSize
-  line-height 1.3
-  word-wrap break-word
 
 .v--modal
   theme(background-color, $background)
@@ -121,23 +115,6 @@ body
   margin-left 0
   margin-right $big
 
-a
-  theme(color, $activeText)
-  text-decoration none
-  transition color $animationTime
-  cursor pointer
-  &:hover
-    theme(color, $activeHoverText)
-
-.page-title
-  pageTitle()
-
-.content-title
-  header()
-
-.content-minor-title
-  minorTitle()
-
 .popup-container
   position absolute
   top 0
@@ -151,15 +128,4 @@ a
   right $medium
   z-index 1000
 
-.quote
-  padding $small
-  theme(background-color, $quoteBackground)
-  themeExtend(border-left, $minor solid, $quoteOutline)
-
-.info-head
-  display inline-block
-  margin $medium 0 $small
-  font-size $titleFontSize
-  font-weight normal
-  theme(color, $highlightText)
 </style>

@@ -11,7 +11,8 @@ module.exports = {
           path.resolve('./src/styles/Fonts.styl'),
           path.resolve('./src/styles/Blocks.styl'),
           path.resolve('./src/styles/Inputs.styl'),
-          path.resolve('./src/styles/Grid.styl')
+          path.resolve('./src/styles/Grid.styl'),
+          path.resolve('./src/styles/Defaults.styl'),
         ]
       }
     }

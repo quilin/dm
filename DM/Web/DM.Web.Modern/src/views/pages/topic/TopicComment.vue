@@ -1,10 +1,12 @@
 <template>
-  <div class="topic-comment">
-    <template v-if="!editMode">
-      <div v-html="comment.text" />
-      <div class="topic-comment__meta">
-        <div>
-          <user-link :user="comment.author" />,
+  <div class="container">
+    <div class="wrapper">
+      <router-link class="user-picture-container" :to="{ name: 'profile', params: { login: comment.author.login } }">
+        <div class="user-picture" :style="{ backgroundImage: comment.author.mediumPictureUrl ? `url(${comment.author.mediumPictureUrl})` : null }" />
+      </router-link>
+      <div class="content">
+        <div class="meta">
+          <user-link :user="comment.author" :hide-picture="true" />,
           <human-timespan :date="comment.created" />
           <template v-if="comment.updated">
             , (изменен
@@ -13,19 +15,13 @@
           &nbsp;
           <like :entity="comment" @liked="addLike({ id: comment.id })" @unliked="deleteLike({ id: comment.id })" />
         </div>
-        <div class="topic-comment__controls" v-if="canEdit">
-          <a class="topic-comment__control" @click="showEditForm">
-            <icon :font="IconType.Edit" />
-            Редактировать
-          </a>
-          <a class="topic-comment__control" @click="$modal.show('delete-comment')">
-            <icon :font="IconType.Remove" />
-            Удалить
-          </a>
+        <div v-if="!editMode" v-html="comment.text" />
+        <edit-comment-form v-else :comment="comment" @edited="hideEditForm" @canceled="hideEditForm" />
+        <div v-if="actionsAvailable" class="actions" @click="editMode = true">
+          <icon :font="IconType.Kebab" />
         </div>
       </div>
-    </template>
-    <edit-comment-form v-else :comment="comment" @edited="hideEditForm" @canceled="hideEditForm" />
+    </div>
     <confirm-lightbox
         name="delete-comment"
         title="Удалить комментарий?"
@@ -74,13 +70,13 @@ export default class TopicComment extends Vue {
   private user!: User | null;
 
   private get canEdit() {
-    return this.comment.author.login === this.user?.login ||
+    return this.comment.author!.login === this.user?.login ||
         this.moderators.some(moderator => moderator.login === this.user?.login) ||
         userIsHighAuthority(this.user);
   }
 
-  private showEditForm() {
-    this.editMode = true;
+  private get actionsAvailable(): boolean {
+    return !this.editMode && this.canEdit;
   }
 
   private hideEditForm() {
@@ -96,27 +92,37 @@ export default class TopicComment extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.topic-comment
-  panel()
+.container
+  margin $small (-($gridStep * 3))
+  padding $gridStep * 3
+  border-radius $borderRadius
 
-  padding $minor
-  border 1px solid
-  theme(border-color, $border)
+.wrapper
+  display flex
 
-  &__meta
-    display flex
-    justify-content space-between
+.user-picture-container
+  display block
+  height $gridStep * 10
+  flex-shrink 0
 
-    margin-top $minor
+.user-picture
+  width $gridStep * 10
+  height $gridStep * 10
+  margin-right $gridStep * 3
+  background transparent left center no-repeat
+  background-size contain
+  border-radius $big
 
-    secondary()
+.content
+  position relative
+  flex-grow 1
 
-  &__controls
-    display none
+.meta
+  theme(color, $secondaryText)
+  margin-bottom $minor
 
-  &:hover &__controls
-    display block
-
-  &__control
-    margin-left $medium
+.actions
+  position absolute
+  right 0
+  top 0
 </style>
