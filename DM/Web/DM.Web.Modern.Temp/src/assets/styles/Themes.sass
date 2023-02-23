@@ -1,0 +1,72 @@
+@function color-set($modern, $contrast, $classic, $pale, $night)
+  @return (Modern: $modern, ClassicPale: $contrast, Classic: $classic, Pale: $pale, Night: $night)
+
+@function color-pair($light, $dark)
+  @return color-set($light, $light, $light, $light, $dark)
+
+@mixin theme($attr, $color-set, $value-prefix: null)
+  @each $mode, $color in $color-set
+    #app.theme_#{$mode} &
+      #{$attr}: $value-prefix $color
+
+/* COLOR THEMES                      Modern   Contrast Classic  Pale     Night */
+/// Texts
+$text:                              color-set(#333,    #333,    #666,    #333,    #eaeaea)
+$secondary-text:                    color-set(#8a8a8a, #999,    #999,    #888,    #adadad)
+$comment-text:                      color-set(#8b532b, #7b532b, #7b532b, #7b532b, #e89b65)
+$highlight-text:                    color-set(#630,    #666,    #888,    #630,    #e89b65)
+
+/// Links
+$active-text:                       color-set(#3f78a8, #304060, #506080, #335a8c, #bac7a9)
+$active-text-hover:                 color-set(#a33,    #3f78a8, #3f78a8, #901717, #ffc73f)
+
+/// Functions
+$positive-text:                     color-set(#337b33, #363,    #008000, #337b33, #92b5e0)
+$negative-text:                     color-set(#900,    #933,    #933,    #901717, #ec6f5b)
+$negative-border:                   color-set(#b33,    #b33,    #b33,    #b33,    #b33)    // TBD
+
+/// Backgrounds
+$background:                        color-set(#fff,    #fff,     #fff,    #fff,    #222)
+$panel-background:                  color-set(#fafafa, #edeceb, #edeceb, #ddd,    #333)
+$panel-background-highlight:        color-set(#e9f0f9, #b0c4de, #b0c4de, #e8e8ee, #4a4a4a)
+$panel-background-hover:            color-set(#fafafa, #fafafa, #fafafa, #fafafa, #2c2c2c) // TBD
+$control-background:                color-set(#eee,    #edeceb, #edeceb, #ddd,    #333)    // TBD
+$overlay-background:                color-pair(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5))
+
+/// Components
+$quote-background:                  color-set(#e8e8f2, #e6e6e5, #e6e6e5, #e8e8ee, #38353c)
+$quote-outline:                     color-set(#c3c3d5, #b0c4de, #b0c4de, #c3c3d0, #a790c1)
+$spoiler-background:                color-set(#ffe,    #f5f5dc, #f5f5dc, #f2f1f0, #444)
+$anticipation:                      color-set(#900,    #630,    #963,    #901717, #ec6f5b)
+
+/// Buttons
+$button-text:                       color-set(#fff,    #444,    #444,    #fff,    #fff)
+$button-text-hover:                 color-set(#000,    #eaeaea, #eaeaea, #000,    #222)
+$button-background:                 color-set(#36a,    #eaeaea, #eaeaea, #335a8c, #c76a28)
+$button-background-hover:           color-set(#a8cbff, #444,    #444,    #97c0f4, #ffd63f)
+$button-text-disabled:              color-set(#8a8a8a, #bbb,    #bbb,    #8a8a8a, #ccc)
+$button-background-disabled:        color-set(#ddd,    #f8f8f8, #f8f8f8, #ddd,    #666)
+
+/// Dropdown
+$dropdown-option-background-hover:  color-set(#fafafa, #fafafa, #fafafa, #fafafa, #2c2c2c) // TBD
+
+// Inputs and textareas
+$input-background:                  color-set(#fff,     #fff,    #fff,    #fff,    #222)
+$input-background-disabled:         color-set(#ddd,     #f8f8f8, #f8f8f8, #ddd,    #666)
+
+/// Borders and outlines
+$border:                            color-set(#dfdfdf, #ccc,    #ccc,    #ccc,    #a8a8a8) // TBD
+
+/// Progress bars
+$progress-background:               color-set(#fafafa, #edeceb, #edeceb, #ddd,    #333)
+$progress-background-done:          color-set(#506080, #506080, #506080, #506080, #506080) // TBD
+
+/// Shades
+$shade-background:                  color-pair(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.6))
+$shade-text:                        color-pair(#fff, #333)
+
+// Notifications
+$notification-background:           color-pair(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.8))
+$notification-text:                 color-pair(#eaeaea, #333)
+$notification-link:                 color-pair(#bac7a9, #3f78a8)
+$notification-link-hover:           color-pair(#ffc73f, #a33)

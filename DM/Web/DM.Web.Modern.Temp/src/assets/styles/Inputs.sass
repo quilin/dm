@@ -1,0 +1,61 @@
+@import "Variables"
+@import "Themes"
+
+$input-padding: ($minor + 1px) $small
+
+@mixin input()
+  margin: 0
+  padding: $input-padding
+
+  outline: none
+  border-radius: $border-radius
+
+  +theme(color, $text)
+  +theme(background-color, $input-background)
+  +theme(border, $border, 1px solid)
+
+  font-family: "PT Sans", sans-serif
+  font-size: $font-size
+
+  &:focus
+    +theme(box-shadow, $border, inset 0 0 $minor)
+
+  &:disabled
+    +theme(background-color, $input-background-disabled)
+
+  &:-internal-autofill-selected
+    +theme(color, $text)
+    background: transparent
+
+@mixin button()
+  margin: 0
+  padding: $input-padding
+
+  outline: none
+  border-radius: $border-radius
+
+  +theme(color, $button-text)
+  +theme(background-color, $button-background)
+  +theme(border, $button-background, 1px solid)
+
+  cursor: pointer
+  font-family: "PT Sans", sans-serif
+  font-size: $font-size
+
+  &:hover
+    +theme(color, $button-text-hover)
+    +theme(background-color, $button-background-hover)
+    +theme(border-color, $button-text-hover)
+
+  &[disabled]
+    +theme(color, $button-text-disabled)
+    +theme(background-color, $button-background-disabled)
+    +theme(border-color, $button-background-disabled)
+    cursor: not-allowed
+
+input,
+textarea
+  +input()
+
+button
+  +button()
