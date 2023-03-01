@@ -19,10 +19,8 @@ public static class LoggingConfiguration
     /// Register logger and add it to the service collection of the application
     /// </summary>
     public static IServiceCollection AddDmLogging(this IServiceCollection services,
-        string applicationName, IConfigurationRoot configuration = null)
+        string applicationName, IConfiguration configuration)
     {
-        configuration ??= ConfigurationFactory.Default;
-
         var connectionStrings = new ConnectionStrings();
         configuration.GetSection(nameof(ConnectionStrings)).Bind(connectionStrings);
 

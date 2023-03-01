@@ -5,3 +5,4 @@ bundles
 .vs
 *.user
 launchSettings.json
+appsettings.*.json

@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Notifications.Consumer;
 
@@ -22,6 +21,17 @@ namespace DM.Services.Notifications.Consumer;
 /// </summary>
 public class Startup
 {
+    private readonly IConfiguration configuration;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configuration"></param>
+    public Startup(IConfiguration configuration)
+    {
+        this.configuration = configuration;
+    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -29,12 +39,11 @@ public class Startup
     /// <returns></returns>
     public void ConfigureServices(IServiceCollection services)
     {
-        var configuration = ConfigurationFactory.Default;
         services
             .AddOptions()
             .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
             .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
-            .AddDmLogging("DM.Notifications.Consumer");
+            .AddDmLogging("DM.Notifications.Consumer", configuration);
 
         services.AddJamqClient(config => config
             .UseRabbit(sp =>

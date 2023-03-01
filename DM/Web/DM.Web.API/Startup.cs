@@ -42,12 +42,13 @@ namespace DM.Web.API;
 /// </summary>
 internal class Startup
 {
+    private readonly IConfiguration configuration;
+
     public Startup(IConfiguration configuration)
     {
-        Configuration = configuration;
+        this.configuration = configuration;
     }
 
-    private IConfiguration Configuration { get; set; }
     private IHttpContextAccessor httpContextAccessor;
     private IBbParserProvider bbParserProvider;
     private bool migrateOnStart;
@@ -58,24 +59,23 @@ internal class Startup
     /// <param name="services">Service collection</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        Configuration = ConfigurationFactory.Default;
-        migrateOnStart = Configuration.GetValue<bool>("MigrateOnStart");
+        migrateOnStart = configuration.GetValue<bool>("MigrateOnStart");
 
         services
             .AddOptions()
-            .Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)).Bind)
-            .Configure<IntegrationSettings>(Configuration.GetSection(nameof(IntegrationSettings)).Bind)
-            .Configure<EmailConfiguration>(Configuration.GetSection(nameof(EmailConfiguration)).Bind)
-            .Configure<CdnConfiguration>(Configuration.GetSection(nameof(CdnConfiguration)).Bind)
-            .Configure<RabbitMqConfiguration>(Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
-            .Configure<SearchServiceConfiguration>(Configuration.GetSection(nameof(SearchServiceConfiguration)).Bind)
-            .AddDmLogging("DM.API");
+            .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
+            .Configure<IntegrationSettings>(configuration.GetSection(nameof(IntegrationSettings)).Bind)
+            .Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)).Bind)
+            .Configure<CdnConfiguration>(configuration.GetSection(nameof(CdnConfiguration)).Bind)
+            .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+            .Configure<SearchServiceConfiguration>(configuration.GetSection(nameof(SearchServiceConfiguration)).Bind)
+            .AddDmLogging("DM.API", configuration);
 
         services
             .AddAutoMapper(config => config.AllowNullCollections = true)
             .AddMemoryCache()
             .AddDbContextPool<DmDbContext>(options => options
-                .UseNpgsql(Configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
+                .UseNpgsql(configuration.GetConnectionString(nameof(ConnectionStrings.Rdb))));
 
         services.AddJamqClient(config => config
             .UseRabbit(sp =>
@@ -99,7 +99,7 @@ internal class Startup
 
         if (migrateOnStart)
         {
-            var mongoConnection = Configuration.GetConnectionString(nameof(ConnectionStrings.Mongo));
+            var mongoConnection = configuration.GetConnectionString(nameof(ConnectionStrings.Mongo));
             services.AddMigration(new MongoMigrationSettings
             {
                 ConnectionString = mongoConnection,
@@ -142,12 +142,10 @@ internal class Startup
     /// </summary>
     /// <param name="appBuilder"></param>
     /// <param name="integrationOptions"></param>
-    /// <param name="configuration"></param>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
     public void Configure(IApplicationBuilder appBuilder,
         IOptions<IntegrationSettings> integrationOptions,
-        IConfiguration configuration,
         DmDbContext dbContext,
         ILogger<Startup> logger)
     {
