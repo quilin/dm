@@ -1,4 +1,5 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -9,9 +10,11 @@ class Program
 {
     static void Main(string[] args)
     {
-        CreateWebHostBuilder(args).Build().Run();
+        CreateWebHostBuilder(args)
+            .WithDmConfiguration()
+            .Build().Run();
     }
-        
+
     /// <summary>
     /// Create web host builder
     /// </summary>

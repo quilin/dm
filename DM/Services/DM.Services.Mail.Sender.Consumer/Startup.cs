@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using ConfigurationFactory = DM.Services.Core.Configuration.ConfigurationFactory;
 
 namespace DM.Services.Mail.Sender.Consumer;
 
@@ -21,6 +20,17 @@ namespace DM.Services.Mail.Sender.Consumer;
 /// </summary>
 public class Startup
 {
+    private readonly IConfiguration configuration;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configuration"></param>
+    public Startup(IConfiguration configuration)
+    {
+        this.configuration = configuration;
+    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -28,13 +38,12 @@ public class Startup
     /// <returns></returns>
     public void ConfigureServices(IServiceCollection services)
     {
-        var configuration = ConfigurationFactory.Default;
         services
             .AddOptions()
             .Configure<EmailConfiguration>(configuration.GetSection(nameof(EmailConfiguration)).Bind)
             .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
             .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
-            .AddDmLogging("DM.MailSender.Consumer");
+            .AddDmLogging("DM.MailSender.Consumer", configuration);
 
         services.AddJamqClient(config => config
             .UseRabbit(sp =>
