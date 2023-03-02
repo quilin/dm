@@ -43,7 +43,7 @@ public class Startup
             .UseRabbit(sp =>
             {
                 var cfg = sp.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
-                return new RabbitConnectionParameters(cfg.Endpoint, cfg.Username, cfg.Password);
+                return new RabbitConnectionParameters(cfg.Endpoint, cfg.VirtualHost, cfg.Username, cfg.Password);
             }));
         services.AddHostedService<SearchEngineConsumer>();
 

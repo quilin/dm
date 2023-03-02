@@ -15,7 +15,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Jamq.Client.Rabbit.DependencyInjection" Version="0.8.0" />
+        <PackageReference Include="Jamq.Client.Rabbit.DependencyInjection" Version="0.9.0" />
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.8" />
     </ItemGroup>
 
