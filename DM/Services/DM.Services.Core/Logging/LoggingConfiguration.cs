@@ -39,16 +39,17 @@ public static class LoggingConfiguration
                 .WriteTo.Console())
             .CreateLogger();
 
-        services.AddOpenTelemetryTracing(builder => builder
-            .ConfigureResource(r => r.AddService(applicationName))
-            .AddAspNetCoreInstrumentation()
-            .AddGrpcClientInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddEntityFrameworkCoreInstrumentation(opts => opts.SetDbStatementForText = true)
-            .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources") // MongoDb is not too fancy
-            .AddJamqClientInstrumentation()
-            .AddConsoleExporter()
-            .AddJaegerExporter(options => options.Endpoint = new Uri(connectionStrings.TracingEndpoint)));
+        services.AddOpenTelemetry()
+            .WithTracing(builder => builder
+                .ConfigureResource(r => r.AddService(applicationName))
+                .AddAspNetCoreInstrumentation()
+                .AddGrpcClientInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddEntityFrameworkCoreInstrumentation(opts => opts.SetDbStatementForText = true)
+                .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources") // MongoDb is not too fancy
+                .AddJamqClientInstrumentation()
+                .AddConsoleExporter()
+                .AddJaegerExporter(options => options.Endpoint = new Uri(connectionStrings.TracingEndpoint)));
 
         return services.AddLogging(b => b.AddSerilog());
     }
