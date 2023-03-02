@@ -13,6 +13,11 @@ public class RabbitMqConfiguration
     public string Endpoint { get; set; }
 
     /// <summary>
+    /// Broker virtual host
+    /// </summary>
+    public string VirtualHost { get; set; }
+
+    /// <summary>
     /// User name
     /// </summary>
     public string Username { get; set; }

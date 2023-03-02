@@ -39,7 +39,8 @@ internal class RealtimeNotificationConsumer : BackgroundService
             Exclusive = true
         };
         var consumer = consumerBuilder.BuildRabbit<RealtimeNotification, RealtimeNotificationProcessor>(parameters);
-        consumeRetryPolicy.Execute(consumer.Subscribe);
+        // consumeRetryPolicy.Execute(consumer.Subscribe);
+        consumer.Subscribe();
 
         logger.LogDebug("[👂] Realtime notifications consumer is listening to {QueueName} queue",
             parameters.QueueName);
