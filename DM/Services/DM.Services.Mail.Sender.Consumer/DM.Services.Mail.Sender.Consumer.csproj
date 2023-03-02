@@ -6,9 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Autofac" Version="7.0.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-        <PackageReference Include="Jamq.Client.Rabbit.DependencyInjection" Version="0.9.0" />
+        <PackageReference Include="Jamq.Client.Rabbit.DependencyInjection" Version="0.10.0" />
         <PackageReference Include="Polly" Version="7.2.3" />
     </ItemGroup>
 
