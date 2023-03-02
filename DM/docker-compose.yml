@@ -18,7 +18,8 @@ x-workload-env: &workload-env
   DM_ConnectionStrings__Logs: http://dm-es:9200
   DM_ConnectionStrings__TracingEndpoint: http://localhost:14268/api/traces
 
-  DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672/
+  DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672
+  DM_RabbitMqConfiguration__VirtualHost: /
   DM_RabbitMqConfiguration__Username: guest
   DM_RabbitMqConfiguration__Password: guest
 
