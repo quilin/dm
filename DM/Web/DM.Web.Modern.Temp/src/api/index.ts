@@ -20,7 +20,7 @@ const defaultHeaders: { [key: string]: string } = {
   [renderKey]: "html",
 };
 
-const apiHost = "http://localhost:5050"; // Config
+const apiHost = "http://localhost:5051"; // Config
 
 const configuration: AxiosRequestConfig = {
   baseURL: `${apiHost}/v1`,
@@ -111,12 +111,9 @@ class Api {
         error: null,
       };
     } catch (err: any) {
-      return {
-        data: null,
-        error: err.response
-          ? { ...err.response.data.error, code: err.response.status }
-          : err,
-      };
+      const { response } = err;
+      const { data } = response;
+      return { data: null, error: data };
     }
   }
 

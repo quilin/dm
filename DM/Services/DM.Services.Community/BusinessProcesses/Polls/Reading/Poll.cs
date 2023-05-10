@@ -52,5 +52,5 @@ public class PollOption
     /// <summary>
     /// List of voted users
     /// </summary>
-    public IEnumerable<Guid> UserIds { get; set; }
+    public List<Guid> UserIds { get; set; }
 }

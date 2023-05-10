@@ -12,8 +12,5 @@ const charCode = computed(() => `&#x${props.font.toString(16)};`);
 </script>
 <style scoped lang="sass">
 .icon
-  font-family: "Iconic", serif !important
-  font-weight: normal !important
-  -webkit-font-smoothing: antialiased
-  user-select: none
+  +icon()
 </style>

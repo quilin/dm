@@ -4,6 +4,7 @@ import { ColorSchema } from "@/api/models/community";
 import { ref } from "vue";
 import accountApi from "@/api/requests/accountApi";
 import { useUiStore } from "@/stores/ui";
+import type { BadRequestError } from "@/api/models/common";
 
 export const useUserStore = defineStore("root", () => {
   const user = ref<User | null>(null);
@@ -15,19 +16,22 @@ export const useUserStore = defineStore("root", () => {
 
     user.value = newUser;
     if (newUser === null) localStorage.removeItem(userKey);
-    else localStorage.setItem(userKey, JSON.stringify(user));
+    else localStorage.setItem(userKey, JSON.stringify(newUser));
     updateTheme(newUser?.settings?.colorSchema ?? ColorSchema.Modern);
   }
 
-  async function login(credentials: LoginCredentials) {
-    const { data } = await accountApi.signIn(credentials);
-    if (!data) return;
-
-    const { resource: authenticatedUser } = data!;
-    updateUser(authenticatedUser);
+  async function signIn(credentials: LoginCredentials) {
+    const { data, error } = await accountApi.signIn(credentials);
+    if (data) {
+      const { resource: authenticatedUser } = data;
+      updateUser(authenticatedUser);
+    } else if ("errors" in error!) {
+      return error as BadRequestError;
+    }
+    return null;
   }
 
-  async function logout() {
+  async function signOut() {
     await accountApi.signOut();
     updateUser(null);
   }
@@ -46,5 +50,5 @@ export const useUserStore = defineStore("root", () => {
     updateUser(data?.resource ?? null);
   }
 
-  return { user, unreadConversations, login, logout, fetchUser };
+  return { user, unreadConversations, signIn, signOut, fetchUser };
 });

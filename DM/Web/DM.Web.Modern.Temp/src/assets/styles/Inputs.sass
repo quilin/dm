@@ -41,11 +41,12 @@ $input-padding: ($minor + 1px) $small
   cursor: pointer
   font-family: "PT Sans", sans-serif
   font-size: $font-size
+  transition: $animation-time
 
   &:hover
     +theme(color, $button-text-hover)
     +theme(background-color, $button-background-hover)
-    +theme(border-color, $button-text-hover)
+    +theme(border-color, $button-background-hover)
 
   &[disabled]
     +theme(color, $button-text-disabled)

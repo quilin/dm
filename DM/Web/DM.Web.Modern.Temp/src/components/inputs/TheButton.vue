@@ -8,15 +8,15 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ loading: boolean; disabled: boolean }>();
+const props = defineProps<{ loading?: boolean; disabled: boolean }>();
 </script>
 
-<style scoped lang="stylus">
+<style scoped lang="sass">
 button.loading
-  background-position center center
-  background-image url('@/assets/loader.gif')
-  background-size $medium
-  background-repeat no-repeat
+  background-position: center center
+  background-image: url('@/assets/images/loader.gif')
+  background-size: $medium
+  background-repeat: no-repeat
   & span
-    visibility hidden
+    visibility: hidden
 </style>

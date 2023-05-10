@@ -5,8 +5,8 @@
   >
     <template v-if="props.user.rating.enabled">
       <span
-        class="quality"
         :class="{
+          quality: true,
           positive: props.user.rating.quality > 0,
           negative: props.user.rating.quality < 0,
         }"

@@ -22,12 +22,23 @@ export interface ListEnvelope<T> {
 }
 
 export interface GeneralError {
-  message: string;
-  code: number;
+  type: string;
+  title: string;
+  status: number;
+  traceId: string;
+}
+
+export enum ValidationErrorCode {
+  Empty = "Empty",
+  Short = "Short",
+  Long = "Long",
+  Taken = "Taken",
+  NotFound = "NotFound",
+  Invalid = "Invalid",
 }
 
 export interface BadRequestError extends GeneralError {
-  invalidProperties: { [field: string]: string };
+  errors: { [field: string]: ValidationErrorCode[] };
 }
 
 export interface ApiResult<T> {

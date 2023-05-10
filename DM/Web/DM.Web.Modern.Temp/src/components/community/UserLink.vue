@@ -35,25 +35,21 @@ const badge = computed(() => {
 });
 </script>
 
-<style scoped lang="stylus">
+<style scoped lang="sass">
 .user-link
-  white-space nowrap
+  white-space: nowrap
 
 .user-logo
-  display inline-block
+  display: inline-block
 
-  width $medium
-  height @width
-  border-radius @width
+  width: $medium
+  height: $medium
+  border-radius: $medium
 
-  margin-right $minor
-  background url('@/assets/userpic.png') 0 0 no-repeat
-  vertical-align text-bottom
-  background-size cover
+  background: url('@/assets/images/userpic.png') 0 0 no-repeat
+  vertical-align: text-bottom
+  background-size: cover
 
-.user-badge-container
-  secondary()
-
-  .user-badge
-    theme(color, $positiveText)
+.user-badge
+  +theme(color, $positive-text)
 </style>

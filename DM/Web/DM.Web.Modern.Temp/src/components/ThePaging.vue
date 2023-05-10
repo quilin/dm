@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import type { Paging } from "@/api/models/common";
 import { computed, watch } from "vue";
-import TheIcon from "@/components/icons/TheIcon.vue";
 import { IconType } from "@/components/icons/iconType";
 
 interface PageLink {

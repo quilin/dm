@@ -1,4 +1,3 @@
-using System.Linq;
 using AutoMapper;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DtoPollOption = DM.Services.Community.BusinessProcesses.Polls.Reading.PollOption;

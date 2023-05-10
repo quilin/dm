@@ -2,7 +2,7 @@
   <div class="poll">
     <div class="poll-name">
       {{ props.poll.title }}
-      <div v-if="closed" class="poll-closed">Голосование окончено</div>
+      <secondary-text v-if="closed">Голосование окончено</secondary-text>
     </div>
     <progress-bar
       v-for="option in props.poll.options"
@@ -13,7 +13,7 @@
       <the-icon v-if="option.voted" :font="IconType.Tick" />
       {{ option.text }}&nbsp;&ndash;&nbsp;{{ option.votesCount }}
       <a
-        v-if="!closed && user && !voted"
+        v-if="!closed && userStore.user && !voted"
         @click="participateInPoll(option.id)"
         class="poll-option-vote"
       />
@@ -27,9 +27,11 @@ import dayjs from "dayjs";
 import type { Poll } from "@/api/models/community";
 import ProgressBar from "@/components/ProgressBar.vue";
 import { useUserStore, useCommunityStore } from "@/stores";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import { IconType } from "@/components/icons/iconType";
 
 const props = defineProps<{ poll: Poll }>();
-const { user } = useUserStore();
+const userStore = useUserStore();
 const { vote } = useCommunityStore();
 
 const closed = computed(() => dayjs(props.poll.ends).isBefore(dayjs()));
@@ -54,9 +56,6 @@ const participateInPoll = async (optionId: string) => {
 
 .poll-name
   margin: $small 0
-
-.poll-closed
-  +secondary()
 
 .poll-option-vote
   display: block

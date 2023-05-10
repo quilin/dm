@@ -10,13 +10,11 @@
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import type { User } from "@/api/models/community";
 import { computed } from "vue";
-import moment from "moment/moment";
+import dayjs from "dayjs";
 
 const props = defineProps<{ detailed: boolean; user: User }>();
 
-const online = computed(
-  () => moment(moment.now()).diff(props.user.online, "minutes") < 5
-);
+const online = computed(() => dayjs().diff(props.user.online, "m", true) < 5);
 </script>
 
 <style scoped lang="stylus">

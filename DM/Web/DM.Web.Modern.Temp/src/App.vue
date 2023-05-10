@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="`theme_${theme}`">
+  <div id="app">
     <div class="main" ref="scroll">
       <div class="content-container">
         <div class="content-wrapper">
@@ -18,21 +18,30 @@
         </div>
         <the-footer />
       </div>
-      <modals-container />
     </div>
+    <modals-container />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useUiStore, useUserStore } from "@/stores";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { ModalsContainer } from "vue-final-modal";
 import TheHeader from "@/views/layout/TheHeader.vue";
 import TheFooter from "@/views/layout/TheFooter.vue";
-import { storeToRefs } from "pinia";
 
-const { theme } = storeToRefs(useUiStore());
+const uiStore = useUiStore();
 const { fetchUser } = useUserStore();
+
+watch(
+  () => [uiStore.theme],
+  (value, oldValue) => {
+    const html = document.querySelector("html")!;
+    html.classList.remove(`theme_${oldValue}`);
+    html.classList.add(`theme_${value}`);
+  },
+  { immediate: true }
+);
 
 onMounted(fetchUser);
 </script>

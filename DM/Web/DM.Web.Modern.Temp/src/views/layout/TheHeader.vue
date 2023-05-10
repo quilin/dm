@@ -5,7 +5,7 @@
         <template v-if="user">
           Добро пожаловать,
           <router-link :to="{ name: 'profile', params: { login: user.login } }">
-            <the-icon :font="$iconType.UserSettings" />
+            <the-icon :font="IconType.UserSettings" />
             {{ user.login }}
           </router-link>
         </template>
@@ -18,16 +18,16 @@
             <template v-if="unread">{{ unread }}</template>
             <the-icon
               :font="
-                unread ? $iconType.MessagesUnread : $iconType.MessagesNoUnread
+                unread ? IconType.MessagesUnread : IconType.MessagesNoUnread
               "
             />
             Сообщения
           </router-link>
           |
-          <a @click="logout"><the-icon :font="$iconType.Logout" /> Выйти</a>
+          <a @click="signOut"><the-icon :font="IconType.Logout" /> Выйти</a>
         </template>
         <template v-else>
-          <a><the-icon :font="$iconType.User" /> Вход</a>
+          <a @click="openLogin"><the-icon :font="IconType.User" /> Вход</a>
           |
           <a>Регистрация</a>
         </template>
@@ -45,7 +45,7 @@
         class="link create"
         :to="{ name: 'create-game' }"
       >
-        <the-icon :font="$iconType.Add" />
+        <the-icon :font="IconType.Add" />
         Новая игра
       </router-link>
     </div>
@@ -58,9 +58,24 @@
 
 <script setup lang="ts">
 import { useUserStore, useUiStore } from "@/stores";
+import { IconType } from "@/components/icons/iconType";
+import { useModal } from "vue-final-modal";
+import LoginForm from "@/views/account/LoginForm.vue";
+import { storeToRefs } from "pinia";
 
-const { user, logout, unreadConversations: unread } = useUserStore();
 const { toggleTheme } = useUiStore();
+const userStore = useUserStore();
+const { user, unreadConversations: unread } = storeToRefs(userStore);
+const { signOut } = userStore;
+
+const { open: openLogin, close: closeLogin } = useModal({
+  component: LoginForm,
+  attrs: {
+    onLogin() {
+      closeLogin();
+    },
+  },
+});
 </script>
 
 <style scoped lang="sass">

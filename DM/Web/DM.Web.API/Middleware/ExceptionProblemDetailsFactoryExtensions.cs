@@ -33,7 +33,7 @@ internal static class ExceptionProblemDetailsFactoryExtensions
         var modelStateDictionary = new ModelStateDictionary();
         foreach (var error in validationException.Errors)
         {
-            modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage);
+            modelStateDictionary.AddModelError(error.PropertyName, error.ErrorCode);
         }
 
         return factory.CreateValidationProblemDetails(httpContext,

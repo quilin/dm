@@ -6,10 +6,10 @@
 
 @mixin theme($attr, $color-set, $value-prefix: null)
   @each $mode, $color in $color-set
-    #app.theme_#{$mode} &
+    html.theme_#{$mode} &
       #{$attr}: $value-prefix $color
 
-/* COLOR THEMES                      Modern   Contrast Classic  Pale     Night */
+/* COLOR THEMES                               Modern   Contrast Classic  Pale     Night */
 /// Texts
 $text:                              color-set(#333,    #333,    #666,    #333,    #eaeaea)
 $secondary-text:                    color-set(#8a8a8a, #999,    #999,    #888,    #adadad)
@@ -50,7 +50,7 @@ $button-background-disabled:        color-set(#ddd,    #f8f8f8, #f8f8f8, #ddd,  
 /// Dropdown
 $dropdown-option-background-hover:  color-set(#fafafa, #fafafa, #fafafa, #fafafa, #2c2c2c) // TBD
 
-// Inputs and textareas
+// Inputs and text areas
 $input-background:                  color-set(#fff,     #fff,    #fff,    #fff,    #222)
 $input-background-disabled:         color-set(#ddd,     #f8f8f8, #f8f8f8, #ddd,    #666)
 
@@ -59,7 +59,7 @@ $border:                            color-set(#dfdfdf, #ccc,    #ccc,    #ccc,  
 
 /// Progress bars
 $progress-background:               color-set(#fafafa, #edeceb, #edeceb, #ddd,    #333)
-$progress-background-done:          color-set(#506080, #506080, #506080, #506080, #506080) // TBD
+$progress-background-done:          color-set(#b8caef, #b8caef, #b8caef, #b8caef, #506080) // TBD
 
 /// Shades
 $shade-background:                  color-pair(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.6))
