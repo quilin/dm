@@ -10,7 +10,6 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Forum.Dto.Internal;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
@@ -18,7 +17,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries;
 
-public class CommentaryDeletingServiceShould : UnitTestBase
+public class CommentaryDeletingServiceShould
 {
     private readonly Mock<IIntentionManager> intentionManager;
     private readonly Mock<IUpdateBuilder<ForumTopic>> topicUpdateBuilder;
@@ -31,16 +30,16 @@ public class CommentaryDeletingServiceShould : UnitTestBase
 
     public CommentaryDeletingServiceShould()
     {
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()));
 
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-        topicUpdateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
+        topicUpdateBuilder = new Mock<IUpdateBuilder<ForumTopic>>();
         topicUpdateBuilder
             .Setup(b => b.Field(t => t.LastCommentId, It.IsAny<Guid?>()))
             .Returns(topicUpdateBuilder.Object);
-        commentUpdateBuilder = Mock<IUpdateBuilder<Comment>>();
+        commentUpdateBuilder = new Mock<IUpdateBuilder<Comment>>();
         commentUpdateBuilder
             .Setup(b => b.Field(c => c.IsRemoved, It.IsAny<bool>()))
             .Returns(commentUpdateBuilder.Object);
@@ -51,11 +50,11 @@ public class CommentaryDeletingServiceShould : UnitTestBase
             .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
             .Returns(commentUpdateBuilder.Object);
 
-        commentaryRepository = Mock<ICommentaryDeletingRepository>();
+        commentaryRepository = new Mock<ICommentaryDeletingRepository>();
         getCommentSetup = commentaryRepository.Setup(r => r.GetForDelete(It.IsAny<Guid>()));
 
-        unreadCountersRepository = Mock<IUnreadCountersRepository>();
-        eventPublisher = Mock<IInvokedEventProducer>();
+        unreadCountersRepository = new Mock<IUnreadCountersRepository>();
+        eventPublisher = new Mock<IInvokedEventProducer>();
 
         service = new CommentaryDeletingService(
             intentionManager.Object, updateBuilderFactory.Object,

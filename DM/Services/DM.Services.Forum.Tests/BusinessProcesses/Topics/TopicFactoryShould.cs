@@ -3,14 +3,14 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Creating;
 using DM.Services.Forum.Dto.Input;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
 
-public class TopicFactoryShould : UnitTestBase
+public class TopicFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> idSetup;
     private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
@@ -18,9 +18,9 @@ public class TopicFactoryShould : UnitTestBase
 
     public TopicFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         idSetup = guidFactory.Setup(f => f.Create());
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
         factory = new TopicFactory(guidFactory.Object, dateTimeProvider.Object);
     }

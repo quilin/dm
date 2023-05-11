@@ -12,14 +12,13 @@ using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
 
-public class TopicDeletingServiceShould : UnitTestBase
+public class TopicDeletingServiceShould
 {
     private readonly ISetup<ITopicReadingService, Task<Topic>> getTopicSetup;
     private readonly Mock<IIntentionManager> intentionManager;
@@ -32,31 +31,31 @@ public class TopicDeletingServiceShould : UnitTestBase
 
     public TopicDeletingServiceShould()
     {
-        var readingService = Mock<ITopicReadingService>();
+        var readingService = new Mock<ITopicReadingService>();
         getTopicSetup = readingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Topic>()));
 
-        updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+        updateBuilder = new Mock<IUpdateBuilder<ForumTopic>>();
         updateBuilder
             .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
             .Returns(updateBuilder.Object);
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
         updateBuilderFactory
             .Setup(f => f.Create<ForumTopic>(It.IsAny<Guid>()))
             .Returns(updateBuilder.Object);
 
-        updatingRepository = Mock<ITopicUpdatingRepository>();
+        updatingRepository = new Mock<ITopicUpdatingRepository>();
         updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
-        publisher = Mock<IInvokedEventProducer>();
+        publisher = new Mock<IInvokedEventProducer>();
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        unreadCountersRepository = new Mock<IUnreadCountersRepository>();
         unreadCountersRepository
             .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
             .Returns(Task.CompletedTask);

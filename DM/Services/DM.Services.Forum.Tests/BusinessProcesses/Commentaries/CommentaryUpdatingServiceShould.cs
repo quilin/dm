@@ -10,7 +10,6 @@ using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 using DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -21,7 +20,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries;
 
-public class CommentaryUpdatingServiceShould : UnitTestBase
+public class CommentaryUpdatingServiceShould
 {
     private readonly ISetup<ICommentaryReadingService, Task<Common.Dto.Comment>> getCommentSetup;
     private readonly Mock<IIntentionManager> intentionManager;
@@ -34,24 +33,24 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
 
     public CommentaryUpdatingServiceShould()
     {
-        var validator = Mock<IValidator<UpdateComment>>();
+        var validator = new Mock<IValidator<UpdateComment>>();
         validator
             .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<UpdateComment>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        var readingService = Mock<ICommentaryReadingService>();
+        var readingService = new Mock<ICommentaryReadingService>();
         getCommentSetup = readingService.Setup(s => s.Get(It.IsAny<Guid>()));
 
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<CommentIntention>(), It.IsAny<Common.Dto.Comment>()));
 
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-        commentUpdateBuilder = Mock<IUpdateBuilder<Comment>>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
+        commentUpdateBuilder = new Mock<IUpdateBuilder<Comment>>();
         commentUpdateBuilder
             .Setup(b => b.Field(t => t.Text, It.IsAny<string>()))
             .Returns(commentUpdateBuilder.Object);
@@ -62,10 +61,10 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
             .Setup(f => f.Create<Comment>(It.IsAny<Guid>()))
             .Returns(commentUpdateBuilder.Object);
 
-        commentRepository = Mock<ICommentaryUpdatingRepository>();
+        commentRepository = new Mock<ICommentaryUpdatingRepository>();
         updateCommentSetup = commentRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<Comment>>()));
 
-        eventPublisher = Mock<IInvokedEventProducer>();
+        eventPublisher = new Mock<IInvokedEventProducer>();
         eventPublisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);

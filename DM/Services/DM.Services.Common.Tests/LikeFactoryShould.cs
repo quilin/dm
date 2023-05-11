@@ -2,21 +2,21 @@ using System;
 using DM.Services.Common.BusinessProcesses.Likes;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Common;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Common.Tests;
 
-public class LikeFactoryShould : UnitTestBase
+public class LikeFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> idSetup;
     private readonly LikeFactory factory;
 
     public LikeFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         idSetup = guidFactory.Setup(f => f.Create());
         factory = new LikeFactory(guidFactory.Object);
     }

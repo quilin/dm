@@ -2,14 +2,14 @@ using System;
 using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Community.Tests.BusinessProcesses;
 
-public class RegistrationTokenFactoryShould : UnitTestBase
+public class RegistrationTokenFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> newIdSetup;
     private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
@@ -17,10 +17,10 @@ public class RegistrationTokenFactoryShould : UnitTestBase
 
     public RegistrationTokenFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         newIdSetup = guidFactory.Setup(f => f.Create());
 
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
         factory = new ActivationTokenFactory(guidFactory.Object, dateTimeProvider.Object);

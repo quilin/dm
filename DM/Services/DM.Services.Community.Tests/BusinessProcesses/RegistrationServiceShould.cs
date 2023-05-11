@@ -8,7 +8,6 @@ using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
@@ -17,7 +16,7 @@ using Xunit;
 
 namespace DM.Services.Community.Tests.BusinessProcesses;
 
-public class RegistrationServiceShould : UnitTestBase
+public class RegistrationServiceShould
 {
     private readonly ISetup<ISecurityManager, (string Hash, string Salt)> passwordGenerationSetup;
     private readonly ISetup<IUserFactory, User> createUserSetup;
@@ -32,33 +31,33 @@ public class RegistrationServiceShould : UnitTestBase
 
     public RegistrationServiceShould()
     {
-        var validator = Mock<IValidator<UserRegistration>>();
+        var validator = new Mock<IValidator<UserRegistration>>();
         validator
             .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<UserRegistration>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        securityManager = Mock<ISecurityManager>();
+        securityManager = new Mock<ISecurityManager>();
         passwordGenerationSetup = securityManager.Setup(m => m.GeneratePassword(It.IsAny<string>()));
 
-        userFactory = Mock<IUserFactory>();
+        userFactory = new Mock<IUserFactory>();
         createUserSetup = userFactory.Setup(f =>
             f.Create(It.IsAny<UserRegistration>(), It.IsAny<string>(), It.IsAny<string>()));
 
-        tokenFactory = Mock<IActivationTokenFactory>();
+        tokenFactory = new Mock<IActivationTokenFactory>();
         createTokenSetup = tokenFactory.Setup(f => f.Create(It.IsAny<Guid>()));
 
-        registrationRepository = Mock<IRegistrationRepository>();
+        registrationRepository = new Mock<IRegistrationRepository>();
         registrationRepository
             .Setup(r => r.AddUser(It.IsAny<User>(), It.IsAny<Token>()))
             .Returns(Task.CompletedTask);
 
-        mailSender = Mock<IRegistrationMailSender>();
+        mailSender = new Mock<IRegistrationMailSender>();
         mailSender
             .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        eventPublisher = Mock<IInvokedEventProducer>();
+        eventPublisher = new Mock<IInvokedEventProducer>();
         eventPublisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);

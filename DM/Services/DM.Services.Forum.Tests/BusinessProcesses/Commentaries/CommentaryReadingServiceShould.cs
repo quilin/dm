@@ -14,7 +14,6 @@ using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.Forum.Tests.Dsl;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -23,7 +22,7 @@ using Comment = DM.Services.Common.Dto.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries;
 
-public class CommentaryReadingServiceShould : UnitTestBase
+public class CommentaryReadingServiceShould
 {
     private readonly ISetup<ITopicReadingService, Task<Topic>> readingTopicSetup;
     private readonly ISetup<ICommentaryReadingRepository, Task<IEnumerable<Comment>>> getCommentsListSetup;
@@ -36,25 +35,25 @@ public class CommentaryReadingServiceShould : UnitTestBase
 
     public CommentaryReadingServiceShould()
     {
-        var topicReadingService = Mock<ITopicReadingService>();
+        var topicReadingService = new Mock<ITopicReadingService>();
         readingTopicSetup = topicReadingService.Setup(r => r.GetTopic(It.IsAny<Guid>()));
 
-        var identity = Mock<IIdentity>();
+        var identity = new Mock<IIdentity>();
         identity.Setup(i => i.Settings).Returns(new UserSettings
             {Paging = new PagingSettings {CommentsPerPage = 10}});
         currentUserSetup = identity.Setup(i => i.User);
-        var identityProvider = Mock<IIdentityProvider>();
+        var identityProvider = new Mock<IIdentityProvider>();
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
 
-        var commentaryRepository = Mock<ICommentaryReadingRepository>();
+        var commentaryRepository = new Mock<ICommentaryReadingRepository>();
         getCommentsListSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<PagingData>()));
         getCommentSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>()));
         countCommentsSetup = commentaryRepository.Setup(r => r.Count(It.IsAny<Guid>()));
 
-        var forumReadingService = Mock<IForumReadingService>();
+        var forumReadingService = new Mock<IForumReadingService>();
         getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), It.IsAny<bool>()));
 
-        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        unreadCountersRepository = new Mock<IUnreadCountersRepository>();
         unreadCountersRepository
             .Setup(r => r.Flush(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);

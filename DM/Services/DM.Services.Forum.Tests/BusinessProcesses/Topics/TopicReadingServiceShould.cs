@@ -13,7 +13,6 @@ using DM.Services.Forum.BusinessProcesses.Fora;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.Forum.Tests.Dsl;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -21,7 +20,7 @@ using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
 
-public class TopicReadingServiceShould : UnitTestBase
+public class TopicReadingServiceShould
 {
     private readonly TopicReadingService service;
     private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
@@ -31,15 +30,15 @@ public class TopicReadingServiceShould : UnitTestBase
 
     public TopicReadingServiceShould()
     {
-        var identityProvider = Mock<IIdentityProvider>();
-        var identity = Mock<IIdentity>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        var identity = new Mock<IIdentity>();
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
         currentUserSetup = identity.Setup(i => i.User);
-        topicRepository = Mock<ITopicReadingRepository>();
-        accessPolicyConverter = Mock<IAccessPolicyConverter>();
-        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        topicRepository = new Mock<ITopicReadingRepository>();
+        accessPolicyConverter = new Mock<IAccessPolicyConverter>();
+        unreadCountersRepository = new Mock<IUnreadCountersRepository>();
         service = new TopicReadingService(identityProvider.Object,
-            Mock<IForumReadingService>().Object, accessPolicyConverter.Object,
+            new Mock<IForumReadingService>().Object, accessPolicyConverter.Object,
             topicRepository.Object, unreadCountersRepository.Object);
     }
 

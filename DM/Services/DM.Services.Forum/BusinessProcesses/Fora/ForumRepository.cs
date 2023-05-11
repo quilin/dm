@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using DM.Services.Core.Caching;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DM.Services.Forum.BusinessProcesses.Fora;
 
@@ -14,12 +14,12 @@ namespace DM.Services.Forum.BusinessProcesses.Fora;
 internal class ForumRepository : IForumRepository
 {
     private readonly DmDbContext dmDbContext;
-    private readonly ICache cache;
+    private readonly IMemoryCache cache;
     private readonly IMapper mapper;
 
     public ForumRepository(
         DmDbContext dmDbContext,
-        ICache cache,
+        IMemoryCache cache,
         IMapper mapper)
     {
         this.dmDbContext = dmDbContext;
@@ -30,7 +30,7 @@ internal class ForumRepository : IForumRepository
     /// <inheritdoc />
     public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
     {
-        var forums = await cache.GetOrCreate<IEnumerable<Dto.Output.Forum>>("Fora", async () => await dmDbContext.Fora
+        var forums = await cache.GetOrCreateAsync<IEnumerable<Dto.Output.Forum>>("Fora", async _ => await dmDbContext.Fora
             .TagWith("DM.Forum.ForaList")
             .OrderBy(f => f.Order)
             .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
