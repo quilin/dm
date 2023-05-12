@@ -7,7 +7,6 @@ using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Dto.Enums;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -16,7 +15,7 @@ using Session = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Tests;
 
-public class AuthenticationServiceLoginShould : UnitTestBase
+public class AuthenticationServiceLoginShould
 {
     private readonly ISetup<IAuthenticationRepository, Task<(bool Success, AuthenticatedUser User)>>
         userSearchSetup;
@@ -30,12 +29,12 @@ public class AuthenticationServiceLoginShould : UnitTestBase
 
     public AuthenticationServiceLoginShould()
     {
-        securityManager = Mock<ISecurityManager>();
-        cryptoService = Mock<ISymmetricCryptoService>();
-        authenticationRepository = Mock<IAuthenticationRepository>();
+        securityManager = new Mock<ISecurityManager>();
+        cryptoService = new Mock<ISymmetricCryptoService>();
+        authenticationRepository = new Mock<IAuthenticationRepository>();
         userSearchSetup = authenticationRepository.Setup(r => r.TryFindUser(It.IsAny<string>()));
-        sessionFactory = Mock<ISessionFactory>();
-        var identityProvider = Mock<IIdentityProvider>();
+        sessionFactory = new Mock<ISessionFactory>();
+        var identityProvider = new Mock<IIdentityProvider>();
         identityProvider.Setup(p => p.Current).Returns(Identity.Guest);
         service = new AuthenticationService(securityManager.Object, cryptoService.Object,
             authenticationRepository.Object, sessionFactory.Object, null, identityProvider.Object, null);

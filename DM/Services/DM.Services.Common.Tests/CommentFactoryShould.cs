@@ -2,15 +2,15 @@ using System;
 using DM.Services.Common.BusinessProcesses.Commentaries;
 using DM.Services.Common.Dto;
 using DM.Services.Core.Implementation;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Common.Tests;
 
-public class CommentFactoryShould : UnitTestBase
+public class CommentFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> newIdSetup;
     private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
@@ -18,10 +18,10 @@ public class CommentFactoryShould : UnitTestBase
 
     public CommentFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         newIdSetup = guidFactory.Setup(f => f.Create());
 
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
 
         factory = new CommentaryFactory(guidFactory.Object, dateTimeProvider.Object);

@@ -17,7 +17,6 @@ using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.Forum.Tests.Dsl;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -25,7 +24,7 @@ using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Likes;
 
-public class LikeServiceForTopicsShould : UnitTestBase
+public class LikeServiceForTopicsShould
 {
     private readonly LikeService service;
     private readonly ISetup<ITopicReadingService, Task<Topic>> topicReading;
@@ -36,21 +35,21 @@ public class LikeServiceForTopicsShould : UnitTestBase
 
     public LikeServiceForTopicsShould()
     {
-        var topicReadingService = Mock<ITopicReadingService>();
+        var topicReadingService = new Mock<ITopicReadingService>();
         topicReading = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
-        var intentionManager = Mock<IIntentionManager>();
+        var intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(TopicIntention.Like, It.IsAny<Topic>()));
-        var identityProvider = Mock<IIdentityProvider>();
-        var identity = Mock<IIdentity>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        var identity = new Mock<IIdentity>();
         currentUser = identity.Setup(i => i.User);
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
 
-        factory = Mock<ILikeFactory>();
-        likeRepository = Mock<ILikeRepository>();
-        publisher = Mock<IInvokedEventProducer>();
-        service = new LikeService(topicReadingService.Object, Mock<ICommentaryReadingService>().Object,
+        factory = new Mock<ILikeFactory>();
+        likeRepository = new Mock<ILikeRepository>();
+        publisher = new Mock<IInvokedEventProducer>();
+        service = new LikeService(topicReadingService.Object, new Mock<ICommentaryReadingService>().Object,
             intentionManager.Object, identityProvider.Object, factory.Object,
             likeRepository.Object, publisher.Object);
     }

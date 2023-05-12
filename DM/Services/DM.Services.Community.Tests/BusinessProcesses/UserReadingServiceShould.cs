@@ -5,7 +5,6 @@ using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Exceptions;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -13,7 +12,7 @@ using Xunit;
 
 namespace DM.Services.Community.Tests.BusinessProcesses;
 
-public class UserReadingServiceShould : UnitTestBase
+public class UserReadingServiceShould
 {
     private readonly ISetup<IIdentity, UserSettings> currentUserSettingsSetup;
     private readonly Mock<IUserReadingRepository> readingRepository;
@@ -21,14 +20,14 @@ public class UserReadingServiceShould : UnitTestBase
 
     public UserReadingServiceShould()
     {
-        var identityProvider = Mock<IIdentityProvider>();
-        var identity = Mock<IIdentity>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        var identity = new Mock<IIdentity>();
         identityProvider
             .Setup(p => p.Current)
             .Returns(identity.Object);
         currentUserSettingsSetup = identity.Setup(i => i.Settings);
 
-        readingRepository = Mock<IUserReadingRepository>();
+        readingRepository = new Mock<IUserReadingRepository>();
 
         service = new UserReadingService(identityProvider.Object, readingRepository.Object);
     }

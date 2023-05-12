@@ -1,11 +1,10 @@
 using DM.Services.Core.Dto;
-using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
 
 namespace DM.Services.Core.Tests;
 
-public class PagingHelperShould : UnitTestBase
+public class PagingHelperShould
 {
     [Theory]
     [InlineData(1000, 10, 100)]

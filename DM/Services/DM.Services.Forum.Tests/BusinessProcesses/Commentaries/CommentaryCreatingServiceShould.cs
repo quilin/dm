@@ -16,7 +16,6 @@ using DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 using DM.Services.Forum.BusinessProcesses.Topics.Reading;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -27,7 +26,7 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Commentaries;
 
-public class CommentaryCreatingServiceShould : UnitTestBase
+public class CommentaryCreatingServiceShould
 {
     private readonly ISetup<ITopicReadingService, Task<Topic>> topicReadingSetup;
     private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
@@ -42,44 +41,44 @@ public class CommentaryCreatingServiceShould : UnitTestBase
 
     public CommentaryCreatingServiceShould()
     {
-        var validator = Mock<IValidator<CreateComment>>();
+        var validator = new Mock<IValidator<CreateComment>>();
         validator
             .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<CreateComment>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        var topicReadingService = Mock<ITopicReadingService>();
+        var topicReadingService = new Mock<ITopicReadingService>();
         topicReadingSetup = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
 
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<TopicIntention>(), It.IsAny<Topic>()));
 
-        var identityProvider = Mock<IIdentityProvider>();
-        var identity = Mock<IIdentity>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        var identity = new Mock<IIdentity>();
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
         currentUserSetup = identity.Setup(i => i.User);
 
-        var commentFactory = Mock<ICommentaryFactory>();
+        var commentFactory = new Mock<ICommentaryFactory>();
         commentaryDalCreateSetup = commentFactory
             .Setup(f => f.Create(It.IsAny<CreateComment>(), It.IsAny<Guid>()));
 
-        commentRepository = Mock<ICommentaryCreatingRepository>();
+        commentRepository = new Mock<ICommentaryCreatingRepository>();
         commentaryCreateSetup = commentRepository.Setup(r =>
             r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
 
-        invokedEventPublisher = Mock<IInvokedEventProducer>();
+        invokedEventPublisher = new Mock<IInvokedEventProducer>();
         invokedEventPublisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        countersRepository = Mock<IUnreadCountersRepository>();
+        countersRepository = new Mock<IUnreadCountersRepository>();
         countersRepository
             .Setup(r => r.Increment(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
             .Returns(Task.CompletedTask);
 
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
-        updateBuilder = Mock<IUpdateBuilder<ForumTopic>>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
+        updateBuilder = new Mock<IUpdateBuilder<ForumTopic>>();
         updateBuilder
             .Setup(b => b.Field(t => t.LastCommentId, It.IsAny<Guid?>()))
             .Returns(updateBuilder.Object);

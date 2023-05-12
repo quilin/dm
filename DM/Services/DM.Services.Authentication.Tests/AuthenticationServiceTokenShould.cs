@@ -9,7 +9,6 @@ using DM.Services.Authentication.Repositories;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -18,7 +17,7 @@ using Session = DM.Services.Authentication.Dto.Session;
 
 namespace DM.Services.Authentication.Tests;
 
-public class AuthenticationServiceTokenShould : UnitTestBase
+public class AuthenticationServiceTokenShould
 {
     private readonly AuthenticationService service;
     private readonly Mock<IAuthenticationRepository> authenticationRepository;
@@ -29,20 +28,20 @@ public class AuthenticationServiceTokenShould : UnitTestBase
 
     public AuthenticationServiceTokenShould()
     {
-        var securityManager = Mock<ISecurityManager>();
-        cryptoService = Mock<ISymmetricCryptoService>();
+        var securityManager = new Mock<ISecurityManager>();
+        cryptoService = new Mock<ISymmetricCryptoService>();
         tokenDecryptSetup = cryptoService.Setup(s => s.Decrypt(It.IsAny<string>()));
 
-        authenticationRepository = Mock<IAuthenticationRepository>();
+        authenticationRepository = new Mock<IAuthenticationRepository>();
 
-        var sessionFactory = Mock<ISessionFactory>();
+        var sessionFactory = new Mock<ISessionFactory>();
 
-        dateTimeProvider = Mock<IDateTimeProvider>();
+        dateTimeProvider = new Mock<IDateTimeProvider>();
 
-        var identityProvider = Mock<IIdentityProvider>();
+        var identityProvider = new Mock<IIdentityProvider>();
 
-        updateBuilder = Mock<IUpdateBuilder<User>>();
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+        updateBuilder = new Mock<IUpdateBuilder<User>>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
         updateBuilderFactory
             .Setup(f => f.Create<User>(It.IsAny<Guid>()))
             .Returns(updateBuilder.Object);

@@ -4,21 +4,20 @@ using DM.Services.Core.Dto.Enums;
 using DM.Services.Forum.Authorization;
 using DM.Services.Forum.BusinessProcesses.Common;
 using DM.Services.Forum.Tests.Dsl;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
 namespace DM.Services.Forum.Tests.Authorization;
 
-public class ForumIntentionResolverShould : UnitTestBase
+public class ForumIntentionResolverShould
 {
     private readonly Mock<IAccessPolicyConverter> policyConverter;
     private readonly ForumIntentionResolver resolver;
 
     public ForumIntentionResolverShould()
     {
-        policyConverter = Mock<IAccessPolicyConverter>();
+        policyConverter = new Mock<IAccessPolicyConverter>();
         resolver = new ForumIntentionResolver(policyConverter.Object);
     }
 

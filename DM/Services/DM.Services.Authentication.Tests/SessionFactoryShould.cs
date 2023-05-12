@@ -2,14 +2,14 @@ using System;
 using DM.Services.Authentication.Factories;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Authentication.Tests;
 
-public class SessionFactoryShould : UnitTestBase
+public class SessionFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> createIdSetup;
     private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMoment;
@@ -17,9 +17,9 @@ public class SessionFactoryShould : UnitTestBase
 
     public SessionFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         createIdSetup = guidFactory.Setup(f => f.Create());
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMoment = dateTimeProvider.Setup(p => p.Now);
         sessionFactory = new SessionFactory(guidFactory.Object, dateTimeProvider.Object);
     }

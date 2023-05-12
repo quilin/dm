@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using DM.Services.Authentication.Implementation.Security;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -9,7 +8,7 @@ using Xunit;
 
 namespace DM.Services.Authentication.Tests;
 
-public class SecurityManagerShould : UnitTestBase
+public class SecurityManagerShould
 {
     private readonly Mock<ISaltFactory> saltFactory;
     private readonly Mock<IHashProvider> hashProvider;
@@ -18,9 +17,9 @@ public class SecurityManagerShould : UnitTestBase
 
     public SecurityManagerShould()
     {
-        saltFactory = Mock<ISaltFactory>();
+        saltFactory = new Mock<ISaltFactory>();
 
-        hashProvider = Mock<IHashProvider>();
+        hashProvider = new Mock<IHashProvider>();
         computeHashSetup = hashProvider.Setup(p => p.ComputeSha256(It.IsAny<string>(), It.IsAny<string>()));
 
         securityManager = new SecurityManager(saltFactory.Object, hashProvider.Object);

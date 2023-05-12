@@ -14,7 +14,6 @@ using DM.Services.Forum.BusinessProcesses.Topics.Creating;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -24,7 +23,7 @@ using Xunit;
 
 namespace DM.Services.Forum.Tests.BusinessProcesses.Topics;
 
-public class TopicCreatingServiceShould : UnitTestBase
+public class TopicCreatingServiceShould
 {
     private readonly ISetup<IForumReadingService, Task<Dto.Output.Forum>> getForumSetup;
     private readonly Mock<IIntentionManager> intentionManager;
@@ -37,37 +36,37 @@ public class TopicCreatingServiceShould : UnitTestBase
 
     public TopicCreatingServiceShould()
     {
-        var validator = Mock<IValidator<CreateTopic>>();
+        var validator = new Mock<IValidator<CreateTopic>>();
         validator
             .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<CreateTopic>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        var forumReadingService = Mock<IForumReadingService>();
+        var forumReadingService = new Mock<IForumReadingService>();
         getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), true));
 
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<ForumIntention>(), It.IsAny<Dto.Output.Forum>()));
 
-        var identityProvider = Mock<IIdentityProvider>();
+        var identityProvider = new Mock<IIdentityProvider>();
         identityProvider
             .Setup(p => p.Current)
             .Returns(Identity.Guest);
 
-        var topicFactory = Mock<ITopicFactory>();
+        var topicFactory = new Mock<ITopicFactory>();
         createTopicSetup = topicFactory.Setup(f => f.Create(
             It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CreateTopic>()));
 
-        creatingRepository = Mock<ITopicCreatingRepository>();
+        creatingRepository = new Mock<ITopicCreatingRepository>();
         saveTopicSetup = creatingRepository.Setup(r => r.Create(It.IsAny<ForumTopic>()));
 
-        unreadCountersRepository = Mock<IUnreadCountersRepository>();
+        unreadCountersRepository = new Mock<IUnreadCountersRepository>();
         unreadCountersRepository
             .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
             .Returns(Task.CompletedTask);
 
-        publisher = Mock<IInvokedEventProducer>();
+        publisher = new Mock<IInvokedEventProducer>();
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
