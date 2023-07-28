@@ -5,6 +5,7 @@ using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.DataAccess;
 using DM.Services.MessageQueuing;
+using DM.Services.Search.Configuration;
 using DM.Services.Search.Consumer.Implementation;
 using DM.Services.Search.Consumer.Interceptors;
 using Jamq.Client.DependencyInjection;
@@ -46,6 +47,7 @@ public class Startup
             .AddOptions()
             .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
             .Configure<RabbitMqConfiguration>(configuration.GetSection(nameof(RabbitMqConfiguration)).Bind)
+            .Configure<SearchEngineConfiguration>(configuration.GetSection(nameof(SearchEngineConfiguration)).Bind)
             .AddDmLogging("DM.Search.Consumer", configuration);
 
         services.AddJamqClient(config => config

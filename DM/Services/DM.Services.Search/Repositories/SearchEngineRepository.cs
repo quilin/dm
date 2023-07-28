@@ -9,19 +9,19 @@ using DM.Services.Core.Exceptions;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Dto;
 using Microsoft.Extensions.Logging;
-using Nest;
+using OpenSearch.Client;
 
 namespace DM.Services.Search.Repositories;
 
 /// <inheritdoc />
 internal class SearchEngineRepository : ISearchEngineRepository
 {
-    private readonly IElasticClient client;
+    private readonly IOpenSearchClient client;
     private readonly ILogger<SearchEngineRepository> logger;
 
     /// <inheritdoc />
     public SearchEngineRepository(
-        IElasticClient client,
+        IOpenSearchClient client,
         ILogger<SearchEngineRepository> logger)
     {
         this.client = client;
