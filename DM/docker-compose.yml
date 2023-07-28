@@ -8,20 +8,23 @@ volumes:
   backups:
   pgdata:
   mongodata:
-  esdata:
+  osdata:
   miniodata:
 
 x-workload-env: &workload-env
   DM_ConnectionStrings__Rdb: Host=dm-pg;Port=5432;User ID=postgres;Password=admin;Database=dm3.5;Pooling=true;MinPoolSize=0;MaxPoolSize=100;Connection Idle Lifetime=60;
   DM_ConnectionStrings__Mongo: mongodb://dm-mongo:27017/dm3-5?maxPoolSize=1000
-  DM_ConnectionStrings__SearchEngine: http://dm-es:9200
   DM_ConnectionStrings__Logs: http://dm-es:9200
-  DM_ConnectionStrings__TracingEndpoint: http://localhost:14268/api/traces
+  DM_ConnectionStrings__TracingEndpoint: http://dm-jaeger:14268/api/traces
 
   DM_RabbitMqConfiguration__Endpoint: amqp://dm-rmq:5672
   DM_RabbitMqConfiguration__VirtualHost: /
   DM_RabbitMqConfiguration__Username: guest
   DM_RabbitMqConfiguration__Password: guest
+
+  DM_SearchEngineConfiguration__Endpoint: http://dm-es:9200
+  DM_SearchEngineConfiguration__UserName: admin
+  DM_SearchEngineConfiguration__Password: admin
 
   DM_CdnConfiguration__Url: http://dm-minio:9000
   DM_CdnConfiguration__PublicUrl: http://localhost:9000
@@ -86,17 +89,26 @@ services:
       - mongo
       - postgres
 
-  elasticsearch:
+  opensearch:
     container_name: 'dm-es'
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.4.0'
+    image: 'opensearchproject/opensearch:2'
     ports:
       - '9200:9200'
-      - '9300:9300'
+      - '9600:9600'
     environment:
       discovery.type: 'single-node'
-      xpack.security.enabled: 'false'
+      plugins.security.disabled: 'true'
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - osdata:/usr/share/opensearch/data
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: 'dm-kibana'
+    ports:
+      - '5601:5601'
+    environment:
+      OPENSEARCH_HOSTS: '["http://dm-es:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
 
   rabbitmq:
     container_name: 'dm-rmq'
@@ -105,16 +117,6 @@ services:
     ports: 
       - '15672:15672'
       - '5672:5672'
-
-  kibana:
-    container_name: 'dm-kibana'
-    image: 'docker.elastic.co/kibana/kibana:8.4.0'
-    ports:
-      - '5601:5601'
-    environment: 
-      ELASTICSEARCH_HOSTS: 'http://dm-es:9200'
-    depends_on:
-      - 'elasticsearch'
 
   mailhog:
     container_name: 'dm-mailhog'
@@ -181,7 +183,7 @@ services:
     environment: *workload-env
     depends_on:
       - rabbitmq
-      - elasticsearch
+      - opensearch
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'

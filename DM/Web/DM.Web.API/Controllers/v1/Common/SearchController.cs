@@ -29,7 +29,9 @@ public class SearchController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ListEnvelope<object>> Search([FromQuery] string query, [FromQuery] PagingQuery q)
+    public async Task<ListEnvelope<object>> Search(
+        [FromQuery] string query,
+        [FromQuery] PagingQuery q)
     {
         using var channel = GrpcChannel.ForAddress(searchServiceConfiguration.GrpcEndpoint);
         var client = new SearchEngine.SearchEngineClient(channel);
@@ -38,9 +40,8 @@ public class SearchController : ControllerBase
             Query = query,
             Skip = q.Skip ?? 0,
             Size = q.Size ?? 10,
-            SearchAcross = { },
         });
-        var paging = new Paging(PagingResult.Create(searchResponse.Total, (q.Skip ?? 0) + 1, q.Size ?? 0));
+        var paging = new Paging(PagingResult.Create(searchResponse.Total, (q.Skip ?? 0) + 1, q.Size ?? 10));
         return new ListEnvelope<object>(searchResponse.Entities, paging);
     }
 }

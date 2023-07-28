@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Services.Search.Configuration;
 using DM.Services.Search.Consumer.Implementation;
 using Jamq.Client.Abstractions.Consuming;
 using Jamq.Client.Rabbit.Consuming;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Nest;
+using OpenSearch.Client;
 using Polly;
 using Polly.Retry;
 using Policy = Polly.Policy;
@@ -20,13 +19,13 @@ namespace DM.Services.Search.Consumer;
 internal class SearchEngineConsumer : BackgroundService
 {
     private readonly ILogger<SearchEngineConsumer> logger;
-    private readonly IElasticClient elasticClient;
+    private readonly IOpenSearchClient elasticClient;
     private readonly IConsumerBuilder consumerBuilder;
     private readonly RetryPolicy consumeRetryPolicy;
 
     public SearchEngineConsumer(
         ILogger<SearchEngineConsumer> logger,
-        IElasticClient elasticClient,
+        IOpenSearchClient elasticClient,
         IConsumerBuilder consumerBuilder)
     {
         this.logger = logger;
@@ -41,12 +40,12 @@ internal class SearchEngineConsumer : BackgroundService
     {
         logger.LogDebug("[🚴] Starting search engine consumer");
 
-        var existsResponse = elasticClient.Indices.Exists(SearchEngineConfiguration.IndexName);
+        var existsResponse = elasticClient.Indices.Exists(Configuration.SearchEngineConfiguration.IndexName);
         if (existsResponse is not { IsValid: true, Exists: true })
         {
-            logger.LogDebug("Creating search engine index {IndexName}", SearchEngineConfiguration.IndexName);
-            var createIndexResponse = elasticClient.Indices.Create(SearchEngineConfiguration.IndexName);
-            if (createIndexResponse is not { IsValid: true, Index: SearchEngineConfiguration.IndexName })
+            logger.LogDebug("Creating search engine index {IndexName}", Configuration.SearchEngineConfiguration.IndexName);
+            var createIndexResponse = elasticClient.Indices.Create(Configuration.SearchEngineConfiguration.IndexName);
+            if (createIndexResponse is not { IsValid: true, Index: Configuration.SearchEngineConfiguration.IndexName })
             {
                 logger.LogError("Could not create search index on consumer start");
             }

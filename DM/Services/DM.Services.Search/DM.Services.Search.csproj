@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="7.0.0" />
-        <PackageReference Include="NEST" Version="7.17.5" />
+        <PackageReference Include="OpenSearch.Client" Version="1.4.0" />
     </ItemGroup>
 
     <ItemGroup>
