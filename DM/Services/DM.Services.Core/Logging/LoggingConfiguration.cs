@@ -31,7 +31,7 @@ public static class LoggingConfiguration
             .Enrich.WithProperty("Environment", "Test")
             .WriteTo.Logger(lc => lc
                 .Filter.ByExcluding(Matching.FromSource("Microsoft"))
-                .WriteTo.Elasticsearch(
+                .WriteTo.OpenSearch(
                     connectionStrings.Logs,
                     "dm_logstash-{0:yyyy.MM.dd}",
                     inlineFields: true))

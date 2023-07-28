@@ -5,40 +5,35 @@ using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess.SearchEngine;
 using DM.Services.Search.Configuration;
-using Nest;
+using OpenSearch.Client;
 
 namespace DM.Services.Search.Consumer.Implementation;
 
 /// <inheritdoc />
 internal class IndexingRepository : IIndexingRepository
 {
-    private readonly IElasticClient client;
+    private readonly IOpenSearchClient client;
 
-    /// <inheritdoc />
     public IndexingRepository(
-        IElasticClient client)
+        IOpenSearchClient client)
     {
         this.client = client;
     }
 
-    /// <inheritdoc />
     public async Task Index(params SearchEntity[] entities)
     {
         await DeclareIndex();
         await client.IndexManyAsync(entities);
     }
 
-    /// <inheritdoc />
     public Task Delete(Guid entityId) => client.DeleteAsync<SearchEntity>(entityId);
 
-    /// <inheritdoc />
     public Task DeleteByParent(Guid parentEntityId) =>
         client.DeleteByQueryAsync<SearchEntity>(d => d.Query(q => q
             .Term(t => t
                 .Field(f => f.ParentEntityId)
                 .Value(parentEntityId))));
 
-    /// <inheritdoc />
     public Task UpdateByParent(Guid parentEntityId, IEnumerable<UserRole> roles) =>
         client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
                 .Term(t => t
@@ -46,7 +41,6 @@ internal class IndexingRepository : IIndexingRepository
                     .Value(parentEntityId)))
             .Script($"ctx._source.authorizedRoles = [{string.Join(",", roles.Cast<int>())}]"));
 
-    /// <inheritdoc />
     public Task UpdateByParent(Guid parentEntityId, IEnumerable<Guid> userIds) =>
         client.UpdateByQueryAsync<SearchEntity>(d => d.Query(q => q
                 .Term(t => t
