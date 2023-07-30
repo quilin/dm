@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import GeneralMenu from "@/views/layout/GeneralMenu.vue";
+import GeneralSidebar from "@/views/layout/GeneralSidebar.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -7,27 +10,33 @@ const router = createRouter({
       path: "/",
       name: "home",
       components: {
-        menu: () => import("@/views/layout/GeneralMenu.vue"),
-        sidebar: () => import("@/views/layout/GeneralSidebar.vue"),
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import("@/views/pages/home/HomePage.vue"),
       },
     },
     {
       path: "/about",
-      name: "about",
       components: {
-        menu: () => import("@/components/TheLoader.vue"),
-        sidebar: () => import("@/components/TheLoader.vue"),
-        page: () => import("@/components/TheLoader.vue"),
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/about/AboutPage.vue"),
       },
+      children: [
+        {
+          name: "about",
+          path: ":n?",
+          component: () => import("@/views/pages/about/ReviewList.vue"),
+        },
+      ],
     },
     {
       name: "rules",
       path: "/rules",
       components: {
-        menu: () => import("@/components/TheLoader.vue"),
-        sidebar: () => import("@/components/TheLoader.vue"),
-        page: () => import("@/components/TheLoader.vue"),
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/rules/RulesPage.vue"),
       },
     },
     {
@@ -47,13 +56,19 @@ const router = createRouter({
     },
 
     {
-      name: "community",
       path: "/community",
       components: {
-        menu: () => import("@/components/TheLoader.vue"),
-        sidebar: () => import("@/components/TheLoader.vue"),
-        page: () => import("@/components/TheLoader.vue"),
+        menu: () => GeneralMenu,
+        sidebar: () => GeneralSidebar,
+        page: () => import("@/views/pages/community/CommunityPage.vue"),
       },
+      children: [
+        {
+          name: "community",
+          path: ":n?",
+          component: () => import("@/views/pages/community/UsersList.vue"),
+        },
+      ],
     },
     {
       name: "profile",
@@ -62,14 +77,34 @@ const router = createRouter({
     },
 
     {
-      name: "forum",
       path: "/fora/:id",
-      component: () => import("@/components/TheLoader.vue"),
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/forum/ForumPage.vue"),
+      },
+      children: [
+        {
+          name: "forum",
+          path: ":n?",
+          component: () => import("@/views/pages/forum/TopicsList.vue"),
+        },
+      ],
     },
     {
-      name: "topic",
       path: "/topics/:id",
-      component: () => import("@/components/TheLoader.vue"),
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/topic/TopicPage.vue"),
+      },
+      children: [
+        {
+          name: "topic",
+          path: ":n?",
+          component: () => import("@/views/pages/topic/CommentsList.vue"),
+        },
+      ],
     },
 
     {
@@ -91,3 +126,10 @@ const router = createRouter({
 });
 
 export default router;
+
+export function extractNumberParam(
+  param: string | string[],
+  defaultValue: number = 1
+) {
+  return parseInt(param as string) || defaultValue;
+}

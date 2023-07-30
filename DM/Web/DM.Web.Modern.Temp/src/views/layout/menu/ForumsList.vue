@@ -1,14 +1,40 @@
+<script setup lang="ts">
+import MenuBlock from "@/views/layout/MenuBlock.vue";
+import { useForumStore, useUserStore } from "@/stores";
+import { onMounted, watch } from "vue";
+import { IconType } from "@/components/icons/iconType";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+
+const store = useForumStore();
+const { fora } = storeToRefs(store);
+const { fetchFora } = store;
+const { user } = storeToRefs(useUserStore());
+const route = useRoute();
+
+const isForumRoute = computed(
+  () => route.name === "forum" || route.name === "topic"
+);
+
+onMounted(() => fetchFora());
+watch(
+  () => user,
+  () => fetchFora()
+);
+</script>
+
 <template>
   <menu-block token="fora">
     <template #title>Форумы</template>
-    <the-loader v-if="!store.fora" />
+    <the-loader v-if="!fora" />
     <div
       v-else
-      v-for="forum in store.fora"
+      v-for="forum in fora!"
       :key="forum.id"
-      :class="{ selected: forum.id === store.selectedForumId }"
+      :class="{ selected: isForumRoute && forum.id === store.selectedForum!.id }"
     >
-      <router-link :to="{ name: 'forum', params: { id: forum.id, n: 1 } }">
+      <router-link :to="{ name: 'forum', params: { id: forum.id } }">
         {{ forum.id }}
         <template v-if="forum.unreadTopicsCount">
           <the-icon :font="IconType.CommentsUnread" />
@@ -18,23 +44,6 @@
     </div>
   </menu-block>
 </template>
-
-<script setup lang="ts">
-import MenuBlock from "@/views/layout/MenuBlock.vue";
-import TheLoader from "@/components/TheLoader.vue";
-import { useForumStore, useUserStore } from "@/stores";
-import { onMounted, watch } from "vue";
-import { IconType } from "@/components/icons/iconType";
-
-const store = useForumStore();
-const userStore = useUserStore();
-
-onMounted(() => store.fetchFora());
-watch(
-  () => userStore.user,
-  () => store.fetchFora()
-);
-</script>
 
 <style scoped lang="sass">
 .selected a

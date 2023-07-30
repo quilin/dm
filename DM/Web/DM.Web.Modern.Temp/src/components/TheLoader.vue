@@ -1,10 +1,10 @@
-<template>
-  <div :class="{ loader: true, 'big-loader': props.big }">&nbsp;</div>
-</template>
-
 <script setup lang="ts">
-const props = defineProps<{ big?: boolean }>();
+defineProps<{ big?: boolean }>();
 </script>
+
+<template>
+  <span :class="{ loader: true, 'big-loader': big }">&nbsp;</span>
+</template>
 
 <style scoped lang="sass">
 .loader

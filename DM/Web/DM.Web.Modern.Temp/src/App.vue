@@ -52,7 +52,6 @@ onMounted(fetchUser);
   min-height: 100%
   overflow-y: scroll
   +theme(background-color, $background)
-  +theme(color, $text)
   transition: color $animation-time, background-color $animation-time
 
 .content-container

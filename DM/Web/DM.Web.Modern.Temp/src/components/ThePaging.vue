@@ -80,20 +80,21 @@ const links = computed(() => {
 });
 </script>
 
-<style scoped lang="stylus">
+<style scoped lang="sass">
 .paging
-  text-align center
+  text-align: center
   & a
-    display inline-block
-    min-width $gridStep * 7
-    text-align center
-    padding $minor 0
-    border-bottom 1px solid
-    theme(border-bottom-color, $activeText)
+    display: inline-block
+    min-width: $grid-step * 7
+    padding: $minor 0
+    border-bottom: 1px solid
+    +theme(border-bottom-color, $active-text)
+    text-align: center
+
     &.active
-      border-bottom-width $minor
-      padding-bottom 1px
-      font-weight bold
+      border-bottom-width: $minor
+      padding-bottom: 1px
+      font-weight: bold
     &:hover
-      theme(border-bottom-color, $activeHoverText)
+      +theme(border-bottom-color, $active-text-hover)
 </style>

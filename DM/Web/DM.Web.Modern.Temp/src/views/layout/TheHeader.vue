@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { useUserStore, useUiStore } from "@/stores";
+import { IconType } from "@/components/icons/iconType";
+import { useModal } from "vue-final-modal";
+import LoginForm from "@/views/account/LoginForm.vue";
+import { storeToRefs } from "pinia";
+
+const { toggleTheme } = useUiStore();
+const userStore = useUserStore();
+const { user, unreadConversations: unread } = storeToRefs(userStore);
+const { signOut } = userStore;
+
+const { open: openLogin, close: closeLogin } = useModal({
+  component: LoginForm,
+  attrs: {
+    onClosed() {
+      closeLogin();
+    },
+  },
+});
+</script>
+
 <template>
   <div class="header">
     <div class="user-info">
@@ -55,28 +77,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useUserStore, useUiStore } from "@/stores";
-import { IconType } from "@/components/icons/iconType";
-import { useModal } from "vue-final-modal";
-import LoginForm from "@/views/account/LoginForm.vue";
-import { storeToRefs } from "pinia";
-
-const { toggleTheme } = useUiStore();
-const userStore = useUserStore();
-const { user, unreadConversations: unread } = storeToRefs(userStore);
-const { signOut } = userStore;
-
-const { open: openLogin, close: closeLogin } = useModal({
-  component: LoginForm,
-  attrs: {
-    onLogin() {
-      closeLogin();
-    },
-  },
-});
-</script>
 
 <style scoped lang="sass">
 .header

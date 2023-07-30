@@ -1,15 +1,12 @@
+<script setup lang="ts">
+defineProps<{ loading?: boolean; disabled: boolean }>();
+</script>
+
 <template>
-  <button
-    :disabled="props.loading || props.disabled"
-    :class="{ loading: props.loading }"
-  >
+  <button :disabled="loading || disabled" :class="{ loading: loading }">
     <span><slot /></span>
   </button>
 </template>
-
-<script setup lang="ts">
-const props = defineProps<{ loading?: boolean; disabled: boolean }>();
-</script>
 
 <style scoped lang="sass">
 button.loading

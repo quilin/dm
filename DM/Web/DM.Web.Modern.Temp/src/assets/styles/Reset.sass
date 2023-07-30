@@ -33,6 +33,7 @@ body
   font-size: $font-size
   line-height: 1.3
   word-wrap: break-word
+  +theme(color, $text)
 
 a
   +theme(color, $active-text)
@@ -41,3 +42,26 @@ a
   transition: color $animation-time
   &:hover
     +theme(color, $active-text-hover)
+
+field
+  display: flex
+  margin: $small 0
+  align-items: baseline
+
+  & input
+    flex-shrink: 0
+
+  &.error input
+    +theme(border-color, $negative-border)
+    animation-name: shake-error
+    animation-duration: $animation-time
+    animation-timing-function: ease-in-out
+
+    &:focus
+      +theme(box-shadow, $negative-border, inset 0 0 $minor)
+
+  & label
+    flex-shrink: 0
+    display: inline-block
+    min-width: $grid-step * 30
+    +theme(color, $text)

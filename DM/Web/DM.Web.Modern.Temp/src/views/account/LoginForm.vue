@@ -1,41 +1,58 @@
 <template>
-  <the-lightbox>
+  <the-lightbox :with-form="true" @closed="emit('closed')">
     <page-title>Вход</page-title>
-    <form @submit.prevent="submit">
-      <input v-bind="login" />{{ errors.login }}<br />
-      <input type="password" v-bind="password" />{{ errors.password }}<br />
-      <input type="checkbox" v-model="rememberMe" /><br />
-      <the-button :disabled="!meta.valid" :loading="loading">Войти</the-button>
-    </form>
+
+    <the-form
+      @submit="submit"
+      :valid="meta.valid"
+      :loading="loading"
+      action="Войти"
+      cancel="Отмена"
+    >
+      <form-field label="Логин" name="login" :errors="errorBag['login']">
+        <input v-bind="login" id="login" />
+      </form-field>
+      <form-field label="Пароль" name="password" :errors="errorBag['password']">
+        <input v-bind="password" type="password" id="password" />
+      </form-field>
+      <form-field name="rememberMe">
+        <label>
+          <input type="checkbox" v-model="rememberMe" />
+          Запомнить меня
+        </label>
+      </form-field>
+    </the-form>
   </the-lightbox>
 </template>
 
 <script setup lang="ts">
-import PageTitle from "@/components/layout/PageTitle.vue";
 import { useUserStore } from "@/stores";
 import { useForm } from "vee-validate";
 import { object, string } from "yup";
 import { ref } from "vue";
 import type { LoginCredentials } from "@/api/models/community";
+import { ValidationErrorCode } from "@/api/models/common";
 
 const emit = defineEmits<{
-  (e: "login"): void;
+  (e: "closed"): void;
 }>();
 
-const { defineInputBinds, handleSubmit, errors, meta } =
+const { defineInputBinds, handleSubmit, meta, errorBag } =
   useForm<LoginCredentials>({
     validationSchema: object({
-      login: string().required("required"),
-      password: string().required("required"),
+      login: string().required(ValidationErrorCode.Empty),
+      password: string().required(ValidationErrorCode.Empty),
     }),
   });
 const login = defineInputBinds("login", (state) => ({
   validateOnInput: state.errors.length > 0,
   validateOnBlur: true,
+  validateOnChange: true,
 }));
 const password = defineInputBinds("password", (state) => ({
   validateOnInput: state.errors.length > 0,
   validateOnBlur: true,
+  validateOnChange: true,
 }));
 const rememberMe = ref(true);
 
@@ -49,24 +66,12 @@ const submit = handleSubmit(async (values, { setErrors }) => {
   });
   loading.value = false;
   if (badRequest) {
-    // todo: translations
     setErrors({
-      login: badRequest.errors["login"]?.join(";"),
-      password: badRequest.errors["password"]?.join(";"),
+      login: badRequest.errors["login"] as unknown as string,
+      password: badRequest.errors["password"] as unknown as string,
     });
   } else {
-    emit("login");
+    emit("closed");
   }
 });
 </script>
-
-<style scoped lang="stylus">
-.vfm
-  display flex;
-
-.lightbox
-  width $large
-
-  & h2
-    margin-top: 0
-</style>

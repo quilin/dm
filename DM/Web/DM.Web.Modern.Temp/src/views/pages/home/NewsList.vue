@@ -22,15 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import BlockTitle from "@/components/layout/BlockTitle.vue";
-import TheLoader from "@/components/TheLoader.vue";
-import UserLink from "@/components/community/UserLink.vue";
-import HumanTimespan from "@/components/dates/HumanTimespan.vue";
-import TheIcon from "@/components/icons/TheIcon.vue";
 import { IconType } from "@/components/icons/iconType";
 import { useForumStore } from "@/stores";
 import { onMounted } from "vue";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const store = useForumStore();
 

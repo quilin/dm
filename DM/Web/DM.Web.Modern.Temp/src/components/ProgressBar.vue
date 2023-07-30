@@ -1,16 +1,16 @@
-<template>
-  <div class="progress">
-    <div class="progress-scale" :style="{ width: `${progress}%` }" />
-    <div class="progress-text"><slot /></div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 
 const props = defineProps<{ goal: number; current: number }>();
 const progress = computed(() => (props.current / props.goal) * 100);
 </script>
+
+<template>
+  <div class="progress">
+    <div class="progress-scale" :style="{ width: `${progress}%` }" />
+    <div class="progress-text"><slot /></div>
+  </div>
+</template>
 
 <style scoped lang="sass">
 .progress

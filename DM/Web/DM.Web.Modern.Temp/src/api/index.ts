@@ -1,5 +1,4 @@
 import axios from "axios";
-import qs from "qs";
 
 import type {
   AxiosRequestConfig,
@@ -26,9 +25,6 @@ const configuration: AxiosRequestConfig = {
   baseURL: `${apiHost}/v1`,
   headers: defaultHeaders,
   responseType: "json",
-  paramsSerializer: {
-    encode: (params) => qs.stringify(params),
-  },
 };
 
 class Api {
