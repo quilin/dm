@@ -32,7 +32,7 @@ export const useForumStore = defineStore("fora", () => {
 
   const moderators = ref<User[] | null>(null);
   async function fetchModerators() {
-    if (!selectedTopic.value) return;
+    if (!selectedForum.value) return;
 
     const { data } = await forumApi.getModerators(selectedForum.value!.id);
     if (data) moderators.value = data.resources;

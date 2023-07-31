@@ -1,5 +1,9 @@
 import { defineStore } from "pinia";
-import type { LoginCredentials, User } from "@/api/models/community";
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  User,
+} from "@/api/models/community";
 import { ColorSchema } from "@/api/models/community";
 import { ref } from "vue";
 import accountApi from "@/api/requests/accountApi";
@@ -18,6 +22,12 @@ export const useUserStore = defineStore("root", () => {
     if (newUser === null) localStorage.removeItem(userKey);
     else localStorage.setItem(userKey, JSON.stringify(newUser));
     updateTheme(newUser?.settings?.colorSchema ?? ColorSchema.Modern);
+  }
+
+  async function register(credentials: RegisterCredentials) {
+    const { error } = await accountApi.register(credentials);
+    if (error && "errors" in error) return error as BadRequestError;
+    return null;
   }
 
   async function signIn(credentials: LoginCredentials) {
@@ -50,5 +60,5 @@ export const useUserStore = defineStore("root", () => {
     updateUser(data?.resource ?? null);
   }
 
-  return { user, unreadConversations, signIn, signOut, fetchUser };
+  return { user, unreadConversations, register, signIn, signOut, fetchUser };
 });

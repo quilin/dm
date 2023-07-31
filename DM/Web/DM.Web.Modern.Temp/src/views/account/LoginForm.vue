@@ -1,6 +1,58 @@
+<script setup lang="ts">
+import { useUserStore } from "@/stores";
+import { useForm } from "vee-validate";
+import { object, string } from "yup";
+import { ref } from "vue";
+import type { LoginCredentials } from "@/api/models/community";
+import { ValidationErrorCode } from "@/api/models/common";
+import LightboxTitle from "@/components/layout/LightboxTitle.vue";
+
+const emit = defineEmits<{
+  (e: "success"): void;
+}>();
+
+const { defineInputBinds, handleSubmit, meta, errorBag } =
+  useForm<LoginCredentials>({
+    validationSchema: object({
+      login: string().required(ValidationErrorCode.Empty),
+      password: string().required(ValidationErrorCode.Empty),
+    }),
+  });
+const login = defineInputBinds("login", (state) => ({
+  validateOnInput: state.errors.length > 0,
+  validateOnBlur: true,
+  validateOnChange: true,
+}));
+const password = defineInputBinds("password", (state) => ({
+  validateOnInput: state.errors.length > 0,
+  validateOnBlur: true,
+  validateOnChange: true,
+}));
+const rememberMe = ref(true);
+
+const loading = ref(false);
+const { signIn } = useUserStore();
+const submit = handleSubmit(async (values, { setErrors }) => {
+  loading.value = true;
+  const badRequest = await signIn({
+    ...values,
+    rememberMe: rememberMe.value,
+  });
+  loading.value = false;
+  if (badRequest) {
+    setErrors({
+      login: badRequest.errors["login"] as unknown as string,
+      password: badRequest.errors["password"] as unknown as string,
+    });
+  } else {
+    emit("success");
+  }
+});
+</script>
+
 <template>
-  <the-lightbox :with-form="true" @closed="emit('closed')">
-    <page-title>Вход</page-title>
+  <the-lightbox :with-form="true">
+    <lightbox-title>Вход</lightbox-title>
 
     <the-form
       @submit="submit"
@@ -24,54 +76,3 @@
     </the-form>
   </the-lightbox>
 </template>
-
-<script setup lang="ts">
-import { useUserStore } from "@/stores";
-import { useForm } from "vee-validate";
-import { object, string } from "yup";
-import { ref } from "vue";
-import type { LoginCredentials } from "@/api/models/community";
-import { ValidationErrorCode } from "@/api/models/common";
-
-const emit = defineEmits<{
-  (e: "closed"): void;
-}>();
-
-const { defineInputBinds, handleSubmit, meta, errorBag } =
-  useForm<LoginCredentials>({
-    validationSchema: object({
-      login: string().required(ValidationErrorCode.Empty),
-      password: string().required(ValidationErrorCode.Empty),
-    }),
-  });
-const login = defineInputBinds("login", (state) => ({
-  validateOnInput: state.errors.length > 0,
-  validateOnBlur: true,
-  validateOnChange: true,
-}));
-const password = defineInputBinds("password", (state) => ({
-  validateOnInput: state.errors.length > 0,
-  validateOnBlur: true,
-  validateOnChange: true,
-}));
-const rememberMe = ref(true);
-
-const loading = ref(false);
-const submit = handleSubmit(async (values, { setErrors }) => {
-  const { signIn } = useUserStore();
-  loading.value = true;
-  const badRequest = await signIn({
-    ...values,
-    rememberMe: rememberMe.value,
-  });
-  loading.value = false;
-  if (badRequest) {
-    setErrors({
-      login: badRequest.errors["login"] as unknown as string,
-      password: badRequest.errors["password"] as unknown as string,
-    });
-  } else {
-    emit("closed");
-  }
-});
-</script>

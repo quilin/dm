@@ -1,26 +1,16 @@
+<script setup lang="ts">
+import { VueFinalModal } from "vue-final-modal";
+</script>
+
 <template>
   <vue-final-modal
     content-class="lightbox"
     overlay-transition="vfm-fade"
     content-transition="vfm-fade"
-    :click-to-close="!withForm"
   >
     <slot />
-    <span class="lightbox-close" @click="emit('closed')">
-      <the-icon :font="IconType.Close" />
-    </span>
   </vue-final-modal>
 </template>
-
-<script setup lang="ts">
-import { VueFinalModal } from "vue-final-modal";
-import { IconType } from "@/components/icons/iconType";
-
-defineProps<{
-  withForm?: boolean;
-}>();
-const emit = defineEmits(["closed"]);
-</script>
 
 <style lang="sass">
 .vfm
@@ -50,4 +40,7 @@ const emit = defineEmits(["closed"]);
 
   &:hover
     +theme(color, $active-text)
+
+h2
+  margin-top: 0
 </style>

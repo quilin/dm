@@ -1,23 +1,13 @@
 <script setup lang="ts">
 import { useUserStore, useUiStore } from "@/stores";
 import { IconType } from "@/components/icons/iconType";
-import { useModal } from "vue-final-modal";
-import LoginForm from "@/views/account/LoginForm.vue";
 import { storeToRefs } from "pinia";
+import GuestActions from "@/views/layout/header/GuestActions.vue";
+import PlayerActions from "@/views/layout/header/PlayerActions.vue";
 
 const { toggleTheme } = useUiStore();
 const userStore = useUserStore();
-const { user, unreadConversations: unread } = storeToRefs(userStore);
-const { signOut } = userStore;
-
-const { open: openLogin, close: closeLogin } = useModal({
-  component: LoginForm,
-  attrs: {
-    onClosed() {
-      closeLogin();
-    },
-  },
-});
+const { user } = storeToRefs(userStore);
 </script>
 
 <template>
@@ -34,26 +24,8 @@ const { open: openLogin, close: closeLogin } = useModal({
         <template v-else>Форумные ролевые игры</template>
       </div>
       <router-link class="logo" :to="{ name: 'home' }" />
-      <div class="user-actions">
-        <template v-if="user">
-          <router-link :to="{ name: 'messenger' }" :class="{ unread }">
-            <template v-if="unread">{{ unread }}</template>
-            <the-icon
-              :font="
-                unread ? IconType.MessagesUnread : IconType.MessagesNoUnread
-              "
-            />
-            Сообщения
-          </router-link>
-          |
-          <a @click="signOut"><the-icon :font="IconType.Logout" /> Выйти</a>
-        </template>
-        <template v-else>
-          <a @click="openLogin"><the-icon :font="IconType.User" /> Вход</a>
-          |
-          <a>Регистрация</a>
-        </template>
-      </div>
+      <player-actions v-if="user" />
+      <guest-actions v-else />
     </div>
     <div class="top-menu">
       <router-link class="link" :to="{ name: 'about' }">О проекте</router-link>

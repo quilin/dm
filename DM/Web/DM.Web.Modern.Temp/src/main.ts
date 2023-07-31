@@ -30,7 +30,7 @@ import FormField from "@/components/inputs/form/FormField.vue";
 import { createI18n } from "vue-i18n";
 import UserLink from "@/components/community/UserLink.vue";
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime).locale("ru");
 
 const i18n = createI18n({
   locale: "ru",

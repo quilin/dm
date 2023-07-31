@@ -73,7 +73,11 @@ const router = createRouter({
     {
       name: "profile",
       path: "/profile/:login",
-      component: () => import("@/components/TheLoader.vue"),
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/profile/ProfilePage.vue"),
+      },
     },
 
     {
