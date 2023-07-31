@@ -26,6 +26,11 @@ public static class ValidationError
     public const string Taken = nameof(Taken);
 
     /// <summary>
+    /// The field value must be present in some storage
+    /// </summary>
+    public const string NotFound = nameof(NotFound);
+
+    /// <summary>
     /// Field value does not match some pattern, e.g. email or regex
     /// </summary>
     public const string Invalid = nameof(Invalid);

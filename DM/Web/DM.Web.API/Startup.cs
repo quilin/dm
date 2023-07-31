@@ -99,7 +99,7 @@ internal class Startup
 
         if (migrateOnStart)
         {
-            var mongoConnection = configuration.GetConnectionString(nameof(ConnectionStrings.Mongo));
+            var mongoConnection = configuration.GetConnectionString(nameof(ConnectionStrings.Mongo))!;
             services.AddMigration(new MongoMigrationSettings
             {
                 ConnectionString = mongoConnection,

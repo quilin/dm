@@ -49,12 +49,12 @@ internal class LoginApiService : ILoginApiService
             case AuthenticationError.WrongLogin:
                 throw new HttpBadRequestException(new Dictionary<string, string>
                 {
-                    ["login"] = "There are no users found with this login. Maybe there was a typo?"
+                    ["login"] = ValidationError.NotFound
                 });
             case AuthenticationError.WrongPassword:
                 throw new HttpBadRequestException(new Dictionary<string, string>
                 {
-                    ["login"] = "The password is incorrect. Did you forget to switch the keyboard?"
+                    ["password"] = ValidationError.Invalid
                 });
             case AuthenticationError.Banned:
             case AuthenticationError.Inactive:
