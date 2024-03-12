@@ -8,6 +8,7 @@ enum IconType {
   Like = 0xe077,
   Upload = 0xe02c,
   Download = 0xe015,
+  Kebab = 0xe048,
 
   CornerTop = 0xe04d,
   CornerRight = 0xe04a,

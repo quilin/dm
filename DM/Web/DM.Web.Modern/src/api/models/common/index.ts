@@ -1,3 +1,5 @@
+import {User} from '@/api/models/community';
+
 export interface Envelope<T> {
   resource: T;
 }
@@ -33,4 +35,9 @@ export interface BadRequestError extends GeneralError {
 export interface ApiResult<T> {
   data: T | null;
   error: GeneralError | null;
+}
+
+export interface Likeable {
+  likes?: User[];
+  author?: User;
 }

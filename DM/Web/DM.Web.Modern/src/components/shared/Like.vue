@@ -4,9 +4,9 @@
     <icon :font="IconType.Like" />
     <template v-if="entity.likes.length"> {{ entity.likes.length }}</template>
   </a>
-  <span v-else class="like">
+  <span v-else-if="entity.likes.length" class="like">
     <icon :font="IconType.Like" />
-    <template v-if="entity.likes.length"> {{ entity.likes.length }}</template>
+    {{ entity.likes.length }}
   </span>
 </template>
 
@@ -15,7 +15,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import IconType from '@/components/iconType';
 import { Getter } from 'vuex-class';
 import { User } from '@/api/models/community';
-import Likeable from '@/components/shared/likeable';
+import { Likeable } from '@/api/models/common';
 
 @Component({})
 export default class Like extends Vue {
@@ -28,11 +28,11 @@ export default class Like extends Vue {
   private user!: User;
 
   private get canInteract(): boolean {
-    return this.user && this.entity.author.login !== this.user.login;
+    return this.user && this.entity.author!.login !== this.user.login;
   }
 
   private get userLiked(): boolean {
-    return this.entity.likes.some((liker: User) => liker.login === this.user.login);
+    return this.entity.likes!.some((liker: User) => liker.login === this.user.login);
   }
 }
 </script>

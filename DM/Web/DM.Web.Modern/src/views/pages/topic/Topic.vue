@@ -4,7 +4,7 @@
       <div class="page-title">{{topic.title}}</div>
       <div class="description" v-html="topic.description"></div>
       <div class="data">
-        <router-link :to="{name: 'user', params: {login: topic.author.login}}">{{topic.author.login}}</router-link>,
+        <user-link :user="topic.author" />,
         <human-timespan :date="topic.created" />
         &nbsp;
         <like :entity="topic" @liked="addLike({ id: topic.id })" @unliked="deleteLike({ id: topic.id })" />

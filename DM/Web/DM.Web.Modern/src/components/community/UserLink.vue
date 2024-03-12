@@ -2,13 +2,13 @@
   <span :title="user.status">
 
     <router-link :to="{ name: 'profile', params: { login: user.login } }" class="user-link">
-      <span :style="{ backgroundImage: user.smallPictureUrl ? `url(${user.smallPictureUrl})` : null }" class="user-logo" />
+      <span v-if="!hidePicture" :style="{ backgroundImage: user.smallPictureUrl ? `url(${user.smallPictureUrl})` : null }" class="user-logo" />
       {{user.login}}
     </router-link>
 
     <span v-if="badge" class="user-badge-container">
-      [<span class="user-badge">{{badge}}</span>]
-    </span>
+      [<span class="user-badge">{{badge}}</span>]</span
+    >
 
   </span>
 </template>
@@ -22,6 +22,9 @@ import { userIsAdmin, userIsAuthority } from '@/api/models/community/helpers';
 export default class UserLink extends Vue {
   @Prop()
   private user!: User;
+
+  @Prop()
+  private hidePicture!: boolean;
 
   private get badge(): string | null {
     if (userIsAdmin(this.user)) {
