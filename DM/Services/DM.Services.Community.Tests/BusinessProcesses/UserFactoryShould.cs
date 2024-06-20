@@ -3,14 +3,14 @@ using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
-using DM.Tests.Core;
 using FluentAssertions;
+using Moq;
 using Moq.Language.Flow;
 using Xunit;
 
 namespace DM.Services.Community.Tests.BusinessProcesses;
 
-public class UserFactoryShould : UnitTestBase
+public class UserFactoryShould
 {
     private readonly ISetup<IGuidFactory, Guid> newIdSetup;
     private readonly ISetup<IDateTimeProvider, DateTimeOffset> currentMomentSetup;
@@ -18,9 +18,9 @@ public class UserFactoryShould : UnitTestBase
 
     public UserFactoryShould()
     {
-        var guidFactory = Mock<IGuidFactory>();
+        var guidFactory = new Mock<IGuidFactory>();
         newIdSetup = guidFactory.Setup(f => f.Create());
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         currentMomentSetup = dateTimeProvider.Setup(p => p.Now);
         factory = new UserFactory(guidFactory.Object, dateTimeProvider.Object);
     }

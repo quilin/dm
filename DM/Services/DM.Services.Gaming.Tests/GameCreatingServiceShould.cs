@@ -17,7 +17,6 @@ using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
@@ -29,7 +28,7 @@ using GameTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 
 namespace DM.Services.Gaming.Tests;
 
-public class GameCreatingServiceShould : UnitTestBase
+public class GameCreatingServiceShould
 {
     private readonly ISetup<IIdentity, AuthenticatedUser> currentUserSetup;
     private readonly ISetup<IGameFactory, Game> createGameSetup;
@@ -46,52 +45,52 @@ public class GameCreatingServiceShould : UnitTestBase
 
     public GameCreatingServiceShould()
     {
-        var validator = Mock<IValidator<CreateGame>>();
+        var validator = new Mock<IValidator<CreateGame>>();
         validator
             .Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<CreateGame>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
 
-        var readingService = Mock<IGameReadingService>();
+        var readingService = new Mock<IGameReadingService>();
         readingService.Setup(s => s.GetTags());
 
-        assignmentService = Mock<IAssignmentService>();
+        assignmentService = new Mock<IAssignmentService>();
         assignmentService
             .Setup(s => s.CreateAssignment(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        intentionManager = Mock<IIntentionManager>();
+        intentionManager = new Mock<IIntentionManager>();
         intentionManager
             .Setup(m => m.ThrowIfForbidden(It.IsAny<GameIntention>()));
 
-        var identityProvider = Mock<IIdentityProvider>();
-        var identity = Mock<IIdentity>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        var identity = new Mock<IIdentity>();
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
         currentUserSetup = identity.Setup(i => i.User);
 
-        gameFactory = Mock<IGameFactory>();
+        gameFactory = new Mock<IGameFactory>();
         createGameSetup = gameFactory
             .Setup(f => f.Create(It.IsAny<CreateGame>(), It.IsAny<Guid>(), It.IsAny<GameStatus>()));
 
-        var roomFactory = Mock<IRoomFactory>();
+        var roomFactory = new Mock<IRoomFactory>();
         createRoomSetup = roomFactory.Setup(r => r.Create(It.IsAny<Guid>()));
 
-        var gameTagFactory = Mock<IGameTagFactory>();
+        var gameTagFactory = new Mock<IGameTagFactory>();
 
-        userRepository = Mock<IUserRepository>();
+        userRepository = new Mock<IUserRepository>();
 
-        gameRepository = Mock<IGameCreatingRepository>();
+        gameRepository = new Mock<IGameCreatingRepository>();
         saveGameSetup = gameRepository
             .Setup(r => r.Create(It.IsAny<Game>(), It.IsAny<Room>(),
                 It.IsAny<IEnumerable<GameTag>>()));
 
-        countersRepository = Mock<IUnreadCountersRepository>();
+        countersRepository = new Mock<IUnreadCountersRepository>();
         countersRepository
             .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
             .Returns(Task.CompletedTask);
 
-        var schemaRepository = Mock<ISchemaReadingRepository>();
+        var schemaRepository = new Mock<ISchemaReadingRepository>();
 
-        publisher = Mock<IInvokedEventProducer>();
+        publisher = new Mock<IInvokedEventProducer>();
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);

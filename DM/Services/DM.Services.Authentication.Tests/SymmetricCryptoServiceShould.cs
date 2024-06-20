@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
-using DM.Tests.Core;
 using FluentAssertions;
 using Xunit;
 
 namespace DM.Services.Authentication.Tests;
 
-public class SymmetricCryptoServiceShould : UnitTestBase
+public class SymmetricCryptoServiceShould
 {
     private readonly TripleDesSymmetricCryptoService service;
 

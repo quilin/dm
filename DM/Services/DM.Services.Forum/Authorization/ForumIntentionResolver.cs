@@ -19,18 +19,12 @@ internal class ForumIntentionResolver : IIntentionResolver<ForumIntention, Dto.O
     }
 
     /// <inheritdoc />
-    public bool IsAllowed(AuthenticatedUser user, ForumIntention intention, Dto.Output.Forum target)
+    public bool IsAllowed(AuthenticatedUser user, ForumIntention intention, Dto.Output.Forum target) => intention switch
     {
-        switch (intention)
-        {
-            case ForumIntention.CreateTopic when user.IsAuthenticated:
-                var userPolicy = accessPolicyConverter.Convert(user.Role);
-                return (target.CreateTopicPolicy & userPolicy) != ForumAccessPolicy.NoOne;
-            case ForumIntention.AdministrateTopics when user.IsAuthenticated:
-                return user.Role.HasFlag(UserRole.Administrator) ||
-                       target.ModeratorIds.Contains(user.UserId);
-            default:
-                return false;
-        }
-    }
+        ForumIntention.CreateTopic when user.IsAuthenticated =>
+            (target.CreateTopicPolicy & accessPolicyConverter.Convert(user.Role)) != ForumAccessPolicy.NoOne,
+        ForumIntention.AdministrateTopics when user.IsAuthenticated =>
+            user.Role.HasFlag(UserRole.Administrator) || target.ModeratorIds.Contains(user.UserId),
+        _ => false
+    };
 }

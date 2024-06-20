@@ -12,7 +12,7 @@ using MongoDB.Driver;
 namespace DM.Services.DataAccess.RelationalStorage;
 
 /// <inheritdoc />
-internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
+public class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
     where TEntity : class, new()
 {
     private readonly Guid id;
@@ -48,6 +48,7 @@ internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
     /// <inheritdoc />
     public bool HasChanges() => toDelete || efUpdateActions.Any();
 
+    /// <inheritdoc />
     public IUpdateBuilder<TEntity> Delete()
     {
         if (efUpdateActions.Any())
@@ -98,6 +99,7 @@ internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
         return id;
     }
 
+    /// <inheritdoc />
     public async Task<Guid> UpdateFor(DmMongoClient mongoClient, bool upsert)
     {
         var entityType = typeof(TEntity);

@@ -6,7 +6,6 @@ using DM.Services.Authentication.Implementation;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Authentication.Repositories;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -15,7 +14,7 @@ using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 
 namespace DM.Services.Authentication.Tests;
 
-public class AuthenticationServiceLogoutShould : UnitTestBase
+public class AuthenticationServiceLogoutShould
 {
     private readonly ISetup<IIdentity, AuthenticatedUser> userSetup;
     private readonly ISetup<IIdentity, Session> sessionSetup;
@@ -27,11 +26,11 @@ public class AuthenticationServiceLogoutShould : UnitTestBase
 
     public AuthenticationServiceLogoutShould()
     {
-        authenticationRepository = Mock<IAuthenticationRepository>();
-        sessionFactory = Mock<ISessionFactory>();
-        cryptoService = Mock<ISymmetricCryptoService>();
-        var identityProvider = Mock<IIdentityProvider>();
-        identity = Mock<IIdentity>();
+        authenticationRepository = new Mock<IAuthenticationRepository>();
+        sessionFactory = new Mock<ISessionFactory>();
+        cryptoService = new Mock<ISymmetricCryptoService>();
+        var identityProvider = new Mock<IIdentityProvider>();
+        identity = new Mock<IIdentity>();
         identityProvider
             .Setup(p => p.Current)
             .Returns(identity.Object);

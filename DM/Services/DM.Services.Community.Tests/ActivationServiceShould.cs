@@ -8,7 +8,6 @@ using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.MessageQueuing.GeneralBus;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Moq.Language.Flow;
@@ -16,7 +15,7 @@ using Xunit;
 
 namespace DM.Services.Community.Tests;
 
-public class ActivationServiceShould : UnitTestBase
+public class ActivationServiceShould
 {
     private readonly ActivationService activationService;
     private readonly ISetup<IActivationRepository, Task<Guid?>> findUserSetup;
@@ -27,30 +26,30 @@ public class ActivationServiceShould : UnitTestBase
 
     public ActivationServiceShould()
     {
-        activationRepository = Mock<IActivationRepository>();
+        activationRepository = new Mock<IActivationRepository>();
         findUserSetup = activationRepository
             .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
         activationRepository
             .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
             .Returns(Task.CompletedTask);
 
-        var dateTimeProvider = Mock<IDateTimeProvider>();
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
         dateTimeProvider.Setup(p => p.Now).Returns(new DateTime(2019, 01, 02));
 
-        publisher = Mock<IInvokedEventProducer>();
+        publisher = new Mock<IInvokedEventProducer>();
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        userUpdateBuilder = Mock<IUpdateBuilder<User>>();
+        userUpdateBuilder = new Mock<IUpdateBuilder<User>>();
         userUpdateBuilder
             .Setup(b => b.Field(u => u.Activated, It.IsAny<bool>()))
             .Returns(userUpdateBuilder.Object);
-        tokenUpdateBuilder = Mock<IUpdateBuilder<Token>>();
+        tokenUpdateBuilder = new Mock<IUpdateBuilder<Token>>();
         tokenUpdateBuilder
             .Setup(b => b.Field(t => t.IsRemoved, It.IsAny<bool>()))
             .Returns(tokenUpdateBuilder.Object);
-        var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
+        var updateBuilderFactory = new Mock<IUpdateBuilderFactory>();
         updateBuilderFactory
             .Setup(f => f.Create<User>(It.IsAny<Guid>()))
             .Returns(userUpdateBuilder.Object);

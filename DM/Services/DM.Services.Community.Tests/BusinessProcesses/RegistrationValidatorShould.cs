@@ -1,21 +1,20 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Account.Registration;
-using DM.Tests.Core;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
 namespace DM.Services.Community.Tests.BusinessProcesses;
 
-public class RegistrationValidatorShould : UnitTestBase
+public class RegistrationValidatorShould
 {
     private readonly UserRegistrationValidator validator;
     private readonly Mock<IRegistrationRepository> registrationRepository;
 
     public RegistrationValidatorShould()
     {
-        registrationRepository = Mock<IRegistrationRepository>(MockBehavior.Loose);
+        registrationRepository = new Mock<IRegistrationRepository>(MockBehavior.Loose);
         registrationRepository
             .Setup(r => r.EmailFree("EmailTaken", It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
