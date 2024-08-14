@@ -1,8 +1,0 @@
-﻿@model DM.Web.Classic.Views.Polls.PollsViewModel
-@if (Model.Polls.Any())
-{
-    foreach (var poll in Model.Polls)
-    {
-        @await Html.PartialAsync("Poll", poll)
-    }
-}

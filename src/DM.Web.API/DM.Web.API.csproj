@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+        <PackageReference Include="Grpc.AspNetCore" />
+        <PackageReference Include="Grpc.Net.Client" />
+        <PackageReference Include="Grpc.Tools">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Jamq.Client.Rabbit.DependencyInjection" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DM.Services.Common\DM.Services.Common.csproj" />
+        <ProjectReference Include="..\DM.Services.Community\DM.Services.Community.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+        <ProjectReference Include="..\DM.Services.Forum\DM.Services.Forum.csproj" />
+        <ProjectReference Include="..\DM.Services.Gaming\DM.Services.Gaming.csproj" />
+        <ProjectReference Include="..\DM.Services.Notifications\DM.Services.Notifications.csproj" />
+        <ProjectReference Include="..\DM.Web.Core\DM.Web.Core.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="../DM.Services.Search.Consumer/Protos/search.proto" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

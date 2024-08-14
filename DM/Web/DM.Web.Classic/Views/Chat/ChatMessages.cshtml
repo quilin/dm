@@ -1,8 +1,0 @@
-﻿@model DM.Web.Classic.Views.Chat.ChatViewModel
-@if (Model.Messages.Any())
-{
-    foreach (var message in Model.Messages)
-    {
-        @await Html.PartialAsync("~/Views/Chat/Message/Message.cshtml", message)
-    }
-}

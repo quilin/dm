@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AWSSDK.S3" />
+        <PackageReference Include="SixLabors.ImageSharp" />
+    </ItemGroup>
+
+</Project>
