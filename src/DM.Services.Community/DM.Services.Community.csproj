@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DM.Services.Authentication\DM.Services.Authentication.csproj" />
+        <ProjectReference Include="..\DM.Services.Common\DM.Services.Common.csproj" />
+        <ProjectReference Include="..\DM.Services.Core\DM.Services.Core.csproj" />
+        <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\DM.Services.Mail.Rendering\DM.Services.Mail.Rendering.csproj" />
+        <ProjectReference Include="..\DM.Services.Mail.Sender\DM.Services.Mail.Sender.csproj" />
+        <ProjectReference Include="..\DM.Services.Uploading\DM.Services.Uploading.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Views\**\*.cshtml" />
+    </ItemGroup>
+
+</Project>

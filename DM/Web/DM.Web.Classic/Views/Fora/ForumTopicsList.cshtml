@@ -1,8 +1,0 @@
-﻿@model IEnumerable<DM.Web.Classic.Views.Fora.Topic.TopicViewModel>
-@if (Model.Any())
-{
-    foreach (var topic in Model)
-    {
-        @await Html.PartialAsync("~/Views/Fora/Topic/Topic.cshtml", topic)
-    }
-}

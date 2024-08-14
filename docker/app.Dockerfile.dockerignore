@@ -1,0 +1,7 @@
+bin/
+obj/
+test/
+node_modules/
+docker-compose.yml
+Dockerfile
+README.md

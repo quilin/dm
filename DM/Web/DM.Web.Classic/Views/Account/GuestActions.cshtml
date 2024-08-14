@@ -1,8 +1,0 @@
-﻿@using DM.Web.Classic.Extensions.IconFontExtensions
-<div class="logo-text">Форумные ролевые игры</div>
-<a class="logo" href="@Url.Action("Index", "Home")">
-    <img src="@Url.Content("~/images/logo.gif")" alt="Dungeonmaster.ru" title="Dungeonmaster.ru"/>
-</a>
-<a href="@Url.Action("LogIn", "Account")" id="LoginLink">@IconFont.Render(IconType.User) Вход</a>
-|
-@Html.ActionLink("Регистрация", "Register", "Account", null, new Dictionary<string, object>{{ "id", "RegisterLink" }})
