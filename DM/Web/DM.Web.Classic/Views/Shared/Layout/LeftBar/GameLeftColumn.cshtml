@@ -1,5 +1,0 @@
-﻿@using DM.Web.Classic.ViewComponents.LeftBar
-@model DM.Web.Classic.Views.GameActions.PageType
-@await Component.InvokeAsync(nameof(GameActions), new {gameId = ViewData["GameId"], pageType = Model, pageId = ViewData["PageId"]})
-@await Component.InvokeAsync(nameof(GamesLists), new {onlyActive = true, currentGameId = ViewData["ModuleId"]})
-@await Component.InvokeAsync(nameof(ForumList))
