@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useReviewStore } from "@/stores";
-import { onMounted, watch } from "vue";
 import { extractNumberParam } from "@/router";
+import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
 const { fetchReviews } = useReviewStore();
 
-onMounted(() => fetchReviews(extractNumberParam(route.params.n)));
-watch(
-  () => route.params,
-  (value) => fetchReviews(extractNumberParam(value.n))
+useFetchData(
+  () => fetchReviews(extractNumberParam(route.params.n)),
+  [
+    {
+      param: (p) => p.n,
+      callback: (n) => fetchReviews(extractNumberParam(n)),
+    },
+  ]
 );
 </script>
 

@@ -32,7 +32,9 @@ watch(
       v-else
       v-for="forum in fora!"
       :key="forum.id"
-      :class="{ selected: isForumRoute && forum.id === store.selectedForum!.id }"
+      :class="{
+        selected: isForumRoute && forum.id === store.selectedForum?.id,
+      }"
     >
       <router-link :to="{ name: 'forum', params: { id: forum.id } }">
         {{ forum.id }}

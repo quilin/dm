@@ -43,7 +43,7 @@ class Api {
     return tokenKey in this.axios.defaults.headers.common;
   }
 
-  public async get<T>(
+  public get<T>(
     url: string,
     params?: any,
     bbRenderMode: BbRenderMode = BbRenderMode.Html
@@ -53,7 +53,7 @@ class Api {
     );
   }
 
-  public async post<T>(url: string, params?: any): Promise<ApiResult<T>> {
+  public post<T>(url: string, params?: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.post(url, params));
   }
 
@@ -61,12 +61,12 @@ class Api {
    Поскольку мы отслеживаем прогресс только отправки файла на сервер с клиента,
    обработчик прогресса "зависает" на 99% до момента получения окончательного ответа от сервера.
   */
-  public async postFile<T>(
+  public postFile<T>(
     url: string,
     params?: any,
     progressCallback?: (event: AxiosProgressEvent) => void
   ): Promise<ApiResult<T>> {
-    const result = await this.send<T>(() =>
+    const result = this.send<T>(() =>
       this.axios.post(url, params, {
         onUploadProgress: progressCallback
           ? (event: AxiosProgressEvent) =>
@@ -82,16 +82,16 @@ class Api {
     return result;
   }
 
-  public async put<T>(url: string, params?: any): Promise<ApiResult<T>> {
+  public put<T>(url: string, params?: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.put(url, params));
   }
 
-  public async patch<T>(url: string, params: any): Promise<ApiResult<T>> {
+  public patch<T>(url: string, params: any): Promise<ApiResult<T>> {
     return this.send(() => this.axios.patch(url, params));
   }
 
-  public async delete<T>(url: string): Promise<ApiResult<T>> {
-    return await this.send(() => this.axios.delete(url));
+  public delete(url: string): Promise<ApiResult<void>> {
+    return this.send(() => this.axios.delete(url));
   }
 
   private async send<T>(

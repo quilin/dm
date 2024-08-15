@@ -1,35 +1,39 @@
 import type { User } from "@/api/models/community";
+import type { Id, Served } from "@/api/models";
 
-export interface Forum {
-  id: string;
-  unreadTopicsCount: number;
-}
+export type ForumId = Id<string>;
+export type Forum = {
+  id: Served<ForumId>;
+  unreadTopicsCount: Served<number>;
+};
 
-export interface LastComment {
+export type LastComment = {
   created: string;
   author: User;
-}
+};
 
-export interface Topic {
-  id?: string;
-  author?: User;
-  created?: string;
+export type TopicId = Id<string>;
+export type Topic = {
+  id: Served<TopicId>;
+  author: Served<User>;
+  created: Served<string>;
   title: string;
-  description?: string;
-  attached?: boolean;
-  closed?: boolean;
-  lastComment?: LastComment | null;
-  commentsCount?: number;
-  unreadCommentsCount?: number;
+  description: string;
+  attached: boolean;
+  closed: boolean;
+  lastComment: Served<LastComment | null>;
+  commentsCount: Served<number>;
+  unreadCommentsCount: Served<number>;
   forum: Forum;
-  likes?: User[];
-}
+  likes: Served<User[]>;
+};
 
-export interface Comment {
-  id: string;
-  author: User;
-  created: string;
-  updated: string | null;
+export type CommentId = Id<string>;
+export type Comment = {
+  id: Served<CommentId>;
+  author: Served<User>;
+  created: Served<string>;
+  updated: Served<string | null>;
   text: string;
-  likes: User[];
-}
+  likes: Served<User[]>;
+};

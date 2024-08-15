@@ -1,6 +1,7 @@
 import type { PagingQuery } from "@/api/models/common";
 import type { User } from "@/api/models/community";
 import type { AttributeSchema } from "@/api/models/gaming/attributes";
+import type { Id, Served } from "@/api/models";
 
 export enum GameStatus {
   Closed = "Closed",
@@ -23,11 +24,12 @@ export enum GameParticipation {
   Owner = "Owner",
 }
 
-export interface Tag {
-  id: string;
-  title: string;
-  category: string;
-}
+export type TagId = Id<string>;
+export type Tag = {
+  id: Served<TagId>;
+  title: Served<string>;
+  category: Served<string>;
+};
 
 export enum CommentariesAccessMode {
   Public = "Public",
@@ -45,19 +47,20 @@ export interface GamePrivacySettings {
   commentariesAccess: CommentariesAccessMode;
 }
 
-export interface Game {
-  id: string;
+export type GameId = Id<string>;
+export type Game = {
+  id: Served<GameId>;
   title: string;
   system: string;
   setting: string;
   status: GameStatus;
-  participation: GameParticipation[];
-  released: string;
+  participation: Served<GameParticipation[]>;
+  released: Served<string>;
 
-  master: User;
+  master: Served<User>;
   assistant: User | null;
-  pendingAssistant: User | null;
-  nanny: User | null;
+  pendingAssistant: Served<User | null>;
+  nanny: Served<User | null>;
   notes: string;
   info: string;
 
@@ -65,10 +68,10 @@ export interface Game {
   privacySettings: GamePrivacySettings;
   schema: AttributeSchema | null;
 
-  unreadPostsCount: number;
-  unreadCommentsCount: number;
-  unreadCharactersCount: number;
-}
+  unreadPostsCount: Served<number>;
+  unreadCommentsCount: Served<number>;
+  unreadCharactersCount: Served<number>;
+};
 
 export interface GamesQuery extends PagingQuery {
   statuses: GameStatus[];

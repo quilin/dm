@@ -2,8 +2,9 @@
 import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import { storeToRefs } from "pinia";
-import { onMounted, watch } from "vue";
 import { extractNumberParam } from "@/router";
+import type { ForumId } from "@/api/models/forum";
+import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
 const forumStore = useForumStore();
@@ -11,7 +12,7 @@ const { moderators } = storeToRefs(forumStore);
 const { trySelectForum, fetchModerators, fetchTopics } = forumStore;
 
 async function fetchData() {
-  const forumId = route.params.id as string;
+  const forumId = route.params.id as ForumId;
   await trySelectForum(forumId);
 
   await Promise.all([
@@ -20,16 +21,18 @@ async function fetchData() {
   ]);
 }
 
-onMounted(() => fetchData());
-watch(
-  () => route.params,
-  (value, oldValue) => {
-    if (value.id !== oldValue.id) {
-      fetchData();
-    } else if (value.n !== oldValue.n) {
-      fetchTopics(extractNumberParam(value.n));
-    }
-  }
+useFetchData(
+  () => fetchData(),
+  [
+    {
+      param: (p) => p.id,
+      callback: () => fetchData(),
+    },
+    {
+      param: (p) => p.n,
+      callback: (n) => fetchTopics(extractNumberParam(n)),
+    },
+  ]
 );
 </script>
 

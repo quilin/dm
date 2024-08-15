@@ -2,11 +2,12 @@
 import { useRoute } from "vue-router";
 import { useCommunityStore } from "@/stores/community";
 import { storeToRefs } from "pinia";
-import { computed, onMounted } from "vue";
-import { UserRole } from "@/api/models/community";
+import { computed } from "vue";
+import { type UserLogin, UserRole } from "@/api/models/community";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import ProfileStat from "@/views/pages/profile/ProfileStat.vue";
 import { useUserStore } from "@/stores";
+import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
 const { user: currentUser } = storeToRefs(useUserStore());
@@ -27,14 +28,22 @@ const isCurrentUser = computed(
   () => currentUser.value && user.value?.login === currentUser.value?.login
 );
 
-onMounted(() => trySelectProfile(route.params.login as string));
+useFetchData(
+  () => trySelectProfile(route.params.login as UserLogin),
+  [
+    {
+      param: (p) => p.login,
+      callback: (login) => trySelectProfile(login as UserLogin),
+    },
+  ]
+);
 </script>
 
 <template>
   <template v-if="user">
     <page-title class="profile_title">{{ route.params.login }}</page-title>
     <secondary-text class="profile_roles">{{
-      userRoles.join(", ")
+      userRoles!.join(", ")
     }}</secondary-text>
 
     <div class="profile_container">

@@ -1,89 +1,71 @@
+import type { ListEnvelope, Envelope, PagingQuery } from "@/api/models/common";
 import type {
-  ListEnvelope,
-  Envelope,
-  ApiResult,
-  PagingQuery,
-} from "@/api/models/common";
-import type { Poll, Review, User } from "@/api/models/community";
+  Poll,
+  PollId,
+  PollOptionId,
+  Review,
+  ReviewId,
+  User,
+  UserLogin,
+} from "@/api/models/community";
 import Api from "@/api";
 import { BbRenderMode } from "../bbRenderMode";
 import type { AxiosProgressEvent } from "axios";
+import type { Patch, Post } from "@/api/models";
 
 export default new (class CommunityApi {
-  public async getPolls(
-    q: PagingQuery,
-    onlyActive: boolean
-  ): Promise<ListEnvelope<Poll>> {
-    const { data } = await Api.get<ListEnvelope<Poll>>("polls", {
+  public getPolls(q: PagingQuery, onlyActive: boolean) {
+    return Api.get<ListEnvelope<Poll>>("polls", {
       ...q,
       onlyActive,
     });
-    return data!;
   }
-  public async postPollVote(
-    pollId: string,
-    optionId: string
-  ): Promise<ApiResult<Envelope<Poll>>> {
-    return await Api.put<Envelope<Poll>>(
-      `polls/${pollId}?optionId=${optionId}`
-    );
+  public postPollVote(pollId: PollId, optionId: PollOptionId) {
+    return Api.put<Envelope<Poll>>(`polls/${pollId}?optionId=${optionId}`);
   }
-  public async postPoll(poll: Poll): Promise<ApiResult<Envelope<Poll>>> {
-    return await Api.post<Envelope<Poll>>("polls", poll);
+  public postPoll(poll: Post<Poll>) {
+    return Api.post<Envelope<Poll>>("polls", poll);
   }
 
-  public async getUsers(q: PagingQuery): Promise<ListEnvelope<User>> {
-    const { data } = await Api.get<ListEnvelope<User>>("users", q);
-    return data!;
+  public getUsers(q: PagingQuery) {
+    return Api.get<ListEnvelope<User>>("users", q);
   }
 
-  public async getUser(login: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.get<Envelope<User>>(`users/${login}/details`);
+  public getUser(login: UserLogin) {
+    return Api.get<Envelope<User>>(`users/${login}/details`);
   }
-  public async getUserForUpdate(login: string): Promise<User> {
-    const { data } = await Api.get<Envelope<User>>(
+  public getUserForUpdate(login: UserLogin) {
+    return Api.get<Envelope<User>>(
       `users/${login}/details`,
       undefined,
       BbRenderMode.Bb
     );
-    return data!.resource;
   }
-  public async updateUser(
-    login: string,
-    user: User
-  ): Promise<ApiResult<Envelope<User>>> {
-    return await Api.patch<Envelope<User>>(`users/${login}/details`, user);
+  public updateUser(login: UserLogin, user: Patch<User>) {
+    return Api.patch<Envelope<User>>(`users/${login}/details`, user);
   }
-  public async uploadUserPicture(
-    login: string,
+  public uploadUserPicture(
+    login: UserLogin,
     files: FormData,
     progressCallback: (event: AxiosProgressEvent) => void
-  ): Promise<Envelope<User>> {
-    const { data } = await Api.postFile<Envelope<User>>(
+  ) {
+    return Api.postFile<Envelope<User>>(
       `users/${login}/uploads`,
       files,
       progressCallback
     );
-    return data!;
   }
 
-  public async getReviews(
-    q: PagingQuery,
-    onlyApproved: boolean
-  ): Promise<ListEnvelope<Review>> {
-    const { data } = await Api.get<ListEnvelope<Review>>("reviews", {
+  public getReviews(q: PagingQuery, onlyApproved: boolean) {
+    return Api.get<ListEnvelope<Review>>("reviews", {
       ...q,
       onlyApproved,
     });
-    return data!;
   }
-  public async updateReview(
-    id: string,
-    review: Review
-  ): Promise<ApiResult<Envelope<Review>>> {
-    return await Api.patch<Envelope<Review>>(`reviews/${id}`, review);
+  public updateReview(id: ReviewId, review: Patch<Review>) {
+    return Api.patch<Envelope<Review>>(`reviews/${id}`, review);
   }
-  public async removeReview(id: string): Promise<ApiResult<Envelope<Review>>> {
-    return await Api.delete<Envelope<Review>>(`reviews/${id}`);
+  public removeReview(id: ReviewId) {
+    return Api.delete(`reviews/${id}`);
   }
 })();
