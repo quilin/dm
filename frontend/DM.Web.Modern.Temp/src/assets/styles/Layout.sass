@@ -1,0 +1,35 @@
+@import "Variables"
+
+$max-width: 350 * $grid-step
+$min-width: 250 * $grid-step
+$header-height: 23 * $grid-step
+$footer-height: 13 * $grid-step
+
+@mixin menu-container
+  margin: 0 $big
+  width: $grid-step * 61
+  flex-shrink: 0
+
+@mixin content-container
+  flex-grow: 1
+  min-width: 0 // fix inner overflow elements https://www.w3.org/TR/css-flexbox-1/#flex-common
+  margin-left: 0
+  margin-right: $big
+
+@mixin sidebar-container
+  margin-right: $big
+  width: $grid-step * 61
+  flex-shrink: 0
+  @media (max-width: $max-width - 121px) // TODO: убрать магические 121пх
+    display: none
+
+@mixin square($size)
+  display: block
+  width: $size
+  height: $size
+
+@mixin icon
+  font-family: "Iconic", serif !important
+  font-weight: normal !important
+  -webkit-font-smoothing: antialiased
+  user-select: none
