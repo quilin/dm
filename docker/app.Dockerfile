@@ -4,9 +4,11 @@ ARG PROJECT_NAME
 
 WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY . ./
-RUN dotnet publish src/${PROJECT_NAME} -c Release -o out
+COPY src ./
+COPY DM.sln ./
+COPY Directory.Build.props ./
+COPY Directory.Packages.props ./
+RUN dotnet publish ${PROJECT_NAME} -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 

@@ -3,9 +3,10 @@ import ThePaging from "@/components/ThePaging.vue";
 import TheReview from "@/views/pages/about/TheReview.vue";
 import { useRoute } from "vue-router";
 import { useReviewStore } from "@/stores";
+import { storeToRefs } from "pinia";
 
 const route = useRoute();
-const { reviews } = useReviewStore();
+const { reviews } = storeToRefs(useReviewStore());
 </script>
 
 <template>
@@ -15,7 +16,7 @@ const { reviews } = useReviewStore();
     :to="{ name: 'about', params: route.params }"
   />
 
-  <the-loader v-if="!reviews" />
+  <the-loader v-if="reviews === null" />
   <the-review
     v-else
     v-for="review in reviews.resources"

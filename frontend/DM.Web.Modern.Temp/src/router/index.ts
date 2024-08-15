@@ -58,8 +58,8 @@ const router = createRouter({
     {
       path: "/community",
       components: {
-        menu: () => GeneralMenu,
-        sidebar: () => GeneralSidebar,
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
         page: () => import("@/views/pages/community/CommunityPage.vue"),
       },
       children: [

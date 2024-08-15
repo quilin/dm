@@ -1,4 +1,4 @@
-import type { ApiResult, Envelope, ListEnvelope } from "@/api/models/common";
+import type { Envelope, ListEnvelope } from "@/api/models/common";
 import type {
   Game,
   AttributeSchema,
@@ -10,74 +10,54 @@ import type { User } from "@/api/models/community";
 import Api from "@/api";
 
 export default new (class {
-  public async getOwnGames(): Promise<ListEnvelope<Game>> {
-    const { data } = await Api.get<ListEnvelope<Game>>("games/own");
-    return data!;
+  public getOwnGames() {
+    return Api.get<ListEnvelope<Game>>("games/own");
   }
 
-  public async getPopularGames(): Promise<ListEnvelope<Game>> {
-    const { data } = await Api.get<ListEnvelope<Game>>("games/popular");
-    return data!;
+  public async getPopularGames() {
+    return Api.get<ListEnvelope<Game>>("games/popular");
   }
 
-  public async getGame(id: string): Promise<ApiResult<Envelope<Game>>> {
-    return await Api.get<Envelope<Game>>(`games/${id}/details`);
+  public getGame(id: string) {
+    return Api.get<Envelope<Game>>(`games/${id}/details`);
   }
 
-  public async getCharacters(gameId: string): Promise<ListEnvelope<Character>> {
-    const { data } = await Api.get<ListEnvelope<Character>>(
-      `games/${gameId}/characters`
-    );
-    return data!;
+  public getCharacters(gameId: string) {
+    return Api.get<ListEnvelope<Character>>(`games/${gameId}/characters`);
   }
 
-  public async getRooms(gameId: string): Promise<ListEnvelope<Room>> {
-    const { data } = await Api.get<ListEnvelope<Room>>(`games/${gameId}/rooms`);
-    return data!;
+  public getRooms(gameId: string) {
+    return Api.get<ListEnvelope<Room>>(`games/${gameId}/rooms`);
   }
 
-  public async getReaders(gameId: string): Promise<ListEnvelope<User>> {
-    const { data } = await Api.get<ListEnvelope<User>>(
-      `games/${gameId}/readers`
-    );
-    return data!;
+  public getReaders(gameId: string) {
+    return Api.get<ListEnvelope<User>>(`games/${gameId}/readers`);
   }
 
-  public async getSchemas(): Promise<ListEnvelope<AttributeSchema>> {
-    const { data } = await Api.get<ListEnvelope<AttributeSchema>>("schemata");
-    return data!;
+  public getSchemas() {
+    return Api.get<ListEnvelope<AttributeSchema>>("schemata");
   }
 
-  public async getTags(): Promise<ListEnvelope<Tag>> {
-    const { data } = await Api.get<ListEnvelope<Tag>>("games/tags");
-    return data!;
+  public getTags() {
+    return Api.get<ListEnvelope<Tag>>("games/tags");
   }
 
-  public async createSchema(
-    schema: AttributeSchema
-  ): Promise<ApiResult<Envelope<AttributeSchema>>> {
-    return await Api.post<Envelope<AttributeSchema>>("schemata", schema);
+  public createSchema(schema: AttributeSchema) {
+    return Api.post<Envelope<AttributeSchema>>("schemata", schema);
   }
 
-  public async createGame(game: Game): Promise<ApiResult<Envelope<Game>>> {
-    return await Api.post<Envelope<Game>>("games", game);
+  public createGame(game: Game) {
+    return Api.post<Envelope<Game>>("games", game);
   }
 
-  public async createCharacter(
-    id: string,
-    character: Character
-  ): Promise<ApiResult<Envelope<Character>>> {
-    return await Api.post<Envelope<Character>>(
-      `games/${id}/characters`,
-      character
-    );
+  public createCharacter(id: string, character: Character) {
+    return Api.post<Envelope<Character>>(`games/${id}/characters`, character);
   }
 
-  public async subscribe(id: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.post<Envelope<User>>(`games/${id}/readers`);
+  public subscribe(id: string) {
+    return Api.post<Envelope<User>>(`games/${id}/readers`);
   }
-
-  public async unsubscribe(id: string): Promise<ApiResult<void>> {
-    return await Api.delete(`games/${id}/readers`);
+  public unsubscribe(id: string) {
+    return Api.delete(`games/${id}/readers`);
   }
 })();
