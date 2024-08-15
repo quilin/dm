@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
 import { IconType } from "@/components/icons/iconType";
 import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import { extractNumberParam } from "@/router";
 import { storeToRefs } from "pinia";
 import TheComment from "@/components/comments/TheComment.vue";
+import type { TopicId } from "@/api/models/forum";
+import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
 const forumStore = useForumStore();
@@ -13,13 +14,22 @@ const { trySelectTopic, fetchComments } = forumStore;
 const { selectedTopic: topic } = storeToRefs(forumStore);
 
 async function fetchData() {
-  await trySelectTopic(route.params.id as string);
+  await trySelectTopic(route.params.id as TopicId);
   await fetchComments(extractNumberParam(route.params.n));
 }
-onMounted(() => fetchData());
-watch(
-  () => route.params,
-  () => fetchData()
+
+useFetchData(
+  () => fetchData(),
+  [
+    {
+      param: (p) => p.id,
+      callback: () => fetchData(),
+    },
+    {
+      param: (p) => p.n,
+      callback: (n) => fetchComments(extractNumberParam(n)),
+    },
+  ]
 );
 </script>
 

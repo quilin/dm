@@ -1,4 +1,5 @@
 import type { User } from "@/api/models/community";
+import type { Id, Served } from "@/api/models";
 
 export enum CharacterStatus {
   Registration = "Registration",
@@ -20,35 +21,37 @@ export enum Alignment {
   ChaoticEvil = "ChaoticEvil",
 }
 
-export interface CharacterPrivacySettings {
+export type CharacterPrivacySettings = {
   isNpc: boolean;
   editByMaster: boolean;
   editPostByMaster: boolean;
-}
+};
 
-export interface CharacterAttribute {
-  id: string;
-  title: string;
+export type CharacterAttributeId = Id<string>;
+export type CharacterAttribute = {
+  id: Served<CharacterAttributeId>;
+  title: Served<string>;
   value: string;
-  modifier: string;
-  inconsistent: string;
-}
+  modifier: Served<string>;
+  inconsistent: Served<string>;
+};
 
-export interface Character {
-  id: string;
-  author: User;
+export type CharacterId = Id<string>;
+export type Character = {
+  id: Served<CharacterId>;
+  author: Served<User>;
   status: CharacterStatus;
   name: string;
   race: string;
   class: string;
   alignment: Alignment;
-  pictureUrl: string;
+  pictureUrl: Served<string>;
   appearance: string;
   temper: string;
   story: string;
   skills: string;
   inventory: string;
   privacy: CharacterPrivacySettings;
-  attributes: CharacterAttribute[];
-  totalPostsCount: number;
-}
+  attributes: Served<CharacterAttribute[]>;
+  totalPostsCount: Served<number>;
+};

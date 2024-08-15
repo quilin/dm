@@ -1,31 +1,27 @@
-import type { Envelope, ApiResult } from "@/api/models/common";
+import type { Envelope } from "@/api/models/common";
+import type { User } from "@/api/models/community";
 import type {
   LoginCredentials,
   RegisterCredentials,
-  User,
-} from "@/api/models/community";
+} from "@/api/models/account";
 import Api from "@/api";
 
 export default new (class AccountApi {
-  public async register(
-    credentials: RegisterCredentials
-  ): Promise<ApiResult<Envelope<User>>> {
-    return await Api.post("account", credentials);
+  public register(credentials: RegisterCredentials) {
+    return Api.post<Envelope<User>>("account", credentials);
   }
-  public async activate(token: string): Promise<ApiResult<Envelope<User>>> {
-    return await Api.put(`account/${token}`);
+  public activate(token: string) {
+    return Api.put<Envelope<User>>(`account/${token}`);
   }
 
-  public async signIn(
-    credentials: LoginCredentials
-  ): Promise<ApiResult<Envelope<User>>> {
-    return await Api.post("account/login", credentials);
+  public signIn(credentials: LoginCredentials) {
+    return Api.post<Envelope<User>>("account/login", credentials);
   }
-  public async fetchUser(): Promise<ApiResult<Envelope<User>>> {
-    return await Api.get("account");
+  public async fetchUser() {
+    return await Api.get<Envelope<User>>("account");
   }
-  public async signOut(): Promise<ApiResult<void>> {
-    const result = await Api.delete<void>("account/login");
+  public async signOut() {
+    const result = await Api.delete("account/login");
     Api.logout();
     return result;
   }

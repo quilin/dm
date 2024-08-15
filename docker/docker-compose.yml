@@ -145,7 +145,7 @@ services:
 
   migration:
     container_name: 'dm-migration'
-    image: 'dm-api:local-latest'
+    image: 'dm-api:local'
     build:
       <<: *docker-context
       args:
@@ -159,7 +159,7 @@ services:
 
   dmemailsenderconsumer:
     container_name: 'dm-email-sender-consumer'
-    image: 'dm-consumer-mail:local-latest'
+    image: 'dm-consumer-mail:local'
     build:
       <<: *docker-context
       args:
@@ -173,7 +173,7 @@ services:
 
   dmsearchengineconsumer:
     container_name: 'dm-search-engine-consumer'
-    image: 'dm-consumer-search:local-latest'
+    image: 'dm-consumer-search:local'
     build:
       <<: *docker-context
       args:
@@ -187,7 +187,7 @@ services:
 
   dmnotificationsconsumer:
     container_name: 'dm-notifications-consumer'
-    image: 'dm-consumer-notification:local-latest'
+    image: 'dm-consumer-notification:local'
     build:
       <<: *docker-context
       args:
@@ -201,7 +201,7 @@ services:
 
   dmapi:
     container_name: 'dm-api'
-    image: 'dm-api:local-latest'
+    image: 'dm-api:local'
     build:
       <<: *docker-context
       args:

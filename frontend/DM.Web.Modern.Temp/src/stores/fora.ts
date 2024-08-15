@@ -1,6 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { Comment, Forum, Topic } from "@/api/models/forum";
+import type {
+  Comment,
+  Forum,
+  ForumId,
+  Topic,
+  TopicId,
+} from "@/api/models/forum";
 import type { User } from "@/api/models/community";
 import type { ListEnvelope, PagingQuery } from "@/api/models/common";
 import forumApi from "@/api/requests/forumApi";
@@ -19,11 +25,11 @@ export const useForumStore = defineStore("fora", () => {
   }
 
   const selectedForum = ref<Forum | null>(null);
-  async function trySelectForum(forumId: string) {
-    const localForum = fora.value?.find((f) => f.id === forumId);
+  async function trySelectForum(id: ForumId) {
+    const localForum = fora.value?.find((f) => f.id === id);
     if (localForum) selectedForum.value = localForum;
 
-    const { error, data } = await forumApi.getForum(forumId);
+    const { error, data } = await forumApi.getForum(id);
     if (error) return false;
 
     selectedForum.value = data!.resource;
@@ -54,7 +60,7 @@ export const useForumStore = defineStore("fora", () => {
   }
 
   const selectedTopic = ref<Topic | null>(null);
-  async function trySelectTopic(id: string) {
+  async function trySelectTopic(id: TopicId) {
     if (selectedTopic.value?.id !== id) selectedTopic.value = null;
     const { data } = await forumApi.getTopic(id);
     if (!data) return;
