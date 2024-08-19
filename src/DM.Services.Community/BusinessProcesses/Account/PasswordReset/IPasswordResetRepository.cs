@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
@@ -12,6 +13,7 @@ internal interface IPasswordResetRepository
     /// Create password restoration token
     /// </summary>
     /// <param name="token"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task CreateToken(Token token);
+    Task CreateToken(Token token, CancellationToken cancellationToken);
 }

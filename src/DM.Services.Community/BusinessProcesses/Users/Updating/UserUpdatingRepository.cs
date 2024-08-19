@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -8,25 +9,18 @@ using DM.Services.DataAccess.RelationalStorage;
 namespace DM.Services.Community.BusinessProcesses.Users.Updating;
 
 /// <inheritdoc />
-internal class UserUpdatingRepository : MongoCollectionRepository<UserSettings>, IUserUpdatingRepository
+internal class UserUpdatingRepository(
+    DmDbContext dbContext,
+    DmMongoClient client) : MongoCollectionRepository<UserSettings>(client), IUserUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly DmMongoClient mongoClient;
+    private readonly DmMongoClient mongoClient = client;
 
     /// <inheritdoc />
-    public UserUpdatingRepository(
-        DmDbContext dbContext,
-        DmMongoClient mongoClient) : base(mongoClient)
-    {
-        this.dbContext = dbContext;
-        this.mongoClient = mongoClient;
-    }
-
-    /// <inheritdoc />
-    public async Task UpdateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate)
+    public async Task UpdateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate,
+        CancellationToken cancellationToken)
     {
         updateUser.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
-        await settingsUpdate.UpdateFor(mongoClient, true);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await settingsUpdate.UpdateFor(mongoClient, true, cancellationToken);
     }
 }

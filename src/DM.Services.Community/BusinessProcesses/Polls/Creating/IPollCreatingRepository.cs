@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
 using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
@@ -13,6 +14,7 @@ internal interface IPollCreatingRepository
     /// Create new poll
     /// </summary>
     /// <param name="poll"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Poll> Create(DbPoll poll);
+    Task<Poll> Create(DbPoll poll, CancellationToken cancellationToken);
 }

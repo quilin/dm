@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Forum.BusinessProcesses.Likes;
@@ -8,37 +9,29 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Fora;
 
 /// <inheritdoc />
-internal class LikeApiService : ILikeApiService
+internal class LikeApiService(
+    ILikeService likeService,
+    IMapper mapper) : ILikeApiService
 {
-    private readonly ILikeService likeService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public LikeApiService(
-        ILikeService likeService,
-        IMapper mapper)
+    public async Task<Envelope<User>> LikeTopic(Guid topicId, CancellationToken cancellationToken)
     {
-        this.likeService = likeService;
-        this.mapper = mapper;
-    }
-    
-    /// <inheritdoc />
-    public async Task<Envelope<User>> LikeTopic(Guid topicId)
-    {
-        var likedByUser = await likeService.LikeTopic(topicId);
+        var likedByUser = await likeService.LikeTopic(topicId, cancellationToken);
         return new Envelope<User>(mapper.Map<User>(likedByUser));
     }
 
     /// <inheritdoc />
-    public Task DislikeTopic(Guid topicId) => likeService.DislikeTopic(topicId);
+    public Task DislikeTopic(Guid topicId, CancellationToken cancellationToken) =>
+        likeService.DislikeTopic(topicId, cancellationToken);
 
     /// <inheritdoc />
-    public async Task<Envelope<User>> LikeComment(Guid commentId)
+    public async Task<Envelope<User>> LikeComment(Guid commentId, CancellationToken cancellationToken)
     {
-        var likedByUser = await likeService.LikeComment(commentId);
+        var likedByUser = await likeService.LikeComment(commentId, cancellationToken);
         return new Envelope<User>(mapper.Map<User>(likedByUser));
     }
 
     /// <inheritdoc />
-    public Task DislikeComment(Guid commentId) => likeService.DislikeComment(commentId);
+    public Task DislikeComment(Guid commentId, CancellationToken cancellationToken) =>
+        likeService.DislikeComment(commentId, cancellationToken);
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -16,66 +17,50 @@ using DM.Services.Forum.Dto.Output;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Reading;
 
 /// <inheritdoc />
-internal class TopicReadingService : ITopicReadingService
+internal class TopicReadingService(
+    IIdentityProvider identityProvider,
+    IForumReadingService forumReadingService,
+    IAccessPolicyConverter accessPolicyConverter,
+    ITopicReadingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository) : ITopicReadingService
 {
-    private readonly IForumReadingService forumReadingService;
-    private readonly IAccessPolicyConverter accessPolicyConverter;
-    private readonly ITopicReadingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IIdentityProvider identityProvider;
-
-    /// <inheritdoc />
-    public TopicReadingService(
-        IIdentityProvider identityProvider,
-        IForumReadingService forumReadingService,
-        IAccessPolicyConverter accessPolicyConverter,
-        ITopicReadingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository)
-    {
-        this.identityProvider = identityProvider;
-        this.forumReadingService = forumReadingService;
-        this.accessPolicyConverter = accessPolicyConverter;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-    }
-
     /// <inheritdoc />
     public async Task<(IEnumerable<Topic> topics, PagingResult paging)> GetTopicsList(
-        string forumTitle, PagingQuery query)
+        string forumTitle, PagingQuery query, CancellationToken cancellationToken)
     {
-        var forum = await forumReadingService.GetForum(forumTitle);
+        var forum = await forumReadingService.GetForum(forumTitle, true, cancellationToken);
 
-        var totalCount = await repository.Count(forum.Id);
+        var totalCount = await repository.Count(forum.Id, cancellationToken);
         var identity = identityProvider.Current;
         var pagingData = new PagingData(query, identity.Settings.Paging.TopicsPerPage, totalCount);
 
-        var topics = (await repository.Get(forum.Id, pagingData, false)).ToArray();
+        var topics = (await repository.Get(forum.Id, pagingData, false, cancellationToken)).ToArray();
         if (identity.User.IsAuthenticated)
         {
             await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
-                t => t.Id, t => t.UnreadCommentsCount);
+                t => t.Id, t => t.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
         }
 
         return (topics, pagingData.Result);
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle)
+    public async Task<IEnumerable<Topic>> GetAttachedTopics(string forumTitle, CancellationToken cancellationToken)
     {
-        var forum = await forumReadingService.GetForum(forumTitle);
-        var topics = (await repository.Get(forum.Id, null, true)).ToArray();
+        var forum = await forumReadingService.GetForum(forumTitle, true, cancellationToken);
+        var topics = (await repository.Get(forum.Id, null, true, cancellationToken)).ToArray();
         var identity = identityProvider.Current;
         if (identity.User.IsAuthenticated)
         {
             await unreadCountersRepository.FillEntityCounters(topics, identity.User.UserId,
-                t => t.Id, t => t.UnreadCommentsCount);
+                t => t.Id, t => t.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
         }
 
         return topics;
     }
 
     /// <inheritdoc />
-    public async Task<Topic> GetTopic(Guid topicId)
+    public async Task<Topic> GetTopic(Guid topicId, CancellationToken cancellationToken)
     {
         var identity = identityProvider.Current;
         var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
@@ -87,8 +72,9 @@ internal class TopicReadingService : ITopicReadingService
 
         if (identity.User.IsAuthenticated)
         {
-            topic.UnreadCommentsCount = (await unreadCountersRepository.SelectByEntities(
-                identity.User.UserId, UnreadEntryType.Message, topicId))[topicId];
+            var selectByEntities = await unreadCountersRepository.SelectByEntities(
+                identity.User.UserId, UnreadEntryType.Message, [topicId], cancellationToken);
+            topic.UnreadCommentsCount = selectByEntities[topicId];
         }
 
         return topic;

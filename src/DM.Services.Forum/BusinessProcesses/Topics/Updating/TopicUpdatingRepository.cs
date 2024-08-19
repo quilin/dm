@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,29 +12,19 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Updating;
 
 /// <inheritdoc />
-internal class TopicUpdatingRepository : ITopicUpdatingRepository
+internal class TopicUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ITopicUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public TopicUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder)
+    public async Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder, CancellationToken cancellationToken)
     {
         var topicId = updateBuilder.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.ForumTopics
             .TagWith("DM.Forum.UpdatedTopic")
             .Where(t => t.ForumTopicId == topicId)
             .ProjectTo<Topic>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

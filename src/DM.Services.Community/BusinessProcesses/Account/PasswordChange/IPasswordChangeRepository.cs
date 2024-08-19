@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.DataAccess.BusinessObjects.Users;
@@ -15,15 +16,17 @@ internal interface IPasswordChangeRepository
     /// Find existing user
     /// </summary>
     /// <param name="login"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AuthenticatedUser> FindUser(string login);
+    Task<AuthenticatedUser> FindUser(string login, CancellationToken cancellationToken);
 
     /// <summary>
     /// Find token user
     /// </summary>
     /// <param name="tokenId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AuthenticatedUser> FindUser(Guid tokenId);
+    Task<AuthenticatedUser> FindUser(Guid tokenId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Check if token is valid
@@ -38,6 +41,8 @@ internal interface IPasswordChangeRepository
     /// </summary>
     /// <param name="userUpdate"></param>
     /// <param name="tokenUpdate"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpdatePassword(IUpdateBuilder<User> userUpdate, IUpdateBuilder<Token> tokenUpdate);
+    Task UpdatePassword(IUpdateBuilder<User> userUpdate, IUpdateBuilder<Token> tokenUpdate,
+        CancellationToken cancellationToken);
 }

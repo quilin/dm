@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 using DbComment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
@@ -13,6 +14,7 @@ internal interface ICommentaryCreatingRepository
     /// Create comment from DAL
     /// </summary>
     /// <param name="comment">DAL model for comment</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Comment> Create(DbComment comment);
+    Task<Comment> Create(DbComment comment, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Gaming.Dto.Input;
@@ -13,6 +14,7 @@ public interface IBlacklistCreatingService
     /// Create new blacklist link
     /// </summary>
     /// <param name="operateBlacklistLink">DTO for creating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink);
+    Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink, CancellationToken cancellationToken);
 }

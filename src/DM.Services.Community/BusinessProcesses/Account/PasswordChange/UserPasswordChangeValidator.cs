@@ -31,7 +31,7 @@ internal class UserPasswordChangeValidator : AbstractValidator<UserPasswordChang
             {
                 RuleFor(c => c.OldPassword)
                     .NotEmpty().WithMessage(ValidationError.Empty)
-                    .Must((model, password, context) =>
+                    .Must((_, password, _) =>
                         identityProvider.Current.User.IsAuthenticated &&
                         securityManager.ComparePasswords(password,
                             identityProvider.Current.User.Salt, identityProvider.Current.User.PasswordHash))

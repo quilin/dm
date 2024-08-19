@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,31 +12,21 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange;
 
 /// <inheritdoc />
-internal class EmailChangeRepository : IEmailChangeRepository
+internal class EmailChangeRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IEmailChangeRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public EmailChangeRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<AuthenticatedUser> FindUser(string login) => dbContext.Users
+    public Task<AuthenticatedUser> FindUser(string login, CancellationToken cancellationToken) => dbContext.Users
         .Where(u => u.Login.ToLower() == login.ToLower())
         .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task Update(IUpdateBuilder<User> updateUser, Token token)
+    public Task Update(IUpdateBuilder<User> updateUser, Token token, CancellationToken cancellationToken)
     {
         updateUser.AttachTo(dbContext);
         dbContext.Tokens.Add(token);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

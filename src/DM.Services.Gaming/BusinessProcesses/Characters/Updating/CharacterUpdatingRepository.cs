@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -14,33 +15,21 @@ using CharacterAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characte
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating;
 
 /// <inheritdoc />
-internal class CharacterUpdatingRepository : ICharacterUpdatingRepository
+internal class CharacterUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ICharacterUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public CharacterUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<CharacterToUpdate> Get(Guid characterId)
-    {
-        return dbContext.Characters
+    public Task<CharacterToUpdate> Get(Guid characterId, CancellationToken cancellationToken) =>
+        dbContext.Characters
             .Where(c => c.CharacterId == characterId)
             .ProjectTo<CharacterToUpdate>(mapper.ConfigurationProvider)
-            .FirstAsync();
-    }
+            .FirstAsync(cancellationToken);
 
     /// <inheritdoc />
     public async Task<Character> Update(
         IUpdateBuilder<DataAccess.BusinessObjects.Games.Characters.Character> updateCharacter,
-        IEnumerable<IUpdateBuilder<CharacterAttribute>> attributeChanges)
+        IEnumerable<IUpdateBuilder<CharacterAttribute>> attributeChanges, CancellationToken cancellationToken)
     {
         var characterId = updateCharacter.AttachTo(dbContext);
         foreach (var attributeChange in attributeChanges)
@@ -48,18 +37,19 @@ internal class CharacterUpdatingRepository : ICharacterUpdatingRepository
             attributeChange.AttachTo(dbContext);
         }
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.Characters
             .Where(c => c.CharacterId == characterId)
             .ProjectTo<Character>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IDictionary<Guid, Guid>> GetAttributeIds(Guid characterId)
-    {
-        return await dbContext.CharacterAttributes
+    public async Task<IDictionary<Guid, Guid>> GetAttributeIds(Guid characterId, CancellationToken cancellationToken) =>
+        await dbContext.CharacterAttributes
             .Where(c => c.CharacterId == characterId)
-            .ToDictionaryAsync(a => a.AttributeId, a => a.CharacterAttributeId);
-    }
+            .ToDictionaryAsync(
+                a => a.AttributeId,
+                a => a.CharacterAttributeId,
+                cancellationToken: cancellationToken);
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -18,13 +19,14 @@ internal class ForumRepository(
     : IForumRepository
 {
     /// <inheritdoc />
-    public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy)
+    public async Task<IEnumerable<Dto.Output.Forum>> SelectFora(ForumAccessPolicy? accessPolicy,
+        CancellationToken cancellationToken)
     {
         var forums = await cache.GetOrCreate<IEnumerable<Dto.Output.Forum>>("Fora", async () => await dmDbContext.Fora
             .TagWith("DM.Forum.ForaList")
             .OrderBy(f => f.Order)
             .ProjectTo<Dto.Output.Forum>(mapper.ConfigurationProvider)
-            .ToArrayAsync());
+            .ToArrayAsync(cancellationToken));
 
         if (accessPolicy.HasValue)
         {

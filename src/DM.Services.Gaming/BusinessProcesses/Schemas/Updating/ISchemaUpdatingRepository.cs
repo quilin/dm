@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
 
@@ -12,6 +13,7 @@ internal interface ISchemaUpdatingRepository
     /// Update existing attribute schema
     /// </summary>
     /// <param name="schema">DAL model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<DbAttributeSchema> UpdateSchema(DbAttributeSchema schema);
+    Task<DbAttributeSchema> UpdateSchema(DbAttributeSchema schema, CancellationToken cancellationToken);
 }

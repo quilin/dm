@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Dto.Enums;
@@ -16,8 +17,9 @@ internal interface ITopicReadingRepository
     /// Get number of forum topics
     /// </summary>
     /// <param name="forumId">Forum identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<int> Count(Guid forumId);
+    Task<int> Count(Guid forumId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get list of forum topics
@@ -25,8 +27,10 @@ internal interface ITopicReadingRepository
     /// <param name="forumId">Forum identifier</param>
     /// <param name="pagingData">Paging data</param>
     /// <param name="attached">Select attached/not attached topics exclusively</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached);
+    Task<IEnumerable<Topic>> Get(Guid forumId, PagingData pagingData, bool attached,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Get topic

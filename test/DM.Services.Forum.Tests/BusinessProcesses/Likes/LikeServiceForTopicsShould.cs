@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -37,7 +38,7 @@ public class LikeServiceForTopicsShould : UnitTestBase
     public LikeServiceForTopicsShould()
     {
         var topicReadingService = Mock<ITopicReadingService>();
-        topicReading = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
+        topicReading = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         var intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -56,7 +57,7 @@ public class LikeServiceForTopicsShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
+    public async Task ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
     {
         var topicId = Guid.NewGuid();
         var userId = Guid.NewGuid();
@@ -70,8 +71,8 @@ public class LikeServiceForTopicsShould : UnitTestBase
         });
         currentUser.Returns(Create.User(userId).Please);
 
-        service.Invoking(s => s.LikeTopic(topicId).Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.LikeTopic(topicId, CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
@@ -97,16 +98,16 @@ public class LikeServiceForTopicsShould : UnitTestBase
             .Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .Returns(like);
         likeRepository
-            .Setup(r => r.Add(It.IsAny<Like>()))
+            .Setup(r => r.Add(It.IsAny<Like>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        var actual = await service.LikeTopic(topicId);
+        var actual = await service.LikeTopic(topicId, CancellationToken.None);
         actual.Should().Be(user);
 
-        likeRepository.Verify(r => r.Add(like), Times.Once);
+        likeRepository.Verify(r => r.Add(like, It.IsAny<CancellationToken>()), Times.Once);
         likeRepository.VerifyNoOtherCalls();
 
         publisher.Verify(p => p.Send(EventType.LikedTopic, likeId), Times.Once);
@@ -114,7 +115,7 @@ public class LikeServiceForTopicsShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
+    public async Task ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
     {
         var topicId = Guid.NewGuid();
         topicReading.ReturnsAsync(new Topic
@@ -126,8 +127,8 @@ public class LikeServiceForTopicsShould : UnitTestBase
         });
         currentUser.Returns(Create.User().Please);
 
-        service.Invoking(s => s.DislikeTopic(topicId).Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.DislikeTopic(topicId, CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
@@ -149,12 +150,12 @@ public class LikeServiceForTopicsShould : UnitTestBase
         currentUser.Returns(user);
 
         likeRepository
-            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        await service.DislikeTopic(topicId);
+        await service.DislikeTopic(topicId, CancellationToken.None);
 
-        likeRepository.Verify(r => r.Delete(topicId, userId), Times.Once);
+        likeRepository.Verify(r => r.Delete(topicId, userId, It.IsAny<CancellationToken>()), Times.Once);
         likeRepository.VerifyNoOtherCalls();
     }
 }

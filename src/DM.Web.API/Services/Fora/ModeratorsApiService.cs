@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Forum.BusinessProcesses.Moderation;
@@ -8,24 +9,14 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Fora;
 
 /// <inheritdoc />
-internal class ModeratorsApiService : IModeratorsApiService
+internal class ModeratorsApiService(
+    IModeratorsReadingService moderatorsReadingService,
+    IMapper mapper) : IModeratorsApiService
 {
-    private readonly IModeratorsReadingService moderatorsReadingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public ModeratorsApiService(
-        IModeratorsReadingService moderatorsReadingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<User>> GetModerators(string id, CancellationToken cancellationToken)
     {
-        this.moderatorsReadingService = moderatorsReadingService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<ListEnvelope<User>> GetModerators(string id)
-    {
-        var moderators = await moderatorsReadingService.GetModerators(id);
+        var moderators = await moderatorsReadingService.GetModerators(id, cancellationToken);
         return new ListEnvelope<User>(moderators.Select(mapper.Map<User>));
     }
 }

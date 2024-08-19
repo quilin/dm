@@ -7,30 +7,22 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration;
 
 /// <inheritdoc />
-internal class RegistrationRepository : IRegistrationRepository
+internal class RegistrationRepository(
+    DmDbContext dbContext) : IRegistrationRepository
 {
-    private readonly DmDbContext dbContext;
+    /// <inheritdoc />
+    public async Task<bool> EmailFree(string email, CancellationToken cancellationToken) =>
+        !await dbContext.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower(), cancellationToken);
 
     /// <inheritdoc />
-    public RegistrationRepository(
-        DmDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
+    public async Task<bool> LoginFree(string login, CancellationToken cancellationToken) =>
+        !await dbContext.Users.AnyAsync(u => u.Login.ToLower() == login.ToLower(), cancellationToken);
 
     /// <inheritdoc />
-    public Task<bool> EmailFree(string email, CancellationToken cancellationToken) =>
-        dbContext.Users.AllAsync(u => u.Email.ToLower() != email.ToLower(), cancellationToken);
-
-    /// <inheritdoc />
-    public Task<bool> LoginFree(string login, CancellationToken cancellationToken) =>
-        dbContext.Users.AllAsync(u => u.Login.ToLower() != login.ToLower(), cancellationToken);
-
-    /// <inheritdoc />
-    public Task AddUser(User user, Token token)
+    public Task AddUser(User user, Token token, CancellationToken cancellationToken)
     {
         dbContext.Users.Add(user);
         dbContext.Tokens.Add(token);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

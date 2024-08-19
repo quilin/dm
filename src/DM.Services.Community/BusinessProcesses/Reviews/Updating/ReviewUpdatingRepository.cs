@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,28 +11,19 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Updating;
 
 /// <inheritdoc />
-internal class ReviewUpdatingRepository : IReviewUpdatingRepository
+internal class ReviewUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IReviewUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public ReviewUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Review> Update(IUpdateBuilder<DataAccess.BusinessObjects.Common.Review> updateReview)
+    public async Task<Review> Update(IUpdateBuilder<DataAccess.BusinessObjects.Common.Review> updateReview,
+        CancellationToken cancellationToken)
     {
         var reviewId = updateReview.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.Reviews
             .Where(r => r.ReviewId == reviewId)
             .ProjectTo<Review>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

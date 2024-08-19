@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -16,43 +17,21 @@ using FluentValidation;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Updating;
 
 /// <inheritdoc />
-internal class TopicUpdatingService : ITopicUpdatingService
+internal class TopicUpdatingService(
+    IValidator<UpdateTopic> validator,
+    ITopicReadingService topicReadingService,
+    IForumReadingService forumReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    ITopicUpdatingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer invokedEventProducer) : ITopicUpdatingService
 {
-    private readonly IValidator<UpdateTopic> validator;
-    private readonly ITopicReadingService topicReadingService;
-    private readonly IForumReadingService forumReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly ITopicUpdatingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer invokedEventProducer;
-
     /// <inheritdoc />
-    public TopicUpdatingService(
-        IValidator<UpdateTopic> validator,
-        ITopicReadingService topicReadingService,
-        IForumReadingService forumReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        ITopicUpdatingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer invokedEventProducer)
+    public async Task<Topic> UpdateTopic(UpdateTopic updateTopic, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.topicReadingService = topicReadingService;
-        this.forumReadingService = forumReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.invokedEventProducer = invokedEventProducer;
-    }
-
-    /// <inheritdoc />
-    public async Task<Topic> UpdateTopic(UpdateTopic updateTopic)
-    {
-        await validator.ValidateAndThrowAsync(updateTopic);
-        var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId);
+        await validator.ValidateAndThrowAsync(updateTopic, cancellationToken);
+        var oldTopic = await topicReadingService.GetTopic(updateTopic.TopicId, cancellationToken);
 
         intentionManager.ThrowIfForbidden(TopicIntention.Edit, oldTopic);
 
@@ -69,14 +48,15 @@ internal class TopicUpdatingService : ITopicUpdatingService
             if (updateTopic.ForumTitle != default &&
                 oldTopic.Forum.Title != updateTopic.ForumTitle)
             {
-                var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false);
+                var forum = await forumReadingService.GetForum(updateTopic.ForumTitle, false, cancellationToken);
                 intentionManager.ThrowIfForbidden(ForumIntention.CreateTopic, forum);
                 changes.Field(t => t.ForumId, forum.Id);
-                await unreadCountersRepository.ChangeParent(oldTopic.Forum.Id, UnreadEntryType.Message, forum.Id);
+                await unreadCountersRepository.ChangeParent(
+                    oldTopic.Forum.Id, UnreadEntryType.Message, forum.Id, cancellationToken);
             }
         }
 
-        var topic = await repository.Update(changes);
+        var topic = await repository.Update(changes, cancellationToken);
         await invokedEventProducer.Send(EventType.ChangedForumTopic, topic.Id);
 
         return topic;

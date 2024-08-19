@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,24 +11,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Account.Verification;
 
 /// <inheritdoc />
-internal class TokenVerificationRepository : ITokenVerificationRepository
+internal class TokenVerificationRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ITokenVerificationRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public TokenVerificationRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<GeneralUser> GetTokenOwner(Guid tokenId) => dbContext.Tokens
+    public Task<GeneralUser> GetTokenOwner(Guid tokenId, CancellationToken cancellationToken) => dbContext.Tokens
         .Where(t => t.TokenId == tokenId && !t.IsRemoved)
         .Select(t => t.User)
         .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 }

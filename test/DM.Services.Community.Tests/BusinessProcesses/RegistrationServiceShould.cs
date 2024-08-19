@@ -50,12 +50,12 @@ public class RegistrationServiceShould : UnitTestBase
 
         registrationRepository = Mock<IRegistrationRepository>();
         registrationRepository
-            .Setup(r => r.AddUser(It.IsAny<User>(), It.IsAny<Token>()))
+            .Setup(r => r.AddUser(It.IsAny<User>(), It.IsAny<Token>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         mailSender = Mock<IRegistrationMailSender>();
         mailSender
-            .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>()))
+            .Setup(s => s.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         eventPublisher = Mock<IInvokedEventProducer>();
@@ -80,7 +80,7 @@ public class RegistrationServiceShould : UnitTestBase
         createUserSetup.Returns(new User());
 
         var userRegistration = new UserRegistration {Password = "my password"};
-        await service.Register(userRegistration);
+        await service.Register(userRegistration, CancellationToken.None);
 
         securityManager.Verify(m => m.GeneratePassword("my password"));
         userFactory.Verify(f => f.Create(userRegistration, "salt", "hash"));
@@ -94,7 +94,7 @@ public class RegistrationServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         createUserSetup.Returns(new User {UserId = userId});
 
-        await service.Register(new UserRegistration());
+        await service.Register(new UserRegistration(), CancellationToken.None);
 
         tokenFactory.Verify(f => f.Create(userId));
     }
@@ -108,9 +108,9 @@ public class RegistrationServiceShould : UnitTestBase
         var user = new User();
         createUserSetup.Returns(user);
 
-        await service.Register(new UserRegistration());
+        await service.Register(new UserRegistration(), CancellationToken.None);
 
-        registrationRepository.Verify(r => r.AddUser(user, token), Times.Once);
+        registrationRepository.Verify(r => r.AddUser(user, token, It.IsAny<CancellationToken>()), Times.Once);
         registrationRepository.VerifyNoOtherCalls();
     }
 
@@ -122,9 +122,9 @@ public class RegistrationServiceShould : UnitTestBase
         createTokenSetup.Returns(new Token {TokenId = tokenId});
         createUserSetup.Returns(new User {Email = "email", Login = "login"});
 
-        await service.Register(new UserRegistration());
+        await service.Register(new UserRegistration(), CancellationToken.None);
 
-        mailSender.Verify(s => s.Send("email", "login", tokenId), Times.Once);
+        mailSender.Verify(s => s.Send("email", "login", tokenId, It.IsAny<CancellationToken>()), Times.Once);
         mailSender.VerifyNoOtherCalls();
     }
 
@@ -136,7 +136,7 @@ public class RegistrationServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         createUserSetup.Returns(new User {UserId = userId});
 
-        await service.Register(new UserRegistration {Email = "email", Login = "login"});
+        await service.Register(new UserRegistration {Email = "email", Login = "login"}, CancellationToken.None);
 
         eventPublisher.Verify(p => p.Send(EventType.NewUser, userId));
     }

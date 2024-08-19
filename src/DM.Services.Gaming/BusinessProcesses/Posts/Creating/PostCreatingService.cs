@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -20,47 +21,23 @@ using PendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPo
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Creating;
 
 /// <inheritdoc />
-internal class PostCreatingService : IPostCreatingService
+internal class PostCreatingService(
+    IValidator<CreatePost> validator,
+    IRoomUpdatingRepository roomUpdatingRepository,
+    IIntentionManager intentionManager,
+    IPostFactory postFactory,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IPostCreatingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer producer,
+    IIdentityProvider identityProvider) : IPostCreatingService
 {
-    private readonly IValidator<CreatePost> validator;
-    private readonly IRoomUpdatingRepository roomUpdatingRepository;
-    private readonly IIntentionManager intentionManager;
-    private readonly IPostFactory postFactory;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IPostCreatingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer producer;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public PostCreatingService(
-        IValidator<CreatePost> validator,
-        IRoomUpdatingRepository roomUpdatingRepository,
-        IIntentionManager intentionManager,
-        IPostFactory postFactory,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IPostCreatingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer producer,
-        IIdentityProvider identityProvider)
+    public async Task<Post> Create(CreatePost createPost, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.roomUpdatingRepository = roomUpdatingRepository;
-        this.intentionManager = intentionManager;
-        this.postFactory = postFactory;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.producer = producer;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<Post> Create(CreatePost createPost)
-    {
-        await validator.ValidateAndThrowAsync(createPost);
+        await validator.ValidateAndThrowAsync(createPost, cancellationToken);
         var identity = identityProvider.Current;
-        var room = await roomUpdatingRepository.GetRoom(createPost.RoomId, identity.User.UserId);
+        var room = await roomUpdatingRepository.GetRoom(createPost.RoomId, identity.User.UserId, cancellationToken);
         if (room == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Room not found");
@@ -81,8 +58,8 @@ internal class PostCreatingService : IPostCreatingService
 
         var post = postFactory.Create(createPost, identity.User.UserId);
 
-        var createdPost = await repository.Create(post, pendingPostUpdates);
-        await unreadCountersRepository.Increment(createdPost.RoomId, UnreadEntryType.Message);
+        var createdPost = await repository.Create(post, pendingPostUpdates, cancellationToken);
+        await unreadCountersRepository.Increment(createdPost.RoomId, UnreadEntryType.Message, cancellationToken);
         await producer.Send(events, createdPost.Id);
 
         return createdPost;

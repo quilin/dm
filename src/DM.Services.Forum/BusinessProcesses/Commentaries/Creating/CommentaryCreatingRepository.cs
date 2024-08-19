@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,22 +12,13 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Creating;
 
 /// <inheritdoc />
-internal class CommentaryCreatingRepository : ICommentaryCreatingRepository
+internal class CommentaryCreatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ICommentaryCreatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public CommentaryCreatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate)
+    public async Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate,
+        CancellationToken cancellationToken)
     {
         dbContext.Comments.Add(comment);
         topicUpdate.AttachTo(dbContext);

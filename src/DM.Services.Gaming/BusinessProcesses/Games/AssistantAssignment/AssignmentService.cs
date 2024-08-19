@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Dto.Enums;
@@ -37,7 +38,7 @@ internal class AssignmentService : IAssignmentService
     }
 
     /// <inheritdoc />
-    public async Task CreateAssignment(Guid gameId, Guid userId)
+    public async Task CreateAssignment(Guid gameId, Guid userId, CancellationToken cancellationToken)
     {
         var updates = (await repository.FindAssignments(gameId))
             .Select(id => updateBuilderFactory.Create<Token>(id).Field(t => t.IsRemoved, true));

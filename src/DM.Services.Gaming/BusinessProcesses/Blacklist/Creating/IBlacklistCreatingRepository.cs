@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
@@ -13,6 +14,7 @@ internal interface IBlacklistCreatingRepository
     /// Save new link
     /// </summary>
     /// <param name="link">DAL model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Create(BlackListLink link);
+    Task<GeneralUser> Create(BlackListLink link, CancellationToken cancellationToken);
 }

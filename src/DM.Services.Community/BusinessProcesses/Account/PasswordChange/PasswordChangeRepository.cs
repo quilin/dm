@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -27,17 +28,17 @@ internal class PasswordChangeRepository : IPasswordChangeRepository
     }
 
     /// <inheritdoc />
-    public Task<AuthenticatedUser> FindUser(string login) => dbContext.Users
+    public Task<AuthenticatedUser> FindUser(string login, CancellationToken cancellationToken) => dbContext.Users
         .Where(u => u.Login.ToLower() == login.ToLower())
         .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<AuthenticatedUser> FindUser(Guid tokenId) => dbContext.Tokens
+    public Task<AuthenticatedUser> FindUser(Guid tokenId, CancellationToken cancellationToken) => dbContext.Tokens
         .Where(u => u.TokenId == tokenId)
         .Select(u => u.User)
         .ProjectTo<AuthenticatedUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
     public Task<bool> TokenValid(Guid tokenId, DateTimeOffset createdSince) => dbContext.Tokens
@@ -45,10 +46,11 @@ internal class PasswordChangeRepository : IPasswordChangeRepository
                        t.Type == TokenType.PasswordChange && t.CreateDate > createdSince);
 
     /// <inheritdoc />
-    public Task UpdatePassword(IUpdateBuilder<User> userUpdate, IUpdateBuilder<Token> tokenUpdate)
+    public Task UpdatePassword(IUpdateBuilder<User> userUpdate, IUpdateBuilder<Token> tokenUpdate,
+        CancellationToken cancellationToken)
     {
         userUpdate.AttachTo(dbContext);
         tokenUpdate?.AttachTo(dbContext);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

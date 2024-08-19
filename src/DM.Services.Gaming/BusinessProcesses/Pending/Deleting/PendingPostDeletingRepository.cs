@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -12,33 +13,21 @@ using DbPendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.Pending
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting;
 
 /// <inheritdoc />
-internal class PendingPostDeletingRepository : IPendingPostDeletingRepository
+internal class PendingPostDeletingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IPendingPostDeletingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PendingPostDeletingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public Task<PendingPost> Get(Guid pendingPostId)
-    {
-        return dbContext.PendingPosts
+    public Task<PendingPost> Get(Guid pendingPostId, CancellationToken cancellationToken) =>
+        dbContext.PendingPosts
             .Where(p => p.PendingPostId == pendingPostId)
             .ProjectTo<PendingPost>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task Delete(IUpdateBuilder<DbPendingPost> updateBuilder)
+    public Task Delete(IUpdateBuilder<DbPendingPost> updateBuilder, CancellationToken cancellationToken)
     {
         updateBuilder.AttachTo(dbContext);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

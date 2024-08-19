@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -13,6 +14,7 @@ internal interface ITokenVerificationRepository
     /// Get user that token was generated for
     /// </summary>
     /// <param name="tokenId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> GetTokenOwner(Guid tokenId);
+    Task<GeneralUser> GetTokenOwner(Guid tokenId, CancellationToken cancellationToken);
 }

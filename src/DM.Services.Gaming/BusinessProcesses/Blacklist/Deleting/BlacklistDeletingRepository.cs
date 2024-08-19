@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
@@ -18,7 +19,7 @@ internal class BlacklistDeletingRepository : IBlacklistDeletingRepository
     }
         
     /// <inheritdoc />
-    public Task Delete(IUpdateBuilder<BlackListLink> updateBuilder)
+    public Task Delete(IUpdateBuilder<BlackListLink> updateBuilder, CancellationToken cancellationToken)
     {
         updateBuilder.AttachTo(dbContext);
         return dbContext.SaveChangesAsync();

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
@@ -15,6 +16,8 @@ internal interface IUserUpdatingRepository
     /// </summary>
     /// <param name="updateUser"></param>
     /// <param name="settingsUpdate"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UpdateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate);
+    Task UpdateUser(IUpdateBuilder<User> updateUser, IUpdateBuilder<UserSettings> settingsUpdate,
+        CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
 
@@ -15,6 +16,7 @@ internal interface IPollVotingRepository
     /// <param name="pollId">Poll identifier</param>
     /// <param name="optionId">Option identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId);
+    Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId, CancellationToken cancellationToken);
 }

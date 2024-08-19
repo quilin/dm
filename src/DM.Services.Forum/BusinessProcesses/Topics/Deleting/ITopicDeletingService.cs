@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting;
@@ -12,6 +13,7 @@ public interface ITopicDeletingService
     /// Remove existing topic
     /// </summary>
     /// <param name="topicId">Topic identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DeleteTopic(Guid topicId);
+    Task DeleteTopic(Guid topicId, CancellationToken cancellationToken);
 }

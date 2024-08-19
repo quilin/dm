@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -20,67 +21,47 @@ using Microsoft.Extensions.Caching.Memory;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Reading;
 
 /// <inheritdoc />
-internal class GameReadingService : IGameReadingService
+internal class GameReadingService(
+    IValidator<GamesQuery> validator,
+    IIntentionManager intentionManager,
+    ISchemaReadingService schemaReadingService,
+    IGameReadingRepository repository,
+    IIdentityProvider identityProvider,
+    IUnreadCountersRepository unreadCountersRepository,
+    IMemoryCache cache) : IGameReadingService
 {
-    private readonly IValidator<GamesQuery> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly ISchemaReadingService schemaReadingService;
-    private readonly IGameReadingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IMemoryCache cache;
-    private readonly IIdentityProvider identityProvider;
-
     private const string TagListCacheKey = nameof(TagListCacheKey);
     private const string PopularGamesCacheKey = nameof(PopularGamesCacheKey);
     private const int PopularGamesLimit = 10;
 
     /// <inheritdoc />
-    public GameReadingService(
-        IValidator<GamesQuery> validator,
-        IIntentionManager intentionManager,
-        ISchemaReadingService schemaReadingService,
-        IGameReadingRepository repository,
-        IIdentityProvider identityProvider,
-        IUnreadCountersRepository unreadCountersRepository,
-        IMemoryCache cache)
-    {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.schemaReadingService = schemaReadingService;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.cache = cache;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public Task<IEnumerable<GameTag>> GetTags()
+    public Task<IEnumerable<GameTag>> GetTags(CancellationToken cancellationToken)
     {
         return cache.GetOrCreateAsync(TagListCacheKey, async e =>
         {
             e.SlidingExpiration = TimeSpan.FromDays(1);
-            return await repository.GetTags();
+            return await repository.GetTags(cancellationToken);
         });
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Game>> GetOwnGames()
+    public async Task<IEnumerable<Game>> GetOwnGames(CancellationToken cancellationToken)
     {
         var currentUserId = identityProvider.Current.User.UserId;
-        var games = (await repository.GetOwn(currentUserId)).ToArray();
+        var games = (await repository.GetOwn(currentUserId, cancellationToken)).ToArray();
 
-        await unreadCountersRepository.FillEntityCounters(
-            games, currentUserId, g => g.Id, g => g.UnreadCommentsCount);
-        await unreadCountersRepository.FillEntityCounters(
-            games, currentUserId, g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
+        await unreadCountersRepository.FillEntityCounters(games, currentUserId,
+            g => g.Id, g => g.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
+        await unreadCountersRepository.FillEntityCounters(games, currentUserId,
+            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character, cancellationToken);
 
         var gameIds = games.Select(g => g.Id).ToArray();
-        var gameRooms = await repository.GetAvailableRoomIds(gameIds, currentUserId);
+        var gameRooms = await repository.GetAvailableRoomIds(gameIds, currentUserId, cancellationToken);
         var allRoomIds = gameRooms.SelectMany(r => r.Value).ToArray();
         var unreadPostCounters = await unreadCountersRepository.SelectByEntities(
-            currentUserId, UnreadEntryType.Message, allRoomIds);
+            currentUserId, UnreadEntryType.Message, allRoomIds, cancellationToken);
 
-        var pendingPosts = (await repository.GetPendingPosts(gameIds, currentUserId)).ToArray();
+        var pendingPosts = (await repository.GetPendingPosts(gameIds, currentUserId, cancellationToken)).ToArray();
 
         foreach (var game in games)
         {
@@ -95,51 +76,52 @@ internal class GameReadingService : IGameReadingService
     }
 
     /// <inheritdoc />
-    public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(GamesQuery query)
+    public async Task<(IEnumerable<Game> games, PagingResult paging)> GetGames(
+        GamesQuery query, CancellationToken cancellationToken)
     {
-        await validator.ValidateAndThrowAsync(query);
+        await validator.ValidateAndThrowAsync(query, cancellationToken);
 
         var currentUserId = identityProvider.Current.User.UserId;
-        var totalCount = await repository.Count(query, currentUserId);
+        var totalCount = await repository.Count(query, currentUserId, cancellationToken);
         var pagingData = new PagingData(query,
             identityProvider.Current.Settings.Paging.EntitiesPerPage, totalCount);
 
-        var games = (await repository.GetGames(pagingData, query, currentUserId)).ToArray();
+        var games = (await repository.GetGames(pagingData, query, currentUserId, cancellationToken)).ToArray();
         await unreadCountersRepository.FillEntityCounters(games, currentUserId,
-            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
+            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character, cancellationToken);
 
         var gamesWithAvailableComments = games
             .Where(g => intentionManager.IsAllowed(GameIntention.ReadComments, g))
             .ToArray();
         await unreadCountersRepository.FillEntityCounters(gamesWithAvailableComments, currentUserId,
-            g => g.Id, g => g.UnreadCommentsCount);
+            g => g.Id, g => g.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
 
         return (games, pagingData.Result);
     }
 
     /// <inheritdoc />
-    public async Task<Game> GetGame(Guid gameId)
+    public async Task<Game> GetGame(Guid gameId, CancellationToken cancellationToken)
     {
         var currentUserId = identityProvider.Current.User.UserId;
-        var game = await repository.GetGame(gameId, currentUserId);
+        var game = await repository.GetGame(gameId, currentUserId, cancellationToken);
         if (game == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Game not found");
         }
 
         await unreadCountersRepository.FillEntityCounters(new[] {game}, currentUserId,
-            g => g.Id, g => g.UnreadCommentsCount);
+            g => g.Id, g => g.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
         await unreadCountersRepository.FillEntityCounters(new[] {game}, currentUserId,
-            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
+            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character, cancellationToken);
 
         return game;
     }
 
     /// <inheritdoc />
-    public async Task<GameExtended> GetGameDetails(Guid gameId)
+    public async Task<GameExtended> GetGameDetails(Guid gameId, CancellationToken cancellationToken)
     {
         var currentUserId = identityProvider.Current.User.UserId;
-        var game = await repository.GetGameDetails(gameId, currentUserId);
+        var game = await repository.GetGameDetails(gameId, currentUserId, cancellationToken);
         if (game == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Game not found");
@@ -147,24 +129,25 @@ internal class GameReadingService : IGameReadingService
 
         if (game.AttributeSchemaId.HasValue)
         {
-            game.AttributeSchema = await schemaReadingService.Get(game.AttributeSchemaId.Value);
+            game.AttributeSchema = await schemaReadingService.Get(game.AttributeSchemaId.Value, cancellationToken);
         }
 
         await unreadCountersRepository.FillEntityCounters(new[] {game}, currentUserId,
-            g => g.Id, g => g.UnreadCommentsCount);
+            g => g.Id, g => g.UnreadCommentsCount, UnreadEntryType.Message, cancellationToken);
         await unreadCountersRepository.FillEntityCounters(new[] {game}, currentUserId,
-            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character);
+            g => g.Id, g => g.UnreadCharactersCount, UnreadEntryType.Character, cancellationToken);
 
         return game;
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public Task<IEnumerable<Game>> GetPopularGames()
+    public Task<IEnumerable<Game>> GetPopularGames(CancellationToken cancellationToken)
     {
         return cache.GetOrCreateAsync(PopularGamesCacheKey, async e =>
         {
             e.SlidingExpiration = TimeSpan.FromDays(1);
-            return await repository.GetPopularGames(PopularGamesLimit);
+            return await repository.GetPopularGames(PopularGamesLimit, cancellationToken);
         });
     }
 }

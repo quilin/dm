@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -15,20 +16,10 @@ using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversa
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
 
 /// <inheritdoc />
-internal class ConversationReadingRepository : IConversationReadingRepository
+internal class ConversationReadingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IConversationReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
-    /// <inheritdoc />
-    public ConversationReadingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
     /// <summary>
     /// Participation predicate
     /// </summary>
@@ -38,51 +29,52 @@ internal class ConversationReadingRepository : IConversationReadingRepository
         c => c.UserLinks.Any(l => !l.IsRemoved && l.UserId == userId);
 
     /// <inheritdoc />
-    public Task<int> Count(Guid userId) => dbContext.Conversations
+    public Task<int> Count(Guid userId, CancellationToken cancellationToken) => dbContext.Conversations
         .Where(UserParticipates(userId))
-        .CountAsync();
+        .CountAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Conversation>> Get(Guid userId, PagingData paging) =>
+    public async Task<IEnumerable<Conversation>> Get(Guid userId, PagingData paging,
+        CancellationToken cancellationToken) =>
         await dbContext.Conversations
             .Where(UserParticipates(userId))
             .Where(c => c.LastMessageId.HasValue)
             .OrderByDescending(c => c.LastMessage.CreateDate)
             .Page(paging)
             .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Conversation> Get(Guid conversationId, Guid userId) => dbContext.Conversations
+    public Task<Conversation> Get(Guid conversationId, Guid userId, CancellationToken cancellationToken) => dbContext.Conversations
         .Where(UserParticipates(userId))
         .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<Guid?> FindUser(string login) => (await dbContext.Users
+    public async Task<Guid?> FindUser(string login, CancellationToken cancellationToken) => (await dbContext.Users
         .Where(u => u.Login.ToLower() == login.ToLower() && !u.IsRemoved && u.Activated)
         .Select(u => new {u.UserId})
-        .FirstOrDefaultAsync())?.UserId;
+        .FirstOrDefaultAsync(cancellationToken))?.UserId;
 
     /// <inheritdoc />
-    public Task<Conversation> FindVisaviConversation(Guid userId, Guid visaviId) => dbContext.Conversations
+    public Task<Conversation> FindVisaviConversation(Guid userId, Guid visaviId, CancellationToken cancellationToken) => dbContext.Conversations
         .Where(c => c.Visavi)
         .Where(UserParticipates(userId))
         .Where(UserParticipates(visaviId))
         .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
     public async Task<Conversation> Create(DbConversation conversation,
-        IEnumerable<UserConversationLink> conversationLinks)
+        IEnumerable<UserConversationLink> conversationLinks, CancellationToken cancellationToken)
     {
         dbContext.Conversations.Add(conversation);
         dbContext.UserConversationLinks.AddRange(conversationLinks);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return await dbContext.Conversations
             .Where(c => c.ConversationId == conversation.ConversationId)
             .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

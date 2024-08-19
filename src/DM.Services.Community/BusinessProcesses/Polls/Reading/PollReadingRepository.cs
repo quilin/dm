@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.MongoIntegration;
@@ -10,7 +11,8 @@ using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 namespace DM.Services.Community.BusinessProcesses.Polls.Reading;
 
 /// <inheritdoc />
-internal class PollReadingRepository : MongoCollectionRepository<DbPoll>, IPollReadingRepository
+internal class PollReadingRepository(DmMongoClient client)
+    : MongoCollectionRepository<DbPoll>(client), IPollReadingRepository
 {
     /// <summary>
     /// Projection for poll
@@ -31,18 +33,15 @@ internal class PollReadingRepository : MongoCollectionRepository<DbPoll>, IPollR
         });
 
     /// <inheritdoc />
-    public PollReadingRepository(DmMongoClient client) : base(client)
-    {
-    }
-
-    /// <inheritdoc />
-    public Task<long> Count(DateTimeOffset? activeUntil) =>
+    public Task<long> Count(DateTimeOffset? activeUntil, CancellationToken cancellationToken) =>
         Collection.CountDocumentsAsync(activeUntil.HasValue
             ? Filter.Gte(p => p.EndDate, activeUntil.Value.UtcDateTime)
-            : Filter.Empty);
+            : Filter.Empty,
+            cancellationToken: cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Poll>> Get(DateTimeOffset? activeUntil, PagingData pagingData)
+    public async Task<IEnumerable<Poll>> Get(DateTimeOffset? activeUntil, PagingData pagingData,
+        CancellationToken cancellationToken)
     {
         return await Collection
             .Find(activeUntil.HasValue
@@ -52,12 +51,12 @@ internal class PollReadingRepository : MongoCollectionRepository<DbPoll>, IPollR
             .Skip(pagingData.Skip)
             .Limit(pagingData.Take)
             .Project(PollProjection)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<Poll> Get(Guid id) => Collection
+    public Task<Poll> Get(Guid id, CancellationToken cancellationToken) => Collection
         .Find(Filter.Eq(p => p.Id, id))
         .Project(PollProjection)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 }

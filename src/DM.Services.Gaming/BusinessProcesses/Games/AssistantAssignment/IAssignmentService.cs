@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.AssistantAssignment;
@@ -13,8 +14,9 @@ public interface IAssignmentService
     /// </summary>
     /// <param name="gameId">Game identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task CreateAssignment(Guid gameId, Guid userId);
+    Task CreateAssignment(Guid gameId, Guid userId, CancellationToken cancellationToken);
         
     /// <summary>
     /// User accepts the request and becomes the game assistant

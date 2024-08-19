@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -33,7 +34,7 @@ public class TopicDeletingServiceShould : UnitTestBase
     public TopicDeletingServiceShould()
     {
         var readingService = Mock<ITopicReadingService>();
-        getTopicSetup = readingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
+        getTopicSetup = readingService.Setup(s => s.GetTopic(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -49,7 +50,7 @@ public class TopicDeletingServiceShould : UnitTestBase
             .Returns(updateBuilder.Object);
 
         updatingRepository = Mock<ITopicUpdatingRepository>();
-        updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>()));
+        updateSetup = updatingRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<ForumTopic>>(), It.IsAny<CancellationToken>()));
 
         publisher = Mock<IInvokedEventProducer>();
         publisher
@@ -58,7 +59,7 @@ public class TopicDeletingServiceShould : UnitTestBase
 
         unreadCountersRepository = Mock<IUnreadCountersRepository>();
         unreadCountersRepository
-            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         service = new TopicDeletingService(readingService.Object,
@@ -76,7 +77,7 @@ public class TopicDeletingServiceShould : UnitTestBase
         getTopicSetup.ReturnsAsync(topic);
         updateSetup.ReturnsAsync(new Topic());
 
-        await service.DeleteTopic(topicId);
+        await service.DeleteTopic(topicId, CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(ForumIntention.AdministrateTopics, forum), Times.Once);
     }
@@ -89,11 +90,11 @@ public class TopicDeletingServiceShould : UnitTestBase
         getTopicSetup.ReturnsAsync(topic);
         updateSetup.ReturnsAsync(new Topic());
 
-        await service.DeleteTopic(topicId);
+        await service.DeleteTopic(topicId, CancellationToken.None);
 
         updateBuilder.Verify(b => b.Field(t => t.IsRemoved, true), Times.Once);
         updateBuilder.VerifyNoOtherCalls();
-        updatingRepository.Verify(r => r.Update(updateBuilder.Object), Times.Once);
+        updatingRepository.Verify(r => r.Update(updateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         updatingRepository.VerifyNoOtherCalls();
     }
 
@@ -105,9 +106,9 @@ public class TopicDeletingServiceShould : UnitTestBase
         getTopicSetup.ReturnsAsync(topic);
         updateSetup.ReturnsAsync(new Topic());
 
-        await service.DeleteTopic(topicId);
+        await service.DeleteTopic(topicId, CancellationToken.None);
 
-        unreadCountersRepository.Verify(r => r.Delete(topicId, UnreadEntryType.Message), Times.Once);
+        unreadCountersRepository.Verify(r => r.Delete(topicId, UnreadEntryType.Message, It.IsAny<CancellationToken>()), Times.Once);
         unreadCountersRepository.VerifyNoOtherCalls();
     }
 
@@ -119,7 +120,7 @@ public class TopicDeletingServiceShould : UnitTestBase
         getTopicSetup.ReturnsAsync(topic);
         updateSetup.ReturnsAsync(new Topic());
 
-        await service.DeleteTopic(topicId);
+        await service.DeleteTopic(topicId, CancellationToken.None);
 
         publisher.Verify(p => p.Send(EventType.DeletedForumTopic, topicId), Times.Once);
         publisher.VerifyNoOtherCalls();

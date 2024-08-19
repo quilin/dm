@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -13,40 +14,31 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 
 /// <inheritdoc />
-internal class CommentaryDeletingRepository : ICommentaryDeletingRepository
+internal class CommentaryDeletingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ICommentaryDeletingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public CommentaryDeletingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<CommentToDelete> GetForDelete(Guid commentId)
+    public Task<CommentToDelete> GetForDelete(Guid commentId, CancellationToken cancellationToken)
     {
         return dbContext.Comments
             .TagWith("DM.Forum.CommentToDelete")
             .Where(c => !c.IsRemoved && c.CommentId == commentId)
             .ProjectTo<CommentToDelete>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task Delete(IUpdateBuilder<Comment> update, IUpdateBuilder<ForumTopic> topicUpdate)
+    public Task Delete(IUpdateBuilder<Comment> update, IUpdateBuilder<ForumTopic> topicUpdate,
+        CancellationToken cancellationToken)
     {
         update.AttachTo(dbContext);
         topicUpdate.AttachTo(dbContext);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<Guid?> GetSecondLastCommentId(Guid topicId)
+    public async Task<Guid?> GetSecondLastCommentId(Guid topicId, CancellationToken cancellationToken)
     {
         var result = await dbContext.Comments
             .TagWith("DM.Forum.SecondLastCommentAfterDelete")
@@ -54,7 +46,7 @@ internal class CommentaryDeletingRepository : ICommentaryDeletingRepository
             .OrderByDescending(c => c.CreateDate)
             .Skip(1)
             .Select(c => c.CommentId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
         return result == default ? null : result;
     }
 }

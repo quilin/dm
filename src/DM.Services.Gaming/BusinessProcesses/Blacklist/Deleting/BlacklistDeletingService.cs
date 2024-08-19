@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -16,43 +17,23 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Deleting;
 
 /// <inheritdoc />
-internal class BlacklistDeletingService : IBlacklistDeletingService
+internal class BlacklistDeletingService(
+    IValidator<OperateBlacklistLink> validator,
+    IUserRepository userRepository,
+    IGameReadingService gameReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IBlacklistDeletingRepository repository,
+    IInvokedEventProducer invokedEventProducer) : IBlacklistDeletingService
 {
-    private readonly IValidator<OperateBlacklistLink> validator;
-    private readonly IUserRepository userRepository;
-    private readonly IGameReadingService gameReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IBlacklistDeletingRepository repository;
-    private readonly IInvokedEventProducer invokedEventProducer;
-
     /// <inheritdoc />
-    public BlacklistDeletingService(
-        IValidator<OperateBlacklistLink> validator,
-        IUserRepository userRepository,
-        IGameReadingService gameReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IBlacklistDeletingRepository repository,
-        IInvokedEventProducer invokedEventProducer)
+    public async Task Delete(OperateBlacklistLink operateBlacklistLink, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.userRepository = userRepository;
-        this.gameReadingService = gameReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.invokedEventProducer = invokedEventProducer;
-    }
-        
-    /// <inheritdoc />
-    public async Task Delete(OperateBlacklistLink operateBlacklistLink)
-    {
-        await validator.ValidateAndThrowAsync(operateBlacklistLink);
-        var game = await gameReadingService.GetGame(operateBlacklistLink.GameId);
+        await validator.ValidateAndThrowAsync(operateBlacklistLink, cancellationToken);
+        var game = await gameReadingService.GetGame(operateBlacklistLink.GameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
-        var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
+        var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login, cancellationToken);
         var blacklistedLink = game.BlacklistedUsers.FirstOrDefault(u => u.UserId == userId);
         if (blacklistedLink == default)
         {
@@ -60,7 +41,7 @@ internal class BlacklistDeletingService : IBlacklistDeletingService
         }
 
         var updateBuilder = updateBuilderFactory.Create<BlackListLink>(blacklistedLink.LinkId).Delete();
-        await repository.Delete(updateBuilder);
+        await repository.Delete(updateBuilder, cancellationToken);
         await invokedEventProducer.Send(EventType.ChangedGame, game.Id);
     }
 }

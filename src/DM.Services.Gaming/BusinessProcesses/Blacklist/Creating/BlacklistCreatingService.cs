@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto;
@@ -15,43 +16,24 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating;
 
 /// <inheritdoc />
-internal class BlacklistCreatingService : IBlacklistCreatingService
+internal class BlacklistCreatingService(
+    IValidator<OperateBlacklistLink> validator,
+    IGameReadingService gameReadingService,
+    IIntentionManager intentionManager,
+    IBlacklistLinkFactory factory,
+    IUserRepository userRepository,
+    IBlacklistCreatingRepository repository,
+    IInvokedEventProducer producer) : IBlacklistCreatingService
 {
-    private readonly IValidator<OperateBlacklistLink> validator;
-    private readonly IGameReadingService gameReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IBlacklistLinkFactory factory;
-    private readonly IUserRepository userRepository;
-    private readonly IBlacklistCreatingRepository repository;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public BlacklistCreatingService(
-        IValidator<OperateBlacklistLink> validator,
-        IGameReadingService gameReadingService,
-        IIntentionManager intentionManager,
-        IBlacklistLinkFactory factory,
-        IUserRepository userRepository,
-        IBlacklistCreatingRepository repository,
-        IInvokedEventProducer producer)
+    public async Task<GeneralUser> Create(
+        OperateBlacklistLink operateBlacklistLink, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.gameReadingService = gameReadingService;
-        this.intentionManager = intentionManager;
-        this.factory = factory;
-        this.userRepository = userRepository;
-        this.repository = repository;
-        this.producer = producer;
-    }
-
-    /// <inheritdoc />
-    public async Task<GeneralUser> Create(OperateBlacklistLink operateBlacklistLink)
-    {
-        await validator.ValidateAndThrowAsync(operateBlacklistLink);
-        var game = await gameReadingService.GetGame(operateBlacklistLink.GameId);
+        await validator.ValidateAndThrowAsync(operateBlacklistLink, cancellationToken);
+        var game = await gameReadingService.GetGame(operateBlacklistLink.GameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
-        var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login);
+        var (_, userId) = await userRepository.FindUserId(operateBlacklistLink.Login, cancellationToken);
         if (game.BlacklistedUsers.Any(l => l.UserId == userId))
         {
             throw new HttpException(HttpStatusCode.Conflict, "User already blacklisted");
@@ -64,7 +46,7 @@ internal class BlacklistCreatingService : IBlacklistCreatingService
         }
 
         var blackListLink = factory.Create(game.Id, userId);
-        var blacklistedUser = await repository.Create(blackListLink);
+        var blacklistedUser = await repository.Create(blackListLink, cancellationToken);
         await producer.Send(EventType.ChangedGame, game.Id);
 
         return blacklistedUser;

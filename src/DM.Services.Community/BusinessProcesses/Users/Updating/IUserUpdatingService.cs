@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
 
@@ -13,8 +14,9 @@ public interface IUserUpdatingService
     /// Update user details
     /// </summary>
     /// <param name="updateUser"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<UserDetails> Update(UpdateUser updateUser);
+    Task<UserDetails> Update(UpdateUser updateUser, CancellationToken cancellationToken);
 
     /// <summary>
     /// Upload user profile picture
@@ -23,6 +25,8 @@ public interface IUserUpdatingService
     /// <param name="uploadStream">Uploaded file stream</param>
     /// <param name="fileName">File name</param>
     /// <param name="contentType">Content type</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<UserDetails> UploadPicture(string login, Stream uploadStream, string fileName, string contentType);
+    Task<UserDetails> UploadPicture(string login, Stream uploadStream, string fileName, string contentType,
+        CancellationToken cancellationToken);
 }

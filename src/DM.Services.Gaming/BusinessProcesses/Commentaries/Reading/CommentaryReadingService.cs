@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -16,57 +17,41 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 
 /// <inheritdoc />
-internal class CommentaryReadingService : ICommentaryReadingService
+internal class CommentaryReadingService(
+    IIntentionManager intentionManager,
+    IGameReadingService gameReadingService,
+    ICommentaryReadingRepository commentaryRepository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IIdentityProvider identityProvider) : ICommentaryReadingService
 {
-    private readonly IIntentionManager intentionManager;
-    private readonly IGameReadingService gameReadingService;
-    private readonly ICommentaryReadingRepository commentaryRepository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IIdentityProvider identityProvider;
-
-    /// <inheritdoc />
-    public CommentaryReadingService(
-        IIntentionManager intentionManager,
-        IGameReadingService gameReadingService,
-        ICommentaryReadingRepository commentaryRepository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IIdentityProvider identityProvider)
-    {
-        this.intentionManager = intentionManager;
-        this.gameReadingService = gameReadingService;
-        this.commentaryRepository = commentaryRepository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.identityProvider = identityProvider;
-    }
-        
     /// <inheritdoc />
     public async Task<(IEnumerable<Comment> comments, PagingResult paging, Game game)> Get(
-        Guid gameId, PagingQuery query)
+        Guid gameId, PagingQuery query, CancellationToken cancellationToken)
     {
-        var game = await gameReadingService.GetGame(gameId);
+        var game = await gameReadingService.GetGame(gameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
 
-        var totalCount = await commentaryRepository.Count(gameId);
+        var totalCount = await commentaryRepository.Count(gameId, cancellationToken);
         var paging = new PagingData(query, identityProvider.Current.Settings.Paging.CommentsPerPage, totalCount);
 
-        var comments = await commentaryRepository.Get(gameId, paging);
+        var comments = await commentaryRepository.Get(gameId, paging, cancellationToken);
 
         return (comments, paging.Result, game);
     }
 
     /// <inheritdoc />
-    public async Task<Comment> Get(Guid commentId)
+    public async Task<Comment> Get(Guid commentId, CancellationToken cancellationToken)
     {
-        return await commentaryRepository.Get(commentId) ??
+        return await commentaryRepository.Get(commentId, cancellationToken) ??
                throw new HttpException(HttpStatusCode.Gone, $"Comment {commentId} not found");
     }
 
     /// <inheritdoc />
-    public async Task MarkAsRead(Guid gameId)
+    public async Task MarkAsRead(Guid gameId, CancellationToken cancellationToken)
     {
-        var game = await gameReadingService.GetGame(gameId);
+        var game = await gameReadingService.GetGame(gameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.ReadComments, game);
         await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
-            UnreadEntryType.Message, gameId);
+            UnreadEntryType.Message, gameId, cancellationToken);
     }
 }

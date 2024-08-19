@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -13,54 +14,30 @@ using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversa
 namespace DM.Services.Community.BusinessProcesses.Messaging.Creating;
 
 /// <inheritdoc />
-internal class MessageCreatingService : IMessageCreatingService
+internal class MessageCreatingService(
+    IConversationReadingService conversationReadingService,
+    IValidator<CreateMessage> validator,
+    IIntentionManager intentionManager,
+    IMessageFactory factory,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IMessageCreatingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer producer,
+    IIdentityProvider identityProvider) : IMessageCreatingService
 {
-    private readonly IConversationReadingService conversationReadingService;
-    private readonly IValidator<CreateMessage> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IMessageFactory factory;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IMessageCreatingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer producer;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public MessageCreatingService(
-        IConversationReadingService conversationReadingService,
-        IValidator<CreateMessage> validator,
-        IIntentionManager intentionManager,
-        IMessageFactory factory,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IMessageCreatingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer producer,
-        IIdentityProvider identityProvider)
+    public async Task<Message> Create(CreateMessage createMessage, CancellationToken cancellationToken)
     {
-        this.conversationReadingService = conversationReadingService;
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.factory = factory;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.producer = producer;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<Message> Create(CreateMessage createMessage)
-    {
-        await validator.ValidateAndThrowAsync(createMessage);
-        var conversation = await conversationReadingService.Get(createMessage.ConversationId);
+        await validator.ValidateAndThrowAsync(createMessage, cancellationToken);
+        var conversation = await conversationReadingService.Get(createMessage.ConversationId, cancellationToken);
         intentionManager.ThrowIfForbidden(ConversationIntention.CreateMessage, conversation);
 
         var message = factory.Create(createMessage, identityProvider.Current.User.UserId);
         var updateConversation = updateBuilderFactory.Create<DbConversation>(conversation.Id)
             .Field(c => c.LastMessageId, message.MessageId);
 
-        var result = await repository.Create(message, updateConversation);
-        await unreadCountersRepository.Increment(conversation.Id, UnreadEntryType.Message);
+        var result = await repository.Create(message, updateConversation, cancellationToken);
+        await unreadCountersRepository.Increment(conversation.Id, UnreadEntryType.Message, cancellationToken);
         await producer.Send(EventType.NewMessage, message.MessageId);
 
         return result;

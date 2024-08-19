@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DbReview = DM.Services.DataAccess.BusinessObjects.Common.Review;
@@ -13,6 +14,7 @@ internal interface IReviewCreatingRepository
     /// Create new review
     /// </summary>
     /// <param name="review"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Review> Create(DbReview review);
+    Task<Review> Create(DbReview review, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 
@@ -12,6 +13,7 @@ public interface IReviewCreatingService
     /// Create new review
     /// </summary>
     /// <param name="createReview"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Review> Create(CreateReview createReview);
+    Task<Review> Create(CreateReview createReview, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
 using DM.Services.DataAccess.MongoIntegration;
@@ -9,15 +10,11 @@ using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 namespace DM.Services.Community.BusinessProcesses.Polls.Voting;
 
 /// <inheritdoc />
-internal class PollVotingRepository : MongoCollectionRepository<DbPoll>, IPollVotingRepository
+internal class PollVotingRepository(DmMongoClient client)
+    : MongoCollectionRepository<DbPoll>(client), IPollVotingRepository
 {
     /// <inheritdoc />
-    public PollVotingRepository(DmMongoClient client) : base(client)
-    {
-    }
-
-    /// <inheritdoc />
-    public Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId) =>
+    public Task<Poll> Vote(Guid pollId, Guid optionId, Guid userId, CancellationToken cancellationToken) =>
         Collection.FindOneAndUpdateAsync(
             Filter.Eq(p => p.Id, pollId) &
             Filter.ElemMatch(p => p.Options, o => o.Id == optionId),
@@ -26,5 +23,6 @@ internal class PollVotingRepository : MongoCollectionRepository<DbPoll>, IPollVo
             {
                 Projection = PollReadingRepository.PollProjection,
                 ReturnDocument = ReturnDocument.After
-            });
+            },
+            cancellationToken);
 }

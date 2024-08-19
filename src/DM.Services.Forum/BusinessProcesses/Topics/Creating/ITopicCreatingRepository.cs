@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto.Output;
@@ -13,6 +14,7 @@ internal interface ITopicCreatingRepository
     /// Create new topic
     /// </summary>
     /// <param name="forumTopic">DAL model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>DTO model of created topic</returns>
-    Task<Topic> Create(ForumTopic forumTopic);
+    Task<Topic> Create(ForumTopic forumTopic, CancellationToken cancellationToken);
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Web.Core.Hubs;
@@ -14,16 +15,18 @@ public interface IUserConnectionService
     /// </summary>
     /// <param name="authToken"></param>
     /// <param name="connectionId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Add(string authToken, string connectionId);
+    Task Add(string authToken, string connectionId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Authenticate user and remove its connection
     /// </summary>
     /// <param name="authToken"></param>
     /// <param name="connectionId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Remove(string authToken, string connectionId);
+    Task Remove(string authToken, string connectionId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get all connected users

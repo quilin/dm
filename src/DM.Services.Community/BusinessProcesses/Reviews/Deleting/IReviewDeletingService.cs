@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Community.BusinessProcesses.Reviews.Deleting;
@@ -12,6 +13,7 @@ public interface IReviewDeletingService
     /// Delete existing review
     /// </summary>
     /// <param name="id">Review identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid id);
+    Task Delete(Guid id, CancellationToken cancellationToken);
 }

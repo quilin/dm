@@ -4,20 +4,10 @@ using DM.Services.DataAccess.BusinessObjects.Users;
 namespace DM.Services.Authentication.Factories;
 
 /// <inheritdoc />
-internal class SessionFactory : ISessionFactory
+internal class SessionFactory(
+    IGuidFactory guidFactory,
+    IDateTimeProvider dateTimeProvider) : ISessionFactory
 {
-    private readonly IGuidFactory guidFactory;
-    private readonly IDateTimeProvider dateTimeProvider;
-
-    /// <inheritdoc />
-    public SessionFactory(
-        IGuidFactory guidFactory,
-        IDateTimeProvider dateTimeProvider)
-    {
-        this.guidFactory = guidFactory;
-        this.dateTimeProvider = dateTimeProvider;
-    }
-
     /// <inheritdoc />
     public Session Create(bool persistent, bool invisible)
     {

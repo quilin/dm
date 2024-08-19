@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Output;
 
@@ -15,6 +16,7 @@ internal interface ICharacterAttributeValueFiller
     /// </summary>
     /// <param name="characters"></param>
     /// <param name="schemaId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Fill(IEnumerable<Character> characters, Guid? schemaId);
+    Task Fill(IEnumerable<Character> characters, Guid? schemaId, CancellationToken cancellationToken);
 }

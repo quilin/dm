@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -17,46 +18,24 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Creating;
 
 /// <inheritdoc />
-internal class PendingPostCreatingService : IPendingPostCreatingService
+internal class PendingPostCreatingService(
+    IValidator<CreatePendingPost> validator,
+    IRoomReadingService roomReadingService,
+    IIntentionManager intentionManager,
+    IPendingPostFactory factory,
+    IUserRepository userRepository,
+    IPendingPostCreatingRepository repository,
+    IInvokedEventProducer producer,
+    IIdentityProvider identityProvider) : IPendingPostCreatingService
 {
-    private readonly IValidator<CreatePendingPost> validator;
-    private readonly IRoomReadingService roomReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IPendingPostFactory factory;
-    private readonly IUserRepository userRepository;
-    private readonly IPendingPostCreatingRepository repository;
-    private readonly IInvokedEventProducer producer;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public PendingPostCreatingService(
-        IValidator<CreatePendingPost> validator,
-        IRoomReadingService roomReadingService,
-        IIntentionManager intentionManager,
-        IPendingPostFactory factory,
-        IUserRepository userRepository,
-        IPendingPostCreatingRepository repository,
-        IInvokedEventProducer producer,
-        IIdentityProvider identityProvider)
+    public async Task<PendingPost> Create(CreatePendingPost createPendingPost, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.roomReadingService = roomReadingService;
-        this.intentionManager = intentionManager;
-        this.factory = factory;
-        this.userRepository = userRepository;
-        this.repository = repository;
-        this.producer = producer;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<PendingPost> Create(CreatePendingPost createPendingPost)
-    {
-        await validator.ValidateAndThrowAsync(createPendingPost);
-        var room = await roomReadingService.Get(createPendingPost.RoomId);
+        await validator.ValidateAndThrowAsync(createPendingPost, cancellationToken);
+        var room = await roomReadingService.Get(createPendingPost.RoomId, cancellationToken);
         intentionManager.ThrowIfForbidden(RoomIntention.CreatePendingPost, room);
 
-        var (_, pendingUserId) = await userRepository.FindUserId(createPendingPost.PendingUserLogin);
+        var (_, pendingUserId) = await userRepository.FindUserId(createPendingPost.PendingUserLogin, cancellationToken);
         var currentUserId = identityProvider.Current.User.UserId;
         if (room.Pendings.Any(p =>
                 p.AwaitingUser.UserId == currentUserId &&
@@ -76,7 +55,7 @@ internal class PendingPostCreatingService : IPendingPostCreatingService
 
         var pendingPostToCreate = factory.Create(createPendingPost, currentUserId, pendingUserId);
 
-        var pendingPost = await repository.Create(pendingPostToCreate);
+        var pendingPost = await repository.Create(pendingPostToCreate, cancellationToken);
         await producer.Send(EventType.RoomPendingCreated, pendingPost.Id);
 
         return pendingPost;

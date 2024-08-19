@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -12,36 +13,30 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Reading;
 
 /// <inheritdoc />
-internal class ReviewReadingRepository : IReviewReadingRepository
+internal class ReviewReadingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IReviewReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
+    /// <inheritdoc />
+    public Task<int> Count(bool approvedOnly, CancellationToken cancellationToken) =>
+        dbContext.Reviews
+            .Where(r => (!approvedOnly || r.IsApproved) && !r.IsRemoved)
+            .CountAsync(cancellationToken);
 
     /// <inheritdoc />
-    public ReviewReadingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
+    public async Task<IEnumerable<Review>> Get(PagingData paging, bool approvedOnly,
+        CancellationToken cancellationToken) =>
+        await dbContext.Reviews
+            .Where(r => (!approvedOnly || r.IsApproved) && !r.IsRemoved)
+            .OrderByDescending(r => r.CreateDate)
+            .Page(paging)
+            .ProjectTo<Review>(mapper.ConfigurationProvider)
+            .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<int> Count(bool approvedOnly) => dbContext.Reviews
-        .Where(r => (!approvedOnly || r.IsApproved) && !r.IsRemoved)
-        .CountAsync();
-
-    /// <inheritdoc />
-    public async Task<IEnumerable<Review>> Get(PagingData paging, bool approvedOnly) => await dbContext.Reviews
-        .Where(r => (!approvedOnly || r.IsApproved) && !r.IsRemoved)
-        .OrderByDescending(r => r.CreateDate)
-        .Page(paging)
-        .ProjectTo<Review>(mapper.ConfigurationProvider)
-        .ToArrayAsync();
-
-    /// <inheritdoc />
-    public Task<Review> Get(Guid id) => dbContext.Reviews
-        .Where(r => !r.IsRemoved && r.ReviewId == id)
-        .ProjectTo<Review>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+    public Task<Review> Get(Guid id, CancellationToken cancellationToken) =>
+        dbContext.Reviews
+            .Where(r => !r.IsRemoved && r.ReviewId == id)
+            .ProjectTo<Review>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 }

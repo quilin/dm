@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -44,7 +45,7 @@ public class TopicReadingServiceShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowHttpExceptionWhenAvailableTopicNotFound()
+    public async Task ThrowHttpExceptionWhenAvailableTopicNotFound()
     {
         var topicId = Guid.NewGuid();
         currentUserSetup.Returns(Create.User().Please);
@@ -56,8 +57,8 @@ public class TopicReadingServiceShould : UnitTestBase
             .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
             .ReturnsAsync((Topic) null);
 
-        service.Invoking(s => s.GetTopic(topicId).Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.GetTopic(topicId, CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Gone);
 
         topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
@@ -77,7 +78,7 @@ public class TopicReadingServiceShould : UnitTestBase
             .Returns(ForumAccessPolicy.Player);
         currentUserSetup.Returns(Create.User().Please);
 
-        var actual = await service.GetTopic(topicId);
+        var actual = await service.GetTopic(topicId, CancellationToken.None);
 
         actual.Should().Be(expected);
         topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player), Times.Once);
@@ -97,13 +98,13 @@ public class TopicReadingServiceShould : UnitTestBase
             .Returns(ForumAccessPolicy.Player);
         currentUserSetup.Returns(Create.User(userId).WithRole(UserRole.Player).Please);
         unreadCountersRepository
-            .Setup(r => r.SelectByEntities(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid[]>()))
+            .Setup(r => r.SelectByEntities(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<IReadOnlyCollection<Guid>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Dictionary<Guid, int>{[topicId] = 22});
 
-        var actual = await service.GetTopic(topicId);
+        var actual = await service.GetTopic(topicId, CancellationToken.None);
 
         actual.Should().Be(expected);
         actual.UnreadCommentsCount.Should().Be(22);
-        unreadCountersRepository.Verify(r => r.SelectByEntities(userId, UnreadEntryType.Message, topicId), Times.Once);
+        unreadCountersRepository.Verify(r => r.SelectByEntities(userId, UnreadEntryType.Message, new[] {topicId}, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

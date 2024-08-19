@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Output;
 using DbPendingPost = DM.Services.DataAccess.BusinessObjects.Games.Links.PendingPost;
@@ -13,6 +14,7 @@ internal interface IPendingPostCreatingRepository
     /// Save new pending post
     /// </summary>
     /// <param name="pendingPost">DAL model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<PendingPost> Create(DbPendingPost pendingPost);
+    Task<PendingPost> Create(DbPendingPost pendingPost, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -14,42 +15,25 @@ using DM.Services.MessageQueuing.GeneralBus;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Deleting;
 
 /// <inheritdoc />
-internal class PostDeletingService : IPostDeletingService
+internal class PostDeletingService(
+    IPostReadingService postReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IPostUpdatingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer producer) : IPostDeletingService
 {
-    private readonly IPostReadingService postReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IPostUpdatingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public PostDeletingService(
-        IPostReadingService postReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IPostUpdatingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer producer)
+    public async Task Delete(Guid postId, CancellationToken cancellationToken)
     {
-        this.postReadingService = postReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.producer = producer;
-    }
-        
-    /// <inheritdoc />
-    public async Task Delete(Guid postId)
-    {
-        var post = await postReadingService.Get(postId);
+        var post = await postReadingService.Get(postId, cancellationToken);
         intentionManager.ThrowIfForbidden(PostIntention.Delete, post);
         var updateBuilder = updateBuilderFactory.Create<Post>(postId)
             .Field(p => p.IsRemoved, true);
 
-        await repository.Update(updateBuilder);
-        await unreadCountersRepository.Decrement(post.RoomId, UnreadEntryType.Message, post.CreateDate);
+        await repository.Update(updateBuilder,cancellationToken);
+        await unreadCountersRepository.Decrement(
+            post.RoomId, UnreadEntryType.Message, post.CreateDate, cancellationToken);
         await producer.Send(EventType.DeletedPost, postId);
     }
 }

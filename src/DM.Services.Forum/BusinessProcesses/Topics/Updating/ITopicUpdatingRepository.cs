@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
@@ -14,6 +15,7 @@ internal interface ITopicUpdatingRepository
     /// Update existing topic
     /// </summary>
     /// <param name="updateBuilder"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns>DTO model of updated topic</returns>
-    Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder);
+    Task<Topic> Update(IUpdateBuilder<ForumTopic> updateBuilder, CancellationToken cancellationToken);
 }

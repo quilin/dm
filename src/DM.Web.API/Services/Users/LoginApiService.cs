@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Dto;
@@ -17,26 +18,12 @@ using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 namespace DM.Web.API.Services.Users;
 
 /// <inheritdoc />
-internal class LoginApiService : ILoginApiService
+internal class LoginApiService(
+    IWebAuthenticationService authenticationService,
+    IIdentityProvider identityProvider,
+    IUserReadingService userReadingService,
+    IMapper mapper) : ILoginApiService
 {
-    private readonly IWebAuthenticationService authenticationService;
-    private readonly IIdentityProvider identityProvider;
-    private readonly IUserReadingService userReadingService;
-    private readonly IMapper mapper;
-
-    /// <inheritdoc />
-    public LoginApiService(
-        IWebAuthenticationService authenticationService,
-        IIdentityProvider identityProvider,
-        IUserReadingService userReadingService,
-        IMapper mapper)
-    {
-        this.authenticationService = authenticationService;
-        this.identityProvider = identityProvider;
-        this.userReadingService = userReadingService;
-        this.mapper = mapper;
-    }
-
     /// <inheritdoc />
     public async Task<Envelope<User>> Login(LoginCredentials credentials, HttpContext httpContext)
     {
@@ -44,7 +31,8 @@ internal class LoginApiService : ILoginApiService
         switch (identity.Error)
         {
             case AuthenticationError.NoError:
-                var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login);
+                var userDetails = await userReadingService.GetDetails(
+                    identityProvider.Current.User.Login, httpContext.RequestAborted);
                 return new Envelope<User>(mapper.Map<User>(userDetails));
             case AuthenticationError.WrongLogin:
                 throw new HttpBadRequestException(new Dictionary<string, string>
@@ -74,10 +62,11 @@ internal class LoginApiService : ILoginApiService
     /// <inheritdoc />
     public Task LogoutAll(HttpContext httpContext) => authenticationService.LogoutElsewhere(httpContext);
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public async Task<Envelope<UserDetails>> GetCurrent()
+    public async Task<Envelope<UserDetails>> GetCurrent(CancellationToken cancellationToken)
     {
-        var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login);
+        var userDetails = await userReadingService.GetDetails(identityProvider.Current.User.Login, cancellationToken);
         return new Envelope<UserDetails>(mapper.Map<UserDetails>(userDetails));
     }
 }

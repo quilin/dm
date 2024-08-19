@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Community.BusinessProcesses.Messaging.Deleting;
@@ -12,6 +13,7 @@ public interface IMessageDeletingService
     /// Delete message
     /// </summary>
     /// <param name="messageId">Message identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid messageId);
+    Task Delete(Guid messageId, CancellationToken cancellationToken);
 }

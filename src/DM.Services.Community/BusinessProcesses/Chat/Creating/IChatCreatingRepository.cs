@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Chat.Reading;
 using DbMessage = DM.Services.DataAccess.BusinessObjects.Common.ChatMessage;
@@ -13,6 +14,7 @@ internal interface IChatCreatingRepository
     /// Create new chat message
     /// </summary>
     /// <param name="chatMessage">DAL model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ChatMessage> Create(DbMessage chatMessage);
+    Task<ChatMessage> Create(DbMessage chatMessage, CancellationToken cancellationToken);
 }

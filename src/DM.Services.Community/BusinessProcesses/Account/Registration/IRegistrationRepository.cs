@@ -30,6 +30,7 @@ internal interface IRegistrationRepository
     /// </summary>
     /// <param name="user">User DAL</param>
     /// <param name="token"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AddUser(User user, Token token);
+    Task AddUser(User user, Token token, CancellationToken cancellationToken);
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -12,38 +13,29 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
 
 /// <inheritdoc />
-internal class MessageReadingRepository : IMessageReadingRepository
+internal class MessageReadingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IMessageReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public MessageReadingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<int> Count(Guid conversationId) => dbContext.Messages
+    public Task<int> Count(Guid conversationId, CancellationToken cancellationToken) => dbContext.Messages
         .Where(m => !m.IsRemoved && m.ConversationId == conversationId)
-        .CountAsync();
+        .CountAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Message>> Get(Guid conversationId, PagingData paging) => await dbContext.Messages
+    public async Task<IEnumerable<Message>> Get(Guid conversationId, PagingData paging,
+        CancellationToken cancellationToken) => await dbContext.Messages
         .Where(m => !m.IsRemoved && m.ConversationId == conversationId)
         .OrderBy(m => m.CreateDate)
         .Page(paging)
         .ProjectTo<Message>(mapper.ConfigurationProvider)
-        .ToArrayAsync();
+        .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Message> Get(Guid messageId, Guid userId) => dbContext.Conversations
+    public Task<Message> Get(Guid messageId, Guid userId, CancellationToken cancellationToken) => dbContext.Conversations
         .Where(ConversationReadingRepository.UserParticipates(userId))
         .SelectMany(c => c.Messages)
         .Where(m => !m.IsRemoved && m.MessageId == messageId)
         .ProjectTo<Message>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 }

@@ -13,17 +13,9 @@ namespace DM.Web.API.Controllers.v1.Community;
 [ApiController]
 [Route("v1/chat")]
 [ApiExplorerSettings(GroupName = "Messaging")]
-public class ChatController : ControllerBase
+public class ChatController(
+    IChatApiService chatApiService) : ControllerBase
 {
-    private readonly IChatApiService chatApiService;
-
-    /// <inheritdoc />
-    public ChatController(
-        IChatApiService chatApiService)
-    {
-        this.chatApiService = chatApiService;
-    }
-
     /// <summary>
     /// Get chat messages
     /// </summary>
@@ -31,7 +23,7 @@ public class ChatController : ControllerBase
     [HttpGet(Name = nameof(GetChatMessages))]
     [ProducesResponseType(typeof(ListEnvelope<ChatMessage>), 200)]
     public async Task<IActionResult> GetChatMessages([FromQuery] PagingQuery q) =>
-        Ok(await chatApiService.GetMessages(q));
+        Ok(await chatApiService.GetMessages(q, HttpContext.RequestAborted));
 
     /// <summary>
     /// Create new chat message
@@ -48,7 +40,7 @@ public class ChatController : ControllerBase
     [ProducesResponseType(typeof(Envelope<ChatMessage>), 403)]
     public async Task<IActionResult> PostChatMessage([FromBody] ChatMessage chatMessage)
     {
-        var result = await chatApiService.CreateMessage(chatMessage);
+        var result = await chatApiService.CreateMessage(chatMessage, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(GetChatMessage), new {id = result.Resource.Id}, result);
     }
 
@@ -57,9 +49,9 @@ public class ChatController : ControllerBase
     /// </summary>
     /// <response code="200"></response>
     /// <response code="410">Message not found</response>
-    [HttpGet("{id}", Name = nameof(GetChatMessage))]
+    [HttpGet("{id:guid}", Name = nameof(GetChatMessage))]
     [ProducesResponseType(typeof(Envelope<ChatMessage>), 200)]
     [ProducesResponseType(typeof(Envelope<ChatMessage>), 410)]
     public async Task<IActionResult> GetChatMessage(Guid id) =>
-        Ok(await chatApiService.GetMessage(id));
+        Ok(await chatApiService.GetMessage(id, HttpContext.RequestAborted));
 }

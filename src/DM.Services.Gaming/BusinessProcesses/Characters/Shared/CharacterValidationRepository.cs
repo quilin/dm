@@ -14,21 +14,11 @@ using DbSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attribu
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared;
 
 /// <inheritdoc />
-internal class CharacterValidationRepository : MongoCollectionRepository<DbSchema>, ICharacterValidationRepository
+internal class CharacterValidationRepository(
+    IMapper mapper,
+    DmDbContext dbContext,
+    DmMongoClient client) : MongoCollectionRepository<DbSchema>(client), ICharacterValidationRepository
 {
-    private readonly IMapper mapper;
-    private readonly DmDbContext dbContext;
-
-    /// <inheritdoc />
-    public CharacterValidationRepository(
-        IMapper mapper,
-        DmDbContext dbContext,
-        DmMongoClient client) : base(client)
-    {
-        this.mapper = mapper;
-        this.dbContext = dbContext;
-    }
-
     /// <inheritdoc />
     public Task<bool> GameRequiresAttributes(CreateCharacter createCharacter, CancellationToken cancellationToken) =>
         dbContext.Games
@@ -37,25 +27,25 @@ internal class CharacterValidationRepository : MongoCollectionRepository<DbSchem
             .FirstAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<AttributeSchema> GetGameSchema(Guid gameId)
+    public async Task<AttributeSchema> GetGameSchema(Guid gameId, CancellationToken cancellationToken)
     {
         var schemaId = await dbContext.Games
             .Where(g => g.GameId == gameId)
             .Select(g => g.AttributeSchemaId)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
         var schema = await Collection
             .Find(Filter.Eq(s => s.Id, schemaId.Value))
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
         return mapper.Map<AttributeSchema>(schema);
     }
 
     /// <inheritdoc />
-    public async Task<AttributeSchema> GetCharacterSchema(Guid characterId)
+    public async Task<AttributeSchema> GetCharacterSchema(Guid characterId, CancellationToken cancellationToken)
     {
         var gameId = await dbContext.Characters
             .Where(c => c.CharacterId == characterId)
             .Select(c => c.GameId)
-            .FirstAsync();
-        return await GetGameSchema(gameId);
+            .FirstAsync(cancellationToken);
+        return await GetGameSchema(gameId, cancellationToken);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -17,38 +18,28 @@ using MongoDB.Driver;
 namespace DM.Services.Community.BusinessProcesses.Users.Reading;
 
 /// <inheritdoc />
-internal class UserReadingRepository : MongoCollectionRepository<UserSettings>, IUserReadingRepository
+internal class UserReadingRepository(
+    DmDbContext dmDbContext,
+    DmMongoClient mongoClient,
+    IDateTimeProvider dateTimeProvider,
+    IMapper mapper) : MongoCollectionRepository<UserSettings>(mongoClient), IUserReadingRepository
 {
-    private readonly DmDbContext dmDbContext;
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly IMapper mapper;
-
-    /// <inheritdoc />
-    public UserReadingRepository(
-        DmDbContext dmDbContext,
-        DmMongoClient mongoClient,
-        IDateTimeProvider dateTimeProvider,
-        IMapper mapper) : base(mongoClient)
-    {
-        this.dmDbContext = dmDbContext;
-        this.dateTimeProvider = dateTimeProvider;
-        this.mapper = mapper;
-    }
-
     private static readonly TimeSpan ActivityRange = TimeSpan.FromDays(30);
 
     /// <inheritdoc />
-    public Task<int> CountUsers(bool withInactive) => GetQuery(withInactive).CountAsync();
+    public Task<int> CountUsers(bool withInactive, CancellationToken cancellationToken) =>
+        GetQuery(withInactive).CountAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IEnumerable<GeneralUser>> GetUsers(PagingData paging, bool withInactive) =>
+    public async Task<IEnumerable<GeneralUser>> GetUsers(PagingData paging, bool withInactive,
+        CancellationToken cancellationToken) =>
         await GetQuery(withInactive)
             .OrderBy(u => u.RatingDisabled)
             .ThenByDescending(u => u.QualityRating)
             .ThenBy(u => u.QuantityRating)
             .Page(paging)
             .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken);
 
     private IQueryable<User> GetQuery(bool withInactive)
     {
@@ -65,18 +56,18 @@ internal class UserReadingRepository : MongoCollectionRepository<UserSettings>, 
     }
 
     /// <inheritdoc />
-    public Task<GeneralUser> GetUser(string login) => dmDbContext.Users
+    public Task<GeneralUser> GetUser(string login, CancellationToken cancellationToken) => dmDbContext.Users
         .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
         .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync();
+        .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<UserDetails> GetUserDetails(string login)
+    public async Task<UserDetails> GetUserDetails(string login, CancellationToken cancellationToken)
     {
         var userDetails = await dmDbContext.Users
             .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
             .ProjectTo<UserDetails>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (userDetails == null)
         {
@@ -85,7 +76,7 @@ internal class UserReadingRepository : MongoCollectionRepository<UserSettings>, 
 
         var userSettings = await Collection
             .Find(Filter.Eq(u => u.UserId, userDetails.UserId))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
         userDetails.Settings = userSettings == null
             ? Authentication.Dto.UserSettings.Default
             : mapper.Map<Authentication.Dto.UserSettings>(userSettings);

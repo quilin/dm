@@ -12,24 +12,17 @@ namespace DM.Web.API.Controllers.v1.Gaming;
 [ApiController]
 [Route("v1/schemata")]
 [ApiExplorerSettings(GroupName = "Game")]
-public class AttributeSchemaController : ControllerBase
+public class AttributeSchemaController(
+    ISchemaApiService schemaApiService) : ControllerBase
 {
-    private readonly ISchemaApiService schemaApiService;
-
-    /// <inheritdoc />
-    public AttributeSchemaController(
-        ISchemaApiService schemaApiService)
-    {
-        this.schemaApiService = schemaApiService;
-    }
-
     /// <summary>
     /// Get list of game attribute schemas
     /// </summary>
     /// <response code="200"></response>
     [HttpGet(Name = nameof(GetSchemas))]
     [ProducesResponseType(typeof(ListEnvelope<AttributeSchema>), 200)]
-    public async Task<IActionResult> GetSchemas() => Ok(await schemaApiService.Get());
+    public async Task<IActionResult> GetSchemas() =>
+        Ok(await schemaApiService.Get(HttpContext.RequestAborted));
 
     /// <summary>
     /// Post new attribute schema
@@ -47,7 +40,7 @@ public class AttributeSchemaController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 403)]
     public async Task<IActionResult> PostSchema([FromBody] AttributeSchema schema)
     {
-        var result = await schemaApiService.Create(schema);
+        var result = await schemaApiService.Create(schema, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(GetSchema), new {id = result.Resource.Id}, result);
     } 
 
@@ -57,10 +50,11 @@ public class AttributeSchemaController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Schema not found</response>
-    [HttpGet("{id}", Name = nameof(GetSchema))]
+    [HttpGet("{id:guid}", Name = nameof(GetSchema))]
     [ProducesResponseType(typeof(Envelope<AttributeSchema>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetSchema(Guid id) => Ok(await schemaApiService.Get(id));
+    public async Task<IActionResult> GetSchema(Guid id) =>
+        Ok(await schemaApiService.Get(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Update existing attribute schema
@@ -72,7 +66,7 @@ public class AttributeSchemaController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to update this attribute schema</response>
     /// <response code="410">Schema not found</response>
-    [HttpPatch("{id}", Name = nameof(PutSchema))]
+    [HttpPatch("{id:guid}", Name = nameof(PutSchema))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<AttributeSchema>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -80,7 +74,7 @@ public class AttributeSchemaController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 403)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PutSchema(Guid id, [FromBody] AttributeSchema schema) =>
-        Ok(await schemaApiService.Update(id, schema));
+        Ok(await schemaApiService.Update(id, schema, HttpContext.RequestAborted));
 
     /// <summary>
     /// Delete existing attribute schema
@@ -90,7 +84,7 @@ public class AttributeSchemaController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to delete this attribute schema</response>
     /// <response code="410">Schema not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteSchema))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteSchema))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -98,7 +92,7 @@ public class AttributeSchemaController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> DeleteSchema(Guid id)
     {
-        await schemaApiService.Delete(id);
+        await schemaApiService.Delete(id, HttpContext.RequestAborted);
         return NoContent();
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
@@ -13,6 +14,7 @@ public interface ITopicUpdatingService
     /// Update existing topic
     /// </summary>
     /// <param name="updateTopic">Update topic model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Topic> UpdateTopic(UpdateTopic updateTopic);
+    Task<Topic> UpdateTopic(UpdateTopic updateTopic, CancellationToken cancellationToken);
 }
