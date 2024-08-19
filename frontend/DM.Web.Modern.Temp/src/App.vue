@@ -40,19 +40,21 @@ watch(
     html.classList.remove(`theme_${oldValue}`);
     html.classList.add(`theme_${value}`);
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(fetchUser);
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+@import "src/assets/styles/Themes"
+
 .main
   height: 100%
   min-height: 100%
   overflow-y: scroll
   +theme(background-color, $background)
-  transition: color $animation-time, background-color $animation-time
 
 .content-container
   position: relative
@@ -67,7 +69,6 @@ onMounted(fetchUser);
     bottom: 0
     background: url('@/assets/images/header_bg.gif') left top repeat-x
     +theme(filter, color-pair(none, invert(87%)))
-    transition: filter $animation-time
 
 .content-wrapper
   position: relative

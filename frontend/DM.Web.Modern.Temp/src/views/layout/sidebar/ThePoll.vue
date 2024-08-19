@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Poll } from "@/api/models/community";
+import type { Poll, PollOptionId } from "@/api/models/community";
 import ProgressBar from "@/components/ProgressBar.vue";
 import { IconType } from "@/components/icons/iconType";
 import { computed } from "vue";
@@ -14,11 +14,11 @@ const { vote } = usePollsStore();
 const props = defineProps<{ poll: Poll }>();
 const closed = computed(() => dayjs(props.poll.ends).isBefore(dayjs()));
 const totalVotes = computed(() =>
-  props.poll.options.reduce((sum, option) => sum + option.votesCount, 0)
+  props.poll.options.reduce((sum, option) => sum + option.votesCount, 0),
 );
 const voted = computed(() => props.poll.options.some((option) => option.voted));
 
-async function voteForOption(optionId: string) {
+async function voteForOption(optionId: PollOptionId) {
   await vote(props.poll.id!, optionId);
 }
 </script>
@@ -46,6 +46,8 @@ async function voteForOption(optionId: string) {
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 .poll
   margin: $small 0 $big
   max-width: $grid-step * 61

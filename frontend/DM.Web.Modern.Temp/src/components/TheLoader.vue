@@ -7,6 +7,8 @@ defineProps<{ big?: boolean }>();
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+
 .loader
   +square($medium)
   background-image: url('@/assets/images/loader.gif')

@@ -9,7 +9,7 @@ export function userIsHighAuthority(user: User | null): boolean {
   return (
     user !== null &&
     user.roles.some(
-      (r) => r === UserRole.Administrator || r === UserRole.SeniorModerator
+      (r) => r === UserRole.Administrator || r === UserRole.SeniorModerator,
     )
   );
 }
@@ -21,7 +21,7 @@ export function userIsAuthority(user: User | null): boolean {
       (r) =>
         r === UserRole.Administrator ||
         r === UserRole.SeniorModerator ||
-        r === UserRole.RegularModerator
+        r === UserRole.RegularModerator,
     )
   );
 }

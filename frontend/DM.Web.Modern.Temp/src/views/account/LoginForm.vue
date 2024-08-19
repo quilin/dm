@@ -3,7 +3,7 @@ import { useUserStore } from "@/stores";
 import { useForm } from "vee-validate";
 import { object, string } from "yup";
 import { ref } from "vue";
-import type { LoginCredentials } from "@/api/models/community";
+import type { LoginCredentials } from "@/api/models/account";
 import { ValidationErrorCode } from "@/api/models/common";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
 

@@ -46,10 +46,10 @@ class Api {
   public get<T>(
     url: string,
     params?: any,
-    bbRenderMode: BbRenderMode = BbRenderMode.Html
+    bbRenderMode: BbRenderMode = BbRenderMode.Html,
   ): Promise<ApiResult<T>> {
     return this.send(() =>
-      this.axios.get(url, { params, headers: { [renderKey]: bbRenderMode } })
+      this.axios.get(url, { params, headers: { [renderKey]: bbRenderMode } }),
     );
   }
 
@@ -64,7 +64,7 @@ class Api {
   public postFile<T>(
     url: string,
     params?: any,
-    progressCallback?: (event: AxiosProgressEvent) => void
+    progressCallback?: (event: AxiosProgressEvent) => void,
   ): Promise<ApiResult<T>> {
     const result = this.send<T>(() =>
       this.axios.post(url, params, {
@@ -73,10 +73,10 @@ class Api {
               progressCallback(
                 event.loaded === event.total
                   ? ({ loaded: 99, total: 100 } as AxiosProgressEvent)
-                  : event
+                  : event,
               )
           : undefined,
-      })
+      }),
     );
     progressCallback?.({ loaded: 1, total: 1 } as AxiosProgressEvent);
     return result;
@@ -95,7 +95,7 @@ class Api {
   }
 
   private async send<T>(
-    sender: () => Promise<AxiosResponse<T>>
+    sender: () => Promise<AxiosResponse<T>>,
   ): Promise<ApiResult<T>> {
     try {
       const { data, headers } = await sender();

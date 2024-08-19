@@ -8,7 +8,7 @@ type FetchDataStrategy = {
 
 export function useFetchData(
   mountHook: () => any,
-  strategies: FetchDataStrategy[]
+  strategies: FetchDataStrategy[],
 ) {
   onMounted(mountHook);
 
@@ -25,6 +25,6 @@ export function useFetchData(
     },
     {
       flush: "post",
-    }
+    },
   );
 }

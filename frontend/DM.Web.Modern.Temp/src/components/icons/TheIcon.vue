@@ -11,6 +11,8 @@ const props = defineProps<{ font: IconType }>();
 const charCode = computed(() => `&#x${props.font.toString(16)};`);
 </script>
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+
 .icon
   +icon()
 </style>

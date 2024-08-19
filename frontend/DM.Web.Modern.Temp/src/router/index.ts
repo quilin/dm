@@ -154,7 +154,7 @@ export default router;
 
 export function extractNumberParam(
   param: string | string[],
-  defaultValue: number = 1
+  defaultValue: number = 1,
 ) {
   return parseInt(param as string) || defaultValue;
 }

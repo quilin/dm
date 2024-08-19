@@ -9,6 +9,8 @@ defineProps<{ loading?: boolean; disabled?: boolean }>();
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 button.loading
   background-position: center center
   background-image: url('@/assets/images/loader.gif')

@@ -6,7 +6,7 @@ import { GameStatus } from "@/api/models/gaming";
 defineProps<{
   token: string;
   title: string;
-  status: GameStatus;
+  gameStatus: GameStatus;
   linkText: string;
 }>();
 </script>
@@ -17,7 +17,7 @@ defineProps<{
     <slot />
     <router-link
       class="forward"
-      :to="{ name: 'games', params: { status: status.toLowerCase() } }"
+      :to="{ name: 'games', params: { status: gameStatus.toLowerCase() } }"
     >
       {{ linkText }}
       <the-icon :font="IconType.Forward" />

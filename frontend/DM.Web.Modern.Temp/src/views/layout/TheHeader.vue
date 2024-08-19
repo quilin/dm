@@ -51,6 +51,9 @@ const { user } = storeToRefs(userStore);
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+@import "src/assets/styles/Themes"
+
 .header
   display: flex
   box-sizing: border-box
@@ -72,7 +75,6 @@ const { user } = storeToRefs(userStore);
   height: 26px /// image size
   background: transparent url('@/assets/images/logo.gif') no-repeat
   +theme(filter, color-pair(none, invert(87%)))
-  transition: filter $animation-time
 
 .logo-text
   margin-bottom: $minor

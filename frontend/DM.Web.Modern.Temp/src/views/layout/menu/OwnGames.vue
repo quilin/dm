@@ -3,7 +3,7 @@
     title="Мои игры"
     link-text="Все активные игры"
     token="OwnGames"
-    :status="GameStatus.Active"
+    :game-status="GameStatus.Active"
   >
     <the-loader v-if="!store.ownGames" />
     <game-menu-link
@@ -31,6 +31,6 @@ const store = useGamesStore();
 onMounted(() => store.fetchOwnGames());
 watch(
   () => userStore.user,
-  () => store.fetchOwnGames()
+  () => store.fetchOwnGames(),
 );
 </script>

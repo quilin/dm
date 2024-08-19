@@ -17,7 +17,7 @@ onMounted(async () => {
   const randomNumber = Math.floor(Math.random() * paging!.total);
   const { data: reviews } = await communityApi.getReviews(
     { size: 1, skip: randomNumber },
-    true
+    true,
   );
   const { resources } = reviews!;
   review.value = resources[0];

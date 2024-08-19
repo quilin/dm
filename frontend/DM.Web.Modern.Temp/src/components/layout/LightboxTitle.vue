@@ -3,6 +3,8 @@
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 h2
   margin-bottom: $small
   font-size: $title-font-size

@@ -33,6 +33,8 @@ defineProps<{
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+
 .comment
   margin: $medium 0 $big
 
