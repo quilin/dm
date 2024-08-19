@@ -1,15 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.Core.Caching;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.DataAccess;
+using DM.Services.Forum.BusinessProcesses.Fora;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Fora;
+namespace DM.Services.Forum.Storage.Storages.Fora;
 
 /// <inheritdoc />
 internal class ForumRepository(

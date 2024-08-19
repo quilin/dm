@@ -8,7 +8,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Creating;
 /// <summary>
 /// Creating topics storage
 /// </summary>
-internal interface ITopicCreatingRepository
+public interface ITopicCreatingRepository
 {
     /// <summary>
     /// Create new topic

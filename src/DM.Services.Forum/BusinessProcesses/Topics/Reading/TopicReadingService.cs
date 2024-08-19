@@ -64,7 +64,7 @@ internal class TopicReadingService(
     {
         var identity = identityProvider.Current;
         var accessPolicy = accessPolicyConverter.Convert(identity.User.Role);
-        var topic = await repository.Get(topicId, accessPolicy);
+        var topic = await repository.Get(topicId, accessPolicy, cancellationToken);
         if (topic == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Topic not found");

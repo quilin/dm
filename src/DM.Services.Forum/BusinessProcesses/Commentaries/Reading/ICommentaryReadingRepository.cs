@@ -10,7 +10,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 /// <summary>
 /// Forum comments storage
 /// </summary>
-internal interface ICommentaryReadingRepository
+public interface ICommentaryReadingRepository
 {
     /// <summary>
     /// Count comments of the topic

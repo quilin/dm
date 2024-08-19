@@ -11,7 +11,7 @@ namespace DM.Services.Forum.BusinessProcesses.Topics.Reading;
 /// <summary>
 /// Forum topics storage
 /// </summary>
-internal interface ITopicReadingRepository
+public interface ITopicReadingRepository
 {
     /// <summary>
     /// Get number of forum topics
@@ -37,6 +37,7 @@ internal interface ITopicReadingRepository
     /// </summary>
     /// <param name="topicId">Topic identifier</param>
     /// <param name="accessPolicy">Forum access policy</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy);
+    Task<Topic> Get(Guid topicId, ForumAccessPolicy accessPolicy, CancellationToken cancellationToken);
 }

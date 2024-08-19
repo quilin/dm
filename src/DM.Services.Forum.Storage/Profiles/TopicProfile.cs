@@ -1,10 +1,9 @@
-using System.Linq;
 using AutoMapper;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.Forum.Dto.Output;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.Dto;
+namespace DM.Services.Forum.Storage.Profiles;
 
 /// <summary>
 /// Profile for topic DTO and DAL mapping

@@ -1,14 +1,12 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
+using DM.Services.Forum.BusinessProcesses.Topics.Creating;
 using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics.Creating;
+namespace DM.Services.Forum.Storage.Storages.Topics;
 
 /// <inheritdoc />
 internal class TopicCreatingRepository(

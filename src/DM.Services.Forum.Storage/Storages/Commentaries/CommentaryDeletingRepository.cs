@@ -1,17 +1,14 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Common;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 using DM.Services.Forum.Dto.Internal;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
+namespace DM.Services.Forum.Storage.Storages.Commentaries;
 
 /// <inheritdoc />
 internal class CommentaryDeletingRepository(
@@ -19,14 +16,12 @@ internal class CommentaryDeletingRepository(
     IMapper mapper) : ICommentaryDeletingRepository
 {
     /// <inheritdoc />
-    public Task<CommentToDelete> GetForDelete(Guid commentId, CancellationToken cancellationToken)
-    {
-        return dbContext.Comments
+    public Task<CommentToDelete?> GetForDelete(Guid commentId, CancellationToken cancellationToken) =>
+        dbContext.Comments
             .TagWith("DM.Forum.CommentToDelete")
             .Where(c => !c.IsRemoved && c.CommentId == commentId)
             .ProjectTo<CommentToDelete>(mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
-    }
 
     /// <inheritdoc />
     public Task Delete(IUpdateBuilder<Comment> update, IUpdateBuilder<ForumTopic> topicUpdate,

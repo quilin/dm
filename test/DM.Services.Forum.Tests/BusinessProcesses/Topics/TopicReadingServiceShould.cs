@@ -54,14 +54,14 @@ public class TopicReadingServiceShould : UnitTestBase
             .Returns(ForumAccessPolicy.SeniorModerator);
 
         topicRepository
-            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Topic) null);
 
         (await service.Invoking(s => s.GetTopic(topicId, CancellationToken.None))
             .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Gone);
 
-        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator), Times.Once);
+        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.SeniorModerator, It.IsAny<CancellationToken>()), Times.Once);
         topicRepository.VerifyNoOtherCalls();
     }
 
@@ -71,7 +71,7 @@ public class TopicReadingServiceShould : UnitTestBase
         var topicId = Guid.NewGuid();
         var expected = new Topic();
         topicRepository
-            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         accessPolicyConverter
             .Setup(c => c.Convert(It.IsAny<UserRole>()))
@@ -81,7 +81,7 @@ public class TopicReadingServiceShould : UnitTestBase
         var actual = await service.GetTopic(topicId, CancellationToken.None);
 
         actual.Should().Be(expected);
-        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player), Times.Once);
+        topicRepository.Verify(r => r.Get(topicId, ForumAccessPolicy.Player, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class TopicReadingServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         var expected = new Topic();
         topicRepository
-            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>()))
+            .Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<ForumAccessPolicy>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         accessPolicyConverter
             .Setup(c => c.Convert(It.IsAny<UserRole>()))

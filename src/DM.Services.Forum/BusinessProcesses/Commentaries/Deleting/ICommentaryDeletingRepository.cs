@@ -11,7 +11,7 @@ namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 /// <summary>
 /// Deleting commentary storage
 /// </summary>
-internal interface ICommentaryDeletingRepository
+public interface ICommentaryDeletingRepository
 {
     /// <summary>
     /// Get single comment to delete by its identifier

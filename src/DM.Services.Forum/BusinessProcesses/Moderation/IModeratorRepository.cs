@@ -9,7 +9,7 @@ namespace DM.Services.Forum.BusinessProcesses.Moderation;
 /// <summary>
 /// Forum moderators storage
 /// </summary>
-internal interface IModeratorRepository
+public interface IModeratorRepository
 {
     /// <summary>
     /// Get list of forum moderators

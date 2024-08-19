@@ -1,14 +1,12 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
 using Microsoft.EntityFrameworkCore;
 using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 
-namespace DM.Services.Forum.BusinessProcesses.Commentaries.Updating;
+namespace DM.Services.Forum.Storage.Storages.Commentaries;
 
 /// <inheritdoc />
 internal class CommentaryUpdatingRepository(

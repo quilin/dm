@@ -8,7 +8,7 @@ namespace DM.Services.Forum.BusinessProcesses.Fora;
 /// <summary>
 /// Fora storage
 /// </summary>
-internal interface IForumRepository
+public interface IForumRepository
 {
     /// <summary>
     /// Get list of available fora by access policy

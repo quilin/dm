@@ -1,15 +1,13 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
+using DM.Services.Forum.BusinessProcesses.Topics.Updating;
 using DM.Services.Forum.Dto.Output;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Forum.BusinessProcesses.Topics.Updating;
+namespace DM.Services.Forum.Storage.Storages.Topics;
 
 /// <inheritdoc />
 internal class TopicUpdatingRepository(

@@ -96,6 +96,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-actions", "github-ac
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Forum.Storage", "src\DM.Services.Forum.Storage\DM.Services.Forum.Storage.csproj", "{101BB826-5855-45C6-BA33-D73E530D4D84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DM.Services.Forum.Storage.Dependencies", "src\DM.Services.Forum.Storage.Dependencies\DM.Services.Forum.Storage.Dependencies.csproj", "{90B89BED-DBBA-41C7-B91D-12D2CE905FD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,6 +210,14 @@ Global
 		{550DC966-8960-4F98-BA6B-BEDBA73BB431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{550DC966-8960-4F98-BA6B-BEDBA73BB431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{550DC966-8960-4F98-BA6B-BEDBA73BB431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{101BB826-5855-45C6-BA33-D73E530D4D84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{101BB826-5855-45C6-BA33-D73E530D4D84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{101BB826-5855-45C6-BA33-D73E530D4D84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{101BB826-5855-45C6-BA33-D73E530D4D84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90B89BED-DBBA-41C7-B91D-12D2CE905FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B89BED-DBBA-41C7-B91D-12D2CE905FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B89BED-DBBA-41C7-B91D-12D2CE905FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B89BED-DBBA-41C7-B91D-12D2CE905FD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{37EE71A5-6F98-42E7-B92F-3E2B65C67850} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
@@ -246,5 +258,7 @@ Global
 		{EAA9F9E3-2684-4C5C-BC70-403F8CE1C4A1} = {60E4E464-934E-42F0-8137-3F2BA8E3063B}
 		{6DD9DA97-AAFF-46D4-9313-367998B98CF9} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
 		{28709B36-C22C-4EB9-906F-19CDCC769338} = {EA05C4AE-2D7E-4F1F-B112-64FB021BB3B9}
+		{101BB826-5855-45C6-BA33-D73E530D4D84} = {74044CFF-FF4E-4604-AB39-018D19914357}
+		{90B89BED-DBBA-41C7-B91D-12D2CE905FD5} = {74044CFF-FF4E-4604-AB39-018D19914357}
 	EndGlobalSection
 EndGlobal
