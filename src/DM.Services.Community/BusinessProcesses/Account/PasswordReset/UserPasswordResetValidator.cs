@@ -16,9 +16,9 @@ internal class UserPasswordResetValidator : AbstractValidator<UserPasswordReset>
     {
         RuleFor(r => r.Login)
             .NotEmpty().WithMessage(ValidationError.Empty)
-            .MustAsync(async (_, login, context, _) =>
+            .MustAsync(async (_, login, context, ct) =>
             {
-                var user = await repository.GetUserDetails(login);
+                var user = await repository.GetUserDetails(login, ct);
                 if (user == null)
                 {
                     return false;

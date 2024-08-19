@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -14,40 +15,23 @@ using DM.Services.MessageQueuing.GeneralBus;
 namespace DM.Services.Forum.BusinessProcesses.Topics.Deleting;
 
 /// <inheritdoc />
-internal class TopicDeletingService : ITopicDeletingService
+internal class TopicDeletingService(
+    ITopicReadingService topicReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    ITopicUpdatingRepository repository,
+    IInvokedEventProducer invokedEventProducer,
+    IUnreadCountersRepository unreadCountersRepository) : ITopicDeletingService
 {
-    private readonly ITopicReadingService topicReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly ITopicUpdatingRepository repository;
-    private readonly IInvokedEventProducer invokedEventProducer;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-
     /// <inheritdoc />
-    public TopicDeletingService(
-        ITopicReadingService topicReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        ITopicUpdatingRepository repository,
-        IInvokedEventProducer invokedEventProducer,
-        IUnreadCountersRepository unreadCountersRepository)
+    public async Task DeleteTopic(Guid topicId, CancellationToken cancellationToken)
     {
-        this.topicReadingService = topicReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.invokedEventProducer = invokedEventProducer;
-        this.unreadCountersRepository = unreadCountersRepository;
-    }
-
-    /// <inheritdoc />
-    public async Task DeleteTopic(Guid topicId)
-    {
-        var topic = await topicReadingService.GetTopic(topicId);
+        var topic = await topicReadingService.GetTopic(topicId, cancellationToken);
         intentionManager.ThrowIfForbidden(ForumIntention.AdministrateTopics, topic.Forum);
 
-        await repository.Update(updateBuilderFactory.Create<ForumTopic>(topicId).Field(t => t.IsRemoved, true));
-        await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message);
+        var updateBuilder = updateBuilderFactory.Create<ForumTopic>(topicId).Field(t => t.IsRemoved, true);
+        await repository.Update(updateBuilder, cancellationToken);
+        await unreadCountersRepository.Delete(topicId, UnreadEntryType.Message, cancellationToken);
         await invokedEventProducer.Send(EventType.DeletedForumTopic, topicId);
     }
 }

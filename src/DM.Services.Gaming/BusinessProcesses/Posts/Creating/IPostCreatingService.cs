@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface IPostCreatingService
     /// Create new post
     /// </summary>
     /// <param name="createPost">DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Post> Create(CreatePost createPost);
+    Task<Post> Create(CreatePost createPost, CancellationToken cancellationToken);
 }

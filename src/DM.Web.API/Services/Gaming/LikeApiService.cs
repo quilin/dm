@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Likes;
@@ -8,27 +9,18 @@ using DM.Web.API.Dto.Users;
 namespace DM.Web.API.Services.Gaming;
 
 /// <inheritdoc />
-internal class LikeApiService : ILikeApiService
+internal class LikeApiService(
+    ILikeService likeService,
+    IMapper mapper) : ILikeApiService
 {
-    private readonly ILikeService likeService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public LikeApiService(
-        ILikeService likeService,
-        IMapper mapper)
+    public async Task<Envelope<User>> LikeComment(Guid commentId, CancellationToken cancellationToken)
     {
-        this.likeService = likeService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<Envelope<User>> LikeComment(Guid commentId)
-    {
-        var user = await likeService.LikeComment(commentId);
+        var user = await likeService.LikeComment(commentId, cancellationToken);
         return new Envelope<User>(mapper.Map<User>(user));
     }
 
     /// <inheritdoc />
-    public Task DislikeComment(Guid commentId) => likeService.DislikeComment(commentId);
+    public Task DislikeComment(Guid commentId, CancellationToken cancellationToken) =>
+        likeService.DislikeComment(commentId, cancellationToken);
 }

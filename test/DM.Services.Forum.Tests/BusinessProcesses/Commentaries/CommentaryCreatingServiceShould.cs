@@ -49,7 +49,7 @@ public class CommentaryCreatingServiceShould : UnitTestBase
             .ReturnsAsync(new ValidationResult());
 
         var topicReadingService = Mock<ITopicReadingService>();
-        topicReadingSetup = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>()));
+        topicReadingSetup = topicReadingService.Setup(s => s.GetTopic(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -66,7 +66,7 @@ public class CommentaryCreatingServiceShould : UnitTestBase
 
         commentRepository = Mock<ICommentaryCreatingRepository>();
         commentaryCreateSetup = commentRepository.Setup(r =>
-            r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>()));
+            r.Create(It.IsAny<Comment>(), It.IsAny<IUpdateBuilder<ForumTopic>>(), It.IsAny<CancellationToken>()));
 
         invokedEventPublisher = Mock<IInvokedEventProducer>();
         invokedEventPublisher
@@ -75,7 +75,7 @@ public class CommentaryCreatingServiceShould : UnitTestBase
 
         countersRepository = Mock<IUnreadCountersRepository>();
         countersRepository
-            .Setup(r => r.Increment(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+            .Setup(r => r.Increment(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var updateBuilderFactory = Mock<IUpdateBuilderFactory>();
@@ -102,7 +102,7 @@ public class CommentaryCreatingServiceShould : UnitTestBase
         commentaryDalCreateSetup.Returns(new Comment());
         commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
-        await service.Create(new CreateComment());
+        await service.Create(new CreateComment(), CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(TopicIntention.CreateComment, topic));
     }
@@ -119,10 +119,10 @@ public class CommentaryCreatingServiceShould : UnitTestBase
         var expected = new Common.Dto.Comment();
         commentaryCreateSetup.ReturnsAsync(expected);
 
-        var actual = await service.Create(new CreateComment());
+        var actual = await service.Create(new CreateComment(), CancellationToken.None);
 
         actual.Should().Be(expected);
-        commentRepository.Verify(r => r.Create(forumComment, updateBuilder.Object), Times.Once);
+        commentRepository.Verify(r => r.Create(forumComment, updateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         updateBuilder.Verify(b => b.Field(t => t.LastCommentId, commentId));
     }
 
@@ -136,9 +136,9 @@ public class CommentaryCreatingServiceShould : UnitTestBase
         commentaryDalCreateSetup.Returns(new Comment());
         commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
-        await service.Create(new CreateComment());
+        await service.Create(new CreateComment(), CancellationToken.None);
 
-        countersRepository.Verify(r => r.Increment(topicId, UnreadEntryType.Message), Times.Once);
+        countersRepository.Verify(r => r.Increment(topicId, UnreadEntryType.Message, It.IsAny<CancellationToken>()), Times.Once);
         countersRepository.VerifyNoOtherCalls();
     }
 
@@ -153,7 +153,7 @@ public class CommentaryCreatingServiceShould : UnitTestBase
         commentaryDalCreateSetup.Returns(new Comment {CommentId = commentId});
         commentaryCreateSetup.ReturnsAsync(new Common.Dto.Comment());
 
-        await service.Create(new CreateComment());
+        await service.Create(new CreateComment(), CancellationToken.None);
 
         invokedEventPublisher.Verify(p => p.Send(EventType.NewForumComment, commentId));
         invokedEventPublisher.VerifyNoOtherCalls();

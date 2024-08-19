@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.DataAccess.RelationalStorage;
@@ -9,13 +10,15 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Creating;
 /// <summary>
 /// Storage for message creating
 /// </summary>
-internal interface IMessageCreatingRepository
+public interface IMessageCreatingRepository
 {
     /// <summary>
     /// Save message
     /// </summary>
     /// <param name="message"></param>
     /// <param name="updateConversation"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Message> Create(DbMessage message, IUpdateBuilder<DbConversation> updateConversation);
+    Task<Message> Create(DbMessage message, IUpdateBuilder<DbConversation> updateConversation,
+        CancellationToken cancellationToken);
 }

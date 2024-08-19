@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -16,9 +17,10 @@ internal class BlacklistReadingRepository(
     IMapper mapper) : IBlacklistReadingRepository
 {
     /// <inheritdoc />
-    public async Task<IEnumerable<GeneralUser>> Get(Guid gameId) => await dbContext.BlackListLinks
-        .Where(l => l.GameId == gameId)
-        .Select(l => l.User)
-        .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-        .ToArrayAsync();
+    public async Task<IEnumerable<GeneralUser>> Get(Guid gameId, CancellationToken cancellationToken) =>
+        await dbContext.BlackListLinks
+            .Where(l => l.GameId == gameId)
+            .Select(l => l.User)
+            .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
+            .ToArrayAsync(cancellationToken);
 }

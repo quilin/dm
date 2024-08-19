@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
@@ -6,21 +7,13 @@ using DM.Services.DataAccess.RelationalStorage;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting;
 
 /// <inheritdoc />
-internal class RoomClaimsDeletingRepository : IRoomClaimsDeletingRepository
+internal class RoomClaimsDeletingRepository(
+    DmDbContext dbContext) : IRoomClaimsDeletingRepository
 {
-    private readonly DmDbContext dbContext;
-
     /// <inheritdoc />
-    public RoomClaimsDeletingRepository(
-        DmDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-        
-    /// <inheritdoc />
-    public Task Delete(IUpdateBuilder<RoomClaim> deleteLink)
+    public Task Delete(IUpdateBuilder<RoomClaim> deleteLink, CancellationToken cancellationToken)
     {
         deleteLink.AttachTo(dbContext);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 }

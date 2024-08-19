@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
@@ -31,7 +32,7 @@ public class AuthenticationServiceTokenShould : UnitTestBase
     {
         var securityManager = Mock<ISecurityManager>();
         cryptoService = Mock<ISymmetricCryptoService>();
-        tokenDecryptSetup = cryptoService.Setup(s => s.Decrypt(It.IsAny<string>()));
+        tokenDecryptSetup = cryptoService.Setup(s => s.Decrypt(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
         authenticationRepository = Mock<IAuthenticationRepository>();
 
@@ -56,27 +57,27 @@ public class AuthenticationServiceTokenShould : UnitTestBase
     public async Task FailIfErrorOnDecryptingToken()
     {
         tokenDecryptSetup.ThrowsAsync(new Exception());
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.ForgedToken);
-        cryptoService.Verify(s => s.Decrypt("token"));
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
     }
 
     [Fact]
     public async Task FailIfErrorOnDeserializingToken()
     {
         tokenDecryptSetup.ReturnsAsync("some invalid decrypted string");
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.ForgedToken);
-        cryptoService.Verify(s => s.Decrypt("token"));
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
     }
 
     [Fact]
     public async Task FailIfDeserializedTokenIsInvalid()
     {
         tokenDecryptSetup.ReturnsAsync("{\"something\": \"invalid\"}");
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.ForgedToken);
-        cryptoService.Verify(s => s.Decrypt("token"));
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -89,32 +90,32 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             " \"sessionId\": \"6f9e570c-1dca-4cca-be93-d7418b85959e\"}");
 
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AuthenticatedUser());
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new UserSettings());
         authenticationRepository
-            .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSession(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Session
             {
                 Persistent = false,
                 ExpirationDate = new DateTime(2018, 06, 11, 9, 59, 59)
             });
         authenticationRepository
-            .Setup(r => r.RemoveSession(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(r => r.RemoveSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         dateTimeProvider
             .Setup(p => p.Now)
             .Returns(new DateTime(2018, 06, 11, 10, 0, 0));
 
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.SessionExpired);
-        cryptoService.Verify(s => s.Decrypt("token"));
-        authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
-        authenticationRepository.Verify(r => r.RemoveSession(userId, sessionId), Times.Once);
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
+        authenticationRepository.Verify(r => r.FindUser(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSettings(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSession(sessionId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.RemoveSession(userId, sessionId, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
     }
 
@@ -126,16 +127,16 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             " \"sessionId\": \"6f9e570c-1dca-4cca-be93-d7418b85959e\"}");
             
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new AuthenticatedUser());
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new UserSettings());
         authenticationRepository
-            .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSession(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Session) null);
             
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.SessionExpired);
     }
 
@@ -157,16 +158,16 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             ExpirationDate = new DateTime(2018, 06, 11, 10, 0, 0)
         };
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(settings);
         authenticationRepository
-            .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSession(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(session);
         authenticationRepository
-            .Setup(r => r.RefreshSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()))
+            .Setup(r => r.RefreshSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<DateTimeOffset>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         dateTimeProvider
             .Setup(p => p.Now)
@@ -175,19 +176,19 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
             .Returns(updateBuilder.Object);
 
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.NoError);
         actual.User.Should().Be(user);
         actual.Session.Should().Be(session);
         actual.Settings.Should().Be(settings);
         actual.AuthenticationToken.Should().Be("token");
 
-        cryptoService.Verify(s => s.Decrypt("token"));
-        authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
-        authenticationRepository.Verify(r => r.RefreshSession(userId, sessionId, new DateTimeOffset(new DateTime(2018, 06, 11, 10, 20, 0))));
-        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
+        authenticationRepository.Verify(r => r.FindUser(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSettings(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSession(sessionId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.RefreshSession(userId, sessionId, new DateTimeOffset(new DateTime(2018, 06, 11, 10, 20, 0)), It.IsAny<CancellationToken>()));
+        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
 
         updateBuilder.VerifyNoOtherCalls();
@@ -211,13 +212,13 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             ExpirationDate = new DateTimeOffset(new DateTime(2019, 06, 11, 10, 0, 0))
         };
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(settings);
         authenticationRepository
-            .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSession(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(session);
         dateTimeProvider
             .Setup(p => p.Now)
@@ -226,18 +227,18 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
             .Returns(updateBuilder.Object);
 
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.NoError);
         actual.User.Should().Be(user);
         actual.Session.Should().Be(session);
         actual.Settings.Should().Be(settings);
         actual.AuthenticationToken.Should().Be("token");
 
-        cryptoService.Verify(s => s.Decrypt("token"));
-        authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
-        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
+        authenticationRepository.Verify(r => r.FindUser(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSettings(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSession(sessionId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
     }
 
@@ -258,30 +259,30 @@ public class AuthenticationServiceTokenShould : UnitTestBase
             Persistent = true
         };
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(settings);
         authenticationRepository
-            .Setup(r => r.FindUserSession(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSession(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(session);
         updateBuilder
             .Setup(b => b.Field(u => u.LastVisitDate, It.IsAny<DateTimeOffset>()))
             .Returns(updateBuilder.Object);
 
-        var actual = await service.Authenticate("token");
+        var actual = await service.Authenticate("token", CancellationToken.None);
         actual.Error.Should().Be(AuthenticationError.NoError);
         actual.User.Should().Be(user);
         actual.Session.Should().Be(session);
         actual.Settings.Should().Be(settings);
         actual.AuthenticationToken.Should().Be("token");
 
-        cryptoService.Verify(s => s.Decrypt("token"));
-        authenticationRepository.Verify(r => r.FindUser(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
-        authenticationRepository.Verify(r => r.FindUserSession(sessionId), Times.Once);
-        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object), Times.Once);
+        cryptoService.Verify(s => s.Decrypt("token", It.IsAny<CancellationToken>()));
+        authenticationRepository.Verify(r => r.FindUser(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSettings(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSession(sessionId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.UpdateActivity(updateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
     }
 }

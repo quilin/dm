@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 
@@ -12,6 +13,7 @@ public interface IReviewUpdatingService
     /// Update existing review
     /// </summary>
     /// <param name="updateReview"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Review> Update(UpdateReview updateReview);
+    Task<Review> Update(UpdateReview updateReview, CancellationToken cancellationToken);
 }

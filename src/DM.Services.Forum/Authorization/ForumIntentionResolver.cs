@@ -7,17 +7,9 @@ using DM.Services.Forum.BusinessProcesses.Common;
 namespace DM.Services.Forum.Authorization;
 
 /// <inheritdoc />
-internal class ForumIntentionResolver : IIntentionResolver<ForumIntention, Dto.Output.Forum>
+internal class ForumIntentionResolver(
+    IAccessPolicyConverter accessPolicyConverter) : IIntentionResolver<ForumIntention, Dto.Output.Forum>
 {
-    private readonly IAccessPolicyConverter accessPolicyConverter;
-
-    /// <inheritdoc />
-    public ForumIntentionResolver(
-        IAccessPolicyConverter accessPolicyConverter)
-    {
-        this.accessPolicyConverter = accessPolicyConverter;
-    }
-
     /// <inheritdoc />
     public bool IsAllowed(AuthenticatedUser user, ForumIntention intention, Dto.Output.Forum target)
     {

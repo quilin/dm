@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Output;
@@ -14,6 +15,7 @@ internal interface IPostUpdatingRepository
     /// Update post
     /// </summary>
     /// <param name="updatePost">Update post</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Post> Update(IUpdateBuilder<DbPost> updatePost);
+    Task<Post> Update(IUpdateBuilder<DbPost> updatePost, CancellationToken cancellationToken);
 }

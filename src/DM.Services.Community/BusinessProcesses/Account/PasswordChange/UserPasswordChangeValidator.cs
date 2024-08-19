@@ -20,10 +20,10 @@ internal class UserPasswordChangeValidator : AbstractValidator<UserPasswordChang
         When(c => c.Token.HasValue, () =>
                 RuleFor(c => c.Token.Value)
                     .NotEmpty().WithMessage(ValidationError.Empty)
-                    .MustAsync(async (token, _) =>
+                    .MustAsync(async (token, ct) =>
                     {
                         var tokenValid = await passwordChangeRepository.TokenValid(
-                            token, dateTimeProvider.Now - TimeSpan.FromDays(1));
+                            token, dateTimeProvider.Now - TimeSpan.FromDays(1), ct);
                         return tokenValid;
                     })
                     .WithMessage(ValidationError.Invalid))
@@ -31,7 +31,7 @@ internal class UserPasswordChangeValidator : AbstractValidator<UserPasswordChang
             {
                 RuleFor(c => c.OldPassword)
                     .NotEmpty().WithMessage(ValidationError.Empty)
-                    .Must((model, password, context) =>
+                    .Must((_, password, _) =>
                         identityProvider.Current.User.IsAuthenticated &&
                         securityManager.ComparePasswords(password,
                             identityProvider.Current.User.Salt, identityProvider.Current.User.PasswordHash))

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,28 +11,18 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Updating;
 
 /// <inheritdoc />
-internal class CommentaryUpdatingRepository : ICommentaryUpdatingRepository
+internal class CommentaryUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ICommentaryUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public CommentaryUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Services.Common.Dto.Comment> Update(IUpdateBuilder<Comment> update)
+    public async Task<Common.Dto.Comment> Update(IUpdateBuilder<Comment> update, CancellationToken cancellationToken)
     {
         var commentId = update.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.Comments
             .Where(c => c.CommentId == commentId)
             .ProjectTo<Services.Common.Dto.Comment>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

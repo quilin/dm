@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting;
@@ -12,6 +13,7 @@ public interface IGameDeletingService
     /// Remove existing game
     /// </summary>
     /// <param name="gameId">Game identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task DeleteGame(Guid gameId);
+    Task DeleteGame(Guid gameId, CancellationToken cancellationToken);
 }

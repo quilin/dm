@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface IPostUpdatingService
     /// Update existing post
     /// </summary>
     /// <param name="updatePost">DTO for post updating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Post> Update(UpdatePost updatePost);
+    Task<Post> Update(UpdatePost updatePost, CancellationToken cancellationToken);
 }

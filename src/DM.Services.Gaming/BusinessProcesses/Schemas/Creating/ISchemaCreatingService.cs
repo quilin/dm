@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Shared;
 
@@ -12,6 +13,7 @@ public interface ISchemaCreatingService
     /// Create new attribute schema
     /// </summary>
     /// <param name="attributeSchema">DTO for creating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AttributeSchema> Create(AttributeSchema attributeSchema);
+    Task<AttributeSchema> Create(AttributeSchema attributeSchema, CancellationToken cancellationToken);
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -13,41 +14,27 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Reading;
 
 /// <inheritdoc />
-internal class CommentaryReadingRepository : ICommentaryReadingRepository
+internal class CommentaryReadingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : ICommentaryReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
+    /// <inheritdoc />
+    public Task<int> Count(Guid gameId, CancellationToken cancellationToken) => dbContext.Comments
+        .CountAsync(c => !c.IsRemoved && c.EntityId == gameId, cancellationToken);
 
     /// <inheritdoc />
-    public CommentaryReadingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<int> Count(Guid gameId) => dbContext.Comments
-        .CountAsync(c => !c.IsRemoved && c.EntityId == gameId);
-
-    /// <inheritdoc />
-    public async Task<IEnumerable<Comment>> Get(Guid gameId, PagingData paging)
-    {
-        return await dbContext.Comments
+    public async Task<IEnumerable<Comment>> Get(Guid gameId, PagingData paging, CancellationToken cancellationToken) =>
+        await dbContext.Comments
             .Where(c => !c.IsRemoved && c.EntityId == gameId)
             .OrderBy(c => c.CreateDate)
             .Page(paging)
             .ProjectTo<Comment>(mapper.ConfigurationProvider)
-            .ToArrayAsync();
-    }
+            .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Comment> Get(Guid commentId)
-    {
-        return dbContext.Comments
+    public Task<Comment> Get(Guid commentId, CancellationToken cancellationToken) =>
+        dbContext.Comments
             .Where(c => !c.IsRemoved && c.CommentId == commentId)
             .ProjectTo<Comment>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Chat.Creating;
@@ -11,42 +12,33 @@ using ChatMessage = DM.Web.API.Dto.Messaging.ChatMessage;
 namespace DM.Web.API.Services.Community;
 
 /// <inheritdoc />
-internal class ChatApiService : IChatApiService
+internal class ChatApiService(
+    IChatReadingService readingService,
+    IChatCreatingService creatingService,
+    IMapper mapper) : IChatApiService
 {
-    private readonly IChatReadingService readingService;
-    private readonly IChatCreatingService creatingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public ChatApiService(
-        IChatReadingService readingService,
-        IChatCreatingService creatingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<ChatMessage>> GetMessages(
+        PagingQuery query, CancellationToken cancellationToken)
     {
-        this.readingService = readingService;
-        this.creatingService = creatingService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<ListEnvelope<ChatMessage>> GetMessages(PagingQuery query)
-    {
-        var (messages, paging) = await readingService.GetMessages(query);
+        var (messages, paging) = await readingService.GetMessages(query, cancellationToken);
         return new ListEnvelope<ChatMessage>(messages.Select(mapper.Map<ChatMessage>), new Paging(paging));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<ChatMessage>> CreateMessage(ChatMessage message)
+    public async Task<Envelope<ChatMessage>> CreateMessage(
+        ChatMessage message, CancellationToken cancellationToken)
     {
         var createMessage = mapper.Map<CreateChatMessage>(message);
-        var createdMessage = await creatingService.Create(createMessage);
+        var createdMessage = await creatingService.Create(createMessage, cancellationToken);
         return new Envelope<ChatMessage>(mapper.Map<ChatMessage>(createdMessage));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<ChatMessage>> GetMessage(Guid id)
+    public async Task<Envelope<ChatMessage>> GetMessage(
+        Guid id, CancellationToken cancellationToken)
     {
-        var message = await readingService.GetMessage(id);
+        var message = await readingService.GetMessage(id, cancellationToken);
         return new Envelope<ChatMessage>(mapper.Map<ChatMessage>(message));
     }
 }

@@ -4,20 +4,10 @@ using System.Text;
 namespace DM.Services.Authentication.Implementation.Security;
 
 /// <inheritdoc />
-internal class SecurityManager : ISecurityManager
+internal class SecurityManager(
+    ISaltFactory saltFactory,
+    IHashProvider hashProvider) : ISecurityManager
 {
-    private readonly ISaltFactory saltFactory;
-    private readonly IHashProvider hashProvider;
-
-    /// <inheritdoc />
-    public SecurityManager(
-        ISaltFactory saltFactory,
-        IHashProvider hashProvider)
-    {
-        this.saltFactory = saltFactory;
-        this.hashProvider = hashProvider;
-    }
-
     /// <inheritdoc />
     public (string Hash, string Salt) GeneratePassword(string password)
     {

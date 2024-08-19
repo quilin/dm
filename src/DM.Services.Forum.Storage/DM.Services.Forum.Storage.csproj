@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+      <ProjectReference Include="..\DM.Services.Forum\DM.Services.Forum.csproj" />
+    </ItemGroup>
+
+</Project>

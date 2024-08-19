@@ -13,17 +13,9 @@ namespace DM.Web.API.Controllers.v1.Community;
 [ApiController]
 [Route("v1")]
 [ApiExplorerSettings(GroupName = "Messaging")]
-public class MessagingController : ControllerBase
+public class MessagingController(
+    IMessagingApiService apiService) : ControllerBase
 {
-    private readonly IMessagingApiService apiService;
-
-    /// <inheritdoc />
-    public MessagingController(
-        IMessagingApiService apiService)
-    {
-        this.apiService = apiService;
-    }
-
     /// <summary>
     /// Get user conversations
     /// </summary>
@@ -34,7 +26,7 @@ public class MessagingController : ControllerBase
     [ProducesResponseType(typeof(ListEnvelope<Conversation>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     public async Task<IActionResult> GetConversations([FromQuery] PagingQuery q) =>
-        Ok(await apiService.GetConversations(q));
+        Ok(await apiService.GetConversations(q, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get conversation with user
@@ -49,7 +41,7 @@ public class MessagingController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetVisaviConversation(string login)
     {
-        var conversation = await apiService.GetConversation(login);
+        var conversation = await apiService.GetConversation(login, HttpContext.RequestAborted);
         return RedirectToRoute(nameof(GetConversation), new {id = conversation.Resource.Id});
     }
 
@@ -59,13 +51,13 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpGet("dialogues/{id}", Name = nameof(GetConversation))]
+    [HttpGet("dialogues/{id:guid}", Name = nameof(GetConversation))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Conversation>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetConversation(Guid id) =>
-        Ok(await apiService.GetConversation(id));
+        Ok(await apiService.GetConversation(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get single conversation messages
@@ -73,13 +65,13 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpGet("dialogues/{id}/messages", Name = nameof(GetMessages))]
+    [HttpGet("dialogues/{id:guid}/messages", Name = nameof(GetMessages))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(ListEnvelope<Message>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetMessages(Guid id, [FromQuery] PagingQuery q) =>
-        Ok(await apiService.GetMessages(id, q));
+        Ok(await apiService.GetMessages(id, q, HttpContext.RequestAborted));
 
     /// <summary>
     /// Create message in conversation
@@ -89,7 +81,7 @@ public class MessagingController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to create message in this conversation</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpPost("dialogues/{id}/messages", Name = nameof(PostMessage))]
+    [HttpPost("dialogues/{id:guid}/messages", Name = nameof(PostMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(ListEnvelope<Message>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -98,7 +90,7 @@ public class MessagingController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PostMessage(Guid id, [FromBody] Message message)
     {
-        var result = await apiService.CreateMessage(id, message);
+        var result = await apiService.CreateMessage(id, message, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(GetMessage), new {id = result.Resource.Id}, result);
     }
 
@@ -107,11 +99,11 @@ public class MessagingController : ControllerBase
     /// </summary>
     /// <response code="204"></response>
     /// <response code="410">Dialogue not found</response>
-    [HttpDelete("dialogues/{id}/messages/unread")]
+    [HttpDelete("dialogues/{id:guid}/messages/unread")]
     [AuthenticationRequired]
     public async Task<IActionResult> MarkAsRead(Guid id)
     {
-        await apiService.MarkAsRead(id);
+        await apiService.MarkAsRead(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -121,12 +113,13 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Message not found</response>
-    [HttpGet("messages/{id}", Name = nameof(GetMessage))]
+    [HttpGet("messages/{id:guid}", Name = nameof(GetMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Message>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetMessage(Guid id) => Ok(await apiService.GetMessage(id));
+    public async Task<IActionResult> GetMessage(Guid id) =>
+        Ok(await apiService.GetMessage(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Delete single message
@@ -134,14 +127,14 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Message not found</response>
-    [HttpDelete("messages/{id}", Name = nameof(DeleteMessage))]
+    [HttpDelete("messages/{id:guid}", Name = nameof(DeleteMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> DeleteMessage(Guid id)
     {
-        await apiService.DeleteMessage(id);
+        await apiService.DeleteMessage(id, HttpContext.RequestAborted);
         return NoContent();
     }
 }

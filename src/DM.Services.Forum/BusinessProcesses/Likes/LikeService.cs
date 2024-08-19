@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -15,57 +16,45 @@ namespace DM.Services.Forum.BusinessProcesses.Likes;
 /// <summary>
 /// Forum like service
 /// </summary>
-internal class LikeService : LikeServiceBase, ILikeService
+internal class LikeService(
+    ITopicReadingService topicReadingService,
+    ICommentaryReadingService commentaryReadingService,
+    IIntentionManager intentionManager,
+    IIdentityProvider identityProvider,
+    ILikeFactory likeFactory,
+    ILikeRepository likeRepository,
+    IInvokedEventProducer invokedEventProducer)
+    : LikeServiceBase(identityProvider, likeFactory, likeRepository, invokedEventProducer), ILikeService
 {
-    private readonly ITopicReadingService topicReadingService;
-    private readonly ICommentaryReadingService commentaryReadingService;
-    private readonly IIntentionManager intentionManager;
-
     /// <inheritdoc />
-    public LikeService(
-        ITopicReadingService topicReadingService,
-        ICommentaryReadingService commentaryReadingService,
-        IIntentionManager intentionManager,
-        IIdentityProvider identityProvider,
-        ILikeFactory likeFactory,
-        ILikeRepository likeRepository,
-        IInvokedEventProducer invokedEventProducer)
-        : base(identityProvider, likeFactory, likeRepository, invokedEventProducer)
+    public async Task<GeneralUser> LikeTopic(Guid topicId, CancellationToken cancellationToken)
     {
-        this.topicReadingService = topicReadingService;
-        this.commentaryReadingService = commentaryReadingService;
-        this.intentionManager = intentionManager;
-    }
-
-    /// <inheritdoc />
-    public async Task<GeneralUser> LikeTopic(Guid topicId)
-    {
-        var topic = await topicReadingService.GetTopic(topicId);
+        var topic = await topicReadingService.GetTopic(topicId, cancellationToken);
         intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
-        return await Like(topic, EventType.LikedTopic);
+        return await Like(topic, EventType.LikedTopic, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<GeneralUser> LikeComment(Guid commentId)
+    public async Task<GeneralUser> LikeComment(Guid commentId, CancellationToken cancellationToken)
     {
-        var comment = await commentaryReadingService.Get(commentId);
+        var comment = await commentaryReadingService.Get(commentId, cancellationToken);
         intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
-        return await Like(comment, EventType.LikedForumComment);
+        return await Like(comment, EventType.LikedForumComment, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task DislikeTopic(Guid topicId)
+    public async Task DislikeTopic(Guid topicId, CancellationToken cancellationToken)
     {
-        var topic = await topicReadingService.GetTopic(topicId);
+        var topic = await topicReadingService.GetTopic(topicId, cancellationToken);
         intentionManager.ThrowIfForbidden(TopicIntention.Like, topic);
-        await Dislike(topic);
+        await Dislike(topic, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task DislikeComment(Guid commentId)
+    public async Task DislikeComment(Guid commentId, CancellationToken cancellationToken)
     {
-        var comment = await commentaryReadingService.Get(commentId);
+        var comment = await commentaryReadingService.Get(commentId, cancellationToken);
         intentionManager.ThrowIfForbidden(CommentIntention.Like, comment);
-        await Dislike(comment);
+        await Dislike(comment, cancellationToken);
     }
 }

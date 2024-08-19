@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,28 +12,18 @@ using DbPost = DM.Services.DataAccess.BusinessObjects.Games.Posts.Post;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Updating;
 
 /// <inheritdoc />
-internal class PostUpdatingRepository : IPostUpdatingRepository
+internal class PostUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IPostUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PostUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<Post> Update(IUpdateBuilder<DbPost> updatePost)
+    public async Task<Post> Update(IUpdateBuilder<DbPost> updatePost, CancellationToken cancellationToken)
     {
         var postId = updatePost.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.Posts
             .Where(p => p.PostId == postId)
             .ProjectTo<Post>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

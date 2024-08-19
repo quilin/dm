@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -12,38 +13,22 @@ using DM.Services.MessageQueuing.GeneralBus;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Deleting;
 
 /// <inheritdoc />
-internal class GameDeletingService : IGameDeletingService
+internal class GameDeletingService(
+    IGameReadingService gameReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IGameUpdatingRepository repository,
+    IInvokedEventProducer producer) : IGameDeletingService
 {
-    private readonly IGameReadingService gameReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IGameUpdatingRepository repository;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public GameDeletingService(
-        IGameReadingService gameReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IGameUpdatingRepository repository,
-        IInvokedEventProducer producer)
+    public async Task DeleteGame(Guid gameId, CancellationToken cancellationToken)
     {
-        this.gameReadingService = gameReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.producer = producer;
-    }
-
-    /// <inheritdoc />
-    public async Task DeleteGame(Guid gameId)
-    {
-        var gameToRemove = await gameReadingService.GetGame(gameId);
+        var gameToRemove = await gameReadingService.GetGame(gameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.Delete, gameToRemove);
 
         var updateBuilder = updateBuilderFactory.Create<Game>(gameId)
             .Field(g => g.IsRemoved, true);
-        await repository.Update(updateBuilder);
+        await repository.Update(updateBuilder, cancellationToken);
         await producer.Send(EventType.DeletedGame, gameId);
     }
 }

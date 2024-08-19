@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -14,57 +15,41 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Reading;
 
 /// <inheritdoc />
-internal class CharacterReadingService : ICharacterReadingService
+internal class CharacterReadingService(
+    IGameReadingService gameReadingService,
+    ICharacterReadingRepository readingRepository,
+    ICharacterAttributeValueFiller attributeValueFiller,
+    IUnreadCountersRepository unreadCountersRepository,
+    IIdentityProvider identityProvider) : ICharacterReadingService
 {
-    private readonly IGameReadingService gameReadingService;
-    private readonly ICharacterReadingRepository readingRepository;
-    private readonly ICharacterAttributeValueFiller attributeValueFiller;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public CharacterReadingService(
-        IGameReadingService gameReadingService,
-        ICharacterReadingRepository readingRepository,
-        ICharacterAttributeValueFiller attributeValueFiller,
-        IUnreadCountersRepository unreadCountersRepository,
-        IIdentityProvider identityProvider)
+    public async Task<IEnumerable<Character>> GetCharacters(Guid gameId, CancellationToken cancellationToken)
     {
-        this.gameReadingService = gameReadingService;
-        this.readingRepository = readingRepository;
-        this.attributeValueFiller = attributeValueFiller;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<IEnumerable<Character>> GetCharacters(Guid gameId)
-    {
-        var game = await gameReadingService.GetGame(gameId);
-        var characters = (await readingRepository.GetCharacters(gameId)).ToArray();
-        await attributeValueFiller.Fill(characters, game.AttributeSchemaId);
+        var game = await gameReadingService.GetGame(gameId, cancellationToken);
+        var characters = (await readingRepository.GetCharacters(gameId, cancellationToken)).ToArray();
+        await attributeValueFiller.Fill(characters, game.AttributeSchemaId, cancellationToken);
         return characters;
     }
 
     /// <inheritdoc />
-    public async Task<Character> GetCharacter(Guid characterId)
+    public async Task<Character> GetCharacter(Guid characterId, CancellationToken cancellationToken)
     {
-        var character = await readingRepository.FindCharacter(characterId);
+        var character = await readingRepository.FindCharacter(characterId, cancellationToken);
         if (character == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Character not found");
         }
 
-        var game = await gameReadingService.GetGame(character.GameId);
-        await attributeValueFiller.Fill(new[] {character}, game.AttributeSchemaId);
+        var game = await gameReadingService.GetGame(character.GameId, cancellationToken);
+        await attributeValueFiller.Fill(new[] {character}, game.AttributeSchemaId, cancellationToken);
         return character;
     }
 
     /// <inheritdoc />
-    public async Task MarkAsRead(Guid gameId)
+    public async Task MarkAsRead(Guid gameId, CancellationToken cancellationToken)
     {
-        await gameReadingService.GetGame(gameId);
+        await gameReadingService.GetGame(gameId, cancellationToken);
         await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
-            UnreadEntryType.Character, gameId);
+            UnreadEntryType.Character, gameId, cancellationToken);
     }
 }

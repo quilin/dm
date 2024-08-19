@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Internal;
 
@@ -14,6 +15,7 @@ internal interface ICharacterClaimApprove
     /// </summary>
     /// <param name="characterId">Character identifier</param>
     /// <param name="room">Room to update</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Guid> GetParticipantId(Guid characterId, RoomToUpdate room);
+    Task<Guid> GetParticipantId(Guid characterId, RoomToUpdate room, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
@@ -11,58 +12,49 @@ using UserDetails = DM.Web.API.Dto.Users.UserDetails;
 namespace DM.Web.API.Services.Users;
 
 /// <inheritdoc />
-internal class UserApiService : IUserApiService
+internal class UserApiService(
+    IUserReadingService readingService,
+    IUserUpdatingService updatingService,
+    IMapper mapper) : IUserApiService
 {
-    private readonly IUserReadingService readingService;
-    private readonly IUserUpdatingService updatingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public UserApiService(
-        IUserReadingService readingService,
-        IUserUpdatingService updatingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<User>> GetUsers(UsersQuery query, CancellationToken cancellationToken)
     {
-        this.readingService = readingService;
-        this.updatingService = updatingService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<ListEnvelope<User>> GetUsers(UsersQuery query)
-    {
-        var (users, paging) = await readingService.Get(query, query.Inactive);
+        var (users, paging) = await readingService.Get(query, query.Inactive, cancellationToken);
         return new ListEnvelope<User>(users.Select(mapper.Map<User>), new Paging(paging));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<User>> GetUser(string login)
+    public async Task<Envelope<User>> GetUser(string login, CancellationToken cancellationToken)
     {
-        var user = await readingService.Get(login);
+        var user = await readingService.Get(login, cancellationToken);
         return new Envelope<User>(mapper.Map<User>(user));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<UserDetails>> GetUserDetails(string login)
+    public async Task<Envelope<UserDetails>> GetUserDetails(string login, CancellationToken cancellationToken)
     {
-        var user = await readingService.GetDetails(login);
+        var user = await readingService.GetDetails(login, cancellationToken);
         return new Envelope<UserDetails>(mapper.Map<UserDetails>(user));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<UserDetails>> UpdateUser(string login, UserDetails user)
+    public async Task<Envelope<UserDetails>> UpdateUser(
+        string login, UserDetails user, CancellationToken cancellationToken)
     {
         var updateUser = mapper.Map<UpdateUser>(user);
         updateUser.Login = login;
-        var updatedUser = await updatingService.Update(updateUser);
+        var updatedUser = await updatingService.Update(updateUser, cancellationToken);
         return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<UserDetails>> UploadProfilePicture(string login, IFormFile file)
+    public async Task<Envelope<UserDetails>> UploadProfilePicture(
+        string login, IFormFile file, CancellationToken cancellationToken)
     {
         await using var uploadStream = file.OpenReadStream();
-        var updatedUser = await updatingService.UploadPicture(login, uploadStream, file.Name, file.ContentType);
+        var updatedUser = await updatingService.UploadPicture(
+            login, uploadStream, file.Name, file.ContentType, cancellationToken);
         return new Envelope<UserDetails>(mapper.Map<UserDetails>(updatedUser));
     }
 }

@@ -13,29 +13,13 @@ namespace DM.Web.API.Controllers.v1.Account;
 [ApiController]
 [Route("v1/account")]
 [ApiExplorerSettings(GroupName = "Account")]
-public class AccountController : ControllerBase
+public class AccountController(
+    IRegistrationApiService registrationApiService,
+    IActivationApiService activationApiService,
+    ILoginApiService loginApiService,
+    IPasswordResetApiService passwordResetApiService,
+    IEmailChangeApiService emailChangeApiService) : ControllerBase
 {
-    private readonly IRegistrationApiService registrationApiService;
-    private readonly IActivationApiService activationApiService;
-    private readonly ILoginApiService loginApiService;
-    private readonly IPasswordResetApiService passwordResetApiService;
-    private readonly IEmailChangeApiService emailChangeApiService;
-
-    /// <inheritdoc />
-    public AccountController(
-        IRegistrationApiService registrationApiService,
-        IActivationApiService activationApiService,
-        ILoginApiService loginApiService,
-        IPasswordResetApiService passwordResetApiService,
-        IEmailChangeApiService emailChangeApiService)
-    {
-        this.registrationApiService = registrationApiService;
-        this.activationApiService = activationApiService;
-        this.loginApiService = loginApiService;
-        this.passwordResetApiService = passwordResetApiService;
-        this.emailChangeApiService = emailChangeApiService;
-    }
-
     /// <summary>
     /// Register new user
     /// </summary>
@@ -47,7 +31,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(BadRequestError), 400)]
     public async Task<IActionResult> Register([FromBody] Registration registration)
     {
-        await registrationApiService.Register(registration);
+        await registrationApiService.Register(registration, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(UserController.GetUser), new {login = registration.Login}, null);
     }
 
@@ -58,11 +42,12 @@ public class AccountController : ControllerBase
     /// <response code="200">User has been activated and logged in</response>
     /// <response code="400">Token is invalid</response>
     /// <response code="410">Token is expired</response>
-    [HttpPut("{token}", Name = nameof(Activate))]
+    [HttpPut("{token:guid}", Name = nameof(Activate))]
     [ProducesResponseType(typeof(Envelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 400)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> Activate(Guid token) => Ok(await activationApiService.Activate(token));
+    public async Task<IActionResult> Activate(Guid token) =>
+        Ok(await activationApiService.Activate(token, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get current user
@@ -71,7 +56,8 @@ public class AccountController : ControllerBase
     [HttpGet(Name = nameof(GetCurrent))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<UserDetails>), 200)]
-    public async Task<IActionResult> GetCurrent() => Ok(await loginApiService.GetCurrent());
+    public async Task<IActionResult> GetCurrent() =>
+        Ok(await loginApiService.GetCurrent(HttpContext.RequestAborted));
 
     /// <summary>
     /// Reset registered user password
@@ -83,7 +69,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword) =>
-        Ok(await passwordResetApiService.Reset(resetPassword));
+        Ok(await passwordResetApiService.Reset(resetPassword, HttpContext.RequestAborted));
 
     /// <summary>
     /// Change registered user password
@@ -95,7 +81,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(Envelope<User>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePassword) =>
-        Ok(await passwordResetApiService.Change(changePassword));
+        Ok(await passwordResetApiService.Change(changePassword, HttpContext.RequestAborted));
 
     /// <summary>
     /// Change registered user email
@@ -107,5 +93,5 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(Envelope<User>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
     public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmail changeEmail) =>
-        Ok(await emailChangeApiService.Change(changeEmail));
+        Ok(await emailChangeApiService.Change(changeEmail, HttpContext.RequestAborted));
 }

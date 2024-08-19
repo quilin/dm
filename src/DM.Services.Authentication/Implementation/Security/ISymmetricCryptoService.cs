@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Authentication.Implementation.Security;
@@ -11,13 +12,15 @@ public interface ISymmetricCryptoService
     /// Encrypts value for storage
     /// </summary>
     /// <param name="valueToEncrypt">Given value</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<string> Encrypt(string valueToEncrypt);
+    Task<string> Encrypt(string valueToEncrypt, CancellationToken cancellationToken);
 
     /// <summary>
     /// Decrypts stored value
     /// </summary>
     /// <param name="valueToDecrypt">Stored value</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<string> Decrypt(string valueToDecrypt);
+    Task<string> Decrypt(string valueToDecrypt, CancellationToken cancellationToken);
 }

@@ -2,12 +2,14 @@
 using Autofac;
 using DM.Services.Common;
 using DM.Services.Community;
+using DM.Services.Community.Storage.Dependencies;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
 using DM.Services.Core.Parsing;
 using DM.Services.DataAccess;
 using DM.Services.Forum;
+using DM.Services.Forum.Storage.Dependencies;
 using DM.Services.Gaming;
 using DM.Services.MessageQueuing;
 using DM.Services.Notifications;
@@ -81,6 +83,9 @@ internal class Startup(IConfiguration configuration)
         bbParserProvider = new BbParserProvider();
 
         services.AddSignalR();
+
+        services.AddForumStorage();
+        services.AddCommunityStorage();
 
         services
             .AddSwaggerGen(c => c.ConfigureGen())

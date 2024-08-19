@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Exceptions;
@@ -9,32 +10,22 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Reading;
 
 /// <inheritdoc />
-internal class RoomClaimsReadingService : IRoomClaimsReadingService
+internal class RoomClaimsReadingService(
+    IRoomClaimsReadingRepository repository,
+    IIdentityProvider identityProvider) : IRoomClaimsReadingService
 {
-    private readonly IRoomClaimsReadingRepository repository;
-    private readonly IIdentityProvider identityProvider;
+    /// <inheritdoc />
+    public Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId, CancellationToken cancellationToken) =>
+        repository.GetGameClaims(gameId, identityProvider.Current.User.UserId, cancellationToken);
 
     /// <inheritdoc />
-    public RoomClaimsReadingService(
-        IRoomClaimsReadingRepository repository,
-        IIdentityProvider identityProvider)
+    public Task<IEnumerable<RoomClaim>> GetRoomClaims(Guid roomId, CancellationToken cancellationToken) =>
+        repository.GetRoomClaims(roomId, identityProvider.Current.User.UserId, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<RoomClaim> GetClaim(Guid claimId, CancellationToken cancellationToken)
     {
-        this.repository = repository;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public Task<IEnumerable<RoomClaim>> GetGameClaims(Guid gameId) =>
-        repository.GetGameClaims(gameId, identityProvider.Current.User.UserId);
-
-    /// <inheritdoc />
-    public Task<IEnumerable<RoomClaim>> GetRoomClaims(Guid roomId) =>
-        repository.GetRoomClaims(roomId, identityProvider.Current.User.UserId);
-
-    /// <inheritdoc />
-    public async Task<RoomClaim> GetClaim(Guid claimId)
-    {
-        var claim = await repository.GetClaim(claimId, identityProvider.Current.User.UserId);
+        var claim = await repository.GetClaim(claimId, identityProvider.Current.User.UserId, cancellationToken);
         if (claim == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Claim not found");

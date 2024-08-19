@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -15,38 +16,20 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 
 /// <inheritdoc />
-internal class RoomUpdatingService : IRoomUpdatingService
+internal class RoomUpdatingService(
+    IValidator<UpdateRoom> validator,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IRoomOrderPull roomOrderPull,
+    IRoomUpdatingRepository repository,
+    IIdentityProvider identityProvider) : IRoomUpdatingService
 {
-    private readonly IValidator<UpdateRoom> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IRoomOrderPull roomOrderPull;
-    private readonly IRoomUpdatingRepository repository;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public RoomUpdatingService(
-        IValidator<UpdateRoom> validator,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IRoomOrderPull roomOrderPull,
-        IRoomUpdatingRepository repository,
-        IIdentityProvider identityProvider)
+    public async Task<Room> Update(UpdateRoom updateRoom, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.roomOrderPull = roomOrderPull;
-        this.repository = repository;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<Room> Update(UpdateRoom updateRoom)
-    {
-        await validator.ValidateAndThrowAsync(updateRoom);
+        await validator.ValidateAndThrowAsync(updateRoom, cancellationToken);
         var currentUserId = identityProvider.Current.User.UserId;
-        var room = await repository.GetRoom(updateRoom.RoomId, currentUserId);
+        var room = await repository.GetRoom(updateRoom.RoomId, currentUserId, cancellationToken);
         if (room == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Room not found");
@@ -61,15 +44,17 @@ internal class RoomUpdatingService : IRoomUpdatingService
 
         if (updateRoom.PreviousRoomId == null || updateRoom.PreviousRoomId.Value == room.PreviousRoomId)
         {
-            return await repository.Update(roomUpdate);
+            return await repository.Update(roomUpdate,
+                null, null, null, null, cancellationToken);
         }
 
         if (!updateRoom.PreviousRoomId.Value.HasValue)
         {
-            return await InsertFirst(room, roomUpdate);
+            return await InsertFirst(room, roomUpdate, cancellationToken);
         }
 
-        var targetRoom = await repository.GetRoom(updateRoom.PreviousRoomId.Value.Value, currentUserId);
+        var targetRoom = await repository.GetRoom(
+            updateRoom.PreviousRoomId.Value.Value, currentUserId, cancellationToken);
         if (targetRoom.Game.Id != room.Game.Id)
         {
             throw new HttpBadRequestException(new Dictionary<string, string>
@@ -78,11 +63,11 @@ internal class RoomUpdatingService : IRoomUpdatingService
             });
         }
 
-        return await InsertAfter(room, targetRoom, roomUpdate);
+        return await InsertAfter(room, targetRoom, roomUpdate, cancellationToken);
     }
 
     private async Task<Room> InsertAfter(RoomToUpdate room, RoomToUpdate afterRoom,
-        IUpdateBuilder<DbRoom> updateRoom)
+        IUpdateBuilder<DbRoom> updateRoom, CancellationToken cancellationToken)
     {
         var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
         var updateNewPreviousRoom = updateBuilderFactory.Create<DbRoom>(afterRoom.Id)
@@ -101,19 +86,25 @@ internal class RoomUpdatingService : IRoomUpdatingService
                 : afterRoom.OrderNumber + 1);
 
         return await repository.Update(updateRoom,
-            updateOldNextRoom, updateOldPreviousRoom, updateNewNextRoom, updateNewPreviousRoom);
+            updateOldNextRoom, updateOldPreviousRoom,
+            updateNewNextRoom, updateNewPreviousRoom,
+            cancellationToken);
     }
 
-    private async Task<Room> InsertFirst(RoomToUpdate room, IUpdateBuilder<DbRoom> updateRoom)
+    private async Task<Room> InsertFirst(RoomToUpdate room, IUpdateBuilder<DbRoom> updateRoom,
+        CancellationToken cancellationToken)
     {
         var (updateOldPreviousRoom, updateOldNextRoom) = roomOrderPull.GetPullChanges(room);
-        var firstRoomInfo = await repository.GetFirstRoomInfo(room.Game.Id);
+        var firstRoomInfo = await repository.GetFirstRoomInfo(room.Game.Id, cancellationToken);
         var updateNewNextRoom = updateBuilderFactory.Create<DbRoom>(firstRoomInfo.Id)
             .Field(r => r.PreviousRoomId, room.Id);
         updateRoom
             .Field(r => r.NextRoomId, firstRoomInfo.Id)
             .Field(r => r.OrderNumber, firstRoomInfo.OrderNumber - 1);
 
-        return await repository.Update(updateRoom, updateOldNextRoom, updateOldPreviousRoom, updateNewNextRoom);
+        return await repository.Update(updateRoom,
+            updateOldNextRoom, updateOldPreviousRoom,
+            updateNewNextRoom, null,
+            cancellationToken);
     }
 }

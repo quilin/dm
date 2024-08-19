@@ -11,17 +11,9 @@ namespace DM.Web.API.Controllers.v1.Community;
 [ApiController]
 [Route("v1/users")]
 [ApiExplorerSettings(GroupName = "Community")]
-public class UserController : ControllerBase
+public class UserController(
+    IUserApiService userApiService) : ControllerBase
 {
-    private readonly IUserApiService userApiService;
-
-    /// <inheritdoc />
-    public UserController(
-        IUserApiService userApiService)
-    {
-        this.userApiService = userApiService;
-    }
-
     /// <summary>
     /// Get list of community users
     /// </summary>
@@ -29,7 +21,7 @@ public class UserController : ControllerBase
     [HttpGet("")]
     [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
     public async Task<IActionResult> GetUsers([FromQuery] UsersQuery query) =>
-        Ok(await userApiService.GetUsers(query));
+        Ok(await userApiService.GetUsers(query, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get certain user
@@ -40,7 +32,8 @@ public class UserController : ControllerBase
     [HttpGet("{login}", Name = nameof(GetUser))]
     [ProducesResponseType(typeof(Envelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetUser(string login) => Ok(await userApiService.GetUser(login));
+    public async Task<IActionResult> GetUser(string login) =>
+        Ok(await userApiService.GetUser(login, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get certain user details
@@ -51,7 +44,8 @@ public class UserController : ControllerBase
     [HttpGet("{login}/details", Name = nameof(GetUserDetails))]
     [ProducesResponseType(typeof(Envelope<UserDetails>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetUserDetails(string login) => Ok(await userApiService.GetUserDetails(login));
+    public async Task<IActionResult> GetUserDetails(string login) =>
+        Ok(await userApiService.GetUserDetails(login, HttpContext.RequestAborted));
 
     /// <summary>
     /// Update user details
@@ -71,5 +65,5 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 403)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PutUserDetails(string login, [FromBody] UserDetails user) =>
-        Ok(await userApiService.UpdateUser(login, user));
+        Ok(await userApiService.UpdateUser(login, user, HttpContext.RequestAborted));
 }

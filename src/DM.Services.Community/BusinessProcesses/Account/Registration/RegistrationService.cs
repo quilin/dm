@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Services.Community.BusinessProcesses.Account.Activation;
@@ -9,46 +10,26 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Account.Registration;
 
 /// <inheritdoc />
-internal class RegistrationService : IRegistrationService
+internal class RegistrationService(
+    IValidator<UserRegistration> validator,
+    ISecurityManager securityManager,
+    IUserFactory userFactory,
+    IActivationTokenFactory activationTokenFactory,
+    IRegistrationRepository repository,
+    IRegistrationMailSender mailSender,
+    IInvokedEventProducer producer) : IRegistrationService
 {
-    private readonly IValidator<UserRegistration> validator;
-    private readonly ISecurityManager securityManager;
-    private readonly IUserFactory userFactory;
-    private readonly IActivationTokenFactory activationTokenFactory;
-    private readonly IRegistrationRepository repository;
-    private readonly IRegistrationMailSender mailSender;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public RegistrationService(
-        IValidator<UserRegistration> validator,
-        ISecurityManager securityManager,
-        IUserFactory userFactory,
-        IActivationTokenFactory activationTokenFactory,
-        IRegistrationRepository repository,
-        IRegistrationMailSender mailSender,
-        IInvokedEventProducer producer)
+    public async Task Register(UserRegistration registration, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.securityManager = securityManager;
-        this.userFactory = userFactory;
-        this.activationTokenFactory = activationTokenFactory;
-        this.repository = repository;
-        this.mailSender = mailSender;
-        this.producer = producer;
-    }
-
-    /// <inheritdoc />
-    public async Task Register(UserRegistration registration)
-    {
-        await validator.ValidateAndThrowAsync(registration);
+        await validator.ValidateAndThrowAsync(registration, cancellationToken);
 
         var (hash, salt) = securityManager.GeneratePassword(registration.Password);
         var user = userFactory.Create(registration, salt, hash);
         var token = activationTokenFactory.Create(user.UserId);
 
-        await repository.AddUser(user, token);
-        await mailSender.Send(user.Email, user.Login, token.TokenId);
+        await repository.AddUser(user, token, cancellationToken);
+        await mailSender.Send(user.Email, user.Login, token.TokenId, cancellationToken);
         await producer.Send(EventType.NewUser, user.UserId);
     }
 }

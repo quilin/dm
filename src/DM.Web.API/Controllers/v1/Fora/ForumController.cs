@@ -12,33 +12,20 @@ namespace DM.Web.API.Controllers.v1.Fora;
 [ApiController]
 [Route("v1/fora")]
 [ApiExplorerSettings(GroupName = "Forum")]
-public class ForumController : ControllerBase
+public class ForumController(
+    IForumApiService forumApiService,
+    ITopicApiService topicApiService,
+    ICommentApiService commentApiService,
+    IModeratorsApiService moderatorsApiService) : ControllerBase
 {
-    private readonly IForumApiService forumApiService;
-    private readonly ITopicApiService topicApiService;
-    private readonly ICommentApiService commentApiService;
-    private readonly IModeratorsApiService moderatorsApiService;
-
-    /// <inheritdoc />
-    public ForumController(
-        IForumApiService forumApiService,
-        ITopicApiService topicApiService,
-        ICommentApiService commentApiService,
-        IModeratorsApiService moderatorsApiService)
-    {
-        this.forumApiService = forumApiService;
-        this.topicApiService = topicApiService;
-        this.commentApiService = commentApiService;
-        this.moderatorsApiService = moderatorsApiService;
-    }
-
     /// <summary>
     /// Get list of available fora
     /// </summary>
     /// <response code="200"></response>
     [HttpGet(Name = nameof(GetFora))]
     [ProducesResponseType(typeof(ListEnvelope<Forum>), 200)]
-    public async Task<IActionResult> GetFora() => Ok(await forumApiService.Get());
+    public async Task<IActionResult> GetFora() =>
+        Ok(await forumApiService.Get(HttpContext.RequestAborted));
 
     /// <summary>
     /// Get certain forum
@@ -49,7 +36,8 @@ public class ForumController : ControllerBase
     [HttpGet("{id}", Name = nameof(GetForum))]
     [ProducesResponseType(typeof(Envelope<Forum>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetForum(string id) => Ok(await forumApiService.Get(id));
+    public async Task<IActionResult> GetForum(string id) =>
+        Ok(await forumApiService.Get(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Mark all forum comments as read
@@ -65,7 +53,7 @@ public class ForumController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> ReadForumComments(string id)
     {
-        await commentApiService.MarkAsRead(id);
+        await commentApiService.MarkAsRead(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -78,7 +66,8 @@ public class ForumController : ControllerBase
     [HttpGet("{id}/moderators", Name = nameof(GetModerators))]
     [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetModerators(string id) => Ok(await moderatorsApiService.GetModerators(id));
+    public async Task<IActionResult> GetModerators(string id) =>
+        Ok(await moderatorsApiService.GetModerators(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Get list of forum topics
@@ -93,7 +82,7 @@ public class ForumController : ControllerBase
     [ProducesResponseType(typeof(BadRequestError), 400)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetTopics(string id, [FromQuery] TopicsQuery q) =>
-        Ok(await topicApiService.Get(id, q));
+        Ok(await topicApiService.Get(id, q, HttpContext.RequestAborted));
 
     /// <summary>
     /// Post new topic
@@ -114,7 +103,7 @@ public class ForumController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PostTopic(string id, [FromBody] Topic topic)
     {
-        var result = await topicApiService.Create(id, topic);
+        var result = await topicApiService.Create(id, topic, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(TopicController.GetTopic), new {id = result.Resource.Id}, result);
     }
 }

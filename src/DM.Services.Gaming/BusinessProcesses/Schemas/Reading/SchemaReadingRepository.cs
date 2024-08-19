@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -16,29 +17,18 @@ using MongoDB.Driver;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 
 /// <inheritdoc cref="ISchemaReadingRepository" />
-internal class SchemaReadingRepository :
-    MongoCollectionRepository<DbSchema>,
-    ISchemaReadingRepository
+internal class SchemaReadingRepository(
+    DmDbContext dbContext,
+    DmMongoClient client,
+    IMapper mapper)
+    : MongoCollectionRepository<DbSchema>(client), ISchemaReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public SchemaReadingRepository(
-        DmDbContext dbContext,
-        DmMongoClient client,
-        IMapper mapper) : base(client)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId)
+    public async Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId, CancellationToken cancellationToken)
     {
         var schemata = await Collection
             .Find(Filter.Eq(s => s.Type, SchemaType.Public) | Filter.Eq(s => s.UserId, userId))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         if (!schemata.Any())
         {
@@ -49,7 +39,7 @@ internal class SchemaReadingRepository :
             .Where(s => s.UserId.HasValue)
             .Select(s => s.UserId.Value)
             .ToHashSet();
-        var authors = (await GetSchemataAuthors(authorIds)).ToDictionary(u => u.UserId);
+        var authors = (await GetSchemataAuthors(authorIds, cancellationToken)).ToDictionary(u => u.UserId);
 
         var result = new List<AttributeSchema>(schemata.Count);
         foreach (var schema in schemata)
@@ -66,11 +56,11 @@ internal class SchemaReadingRepository :
     }
 
     /// <inheritdoc />
-    public async Task<AttributeSchema> GetSchema(Guid schemaId)
+    public async Task<AttributeSchema> GetSchema(Guid schemaId, CancellationToken cancellationToken)
     {
         var schema = await Collection
             .Find(Filter.Eq(s => s.Id, schemaId))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (schema == null)
         {
@@ -80,18 +70,17 @@ internal class SchemaReadingRepository :
         var result = mapper.Map<AttributeSchema>(schema);
         if (schema.UserId.HasValue)
         {
-            result.Author = (await GetSchemataAuthors(new[] {schema.UserId.Value})).First();
+            result.Author = (await GetSchemataAuthors(new[] {schema.UserId.Value}, cancellationToken)).First();
         }
 
         return result;
     }
 
     /// <inheritdoc />
-    private async Task<IEnumerable<GeneralUser>> GetSchemataAuthors(ICollection<Guid> userIds)
-    {
-        return await dbContext.Users
+    private async Task<IEnumerable<GeneralUser>> GetSchemataAuthors(
+        ICollection<Guid> userIds, CancellationToken cancellationToken) =>
+        await dbContext.Users
             .Where(u => userIds.Contains(u.UserId))
             .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-            .ToArrayAsync();
-    }
+            .ToArrayAsync(cancellationToken);
 }

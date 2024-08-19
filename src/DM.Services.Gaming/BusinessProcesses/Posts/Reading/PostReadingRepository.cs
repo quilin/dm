@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -14,35 +15,23 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading;
 
 /// <inheritdoc />
-internal class PostReadingRepository : IPostReadingRepository
+internal class PostReadingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IPostReadingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PostReadingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public Task<int> Count(Guid roomId, Guid userId)
-    {
-        return dbContext.Rooms
+    public Task<int> Count(Guid roomId, Guid userId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(AccessibilityFilters.RoomAvailable(userId))
             .Where(r => r.RoomId == roomId)
             .SelectMany(r => r.Posts)
             .Where(p => !p.IsRemoved)
-            .CountAsync();
-    }
+            .CountAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<IEnumerable<Post>> Get(Guid roomId, PagingData paging, Guid userId)
-    {
-        return await dbContext.Rooms
+    public async Task<IEnumerable<Post>> Get(Guid roomId, PagingData paging, Guid userId,
+        CancellationToken cancellationToken) =>
+        await dbContext.Rooms
             .Where(AccessibilityFilters.RoomAvailable(userId))
             .Where(r => r.RoomId == roomId)
             .SelectMany(r => r.Posts)
@@ -50,17 +39,14 @@ internal class PostReadingRepository : IPostReadingRepository
             .OrderBy(p => p.CreateDate)
             .Page(paging)
             .ProjectTo<Post>(mapper.ConfigurationProvider)
-            .ToArrayAsync();
-    }
+            .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Post> Get(Guid postId, Guid userId)
-    {
-        return dbContext.Rooms
+    public Task<Post> Get(Guid postId, Guid userId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(AccessibilityFilters.RoomAvailable(userId))
             .SelectMany(r => r.Posts)
             .Where(p => !p.IsRemoved && p.PostId == postId)
             .ProjectTo<Post>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 }

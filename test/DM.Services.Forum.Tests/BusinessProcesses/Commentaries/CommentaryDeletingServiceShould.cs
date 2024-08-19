@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -52,7 +53,7 @@ public class CommentaryDeletingServiceShould : UnitTestBase
             .Returns(commentUpdateBuilder.Object);
 
         commentaryRepository = Mock<ICommentaryDeletingRepository>();
-        getCommentSetup = commentaryRepository.Setup(r => r.GetForDelete(It.IsAny<Guid>()));
+        getCommentSetup = commentaryRepository.Setup(r => r.GetForDelete(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         unreadCountersRepository = Mock<IUnreadCountersRepository>();
         eventPublisher = Mock<IInvokedEventProducer>();
@@ -69,7 +70,7 @@ public class CommentaryDeletingServiceShould : UnitTestBase
         var comment = new CommentToDelete();
         getCommentSetup.ReturnsAsync(comment);
 
-        await service.Delete(commentId);
+        await service.Delete(commentId, CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Delete, (Common.Dto.Comment) comment));
     }
@@ -81,10 +82,10 @@ public class CommentaryDeletingServiceShould : UnitTestBase
         var comment = new CommentToDelete();
         getCommentSetup.ReturnsAsync(comment);
 
-        await service.Delete(commentId);
+        await service.Delete(commentId, CancellationToken.None);
 
         commentaryRepository.Verify(r =>
-            r.Delete(commentUpdateBuilder.Object, topicUpdateBuilder.Object), Times.Once);
+            r.Delete(commentUpdateBuilder.Object, topicUpdateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         commentUpdateBuilder.Verify(b => b.Field(c => c.IsRemoved, true));
     }
 
@@ -98,14 +99,14 @@ public class CommentaryDeletingServiceShould : UnitTestBase
 
         var secondLastCommentId = Guid.NewGuid();
         commentaryRepository
-            .Setup(r => r.GetSecondLastCommentId(topicId))
+            .Setup(r => r.GetSecondLastCommentId(topicId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(secondLastCommentId);
 
-        await service.Delete(commentId);
+        await service.Delete(commentId, CancellationToken.None);
 
-        commentaryRepository.Verify(r => r.GetSecondLastCommentId(topicId), Times.Once);
+        commentaryRepository.Verify(r => r.GetSecondLastCommentId(topicId, It.IsAny<CancellationToken>()), Times.Once);
         commentaryRepository.Verify(r =>
-            r.Delete(commentUpdateBuilder.Object, topicUpdateBuilder.Object), Times.Once);
+            r.Delete(commentUpdateBuilder.Object, topicUpdateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         topicUpdateBuilder.Verify(b => b.Field(t => t.LastCommentId, secondLastCommentId));
     }
 
@@ -121,11 +122,12 @@ public class CommentaryDeletingServiceShould : UnitTestBase
         };
         getCommentSetup.ReturnsAsync(comment);
 
-        await service.Delete(commentId);
+        await service.Delete(commentId, CancellationToken.None);
 
         unreadCountersRepository.Verify(
             r => r.Decrement(topicId, UnreadEntryType.Message,
-                new DateTimeOffset(2019, 01, 14, 10, 13, 11, TimeSpan.Zero)), Times.Once);
+                new DateTimeOffset(2019, 01, 14, 10, 13, 11, TimeSpan.Zero),
+                It.IsAny<CancellationToken>()), Times.Once);
         unreadCountersRepository.VerifyNoOtherCalls();
     }
 
@@ -136,7 +138,7 @@ public class CommentaryDeletingServiceShould : UnitTestBase
         var comment = new CommentToDelete();
         getCommentSetup.ReturnsAsync(comment);
 
-        await service.Delete(commentId);
+        await service.Delete(commentId, CancellationToken.None);
 
         eventPublisher.Verify(p => p.Send(EventType.DeletedForumComment, commentId));
     }

@@ -22,8 +22,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DM.Services.Common\DM.Services.Common.csproj" />
+        <ProjectReference Include="..\DM.Services.Community.Storage.Dependencies\DM.Services.Community.Storage.Dependencies.csproj" />
         <ProjectReference Include="..\DM.Services.Community\DM.Services.Community.csproj" />
         <ProjectReference Include="..\DM.Services.DataAccess\DM.Services.DataAccess.csproj" />
+        <ProjectReference Include="..\DM.Services.Forum.Storage.Dependencies\DM.Services.Forum.Storage.Dependencies.csproj" />
         <ProjectReference Include="..\DM.Services.Forum\DM.Services.Forum.csproj" />
         <ProjectReference Include="..\DM.Services.Gaming\DM.Services.Gaming.csproj" />
         <ProjectReference Include="..\DM.Services.Notifications\DM.Services.Notifications.csproj" />

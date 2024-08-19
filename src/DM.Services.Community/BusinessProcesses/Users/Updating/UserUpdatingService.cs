@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Users.Reading;
@@ -12,37 +13,19 @@ using FluentValidation;
 namespace DM.Services.Community.BusinessProcesses.Users.Updating;
 
 /// <inheritdoc />
-internal class UserUpdatingService : IUserUpdatingService
+internal class UserUpdatingService(
+    IValidator<UpdateUser> validator,
+    IUserReadingService userReadingService,
+    IPublicImageService imageService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IUserUpdatingRepository repository) : IUserUpdatingService
 {
-    private readonly IValidator<UpdateUser> validator;
-    private readonly IUserReadingService userReadingService;
-    private readonly IPublicImageService imageService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IUserUpdatingRepository repository;
-
     /// <inheritdoc />
-    public UserUpdatingService(
-        IValidator<UpdateUser> validator,
-        IUserReadingService userReadingService,
-        IPublicImageService imageService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IUserUpdatingRepository repository)
+    public async Task<UserDetails> Update(UpdateUser updateUser, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.userReadingService = userReadingService;
-        this.imageService = imageService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-    }
-
-    /// <inheritdoc />
-    public async Task<UserDetails> Update(UpdateUser updateUser)
-    {
-        await validator.ValidateAndThrowAsync(updateUser);
-        var user = await userReadingService.Get(updateUser.Login);
+        await validator.ValidateAndThrowAsync(updateUser, cancellationToken);
+        var user = await userReadingService.Get(updateUser.Login, cancellationToken);
         intentionManager.IsAllowed(UserIntention.Edit, user);
 
         var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
@@ -62,15 +45,15 @@ internal class UserUpdatingService : IUserUpdatingService
             .MaybeField(u => u.Paging.PostsPerPage, updateUser.Settings?.Paging?.PostsPerPage)
             .MaybeField(u => u.Paging.EntitiesPerPage, updateUser.Settings?.Paging?.EntitiesPerPage);
 
-        await repository.UpdateUser(userUpdate, settingsUpdate);
-        return await userReadingService.GetDetails(updateUser.Login);
+        await repository.UpdateUser(userUpdate, settingsUpdate, cancellationToken);
+        return await userReadingService.GetDetails(updateUser.Login, cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<UserDetails> UploadPicture(string login, Stream uploadStream, string fileName,
-        string contentType)
+        string contentType, CancellationToken cancellationToken)
     {
-        var user = await userReadingService.Get(login);
+        var user = await userReadingService.Get(login, cancellationToken);
 
         var (original, medium, small) = await imageService.Upload(new CreateUpload
         {
@@ -78,17 +61,17 @@ internal class UserUpdatingService : IUserUpdatingService
             FileName = fileName,
             ContentType = contentType,
             StreamAccessor = () => uploadStream
-        });
+        }, cancellationToken);
 
         var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
             .Field(u => u.ProfilePictureUrl, original.FilePath)
             .Field(u => u.MediumProfilePictureUrl, medium.FilePath)
             .Field(u => u.SmallProfilePictureUrl, small.FilePath);
         var settingsUpdate = updateBuilderFactory.Create<UserSettings>(user.UserId);
-        await repository.UpdateUser(userUpdate, settingsUpdate);
+        await repository.UpdateUser(userUpdate, settingsUpdate, cancellationToken);
 
-        await imageService.PrepareObsoleteForDeleting(user.UserId);
+        await imageService.PrepareObsoleteForDeleting(user.UserId, cancellationToken);
 
-        return await userReadingService.GetDetails(login);
+        return await userReadingService.GetDetails(login, cancellationToken);
     }
 }

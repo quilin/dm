@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Forum.Dto.Input;
 using DM.Services.Forum.Dto.Output;
@@ -13,6 +14,7 @@ public interface ITopicCreatingService
     /// Create new topic
     /// </summary>
     /// <param name="createTopic">Create topic model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Topic> CreateTopic(CreateTopic createTopic);
+    Task<Topic> CreateTopic(CreateTopic createTopic, CancellationToken cancellationToken);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Claims.Creating;
@@ -11,44 +12,33 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming.Rooms;
 
 /// <inheritdoc />
-internal class RoomClaimApiService : IRoomClaimApiService
+internal class RoomClaimApiService(
+    IRoomClaimsCreatingService creatingService,
+    IRoomClaimsUpdatingService updatingService,
+    IRoomClaimsDeletingService deletingService,
+    IMapper mapper) : IRoomClaimApiService
 {
-    private readonly IRoomClaimsCreatingService creatingService;
-    private readonly IRoomClaimsUpdatingService updatingService;
-    private readonly IRoomClaimsDeletingService deletingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public RoomClaimApiService(
-        IRoomClaimsCreatingService creatingService,
-        IRoomClaimsUpdatingService updatingService,
-        IRoomClaimsDeletingService deletingService,
-        IMapper mapper)
-    {
-        this.creatingService = creatingService;
-        this.updatingService = updatingService;
-        this.deletingService = deletingService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<Envelope<RoomClaim>> Create(Guid roomId, RoomClaim claim)
+    public async Task<Envelope<RoomClaim>> Create(
+        Guid roomId, RoomClaim claim, CancellationToken cancellationToken)
     {
         var createRoomClaim = mapper.Map<CreateRoomClaim>(claim);
         createRoomClaim.RoomId = roomId;
-        var createdRoomClaim = await creatingService.Create(createRoomClaim);
+        var createdRoomClaim = await creatingService.Create(createRoomClaim, cancellationToken);
         return new Envelope<RoomClaim>(mapper.Map<RoomClaim>(createdRoomClaim));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<RoomClaim>> Update(Guid claimId, RoomClaim claim)
+    public async Task<Envelope<RoomClaim>> Update(
+        Guid claimId, RoomClaim claim, CancellationToken cancellationToken)
     {
         var updateRoomClaim = mapper.Map<UpdateRoomClaim>(claim);
         updateRoomClaim.ClaimId = claimId;
-        var updatedRoomClaim = await updatingService.Update(updateRoomClaim);
+        var updatedRoomClaim = await updatingService.Update(updateRoomClaim, cancellationToken);
         return new Envelope<RoomClaim>(mapper.Map<RoomClaim>(updatedRoomClaim));
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid claimId) => deletingService.Delete(claimId);
+    public Task Delete(Guid claimId, CancellationToken cancellationToken) =>
+        deletingService.Delete(claimId, cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -10,44 +11,24 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Updating;
 
 /// <inheritdoc />
-internal class SchemaUpdatingService : ISchemaUpdatingService
+internal class SchemaUpdatingService(
+    ISchemaCreatingValidator validator,
+    ISchemaReadingService readingService,
+    IIntentionManager intentionManager,
+    ISchemaFactory schemaFactory,
+    ISchemaUpdatingRepository repository,
+    IMapper mapper,
+    IIdentityProvider identityProvider) : ISchemaUpdatingService
 {
-    private readonly ISchemaCreatingValidator validator;
-    private readonly ISchemaReadingService readingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly ISchemaFactory schemaFactory;
-    private readonly ISchemaUpdatingRepository repository;
-    private readonly IMapper mapper;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public SchemaUpdatingService(
-        ISchemaCreatingValidator validator,
-        ISchemaReadingService readingService,
-        IIntentionManager intentionManager,
-        ISchemaFactory schemaFactory,
-        ISchemaUpdatingRepository repository,
-        IMapper mapper,
-        IIdentityProvider identityProvider)
-    {
-        this.validator = validator;
-        this.readingService = readingService;
-        this.intentionManager = intentionManager;
-        this.schemaFactory = schemaFactory;
-        this.repository = repository;
-        this.mapper = mapper;
-        this.identityProvider = identityProvider;
-    }
-        
-    /// <inheritdoc />
-    public async Task<AttributeSchema> Update(AttributeSchema attributeSchema)
+    public async Task<AttributeSchema> Update(AttributeSchema attributeSchema, CancellationToken cancellationToken)
     {
         validator.ValidateAndThrow(attributeSchema);
-        var oldSchema = await readingService.Get(attributeSchema.Id);
+        var oldSchema = await readingService.Get(attributeSchema.Id, cancellationToken);
         intentionManager.ThrowIfForbidden(AttributeSchemaIntention.Edit, oldSchema);
             
         var schemaToUpdate = schemaFactory.CreateToUpdate(attributeSchema, identityProvider.Current.User.UserId);
-        var updatedSchema = await repository.UpdateSchema(schemaToUpdate);
+        var updatedSchema = await repository.UpdateSchema(schemaToUpdate, cancellationToken);
         return mapper.Map<AttributeSchema>(updatedSchema);
     }
 }

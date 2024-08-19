@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
@@ -16,42 +17,23 @@ using DbSession = DM.Services.DataAccess.BusinessObjects.Users.Session;
 namespace DM.Services.Authentication.Implementation;
 
 /// <inheritdoc />
-internal class AuthenticationService : IAuthenticationService
+internal class AuthenticationService(
+    ISecurityManager securityManager,
+    ISymmetricCryptoService cryptoService,
+    IAuthenticationRepository repository,
+    ISessionFactory sessionFactory,
+    IDateTimeProvider dateTimeProvider,
+    IIdentityProvider identityProvider,
+    IUpdateBuilderFactory updateBuilderFactory) : IAuthenticationService
 {
-    private readonly ISecurityManager securityManager;
-    private readonly ISymmetricCryptoService cryptoService;
-    private readonly IAuthenticationRepository repository;
-    private readonly ISessionFactory sessionFactory;
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly IIdentityProvider identityProvider;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-
     private const string UserIdKey = "userId";
     private const string SessionIdKey = "sessionId";
 
     /// <inheritdoc />
-    public AuthenticationService(
-        ISecurityManager securityManager,
-        ISymmetricCryptoService cryptoService,
-        IAuthenticationRepository repository,
-        ISessionFactory sessionFactory,
-        IDateTimeProvider dateTimeProvider,
-        IIdentityProvider identityProvider,
-        IUpdateBuilderFactory updateBuilderFactory)
+    public async Task<IIdentity> Authenticate(
+        string login, string password, bool persistent, CancellationToken cancellationToken)
     {
-        this.securityManager = securityManager;
-        this.cryptoService = cryptoService;
-        this.repository = repository;
-        this.sessionFactory = sessionFactory;
-        this.dateTimeProvider = dateTimeProvider;
-        this.identityProvider = identityProvider;
-        this.updateBuilderFactory = updateBuilderFactory;
-    }
-
-    /// <inheritdoc />
-    public async Task<IIdentity> Authenticate(string login, string password, bool persistent)
-    {
-        var (userFound, user) = await repository.TryFindUser(login);
+        var (userFound, user) = await repository.TryFindUser(login, cancellationToken);
         switch (userFound)
         {
             case false:
@@ -68,20 +50,20 @@ internal class AuthenticationService : IAuthenticationService
 
             default:
                 var session = sessionFactory.Create(persistent, false);
-                var settings = await repository.FindUserSettings(user.UserId);
-                return await CreateAuthenticationResult(user, session, settings);
+                var settings = await repository.FindUserSettings(user.UserId, cancellationToken);
+                return await CreateAuthenticationResult(user, session, settings, cancellationToken);
         }
     }
 
     /// <inheritdoc />
-    public async Task<IIdentity> Authenticate(string authToken)
+    public async Task<IIdentity> Authenticate(string authToken, CancellationToken cancellationToken)
     {
         Guid userId;
         Guid sessionId;
 
         try
         {
-            var decryptedString = await cryptoService.Decrypt(authToken);
+            var decryptedString = await cryptoService.Decrypt(authToken, cancellationToken);
             var authData = JsonSerializer.Deserialize<Dictionary<string, Guid>>(decryptedString);
             userId = authData[UserIdKey];
             sessionId = authData[SessionIdKey];
@@ -91,9 +73,9 @@ internal class AuthenticationService : IAuthenticationService
             return Identity.Fail(AuthenticationError.ForgedToken);
         }
 
-        var fetchUser = repository.FindUser(userId);
-        var fetchSession = repository.FindUserSession(sessionId);
-        var fetchSettings = repository.FindUserSettings(userId);
+        var fetchUser = repository.FindUser(userId, cancellationToken);
+        var fetchSession = repository.FindUserSession(sessionId, cancellationToken);
+        var fetchSettings = repository.FindUserSettings(userId, cancellationToken);
 
         await Task.WhenAll(fetchUser, fetchSession, fetchSettings);
 
@@ -109,7 +91,7 @@ internal class AuthenticationService : IAuthenticationService
         if (!session.Persistent &&
             session.ExpirationDate < dateTimeProvider.Now)
         {
-            await repository.RemoveSession(userId, sessionId);
+            await repository.RemoveSession(userId, sessionId, cancellationToken);
             return Identity.Fail(AuthenticationError.SessionExpired);
         }
 
@@ -117,7 +99,8 @@ internal class AuthenticationService : IAuthenticationService
         if (!session.Persistent &&
             session.ExpirationDate < dateTimeProvider.Now + sessionRefreshDelta)
         {
-            await repository.RefreshSession(userId, sessionId, session.ExpirationDate + sessionRefreshDelta);
+            await repository.RefreshSession(
+                userId, sessionId, session.ExpirationDate + sessionRefreshDelta, cancellationToken);
         }
 
         if (!session.Invisible && (
@@ -126,47 +109,47 @@ internal class AuthenticationService : IAuthenticationService
         {
             var userUpdate = updateBuilderFactory.Create<User>(user.UserId)
                 .Field(u => u.LastVisitDate, dateTimeProvider.Now);
-            await repository.UpdateActivity(userUpdate);
+            await repository.UpdateActivity(userUpdate, cancellationToken);
         }
 
         return Identity.Success(user, session, settings, authToken);
     }
 
     /// <inheritdoc />
-    public async Task<IIdentity> Authenticate(Guid userId)
+    public async Task<IIdentity> Authenticate(Guid userId, CancellationToken cancellationToken)
     {
-        var user = await repository.FindUser(userId);
+        var user = await repository.FindUser(userId, cancellationToken);
         var session = sessionFactory.Create(false, true);
-        var settings = await repository.FindUserSettings(userId);
-        return await CreateAuthenticationResult(user, session, settings);
+        var settings = await repository.FindUserSettings(userId, cancellationToken);
+        return await CreateAuthenticationResult(user, session, settings, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IIdentity> Logout()
+    public async Task<IIdentity> Logout(CancellationToken cancellationToken)
     {
         var identity = identityProvider.Current;
-        await repository.RemoveSession(identity.User.UserId, identity.Session.Id);
+        await repository.RemoveSession(identity.User.UserId, identity.Session.Id, cancellationToken);
         return Identity.Guest();
     }
 
     /// <inheritdoc />
-    public async Task<IIdentity> LogoutElsewhere()
+    public async Task<IIdentity> LogoutElsewhere(CancellationToken cancellationToken)
     {
         var identity = identityProvider.Current;
-        await repository.RemoveSessionsExcept(identity.User.UserId, identity.Session.Id);
+        await repository.RemoveSessionsExcept(identity.User.UserId, identity.Session.Id, cancellationToken);
         return identity;
     }
 
     private async Task<IIdentity> CreateAuthenticationResult(
-        AuthenticatedUser user, DbSession session, UserSettings settings)
+        AuthenticatedUser user, DbSession session, UserSettings settings, CancellationToken cancellationToken)
     {
-        var newSession = await repository.AddSession(user.UserId, session);
+        var newSession = await repository.AddSession(user.UserId, session, cancellationToken);
         var authData = new Dictionary<string, Guid>
         {
             [UserIdKey] = user.UserId,
             [SessionIdKey] = session.Id
         };
-        var token = await cryptoService.Encrypt(JsonSerializer.Serialize(authData));
+        var token = await cryptoService.Encrypt(JsonSerializer.Serialize(authData), cancellationToken);
         return Identity.Success(user, newSession, settings, token);
     }
 }

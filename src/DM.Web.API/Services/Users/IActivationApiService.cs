@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -14,6 +15,7 @@ public interface IActivationApiService
     /// Activate user and authenticate
     /// </summary>
     /// <param name="token">Activation token</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<User>> Activate(Guid token);
+    Task<Envelope<User>> Activate(Guid token, CancellationToken cancellationToken);
 }

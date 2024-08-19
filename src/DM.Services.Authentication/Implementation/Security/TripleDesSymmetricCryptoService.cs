@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Authentication.Implementation.Security;
@@ -14,7 +15,7 @@ internal class TripleDesSymmetricCryptoService : ISymmetricCryptoService
     private readonly Lazy<TripleDES> tripleDesService = new(TripleDES.Create);
 
     /// <inheritdoc />
-    public async Task<string> Encrypt(string valueToEncrypt)
+    public async Task<string> Encrypt(string valueToEncrypt, CancellationToken cancellationToken)
     {
         using var encryptedStream = new MemoryStream();
         var key = Convert.FromBase64String(Key);
@@ -24,14 +25,14 @@ internal class TripleDesSymmetricCryptoService : ISymmetricCryptoService
                          CryptoStreamMode.Write))
         {
             var data = Encoding.UTF8.GetBytes(valueToEncrypt);
-            await stream.WriteAsync(data);
+            await stream.WriteAsync(data, cancellationToken);
         }
 
         return Convert.ToBase64String(encryptedStream.ToArray());
     }
 
     /// <inheritdoc />
-    public async Task<string> Decrypt(string valueToDecrypt)
+    public async Task<string> Decrypt(string valueToDecrypt, CancellationToken cancellationToken)
     {
         using var decryptedStream = new MemoryStream();
         var key = Convert.FromBase64String(Key);
@@ -41,7 +42,7 @@ internal class TripleDesSymmetricCryptoService : ISymmetricCryptoService
                          CryptoStreamMode.Write))
         {
             var encryptedData = Convert.FromBase64String(valueToDecrypt);
-            await stream.WriteAsync(encryptedData);
+            await stream.WriteAsync(encryptedData, cancellationToken);
         }
 
         return Encoding.UTF8.GetString(decryptedStream.ToArray());

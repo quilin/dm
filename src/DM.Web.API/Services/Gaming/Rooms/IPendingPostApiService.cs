@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Games;
@@ -15,13 +16,16 @@ public interface IPendingPostApiService
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="pendingPost">API DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<PendingPost>> Create(Guid roomId, PendingPost pendingPost);
+    Task<Envelope<PendingPost>> Create(Guid roomId, PendingPost pendingPost,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete existing pending post
     /// </summary>
     /// <param name="pendingPostId">Pending post identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid pendingPostId);
+    Task Delete(Guid pendingPostId, CancellationToken cancellationToken);
 }

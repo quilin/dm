@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface IRoomCreatingService
     /// Create new room
     /// </summary>
     /// <param name="createRoom">DTO for room creating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Room> Create(CreateRoom createRoom);
+    Task<Room> Create(CreateRoom createRoom, CancellationToken cancellationToken);
 }

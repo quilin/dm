@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.RelationalStorage;
@@ -13,6 +14,7 @@ internal interface IBlacklistDeletingRepository
     /// Delete existing blacklist link
     /// </summary>
     /// <param name="updateBuilder"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(IUpdateBuilder<BlackListLink> updateBuilder);
+    Task Delete(IUpdateBuilder<BlackListLink> updateBuilder, CancellationToken cancellationToken);
 }

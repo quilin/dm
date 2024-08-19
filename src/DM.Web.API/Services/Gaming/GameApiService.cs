@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Games.Creating;
@@ -16,89 +17,77 @@ using GamesQuery = DM.Services.Gaming.Dto.Input.GamesQuery;
 namespace DM.Web.API.Services.Gaming;
 
 /// <inheritdoc />
-internal class GameApiService : IGameApiService
+internal class GameApiService(
+    IGameReadingService readingService,
+    IGameCreatingService creatingService,
+    IGameUpdatingService updatingService,
+    IGameDeletingService deletingService,
+    IMapper mapper) : IGameApiService
 {
-    private readonly IGameReadingService readingService;
-    private readonly IGameCreatingService creatingService;
-    private readonly IGameUpdatingService updatingService;
-    private readonly IGameDeletingService deletingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public GameApiService(
-        IGameReadingService readingService,
-        IGameCreatingService creatingService,
-        IGameUpdatingService updatingService,
-        IGameDeletingService deletingService,
-        IMapper mapper)
-    {
-        this.readingService = readingService;
-        this.creatingService = creatingService;
-        this.updatingService = updatingService;
-        this.deletingService = deletingService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<ListEnvelope<Game>> Get(GameApiQuery gamesQuery)
+    public async Task<ListEnvelope<Game>> Get(GameApiQuery gamesQuery, CancellationToken cancellationToken)
     {
         var query = mapper.Map<GamesQuery>(gamesQuery);
-        var (games, paging) = await readingService.GetGames(query);
+        var (games, paging) = await readingService.GetGames(query, cancellationToken);
         return new ListEnvelope<Game>(games.Select(mapper.Map<Game>), new Paging(paging));
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public async Task<ListEnvelope<Game>> GetOwn()
+    public async Task<ListEnvelope<Game>> GetOwn(CancellationToken cancellationToken)
     {
-        var games = await readingService.GetOwnGames();
+        var games = await readingService.GetOwnGames(cancellationToken);
+        return new ListEnvelope<Game>(games.Select(mapper.Map<Game>));
+    }
+
+    /// <param name="cancellationToken"></param>
+    /// <inheritdoc />
+    public async Task<ListEnvelope<Game>> GetPopular(CancellationToken cancellationToken)
+    {
+        var games = await readingService.GetPopularGames(cancellationToken);
         return new ListEnvelope<Game>(games.Select(mapper.Map<Game>));
     }
 
     /// <inheritdoc />
-    public async Task<ListEnvelope<Game>> GetPopular()
+    public async Task<Envelope<Game>> Get(Guid gameId, CancellationToken cancellationToken)
     {
-        var games = await readingService.GetPopularGames();
-        return new ListEnvelope<Game>(games.Select(mapper.Map<Game>));
-    }
-
-    /// <inheritdoc />
-    public async Task<Envelope<Game>> Get(Guid gameId)
-    {
-        var game = await readingService.GetGame(gameId);
+        var game = await readingService.GetGame(gameId, cancellationToken);
         return new Envelope<Game>(mapper.Map<Game>(game));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Game>> GetDetails(Guid gameId)
+    public async Task<Envelope<Game>> GetDetails(Guid gameId, CancellationToken cancellationToken)
     {
-        var game = await readingService.GetGameDetails(gameId);
+        var game = await readingService.GetGameDetails(gameId, cancellationToken);
         return new Envelope<Game>(mapper.Map<Game>(game));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Game>> Create(Game game)
+    public async Task<Envelope<Game>> Create(Game game, CancellationToken cancellationToken)
     {
         var createGame = mapper.Map<CreateGame>(game);
-        var createdGame = await creatingService.Create(createGame);
+        var createdGame = await creatingService.Create(createGame, cancellationToken);
         return new Envelope<Game>(mapper.Map<Game>(createdGame));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Game>> Update(Guid gameId, Game game)
+    public async Task<Envelope<Game>> Update(Guid gameId, Game game, CancellationToken cancellationToken)
     {
         var updateGame = mapper.Map<UpdateGame>(game);
         updateGame.GameId = gameId;
-        var updatedGame = await updatingService.Update(updateGame);
+        var updatedGame = await updatingService.Update(updateGame, cancellationToken);
         return new Envelope<Game>(mapper.Map<Game>(updatedGame));
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid gameId) => deletingService.DeleteGame(gameId);
+    public Task Delete(Guid gameId, CancellationToken cancellationToken) =>
+        deletingService.DeleteGame(gameId, cancellationToken);
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public async Task<ListEnvelope<Tag>> GetTags()
+    public async Task<ListEnvelope<Tag>> GetTags(CancellationToken cancellationToken)
     {
-        var tags = await readingService.GetTags();
+        var tags = await readingService.GetTags(cancellationToken);
         return new ListEnvelope<Tag>(tags.Select(mapper.Map<Tag>));
     }
 }

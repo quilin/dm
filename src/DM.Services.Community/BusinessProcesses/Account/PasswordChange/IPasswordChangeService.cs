@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -12,6 +13,7 @@ public interface IPasswordChangeService
     /// Change user password
     /// </summary>
     /// <param name="passwordChange"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Change(UserPasswordChange passwordChange);
+    Task<GeneralUser> Change(UserPasswordChange passwordChange, CancellationToken cancellationToken);
 }

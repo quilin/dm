@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -15,43 +16,21 @@ using FluentValidation;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Creating;
 
 /// <inheritdoc />
-internal class CharacterCreatingService : ICharacterCreatingService
+internal class CharacterCreatingService(
+    IValidator<CreateCharacter> validator,
+    IGameReadingService gameReadingService,
+    IIntentionManager intentionManager,
+    ICharacterFactory factory,
+    ICharacterCreatingRepository creatingRepository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer producer,
+    IIdentityProvider identityProvider) : ICharacterCreatingService
 {
-    private readonly IValidator<CreateCharacter> validator;
-    private readonly IGameReadingService gameReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly ICharacterFactory factory;
-    private readonly ICharacterCreatingRepository creatingRepository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer producer;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public CharacterCreatingService(
-        IValidator<CreateCharacter> validator,
-        IGameReadingService gameReadingService,
-        IIntentionManager intentionManager,
-        ICharacterFactory factory,
-        ICharacterCreatingRepository creatingRepository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer producer,
-        IIdentityProvider identityProvider)
+    public async Task<Character> Create(CreateCharacter createCharacter, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.gameReadingService = gameReadingService;
-        this.intentionManager = intentionManager;
-        this.factory = factory;
-        this.creatingRepository = creatingRepository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.producer = producer;
-        this.identityProvider = identityProvider;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Character> Create(CreateCharacter createCharacter)
-    {
-        await validator.ValidateAndThrowAsync(createCharacter);
-        var game = await gameReadingService.GetGame(createCharacter.GameId);
+        await validator.ValidateAndThrowAsync(createCharacter, cancellationToken);
+        var game = await gameReadingService.GetGame(createCharacter.GameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.CreateCharacter, game);
 
         var currentUserId = identityProvider.Current.User.UserId;
@@ -66,9 +45,9 @@ internal class CharacterCreatingService : ICharacterCreatingService
         createCharacter.IsNpc = createCharacter.IsNpc && gameParticipation.HasFlag(GameParticipation.Authority);
 
         var (character, attributes) = factory.Create(createCharacter, currentUserId, initialStatus);
-        var createdCharacter = await creatingRepository.Create(character, attributes);
+        var createdCharacter = await creatingRepository.Create(character, attributes, cancellationToken);
 
-        await unreadCountersRepository.Increment(createCharacter.GameId, UnreadEntryType.Character);
+        await unreadCountersRepository.Increment(createCharacter.GameId, UnreadEntryType.Character, cancellationToken);
         await producer.Send(EventType.NewCharacter, createdCharacter.Id);
 
         return createdCharacter;

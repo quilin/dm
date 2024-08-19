@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Claims.Deleting;
@@ -12,6 +13,7 @@ public interface IRoomClaimsDeletingService
     /// Delete existing claim
     /// </summary>
     /// <param name="claimId">Claim identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid claimId);
+    Task Delete(Guid claimId, CancellationToken cancellationToken);
 }

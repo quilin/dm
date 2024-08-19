@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -15,46 +16,24 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating;
 
 /// <inheritdoc />
-internal class RoomCreatingService : IRoomCreatingService
+internal class RoomCreatingService(
+    IGameReadingService gameReadingService,
+    IValidator<CreateRoom> validator,
+    IIntentionManager intentionManager,
+    IRoomFactory roomFactory,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IRoomCreatingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer producer) : IRoomCreatingService
 {
-    private readonly IGameReadingService gameReadingService;
-    private readonly IValidator<CreateRoom> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IRoomFactory roomFactory;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IRoomCreatingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public RoomCreatingService(
-        IGameReadingService gameReadingService,
-        IValidator<CreateRoom> validator,
-        IIntentionManager intentionManager,
-        IRoomFactory roomFactory,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IRoomCreatingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer producer)
+    public async Task<Room> Create(CreateRoom createRoom, CancellationToken cancellationToken)
     {
-        this.gameReadingService = gameReadingService;
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.roomFactory = roomFactory;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.producer = producer;
-    }
-
-    /// <inheritdoc />
-    public async Task<Room> Create(CreateRoom createRoom)
-    {
-        await validator.ValidateAndThrowAsync(createRoom);
-        var game = await gameReadingService.GetGame(createRoom.GameId);
+        await validator.ValidateAndThrowAsync(createRoom, cancellationToken);
+        var game = await gameReadingService.GetGame(createRoom.GameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
-        var lastRoom = await repository.GetLastRoomInfo(createRoom.GameId);
+        var lastRoom = await repository.GetLastRoomInfo(createRoom.GameId, cancellationToken);
 
         var roomToCreate = lastRoom == null
             ? roomFactory.CreateFirst(createRoom)
@@ -63,8 +42,8 @@ internal class RoomCreatingService : IRoomCreatingService
             ? null
             : updateBuilderFactory.Create<DbRoom>(lastRoom.Id).Field(r => r.NextRoomId, roomToCreate.RoomId);
 
-        var room = await repository.Create(roomToCreate, updateLastRoom);
-        await unreadCountersRepository.Create(room.Id, game.Id, UnreadEntryType.Message);
+        var room = await repository.Create(roomToCreate, updateLastRoom, cancellationToken);
+        await unreadCountersRepository.Create(room.Id, game.Id, UnreadEntryType.Message, cancellationToken);
         await producer.Send(EventType.NewRoom, room.Id);
 
         return room;

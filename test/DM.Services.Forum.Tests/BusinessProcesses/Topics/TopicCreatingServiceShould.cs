@@ -44,7 +44,7 @@ public class TopicCreatingServiceShould : UnitTestBase
             .ReturnsAsync(new ValidationResult());
 
         var forumReadingService = Mock<IForumReadingService>();
-        getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), true));
+        getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), true, It.IsAny<CancellationToken>()));
 
         intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -60,11 +60,11 @@ public class TopicCreatingServiceShould : UnitTestBase
             It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CreateTopic>()));
 
         creatingRepository = Mock<ITopicCreatingRepository>();
-        saveTopicSetup = creatingRepository.Setup(r => r.Create(It.IsAny<ForumTopic>()));
+        saveTopicSetup = creatingRepository.Setup(r => r.Create(It.IsAny<ForumTopic>(), It.IsAny<CancellationToken>()));
 
         unreadCountersRepository = Mock<IUnreadCountersRepository>();
         unreadCountersRepository
-            .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+            .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         publisher = Mock<IInvokedEventProducer>();
@@ -92,7 +92,7 @@ public class TopicCreatingServiceShould : UnitTestBase
         createTopicSetup.Returns(forumTopic);
         saveTopicSetup.ReturnsAsync(new Topic());
 
-        await service.CreateTopic(createTopic);
+        await service.CreateTopic(createTopic, CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(ForumIntention.CreateTopic, forum));
     }
@@ -108,10 +108,10 @@ public class TopicCreatingServiceShould : UnitTestBase
         var expected = new Topic();
         saveTopicSetup.ReturnsAsync(expected);
 
-        var actual = await service.CreateTopic(createTopic);
+        var actual = await service.CreateTopic(createTopic, CancellationToken.None);
 
         actual.Should().Be(expected);
-        creatingRepository.Verify(r => r.Create(forumTopic), Times.Once);
+        creatingRepository.Verify(r => r.Create(forumTopic, It.IsAny<CancellationToken>()), Times.Once);
         creatingRepository.VerifyNoOtherCalls();
     }
 
@@ -127,9 +127,9 @@ public class TopicCreatingServiceShould : UnitTestBase
         createTopicSetup.Returns(forumTopic);
         saveTopicSetup.ReturnsAsync(new Topic {Id = forumTopicId});
 
-        await service.CreateTopic(createTopic);
+        await service.CreateTopic(createTopic, CancellationToken.None);
 
-        unreadCountersRepository.Verify(r => r.Create(forumTopicId, forumId, UnreadEntryType.Message), Times.Once);
+        unreadCountersRepository.Verify(r => r.Create(forumTopicId, forumId, UnreadEntryType.Message, It.IsAny<CancellationToken>()), Times.Once);
         unreadCountersRepository.VerifyNoOtherCalls();
     }
 
@@ -144,7 +144,7 @@ public class TopicCreatingServiceShould : UnitTestBase
         createTopicSetup.Returns(forumTopic);
         saveTopicSetup.ReturnsAsync(new Topic {Id = forumTopicId});
 
-        await service.CreateTopic(createTopic);
+        await service.CreateTopic(createTopic, CancellationToken.None);
 
         publisher.Verify(p => p.Send(EventType.NewForumTopic, forumTopicId), Times.Once);
         publisher.VerifyNoOtherCalls();
