@@ -10,7 +10,9 @@ const { selectedUser: user } = storeToRefs(useCommunityStore());
 <template>
   <the-loader v-if="!user" :big="true" />
   <div v-else-if="user!.info" v-html="user!.info" />
-  <secondary-text v-else>Пользователь ничего о себе не написал...</secondary-text>
+  <secondary-text v-else
+    >Пользователь ничего о себе не написал...</secondary-text
+  >
 </template>
 
 <style scoped lang="sass"></style>
