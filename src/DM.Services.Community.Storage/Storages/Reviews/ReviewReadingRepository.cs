@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.BusinessProcesses.Reviews.Reading;
+namespace DM.Services.Community.Storage.Storages.Reviews;
 
 /// <inheritdoc />
 internal class ReviewReadingRepository(
@@ -34,7 +30,7 @@ internal class ReviewReadingRepository(
             .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Review> Get(Guid id, CancellationToken cancellationToken) =>
+    public Task<Review?> Get(Guid id, CancellationToken cancellationToken) =>
         dbContext.Reviews
             .Where(r => !r.IsRemoved && r.ReviewId == id)
             .ProjectTo<Review>(mapper.ConfigurationProvider)

@@ -1,9 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
+using DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
 
-namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset;
+namespace DM.Services.Community.Storage.Storages.Account;
 
 /// <inheritdoc />
 internal class PasswordResetRepository(

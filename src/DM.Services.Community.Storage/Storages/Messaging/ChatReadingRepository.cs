@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Chat.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.BusinessProcesses.Chat.Reading;
+namespace DM.Services.Community.Storage.Storages.Messaging;
 
 /// <inheritdoc />
 internal class ChatReadingRepository(
@@ -40,8 +36,9 @@ internal class ChatReadingRepository(
             .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<ChatMessage> Get(Guid id, CancellationToken cancellationToken) => await dbContext.ChatMessages
-        .Where(m => m.ChatMessageId == id)
-        .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync(cancellationToken);
+    public async Task<ChatMessage?> Get(Guid id, CancellationToken cancellationToken) =>
+        await dbContext.ChatMessages
+            .Where(m => m.ChatMessageId == id)
+            .ProjectTo<ChatMessage>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 }

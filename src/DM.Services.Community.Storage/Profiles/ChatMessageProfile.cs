@@ -1,7 +1,8 @@
 using AutoMapper;
+using DM.Services.Community.BusinessProcesses.Chat.Reading;
 using DbMessage = DM.Services.DataAccess.BusinessObjects.Common.ChatMessage;
 
-namespace DM.Services.Community.BusinessProcesses.Chat.Reading;
+namespace DM.Services.Community.Storage.Profiles;
 
 /// <inheritdoc />
 internal class ChatMessageProfile : Profile

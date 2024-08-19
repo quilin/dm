@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Users.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Implementation;
@@ -15,7 +11,7 @@ using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
-namespace DM.Services.Community.BusinessProcesses.Users.Reading;
+namespace DM.Services.Community.Storage.Storages.Users;
 
 /// <inheritdoc />
 internal class UserReadingRepository(
@@ -56,13 +52,14 @@ internal class UserReadingRepository(
     }
 
     /// <inheritdoc />
-    public Task<GeneralUser> GetUser(string login, CancellationToken cancellationToken) => dmDbContext.Users
-        .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
-        .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync(cancellationToken);
+    public Task<GeneralUser?> GetUser(string login, CancellationToken cancellationToken) =>
+        dmDbContext.Users
+            .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
+            .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<UserDetails> GetUserDetails(string login, CancellationToken cancellationToken)
+    public async Task<UserDetails?> GetUserDetails(string login, CancellationToken cancellationToken)
     {
         var userDetails = await dmDbContext.Users
             .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())

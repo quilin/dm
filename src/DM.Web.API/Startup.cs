@@ -2,6 +2,7 @@
 using Autofac;
 using DM.Services.Common;
 using DM.Services.Community;
+using DM.Services.Community.Storage.Dependencies;
 using DM.Services.Core.Configuration;
 using DM.Services.Core.Extensions;
 using DM.Services.Core.Logging;
@@ -84,6 +85,7 @@ internal class Startup(IConfiguration configuration)
         services.AddSignalR();
 
         services.AddForumStorage();
+        services.AddCommunityStorage();
 
         services
             .AddSwaggerGen(c => c.ConfigureGen())

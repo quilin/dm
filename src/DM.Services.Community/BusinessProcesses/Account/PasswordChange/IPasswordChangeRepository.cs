@@ -10,7 +10,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordChange;
 /// <summary>
 /// Storage for password change
 /// </summary>
-internal interface IPasswordChangeRepository
+public interface IPasswordChangeRepository
 {
     /// <summary>
     /// Find existing user
@@ -33,8 +33,9 @@ internal interface IPasswordChangeRepository
     /// </summary>
     /// <param name="tokenId"></param>
     /// <param name="createdSince"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<bool> TokenValid(Guid tokenId, DateTimeOffset createdSince);
+    Task<bool> TokenValid(Guid tokenId, DateTimeOffset createdSince, CancellationToken cancellationToken);
 
     /// <summary>
     /// Save user password changes

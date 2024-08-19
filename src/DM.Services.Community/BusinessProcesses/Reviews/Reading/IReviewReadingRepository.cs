@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Reviews.Reading;
 /// <summary>
 /// Storage for reading the site reviews
 /// </summary>
-internal interface IReviewReadingRepository
+public interface IReviewReadingRepository
 {
     /// <summary>
     /// Get total count of reviews

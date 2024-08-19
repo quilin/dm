@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset;
 /// <summary>
 /// Storage for password resetting
 /// </summary>
-internal interface IPasswordResetRepository
+public interface IPasswordResetRepository
 {
     /// <summary>
     /// Create password restoration token

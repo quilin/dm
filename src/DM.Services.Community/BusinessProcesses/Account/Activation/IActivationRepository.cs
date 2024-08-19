@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Activation;
 /// <summary>
 /// Activation storage
 /// </summary>
-internal interface IActivationRepository
+public interface IActivationRepository
 {
     /// <summary>
     /// Find user identifier by its activation token identifier

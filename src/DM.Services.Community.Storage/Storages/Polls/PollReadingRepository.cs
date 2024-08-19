@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using DM.Services.Community.BusinessProcesses.Polls.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.DataAccess.MongoIntegration;
 using MongoDB.Driver;
 using DbPoll = DM.Services.DataAccess.BusinessObjects.Fora.Poll;
 
-namespace DM.Services.Community.BusinessProcesses.Polls.Reading;
+namespace DM.Services.Community.Storage.Storages.Polls;
 
 /// <inheritdoc />
 internal class PollReadingRepository(DmMongoClient client)

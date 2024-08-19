@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Creating;
 /// <summary>
 /// Storage for poll creating
 /// </summary>
-internal interface IPollCreatingRepository
+public interface IPollCreatingRepository
 {
     /// <summary>
     /// Create new poll

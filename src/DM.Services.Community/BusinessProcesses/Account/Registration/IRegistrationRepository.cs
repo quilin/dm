@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration;
 /// <summary>
 /// Registration information storage
 /// </summary>
-internal interface IRegistrationRepository
+public interface IRegistrationRepository
 {
     /// <summary>
     /// Tells if user with certain email is already registered

@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
 /// <summary>
 /// Storage for reading the messages
 /// </summary>
-internal interface IMessageReadingRepository
+public interface IMessageReadingRepository
 {
     /// <summary>
     /// Count messages in conversation

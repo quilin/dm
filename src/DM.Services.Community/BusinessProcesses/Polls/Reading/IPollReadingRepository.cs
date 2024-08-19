@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Polls.Reading;
 /// <summary>
 /// Storage for reading polls
 /// </summary>
-internal interface IPollReadingRepository
+public interface IPollReadingRepository
 {
     /// <summary>
     /// Count all

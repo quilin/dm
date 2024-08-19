@@ -1,12 +1,11 @@
-using System.Threading;
-using System.Threading.Tasks;
+using DM.Services.Community.BusinessProcesses.Users.Updating;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using DM.Services.DataAccess.BusinessObjects.Users.Settings;
 using DM.Services.DataAccess.MongoIntegration;
 using DM.Services.DataAccess.RelationalStorage;
 
-namespace DM.Services.Community.BusinessProcesses.Users.Updating;
+namespace DM.Services.Community.Storage.Storages.Users;
 
 /// <inheritdoc />
 internal class UserUpdatingRepository(

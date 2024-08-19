@@ -1,7 +1,8 @@
 using AutoMapper;
+using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DbReview = DM.Services.DataAccess.BusinessObjects.Common.Review;
 
-namespace DM.Services.Community.BusinessProcesses.Reviews.Reading;
+namespace DM.Services.Community.Storage.Profiles;
 
 /// <inheritdoc />
 internal class ReviewProfile : Profile

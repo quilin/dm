@@ -1,8 +1,6 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Messaging.Creating;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.RelationalStorage;
@@ -10,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 using DbMessage = DM.Services.DataAccess.BusinessObjects.Messaging.Message;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Creating;
+namespace DM.Services.Community.Storage.Storages.Messaging;
 
 /// <inheritdoc />
 internal class MessageCreatingRepository(

@@ -8,7 +8,7 @@ namespace DM.Services.Community.BusinessProcesses.Chat.Creating;
 /// <summary>
 /// Storage for chat creating
 /// </summary>
-internal interface IChatCreatingRepository
+public interface IChatCreatingRepository
 {
     /// <summary>
     /// Create new chat message

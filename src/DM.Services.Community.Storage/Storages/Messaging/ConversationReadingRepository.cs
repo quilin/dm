@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DM.Services.Core.Dto;
 using DM.Services.Core.Extensions;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Conversation = DM.Services.Community.BusinessProcesses.Messaging.Reading.Conversation;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
+namespace DM.Services.Community.Storage.Storages.Messaging;
 
 /// <inheritdoc />
 internal class ConversationReadingRepository(
@@ -45,24 +42,28 @@ internal class ConversationReadingRepository(
             .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<Conversation> Get(Guid conversationId, Guid userId, CancellationToken cancellationToken) => dbContext.Conversations
-        .Where(UserParticipates(userId))
-        .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync(cancellationToken);
+    public Task<Conversation?> Get(Guid conversationId, Guid userId, CancellationToken cancellationToken) =>
+        dbContext.Conversations
+            .Where(UserParticipates(userId))
+            .ProjectTo<Conversation>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public async Task<Guid?> FindUser(string login, CancellationToken cancellationToken) => (await dbContext.Users
-        .Where(u => u.Login.ToLower() == login.ToLower() && !u.IsRemoved && u.Activated)
-        .Select(u => new {u.UserId})
-        .FirstOrDefaultAsync(cancellationToken))?.UserId;
+    public async Task<Guid?> FindUser(string login, CancellationToken cancellationToken) =>
+        (await dbContext.Users
+            .Where(u => u.Login.ToLower() == login.ToLower() && !u.IsRemoved && u.Activated)
+            .Select(u => new { u.UserId })
+            .FirstOrDefaultAsync(cancellationToken))?.UserId;
 
     /// <inheritdoc />
-    public Task<Conversation> FindVisaviConversation(Guid userId, Guid visaviId, CancellationToken cancellationToken) => dbContext.Conversations
-        .Where(c => c.Visavi)
-        .Where(UserParticipates(userId))
-        .Where(UserParticipates(visaviId))
-        .ProjectTo<Conversation>(mapper.ConfigurationProvider)
-        .FirstOrDefaultAsync(cancellationToken);
+    public Task<Conversation?> FindVisaviConversation(
+        Guid userId, Guid visaviId, CancellationToken cancellationToken) =>
+        dbContext.Conversations
+            .Where(c => c.Visavi)
+            .Where(UserParticipates(userId))
+            .Where(UserParticipates(visaviId))
+            .ProjectTo<Conversation>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
     public async Task<Conversation> Create(DbConversation conversation,

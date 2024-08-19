@@ -1,9 +1,9 @@
-using System.Linq;
 using AutoMapper;
+using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 using DbConversation = DM.Services.DataAccess.BusinessObjects.Messaging.Conversation;
 using DbMessage = DM.Services.DataAccess.BusinessObjects.Messaging.Message;
 
-namespace DM.Services.Community.BusinessProcesses.Messaging.Reading;
+namespace DM.Services.Community.Storage.Profiles;
 
 /// <inheritdoc />
 internal class MessagingProfile : Profile

@@ -1,10 +1,9 @@
-using System.Threading;
-using System.Threading.Tasks;
+using DM.Services.Community.BusinessProcesses.Account.Registration;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace DM.Services.Community.BusinessProcesses.Account.Registration;
+namespace DM.Services.Community.Storage.Storages.Account;
 
 /// <inheritdoc />
 internal class RegistrationRepository(

@@ -9,7 +9,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.EmailChange;
 /// <summary>
 /// Storage for email changing
 /// </summary>
-internal interface IEmailChangeRepository
+public interface IEmailChangeRepository
 {
     /// <summary>
     /// Find user by login

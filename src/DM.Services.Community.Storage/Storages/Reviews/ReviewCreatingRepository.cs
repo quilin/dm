@@ -1,14 +1,12 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DM.Services.Community.BusinessProcesses.Reviews.Creating;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
 using DM.Services.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using DbReview = DM.Services.DataAccess.BusinessObjects.Common.Review;
 
-namespace DM.Services.Community.BusinessProcesses.Reviews.Creating;
+namespace DM.Services.Community.Storage.Storages.Reviews;
 
 /// <inheritdoc />
 internal class ReviewCreatingRepository(
