@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { object, string } from "yup";
-import type { RegisterCredentials } from "@/api/models/community";
+import type { RegisterCredentials } from "@/api/models/account";
 import { ValidationErrorCode } from "@/api/models/common";
 import { useUserStore } from "@/stores";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";

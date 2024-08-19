@@ -22,10 +22,10 @@ const roleNames: Record<string, string> = {
   [UserRole.NannyModerator]: "Гоблин-нянька",
 };
 const userRoles = computed(() =>
-  user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r])
+  user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r]),
 );
 const isCurrentUser = computed(
-  () => currentUser.value && user.value?.login === currentUser.value?.login
+  () => currentUser.value && user.value?.login === currentUser.value?.login,
 );
 
 useFetchData(
@@ -35,7 +35,7 @@ useFetchData(
       param: (p) => p.login,
       callback: (login) => trySelectProfile(login as UserLogin),
     },
-  ]
+  ],
 );
 </script>
 
@@ -96,6 +96,8 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 .profile_title
   display: inline-block
 .profile_roles

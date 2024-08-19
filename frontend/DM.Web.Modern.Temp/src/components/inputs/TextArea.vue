@@ -18,18 +18,17 @@ watch(
     value.value = newValue;
     emit("update:modelValue", newValue);
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
-<style lang="stylus" scoped>
-.controls
-  secondary()
+<style scoped lang="sass">
+@import "src/assets/styles/Themes"
 
 textarea
-  display block
-  height $large
-  width 100%
-  min-width $gridStep * 100
-  box-sizing border-box
+  display: block
+  height: $large
+  width: 100%
+  min-width: $grid-step * 100
+  box-sizing: border-box
 </style>

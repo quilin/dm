@@ -1,3 +1,5 @@
+@import 'Variables'
+
 @function color-set($modern, $contrast, $classic, $pale, $night)
   @return (Modern: $modern, ClassicPale: $contrast, Classic: $classic, Pale: $pale, Night: $night)
 
@@ -8,6 +10,7 @@
   @each $mode, $color in $color-set
     html.theme_#{$mode} &
       #{$attr}: $value-prefix $color
+      transition: $attr $animation-time
 
 /* COLOR THEMES                               Modern   Contrast Classic  Pale     Night */
 /// Texts

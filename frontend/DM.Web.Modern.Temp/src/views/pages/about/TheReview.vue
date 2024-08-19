@@ -14,7 +14,7 @@ const userStore = useUserStore();
 const communityStore = useReviewStore();
 
 const canAdministrate = computed(
-  () => props.controls && userIsAdmin(userStore.user)
+  () => props.controls && userIsAdmin(userStore.user),
 );
 const loading = ref(false);
 
@@ -57,6 +57,8 @@ async function remove() {
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .review
   margin: $medium 0
 
@@ -68,7 +70,6 @@ async function remove() {
 
   border-radius: $border-radius
   +theme(background-color, $panel-background-highlight)
-  transition: all $animation-time
 
   &:after
     position: absolute
@@ -79,7 +80,6 @@ async function remove() {
     border: solid $minor transparent
     +theme(border-top-color, $panel-background-highlight)
     +theme(border-left-color, $panel-background-highlight)
-    transition: all $animation-time
 
 .review-info
   display: flex

@@ -17,6 +17,8 @@ const online = computed(() => dayjs().diff(props.user.online, "m", true) < 5);
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .online
   +theme(color, $positive-text)
 

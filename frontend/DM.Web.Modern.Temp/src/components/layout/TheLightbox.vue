@@ -13,6 +13,8 @@ import { VueFinalModal } from "vue-final-modal";
 </template>
 
 <style lang="sass">
+@import "src/assets/styles/Themes"
+
 .vfm
   display: flex
   justify-content: center

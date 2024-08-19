@@ -32,7 +32,7 @@ useFetchData(
       param: (p) => p.n,
       callback: (n) => fetchTopics(extractNumberParam(n)),
     },
-  ]
+  ],
 );
 </script>
 
@@ -56,6 +56,8 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 .forum-info
   margin: $medium 0
 
