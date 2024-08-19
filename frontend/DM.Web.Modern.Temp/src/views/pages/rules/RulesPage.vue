@@ -34,6 +34,8 @@
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 article
   margin: $medium 0
 </style>

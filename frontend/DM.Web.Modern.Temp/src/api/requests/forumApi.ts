@@ -74,7 +74,7 @@ export default new (class ForumApi {
     return Api.get<Envelope<Comment>>(
       `forum/comments/${id}`,
       undefined,
-      BbRenderMode.Bb
+      BbRenderMode.Bb,
     );
   }
 

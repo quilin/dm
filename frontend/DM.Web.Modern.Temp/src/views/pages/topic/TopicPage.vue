@@ -29,7 +29,7 @@ useFetchData(
       param: (p) => p.n,
       callback: (n) => fetchComments(extractNumberParam(n)),
     },
-  ]
+  ],
 );
 </script>
 
@@ -53,6 +53,8 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 .topic-header
   display: flex
   justify-content: space-between

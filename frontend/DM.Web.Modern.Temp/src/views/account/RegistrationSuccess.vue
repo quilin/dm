@@ -15,6 +15,8 @@ import LightboxTitle from "@/components/layout/LightboxTitle.vue";
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 p
   margin: $medium 0
 </style>

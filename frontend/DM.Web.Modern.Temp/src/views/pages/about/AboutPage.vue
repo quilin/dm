@@ -14,7 +14,7 @@ useFetchData(
       param: (p) => p.n,
       callback: (n) => fetchReviews(extractNumberParam(n)),
     },
-  ]
+  ],
 );
 </script>
 

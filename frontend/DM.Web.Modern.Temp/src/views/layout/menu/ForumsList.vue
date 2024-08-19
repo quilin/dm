@@ -14,13 +14,13 @@ const { user } = storeToRefs(useUserStore());
 const route = useRoute();
 
 const isForumRoute = computed(
-  () => route.name === "forum" || route.name === "topic"
+  () => route.name === "forum" || route.name === "topic",
 );
 
 onMounted(() => fetchFora());
 watch(
   () => user,
-  () => fetchFora()
+  () => fetchFora(),
 );
 </script>
 
@@ -48,6 +48,8 @@ watch(
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .selected a
   font-weight: bold
   +theme(color, $text)

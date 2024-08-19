@@ -21,6 +21,8 @@ defineProps<{
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .form-field__labeled
   display: flex
   margin: $small 0
@@ -30,10 +32,10 @@ defineProps<{
     flex-shrink: 0
 
   &.error input
-    +theme(border-color, $negative-border)
     animation-name: shake-error
     animation-duration: $animation-time
     animation-timing-function: ease-in-out
+    +theme(border-color, $negative-border)
 
     &:focus
       +theme(box-shadow, $negative-border, inset 0 0 $minor)

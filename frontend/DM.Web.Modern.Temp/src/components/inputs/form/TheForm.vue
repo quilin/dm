@@ -29,11 +29,13 @@ const slots = defineSlots();
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .controls
   margin: $small (-$medium) (-$medium)
   padding: $medium
-  +theme(background-color, $control-background)
   border-radius: 0 0 $border-radius $border-radius
+  +theme(background-color, $control-background)
 
 .controls-cancel
   display: inline-block

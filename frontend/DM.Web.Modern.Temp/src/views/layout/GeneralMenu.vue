@@ -8,20 +8,20 @@
     title="Активные игры"
     link-text="Все активные игры"
     token="ActiveGames"
-    :status="GameStatus.Active"
+    :game-status="GameStatus.Active"
   />
 
   <games-list
     title="Идёт набор"
     link-text="Все игры с открытым набором"
     token="RequiringGames"
-    :status="GameStatus.Requirement"
+    :game-status="GameStatus.Requirement"
   />
   <games-list
     title="Завершённые игры"
     link-text="Все завершённые игры"
     token="FinishedGames"
-    :status="GameStatus.Finished"
+    :game-status="GameStatus.Finished"
   />
 
   <forums-list />

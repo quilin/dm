@@ -13,6 +13,9 @@ const currentYear = ref<number>(new Date().getFullYear());
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Layout"
+@import "src/assets/styles/Themes"
+
 .footer
   display: flex
   justify-content: center
@@ -31,7 +34,6 @@ const currentYear = ref<number>(new Date().getFullYear());
     bottom: 0
     background: url('@/assets/images/footer_bg.gif') left top repeat-x
     +theme(filter, color-pair(none, invert(87%)))
-    transition: filter $animation-time
 
 .copyright
   align-self: center

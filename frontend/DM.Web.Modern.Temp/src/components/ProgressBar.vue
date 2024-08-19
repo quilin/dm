@@ -13,6 +13,8 @@ const progress = computed(() => (props.current / props.goal) * 100);
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .progress
   position: relative
   overflow: hidden
@@ -26,8 +28,8 @@ const progress = computed(() => (props.current / props.goal) * 100);
   top: 0
   left: 0
   bottom: 0
-  +theme(background-color, $progress-background-done)
   transition: width $animation-time
+  +theme(background-color, $progress-background-done)
 
 .progress-text
   position: relative

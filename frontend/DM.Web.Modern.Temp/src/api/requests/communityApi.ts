@@ -38,7 +38,7 @@ export default new (class CommunityApi {
     return Api.get<Envelope<User>>(
       `users/${login}/details`,
       undefined,
-      BbRenderMode.Bb
+      BbRenderMode.Bb,
     );
   }
   public updateUser(login: UserLogin, user: Patch<User>) {
@@ -47,12 +47,12 @@ export default new (class CommunityApi {
   public uploadUserPicture(
     login: UserLogin,
     files: FormData,
-    progressCallback: (event: AxiosProgressEvent) => void
+    progressCallback: (event: AxiosProgressEvent) => void,
   ) {
     return Api.postFile<Envelope<User>>(
       `users/${login}/uploads`,
       files,
-      progressCallback
+      progressCallback,
     );
   }
 
