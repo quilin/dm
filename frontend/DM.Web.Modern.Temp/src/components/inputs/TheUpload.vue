@@ -20,18 +20,18 @@ const upload = (event: Event) => {
 };
 </script>
 
-<style scoped lang="stylus">
+<style scoped lang="sass">
 .upload-input
-  position absolute
-  bottom 0
-  top 0
-  left 0
-  right 0
-  width 100%
-  padding 0
-  margin 0
-  opacity 0
-  border none
-  outline none
-  cursor pointer
+  position: absolute
+  bottom: 0
+  top: 0
+  left: 0
+  right: 0
+  width: 100%
+  padding: 0
+  margin: 0
+  opacity: 0
+  border: none
+  outline: none
+  cursor: pointer
 </style>
