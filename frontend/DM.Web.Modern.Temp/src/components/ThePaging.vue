@@ -31,7 +31,7 @@ let localPaging: Paging;
 watch(
   () => props.paging,
   (paging) => (localPaging = Object.assign({}, paging)),
-  { immediate: true }
+  { immediate: true },
 );
 
 const prematureUpdate = (page: number) => (localPaging.current = page);
@@ -47,7 +47,7 @@ const links = computed(() => {
   const lowerBound: number = Math.max(localPaging.current - 3, 1);
   const upperBound: number = Math.min(
     localPaging.current + 3,
-    localPaging.pages
+    localPaging.pages,
   );
   for (let i = lowerBound; i <= upperBound; ++i) {
     let icon: IconType | null;
@@ -81,6 +81,8 @@ const links = computed(() => {
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .paging
   text-align: center
   & a

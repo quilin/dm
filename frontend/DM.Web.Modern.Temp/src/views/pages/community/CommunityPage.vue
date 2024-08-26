@@ -14,7 +14,7 @@ useFetchData(
       param: (p) => p.n,
       callback: (n) => fetchUsers(extractNumberParam(n)),
     },
-  ]
+  ],
 );
 </script>
 

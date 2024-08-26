@@ -36,6 +36,8 @@ const badge = computed(() => {
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Themes"
+
 .user-link
   white-space: nowrap
 

@@ -14,6 +14,8 @@ const value = defineModel();
 </template>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 dl
   margin: $small 0
 

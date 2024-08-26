@@ -38,6 +38,8 @@ const toggle = () => {
 </script>
 
 <style scoped lang="sass">
+@import "src/assets/styles/Variables"
+
 .title
   cursor: pointer
 
