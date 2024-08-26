@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
-import type {
-  LoginCredentials,
-  RegisterCredentials,
-  User,
-} from "@/api/models/community";
+import type { User } from "@/api/models/community";
 import { ColorSchema } from "@/api/models/community";
 import { ref } from "vue";
 import accountApi from "@/api/requests/accountApi";
 import { useUiStore } from "@/stores/ui";
 import type { BadRequestError } from "@/api/models/common";
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+} from "@/api/models/account";
 
 export const useUserStore = defineStore("root", () => {
   const user = ref<User | null>(null);

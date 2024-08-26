@@ -6,8 +6,8 @@ import gamingApi from "@/api/requests/gamingApi";
 export const useGamesStore = defineStore("games", () => {
   const ownGames = ref<Game[] | null>(null);
   async function fetchOwnGames() {
-    const { resources } = await gamingApi.getOwnGames();
-    ownGames.value = resources;
+    const { data } = await gamingApi.getOwnGames();
+    ownGames.value = data!.resources;
   }
 
   return { ownGames, fetchOwnGames };
