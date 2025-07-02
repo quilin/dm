@@ -33,7 +33,7 @@ public class CommentController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Comment not found</response>
-    [HttpGet("{id}", Name = nameof(GetForumComment))]
+    [HttpGet("{id:guid}", Name = nameof(GetForumComment))]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetForumComment(Guid id) => Ok(await commentApiService.Get(id));
@@ -48,7 +48,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPatch("{id}", Name = nameof(PutForumComment))]
+    [HttpPatch("{id:guid}", Name = nameof(PutForumComment))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -66,7 +66,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteForumComment))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteForumComment))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -87,7 +87,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to like the comment</response>
     /// <response code="409">User already liked this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPost("{id}/likes", Name = nameof(PostForumCommentLike))]
+    [HttpPost("{id:guid}/likes", Name = nameof(PostForumCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -109,7 +109,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to remove like from this comment</response>
     /// <response code="409">User has no like for this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("{id}/likes", Name = nameof(DeleteForumCommentLike))]
+    [HttpDelete("{id:guid}/likes", Name = nameof(DeleteForumCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

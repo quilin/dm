@@ -71,7 +71,7 @@ public class GameController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("{id}", Name = nameof(GetGame))]
+    [HttpGet("{id:guid}", Name = nameof(GetGame))]
     [ProducesResponseType(typeof(Envelope<Game>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetGame(Guid id) => Ok(await gameApiService.Get(id));
@@ -82,7 +82,7 @@ public class GameController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("{id}/details", Name = nameof(GetGameDetails))]
+    [HttpGet("{id:guid}/details", Name = nameof(GetGameDetails))]
     [ProducesResponseType(typeof(Envelope<Game>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetGameDetails(Guid id) => Ok(await gameApiService.GetDetails(id));
@@ -119,7 +119,7 @@ public class GameController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to change some properties of this game</response>
     /// <response code="410">Game not found</response>
-    [HttpPatch("{id}/details", Name = nameof(PutGame))]
+    [HttpPatch("{id:guid}/details", Name = nameof(PutGame))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Game>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -136,7 +136,7 @@ public class GameController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to remove the game</response>
     /// <response code="410">Game not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteGame))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteGame))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -154,7 +154,7 @@ public class GameController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("{id}/readers", Name = nameof(GetReaders))]
+    [HttpGet("{id:guid}/readers", Name = nameof(GetReaders))]
     [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetReaders(Guid id) => Ok(await readerApiService.Get(id));
@@ -168,7 +168,7 @@ public class GameController : ControllerBase
     /// <response code="403">User is not authorized to subscribe to this game</response>
     /// <response code="409">User is already subscribed to this game</response>
     /// <response code="410">Game not found</response>
-    [HttpPost("{id}/readers", Name = nameof(PostReader))]
+    [HttpPost("{id:guid}/readers", Name = nameof(PostReader))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -187,7 +187,7 @@ public class GameController : ControllerBase
     /// <response code="403">User is not authorized to unsubscribe from this game</response>
     /// <response code="409">User is not subscribed to this game</response>
     /// <response code="410">Game not found</response>
-    [HttpDelete("{id}/readers", Name = nameof(DeleteReader))]
+    [HttpDelete("{id:guid}/readers", Name = nameof(DeleteReader))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -208,7 +208,7 @@ public class GameController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to read blacklist of this game</response>
     /// <response code="410">Game not found</response>
-    [HttpGet("{id}/blacklist/users", Name = nameof(GetBlacklist))]
+    [HttpGet("{id:guid}/blacklist/users", Name = nameof(GetBlacklist))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(ListEnvelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -227,7 +227,7 @@ public class GameController : ControllerBase
     /// <response code="403">User is not authorized to blacklist users in this game</response>
     /// <response code="409">User is already blacklisted</response>
     /// <response code="410">Game not found</response>
-    [HttpPost("{id}/blacklist/users", Name = nameof(PostBlacklist))]
+    [HttpPost("{id:guid}/blacklist/users", Name = nameof(PostBlacklist))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -251,7 +251,7 @@ public class GameController : ControllerBase
     /// <response code="403">User is not authorized to un-blacklist users in this game</response>
     /// <response code="409">User is not in the blacklist</response>
     /// <response code="410">Game not found</response>
-    [HttpDelete("{id}/blacklist/users/{login}", Name = nameof(DeleteBlacklist))]
+    [HttpDelete("{id:guid}/blacklist/users/{login}", Name = nameof(DeleteBlacklist))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

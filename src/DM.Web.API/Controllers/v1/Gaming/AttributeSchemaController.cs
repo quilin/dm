@@ -57,7 +57,7 @@ public class AttributeSchemaController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Schema not found</response>
-    [HttpGet("{id}", Name = nameof(GetSchema))]
+    [HttpGet("{id:guid}", Name = nameof(GetSchema))]
     [ProducesResponseType(typeof(Envelope<AttributeSchema>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetSchema(Guid id) => Ok(await schemaApiService.Get(id));
@@ -72,7 +72,7 @@ public class AttributeSchemaController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to update this attribute schema</response>
     /// <response code="410">Schema not found</response>
-    [HttpPatch("{id}", Name = nameof(PutSchema))]
+    [HttpPatch("{id:guid}", Name = nameof(PutSchema))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<AttributeSchema>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -90,7 +90,7 @@ public class AttributeSchemaController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to delete this attribute schema</response>
     /// <response code="410">Schema not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteSchema))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteSchema))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

@@ -35,7 +35,7 @@ public class CommentController : ControllerBase
     /// <param name="q"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("{id}/comments", Name = nameof(GetGameComments))]
+    [HttpGet("{id:guid}/comments", Name = nameof(GetGameComments))]
     [ProducesResponseType(typeof(ListEnvelope<Comment>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetGameComments(Guid id, [FromQuery] PagingQuery q) =>
@@ -51,7 +51,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to create a comment in this game</response>
     /// <response code="410">Game not found</response>
-    [HttpPost("{id}/comments", Name = nameof(PostGameComment))]
+    [HttpPost("{id:guid}/comments", Name = nameof(PostGameComment))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Comment>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -72,7 +72,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="401">User is not authorized to read comments in this game</response>
     /// <response code="410">Game not found</response>
-    [HttpDelete("{id}/comments/unread", Name = nameof(ReadGameComments))]
+    [HttpDelete("{id:guid}/comments/unread", Name = nameof(ReadGameComments))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -89,7 +89,7 @@ public class CommentController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Comment not found</response>
-    [HttpGet("comments/{id}", Name = nameof(GetGameComment))]
+    [HttpGet("comments/{id:guid}", Name = nameof(GetGameComment))]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetGameComment(Guid id) => Ok(await commentApiService.Get(id));
@@ -104,7 +104,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPatch("comments/{id}", Name = nameof(PutGameComment))]
+    [HttpPatch("comments/{id:guid}", Name = nameof(PutGameComment))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -122,7 +122,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("comments/{id}", Name = nameof(DeleteGameComment))]
+    [HttpDelete("comments/{id:guid}", Name = nameof(DeleteGameComment))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -143,7 +143,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to like the comment</response>
     /// <response code="409">User already liked this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPost("comments/{id}/likes", Name = nameof(PostGameCommentLike))]
+    [HttpPost("comments/{id:guid}/likes", Name = nameof(PostGameCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -165,7 +165,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to remove like from this comment</response>
     /// <response code="409">User has no like for this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("comments/{id}/likes", Name = nameof(DeleteGameCommentLike))]
+    [HttpDelete("comments/{id:guid}/likes", Name = nameof(DeleteGameCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

@@ -58,7 +58,7 @@ public class PollController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Poll not found</response>
-    [HttpGet("{id}", Name = nameof(GetPoll))]
+    [HttpGet("{id:guid}", Name = nameof(GetPoll))]
     [ProducesResponseType(typeof(Envelope<Poll>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetPoll(Guid id) => Ok(await apiService.Get(id));
@@ -72,7 +72,7 @@ public class PollController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to vote for this poll</response>
     /// <response code="410">Poll not found</response>
-    [HttpPut("{id}", Name = nameof(PutPollVote))]
+    [HttpPut("{id:guid}", Name = nameof(PutPollVote))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Poll>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
