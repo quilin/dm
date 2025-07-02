@@ -30,6 +30,7 @@ ProjectSection(SolutionItems) = preProject
 	.gitignore = .gitignore
 	Directory.Packages.props = Directory.Packages.props
 	test\Directory.Packages.props = test\Directory.Packages.props
+	nuget.config = nuget.config
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{AB8A13B8-6C50-4765-983A-63F1D78A777E}"
