@@ -30,7 +30,7 @@
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.12",
     "@types/qs": "^6.9.7",
-    "@vitejs/plugin-vue": "^4.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/test-utils": "^2.2.6",
@@ -45,8 +45,8 @@
     "sass-loader": "^13.2.0",
     "start-server-and-test": "^2.0.5",
     "typescript": "^5.5.4",
-    "vite": "^4.3.5",
-    "vitest": "^0.25.6",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.4",
     "vue-tsc": "^2.0.29"
   }
 }
