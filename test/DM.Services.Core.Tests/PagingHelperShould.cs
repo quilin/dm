@@ -39,6 +39,6 @@ public class PagingHelperShould : UnitTestBase
     public void GuaranteeCurrentPageIsAtLeastFirst(int entityNumber)
     {
         var actual = PagingResult.Create(100, entityNumber, 10);
-        actual.CurrentPage.Should().BeGreaterOrEqualTo(1);
+        actual.CurrentPage.Should().BeGreaterThanOrEqualTo(1);
     }
 }
