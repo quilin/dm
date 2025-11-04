@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using DM.Services.Common;
 using DM.Services.Community;
 using DM.Services.Core.Configuration;
@@ -41,7 +40,6 @@ internal class Startup(IConfiguration configuration)
 {
     private IHttpContextAccessor httpContextAccessor;
     private IBbParserProvider bbParserProvider;
-    private bool migrateOnStart;
 
     /// <summary>
     /// Configure application services
@@ -49,8 +47,6 @@ internal class Startup(IConfiguration configuration)
     /// <param name="services">Service collection</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        migrateOnStart = configuration.GetValue<bool>("MigrateOnStart");
-
         services
             .AddOptions()
             .Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)).Bind)
@@ -128,12 +124,6 @@ internal class Startup(IConfiguration configuration)
         DmDbContext dbContext,
         ILogger<Startup> logger)
     {
-        if (migrateOnStart)
-        {
-            dbContext.Database.Migrate();
-            Environment.Exit(0);
-        }
-        
         appBuilder
             .UseSwagger(c => c.Configure())
             .UseSwaggerUI(c => c.ConfigureUi())
