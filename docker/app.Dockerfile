@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 ARG PROJECT_NAME
 
@@ -10,7 +10,7 @@ COPY Directory.Build.props ./
 COPY Directory.Packages.props ./
 RUN dotnet publish ${PROJECT_NAME} -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 
 ARG PROJECT_NAME
 

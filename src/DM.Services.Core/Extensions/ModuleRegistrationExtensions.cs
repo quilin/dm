@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Core;
 using AutoMapper;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DM.Services.Core.Extensions;
 
@@ -81,7 +82,8 @@ public static class ModuleRegistrationExtensions
 
         builder
             .Register<IConfigurationProvider>(ctx =>
-                new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>())))
+                new MapperConfiguration(cfg => cfg.AddProfiles(ctx.Resolve<IEnumerable<Profile>>()),
+                    NullLoggerFactory.Instance))
             .SingleInstance();
 
         builder

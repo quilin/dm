@@ -11,6 +11,6 @@ public class SaltFactoryShould
     [Fact]
     public void GenerateSaltOfLimitedLength()
     {
-        saltFactory.Create(20).Length.Should().BeLessOrEqualTo(20);
+        saltFactory.Create(20).Length.Should().BeLessThanOrEqualTo(20);
     }
 }
