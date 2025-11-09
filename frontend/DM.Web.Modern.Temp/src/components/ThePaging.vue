@@ -81,22 +81,23 @@ const links = computed(() => {
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .paging
   text-align: center
   & a
     display: inline-block
-    min-width: $grid-step * 7
-    padding: $minor 0
+    min-width: Variables.$grid-step * 7
+    padding: Variables.$minor 0
     border-bottom: 1px solid
-    +theme(border-bottom-color, $active-text)
+    +Themes.theme(border-bottom-color, Themes.$active-text)
     text-align: center
 
     &.active
-      border-bottom-width: $minor
+      border-bottom-width: Variables.$minor
       padding-bottom: 1px
       font-weight: bold
     &:hover
-      +theme(border-bottom-color, $active-text-hover)
+      +Themes.theme(border-bottom-color, Themes.$active-text-hover)
 </style>

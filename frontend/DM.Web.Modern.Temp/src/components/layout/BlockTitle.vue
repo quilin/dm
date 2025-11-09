@@ -5,11 +5,12 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 h3
-  margin: $grid-step * 5 0 $grid-step
+  margin: Variables.$grid-step * 5 0 Variables.$grid-step
   font-weight: bold
   text-transform: uppercase
-  +theme(color, $highlight-text)
+  +Themes.theme(color, Themes.$highlight-text)
 </style>

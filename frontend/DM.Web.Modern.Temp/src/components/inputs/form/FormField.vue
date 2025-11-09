@@ -21,11 +21,12 @@ defineProps<{
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .form-field__labeled
   display: flex
-  margin: $small 0
+  margin: Variables.$small 0
   align-items: baseline
 
   & input
@@ -33,19 +34,19 @@ defineProps<{
 
   &.error input
     animation-name: shake-error
-    animation-duration: $animation-time
+    animation-duration: Variables.$animation-time
     animation-timing-function: ease-in-out
-    +theme(border-color, $negative-border)
+    +Themes.theme(border-color, Themes.$negative-border)
 
     &:focus
-      +theme(box-shadow, $negative-border, inset 0 0 $minor)
+      +Themes.theme(box-shadow, Themes.$negative-border, inset 0 0 Variables.$minor)
 
   & label
     flex-shrink: 0
     display: inline-block
-    min-width: $grid-step * 30
-    +theme(color, $text)
+    min-width: Variables.$grid-step * 30
+    +Themes.theme(color, Themes.$text)
 
 .form-field-error
-  +theme(color, $negative-text)
+  +Themes.theme(color, Themes.$negative-text)
 </style>

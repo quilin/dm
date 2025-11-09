@@ -33,21 +33,22 @@ defineProps<{
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Layout"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Layout"
 
 .comment
-  margin: $medium 0 $big
+  margin: Variables.$medium 0 Variables.$big
 
 .comment_author
   display: flex
-  margin-bottom: $small
+  margin-bottom: Variables.$small
 
 .comment_author_picture
-  margin-right: $small
-  +square($big)
-  border-radius: $big
+  margin-right: Variables.$small
+  +Layout.square(Variables.$big)
+  border-radius: Variables.$big
   background-size: contain
 
 .comment_text
-  padding-left: $big + $small
+  padding-left: Variables.$big + Variables.$small
 </style>

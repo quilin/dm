@@ -17,11 +17,11 @@ const online = computed(() => dayjs().diff(props.user.online, "m", true) < 5);
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Themes"
 
 .online
-  +theme(color, $positive-text)
+  +Themes.theme(color, Themes.$positive-text)
 
 .offline
-  +theme(color, $secondary-text)
+  +Themes.theme(color, Themes.$secondary-text)
 </style>

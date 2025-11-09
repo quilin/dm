@@ -1,53 +1,54 @@
-@import "Themes"
+@use "Variables"
+@use "Themes"
 
-$input-padding: ($minor + 1px) $small
+$input-padding: (Variables.$minor + 1px) Variables.$small
 
 @mixin input()
   margin: 0
   padding: $input-padding
 
   outline: none
-  border-radius: $border-radius
+  border-radius: Variables.$border-radius
 
   font-family: "PT Sans", sans-serif
-  font-size: $font-size
+  font-size: Variables.$font-size
 
-  +theme(color, $text)
-  +theme(background-color, $input-background)
-  +theme(border, $border, 1px solid)
+  +Themes.theme(color, Themes.$text)
+  +Themes.theme(background-color, Themes.$input-background)
+  +Themes.theme(border, Themes.$border, 1px solid)
 
   &:focus
-    +theme(box-shadow, $border, inset 0 0 $minor)
+    +Themes.theme(box-shadow, Themes.$border, inset 0 0 Variables.$minor)
 
   &:disabled
-    +theme(background-color, $input-background-disabled)
+    +Themes.theme(background-color, Themes.$input-background-disabled)
 
 @mixin button()
   margin: 0
   padding: $input-padding
 
   outline: none
-  border-radius: $border-radius
+  border-radius: Variables.$border-radius
 
   cursor: pointer
   font-family: "PT Sans", sans-serif
-  font-size: $font-size
-  transition: $animation-time
+  font-size: Variables.$font-size
+  transition: Variables.$animation-time
 
-  +theme(color, $button-text)
-  +theme(background-color, $button-background)
-  +theme(border, $button-background, 1px solid)
+  +Themes.theme(color, Themes.$button-text)
+  +Themes.theme(background-color, Themes.$button-background)
+  +Themes.theme(border, Themes.$button-background, 1px solid)
 
   &:hover
-    +theme(color, $button-text-hover)
-    +theme(background-color, $button-background-hover)
-    +theme(border-color, $button-background-hover)
+    +Themes.theme(color, Themes.$button-text-hover)
+    +Themes.theme(background-color, Themes.$button-background-hover)
+    +Themes.theme(border-color, Themes.$button-background-hover)
 
   &[disabled]
     cursor: not-allowed
-    +theme(color, $button-text-disabled)
-    +theme(background-color, $button-background-disabled)
-    +theme(border-color, $button-background-disabled)
+    +Themes.theme(color, Themes.$button-text-disabled)
+    +Themes.theme(background-color, Themes.$button-background-disabled)
+    +Themes.theme(border-color, Themes.$button-background-disabled)
 
 input,
 textarea

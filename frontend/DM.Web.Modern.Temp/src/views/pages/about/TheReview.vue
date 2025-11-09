@@ -57,29 +57,30 @@ async function remove() {
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .review
-  margin: $medium 0
+  margin: Variables.$medium 0
 
 .review-text
   position: relative
 
-  padding: $medium
-  margin-bottom: $small
+  padding: Variables.$medium
+  margin-bottom: Variables.$small
 
-  border-radius: $border-radius
-  +theme(background-color, $panel-background-highlight)
+  border-radius: Variables.$border-radius
+  +Themes.theme(background-color, Themes.$panel-background-highlight)
 
   &:after
     position: absolute
     top: 100%
-    left: $small
+    left: Variables.$small
 
     content: ''
-    border: solid $minor transparent
-    +theme(border-top-color, $panel-background-highlight)
-    +theme(border-left-color, $panel-background-highlight)
+    border: solid Variables.$minor transparent
+    +Themes.theme(border-top-color, Themes.$panel-background-highlight)
+    +Themes.theme(border-left-color, Themes.$panel-background-highlight)
 
 .review-info
   display: flex
@@ -88,5 +89,5 @@ async function remove() {
 .review-controls
   display: flex
   & > *
-    margin-left: $small
+    margin-left: Variables.$small
 </style>

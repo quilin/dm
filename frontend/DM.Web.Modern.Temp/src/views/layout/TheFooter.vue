@@ -13,17 +13,17 @@ const currentYear = ref<number>(new Date().getFullYear());
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Layout"
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Layout"
+@use "@/assets/styles/Themes"
 
 .footer
   display: flex
   justify-content: center
   position: relative
   box-sizing: border-box
-  height: $footer-height
-  margin-top: -$footer-height
-  line-height: $footer-height
+  height: Layout.$footer-height
+  margin-top: -(Layout.$footer-height)
+  line-height: Layout.$footer-height
 
   &:before
     content: ''
@@ -33,7 +33,7 @@ const currentYear = ref<number>(new Date().getFullYear());
     right: 0
     bottom: 0
     background: url('@/assets/images/footer_bg.gif') left top repeat-x
-    +theme(filter, color-pair(none, invert(87%)))
+    +Themes.theme(filter, Themes.color-pair(none, invert(87%)))
 
 .copyright
   align-self: center

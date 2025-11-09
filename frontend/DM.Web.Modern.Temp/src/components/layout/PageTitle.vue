@@ -5,10 +5,11 @@
 <script setup lang="ts"></script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 h2
-  margin: $medium 0 $small
-  font-size: $title-font-size
-  +theme(color, $highlight-text)
+  margin: Variables.$medium 0 Variables.$small
+  font-size: Variables.$title-font-size
+  +Themes.theme(color, Themes.$highlight-text)
 </style>

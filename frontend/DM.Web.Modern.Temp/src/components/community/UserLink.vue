@@ -36,7 +36,8 @@ const badge = computed(() => {
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .user-link
   white-space: nowrap
@@ -44,14 +45,14 @@ const badge = computed(() => {
 .user-logo
   display: inline-block
 
-  width: $medium
-  height: $medium
-  border-radius: $medium
+  width: Variables.$medium
+  height: Variables.$medium
+  border-radius: Variables.$medium
 
   background: url('@/assets/images/userpic.png') 0 0 no-repeat
   vertical-align: text-bottom
   background-size: cover
 
 .user-badge
-  +theme(color, $positive-text)
+  +Themes.theme(color, Themes.$positive-text)
 </style>
