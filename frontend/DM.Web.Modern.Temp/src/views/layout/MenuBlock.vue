@@ -38,14 +38,14 @@ const toggle = () => {
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .title
   cursor: pointer
 
 .list
   overflow: hidden
-  transition: height $animation-time
+  transition: height Variables.$animation-time
 
   &.collapsed
     height: 0

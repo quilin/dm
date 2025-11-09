@@ -7,14 +7,15 @@ defineProps<{ big?: boolean }>();
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Layout"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Layout"
 
 .loader
-  +square($medium)
+  +Layout.square(Variables.$medium)
   background-image: url('@/assets/images/loader.gif')
   background-size: contain
 
 .big-loader
-  +square($big)
-  margin: $big auto
+  +Layout.square(Variables.$big)
+  margin: Variables.$big auto
 </style>

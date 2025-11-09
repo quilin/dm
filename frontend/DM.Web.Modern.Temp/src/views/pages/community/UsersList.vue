@@ -48,6 +48,7 @@ const route = useRoute();
 </template>
 
 <style scoped lang="sass">
+@import "@/assets/styles/Variables"
 @import "@/assets/styles/Grid"
 
 $grid-template: [number] 6% [login] auto [rating] 12% [online] 8% [name] 25% [location] 25%
@@ -59,6 +60,6 @@ $grid-template: [number] 6% [login] auto [rating] 12% [online] 8% [name] 25% [lo
   +grid($grid-template)
 
 .users-list-none
-  margin: $medium 0
+  margin: Variables.$medium 0
   text-align: center
 </style>

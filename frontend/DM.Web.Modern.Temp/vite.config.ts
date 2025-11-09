@@ -13,11 +13,11 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      sass: {
+      scss: {
         additionalData: `
-          @import "@/assets/styles/Variables"
-          @import "@/assets/styles/Layout"
-          @import "@/assets/styles/Themes"
+          @use "@/assets/styles/Variables"
+          @use "@/assets/styles/Layout"
+          @use "@/assets/styles/Themes"
         `,
       },
     },

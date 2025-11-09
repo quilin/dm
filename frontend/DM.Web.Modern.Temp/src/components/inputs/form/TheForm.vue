@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineSlots } from "vue";
 import TheButton from "@/components/inputs/TheButton.vue";
 
 defineProps<{
@@ -29,15 +28,16 @@ const slots = defineSlots();
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .controls
-  margin: $small (-$medium) (-$medium)
-  padding: $medium
-  border-radius: 0 0 $border-radius $border-radius
-  +theme(background-color, $control-background)
+  margin: Variables.$small (-(Variables.$medium)) (-(Variables.$medium))
+  padding: Variables.$medium
+  border-radius: 0 0 Variables.$border-radius Variables.$border-radius
+  +Themes.theme(background-color, Themes.$control-background)
 
 .controls-cancel
   display: inline-block
-  margin-left: $medium
+  margin-left: Variables.$medium
 </style>

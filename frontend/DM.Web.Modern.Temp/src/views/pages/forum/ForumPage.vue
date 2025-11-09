@@ -56,14 +56,14 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .forum-info
-  margin: $medium 0
+  margin: Variables.$medium 0
 
 .forum-info_moderators-title
   display: inline-block
-  margin: 0 $medium 0 0
+  margin: 0 Variables.$medium 0 0
 
 .forum-info_moderators-loader
   display: inline-block

@@ -23,12 +23,13 @@ watch(
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 textarea
   display: block
-  height: $large
+  height: Variables.$large
   width: 100%
-  min-width: $grid-step * 100
+  min-width: Variables.$grid-step * 100
   box-sizing: border-box
 </style>

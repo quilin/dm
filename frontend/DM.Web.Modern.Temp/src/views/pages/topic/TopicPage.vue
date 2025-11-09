@@ -53,7 +53,7 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .topic-header
   display: flex
@@ -61,5 +61,5 @@ useFetchData(
   align-items: baseline
 
 .topic-description
-  margin-bottom: $medium
+  margin-bottom: Variables.$medium
 </style>

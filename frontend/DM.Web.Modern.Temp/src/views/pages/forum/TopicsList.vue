@@ -84,16 +84,18 @@ const { topics } = storeToRefs(useForumStore());
 </template>
 
 <style scoped lang="sass">
-@import "@/assets/styles/Grid"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
+@use "@/assets/styles/Grid"
 $grid-template: [title] 40% [date] 12% [author] 14% [count] auto [lastComment] 26%
 
 .topics-list_header
-  +grid-head($grid-template)
+  +Grid.grid-head($grid-template)
 
 .topics-list_row
-  +grid($grid-template)
+  +Grid.grid($grid-template)
   &:hover
-    +theme(background-color, $panel-background-hover)
+    +Themes.theme(background-color, Themes.$panel-background-hover)
   &.closed
     opacity: 0.7
     &.attached
@@ -109,6 +111,6 @@ $grid-template: [title] 40% [date] 12% [author] 14% [count] auto [lastComment] 2
   font-weight: bold
 
 .topics-list_none
-  margin: $medium 0
+  margin: Variables.$medium 0
   text-align: center
 </style>

@@ -96,33 +96,33 @@ useFetchData(
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .profile_title
   display: inline-block
 .profile_roles
   display: inline-block
-  margin-left: $small
+  margin-left: Variables.$small
 
 .profile_container
   display: flex
 
 .profile_short-info
-  width: $grid-step * 40
+  width: Variables.$grid-step * 40
 
 .profile_short-info_picture
   width: 100%
-  max-height: $grid-step * 200
-  border-radius: $border-radius
+  max-height: Variables.$grid-step * 200
+  border-radius: Variables.$border-radius
 
 .profile_content
-  margin-left: $big
+  margin-left: Variables.$big
 
 nav
-  margin-bottom: $small
+  margin-bottom: Variables.$small
   & a
     display: inline-block
-    margin-right: $medium
+    margin-right: Variables.$medium
 
     text-transform: uppercase
     font-weight: bold

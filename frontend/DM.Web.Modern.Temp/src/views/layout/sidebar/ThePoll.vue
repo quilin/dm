@@ -46,16 +46,16 @@ async function voteForOption(optionId: PollOptionId) {
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .poll
-  margin: $small 0 $big
-  max-width: $grid-step * 61
+  margin: Variables.$small 0 Variables.$big
+  max-width: Variables.$grid-step * 61
   &:last-child
     margin-bottom: 0
 
 .poll-name
-  margin: $small 0
+  margin: Variables.$small 0
 
 .poll-option-vote
   display: block

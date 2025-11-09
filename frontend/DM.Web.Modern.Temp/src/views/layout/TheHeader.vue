@@ -51,65 +51,66 @@ const { user } = storeToRefs(userStore);
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Layout"
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Layout"
+@use "@/assets/styles/Themes"
 
 .header
   display: flex
   box-sizing: border-box
 
-  padding: $small 0
+  padding: Variables.$small 0
   height: 90px /// image size
 
   background-position: left top
   background-repeat: repeat-x
 
 .user-info
-  +menu-container()
+  +Layout.menu-container()
   white-space: nowrap
   cursor: default
 
 .logo
   display: block
-  margin-bottom: $tiny
+  margin-bottom: Variables.$tiny
   height: 26px /// image size
   background: transparent url('@/assets/images/logo.gif') no-repeat
-  +theme(filter, color-pair(none, invert(87%)))
+  +Themes.theme(filter, Themes.color-pair(none, invert(87%)))
 
 .logo-text
-  margin-bottom: $minor
-  +theme(color, $highlight-text)
+  margin-bottom: Variables.$minor
+  +Themes.theme(color, Themes.$highlight-text)
 
 .unread
   font-weight: bold
-  +theme(color, $positive-text)
+  +Themes.theme(color, Themes.$positive-text)
   &:hover
-    +theme(color, $active-text-hover)
+    +Themes.theme(color, Themes.$active-text-hover)
 
 .top-menu
-  padding: $medium + $small 0
-  +content-container()
+  padding: Variables.$medium + Variables.$small 0
+  +Layout.content-container()
 
 .link
-  margin-right: $medium + $small
-  font-size: $text-font-size
+  margin-right: Variables.$medium + Variables.$small
+  font-size: Variables.$text-font-size
   letter-spacing: 1px
-  +theme(color, $secondary-text)
+  +Themes.theme(color, Themes.$secondary-text)
 
   &.router-link-active
     font-weight: bold
   &:hover
-    +theme(color, $text)
+    +Themes.theme(color, Themes.$text)
   &.create
-    padding: $minor + $tiny $small
-    border-radius: $border-radius
-    +theme(background, $panel-background)
-    +theme(border, $panel-background, 1px solid)
+    padding: Variables.$minor + Variables.$tiny Variables.$small
+    border-radius: Variables.$border-radius
+    +Themes.theme(background, Themes.$panel-background)
+    +Themes.theme(border, Themes.$panel-background, 1px solid)
     &.router-link-exact-active
       font-weight: normal
     &:hover
-      +theme(border-color, $border)
+      +Themes.theme(border-color, Themes.$border)
 
 .controls
-  +sidebar-container()
+  +Layout.sidebar-container()
 </style>

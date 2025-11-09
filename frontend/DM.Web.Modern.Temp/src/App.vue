@@ -47,19 +47,20 @@ onMounted(fetchUser);
 </script>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Layout"
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Layout"
+@use "@/assets/styles/Themes"
 
 .main
   height: 100%
   min-height: 100%
   overflow-y: scroll
-  +theme(background-color, $background)
+  +Themes.theme(background-color, Themes.$background)
 
 .content-container
   position: relative
   height: 100%
-  min-width: $min-width
+  min-width: Layout.$min-width
   &:before
     content: ''
     position: absolute
@@ -68,25 +69,25 @@ onMounted(fetchUser);
     top: 0
     bottom: 0
     background: url('@/assets/images/header_bg.gif') left top repeat-x
-    +theme(filter, color-pair(none, invert(87%)))
+    +Themes.theme(filter, Themes.color-pair(none, invert(87%)))
 
 .content-wrapper
   position: relative
   margin: auto
   min-height: 100%
-  min-width: $min-width
-  max-width: $max-width
+  min-width: Layout.$min-width
+  max-width: Layout.$max-width
 
 .content-body
   display: flex
-  padding-bottom: $footer-height + $big
+  padding-bottom: Layout.$footer-height + Variables.$big
 
 .content-menu
-  +menu-container()
+  +Layout.menu-container()
 
 .content
-  +content-container()
+  +Layout.content-container()
 
 .content-sidebar
-  +sidebar-container()
+  +Layout.sidebar-container()
 </style>

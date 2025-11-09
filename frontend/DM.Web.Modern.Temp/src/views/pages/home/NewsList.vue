@@ -34,14 +34,14 @@ onMounted(() => store.fetchNews());
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 .article
-  margin: $medium 0
+  margin: Variables.$medium 0
 
 .article-title
   font-weight: bold
 
 .article-description
-  margin: $small 0
+  margin: Variables.$small 0
 </style>

@@ -1,4 +1,5 @@
-@import "Themes"
+@use "Variables"
+@use "Themes"
 
 @mixin grid($template)
   display: grid
@@ -6,10 +7,10 @@
   justify-items: stretch
   align-items: stretch
   & > *
-    padding: $small $minor
+    padding: Variables.$small Variables.$minor
 
 @mixin grid-head($template)
   +grid($template)
   border-bottom: 1px solid
-  +theme(border-bottom-color, $border)
-  +theme(background-color, $panel-background)
+  +Themes.theme(border-bottom-color, Themes.$border)
+  +Themes.theme(background-color, Themes.$panel-background)

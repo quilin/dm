@@ -13,7 +13,8 @@ import { VueFinalModal } from "vue-final-modal";
 </template>
 
 <style lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Variables"
+@use "@/assets/styles/Themes"
 
 .vfm
   display: flex
@@ -22,10 +23,10 @@ import { VueFinalModal } from "vue-final-modal";
 
 .lightbox
   position: relative
-  padding: $medium
-  width: $grid-step * 100
-  border-radius: $border-radius
-  +theme(background-color, $background)
+  padding: Variables.$medium
+  width: Variables.$grid-step * 100
+  border-radius: Variables.$border-radius
+  +Themes.theme(background-color, Themes.$background)
 
   & h2
     margin-top: 0
@@ -34,14 +35,14 @@ import { VueFinalModal } from "vue-final-modal";
   position: absolute
   top: 0
   right: 0
-  margin: $small
+  margin: Variables.$small
 
-  font-size: $grid-step * 4
+  font-size: Variables.$grid-step * 4
   cursor: pointer
-  +theme(color, $text)
+  +Themes.theme(color, Themes.$text)
 
   &:hover
-    +theme(color, $active-text)
+    +Themes.theme(color, Themes.$active-text)
 
 h2
   margin-top: 0

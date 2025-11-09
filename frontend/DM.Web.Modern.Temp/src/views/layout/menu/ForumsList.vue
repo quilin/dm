@@ -48,9 +48,9 @@ watch(
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Themes"
 
 .selected a
   font-weight: bold
-  +theme(color, $text)
+  +Themes.theme(color, Themes.$text)
 </style>

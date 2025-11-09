@@ -19,8 +19,8 @@ const emit = defineEmits<{
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Variables"
+@use "@/assets/styles/Variables"
 
 p
-  margin: $medium 0
+  margin: Variables.$medium 0
 </style>

@@ -24,14 +24,14 @@ defineProps<{ user: User }>();
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/styles/Themes"
+@use "@/assets/styles/Themes"
 
 .quality
   font-weight: bold
 
 .positive
-  +theme(color, $positive-text)
+  +Themes.theme(color, Themes.$positive-text)
 
 .negative
-  +theme(color, $negative-text)
+  +Themes.theme(color, Themes.$negative-text)
 </style>
