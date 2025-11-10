@@ -1,5 +1,5 @@
 <template>
-  <div class="secondary-text"><slot /></div>
+  <span class="secondary-text"><slot /></span>
 </template>
 
 <style scoped lang="sass">

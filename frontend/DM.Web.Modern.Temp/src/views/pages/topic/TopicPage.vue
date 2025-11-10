@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import { extractNumberParam } from "@/router";
 import { storeToRefs } from "pinia";
-import TheComment from "@/components/comments/TheComment.vue";
 import type { TopicId } from "@/api/models/forum";
 import { useFetchData } from "@/composables/useFetchData";
 
@@ -18,19 +17,16 @@ async function fetchData() {
   await fetchComments(extractNumberParam(route.params.n));
 }
 
-useFetchData(
-  () => fetchData(),
-  [
-    {
-      param: (p) => p.id,
-      callback: () => fetchData(),
-    },
-    {
-      param: (p) => p.n,
-      callback: (n) => fetchComments(extractNumberParam(n)),
-    },
-  ],
-);
+useFetchData(fetchData, [
+  {
+    param: (p) => p.id,
+    callback: fetchData,
+  },
+  {
+    param: (p) => p.n,
+    callback: (n) => fetchComments(extractNumberParam(n)),
+  },
+]);
 </script>
 
 <template>
@@ -42,11 +38,7 @@ useFetchData(
         Назад на форум "{{ topic.forum.id }}"
       </router-link>
     </div>
-    <the-comment
-      :author="topic.author!"
-      :created="topic.created!"
-      :comment="topic.description!"
-    />
+    <div v-if="topic.description" v-html="topic.description" />
   </template>
   <the-loader v-else :big="true" />
   <router-view />

@@ -75,7 +75,6 @@ export const useForumStore = defineStore("fora", () => {
     comments.value = null;
     if (!selectedTopic.value) return;
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     const { data } = await forumApi.getComments(selectedTopic.value.id!, {
       number,
     } as PagingQuery);
