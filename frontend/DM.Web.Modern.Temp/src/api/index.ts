@@ -19,7 +19,7 @@ const defaultHeaders: { [key: string]: string } = {
   [renderKey]: "html",
 };
 
-const apiHost = "http://localhost:5051"; // Config
+const apiHost = "http://localhost:5000"; // Config
 
 const configuration: AxiosRequestConfig = {
   baseURL: `${apiHost}/v1`,
