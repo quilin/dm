@@ -26,7 +26,7 @@ const { comment } = defineProps<{ comment: Comment }>();
       </router-link>
       <div class="content">
         <div class="meta">
-          <user-link :user="comment.author" picture-size="none" />,
+          <user-link :user="comment.author" hide-picture />,
           <secondary-text>
             <human-timespan :date="comment.created" />
             <template v-if="comment.updated">

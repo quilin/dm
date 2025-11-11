@@ -5,9 +5,10 @@
       class="user-link"
     >
       <span
-        v-if="pictureSize !== 'none'"
+        v-if="!hidePicture"
         :style="{
-          backgroundImage: pictureUrl ? `url(${pictureUrl})` : undefined,
+          backgroundImage:
+            user.smallPictureUrl && `url(${user.smallPictureUrl})`,
         }"
         class="user-logo"
       />
@@ -26,26 +27,15 @@ import type { User } from "@/api/models/community";
 import { computed } from "vue";
 import { userIsAdmin, userIsAuthority } from "@/api/models/community/helpers";
 
-const { user, pictureSize = "small" } = defineProps<{
+const { user, hidePicture } = defineProps<{
   user: User;
-  pictureSize?: "none" | "small" | "medium";
+  hidePicture?: boolean;
 }>();
 
 const badge = computed(() => {
   if (userIsAdmin(user)) return "A";
   if (userIsAuthority(user)) return "M";
   return null;
-});
-
-const pictureUrl = computed(() => {
-  switch (pictureSize) {
-    case "small":
-      return user.smallPictureUrl;
-    case "medium":
-      return user.mediumPictureUrl;
-    default:
-      return null;
-  }
 });
 </script>
 

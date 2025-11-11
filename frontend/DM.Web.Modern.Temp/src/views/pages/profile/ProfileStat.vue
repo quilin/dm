@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineModel } from "vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 defineProps<{ title: string; empty: string }>();
