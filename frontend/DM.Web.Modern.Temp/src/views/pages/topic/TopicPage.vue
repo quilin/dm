@@ -6,6 +6,7 @@ import { extractNumberParam } from "@/router";
 import { storeToRefs } from "pinia";
 import type { TopicId } from "@/api/models/forum";
 import { useFetchData } from "@/composables/useFetchData";
+import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 
 const route = useRoute();
 const forumStore = useForumStore();
@@ -38,7 +39,15 @@ useFetchData(fetchData, [
         Назад на форум "{{ topic.forum.id }}"
       </router-link>
     </div>
-    <div v-if="topic.description" v-html="topic.description" />
+    <div
+      v-if="topic.description"
+      class="topic-description"
+      v-html="topic.description"
+    />
+    <user-link :user="topic.author" />,
+    <secondary-text>
+      <human-timespan date="topic.created" />
+    </secondary-text>
   </template>
   <the-loader v-else :big="true" />
   <router-view />
@@ -53,5 +62,5 @@ useFetchData(fetchData, [
   align-items: baseline
 
 .topic-description
-  margin-bottom: Variables.$medium
+  margin-bottom: Variables.$minor
 </style>
