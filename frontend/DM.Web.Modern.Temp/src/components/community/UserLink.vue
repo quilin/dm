@@ -1,23 +1,23 @@
 <template>
-  <span :title="props.user.status">
+  <span :title="user.status">
     <router-link
-      :to="{ name: 'profile', params: { login: props.user.login } }"
+      :to="{ name: 'profile', params: { login: user.login } }"
       class="user-link"
     >
       <span
-        v-if="props.pictureSize !== 'none'"
+        v-if="pictureSize !== 'none'"
         :style="{
           backgroundImage: pictureUrl ? `url(${pictureUrl})` : undefined,
         }"
         class="user-logo"
       />
-      {{ props.user.login }}
+      {{ user.login }}
     </router-link>
 
     <span v-if="badge" class="user-badge-container">
       [<span class="user-badge">{{ badge }}</span
-      >]
-    </span>
+      >]</span
+    >
   </span>
 </template>
 
@@ -26,21 +26,23 @@ import type { User } from "@/api/models/community";
 import { computed } from "vue";
 import { userIsAdmin, userIsAuthority } from "@/api/models/community/helpers";
 
-const props = defineProps<{
+const { user, pictureSize = "small" } = defineProps<{
   user: User;
   pictureSize?: "none" | "small" | "medium";
 }>();
+
 const badge = computed(() => {
-  if (userIsAdmin(props.user)) return "A";
-  if (userIsAuthority(props.user)) return "M";
+  if (userIsAdmin(user)) return "A";
+  if (userIsAuthority(user)) return "M";
   return null;
 });
+
 const pictureUrl = computed(() => {
-  switch (props.pictureSize) {
+  switch (pictureSize) {
     case "small":
-      return props.user.smallPictureUrl;
+      return user.smallPictureUrl;
     case "medium":
-      return props.user.mediumPictureUrl;
+      return user.mediumPictureUrl;
     default:
       return null;
   }
