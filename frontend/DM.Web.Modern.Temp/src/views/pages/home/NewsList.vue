@@ -4,6 +4,7 @@ import { useForumStore } from "@/stores";
 import { onMounted } from "vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import { storeToRefs } from "pinia";
+import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 
 const store = useForumStore();
 const { news } = storeToRefs(store);
@@ -25,10 +26,28 @@ onMounted(() => store.fetchNews());
     </router-link>
     <div class="article-description" v-html="article.description"></div>
     <div>
-      <user-link :user="article.author!" />
-      <human-timespan :date="article.created!" />&nbsp;<the-icon
-        :font="IconType.CommentsNoUnread"
-      />
+      <user-link :user="article.author!" />,
+      <secondary-text>
+        <human-timespan :date="article.created" /> </secondary-text
+      >&nbsp;<router-link
+        :to="{
+          name: 'topic',
+          params: {
+            id: article.id,
+            n: article.commentsCount - article.unreadCommentsCount + 1,
+          },
+        }"
+      >
+        <the-icon
+          :font="
+            article.unreadCommentsCount > 0
+              ? IconType.CommentsUnread
+              : IconType.CommentsNoUnread
+          "
+        />&nbsp;<template v-if="article.unreadCommentsCount">{{
+          article.unreadCommentsCount
+        }}</template>
+      </router-link>
     </div>
   </div>
 </template>
