@@ -40,6 +40,21 @@ const router = createRouter({
       },
     },
     {
+      path: "/polls",
+      components: {
+        menu: GeneralMenu,
+        sidebar: GeneralSidebar,
+        page: () => import("@/views/pages/polls/PollsPage.vue"),
+      },
+      children: [
+        {
+          name: "polls",
+          path: ":n?",
+          component: () => import("@/views/pages/polls/PollsList.vue"),
+        },
+      ],
+    },
+    {
       name: "chat",
       path: "/chat",
       component: () => import("@/components/TheLoader.vue"),

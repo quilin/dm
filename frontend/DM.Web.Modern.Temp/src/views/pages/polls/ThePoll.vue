@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Poll, PollOptionId } from "@/api/models/community";
 import ProgressBar from "@/components/ProgressBar.vue";
-import { IconType } from "@/components/icons/iconType";
 import { computed } from "vue";
 import dayjs from "dayjs";
 import { storeToRefs } from "pinia";
@@ -25,8 +24,8 @@ async function voteForOption(optionId: PollOptionId) {
 <template>
   <div class="poll">
     <div class="poll-title">
-      {{ poll.title }}
-      <secondary-text v-if="closed">Голосование окончено</secondary-text>
+      {{ poll.title }}<br/>
+      <secondary-text v-if="!closed">Голосование окончено</secondary-text>
     </div>
     <progress-bar
       v-for="option in poll.options"
@@ -34,8 +33,10 @@ async function voteForOption(optionId: PollOptionId) {
       :current="option.votesCount"
       :goal="totalVotes || 1"
     >
-      <the-icon :font="IconType.Tick" />
-      {{ option.text }}&nbsp;&ndash;&nbsp;{{ option.votesCount }}
+      <div class="poll-option">
+        <span>{{ option.text }}</span>
+        <span>{{ option.votesCount }}</span>
+      </div>
       <a
         v-if="!closed && user && !voted"
         @click="voteForOption(option.id)"
@@ -49,13 +50,17 @@ async function voteForOption(optionId: PollOptionId) {
 @use "@/assets/styles/Variables"
 
 .poll
-  margin: Variables.$small 0 Variables.$big
+  margin: Variables.$small 0
   max-width: Variables.$grid-step * 61
   &:last-child
     margin-bottom: 0
 
 .poll-name
   margin: Variables.$small 0
+
+.poll-option
+  display: flex
+  justify-content: space-between
 
 .poll-option-vote
   display: block
