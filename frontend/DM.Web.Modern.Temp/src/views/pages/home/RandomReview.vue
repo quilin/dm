@@ -7,20 +7,13 @@
 <script setup lang="ts">
 import TheReview from "@/views/pages/about/TheReview.vue";
 import { ref, onMounted } from "vue";
-import communityApi from "@/api/requests/communityApi";
+import type { Review } from "@/api/models/community";
+import { useReviewStore } from "@/stores";
 
-const review = ref();
+const { getRandomReview } = useReviewStore();
+const review = ref<Review | null>(null);
 onMounted(async () => {
-  const { data } = await communityApi.getReviews({ size: 0 }, true);
-  const { paging } = data!;
-
-  const randomNumber = Math.floor(Math.random() * paging!.total);
-  const { data: reviews } = await communityApi.getReviews(
-    { size: 1, skip: randomNumber },
-    true,
-  );
-  const { resources } = reviews!;
-  review.value = resources[0];
+  review.value = await getRandomReview();
 });
 </script>
 

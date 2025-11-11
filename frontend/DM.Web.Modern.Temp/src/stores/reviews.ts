@@ -24,10 +24,24 @@ export const useReviewStore = defineStore("reviews", () => {
     await communityApi.removeReview(id);
   }
 
+  async function getRandomReview() {
+    const { data } = await communityApi.getReviews({ size: 0 }, true);
+    const { paging } = data!;
+
+    const randomNumber = Math.floor(Math.random() * paging!.total);
+    const { data: reviews } = await communityApi.getReviews(
+      { size: 1, skip: randomNumber },
+      true,
+    );
+    const { resources } = reviews!;
+    return resources[0];
+  }
+
   return {
     reviews,
     fetchReviews,
     approveReview,
     removeReview,
+    getRandomReview,
   };
 });
