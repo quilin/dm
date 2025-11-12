@@ -1,25 +1,13 @@
 <template>
   <div>
     <div class="controls">TODO: элементы управления</div>
-    <textarea v-model="value" :disabled="props.disabled" />
+    <textarea v-model="model" :disabled="props.disabled" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-
-const props = defineProps<{ modelValue: string; disabled: boolean }>();
-const emit = defineEmits(["update:modelValue"]);
-
-const value = ref<string>(props.modelValue);
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    value.value = newValue;
-    emit("update:modelValue", newValue);
-  },
-  { immediate: true },
-);
+const model = defineModel<string>();
+const props = defineProps<{ disabled?: boolean }>();
 </script>
 
 <style scoped lang="sass">

@@ -2,9 +2,14 @@
 import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import { storeToRefs } from "pinia";
-import { extractNumberParam } from "@/router";
+import router, { extractNumberParam } from "@/router";
 import type { ForumId } from "@/api/models/forum";
 import { useFetchData } from "@/composables/useFetchData";
+import TheButton from "@/components/inputs/TheButton.vue";
+import TheIcon from "@/components/icons/TheIcon.vue";
+import { IconType } from "@/components/icons/iconType";
+import { useModal } from "vue-final-modal";
+import CreateTopic from "@/views/pages/forum/CreateTopic.vue";
 
 const route = useRoute();
 const forumStore = useForumStore();
@@ -30,10 +35,21 @@ useFetchData(
     },
     {
       param: (p) => p.n,
-      callback: (n) => fetchTopics(extractNumberParam(n)),
+      callback: () => fetchTopics(extractNumberParam(route.params.n)),
     },
   ],
 );
+
+const { open: openCreateTopic, close: closeCreateTopic } = useModal({
+  component: CreateTopic,
+  attrs: {
+    onCancelled: () => closeCreateTopic(),
+    onCreated: (topic) => {
+      closeCreateTopic();
+      router.push({ name: "topic", params: { id: topic.id } });
+    },
+  },
+});
 </script>
 
 <template>
@@ -50,6 +66,9 @@ useFetchData(
         :user="user"
       />
     </div>
+    <the-button @click="openCreateTopic"
+      ><the-icon :font="IconType.Add" /> Новая тема</the-button
+    >
   </div>
 
   <router-view />
@@ -59,6 +78,9 @@ useFetchData(
 @use "@/assets/styles/Variables"
 
 .forum-info
+  display: flex
+  justify-content: space-between
+  align-items: baseline
   margin: Variables.$medium 0
 
 .forum-info_moderators-title

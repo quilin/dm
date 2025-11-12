@@ -24,8 +24,8 @@ async function voteForOption(optionId: PollOptionId) {
 <template>
   <div class="poll">
     <div class="poll-title">
-      {{ poll.title }}<br/>
-      <secondary-text v-if="!closed">Голосование окончено</secondary-text>
+      {{ poll.title }}<br />
+      <secondary-text v-if="closed">Голосование окончено</secondary-text>
     </div>
     <progress-bar
       v-for="option in poll.options"

@@ -29,5 +29,6 @@ const { comments } = storeToRefs(useForumStore());
 
 <style scoped lang="sass">
 .comments-none
+  display: block
   text-align: center
 </style>
