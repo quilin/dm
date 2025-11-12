@@ -86,6 +86,8 @@ const links = computed(() => {
 
 .paging
   text-align: center
+  margin-bottom: Variables.$small
+
   & a
     display: inline-block
     min-width: Variables.$grid-step * 7

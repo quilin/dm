@@ -10,6 +10,10 @@ defineProps<{ loading?: boolean; disabled?: boolean }>();
 
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"
+@use "@/assets/styles/Inputs"
+
+button
+  +Inputs.button()
 
 button.loading
   background-position: center center

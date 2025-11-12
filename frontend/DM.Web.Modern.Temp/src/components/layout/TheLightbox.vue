@@ -7,9 +7,8 @@ import { VueFinalModal } from "vue-final-modal";
     content-class="lightbox"
     overlay-transition="vfm-fade"
     content-transition="vfm-fade"
-  >
-    <slot />
-  </vue-final-modal>
+    ><slot
+  /></vue-final-modal>
 </template>
 
 <style lang="sass">

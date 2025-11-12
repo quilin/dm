@@ -32,10 +32,14 @@ export default new (class ForumApi {
   }
 
   public getTopics(id: ForumId, q: PagingQuery, attached: boolean) {
-    return Api.get<ListEnvelope<Topic>>(`fora/${id}/topics`, {
-      ...q,
-      attached,
-    });
+    return Api.get<ListEnvelope<Topic>>(
+      `fora/${id}/topics`,
+      {
+        ...q,
+        attached,
+      },
+      BbRenderMode.Text,
+    );
   }
 
   public createTopic(id: ForumId, topic: Post<Topic>) {

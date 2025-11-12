@@ -10,6 +10,7 @@ import type {
 import type { User } from "@/api/models/community";
 import type { ListEnvelope, PagingQuery } from "@/api/models/common";
 import forumApi from "@/api/requests/forumApi";
+import type { Post } from "@/api/models";
 
 export const useForumStore = defineStore("fora", () => {
   const fora = ref<Forum[] | null>(null);
@@ -59,6 +60,11 @@ export const useForumStore = defineStore("fora", () => {
     topics.value = fetchedTopics.data!;
   }
 
+  async function createTopic(topic: Post<Topic>) {
+    const { data } = await forumApi.createTopic(selectedForum.value!.id, topic);
+    return data!.resource;
+  }
+
   const selectedTopic = ref<Topic | null>(null);
   async function trySelectTopic(id: TopicId) {
     if (selectedTopic.value?.id !== id) selectedTopic.value = null;
@@ -91,6 +97,7 @@ export const useForumStore = defineStore("fora", () => {
     attachedTopics,
     topics,
     fetchTopics,
+    createTopic,
     news,
     fetchNews,
     trySelectTopic,

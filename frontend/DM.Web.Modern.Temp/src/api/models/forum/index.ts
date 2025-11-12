@@ -24,7 +24,7 @@ export type Topic = {
   lastComment: Served<LastComment | null>;
   commentsCount: Served<number>;
   unreadCommentsCount: Served<number>;
-  forum: Forum;
+  forum: Served<Forum>;
   likes: Served<User[]>;
 };
 

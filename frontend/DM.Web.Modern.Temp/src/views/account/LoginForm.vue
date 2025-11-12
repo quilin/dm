@@ -54,13 +54,7 @@ const submit = handleSubmit(async (values, { setErrors }) => {
   <the-lightbox :with-form="true">
     <lightbox-title>Вход</lightbox-title>
 
-    <the-form
-      @submit="submit"
-      :valid="meta.valid"
-      :loading="loading"
-      action="Войти"
-      cancel="Отмена"
-    >
+    <the-form @submit="submit" :valid="meta.valid" :loading="loading">
       <form-field label="Логин" name="login" :errors="errorBag['login']">
         <input v-bind="login" id="login" />
       </form-field>

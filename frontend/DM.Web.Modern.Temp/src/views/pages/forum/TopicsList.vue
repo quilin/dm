@@ -50,14 +50,17 @@ const { topics } = storeToRefs(useForumStore());
         name: 'topic',
         params: {
           id: topic.id,
-          n: topic.commentsCount - topic.unreadCommentsCount,
+          n: topic.commentsCount - topic.unreadCommentsCount + 1,
         },
       }"
       class="topics-list_row-title"
     >
       <the-icon v-if="topic.attached" :font="IconType.Attached" />
       <the-icon v-if="topic.closed" :font="IconType.Closed" />
-      {{ topic.title }}
+      {{ topic.title }}<br />
+      <secondary-text v-if="topic.description"
+        ><span v-html="topic.description"
+      /></secondary-text>
     </router-link>
     <div><human-date :date="topic.created!" format="DD.MM.YYYY" /></div>
     <div><user-link :user="topic.author!" /></div>
