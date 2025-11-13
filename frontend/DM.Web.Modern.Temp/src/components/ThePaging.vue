@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import type { Paging } from "@/api/models/common";
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { IconType } from "@/components/icons/iconType";
 
 interface PageLink {
@@ -27,27 +27,32 @@ interface PageLink {
 
 const props = defineProps<{ paging: Paging; to: any }>();
 
-let localPaging: Paging;
+const localPaging = ref<Paging | null>(null);
 watch(
   () => props.paging,
-  (paging) => (localPaging = Object.assign({}, paging)),
+  (paging) => {
+    if (paging) localPaging.value = Object.assign({}, paging);
+  },
   { immediate: true },
 );
 
-const prematureUpdate = (page: number) => (localPaging.current = page);
+const prematureUpdate = (page: number) => (localPaging.value!.current = page);
 
-const hasPages = computed(() => localPaging.pages > 1);
+const hasPages = computed(
+  () => localPaging.value && localPaging.value.pages > 1,
+);
 
 const links = computed(() => {
   if (!hasPages.value) {
     return [];
   }
 
+  const { current, pages, size } = localPaging.value!;
   const result: PageLink[] = [];
-  const lowerBound: number = Math.max(localPaging.current - 3, 1);
+  const lowerBound: number = Math.max(current - 3, 1);
   const upperBound: number = Math.min(
-    localPaging.current + 3,
-    localPaging.pages,
+    localPaging.value!.current + 3,
+    localPaging.value!.pages,
   );
   for (let i = lowerBound; i <= upperBound; ++i) {
     let icon: IconType | null;
@@ -55,17 +60,17 @@ const links = computed(() => {
     if (i === lowerBound && lowerBound > 1) {
       icon = IconType.Backward;
       entityNumber = 1;
-    } else if (i === upperBound && upperBound < localPaging.pages) {
+    } else if (i === upperBound && upperBound < pages) {
       icon = IconType.Forward;
-      entityNumber = (localPaging.pages - 1) * localPaging.size + 1;
+      entityNumber = (pages - 1) * size + 1;
     } else {
       icon = null;
-      entityNumber = (i - 1) * localPaging.size + 1;
+      entityNumber = (i - 1) * size + 1;
     }
 
     result.push({
       n: i,
-      isActive: i === localPaging.current,
+      isActive: i === current,
       icon,
       to: {
         name: props.to.name,
