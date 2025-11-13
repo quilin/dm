@@ -10,6 +10,7 @@ import TheButton from "@/components/inputs/TheButton.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
+  (e: "cancel"): void;
 }>();
 
 const { defineInputBinds, handleSubmit, meta, errorBag } =
@@ -72,6 +73,7 @@ const submit = handleSubmit(async (values, { setErrors }) => {
         <the-button type="submit" @click="submit" :loading="loading"
           >Войти</the-button
         >
+        <a @click="$emit('cancel')">Отмена</a>
       </template>
     </the-form>
   </the-lightbox>

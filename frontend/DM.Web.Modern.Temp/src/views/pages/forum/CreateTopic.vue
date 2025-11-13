@@ -39,7 +39,7 @@ const tryCreateTopic = async () => {
       <input v-model="topic.title" type="text" />
       <text-area v-model="topic.description" />
       <template #controls>
-        <the-button :loading="loading" type="submit">Создать тему</the-button>
+        <the-button :loading="loading" type="submit">Создать</the-button>
         <a @click="$emit('cancelled')">Отмена</a>
       </template>
     </the-form>
