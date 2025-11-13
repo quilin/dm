@@ -35,19 +35,16 @@ async function fetchData() {
   ]);
 }
 
-useFetchData(
-  () => fetchData(),
-  [
-    {
-      param: (p) => p.id,
-      callback: () => fetchData(),
-    },
-    {
-      param: (p) => p.n,
-      callback: () => fetchTopics(extractNumberParam(route.params.n)),
-    },
-  ],
-);
+useFetchData(fetchData, [
+  {
+    param: (p) => p.id,
+    callback: fetchData,
+  },
+  {
+    param: (p) => p.n,
+    callback: () => fetchTopics(extractNumberParam(route.params.n)),
+  },
+]);
 
 const { open: openCreateTopic, close: closeCreateTopic } = useModal({
   component: CreateTopic,
