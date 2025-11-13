@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { useForumStore } from "@/stores";
+import { useForumStore, useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import router, { extractNumberParam } from "@/router";
 import type { ForumId } from "@/api/models/forum";
@@ -10,11 +10,20 @@ import TheIcon from "@/components/icons/TheIcon.vue";
 import { IconType } from "@/components/icons/iconType";
 import { useModal } from "vue-final-modal";
 import CreateTopic from "@/views/pages/forum/CreateTopic.vue";
+import { computed } from "vue";
+import { userIsHighAuthority } from "@/api/models/community/helpers";
 
 const route = useRoute();
+const { user } = storeToRefs(useUserStore());
 const forumStore = useForumStore();
-const { moderators } = storeToRefs(forumStore);
+const { moderators, selectedForum } = storeToRefs(forumStore);
 const { trySelectForum, fetchModerators, fetchTopics } = forumStore;
+
+const canCreateTopic = computed(() => {
+  if (!user.value) return false;
+  if (userIsHighAuthority(user.value)) return true;
+  return selectedForum.value!.id !== "Новости проекта";
+});
 
 async function fetchData() {
   const forumId = route.params.id as ForumId;
@@ -66,7 +75,7 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
         :user="user"
       />
     </div>
-    <the-button @click="openCreateTopic"
+    <the-button v-if="canCreateTopic" @click="openCreateTopic"
       ><the-icon :font="IconType.Add" /> Новая тема</the-button
     >
   </div>
