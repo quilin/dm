@@ -15,7 +15,7 @@ export function useFetchData(
   const route = useRoute();
   watch(
     strategies.map((s) => () => s.param(route.params)),
-    (oldParams, newParams) => {
+    (newParams, oldParams) => {
       for (let i = 0; i < oldParams.length; i++) {
         if (oldParams[i] !== newParams[i]) {
           strategies[i].callback(newParams[i]);
