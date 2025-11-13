@@ -42,7 +42,7 @@ useFetchData(fetchData, [
   },
   {
     param: (p) => p.n,
-    callback: () => fetchTopics(extractNumberParam(route.params.n)),
+    callback: (n) => fetchTopics(extractNumberParam(n)),
   },
 ]);
 
