@@ -6,6 +6,7 @@ import { ref } from "vue";
 import type { LoginCredentials } from "@/api/models/account";
 import { ValidationErrorCode } from "@/api/models/common";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
+import TheButton from "@/components/inputs/TheButton.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
@@ -67,6 +68,11 @@ const submit = handleSubmit(async (values, { setErrors }) => {
           Запомнить меня
         </label>
       </form-field>
+      <template #controls>
+        <the-button type="submit" @click="submit" :loading="loading"
+          >Войти</the-button
+        >
+      </template>
     </the-form>
   </the-lightbox>
 </template>
