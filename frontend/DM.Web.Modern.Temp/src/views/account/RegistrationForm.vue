@@ -6,9 +6,11 @@ import type { RegisterCredentials } from "@/api/models/account";
 import { ValidationErrorCode } from "@/api/models/common";
 import { useUserStore } from "@/stores";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
+import TheButton from "@/components/inputs/TheButton.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
+  (e: "cancelled"): void;
 }>();
 
 const { handleSubmit, defineInputBinds, meta, errorBag } =
@@ -69,6 +71,11 @@ const submit = handleSubmit(async (values, { setErrors }) => {
       <form-field label="Пароль" name="password" :errors="errorBag['password']">
         <input v-bind="password" type="password" id="password" />
       </form-field>
+
+      <template #controls>
+        <the-button type="submit">Зарегистрироваться</the-button>
+        <a @click="$emit('cancelled')">Отмена</a>
+      </template>
     </the-form>
   </the-lightbox>
 </template>
