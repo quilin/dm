@@ -1,6 +1,5 @@
 <template>
   <div :class="['form-field', label ? 'form-field__labeled' : null]">
-    <label :for="name" v-if="label">{{ label }}</label>
     <div>
       <slot />
       <template v-if="errors">

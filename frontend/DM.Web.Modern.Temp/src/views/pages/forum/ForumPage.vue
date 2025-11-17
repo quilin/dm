@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 import router, { extractNumberParam } from "@/router";
 import type { ForumId } from "@/api/models/forum";
 import { useFetchData } from "@/composables/useFetchData";
-import TheButton from "@/components/inputs/TheButton.vue";
+import SimpleButton from "@/components/inputs/SimpleButton.vue";
 import TheIcon from "@/components/icons/TheIcon.vue";
 import { IconType } from "@/components/icons/iconType";
 import { useModal } from "vue-final-modal";
@@ -72,8 +72,8 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
         :user="user"
       />
     </div>
-    <the-button v-if="canCreateTopic" @click="openCreateTopic"
-      ><the-icon :font="IconType.Add" /> Новая тема</the-button
+    <simple-button v-if="canCreateTopic" @click="openCreateTopic"
+      ><the-icon :font="IconType.Add" /> Новая тема</simple-button
     >
   </div>
 
