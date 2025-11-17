@@ -116,7 +116,11 @@ useFetchData(
   border-radius: Variables.$border-radius
 
 .profile_content
+  flex-grow: 1
   margin-left: Variables.$big
+
+  & .controls
+    background: transparent
 
 nav
   margin-bottom: Variables.$small

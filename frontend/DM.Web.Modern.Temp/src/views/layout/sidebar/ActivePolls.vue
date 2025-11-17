@@ -21,10 +21,12 @@ onMounted(() => store.fetchActivePolls());
       >Нет активных опросов</secondary-text
     >
     <the-poll v-else v-for="poll in activePolls" :key="poll.id" :poll="poll" />
-    <router-link class="forward" :to="{ name: 'polls' }">
-      К старым опросам
-      <the-icon :font="IconType.Forward" />
-    </router-link>
+    <div>
+      <router-link class="forward" :to="{ name: 'polls' }">
+        К старым опросам
+        <the-icon :font="IconType.Forward" />
+      </router-link>
+    </div>
   </menu-block>
 </template>
 
