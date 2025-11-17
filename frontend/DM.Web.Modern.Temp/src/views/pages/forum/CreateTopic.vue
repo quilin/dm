@@ -9,13 +9,14 @@ import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
 import { useForumStore } from "@/stores";
 
-const { createTopic } = useForumStore();
+const { createTopic, selectedForum } = useForumStore();
 
 const topic = reactive<Post<Topic>>({
   title: "",
   description: "",
   attached: false,
   closed: false,
+  forum: selectedForum!,
 });
 
 const emit = defineEmits<{
@@ -26,6 +27,7 @@ const emit = defineEmits<{
 const loading = ref(false);
 const tryCreateTopic = async () => {
   loading.value = true;
+  alert(selectedForum?.id);
   const createdTopic = await createTopic(topic);
   loading.value = false;
   emit("created", createdTopic);
