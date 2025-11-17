@@ -25,11 +25,12 @@ import HumanDate from "@/components/dates/HumanDate.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import TheIcon from "@/components/icons/TheIcon.vue";
 import TheLightbox from "@/components/layout/TheLightbox.vue";
-import TheButton from "@/components/inputs/TheButton.vue";
+import SimpleButton from "@/components/inputs/SimpleButton.vue";
 import TheForm from "@/components/inputs/form/TheForm.vue";
 import FormField from "@/components/inputs/form/FormField.vue";
 import { createI18n } from "vue-i18n";
 import UserLink from "@/components/community/UserLink.vue";
+import InputText from "@/components/inputs/InputText.vue";
 
 dayjs.extend(relativeTime).locale("ru");
 
@@ -46,10 +47,13 @@ application
   .component("TheIcon", TheIcon)
   .component("PageTitle", PageTitle)
   .component("BlockTitle", BlockTitle)
-  .component("SecondaryText", SecondaryText)
+  .component("SecondaryText", SecondaryText);
+
+application
   .component("TheForm", TheForm)
   .component("FormField", FormField)
-  .component("TheButton", TheButton)
+  .component("SimpleButton", SimpleButton)
+  .component("InputText", InputText)
   .component("TheLightbox", TheLightbox)
   .component("HumanDate", HumanDate)
   .component("HumanTimespan", HumanTimespan)
@@ -58,7 +62,9 @@ application
 application
   .use(createPinia())
   .use(router)
-  .use(PrimeVue)
+  .use(PrimeVue, {
+    unstyled: true,
+  })
   .use(createVfm())
   .use(i18n)
   .mount("#application");
