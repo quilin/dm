@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ru";
+import PrimeVue from "primevue/config";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
@@ -57,6 +58,7 @@ application
 application
   .use(createPinia())
   .use(router)
+  .use(PrimeVue)
   .use(createVfm())
   .use(i18n)
   .mount("#application");
