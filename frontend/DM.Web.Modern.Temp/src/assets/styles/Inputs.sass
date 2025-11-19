@@ -34,18 +34,16 @@ $input-padding: (Variables.$minor + 1px) Variables.$small
 
   +Themes.theme(color, Themes.$button-text)
   +Themes.theme(background-color, Themes.$button-background)
-  +Themes.theme(border, Themes.$button-background, 1px solid)
+  border: 1px solid transparent
 
   &:hover
     +Themes.theme(color, Themes.$button-text-hover)
     +Themes.theme(background-color, Themes.$button-background-hover)
-    +Themes.theme(border-color, Themes.$button-background-hover)
 
   &[disabled]
     cursor: not-allowed
     +Themes.theme(color, Themes.$button-text-disabled)
     +Themes.theme(background-color, Themes.$button-background-disabled)
-    +Themes.theme(border-color, Themes.$button-background-disabled)
 
 input,
 textarea
