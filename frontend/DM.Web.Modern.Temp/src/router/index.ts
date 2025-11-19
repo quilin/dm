@@ -95,22 +95,22 @@ const router = createRouter({
       children: [
         {
           name: "profile",
-          path: "/:login",
+          path: ":login",
           component: () => import("@/views/pages/profile/UserInformation.vue"),
         },
         {
           name: "user-games",
-          path: "/:login/games",
+          path: ":login/games",
           component: () => import("@/views/pages/profile/UserGames.vue"),
         },
         {
           name: "user-characters",
-          path: "/:login/characters",
+          path: ":login/characters",
           component: () => import("@/views/pages/profile/UserCharacters.vue"),
         },
         {
           name: "user-settings",
-          path: "/:login/settings",
+          path: ":login/settings",
           component: () => import("@/views/pages/profile/UserSettings.vue"),
         },
       ],
