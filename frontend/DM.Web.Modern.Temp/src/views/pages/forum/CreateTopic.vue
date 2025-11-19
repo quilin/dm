@@ -38,7 +38,7 @@ const tryCreateTopic = async () => {
   <the-lightbox>
     <lightbox-title>Создание темы</lightbox-title>
     <the-form @submit="tryCreateTopic" :valid="true" :loading="loading">
-      <input v-model="topic.title" type="text" />
+      <input-text v-model="topic.title" placeholder="Название темы" />
       <text-area v-model="topic.description" />
       <template #controls>
         <simple-button :loading="loading" type="submit">Создать</simple-button>

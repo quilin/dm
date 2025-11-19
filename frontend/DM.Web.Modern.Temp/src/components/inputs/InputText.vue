@@ -4,6 +4,7 @@ import { InputText, FloatLabel } from "primevue";
 const model = defineModel<string>();
 defineProps<{
   id: string;
+  type?: string;
   disabled?: boolean;
   placeholder?: string;
   invalid?: boolean;
@@ -14,6 +15,7 @@ defineProps<{
   <FloatLabel variant="on">
     <InputText
       :class="{ 'is-filled': model?.length }"
+      :type="type ?? 'text'"
       :id="id"
       v-model="model"
       :disabled="disabled"
@@ -37,6 +39,7 @@ defineProps<{
     left: Variables.$small
     top: 50%
     transform: translateY(-50%)
+    pointer-events: none
 
     +Themes.theme(color, Themes.$secondary-text)
     +Themes.theme(background-color, Themes.$background)
