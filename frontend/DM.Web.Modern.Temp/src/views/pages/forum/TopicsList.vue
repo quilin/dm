@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
-import TheIcon from "@/components/icons/TheIcon.vue";
+import DmIcon from "@/components/icons/DmIcon.vue";
 import UserLink from "@/components/community/UserLink.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import HumanDate from "@/components/dates/HumanDate.vue";
@@ -26,7 +26,7 @@ const { topics } = storeToRefs(useForumStore());
     <div>Дата</div>
     <div>Автор</div>
     <div>
-      <the-icon :font="IconType.CommentsNoUnread" />
+      <dm-icon :font="IconType.CommentsNoUnread" />
     </div>
     <div>Последнее сообщение</div>
   </div>
@@ -55,8 +55,8 @@ const { topics } = storeToRefs(useForumStore());
       }"
       class="topics-list_row-title"
     >
-      <the-icon v-if="topic.attached" :font="IconType.Attached" />
-      <the-icon v-if="topic.closed" :font="IconType.Closed" />
+      <dm-icon v-if="topic.attached" :font="IconType.Attached" />
+      <dm-icon v-if="topic.closed" :font="IconType.Closed" />
       {{ topic.title }}<br />
       <secondary-text v-if="topic.description"
         ><span v-html="topic.description"

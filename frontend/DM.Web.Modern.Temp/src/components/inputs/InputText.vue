@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { InputText, FloatLabel } from "primevue";
+import { InputText } from "primevue";
+import InputBase from "@/components/inputs/InputBase.vue";
 
 const model = defineModel<string>();
 defineProps<{
@@ -12,41 +13,19 @@ defineProps<{
 </script>
 
 <template>
-  <FloatLabel variant="on">
+  <InputBase :id="id" :placeholder="placeholder" :is-filled="!!model">
     <InputText
-      :class="{ 'is-filled': model?.length }"
+      v-model="model"
       :type="type ?? 'text'"
       :id="id"
-      v-model="model"
-      :disabled="disabled"
+      :disabled
       :invalid
-      autocomplete="off"
+      :pt:root="{ class: 'helpmeplz' }"
     />
-    <label :for="id">{{ placeholder }}</label>
-  </FloatLabel>
+  </InputBase>
 </template>
 
 <style scoped lang="sass">
-@use "@/assets/styles/Variables"
-@use "@/assets/styles/Themes"
-
-[data-pc-name="floatlabel"]
-  display: block
-  position: relative
-
-  & label
-    position: absolute
-    left: Variables.$small
-    top: 50%
-    transform: translateY(-50%)
-    pointer-events: none
-
-    +Themes.theme(color, Themes.$secondary-text)
-    +Themes.theme(background-color, Themes.$background)
-    transition: all Variables.$animation-time !important
-
-  &:has(input:focus) label,
-  &:has(input.is-filled) label
-    top: 0
-    font-size: Variables.$secondary-font-size
+.input
+  background: red
 </style>

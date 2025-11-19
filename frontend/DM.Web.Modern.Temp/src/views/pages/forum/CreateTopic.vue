@@ -4,7 +4,7 @@ import TheLightbox from "@/components/layout/TheLightbox.vue";
 import TheForm from "@/components/inputs/form/TheForm.vue";
 import TextArea from "@/components/inputs/TextArea.vue";
 import { reactive, ref } from "vue";
-import SimpleButton from "@/components/inputs/SimpleButton.vue";
+import ButtonBase from "@/components/inputs/ButtonBase.vue";
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
 import { useForumStore } from "@/stores";
@@ -41,7 +41,7 @@ const tryCreateTopic = async () => {
       <input-text v-model="topic.title" placeholder="Название темы" />
       <text-area v-model="topic.description" />
       <template #controls>
-        <simple-button :loading="loading" type="submit">Создать</simple-button>
+        <button-base :loading="loading" type="submit">Создать</button-base>
         <a @click="$emit('cancelled')">Отмена</a>
       </template>
     </the-form>

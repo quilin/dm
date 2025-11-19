@@ -6,7 +6,6 @@ import type { RegisterCredentials } from "@/api/models/account";
 import { ValidationErrorCode } from "@/api/models/common";
 import { useUserStore } from "@/stores";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
-import SimpleButton from "@/components/inputs/SimpleButton.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
@@ -73,7 +72,7 @@ const submit = handleSubmit(async (values, { setErrors }) => {
       </form-field>
 
       <template #controls>
-        <simple-button type="submit">Зарегистрироваться</simple-button>
+        <dm-button type="submit">Зарегистрироваться</dm-button>
         <a @click="$emit('cancelled')">Отмена</a>
       </template>
     </the-form>
