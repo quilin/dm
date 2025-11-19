@@ -114,6 +114,7 @@ $grid-template: [title] 40% [date] 12% [author] 14% [count] auto [lastComment] 2
   font-weight: bold
 
 .topics-list_none
+  display: block
   margin: Variables.$medium 0
   text-align: center
 </style>

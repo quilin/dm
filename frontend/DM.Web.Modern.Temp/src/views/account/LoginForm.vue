@@ -41,6 +41,7 @@ const submit = async () => {
       </form-field>
       <form-field label="Пароль" name="password">
         <input-text
+          type="password"
           id="password"
           v-model="credentials.password"
           placeholder="Пароль"

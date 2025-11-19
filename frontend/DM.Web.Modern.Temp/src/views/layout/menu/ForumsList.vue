@@ -17,6 +17,7 @@ const isForumRoute = computed(
   () => route.name === "forum" || route.name === "topic",
 );
 
+// TODO: fix double invocation
 onMounted(fetchFora);
 watch(() => user.value, fetchFora, { flush: "post" });
 </script>
