@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import { extractNumberParam } from "@/router";
@@ -35,7 +35,7 @@ useFetchData(fetchData, [
     <div class="topic-header">
       <page-title>{{ topic.title }}</page-title>
       <router-link :to="{ name: 'forum', params: { id: topic.forum.id } }">
-        <the-icon :font="IconType.ArrowLeft" />
+        <dm-icon :font="IconType.ArrowLeft" />
         Назад на форум "{{ topic.forum.id }}"
       </router-link>
     </div>
@@ -49,7 +49,7 @@ useFetchData(fetchData, [
       <human-timespan date="topic.created" />
     </secondary-text>
   </template>
-  <the-loader v-else :big="true" />
+  <dm-loader v-else :big="true" />
   <router-view />
 </template>
 

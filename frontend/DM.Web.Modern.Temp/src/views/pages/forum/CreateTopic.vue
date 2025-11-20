@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
 import TheLightbox from "@/components/layout/TheLightbox.vue";
-import TheForm from "@/components/inputs/form/TheForm.vue";
-import TextArea from "@/components/inputs/TextArea.vue";
+
 import { reactive, ref } from "vue";
-import ButtonBase from "@/components/inputs/ButtonBase.vue";
+import { useForumStore } from "@/stores";
+
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
-import { useForumStore } from "@/stores";
 
 const { createTopic, selectedForum } = useForumStore();
 
@@ -37,14 +36,26 @@ const tryCreateTopic = async () => {
 <template>
   <the-lightbox>
     <lightbox-title>Создание темы</lightbox-title>
-    <the-form @submit="tryCreateTopic" :valid="true" :loading="loading">
-      <input-text v-model="topic.title" placeholder="Название темы" />
-      <text-area v-model="topic.description" />
+    <dm-form :model="topic" @submit="tryCreateTopic">
+      <dm-field>
+        <dm-input
+          id="title"
+          v-model="topic.title"
+          placeholder="Название темы"
+        />
+      </dm-field>
+      <dm-field>
+        <dm-text
+          id="description"
+          v-model="topic.description"
+          placeholder="Описание"
+        />
+      </dm-field>
       <template #controls>
-        <button-base :loading="loading" type="submit">Создать</button-base>
+        <dm-button label="Создать" :loading="loading" type="submit" />
         <a @click="$emit('cancelled')">Отмена</a>
       </template>
-    </the-form>
+    </dm-form>
   </the-lightbox>
 </template>
 

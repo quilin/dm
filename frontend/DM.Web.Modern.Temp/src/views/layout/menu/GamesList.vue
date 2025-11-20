@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MenuBlock from "@/views/layout/MenuBlock.vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { GameStatus } from "@/api/models/gaming";
 
 defineProps<{
@@ -20,7 +20,7 @@ defineProps<{
       :to="{ name: 'games', params: { status: gameStatus.toLowerCase() } }"
     >
       {{ linkText }}
-      <the-icon :font="IconType.Forward" />
+      <dm-icon :font="IconType.Forward" />
     </router-link>
   </menu-block>
 </template>

@@ -4,7 +4,7 @@ import type { User } from "@/api/models/community";
 import { computed } from "vue";
 import dayjs from "dayjs";
 
-const props = defineProps<{ detailed: boolean; user: User }>();
+const props = defineProps<{ detailed?: boolean; user: User }>();
 const online = computed(() => dayjs().diff(props.user.online, "m", true) < 5);
 </script>
 

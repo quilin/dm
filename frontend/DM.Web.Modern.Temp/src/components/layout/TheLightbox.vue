@@ -23,7 +23,7 @@ import { VueFinalModal } from "vue-final-modal";
 .lightbox
   position: relative
   padding: Variables.$medium
-  width: Variables.$grid-step * 100
+  max-width: Variables.$grid-step * 100
   border-radius: Variables.$border-radius
   +Themes.theme(background-color, Themes.$background)
 

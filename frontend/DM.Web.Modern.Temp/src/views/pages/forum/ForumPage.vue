@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { useForumStore, useUserStore } from "@/stores";
-import { storeToRefs } from "pinia";
-import router, { extractNumberParam } from "@/router";
-import type { ForumId } from "@/api/models/forum";
-import { useFetchData } from "@/composables/useFetchData";
-import ButtonBase from "@/components/inputs/ButtonBase.vue";
-import DmIcon from "@/components/icons/DmIcon.vue";
-import { IconType } from "@/components/icons/iconType";
-import { useModal } from "vue-final-modal";
+import { IconType } from "@/components/ui-kit/iconType";
 import CreateTopic from "@/views/pages/forum/CreateTopic.vue";
+
 import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useModal } from "vue-final-modal";
+
+import { useForumStore, useUserStore } from "@/stores";
+import router, { extractNumberParam } from "@/router";
+import { useFetchData } from "@/composables/useFetchData";
+
 import { userIsHighAuthority } from "@/api/models/community/helpers";
+import type { ForumId } from "@/api/models/forum";
 
 const route = useRoute();
 const { user } = storeToRefs(useUserStore());
@@ -64,7 +65,7 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
   <div class="forum-info">
     <div class="forum-info_moderators">
       <block-title class="forum-info_moderators-title">Модераторы:</block-title>
-      <the-loader v-if="!moderators" class="forum-info_moderators-loader" />
+      <dm-loader v-if="!moderators" class="forum-info_moderators-loader" />
       <user-link
         v-else
         v-for="user in moderators"
@@ -72,9 +73,12 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
         :user="user"
       />
     </div>
-    <button-base v-if="canCreateTopic" @click="openCreateTopic"
-      ><dm-icon :font="IconType.Add" /> Новая тема</button-base
-    >
+    <dm-button
+      label="Новая тема"
+      :icon="IconType.Add"
+      v-if="canCreateTopic"
+      @click="openCreateTopic"
+    />
   </div>
 
   <router-view />

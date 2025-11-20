@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { useModal } from "vue-final-modal";
 import LoginForm from "@/views/account/LoginForm.vue";
 import RegistrationForm from "@/views/account/RegistrationForm.vue";
@@ -9,6 +9,7 @@ const { open: openLogin, close: closeLogin } = useModal({
   component: LoginForm,
   attrs: {
     onSuccess: () => closeLogin(),
+    onCancel: () => closeLogin(),
   },
 });
 const { open: openRegistrar, close: closeRegistrar } = useModal({
@@ -18,6 +19,7 @@ const { open: openRegistrar, close: closeRegistrar } = useModal({
       closeRegistrar();
       openRegistrarSuccess();
     },
+    onCancel: () => closeRegistrar(),
   },
 });
 const { open: openRegistrarSuccess, close: closeRegistrarSuccess } = useModal({
@@ -30,7 +32,7 @@ const { open: openRegistrarSuccess, close: closeRegistrarSuccess } = useModal({
 
 <template>
   <div class="user-actions">
-    <a @click="openLogin"><the-icon :font="IconType.User" /> Вход</a>
+    <a @click="openLogin"><dm-icon :font="IconType.User" /> Вход</a>
     |
     <a @click="openRegistrar">Регистрация</a>
   </div>

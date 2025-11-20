@@ -5,7 +5,7 @@
     token="OwnGames"
     :game-status="GameStatus.Active"
   >
-    <the-loader v-if="!store.ownGames" />
+    <dm-loader v-if="!store.ownGames" />
     <game-menu-link
       v-else
       v-for="game in store.ownGames"
@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import TheLoader from "@/components/TheLoader.vue";
 import GameMenuLink from "@/views/layout/menu/GameMenuLink.vue";
 import { useUserStore } from "@/stores";
 import { useGamesStore } from "@/stores/games";

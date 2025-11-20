@@ -1,6 +1,6 @@
 import type { App } from "vue";
-import { IconType } from "@/components/icons/iconType";
-import DmIcon from "@/components/icons/DmIcon.vue";
+import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
@@ -14,6 +14,7 @@ import DmButton from "@/components/ui-kit/DmButton.vue";
 import DmText from "@/components/ui-kit/DmText.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import DmDropdown from "@/components/ui-kit/DmDropdown.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -21,7 +22,8 @@ export default function (application: App<Element>) {
   application
     .component("DmIcon", DmIcon)
     .component("DmLoader", DmLoader)
-    .component("DmForm", DmForm);
+    .component("DmForm", DmForm)
+    .component("DmField", DmField);
 
   application
     .component("DmInput", DmInput)

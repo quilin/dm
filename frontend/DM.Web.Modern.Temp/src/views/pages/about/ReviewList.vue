@@ -16,7 +16,7 @@ const { reviews } = storeToRefs(useReviewStore());
     :to="{ name: 'about', params: route.params }"
   />
 
-  <the-loader v-if="reviews === null" />
+  <dm-loader v-if="reviews === null" />
   <the-review
     v-else
     v-for="review in reviews.resources"

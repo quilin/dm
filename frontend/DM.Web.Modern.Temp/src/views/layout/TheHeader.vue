@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore, useUiStore } from "@/stores";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { storeToRefs } from "pinia";
 import GuestActions from "@/views/layout/header/GuestActions.vue";
 import PlayerActions from "@/views/layout/header/PlayerActions.vue";
@@ -17,7 +17,7 @@ const { user } = storeToRefs(userStore);
         <template v-if="user">
           Добро пожаловать,
           <router-link :to="{ name: 'profile', params: { login: user.login } }">
-            <the-icon :font="IconType.UserSettings" />
+            <dm-icon :font="IconType.UserSettings" />
             {{ user.login }}
           </router-link>
         </template>
@@ -39,7 +39,7 @@ const { user } = storeToRefs(userStore);
         class="link create"
         :to="{ name: 'create-game' }"
       >
-        <the-icon :font="IconType.Add" />
+        <dm-icon :font="IconType.Add" />
         Новая игра
       </router-link>
     </div>

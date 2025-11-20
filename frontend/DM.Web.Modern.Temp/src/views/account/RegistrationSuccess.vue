@@ -14,7 +14,7 @@ const emit = defineEmits<{
       Вы успешно зарегистрировались на нашем сайте. Мы отправили вам письмо на
       указанный e-mail с дальнейшими инструкциями.
     </p>
-    <the-button @click="emit('confirm')">Пойду проверю почту</the-button>
+    <dm-button label="Пойду проверю почту" @click="emit('confirm')" />
   </the-lightbox>
 </template>
 

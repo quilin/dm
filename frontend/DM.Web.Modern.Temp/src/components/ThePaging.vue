@@ -7,7 +7,7 @@
       :class="{ active: link.isActive }"
       @click="prematureUpdate(link.n)"
     >
-      <the-icon v-if="link.icon" :font="link.icon" />
+      <dm-icon v-if="link.icon" :font="link.icon" />
       <template v-else>{{ link.n }}</template>
     </router-link>
   </div>
@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import type { Paging } from "@/api/models/common";
 import { computed, ref, watch } from "vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 
 interface PageLink {
   to: any;

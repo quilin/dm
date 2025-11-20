@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { useForumStore } from "@/stores";
 import { onMounted } from "vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
@@ -14,7 +14,7 @@ onMounted(() => store.fetchNews());
 
 <template>
   <block-title>Последние новости</block-title>
-  <the-loader v-if="!news" />
+  <dm-loader v-if="!news" />
   <secondary-text v-else-if="!news.length">Ничего нового</secondary-text>
 
   <div v-else v-for="article in news" :key="article.id" class="article">
@@ -38,7 +38,7 @@ onMounted(() => store.fetchNews());
           },
         }"
       >
-        <the-icon
+        <dm-icon
           :font="
             article.unreadCommentsCount > 0
               ? IconType.CommentsUnread
