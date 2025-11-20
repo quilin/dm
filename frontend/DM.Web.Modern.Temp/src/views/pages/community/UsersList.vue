@@ -26,7 +26,7 @@ const route = useRoute();
     <div>Местоположение</div>
   </div>
 
-  <the-loader v-if="!users" :big="true" />
+  <dm-loader v-if="!users" :big="true" />
   <secondary-text v-else-if="!users.resources.length" class="users-list-none"
     >Пользователей нет...</secondary-text
   >
@@ -41,7 +41,7 @@ const route = useRoute();
     }}</span>
     <user-link :user="user" />
     <user-rating :user="user" />
-    <user-online :user="user" :detailed="true" />
+    <user-online :user="user" />
     <span>{{ user.name }}</span>
     <span>{{ user.location }}</span>
   </div>

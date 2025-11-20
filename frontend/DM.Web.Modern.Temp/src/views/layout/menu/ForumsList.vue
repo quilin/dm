@@ -2,7 +2,7 @@
 import MenuBlock from "@/views/layout/MenuBlock.vue";
 import { useForumStore, useUserStore } from "@/stores";
 import { onMounted, watch } from "vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
@@ -25,7 +25,7 @@ watch(() => user.value, fetchFora, { flush: "post" });
 <template>
   <menu-block token="fora">
     <template #title>Форумы</template>
-    <the-loader v-if="!fora" />
+    <dm-loader v-if="!fora" />
     <div
       v-else
       v-for="forum in fora!"
@@ -37,7 +37,7 @@ watch(() => user.value, fetchFora, { flush: "post" });
       <router-link :to="{ name: 'forum', params: { id: forum.id } }">
         {{ forum.id }}
         <template v-if="forum.unreadTopicsCount">
-          <the-icon :font="IconType.CommentsUnread" />
+          <dm-icon :font="IconType.CommentsUnread" />
           {{ forum.unreadTopicsCount }}
         </template>
       </router-link>

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { IconType } from "@/components/icons/iconType";
+import type { IconType } from "@/components/ui-kit/iconType";
 
 const props = defineProps<{ font: IconType }>();
 

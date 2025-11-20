@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Game } from "@/api/models/gaming";
 import { computed } from "vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 
 const props = defineProps<{
   game: Game;
@@ -17,7 +17,7 @@ const params = computed(() => ({ id: props.game.id }));
     </router-link>
     <span v-if="props.counters">
       <router-link :to="{ name: 'game-first-unread-post', params }">
-        <the-icon
+        <dm-icon
           :font="
             game.unreadPostsCount
               ? IconType.PostsUnread
@@ -30,7 +30,7 @@ const params = computed(() => ({ id: props.game.id }));
       </router-link>
       <span class="separator">|</span>
       <router-link :to="{ name: 'game-comments', params }">
-        <the-icon
+        <dm-icon
           :font="
             game.unreadCommentsCount
               ? IconType.CommentsUnread
@@ -44,7 +44,7 @@ const params = computed(() => ({ id: props.game.id }));
       <template v-if="game.unreadCharactersCount">
         <span class="separator">|</span>
         <router-link :to="{ name: 'game-characters', params }">
-          <the-icon :font="IconType.User" />
+          <dm-icon :font="IconType.User" />
           {{ game.unreadCharactersCount }}
         </router-link>
       </template>

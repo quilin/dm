@@ -5,7 +5,7 @@ import { onMounted } from "vue";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
 import { storeToRefs } from "pinia";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 
 const store = usePollsStore();
 const { activePolls } = storeToRefs(store);
@@ -16,7 +16,7 @@ onMounted(() => store.fetchActivePolls());
 <template>
   <menu-block token="OpenPolls">
     <template #title>Опросы</template>
-    <the-loader v-if="!activePolls" />
+    <dm-loader v-if="!activePolls" />
     <secondary-text v-else-if="!activePolls.length"
       >Нет активных опросов</secondary-text
     >
@@ -24,7 +24,7 @@ onMounted(() => store.fetchActivePolls());
     <div>
       <router-link class="forward" :to="{ name: 'polls' }">
         К старым опросам
-        <the-icon :font="IconType.Forward" />
+        <dm-icon :font="IconType.Forward" />
       </router-link>
     </div>
   </menu-block>

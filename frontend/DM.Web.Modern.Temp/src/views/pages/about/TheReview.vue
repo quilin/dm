@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Review } from "@/api/models/community";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import { useReviewStore, useUserStore } from "@/stores";
 import { computed, ref } from "vue";
 import { userIsAdmin } from "@/api/models/community/helpers";
@@ -42,15 +42,15 @@ async function remove() {
         <span v-if="!review.approved">Ожидает проверки</span>
         <template v-if="!loading">
           <a v-if="!review.approved" @click="approve">
-            <the-icon :font="IconType.Tick" />
+            <dm-icon :font="IconType.Tick" />
             Принять</a
           >
           <a @click="remove">
-            <the-icon :font="IconType.Close" />
+            <dm-icon :font="IconType.Close" />
             Отклонить</a
           >
         </template>
-        <the-loader v-else />
+        <dm-loader v-else />
       </secondary-text>
     </div>
   </article>

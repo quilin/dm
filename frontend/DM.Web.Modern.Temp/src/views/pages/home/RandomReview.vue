@@ -1,7 +1,7 @@
 <template>
   <block-title>Случайный отзыв</block-title>
   <the-review v-if="review" :controls="false" :review="review" />
-  <the-loader v-else />
+  <dm-loader v-else />
 </template>
 
 <script setup lang="ts">

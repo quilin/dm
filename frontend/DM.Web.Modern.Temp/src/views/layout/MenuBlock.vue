@@ -1,7 +1,7 @@
 <template>
   <div>
     <block-title class="title" @click="toggle">
-      <slot name="title" />&nbsp;<the-icon
+      <slot name="title" />&nbsp;<dm-icon
         :font="show ? IconType.CornerTop : IconType.CornerBottom"
       />
     </block-title>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 
 const props = defineProps<{ token: string }>();
 const storageKey = computed(() => `__HideMenuModule_${props.token}__`);

@@ -3,7 +3,6 @@ import { usePollsStore } from "@/stores/polls";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import ThePaging from "@/components/ThePaging.vue";
-import TheLoader from "@/components/TheLoader.vue";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
 
 const route = useRoute();
@@ -17,7 +16,7 @@ const { polls } = storeToRefs(usePollsStore());
     :to="{ name: 'polls', params: route.params }"
   />
 
-  <the-loader v-if="!polls" :big="true" />
+  <dm-loader v-if="!polls" :big="true" />
   <the-poll
     class="poll-container"
     v-else

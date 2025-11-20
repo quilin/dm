@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { IconType } from "@/components/icons/iconType";
+import { IconType } from "@/components/ui-kit/iconType";
 import ThePaging from "@/components/ThePaging.vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
-import DmIcon from "@/components/icons/DmIcon.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import UserLink from "@/components/community/UserLink.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import HumanDate from "@/components/dates/HumanDate.vue";
@@ -31,7 +31,7 @@ const { topics } = storeToRefs(useForumStore());
     <div>Последнее сообщение</div>
   </div>
 
-  <the-loader v-if="!topics" :big="true" />
+  <dm-loader v-if="!topics" :big="true" />
   <secondary-text v-else-if="!topics.resources.length" class="topics-list_none"
     >Еще не создано ни одной темы
   </secondary-text>

@@ -8,6 +8,7 @@ import SecondaryText from "@/components/layout/SecondaryText.vue";
 import ProfileStat from "@/views/pages/profile/ProfileStat.vue";
 import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
+import UserOnline from "@/components/community/UserOnline.vue";
 
 const route = useRoute();
 const { user: currentUser } = storeToRefs(useUserStore());
@@ -54,6 +55,7 @@ useFetchData(
           class="profile_short-info_picture"
         />
 
+        <div>В сети: <user-online :user="user" :detailed="true" /></div>
         <profile-stat title="Статус" empty="Не указан" v-model="user.status" />
         <profile-stat title="Имя" empty="Не указано" v-model="user.name" />
         <profile-stat
@@ -92,7 +94,7 @@ useFetchData(
     </div>
   </template>
 
-  <the-loader v-else :big="true" />
+  <dm-loader v-else :big="true" />
 </template>
 
 <style scoped lang="sass">

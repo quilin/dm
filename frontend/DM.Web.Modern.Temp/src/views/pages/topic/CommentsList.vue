@@ -15,7 +15,7 @@ const { comments } = storeToRefs(useForumStore());
     :paging="comments.paging!"
     :to="{ name: 'topic', params: route.params }"
   />
-  <the-loader v-if="!comments" :big="true" />
+  <dm-loader v-if="!comments" :big="true" />
   <secondary-text v-else-if="!comments.resources.length" class="comments-none"
     >Комментариев пока нет...</secondary-text
   >

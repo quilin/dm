@@ -3,6 +3,7 @@ import { useUserStore } from "@/stores";
 import { reactive, ref } from "vue";
 import type { LoginCredentials } from "@/api/models/account";
 import LightboxTitle from "@/components/layout/LightboxTitle.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
@@ -31,34 +32,28 @@ const submit = async () => {
   <the-lightbox :with-form="true">
     <lightbox-title>Вход</lightbox-title>
 
-    <the-form @submit="submit" :loading="loading">
-      <form-field name="login">
-        <input-text
-          id="login"
-          v-model="credentials.login"
-          placeholder="Логин"
-        />
-      </form-field>
-      <form-field label="Пароль" name="password">
-        <input-text
-          type="password"
+    <dm-form :model="credentials" :loading="loading" @submit="submit">
+      <dm-field>
+        <dm-input id="login" placeholder="Логин" v-model="credentials.login" />
+      </dm-field>
+      <dm-field>
+        <dm-input
           id="password"
+          type="password"
           v-model="credentials.password"
           placeholder="Пароль"
         />
-      </form-field>
-      <form-field name="rememberMe">
+      </dm-field>
+      <dm-field>
         <label>
           <input type="checkbox" v-model="credentials.rememberMe" />
           Запомнить меня
         </label>
-      </form-field>
+      </dm-field>
       <template #controls>
-        <simple-button type="submit" @click="submit" :loading="loading"
-          >Войти</simple-button
-        >
+        <dm-button type="submit" :loading="loading" label="Войти" />
         <a @click="$emit('cancel')">Отмена</a>
       </template>
-    </the-form>
+    </dm-form>
   </the-lightbox>
 </template>
