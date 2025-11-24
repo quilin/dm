@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import DmInput from "@/components/ui-kit/DmInput.vue";
 import { useUiStore, useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
@@ -10,9 +10,9 @@ const { user } = storeToRefs(useUserStore());
 const { updateTheme } = useUiStore();
 
 const loading = ref(false);
-const settings = reactive(Object.assign({}, user.value!.settings));
+const settings = ref(Object.assign({}, user.value!.settings));
 
-watch(() => settings.colorSchema, updateTheme);
+watch(() => settings.value.colorSchema, updateTheme);
 </script>
 
 <template>
