@@ -57,17 +57,17 @@ const router = createRouter({
     {
       name: "chat",
       path: "/chat",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
     {
       name: "messenger",
       path: "/messenger",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
     {
       name: "donate",
       path: "/donate",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
 
     {
@@ -150,17 +150,17 @@ const router = createRouter({
     {
       name: "create-game",
       path: "/create-game",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
     {
       name: "games",
       path: "/games/:status",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
     {
       name: "game",
       path: "/games/:id",
-      component: () => import("@/components/TheLoader.vue"),
+      component: () => import("@/components/ui-kit/DmLoader.vue"),
     },
   ],
 });
