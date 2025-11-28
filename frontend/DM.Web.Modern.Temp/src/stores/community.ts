@@ -3,6 +3,7 @@ import { ref } from "vue";
 import type { ListEnvelope } from "@/api/models/common";
 import type { User, UserLogin } from "@/api/models/community";
 import communityApi from "@/api/requests/communityApi";
+import type { Patch } from "@/api/models";
 
 export const useCommunityStore = defineStore("community", () => {
   const users = ref<ListEnvelope<User> | null>(null);
@@ -21,5 +22,10 @@ export const useCommunityStore = defineStore("community", () => {
     return true;
   }
 
-  return { users, fetchUsers, selectedUser, trySelectProfile };
+  async function updateUser(login: UserLogin, user: Patch<User>) {
+    const { data } = await communityApi.updateUser(login, user);
+    return data!.resource;
+  }
+
+  return { users, fetchUsers, selectedUser, trySelectProfile, updateUser };
 });

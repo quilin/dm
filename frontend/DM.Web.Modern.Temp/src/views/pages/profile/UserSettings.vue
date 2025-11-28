@@ -1,20 +1,55 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useUiStore, useUserStore } from "@/stores";
-import { storeToRefs } from "pinia";
 import { ColorSchema } from "@/api/models/community";
+import type { DropdownOption } from "@/components/ui-kit/DmDropdown.vue";
+
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useUiStore, useUserStore } from "@/stores";
+import { useCommunityStore } from "@/stores/community";
 
 const { user } = storeToRefs(useUserStore());
+const { updateUser } = useCommunityStore();
 const { updateTheme } = useUiStore();
 
 const loading = ref(false);
 const settings = ref(Object.assign({}, user.value!.settings));
 
+const colorSchemeOptions: DropdownOption<ColorSchema>[] = [
+  {
+    value: ColorSchema.Modern,
+    label: "Современная",
+  },
+  {
+    value: ColorSchema.Classic,
+    label: "Классика",
+  },
+  {
+    value: ColorSchema.Pale,
+    label: "Бледная",
+  },
+  {
+    value: ColorSchema.ClassicPale,
+    label: "Господи опять бледная за что",
+  },
+  {
+    value: ColorSchema.Night,
+    label: "Ночная",
+  },
+];
+
 watch(() => settings.value.colorSchema, updateTheme);
+
+const saveChanges = async () => {
+  loading.value = true;
+  await updateUser(user.value!.login, {
+    settings: settings.value,
+  });
+  loading.value = false;
+};
 </script>
 
 <template>
-  <dm-form :model="settings" :validation="() => true">
+  <dm-form :model="settings" @submit="saveChanges">
     <div class="settings_block">
       Количество сообщений на странице
       <div class="settings_per_page">
@@ -52,24 +87,16 @@ watch(() => settings.value.colorSchema, updateTheme);
     </div>
     <div class="settings_block">
       <dm-dropdown
+        id="color-schema"
+        class="settings_scheme"
         v-model="settings.colorSchema"
-        :options="[
-          {
-            value: ColorSchema.Night,
-            label: 'Night',
-          },
-          {
-            value: ColorSchema.Modern,
-            label: 'Modern',
-          },
-          {
-            value: ColorSchema.Classic,
-            label: 'Classic',
-          },
-        ]"
+        :options="colorSchemeOptions"
+        placeholder="Цветовая схема"
       />
     </div>
-    <dm-button label="Сохранить" :loading="loading" />
+    <template #controls>
+      <dm-button type="submit" label="Сохранить" :loading="loading" />
+    </template>
   </dm-form>
 </template>
 
@@ -86,4 +113,7 @@ watch(() => settings.value.colorSchema, updateTheme);
 
 .settings_per_page-input
   width: Variables.$grid-step * 12
+
+.settings_scheme
+  width: Variables.$grid-step * 30
 </style>

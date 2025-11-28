@@ -41,29 +41,17 @@ const isFilled = computed(() => !!model.value);
   display: flex
   margin: Variables.$medium 0
 
++Inputs.placeholder()
 [data-pc-name="floatlabel"]
-  display: inline-flex
-  position: relative
   flex-grow: 1
 
   & label
-    position: absolute
-    left: Variables.$small - Variables.$tiny
-    padding: 0 Variables.$tiny
     top: Variables.$small + .5px
     transform: translateY(0)
-    pointer-events: none
-    line-height: 1
-
-    +Themes.theme(color, Themes.$secondary-text)
-    +Themes.theme(background-color, Themes.$background)
-    transition: all Variables.$animation-time !important
 
   &:has(:focus) label,
   label.is-filled
-    top: 0
     transform: translateY(-50%)
-    font-size: Variables.$secondary-font-size
 
 textarea
   +Inputs.input()

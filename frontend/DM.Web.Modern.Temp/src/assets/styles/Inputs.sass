@@ -48,3 +48,29 @@ $input-padding: (Variables.$minor + 1px) Variables.$small
 input,
 textarea
   +input()
+
+@mixin placeholder()
+  [data-pc-name="floatlabel"]
+    display: inline-flex
+    position: relative
+
+    & label
+      position: absolute
+      left: Variables.$small - Variables.$tiny
+      padding: 0 Variables.$tiny
+      top: 50%
+      transform: translateY(-50%)
+      pointer-events: none
+      line-height: 1
+
+      +Themes.theme(color, Themes.$secondary-text)
+      +Themes.theme(background-color, Themes.$background)
+      transition: all Variables.$animation-time !important
+
+    &:has(:focus) label,
+    label.is-filled
+      top: 0
+      font-size: Variables.$secondary-font-size
+
+    input
+      min-width: 0

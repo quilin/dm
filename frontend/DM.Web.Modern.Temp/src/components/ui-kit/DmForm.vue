@@ -1,24 +1,20 @@
 <script setup lang="ts" generic="T">
-import { ref } from "vue";
-
 defineProps<{
   model: T;
-  canonicalState?: T;
   validation?: (model: T) => Promise<boolean> | boolean;
 }>();
 defineEmits(["submit"]);
-
-const invalid = ref(false);
-const disabled = ref(false);
 </script>
 
 <template>
-  <form @submit.prevent.stop.capture="$emit('submit')">
-    <slot />
-    <div class="controls">
-      <slot name="controls" :invalid="invalid" :disabled="disabled" />
-    </div>
-  </form>
+  <div>
+    <form @submit.prevent="$emit('submit')">
+      <slot />
+      <div class="controls">
+        <slot name="controls" />
+      </div>
+    </form>
+  </div>
 </template>
 
 <style scoped lang="sass">
