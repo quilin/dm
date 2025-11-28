@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/stores";
-import LightboxTitle from "@/components/layout/LightboxTitle.vue";
-import DmInput from "@/components/ui-kit/DmInput.vue";
 import type { RegisterCredentials } from "@/api/models/account";
 
 const emit = defineEmits<{
@@ -29,8 +27,8 @@ const submit = async () => {
 </script>
 
 <template>
-  <the-lightbox :with-form="true">
-    <lightbox-title>Регистрация</lightbox-title>
+  <dm-dialog :with-form="true">
+    <page-title>Регистрация</page-title>
 
     <dm-form :model="credentials" @submit="submit">
       <dm-field>
@@ -58,7 +56,7 @@ const submit = async () => {
         <a @click="$emit('cancel')">Отмена</a>
       </template>
     </dm-form>
-  </the-lightbox>
+  </dm-dialog>
 </template>
 
 <style scoped lang="stylus"></style>

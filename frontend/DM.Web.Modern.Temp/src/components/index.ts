@@ -4,7 +4,6 @@ import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
-import TheLightbox from "@/components/layout/TheLightbox.vue";
 import HumanDate from "@/components/dates/HumanDate.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import UserLink from "@/components/community/UserLink.vue";
@@ -15,6 +14,7 @@ import DmText from "@/components/ui-kit/DmText.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import DmDropdown from "@/components/ui-kit/DmDropdown.vue";
 import DmField from "@/components/ui-kit/DmField.vue";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -22,6 +22,7 @@ export default function (application: App<Element>) {
   application
     .component("DmIcon", DmIcon)
     .component("DmLoader", DmLoader)
+    .component("DmDialog", DmDialog)
     .component("DmForm", DmForm)
     .component("DmField", DmField);
 
@@ -37,6 +38,5 @@ export default function (application: App<Element>) {
     .component("SecondaryText", SecondaryText)
     .component("HumanDate", HumanDate)
     .component("HumanTimespan", HumanTimespan)
-    .component("UserLink", UserLink)
-    .component("TheLightbox", TheLightbox);
+    .component("UserLink", UserLink);
 }

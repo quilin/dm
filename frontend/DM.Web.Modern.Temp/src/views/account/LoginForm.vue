@@ -2,8 +2,6 @@
 import { useUserStore } from "@/stores";
 import { reactive, ref } from "vue";
 import type { LoginCredentials } from "@/api/models/account";
-import LightboxTitle from "@/components/layout/LightboxTitle.vue";
-import DmInput from "@/components/ui-kit/DmInput.vue";
 
 const emit = defineEmits<{
   (e: "success"): void;
@@ -29,8 +27,8 @@ const submit = async () => {
 </script>
 
 <template>
-  <the-lightbox :with-form="true">
-    <lightbox-title>Вход</lightbox-title>
+  <dm-dialog :with-form="true">
+    <page-title>Вход</page-title>
 
     <dm-form :model="credentials" :loading="loading" @submit="submit">
       <dm-field>
@@ -55,5 +53,5 @@ const submit = async () => {
         <a @click="$emit('cancel')">Отмена</a>
       </template>
     </dm-form>
-  </the-lightbox>
+  </dm-dialog>
 </template>

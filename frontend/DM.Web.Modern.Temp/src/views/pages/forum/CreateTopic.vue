@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import LightboxTitle from "@/components/layout/LightboxTitle.vue";
-import TheLightbox from "@/components/layout/TheLightbox.vue";
-
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { useForumStore } from "@/stores";
 
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const { createTopic, selectedForum } = useForumStore();
 
@@ -26,7 +24,6 @@ const emit = defineEmits<{
 const loading = ref(false);
 const tryCreateTopic = async () => {
   loading.value = true;
-  alert(selectedForum?.id);
   const createdTopic = await createTopic(topic.value);
   loading.value = false;
   emit("created", createdTopic);
@@ -34,8 +31,8 @@ const tryCreateTopic = async () => {
 </script>
 
 <template>
-  <the-lightbox>
-    <lightbox-title>Создание темы</lightbox-title>
+  <dm-dialog :with-form="true">
+    <page-title>Создание темы</page-title>
     <dm-form :model="topic" @submit="tryCreateTopic">
       <dm-field>
         <dm-input
@@ -56,7 +53,7 @@ const tryCreateTopic = async () => {
         <a @click="$emit('cancelled')">Отмена</a>
       </template>
     </dm-form>
-  </the-lightbox>
+  </dm-dialog>
 </template>
 
 <style scoped lang="sass"></style>
