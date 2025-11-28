@@ -4,11 +4,6 @@ import ThePaging from "@/components/ThePaging.vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
-import DmIcon from "@/components/ui-kit/DmIcon.vue";
-import UserLink from "@/components/community/UserLink.vue";
-import HumanTimespan from "@/components/dates/HumanTimespan.vue";
-import HumanDate from "@/components/dates/HumanDate.vue";
 
 const route = useRoute();
 const { topics } = storeToRefs(useForumStore());

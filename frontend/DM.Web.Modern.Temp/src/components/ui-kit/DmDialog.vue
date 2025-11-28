@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { VueFinalModal } from "vue-final-modal";
+defineProps<{ withForm: boolean }>();
 </script>
 
 <template>
   <vue-final-modal
-    content-class="lightbox"
     overlay-transition="vfm-fade"
     content-transition="vfm-fade"
+    :click-to-close="!withForm"
     ><slot
   /></vue-final-modal>
 </template>
@@ -20,29 +21,10 @@ import { VueFinalModal } from "vue-final-modal";
   justify-content: center
   align-items: center
 
-.lightbox
+.vfm__content
   position: relative
-  padding: Variables.$medium
+  padding: 0 Variables.$medium Variables.$medium
   max-width: Variables.$grid-step * 100
   border-radius: Variables.$border-radius
   +Themes.theme(background-color, Themes.$background)
-
-  & h2
-    margin-top: 0
-
-.lightbox-close
-  position: absolute
-  top: 0
-  right: 0
-  margin: Variables.$small
-
-  font-size: Variables.$grid-step * 4
-  cursor: pointer
-  +Themes.theme(color, Themes.$text)
-
-  &:hover
-    +Themes.theme(color, Themes.$active-text)
-
-h2
-  margin-top: 0
 </style>

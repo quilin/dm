@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import DmInput from "@/components/ui-kit/DmInput.vue";
 import { useUiStore, useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
-import DmDropdown from "@/components/ui-kit/DmDropdown.vue";
 import { ColorSchema } from "@/api/models/community";
 
 const { user } = storeToRefs(useUserStore());
