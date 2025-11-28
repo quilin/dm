@@ -31,31 +31,9 @@ const isFilled = computed(
 <style scoped lang="sass">
 @use "@/assets/styles/Variables.sass"
 @use "@/assets/styles/Themes.sass"
+@use "@/assets/styles/Inputs.sass"
 
-[data-pc-name="floatlabel"]
-  display: inline-flex
-  position: relative
-
-  & label
-    position: absolute
-    left: Variables.$small - Variables.$tiny
-    padding: 0 Variables.$tiny
-    top: 50%
-    transform: translateY(-50%)
-    pointer-events: none
-    line-height: 1
-
-    +Themes.theme(color, Themes.$secondary-text)
-    +Themes.theme(background-color, Themes.$background)
-    transition: all Variables.$animation-time !important
-
-  &:has(input:focus) label,
-  label.is-filled
-    top: 0
-    font-size: Variables.$secondary-font-size
-
-  input
-    min-width: 0
++Inputs.placeholder()
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

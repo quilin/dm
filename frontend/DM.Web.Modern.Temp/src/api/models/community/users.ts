@@ -23,7 +23,7 @@ export type User = {
   originalPictureUrl: Served<string>;
   info: string;
   registration: Served<string>;
-  settings: Served<UserSettings>;
+  settings: UserSettings;
 };
 
 export enum UserRole {
