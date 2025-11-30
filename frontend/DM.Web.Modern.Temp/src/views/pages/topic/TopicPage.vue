@@ -9,6 +9,7 @@ import { useFetchData } from "@/composables/useFetchData";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 
 const route = useRoute();
+
 const forumStore = useForumStore();
 const { trySelectTopic, fetchComments } = forumStore;
 const { selectedTopic: topic } = storeToRefs(forumStore);

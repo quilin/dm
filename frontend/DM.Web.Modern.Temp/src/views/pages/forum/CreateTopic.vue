@@ -33,7 +33,7 @@ const tryCreateTopic = async () => {
 <template>
   <dm-dialog :with-form="true">
     <page-title>Создание темы</page-title>
-    <dm-form :model="topic" @submit="tryCreateTopic">
+    <dm-form @submit="tryCreateTopic">
       <dm-field>
         <dm-input
           id="title"

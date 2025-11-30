@@ -1,8 +1,4 @@
 <script setup lang="ts" generic="T">
-defineProps<{
-  model: T;
-  validation?: (model: T) => Promise<boolean> | boolean;
-}>();
 defineEmits(["submit"]);
 </script>
 

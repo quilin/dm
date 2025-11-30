@@ -30,7 +30,7 @@ const submit = async () => {
   <dm-dialog :with-form="true">
     <page-title>Регистрация</page-title>
 
-    <dm-form :model="credentials" @submit="submit">
+    <dm-form @submit="submit">
       <dm-field>
         <dm-input
           id="email"

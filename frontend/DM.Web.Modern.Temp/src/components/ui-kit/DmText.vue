@@ -11,6 +11,12 @@ defineProps<{
 }>();
 
 const isFilled = computed(() => !!model.value);
+
+const dispatchSubmit = (nativeInput: HTMLInputElement) => {
+  console.log(nativeInput);
+  const event = new Event("submit");
+  nativeInput.form?.dispatchEvent(event);
+};
 </script>
 
 <template>
@@ -20,10 +26,13 @@ const isFilled = computed(() => !!model.value);
       <text-area
         :id="id"
         v-model="model"
-        rows="7"
+        rows="5"
         auto-resize
         :disabled="disabled"
         :readonly="readonly"
+        @keydown.meta.enter.prevent="
+          dispatchSubmit($event.target! as HTMLInputElement)
+        "
       />
       <label v-if="placeholder" :class="{ 'is-filled': isFilled }">{{
         placeholder
