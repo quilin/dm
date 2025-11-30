@@ -30,7 +30,7 @@ const submit = async () => {
   <dm-dialog :with-form="true">
     <page-title>Вход</page-title>
 
-    <dm-form :model="credentials" :loading="loading" @submit="submit">
+    <dm-form @submit="submit">
       <dm-field>
         <dm-input id="login" placeholder="Логин" v-model="credentials.login" />
       </dm-field>

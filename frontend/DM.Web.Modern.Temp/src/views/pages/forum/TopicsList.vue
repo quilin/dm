@@ -45,7 +45,9 @@ const { topics } = storeToRefs(useForumStore());
         name: 'topic',
         params: {
           id: topic.id,
-          n: topic.commentsCount - topic.unreadCommentsCount + 1,
+          n: topic.commentsCount
+            ? topic.commentsCount - topic.unreadCommentsCount + 1
+            : undefined,
         },
       }"
       class="topics-list_row-title"

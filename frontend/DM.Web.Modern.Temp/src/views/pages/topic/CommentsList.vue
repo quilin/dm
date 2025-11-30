@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { useForumStore } from "@/stores";
+import { useForumStore, useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import ThePaging from "@/components/ThePaging.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import TopicComment from "@/views/pages/topic/TopicComment.vue";
+import CreateComment from "@/views/pages/topic/CreateComment.vue";
 
 const route = useRoute();
-const { comments } = storeToRefs(useForumStore());
+const router = useRouter();
+const { comments, selectedTopic } = storeToRefs(useForumStore());
+const { user } = storeToRefs(useUserStore());
+
+const redirectToLastPage = () => {
+  console.log(selectedTopic.value);
+  console.log(comments.value);
+  router.push({
+    name: "topic",
+    params: {
+      id: selectedTopic.value!.id,
+      n: comments.value!.paging!.total + 1,
+    },
+  });
+};
 </script>
 
 <template>
@@ -25,6 +40,8 @@ const { comments } = storeToRefs(useForumStore());
     :key="comment.id"
     :comment="comment"
   />
+
+  <create-comment v-if="user" @created="redirectToLastPage" />
 </template>
 
 <style scoped lang="sass">

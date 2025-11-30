@@ -49,7 +49,7 @@ const saveChanges = async () => {
 </script>
 
 <template>
-  <dm-form :model="settings" @submit="saveChanges">
+  <dm-form @submit="saveChanges">
     <div class="settings_block">
       Количество сообщений на странице
       <div class="settings_per_page">

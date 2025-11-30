@@ -86,6 +86,9 @@ export const useForumStore = defineStore("fora", () => {
     } as PagingQuery);
     comments.value = data;
   }
+  async function createComment(comment: Post<Comment>) {
+    return await forumApi.createComment(selectedTopic.value!.id, comment);
+  }
 
   return {
     fora,
@@ -103,6 +106,7 @@ export const useForumStore = defineStore("fora", () => {
     trySelectTopic,
     selectedTopic,
     fetchComments,
+    createComment,
     comments,
   };
 });
