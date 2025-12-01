@@ -15,6 +15,7 @@ import DmForm from "@/components/ui-kit/DmForm.vue";
 import DmDropdown from "@/components/ui-kit/DmDropdown.vue";
 import DmField from "@/components/ui-kit/DmField.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
+import DmMenu from "@/components/ui-kit/DmMenu.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -23,10 +24,11 @@ export default function (application: App<Element>) {
     .component("DmIcon", DmIcon)
     .component("DmLoader", DmLoader)
     .component("DmDialog", DmDialog)
-    .component("DmForm", DmForm)
-    .component("DmField", DmField);
+    .component("DmMenu", DmMenu);
 
   application
+    .component("DmForm", DmForm)
+    .component("DmField", DmField)
     .component("DmInput", DmInput)
     .component("DmText", DmText)
     .component("DmDropdown", DmDropdown)

@@ -4,6 +4,8 @@ import type { Comment } from "@/api/models/forum";
 import UserLink from "@/components/community/UserLink.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
+import DmMenu from "@/components/ui-kit/DmMenu.vue";
+import { IconType } from "@/components/ui-kit/iconType";
 
 const { comment } = defineProps<{ comment: Comment }>();
 </script>
@@ -37,6 +39,13 @@ const { comment } = defineProps<{ comment: Comment }>();
         </div>
         <div v-html="comment.text" />
       </div>
+      <dm-menu
+        class="actions"
+        :items="[
+          { label: 'Редактировать', icon: IconType.Edit },
+          { label: 'Удалить', icon: IconType.Remove },
+        ]"
+      />
     </div>
   </div>
 </template>
@@ -45,23 +54,6 @@ const { comment } = defineProps<{ comment: Comment }>();
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Layout"
 
-.comment
-  margin: Variables.$medium 0 Variables.$big
-
-.comment_author
-  display: flex
-  margin-bottom: Variables.$small
-
-.comment_author_picture
-  margin-right: Variables.$small
-  +Layout.square(Variables.$big)
-  border-radius: Variables.$big
-  background-size: contain
-
-.comment_text
-  padding-left: Variables.$big + Variables.$small
-
-
 .container
   margin: Variables.$small (-(Variables.$grid-step * 3))
   padding: Variables.$grid-step * 3
@@ -69,6 +61,12 @@ const { comment } = defineProps<{ comment: Comment }>();
 
 .wrapper
   display: flex
+  position: relative
+
+.actions
+  position: absolute
+  top: 0
+  right: 0
 
 .user-picture-container
   display: block
