@@ -21,7 +21,7 @@ defineEmits(["submit"]);
   display: flex
   gap: Variables.$medium
   align-items: baseline
-  margin: Variables.$small (-(Variables.$medium)) (-(Variables.$medium))
+  margin: Variables.$medium (-(Variables.$medium)) (-(Variables.$medium))
   padding: Variables.$medium
   border-radius: 0 0 Variables.$border-radius Variables.$border-radius
   +Themes.theme(background-color, Themes.$control-background)
