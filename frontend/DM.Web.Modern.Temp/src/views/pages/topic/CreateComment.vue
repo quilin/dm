@@ -2,6 +2,7 @@
 import DmText from "@/components/ui-kit/DmText.vue";
 import { ref } from "vue";
 import { useForumStore } from "@/stores";
+import DmField from "@/components/ui-kit/DmField.vue";
 
 const { createComment } = useForumStore();
 
@@ -15,10 +16,17 @@ const tryCreateTopic = async () => {
 </script>
 
 <template>
-  <dm-form @submit="tryCreateTopic">
-    <dm-text v-model="text" id="text" placeholder="Новый комментарий" />
+  <dm-form @submit="tryCreateTopic" class="container">
+    <dm-field>
+      <dm-text v-model="text" id="text" placeholder="Новый комментарий" />
+    </dm-field>
     <dm-button type="submit" label="Отправить" />
   </dm-form>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+@use "@/assets/styles/Variables"
+
+.container
+  margin-top: Variables.$medium
+</style>

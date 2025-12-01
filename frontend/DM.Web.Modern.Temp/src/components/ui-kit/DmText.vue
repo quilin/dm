@@ -48,7 +48,6 @@ const dispatchSubmit = (nativeInput: HTMLInputElement) => {
 
 .container
   display: flex
-  margin: Variables.$medium 0
 
 +Inputs.placeholder()
 [data-pc-name="floatlabel"]
