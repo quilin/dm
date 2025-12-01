@@ -18,12 +18,13 @@ const route = useRoute();
 const { user } = storeToRefs(useUserStore());
 const forumStore = useForumStore();
 const { moderators, selectedForum } = storeToRefs(forumStore);
-const { trySelectForum, fetchModerators, fetchTopics } = forumStore;
+const { trySelectForum, fetchModerators, fetchTopics, markAllTopicsAsRead } =
+  forumStore;
 
 const canCreateTopic = computed(() => {
   if (!user.value) return false;
   if (userIsHighAuthority(user.value)) return true;
-  return selectedForum.value!.id !== "Новости проекта";
+  return selectedForum.value?.id !== "Новости проекта";
 });
 
 async function fetchData() {
@@ -60,7 +61,10 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
 </script>
 
 <template>
-  <page-title>Форум | {{ route.params.id }}</page-title>
+  <div class="forum-header">
+    <page-title>Форум | {{ route.params.id }}</page-title>
+    <a @click="markAllTopicsAsRead">Отметить все темы прочитанными</a>
+  </div>
 
   <div class="forum-info">
     <div class="forum-info_moderators">
@@ -86,6 +90,11 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
 
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"
+
+.forum-header
+  display: flex
+  justify-content: space-between
+  align-items: baseline
 
 .forum-info
   display: flex
