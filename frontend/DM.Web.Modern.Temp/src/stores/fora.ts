@@ -36,6 +36,10 @@ export const useForumStore = defineStore("fora", () => {
     selectedForum.value = data!.resource;
     return true;
   }
+  async function markAllTopicsAsRead() {
+    await forumApi.markAllTopicsAsRead(selectedForum.value!.id);
+    await fetchFora();
+  }
 
   const moderators = ref<User[] | null>(null);
   async function fetchModerators() {
@@ -81,13 +85,25 @@ export const useForumStore = defineStore("fora", () => {
     comments.value = null;
     if (!selectedTopic.value) return;
 
-    const { data } = await forumApi.getComments(selectedTopic.value.id!, {
+    const { data } = await forumApi.getComments(selectedTopic.value!.id, {
       number,
     } as PagingQuery);
+    await forumApi.markTopicAsRead(selectedTopic.value!.id);
     comments.value = data;
+
+    await fetchFora();
   }
   async function createComment(comment: Post<Comment>) {
-    return await forumApi.createComment(selectedTopic.value!.id, comment);
+    const result = await forumApi.createComment(
+      selectedTopic.value!.id,
+      comment,
+    );
+
+    if (result.data) {
+      await forumApi.markTopicAsRead(selectedTopic.value!.id);
+      await fetchFora();
+    }
+    return result;
   }
 
   return {
@@ -95,6 +111,7 @@ export const useForumStore = defineStore("fora", () => {
     fetchFora,
     selectedForum,
     trySelectForum,
+    markAllTopicsAsRead,
     moderators,
     fetchModerators,
     attachedTopics,

@@ -34,9 +34,10 @@ onMounted(() => store.fetchNews());
           name: 'topic',
           params: {
             id: article.id,
-            n: article.commentsCount
-              ? article.commentsCount - article.unreadCommentsCount + 1
-              : undefined,
+            n:
+              article.commentsCount && article.unreadCommentsCount
+                ? article.commentsCount - article.unreadCommentsCount + 1
+                : article.commentsCount || undefined,
           },
         }"
       >
