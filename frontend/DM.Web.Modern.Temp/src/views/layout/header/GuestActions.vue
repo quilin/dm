@@ -8,7 +8,6 @@ import RegistrationSuccess from "@/views/account/RegistrationSuccess.vue";
 const { open: openLogin, close: closeLogin } = useModal({
   component: LoginForm,
   attrs: {
-    onSuccess: () => closeLogin(),
     onCancel: () => closeLogin(),
   },
 });
