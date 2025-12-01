@@ -4,7 +4,6 @@ import { reactive, ref } from "vue";
 import type { LoginCredentials } from "@/api/models/account";
 
 const emit = defineEmits<{
-  (e: "success"): void;
   (e: "cancel"): void;
 }>();
 
@@ -21,7 +20,7 @@ const submit = async () => {
   const badRequest = await signIn(credentials);
   loading.value = false;
   if (!badRequest) {
-    emit("success");
+    document.location.reload();
   }
 };
 </script>

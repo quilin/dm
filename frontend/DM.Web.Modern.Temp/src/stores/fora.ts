@@ -38,6 +38,12 @@ export const useForumStore = defineStore("fora", () => {
   }
   async function markAllTopicsAsRead() {
     await forumApi.markAllTopicsAsRead(selectedForum.value!.id);
+    topics.value?.resources.forEach(
+      (topic) => ((topic.unreadCommentsCount as number) = 0),
+    );
+    attachedTopics.value?.forEach(
+      (topic) => ((topic.unreadCommentsCount as number) = 0),
+    );
     await fetchFora();
   }
 
