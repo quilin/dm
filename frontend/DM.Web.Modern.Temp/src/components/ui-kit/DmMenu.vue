@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import { Menu } from "primevue";
 import { IconType } from "@/components/ui-kit/iconType";
-import { useTemplateRef } from "vue";
+import { computed, useTemplateRef } from "vue";
 import type { MenuItem } from "primevue/menuitem";
 
-defineProps<{ items: { label: string; icon?: IconType }[] }>();
+export type DmMenuItem = {
+  label: string;
+  icon?: IconType;
+  command?: () => any;
+};
+const props = defineProps<{
+  items: DmMenuItem[];
+}>();
+const primeItems = computed<MenuItem[]>(() =>
+  props.items.map((item) => ({ label: item.label, command: item.command })),
+);
 
 const menu = useTemplateRef("menu");
 </script>
@@ -19,7 +29,7 @@ const menu = useTemplateRef("menu");
     <Menu
       ref="menu"
       popup
-      :model="items as MenuItem[]"
+      :model="primeItems"
       :pt="{
         root: 'menu-root',
         list: 'menu-list',
@@ -39,6 +49,7 @@ const menu = useTemplateRef("menu");
 <style lang="sass">
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Themes"
+@use "@/assets/styles/Layout"
 
 .p-connected-overlay-enter-active
   animation: demo-overlay-in Variables.$animation-time ease-out
@@ -57,7 +68,16 @@ const menu = useTemplateRef("menu");
     transform: translateY(10%)
 
 .menu-button
+  +Layout.square(Variables.$medium)
+  +Themes.theme(background-color, Themes.$background)
+  line-height: Variables.$grid-step * 3
+  text-align: center
+  padding: Variables.$tiny
+  border-radius: Variables.$medium
   cursor: pointer
+
+  &:hover
+    +Themes.theme(background-color, Themes.$panel-background-hover)
 
 .menu-root
   +Themes.theme(background, Themes.$background)

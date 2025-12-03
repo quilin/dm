@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import ThePaging from "@/components/ThePaging.vue";
-import { storeToRefs } from "pinia";
 import UserRating from "@/components/community/UserRating.vue";
 import UserOnline from "@/components/community/UserOnline.vue";
+import { storeToRefs } from "pinia";
 import { useCommunityStore } from "@/stores/community";
 import { useRoute } from "vue-router";
 
@@ -11,7 +10,7 @@ const route = useRoute();
 </script>
 
 <template>
-  <the-paging
+  <dm-paging
     v-if="users"
     :paging="users.paging!"
     :to="{ name: 'community', params: route.params }"

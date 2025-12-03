@@ -1,51 +1,59 @@
 <script setup lang="ts">
 import type { Comment } from "@/api/models/forum";
-
-import UserLink from "@/components/community/UserLink.vue";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
-import HumanTimespan from "@/components/dates/HumanTimespan.vue";
-import DmMenu from "@/components/ui-kit/DmMenu.vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import type { DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 
+import { computed, ref } from "vue";
+import { useUserStore } from "@/stores";
+import { storeToRefs } from "pinia";
+import { userIsHighAuthority } from "@/api/models/community/helpers";
+
+import EditComment from "@/views/pages/topic/EditComment.vue";
+import UserIcon from "@/components/community/UserIcon.vue";
+import forumApi from "@/api/requests/forumApi";
+
+const { user } = storeToRefs(useUserStore());
 const { comment } = defineProps<{ comment: Comment }>();
+
+const commentActions = computed(() => {
+  const result: DmMenuItem[] = [];
+  if (!user.value) return result;
+  if (userIsHighAuthority(user.value)) {
+    result.push({ label: "Удалить", icon: IconType.Remove, command: remove });
+  }
+  if (user.value.login === comment.author.login) {
+    result.unshift({
+      label: "Редактировать",
+      icon: IconType.Edit,
+      command: () => (editMode.value = true),
+    });
+  }
+
+  return result;
+});
+
+const editMode = ref(false);
+const remove = () => forumApi.deleteComment(comment.id);
 </script>
 
 <template>
-  <div class="container">
+  <div class="topic-container">
     <div class="wrapper">
-      <router-link
-        class="user-picture-container"
-        :to="{ name: 'profile', params: { login: comment.author.login } }"
-      >
-        <div
-          class="user-picture"
-          :style="{
-            backgroundImage:
-              comment.author.mediumPictureUrl &&
-              `url(${comment.author.mediumPictureUrl})`,
-          }"
-        ></div>
-      </router-link>
+      <user-icon :user="comment.author" />
       <div class="content">
         <div class="meta">
           <user-link :user="comment.author" hide-picture />,
           <secondary-text>
-            <human-timespan :date="comment.created" />
-            <template v-if="comment.updated">
-              , (изменен
-              <human-timespan :date="comment.updated" />)
+            <human-timespan :date="comment.created" /><template
+              v-if="comment.updated"
+              >, (изменен <human-timespan :date="comment.updated" />)
             </template>
           </secondary-text>
         </div>
-        <div v-html="comment.text" />
+        <edit-comment :comment="comment" v-model:active="editMode" />
+        <div v-if="!editMode" v-html="comment.text" />
       </div>
-      <dm-menu
-        class="actions"
-        :items="[
-          { label: 'Редактировать', icon: IconType.Edit },
-          { label: 'Удалить', icon: IconType.Remove },
-        ]"
-      />
+      <dm-menu v-if="commentActions" class="actions" :items="commentActions" />
     </div>
   </div>
 </template>
@@ -54,7 +62,7 @@ const { comment } = defineProps<{ comment: Comment }>();
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Layout"
 
-.container
+.topic-container
   margin: Variables.$small (-(Variables.$grid-step * 3))
   padding: Variables.$grid-step * 3
   border-radius: Variables.$border-radius
@@ -67,19 +75,6 @@ const { comment } = defineProps<{ comment: Comment }>();
   position: absolute
   top: 0
   right: 0
-
-.user-picture-container
-  display: block
-  height: Variables.$grid-step * 10
-  flex-shrink: 0
-
-.user-picture
-  width: Variables.$grid-step * 10
-  height: Variables.$grid-step * 10
-  margin-right: Variables.$grid-step * 3
-  background: url('@/assets/images/userpic.png') transparent left center no-repeat
-  background-size: contain
-  border-radius: Variables.$big
 
 .content
   position: relative
