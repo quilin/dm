@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
-import ThePaging from "@/components/ThePaging.vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
@@ -10,7 +9,7 @@ const { topics } = storeToRefs(useForumStore());
 </script>
 
 <template>
-  <the-paging
+  <dm-paging
     v-if="topics"
     :paging="topics.paging!"
     :to="{ name: 'forum', params: route.params }"

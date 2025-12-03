@@ -16,6 +16,9 @@ import DmDropdown from "@/components/ui-kit/DmDropdown.vue";
 import DmField from "@/components/ui-kit/DmField.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
 import DmMenu from "@/components/ui-kit/DmMenu.vue";
+import UserOnline from "@/components/community/UserOnline.vue";
+import UserRating from "@/components/community/UserRating.vue";
+import UserIcon from "@/components/community/UserIcon.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -39,6 +42,11 @@ export default function (application: App<Element>) {
     .component("BlockTitle", BlockTitle)
     .component("SecondaryText", SecondaryText)
     .component("HumanDate", HumanDate)
-    .component("HumanTimespan", HumanTimespan)
-    .component("UserLink", UserLink);
+    .component("HumanTimespan", HumanTimespan);
+
+  application
+    .component("UserLink", UserLink)
+    .component("UserOnline", UserOnline)
+    .component("UserRating", UserRating)
+    .component("UserIcon", UserIcon);
 }

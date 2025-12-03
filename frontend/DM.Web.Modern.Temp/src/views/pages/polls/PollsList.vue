@@ -2,7 +2,6 @@
 import { usePollsStore } from "@/stores/polls";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import ThePaging from "@/components/ThePaging.vue";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
 
 const route = useRoute();
@@ -10,7 +9,7 @@ const { polls } = storeToRefs(usePollsStore());
 </script>
 
 <template>
-  <the-paging
+  <dm-paging
     v-if="polls"
     :paging="polls.paging!"
     :to="{ name: 'polls', params: route.params }"

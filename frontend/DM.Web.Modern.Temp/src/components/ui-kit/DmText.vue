@@ -20,25 +20,23 @@ const dispatchSubmit = (nativeInput: HTMLInputElement) => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="controls"></div>
-    <float-label>
-      <text-area
-        :id="id"
-        v-model="model"
-        rows="5"
-        auto-resize
-        :disabled="disabled"
-        :readonly="readonly"
-        @keydown.meta.enter.prevent="
-          dispatchSubmit($event.target! as HTMLInputElement)
-        "
-      />
-      <label v-if="placeholder" :class="{ 'is-filled': isFilled }">{{
-        placeholder
-      }}</label>
-    </float-label>
-  </div>
+  <div class="controls"></div>
+  <float-label>
+    <text-area
+      :id="id"
+      v-model="model"
+      rows="5"
+      auto-resize
+      :disabled="disabled"
+      :readonly="readonly"
+      @keydown.meta.enter.prevent="
+        dispatchSubmit($event.target! as HTMLInputElement)
+      "
+    />
+    <label v-if="placeholder" :for="id" :class="{ 'is-filled': isFilled }">{{
+      placeholder
+    }}</label>
+  </float-label>
 </template>
 
 <style scoped lang="sass">

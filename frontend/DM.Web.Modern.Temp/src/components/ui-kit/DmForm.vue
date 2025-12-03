@@ -17,12 +17,14 @@ defineEmits(["submit"]);
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Themes"
 
-.vfm__content .controls
+.controls
   display: flex
   gap: Variables.$medium
   align-items: baseline
-  margin: Variables.$medium (-(Variables.$medium)) (-(Variables.$medium))
-  padding: Variables.$medium
-  border-radius: 0 0 Variables.$border-radius Variables.$border-radius
-  +Themes.theme(background-color, Themes.$control-background)
+
+  .vfm__content &
+    margin: Variables.$medium (-(Variables.$medium)) (-(Variables.$medium))
+    padding: Variables.$medium
+    border-radius: 0 0 Variables.$border-radius Variables.$border-radius
+    +Themes.theme(background-color, Themes.$control-background)
 </style>

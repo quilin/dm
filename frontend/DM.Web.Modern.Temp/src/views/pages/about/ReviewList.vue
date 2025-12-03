@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ThePaging from "@/components/ThePaging.vue";
 import TheReview from "@/views/pages/about/TheReview.vue";
 import { useRoute } from "vue-router";
 import { useReviewStore } from "@/stores";
@@ -10,7 +9,7 @@ const { reviews } = storeToRefs(useReviewStore());
 </script>
 
 <template>
-  <the-paging
+  <dm-paging
     v-if="reviews"
     :paging="reviews.paging!"
     :to="{ name: 'about', params: route.params }"
