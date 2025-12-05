@@ -3,9 +3,12 @@ import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
+import ForumTopic from "@/views/pages/forum/ForumTopic.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const route = useRoute();
-const { topics } = storeToRefs(useForumStore());
+const { topics, attachedTopics } = storeToRefs(useForumStore());
 </script>
 
 <template>
@@ -25,62 +28,25 @@ const { topics } = storeToRefs(useForumStore());
     <div>Последнее сообщение</div>
   </div>
 
-  <dm-loader v-if="!topics" :big="true" />
-  <secondary-text v-else-if="!topics.resources.length" class="topics-list_none"
-    >Еще не создано ни одной темы
-  </secondary-text>
-  <div
-    v-for="topic in topics.resources"
-    v-else
-    :key="topic.id"
-    :class="{
-      'topics-list_row': true,
-      closed: topic.closed,
-      attached: topic.attached,
-    }"
+  <template v-if="attachedTopics !== null">
+    <forum-topic
+      v-for="topic in attachedTopics"
+      :topic="topic"
+      :key="topic.id"
+    />
+  </template>
+  <dm-loader v-if="!topics || attachedTopics === null" :big="true" />
+  <secondary-text
+    v-else-if="topics.resources.length + attachedTopics.length === 0"
+    class="topics-list_none"
+    >Еще не создано ни одной темы</secondary-text
   >
-    <router-link
-      :to="{
-        name: 'topic',
-        params: {
-          id: topic.id,
-          n:
-            topic.commentsCount && topic.unreadCommentsCount
-              ? topic.commentsCount - topic.unreadCommentsCount + 1
-              : topic.commentsCount || undefined,
-        },
-      }"
-      class="topics-list_row-title"
-    >
-      <dm-icon v-if="topic.attached" :font="IconType.Attached" />
-      <dm-icon v-if="topic.closed" :font="IconType.Closed" />
-      {{ topic.title }}<br />
-      <secondary-text v-if="topic.description"
-        ><span v-html="topic.description"
-      /></secondary-text>
-    </router-link>
-    <div><human-date :date="topic.created!" format="DD.MM.YYYY" /></div>
-    <div><user-link :user="topic.author!" /></div>
-    <div>
-      {{ topic.commentsCount }}
-      <span class="topics-list_row-unread" v-if="topic.unreadCommentsCount"
-        >(+{{ topic.unreadCommentsCount }})</span
-      >
-    </div>
-    <div>
-      <template v-if="topic.lastComment">
-        <user-link :user="topic.lastComment.author" />,
-        <router-link
-          :to="{
-            name: 'topic',
-            params: { id: topic.id, n: topic.commentsCount },
-          }"
-        >
-          <human-timespan :date="topic.lastComment.created" />
-        </router-link>
-      </template>
-    </div>
-  </div>
+  <forum-topic
+    v-else
+    v-for="topic in topics.resources"
+    :topic="topic"
+    :key="topic.id"
+  />
 </template>
 
 <style scoped lang="sass">

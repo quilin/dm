@@ -46,6 +46,18 @@ export default new (class ForumApi {
     return Api.post<Envelope<Topic>>(`fora/${id}/topics`, topic);
   }
 
+  public getTopicForUpdate(id: TopicId) {
+    return Api.get<Envelope<Topic>>(`topics/${id}`, undefined, BbRenderMode.Bb);
+  }
+
+  public updateTopic(id: TopicId, topic: Patch<Topic>) {
+    return Api.patch<Envelope<Topic>>(`topics/${id}`, topic);
+  }
+
+  public deleteTopic(id: TopicId) {
+    return Api.delete(`topics/${id}`);
+  }
+
   public getTopic(id: TopicId) {
     return Api.get<Envelope<Topic>>(`topics/${id}`);
   }
