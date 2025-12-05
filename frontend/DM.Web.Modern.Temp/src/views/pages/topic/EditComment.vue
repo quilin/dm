@@ -5,6 +5,7 @@ import type { Comment } from "@/api/models/forum";
 
 const active = defineModel("active");
 const props = defineProps<{ comment: Comment }>();
+const emit = defineEmits(["updated"]);
 const editableComment = ref<Comment | null>(null);
 
 watch(
@@ -18,6 +19,7 @@ watch(
 const saveChanges = async () => {
   await forumApi.updateComment(props.comment.id, editableComment.value!);
   active.value = false;
+  emit("updated");
 };
 </script>
 

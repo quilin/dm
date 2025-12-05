@@ -87,17 +87,24 @@ export const useForumStore = defineStore("fora", () => {
   }
 
   const comments = ref<ListEnvelope<Comment> | null>(null);
-  async function fetchComments(number: number) {
+  async function fetchComments(number?: number) {
     comments.value = null;
     if (!selectedTopic.value) return;
 
-    const { data } = await forumApi.getComments(selectedTopic.value!.id, {
+    const { data } = await forumApi.getComments(selectedTopic.value.id, {
       number,
-    } as PagingQuery);
+    });
     await forumApi.markTopicAsRead(selectedTopic.value!.id);
     comments.value = data;
 
     await fetchFora();
+  }
+  async function reloadComments() {
+    if (!selectedTopic.value || !comments.value) return;
+    const { data } = await forumApi.getComments(selectedTopic.value.id, {
+      number: comments.value.paging!.number,
+    });
+    comments.value = data;
   }
   async function createComment(comment: Post<Comment>) {
     const result = await forumApi.createComment(
@@ -129,6 +136,7 @@ export const useForumStore = defineStore("fora", () => {
     trySelectTopic,
     selectedTopic,
     fetchComments,
+    reloadComments,
     createComment,
     comments,
   };
