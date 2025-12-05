@@ -27,11 +27,7 @@ const saveChanges = async () => {
   <dm-form v-if="active" @submit="saveChanges">
     <template v-if="editableComment">
       <dm-field>
-        <dm-text
-          v-if="editableComment"
-          id="edit-comment-text"
-          v-model="editableComment.text"
-        />
+        <dm-text id="edit-comment-text" v-model="editableComment.text" />
       </dm-field>
     </template>
     <dm-loader v-else />

@@ -46,7 +46,8 @@ export enum IconType {
   Remove = 0xe022,
   Settings = 0xe018,
   Closed = 0xe02e,
-  Attached = 0xe073,
+  Open = 0xe02d,
+  Pinned = 0xe073,
   Reorder = 0xe01f,
 
   Blast = 0xe076,

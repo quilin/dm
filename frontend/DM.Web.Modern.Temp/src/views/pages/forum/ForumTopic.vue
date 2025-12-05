@@ -1,0 +1,61 @@
+<script setup lang="ts">
+import type { Topic } from "@/api/models/forum";
+import { IconType } from "@/components/ui-kit/iconType";
+
+defineProps<{ topic: Topic }>();
+</script>
+
+<template>
+  <div
+    :key="topic.id"
+    :class="{
+      'topics-list_row': true,
+      closed: topic.closed,
+      attached: topic.attached,
+    }"
+  >
+    <router-link
+      :to="{
+        name: 'topic',
+        params: {
+          id: topic.id,
+          n:
+            topic.commentsCount && topic.unreadCommentsCount
+              ? topic.commentsCount - topic.unreadCommentsCount + 1
+              : topic.commentsCount || undefined,
+        },
+      }"
+      class="topics-list_row-title"
+    >
+      <dm-icon v-if="topic.attached" :font="IconType.Pinned" />
+      <dm-icon v-if="topic.closed" :font="IconType.Closed" />
+      {{ topic.title }}<br />
+      <secondary-text v-if="topic.description"
+        ><span v-html="topic.description"
+      /></secondary-text>
+    </router-link>
+    <div><human-date :date="topic.created!" format="DD.MM.YYYY" /></div>
+    <div><user-link :user="topic.author!" /></div>
+    <div>
+      {{ topic.commentsCount }}
+      <span class="topics-list_row-unread" v-if="topic.unreadCommentsCount"
+        >(+{{ topic.unreadCommentsCount }})</span
+      >
+    </div>
+    <div>
+      <template v-if="topic.lastComment">
+        <user-link :user="topic.lastComment.author" />,
+        <router-link
+          :to="{
+            name: 'topic',
+            params: { id: topic.id, n: topic.commentsCount },
+          }"
+        >
+          <human-timespan :date="topic.lastComment.created" />
+        </router-link>
+      </template>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="sass"></style>

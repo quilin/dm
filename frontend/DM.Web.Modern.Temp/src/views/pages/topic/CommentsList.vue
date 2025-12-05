@@ -38,10 +38,7 @@ const redirectToLastPage = () => {
     :comment="comment"
   />
 
-  <create-comment
-    v-if="user && !selectedTopic?.closed"
-    @created="redirectToLastPage"
-  />
+  <create-comment v-if="user" @created="redirectToLastPage" />
 </template>
 
 <style scoped lang="sass">
