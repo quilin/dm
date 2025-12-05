@@ -63,9 +63,11 @@ const isFilled = computed(() => !!selectedValue.value);
   cursor: pointer
 
   &:first-child
-    border-radius: Variables.$border-radius Variables.$border-radius 0 0
+    border-top-left-radius: Variables.$border-radius
+    border-top-right-radius: Variables.$border-radius
   &:last-child
-    border-radius: 0 0 Variables.$border-radius Variables.$border-radius
+    border-bottom-left-radius: Variables.$border-radius
+    border-bottom-right-radius: Variables.$border-radius
   &:hover
     +Themes.theme(background-color, Themes.$panel-background-hover)
 </style>
