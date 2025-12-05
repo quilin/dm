@@ -114,9 +114,9 @@ const removeTopic = async () => {
           v-html="topic.description"
         />
         <user-link :user="topic.author" />,
-        <secondary-text>
-          <human-timespan date="topic.created" />
-        </secondary-text>
+        <secondary-text
+          ><human-timespan :date="topic.created"
+        /></secondary-text>
         <dm-menu
           v-if="topicActions"
           class="topic-actions"
