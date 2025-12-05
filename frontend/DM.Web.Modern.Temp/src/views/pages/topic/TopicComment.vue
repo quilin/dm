@@ -4,7 +4,7 @@ import { IconType } from "@/components/ui-kit/iconType";
 import type { DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 
 import { computed, ref } from "vue";
-import { useUserStore } from "@/stores";
+import { useForumStore, useUserStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 
@@ -13,6 +13,7 @@ import UserIcon from "@/components/community/UserIcon.vue";
 import forumApi from "@/api/requests/forumApi";
 
 const { user } = storeToRefs(useUserStore());
+const { reloadComments } = useForumStore();
 const { comment } = defineProps<{ comment: Comment }>();
 
 const commentActions = computed(() => {
@@ -33,7 +34,10 @@ const commentActions = computed(() => {
 });
 
 const editMode = ref(false);
-const remove = () => forumApi.deleteComment(comment.id);
+const remove = async () => {
+  await forumApi.deleteComment(comment.id);
+  await reloadComments();
+};
 </script>
 
 <template>
@@ -50,7 +54,11 @@ const remove = () => forumApi.deleteComment(comment.id);
             </template>
           </secondary-text>
         </div>
-        <edit-comment :comment="comment" v-model:active="editMode" />
+        <edit-comment
+          :comment="comment"
+          v-model:active="editMode"
+          @updated="reloadComments"
+        />
         <div v-if="!editMode" v-html="comment.text" />
       </div>
       <dm-menu v-if="commentActions" class="actions" :items="commentActions" />
