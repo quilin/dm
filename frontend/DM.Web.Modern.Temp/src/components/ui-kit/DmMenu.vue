@@ -11,6 +11,7 @@ export type DmMenuItem = {
 };
 const props = defineProps<{
   items: DmMenuItem[];
+  loading?: boolean;
 }>();
 const primeItems = computed<MenuItem[]>(() =>
   props.items.map((item) => ({
@@ -26,7 +27,11 @@ const menu = useTemplateRef("menu");
 
 <template>
   <span>
-    <dm-icon-button :icon="IconType.Kebab" @click="menu!.toggle($event)" />
+    <dm-icon-button
+      :loading="loading"
+      :icon="IconType.Kebab"
+      @click="menu!.toggle($event)"
+    />
     <Menu
       ref="menu"
       popup

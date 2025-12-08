@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
 import ForumTopic from "@/views/pages/forum/ForumTopic.vue";
-import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const route = useRoute();
