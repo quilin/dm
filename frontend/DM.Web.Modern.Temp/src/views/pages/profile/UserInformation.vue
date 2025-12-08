@@ -42,10 +42,12 @@ const saveChanges = async () => {
   <dm-loader v-if="!selectedUser" :big="true" />
 
   <div class="profile-edit_container" v-if="canEdit">
-    <!--  TODO: should be same button as activation menu link  -->
-    <a v-if="!editMode" class="profile-edit_button" @click="editMode = true"
-      ><dm-icon :font="IconType.Edit"
-    /></a>
+    <dm-icon-button
+      v-if="!editMode"
+      :icon="IconType.Edit"
+      class="profile-edit_button"
+      @click="editMode = true"
+    />
     <dm-form v-if="editMode" @submit="saveChanges">
       <dm-field>
         <dm-text id="edit-profile-info-text" v-model="info" />

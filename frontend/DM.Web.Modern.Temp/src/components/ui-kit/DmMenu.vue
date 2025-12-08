@@ -26,11 +26,7 @@ const menu = useTemplateRef("menu");
 
 <template>
   <span>
-    <dm-icon
-      class="menu-button"
-      @click="menu!.toggle($event)"
-      :font="IconType.Kebab"
-    />
+    <dm-icon-button :icon="IconType.Kebab" @click="menu!.toggle($event)" />
     <Menu
       ref="menu"
       popup
@@ -71,18 +67,6 @@ const menu = useTemplateRef("menu");
   to
     opacity: 0
     transform: translateY(10%)
-
-.menu-button
-  +Layout.square(Variables.$medium)
-  +Themes.theme(background-color, Themes.$background)
-  line-height: Variables.$grid-step * 3
-  text-align: center
-  padding: Variables.$tiny
-  border-radius: Variables.$medium
-  cursor: pointer
-
-  &:hover
-    +Themes.theme(background-color, Themes.$panel-background-hover)
 
 .menu-root
   +Themes.theme(background, Themes.$background)
