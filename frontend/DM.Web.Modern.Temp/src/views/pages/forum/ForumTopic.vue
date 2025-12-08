@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import type { Topic } from "@/api/models/forum";
 import { IconType } from "@/components/ui-kit/iconType";
+import { computed } from "vue";
 
-defineProps<{ topic: Topic }>();
+const props = defineProps<{ topic: Topic }>();
+const topicDescription = computed(() => {
+  return props.topic.description.length <= 100
+    ? props.topic.description
+    : `${props.topic.description.substring(0, 100)}...`;
+});
 </script>
 
 <template>
@@ -30,8 +36,8 @@ defineProps<{ topic: Topic }>();
       <dm-icon v-if="topic.attached" :font="IconType.Pinned" />
       <dm-icon v-if="topic.closed" :font="IconType.Closed" />
       {{ topic.title }}<br />
-      <secondary-text v-if="topic.description"
-        ><span v-html="topic.description"
+      <secondary-text v-if="topicDescription"
+        ><span v-html="topicDescription"
       /></secondary-text>
     </router-link>
     <div><human-date :date="topic.created!" format="DD.MM.YYYY" /></div>
