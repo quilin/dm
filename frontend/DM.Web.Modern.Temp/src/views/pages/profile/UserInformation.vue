@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { useCommunityStore } from "@/stores/community";
 import { IconType } from "@/components/ui-kit/iconType";
 import { useUserStore } from "@/stores";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import communityApi from "@/api/requests/communityApi";
 
@@ -19,17 +19,21 @@ const canEdit = computed(() => {
 });
 
 const editMode = ref(false);
+const loading = ref(false);
 const info = ref<string | null>(null);
-watch(
-  () => editMode.value,
-  async () => {
-    if (info.value !== null) return;
+
+const initializeEditMode = async () => {
+  if (info.value === null) {
+    loading.value = true;
     const { data } = await communityApi.getUserForUpdate(
       selectedUser.value!.login,
     );
     info.value = data!.resource.info;
-  },
-);
+    loading.value = false;
+  }
+
+  editMode.value = true;
+};
 
 const saveChanges = async () => {
   await store.updateUser(currentUser.value!.login, { info: info.value! });
@@ -44,9 +48,10 @@ const saveChanges = async () => {
   <div class="profile-edit_container" v-if="canEdit">
     <dm-icon-button
       v-if="!editMode"
+      :loading="loading"
       :icon="IconType.Edit"
       class="profile-edit_button"
-      @click="editMode = true"
+      @click="initializeEditMode"
     />
     <dm-form v-if="editMode" @submit="saveChanges">
       <dm-field>
