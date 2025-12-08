@@ -25,7 +25,6 @@ const dispatchSubmit = (nativeInput: HTMLInputElement) => {
     <text-area
       :id="id"
       v-model="model"
-      rows="5"
       auto-resize
       :disabled="disabled"
       :readonly="readonly"
