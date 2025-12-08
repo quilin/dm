@@ -53,9 +53,9 @@ const saveChanges = async () => {
       class="profile-edit_button"
       @click="initializeEditMode"
     />
-    <dm-form v-if="editMode" @submit="saveChanges">
+    <dm-form v-else @submit="saveChanges">
       <dm-field>
-        <dm-text id="edit-profile-info-text" v-model="info" />
+        <dm-text id="edit-profile-info-text" v-model="info" :rows="5" />
       </dm-field>
       <template #controls>
         <dm-button type="submit" label="Сохранить" />

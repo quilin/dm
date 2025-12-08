@@ -2,10 +2,6 @@
 import type { Topic } from "@/api/models/forum";
 import { ref, watch } from "vue";
 import forumApi from "@/api/requests/forumApi";
-import DmForm from "@/components/ui-kit/DmForm.vue";
-import DmLoader from "@/components/ui-kit/DmLoader.vue";
-import DmField from "@/components/ui-kit/DmField.vue";
-import DmInput from "@/components/ui-kit/DmInput.vue";
 
 const active = defineModel("active");
 const props = defineProps<{ topic: Topic }>();

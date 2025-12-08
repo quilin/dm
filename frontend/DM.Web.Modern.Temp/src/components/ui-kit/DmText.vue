@@ -8,12 +8,12 @@ defineProps<{
   disabled?: boolean;
   placeholder?: string;
   readonly?: boolean;
+  rows?: number;
 }>();
 
 const isFilled = computed(() => !!model.value);
 
 const dispatchSubmit = (nativeInput: HTMLInputElement) => {
-  console.log(nativeInput);
   const event = new Event("submit");
   nativeInput.form?.dispatchEvent(event);
 };
@@ -28,6 +28,7 @@ const dispatchSubmit = (nativeInput: HTMLInputElement) => {
       auto-resize
       :disabled="disabled"
       :readonly="readonly"
+      :rows="rows"
       @keydown.meta.enter.prevent="
         dispatchSubmit($event.target! as HTMLInputElement)
       "

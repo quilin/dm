@@ -19,7 +19,7 @@ defineProps<{
     }"
   >
     <template v-if="icon" #icon>
-      <DmIcon :font="icon" class="button-icon" />
+      <dm-icon :font="icon" class="button-icon" />
     </template>
   </Button>
 </template>

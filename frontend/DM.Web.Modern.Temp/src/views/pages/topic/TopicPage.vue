@@ -4,13 +4,13 @@ import { useRoute, useRouter } from "vue-router";
 import { useForumStore, useUserStore } from "@/stores";
 import { extractNumberParam } from "@/router";
 import { storeToRefs } from "pinia";
-import type { TopicId } from "@/api/models/forum";
+import type { Topic, TopicId } from "@/api/models/forum";
 import { useFetchData } from "@/composables/useFetchData";
 import { computed, ref } from "vue";
 import { type DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import forumApi from "@/api/requests/forumApi";
-import EditTopic from "@/views/pages/forum/EditTopic.vue";
+import useEditMode from "@/composables/useEditMode";
 
 const route = useRoute();
 const router = useRouter();
@@ -43,11 +43,6 @@ const topicActions = computed(() => {
   if (userIsHighAuthority(user.value)) {
     result.push(
       {
-        label: "Удалить",
-        icon: IconType.Remove,
-        command: removeTopic,
-      },
-      {
         label: topic.value!.closed ? "Открыть" : "Закрыть",
         icon: topic.value!.closed ? IconType.Open : IconType.Closed,
         command: toggleClose,
@@ -57,33 +52,66 @@ const topicActions = computed(() => {
         icon: IconType.Pinned,
         command: togglePinned,
       },
+      {
+        label: "Удалить",
+        icon: IconType.Remove,
+        command: removeTopic,
+      },
     );
   }
   if (user.value.login === topic.value!.author.login) {
     result.unshift({
       label: "Редактировать",
       icon: IconType.Edit,
-      command: () => (editMode.value = true),
+      command: initializeEditMode,
     });
   }
   return result;
 });
 
-const editMode = ref(false);
+const { isActive, acquire, release } = useEditMode();
+const loading = ref(false);
+
+const topicToEdit = ref<Topic | null>(null);
+const initializeEditMode = async () => {
+  if (topicToEdit.value === null) {
+    loading.value = true;
+    const { data } = await forumApi.getTopicForUpdate(topic.value!.id);
+    topicToEdit.value = data!.resource;
+    loading.value = false;
+  }
+  acquire();
+};
+const updateTopic = async () => {
+  loading.value = true;
+  await forumApi.updateTopic(topic.value!.id, {
+    title: topicToEdit.value!.title,
+    description: topicToEdit.value!.description,
+  });
+  loading.value = false;
+  await trySelectTopic(topic.value!.id);
+};
+
 const toggleClose = async () => {
+  loading.value = true;
   await forumApi.updateTopic(topic.value!.id, {
     closed: !topic.value!.closed,
   });
   topic.value!.closed = !topic.value!.closed;
+  loading.value = false;
 };
 const togglePinned = async () => {
+  loading.value = true;
   await forumApi.updateTopic(topic.value!.id, {
     attached: !topic.value!.attached,
   });
   topic.value!.attached = !topic.value!.attached;
+  loading.value = false;
 };
 const removeTopic = async () => {
+  loading.value = true;
   await forumApi.deleteTopic(topic.value!.id);
+  loading.value = false;
   await router.push({
     name: "forum",
     params: { n: undefined, id: topic.value!.forum.id },
@@ -101,12 +129,27 @@ const removeTopic = async () => {
       </router-link>
     </div>
     <div class="topic-content">
-      <edit-topic
-        :topic="topic"
-        v-model:active="editMode"
-        @updated="trySelectTopic(route.params.id as TopicId)"
-      />
-      <template v-if="!editMode">
+      <dm-form v-if="isActive" @submit="updateTopic">
+        <dm-field>
+          <dm-input
+            id="edit-topic-title"
+            v-model="topicToEdit!.title"
+            placeholder="Название"
+          />
+        </dm-field>
+        <dm-field>
+          <dm-text
+            id="edit-topic-description"
+            v-model="topicToEdit!.description"
+            placeholder="Описание"
+          />
+        </dm-field>
+        <template #controls>
+          <dm-button type="submit" label="Сохранить" />
+          <a @click="release">Отмена</a>
+        </template>
+      </dm-form>
+      <template v-else>
         <div
           v-if="topic.description"
           class="topic-description"
@@ -120,6 +163,7 @@ const removeTopic = async () => {
           v-if="topicActions"
           class="topic-actions"
           :items="topicActions"
+          :loading="loading"
         />
       </template>
     </div>
