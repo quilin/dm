@@ -37,6 +37,7 @@ defineProps<{
     background-size: Variables.$medium
     background-repeat: no-repeat
     color: transparent !important
+    cursor: progress
 
 .button-icon
   margin-right: Variables.$minor

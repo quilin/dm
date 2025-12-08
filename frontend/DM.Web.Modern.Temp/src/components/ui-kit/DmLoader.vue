@@ -3,7 +3,7 @@ defineProps<{ big?: boolean }>();
 </script>
 
 <template>
-  <span :class="{ loader: true, 'big-loader': big }">&nbsp;</span>
+  <span :class="['loader', big && 'big-loader']">&nbsp;</span>
 </template>
 
 <style scoped lang="sass">
@@ -14,6 +14,7 @@ defineProps<{ big?: boolean }>();
   +Layout.square(Variables.$medium)
   background-image: url('@/assets/images/loader.gif')
   background-size: contain
+  cursor: progress
 
 .big-loader
   +Layout.square(Variables.$big)

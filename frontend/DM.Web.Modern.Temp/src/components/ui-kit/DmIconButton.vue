@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 
-defineProps<{ icon: IconType }>();
+defineProps<{ icon: IconType; loading?: boolean }>();
 </script>
 
 <template>
-  <button class="icon-button"><dm-icon :font="icon" /></button>
+  <button :class="['icon-button', loading && 'loading']">
+    <dm-icon :font="icon" />
+  </button>
 </template>
 
 <style scoped lang="sass">
@@ -31,4 +33,12 @@ defineProps<{ icon: IconType }>();
   &:hover
     +Themes.theme(background-color, Themes.$panel-background-hover)
     +Themes.theme(color, Themes.$active-text-hover)
+
+  &.loading
+    background-position: center center
+    background-image: url('@/assets/images/loader.gif')
+    background-size: Variables.$medium
+    background-repeat: no-repeat
+    color: transparent !important
+    cursor: progress
 </style>
