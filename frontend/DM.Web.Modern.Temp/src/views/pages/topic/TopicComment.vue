@@ -39,7 +39,7 @@ const commentActions = computed(() => {
 
 const loading = ref(false);
 
-const { isActive, acquire, release } = useEditMode();
+const { id, isActive, acquire, release } = useEditMode();
 const text = ref<string | null>(null);
 const initializeEditMode = async () => {
   if (text.value === null) {
@@ -86,7 +86,7 @@ const removeComment = async () => {
           @submit="updateComment"
         >
           <dm-field>
-            <dm-text id="edit_comment-text" v-model="text" />
+            <dm-text :id="id" v-model="text" />
           </dm-field>
           <template #controls>
             <dm-button type="submit" label="Сохранить" :loading="loading" />

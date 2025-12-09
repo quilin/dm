@@ -25,7 +25,7 @@ const roleNames: Record<string, string> = {
 const userRoles = computed(() =>
   user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r]),
 );
-const isCurrentUser = computed(
+const canEdit = computed(
   () => currentUser.value && user.value?.login === currentUser.value?.login,
 );
 
@@ -42,30 +42,46 @@ useFetchData(
 
 <template>
   <template v-if="user">
-    <page-title class="profile_title">{{ route.params.login }}</page-title>
-    <secondary-text class="profile_roles">{{
+    <page-title class="profile-title">{{ route.params.login }}</page-title>
+    <secondary-text class="profile-roles">{{
       userRoles!.join(", ")
     }}</secondary-text>
 
-    <div class="profile_container">
-      <div class="profile_short-info">
+    <div class="profile-container">
+      <div class="profile-short_info">
         <img
           :src="user.originalPictureUrl"
           :alt="user.login"
-          class="profile_short-info_picture"
+          class="profile-short_info-picture"
         />
 
         <div>В сети: <user-online :user="user" :detailed="true" /></div>
-        <profile-stat title="Статус" empty="Не указан" v-model="user.status" />
-        <profile-stat title="Имя" empty="Не указано" v-model="user.name" />
+        <profile-stat
+          title="Статус"
+          empty="Не указан"
+          :value="user.status"
+          :update-value="(value) => ({ status: value })"
+        />
+        <profile-stat
+          title="Имя"
+          empty="Не указано"
+          :value="user.name"
+          :update-value="(value) => ({ name: value })"
+        />
         <profile-stat
           title="Местоположение"
           empty="Не указано"
-          v-model="user.location"
+          :value="user.location"
+          :update-value="(value) => ({ location: value })"
         />
-        <profile-stat title="Skype" empty="Не указан" v-model="user.skype" />
+        <profile-stat
+          title="Skype"
+          empty="Не указан"
+          :value="user.skype"
+          :update-value="(value) => ({ skype: value })"
+        />
       </div>
-      <div class="profile_content">
+      <div class="profile-content">
         <nav>
           <router-link
             class="tabs-link"
@@ -83,7 +99,7 @@ useFetchData(
             >Персонажи</router-link
           >
           <router-link
-            v-if="isCurrentUser"
+            v-if="canEdit"
             class="tabs-link"
             :to="{ name: 'user-settings', params: route.params }"
             >Настройки</router-link
@@ -100,29 +116,28 @@ useFetchData(
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"
 
-.profile_title
+.profile-title
   display: inline-block
-.profile_roles
+.profile-roles
   display: inline-block
   margin-left: Variables.$small
 
-.profile_container
+.profile-container
   display: flex
+  gap: Variables.$big
 
-.profile_short-info
-  width: Variables.$grid-step * 40
+.profile-short_info
+  width: Variables.$grid-step * 50
+  flex-shrink: 0
 
-.profile_short-info_picture
+.profile-short_info-picture
   width: 100%
   max-height: Variables.$grid-step * 200
   border-radius: Variables.$border-radius
 
-.profile_content
+.profile-content
   flex-grow: 1
-  margin-left: Variables.$big
-
-  & .controls
-    background: transparent
+  min-width: 0
 
 nav
   margin-bottom: Variables.$small
