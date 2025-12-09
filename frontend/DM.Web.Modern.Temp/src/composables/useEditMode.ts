@@ -9,6 +9,7 @@ export default function useEditMode() {
   const release = () => (activeId.value = null);
 
   return {
+    id,
     isActive,
     acquire,
     release,

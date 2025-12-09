@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores";
 import { computed, ref } from "vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import communityApi from "@/api/requests/communityApi";
+import useEditMode from "@/composables/useEditMode";
 
 const store = useCommunityStore();
 const { selectedUser } = storeToRefs(store);
@@ -18,7 +19,7 @@ const canEdit = computed(() => {
   return currentUser.value.login === selectedUser.value.login;
 });
 
-const editMode = ref(false);
+const { isActive, acquire, release } = useEditMode();
 const loading = ref(false);
 const info = ref<string | null>(null);
 
@@ -32,55 +33,53 @@ const initializeEditMode = async () => {
     loading.value = false;
   }
 
-  editMode.value = true;
+  acquire();
 };
 
 const saveChanges = async () => {
   await store.updateUser(currentUser.value!.login, { info: info.value! });
   await store.trySelectProfile(currentUser.value!.login);
-  editMode.value = false;
+  release();
 };
 </script>
 
 <template>
   <dm-loader v-if="!selectedUser" :big="true" />
 
-  <div class="profile-edit_container" v-if="canEdit">
+  <div class="profile-info" v-if="!isActive && selectedUser">
     <dm-icon-button
-      v-if="!editMode"
+      v-if="canEdit"
       :loading="loading"
       :icon="IconType.Edit"
       class="profile-edit_button"
       @click="initializeEditMode"
     />
-    <dm-form v-else @submit="saveChanges">
-      <dm-field>
-        <dm-text id="edit-profile-info-text" v-model="info" :rows="5" />
-      </dm-field>
-      <template #controls>
-        <dm-button type="submit" label="Сохранить" />
-        <a @click="editMode = false">Отмена</a>
-      </template>
-    </dm-form>
-  </div>
-
-  <div class="profile-info" v-if="!editMode && selectedUser">
     <div v-if="selectedUser.info" v-html="selectedUser.info" />
     <secondary-text v-else
       >Пользователь ничего о себе не написал...</secondary-text
     >
   </div>
+
+  <dm-form class="profile-edit_container" v-if="isActive" @submit="saveChanges">
+    <dm-field>
+      <dm-text id="edit-profile-info-text" v-model="info" :rows="5" />
+    </dm-field>
+    <template #controls>
+      <dm-button type="submit" label="Сохранить" />
+      <a @click="release">Отмена</a>
+    </template>
+  </dm-form>
 </template>
 
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"
 
 .profile-info
+  position: relative
   margin: Variables.$medium 0
 
 .profile-edit_container
-  position: relative
-  margin: 0 (-(Variables.$small))
+  margin: 0 (-(Variables.$small + Variables.$tiny))
 
 .profile-edit_button
   position: absolute

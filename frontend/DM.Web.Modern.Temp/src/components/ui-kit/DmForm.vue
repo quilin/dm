@@ -3,14 +3,12 @@ defineEmits(["submit"]);
 </script>
 
 <template>
-  <div>
-    <form @submit.prevent="$emit('submit')">
-      <slot />
-      <div class="controls">
-        <slot name="controls" />
-      </div>
-    </form>
-  </div>
+  <form @submit.self.prevent="$emit('submit')">
+    <slot />
+    <div class="controls">
+      <slot name="controls" />
+    </div>
+  </form>
 </template>
 
 <style scoped lang="sass">
