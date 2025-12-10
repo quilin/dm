@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Poll, PollOptionId } from "@/api/models/community";
-import ProgressBar from "@/components/ProgressBar.vue";
 import { computed } from "vue";
 import dayjs from "dayjs";
 import { storeToRefs } from "pinia";
@@ -27,7 +26,7 @@ async function voteForOption(optionId: PollOptionId) {
       {{ poll.title }}<br />
       <secondary-text v-if="closed">Голосование окончено</secondary-text>
     </div>
-    <progress-bar
+    <dm-progress
       v-for="option in poll.options"
       :key="option.id"
       :current="option.votesCount"
@@ -42,7 +41,7 @@ async function voteForOption(optionId: PollOptionId) {
         @click="voteForOption(option.id)"
         class="poll-option-vote"
       />
-    </progress-bar>
+    </dm-progress>
   </div>
 </template>
 

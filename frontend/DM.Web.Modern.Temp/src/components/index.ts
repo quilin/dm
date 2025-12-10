@@ -22,6 +22,7 @@ import UserIcon from "@/components/community/UserIcon.vue";
 import DmPaging from "@/components/ui-kit/DmPaging.vue";
 import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
 import DmUpload from "@/components/ui-kit/DmUpload.vue";
+import DmProgress from "@/components/ui-kit/DmProgress.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -31,7 +32,8 @@ export default function (application: App<Element>) {
     .component("DmLoader", DmLoader)
     .component("DmDialog", DmDialog)
     .component("DmPaging", DmPaging)
-    .component("DmMenu", DmMenu);
+    .component("DmMenu", DmMenu)
+    .component("DmProgress", DmProgress);
 
   application
     .component("DmForm", DmForm)

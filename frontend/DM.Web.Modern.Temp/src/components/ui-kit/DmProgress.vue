@@ -20,7 +20,7 @@ const progress = computed(() => (props.current / props.goal) * 100);
   position: relative
   overflow: hidden
   margin: Variables.$small 0
-  padding: Variables.$small
+  padding: Variables.$minor Variables.$small
   border-radius: Variables.$border-radius
   +Themes.theme(background-color, Themes.$progress-background)
 

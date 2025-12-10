@@ -2,30 +2,19 @@
 import { useRoute } from "vue-router";
 import { useCommunityStore } from "@/stores/community";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { type UserLogin, UserRole } from "@/api/models/community";
 import ProfileStat from "@/views/pages/profile/ProfileStat.vue";
 import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
+import DmPictureUpload from "@/components/ui-kit/DmPictureUpload.vue";
+import communityApi from "@/api/requests/communityApi";
 
 const route = useRoute();
 const { user: currentUser } = storeToRefs(useUserStore());
 const communityStore = useCommunityStore();
 const { selectedUser: user } = storeToRefs(communityStore);
 const { trySelectProfile } = communityStore;
-
-const roleNames: Record<string, string> = {
-  [UserRole.Administrator]: "Тролль",
-  [UserRole.SeniorModerator]: "Старший гоблин",
-  [UserRole.RegularModerator]: "Гоблин",
-  [UserRole.NannyModerator]: "Гоблин-нянька",
-};
-const userRoles = computed(() =>
-  user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r]),
-);
-const canEdit = computed(
-  () => currentUser.value && user.value?.login === currentUser.value?.login,
-);
 
 useFetchData(
   () => trySelectProfile(route.params.login as UserLogin),
@@ -36,6 +25,36 @@ useFetchData(
     },
   ],
 );
+
+const roleNames: Record<string, string> = {
+  [UserRole.Administrator]: "Тролль",
+  [UserRole.SeniorModerator]: "Старший гоблин",
+  [UserRole.RegularModerator]: "Гоблин",
+  [UserRole.NannyModerator]: "Гоблин-нянька",
+};
+const userRoles = computed(() =>
+  user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r]),
+);
+const canEdit = computed(() => {
+  if (currentUser.value === null) return false;
+  return user.value?.login === currentUser.value?.login;
+});
+
+const uploadProgress = ref<ProgressEvent | null>(null);
+const profilePictureUrl = computed(
+  () => user.value?.originalPictureUrl ?? "/userpic.png",
+);
+const uploadPicture = async (data: FormData) => {
+  await communityApi.uploadUserPicture(
+    user.value!.login,
+    data,
+    (progressEvent) => {
+      uploadProgress.value = progressEvent;
+    },
+  );
+  uploadProgress.value = null;
+  await trySelectProfile(user.value!.login);
+};
 </script>
 
 <template>
@@ -47,12 +66,15 @@ useFetchData(
 
     <div class="profile-container">
       <div class="profile-short_info">
-        <img
-          :src="user.originalPictureUrl"
-          :alt="user.login"
-          class="profile-short_info-picture"
-        />
-        <dm-upload v-if="canEdit" />
+        <div class="profile-picture">
+          <dm-picture-upload
+            @upload="uploadPicture"
+            :can-upload="canEdit"
+            :alt="user.login"
+            :progress-event="uploadProgress"
+            :picture-url="profilePictureUrl"
+          />
+        </div>
 
         <div>В сети: <user-online :user="user" :detailed="true" /></div>
         <profile-stat
@@ -129,10 +151,8 @@ useFetchData(
   width: Variables.$grid-step * 50
   flex-shrink: 0
 
-.profile-short_info-picture
-  width: 100%
-  max-height: Variables.$grid-step * 200
-  border-radius: Variables.$border-radius
+.profile-picture
+  margin-bottom: Variables.$small
 
 .profile-content
   flex-grow: 1

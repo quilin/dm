@@ -10,7 +10,6 @@ import type {
 } from "@/api/models/community";
 import Api from "@/api";
 import { BbRenderMode } from "../bbRenderMode";
-import type { AxiosProgressEvent } from "axios";
 import type { Patch, Post } from "@/api/models";
 
 export default new (class CommunityApi {
@@ -47,7 +46,7 @@ export default new (class CommunityApi {
   public uploadUserPicture(
     login: UserLogin,
     files: FormData,
-    progressCallback: (event: AxiosProgressEvent) => void,
+    progressCallback: (event: ProgressEvent) => void,
   ) {
     return Api.postFile<Envelope<User>>(
       `users/${login}/uploads`,
