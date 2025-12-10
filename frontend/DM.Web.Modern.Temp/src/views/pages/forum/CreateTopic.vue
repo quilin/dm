@@ -4,7 +4,6 @@ import { useForumStore } from "@/stores";
 
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
-import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const { createTopic, selectedForum } = useForumStore();
 
@@ -36,14 +35,14 @@ const tryCreateTopic = async () => {
     <dm-form @submit="tryCreateTopic">
       <dm-field>
         <dm-input
-          id="title"
+          id="topic-title"
           v-model="topic.title"
           placeholder="Название темы"
         />
       </dm-field>
       <dm-field>
         <dm-text
-          id="description"
+          id="topic-description"
           v-model="topic.description"
           placeholder="Описание"
         />

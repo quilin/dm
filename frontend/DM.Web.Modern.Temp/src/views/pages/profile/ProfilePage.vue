@@ -9,6 +9,7 @@ import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
 import DmPictureUpload from "@/components/ui-kit/DmPictureUpload.vue";
 import communityApi from "@/api/requests/communityApi";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const route = useRoute();
 const { user: currentUser } = storeToRefs(useUserStore());
@@ -76,7 +77,10 @@ const uploadPicture = async (data: FormData) => {
           />
         </div>
 
-        <div>В сети: <user-online :user="user" :detailed="true" /></div>
+        <div>
+          <secondary-text>В сети</secondary-text>&nbsp;
+          <user-online :user="user" :detailed="true" />
+        </div>
         <profile-stat
           title="Статус"
           empty="Не указан"

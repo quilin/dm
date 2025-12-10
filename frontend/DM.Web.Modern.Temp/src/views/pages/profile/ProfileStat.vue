@@ -6,10 +6,7 @@ import type { Patch } from "@/api/models";
 import type { User } from "@/api/models/community";
 import { computed, ref } from "vue";
 import useEditMode from "@/composables/useEditMode";
-import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
 import { IconType } from "@/components/ui-kit/iconType";
-import DmForm from "@/components/ui-kit/DmForm.vue";
-import DmInput from "@/components/ui-kit/DmInput.vue";
 import communityApi from "@/api/requests/communityApi";
 
 const { user: currentUser } = storeToRefs(useUserStore());

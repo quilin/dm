@@ -11,9 +11,13 @@ type IfEquals<X, Y, A, B> =
 export type Id<T> = Served<T>;
 
 export type Post<T> = {
-  [P in keyof T as IfEquals<T[P], Served<T[P]>, never, P>]: T[P];
+  [P in keyof T as IfEquals<T[P], Served<T[P]>, never, P>]: T[P] extends Array<
+    infer U
+  >
+    ? Array<Post<U>>
+    : T[P];
 };
 
 export type Patch<T> = {
-  [P in keyof T as IfEquals<T[P], Served<T[P]>, never, P>]?: T[P];
+  [P in keyof T as IfEquals<T[P], Served<T[P]>, never, P>]?: Patch<T[P]>;
 };
