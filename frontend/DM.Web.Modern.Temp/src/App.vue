@@ -80,6 +80,7 @@ onMounted(fetchUser);
 
 .content-body
   display: flex
+  line-height: Variables.$grid-step * 5
   padding-bottom: Layout.$footer-height + Variables.$big
 
 .content-menu
