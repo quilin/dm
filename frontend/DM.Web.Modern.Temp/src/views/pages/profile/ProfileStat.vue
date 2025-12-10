@@ -70,7 +70,8 @@ dl
 dd
   padding: 0
 
-.profile_stat-data
+.profile_stat-data,
+.profile_stat-edit
   display: flex
   flex-wrap: nowrap
   align-content: space-between
@@ -80,11 +81,6 @@ dd
   flex-grow: 1
 
 .profile_stat-edit
-  display: flex
-  flex-wrap: nowrap
-  align-content: space-between
-  align-items: baseline
-
   & > *:first-child
     flex-grow: 1
     min-width: 0

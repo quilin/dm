@@ -4,11 +4,9 @@ import { useCommunityStore } from "@/stores/community";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { type UserLogin, UserRole } from "@/api/models/community";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
 import ProfileStat from "@/views/pages/profile/ProfileStat.vue";
 import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
-import UserOnline from "@/components/community/UserOnline.vue";
 
 const route = useRoute();
 const { user: currentUser } = storeToRefs(useUserStore());
@@ -54,6 +52,7 @@ useFetchData(
           :alt="user.login"
           class="profile-short_info-picture"
         />
+        <dm-upload v-if="canEdit" />
 
         <div>В сети: <user-online :user="user" :detailed="true" /></div>
         <profile-stat

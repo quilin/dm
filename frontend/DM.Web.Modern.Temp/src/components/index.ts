@@ -21,6 +21,7 @@ import UserRating from "@/components/community/UserRating.vue";
 import UserIcon from "@/components/community/UserIcon.vue";
 import DmPaging from "@/components/ui-kit/DmPaging.vue";
 import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
+import DmUpload from "@/components/ui-kit/DmUpload.vue";
 
 export default function (application: App<Element>) {
   application.config.globalProperties.IconType = IconType;
@@ -38,6 +39,7 @@ export default function (application: App<Element>) {
     .component("DmInput", DmInput)
     .component("DmText", DmText)
     .component("DmDropdown", DmDropdown)
+    .component("DmUpload", DmUpload)
     .component("DmButton", DmButton)
     .component("DmIconButton", DmIconButton);
 
