@@ -64,21 +64,24 @@ class Api {
   public postFile<T>(
     url: string,
     params?: any,
-    progressCallback?: (event: AxiosProgressEvent) => void,
+    progressCallback?: (event: ProgressEvent) => void,
   ): Promise<ApiResult<T>> {
     const result = this.send<T>(() =>
       this.axios.post(url, params, {
         onUploadProgress: progressCallback
           ? (event: AxiosProgressEvent) =>
               progressCallback(
-                event.loaded === event.total
-                  ? ({ loaded: 99, total: 100 } as AxiosProgressEvent)
-                  : event,
+                (event.loaded === event.total
+                  ? { loaded: 99, total: 100 }
+                  : event) as ProgressEvent,
               )
           : undefined,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }),
     );
-    progressCallback?.({ loaded: 1, total: 1 } as AxiosProgressEvent);
+    progressCallback?.({ loaded: 1, total: 1 } as ProgressEvent);
     return result;
   }
 
