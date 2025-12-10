@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 
-defineProps<{ icon: IconType; loading?: boolean }>();
+defineProps<{
+  icon: IconType;
+  loading?: boolean;
+  type?: "reset" | "submit" | "button";
+}>();
 </script>
 
 <template>
-  <button :class="['icon-button', loading && 'loading']">
+  <button
+    :type="type ?? 'button'"
+    :class="['icon-button', loading && 'loading']"
+  >
     <dm-icon :font="icon" />
   </button>
 </template>
