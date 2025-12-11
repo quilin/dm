@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import type {
   Comment,
+  CommentId,
   Forum,
   ForumId,
   Topic,
@@ -106,6 +107,14 @@ export const useForumStore = defineStore("fora", () => {
     });
     comments.value = data;
   }
+  async function reloadComment(id: CommentId) {
+    if (!selectedTopic.value || !comments.value) return;
+
+    const commentIndex = comments.value.resources.findIndex((c) => c.id === id);
+    if (commentIndex === -1) return;
+    const { data } = await forumApi.getComment(id);
+    comments.value.resources[commentIndex] = data!.resource;
+  }
   async function createComment(comment: Post<Comment>) {
     const result = await forumApi.createComment(
       selectedTopic.value!.id,
@@ -137,6 +146,7 @@ export const useForumStore = defineStore("fora", () => {
     selectedTopic,
     fetchComments,
     reloadComments,
+    reloadComment,
     createComment,
     comments,
   };

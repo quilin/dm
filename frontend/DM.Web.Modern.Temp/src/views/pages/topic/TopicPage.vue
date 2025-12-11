@@ -11,6 +11,7 @@ import { type DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import forumApi from "@/api/requests/forumApi";
 import useEditMode from "@/composables/useEditMode";
+import DmLike from "@/components/likes/DmLike.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -117,6 +118,15 @@ const removeTopic = async () => {
     params: { n: undefined, id: topic.value!.forum.id },
   });
 };
+
+const like = async () => {
+  await forumApi.postTopicLike(topic.value!.id);
+  await trySelectTopic(topic.value!.id);
+};
+const unlike = async () => {
+  await forumApi.deleteTopicLike(topic.value!.id);
+  await trySelectTopic(topic.value!.id);
+};
 </script>
 
 <template>
@@ -159,12 +169,19 @@ const removeTopic = async () => {
         <secondary-text
           ><human-timespan :date="topic.created"
         /></secondary-text>
-        <dm-menu
-          v-if="topicActions"
-          class="topic-actions"
-          :items="topicActions"
-          :loading="loading"
-        />
+        <div class="topic-actions">
+          <dm-like
+            :entity="topic"
+            :user="user"
+            @liked="like"
+            @unliked="unlike"
+          />
+          <dm-menu
+            v-if="topicActions.length"
+            :items="topicActions"
+            :loading="loading"
+          />
+        </div>
       </template>
     </div>
   </template>
@@ -184,6 +201,8 @@ const removeTopic = async () => {
   position: relative
 
 .topic-actions
+  display: flex
+  gap: Variables.$tiny
   position: absolute
   bottom: 0
   right: 0

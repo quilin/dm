@@ -11,9 +11,11 @@ import { userIsHighAuthority } from "@/api/models/community/helpers";
 import UserIcon from "@/components/community/UserIcon.vue";
 import forumApi from "@/api/requests/forumApi";
 import useEditMode from "@/composables/useEditMode";
+import DmLike from "@/components/likes/DmLike.vue";
+import { BbRenderMode } from "@/api/bbRenderMode";
 
 const { user } = storeToRefs(useUserStore());
-const { reloadComments } = useForumStore();
+const { reloadComments, reloadComment } = useForumStore();
 const { comment } = defineProps<{ comment: Comment }>();
 
 const commentActions = computed(() => {
@@ -44,7 +46,7 @@ const text = ref<string | null>(null);
 const initializeEditMode = async () => {
   if (text.value === null) {
     loading.value = true;
-    const { data } = await forumApi.getCommentForUpdate(comment.id);
+    const { data } = await forumApi.getComment(comment.id, BbRenderMode.Bb);
     text.value = data!.resource.text;
     loading.value = false;
   }
@@ -63,47 +65,68 @@ const removeComment = async () => {
   loading.value = false;
   await reloadComments();
 };
+
+const canLike = computed(
+  () => user.value! && user.value.login !== comment.author.login,
+);
+const liked = computed(() =>
+  comment.likes.some((u) => u.login === user.value?.login),
+);
+const like = async () => {
+  await forumApi.postCommentLike(comment.id);
+  await reloadComment(comment.id);
+};
+const unlike = async () => {
+  await forumApi.deleteCommentLike(comment.id);
+  await reloadComment(comment.id);
+};
 </script>
 
 <template>
   <div class="comment-container">
-    <div class="comment-wrapper">
-      <user-icon :user="comment.author" />
-      <div class="comment-content">
-        <div>
-          <user-link :user="comment.author" :hide-picture="true" />,
-          <secondary-text>
-            <human-timespan :date="comment.created" /><template
-              v-if="comment.updated"
-              >, (изменен <human-timespan :date="comment.updated" />)
-            </template>
-          </secondary-text>
-        </div>
-
-        <dm-form
-          v-if="isActive"
-          class="edit_comment-form"
-          @submit="updateComment"
-        >
-          <dm-field>
-            <dm-text :id="id" v-model="text" />
-          </dm-field>
-          <template #controls>
-            <dm-button type="submit" label="Сохранить" :loading="loading" />
-            <a @click="release">Отмена</a>
+    <user-icon :user="comment.author" />
+    <div class="comment-content">
+      <div>
+        <user-link :user="comment.author" :hide-picture="true" />,
+        <secondary-text>
+          <human-timespan :date="comment.created" /><template
+            v-if="comment.updated"
+          >
+            (изменен <human-timespan :date="comment.updated" />)
           </template>
-        </dm-form>
-
-        <template v-else>
-          <div v-html="comment.text" />
-          <dm-menu
-            v-if="commentActions"
-            class="comment-actions"
-            :items="commentActions"
-            :loading="loading"
-          />
-        </template>
+        </secondary-text>
       </div>
+
+      <dm-form
+        v-if="isActive"
+        class="edit_comment-form"
+        @submit="updateComment"
+      >
+        <dm-field>
+          <dm-text :id="id" v-model="text" />
+        </dm-field>
+        <template #controls>
+          <dm-button type="submit" label="Сохранить" :loading="loading" />
+          <a @click="release">Отмена</a>
+        </template>
+      </dm-form>
+
+      <template v-else>
+        <div v-html="comment.text" />
+      </template>
+    </div>
+    <div v-if="!isActive" class="comment-actions">
+      <dm-like
+        :entity="comment"
+        :user="user"
+        @liked="like"
+        @unliked="unlike"
+      />
+      <dm-menu
+        v-if="commentActions.length"
+        :items="commentActions"
+        :loading="loading"
+      />
     </div>
   </div>
 </template>
@@ -112,21 +135,23 @@ const removeComment = async () => {
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Layout"
 
+$outline: Variables.$grid-step * 3
+
 .comment-container
-  margin: Variables.$small (-(Variables.$grid-step * 3))
-  padding: Variables.$grid-step * 3
+  display: flex
+  position: relative
+  margin: Variables.$small (-$outline)
+  padding: $outline
   border-radius: Variables.$border-radius
 
-.comment-wrapper
-  display: flex
-
 .comment-actions
+  display: flex
+  gap: Variables.$tiny
   position: absolute
-  top: 0
-  right: 0
+  top: $outline
+  right: $outline
 
 .comment-content
-  position: relative
   flex-grow: 1
 
 .edit_comment-form

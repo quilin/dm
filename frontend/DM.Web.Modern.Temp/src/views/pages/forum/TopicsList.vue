@@ -17,12 +17,15 @@ const { topics, attachedTopics } = storeToRefs(useForumStore());
     :to="{ name: 'forum', params: route.params }"
   />
 
-  <div class="topics-list_header">
+  <div class="topics_list-header">
     <div>Тема</div>
     <div>Дата</div>
     <div>Автор</div>
-    <div>
+    <div class="topics_list-counter">
       <dm-icon :font="IconType.CommentsNoUnread" />
+    </div>
+    <div class="topics_list-counter">
+      <dm-icon :font="IconType.Like" />
     </div>
     <div>Последнее сообщение</div>
   </div>
@@ -37,7 +40,7 @@ const { topics, attachedTopics } = storeToRefs(useForumStore());
   <dm-loader v-if="!topics || attachedTopics === null" :big="true" />
   <secondary-text
     v-else-if="topics.resources.length + attachedTopics.length === 0"
-    class="topics-list_none"
+    class="topics_list-none"
     >Еще не создано ни одной темы</secondary-text
   >
   <forum-topic
@@ -52,12 +55,15 @@ const { topics, attachedTopics } = storeToRefs(useForumStore());
 @use "@/assets/styles/Variables"
 @use "@/assets/styles/Themes"
 @use "@/assets/styles/Grid"
-$grid-template: [title] 40% [date] 12% [author] 14% [count] auto [lastComment] 26%
+$grid-template: [title] 35% [date] 12% [author] 14% [count] 1fr [likes] 1fr [lastComment] 26%
 
-.topics-list_header
+.topics_list-header
   +Grid.grid-head($grid-template)
 
-.topics-list_row
+.topics_list-counter
+  text-align: center
+
+.topics_list-row
   +Grid.grid($grid-template)
   &:hover
     +Themes.theme(background-color, Themes.$panel-background-hover)
@@ -66,16 +72,16 @@ $grid-template: [title] 40% [date] 12% [author] 14% [count] auto [lastComment] 2
     &.attached
       opacity: initial
 
-.topics-list_row-title
+.topics_list-row_title
   display: block
   position: relative
   & .attached
     font-weight: bold
 
-.topics-list_row-unread
+.topics_list-row_unread
   font-weight: bold
 
-.topics-list_none
+.topics_list-none
   display: block
   margin: Variables.$medium 0
   text-align: center
