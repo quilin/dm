@@ -86,11 +86,11 @@ export default new (class ForumApi {
     return Api.delete(`forum/comments/${id}`);
   }
 
-  public getCommentForUpdate(id: CommentId) {
+  public getComment(id: CommentId, renderMode?: BbRenderMode) {
     return Api.get<Envelope<Comment>>(
       `forum/comments/${id}`,
       undefined,
-      BbRenderMode.Bb,
+      renderMode,
     );
   }
 

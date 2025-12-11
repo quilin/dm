@@ -4,6 +4,7 @@ import { IconType } from "@/components/ui-kit/iconType";
 defineProps<{
   icon: IconType;
   loading?: boolean;
+  disabled?: boolean;
   type?: "reset" | "submit" | "button";
 }>();
 </script>
@@ -11,9 +12,14 @@ defineProps<{
 <template>
   <button
     :type="type ?? 'button'"
-    :class="['icon-button', loading && 'loading']"
+    :disabled="disabled"
+    :class="[
+      'icon_button',
+      loading && 'icon_button-loading',
+      !disabled && 'icon_button-active',
+    ]"
   >
-    <dm-icon :font="icon" />
+    <dm-icon :font="icon" /><slot />
   </button>
 </template>
 
@@ -22,26 +28,31 @@ defineProps<{
 @use "@/assets/styles/Themes"
 @use "@/assets/styles/Layout"
 
-.icon-button
+.icon_button
   +Layout.square(Variables.$grid-step * 5)
+  display: inline-block
   padding: Variables.$tiny
+  width: initial
+  min-width: Variables.$grid-step * 5
   border: none
 
   +Themes.theme(background-color, Themes.$background)
   +Themes.theme(color, Themes.$active-text)
 
-  font-size: Variables.$font-size
+  font-family: "PT Sans", sans-serif
   line-height: 1
   text-align: center
 
   border-radius: Variables.$medium
-  cursor: pointer
+  cursor: default
 
-  &:hover
-    +Themes.theme(background-color, Themes.$panel-background-hover)
-    +Themes.theme(color, Themes.$active-text-hover)
+  &.icon_button-active
+    cursor: pointer
+    &:hover
+      +Themes.theme(background-color, Themes.$panel-background-hover)
+      +Themes.theme(color, Themes.$active-text-hover)
 
-  &.loading
+  &.icon_button-loading
     background-position: center center
     background-image: url('@/assets/images/loader.gif')
     background-size: Variables.$medium

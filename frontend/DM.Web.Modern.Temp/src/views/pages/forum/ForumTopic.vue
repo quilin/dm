@@ -15,7 +15,7 @@ const topicDescription = computed(() => {
   <div
     :key="topic.id"
     :class="{
-      'topics-list_row': true,
+      'topics_list-row': true,
       closed: topic.closed,
       attached: topic.attached,
     }"
@@ -31,7 +31,7 @@ const topicDescription = computed(() => {
               : topic.commentsCount || undefined,
         },
       }"
-      class="topics-list_row-title"
+      class="topics_list-row_title"
     >
       <dm-icon v-if="topic.attached" :font="IconType.Pinned" />
       <dm-icon v-if="topic.closed" :font="IconType.Closed" />
@@ -42,12 +42,13 @@ const topicDescription = computed(() => {
     </router-link>
     <div><human-date :date="topic.created!" format="DD.MM.YYYY" /></div>
     <div><user-link :user="topic.author!" /></div>
-    <div>
+    <div class="topics_list-counter">
       {{ topic.commentsCount }}
-      <span class="topics-list_row-unread" v-if="topic.unreadCommentsCount"
+      <span class="topics_list-row_unread" v-if="topic.unreadCommentsCount"
         >(+{{ topic.unreadCommentsCount }})</span
       >
     </div>
+    <div class="topics_list-counter">{{ topic.likes.length }}</div>
     <div>
       <template v-if="topic.lastComment">
         <user-link :user="topic.lastComment.author" />,
@@ -64,4 +65,7 @@ const topicDescription = computed(() => {
   </div>
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.topics_list-counter
+  text-align: center
+</style>
