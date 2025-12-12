@@ -19,7 +19,10 @@ import "@/assets/styles/Inputs.sass";
 
 dayjs.extend(relativeTime).locale("ru");
 
-const i18n = createI18n({ locale: "ru" });
+const i18n = createI18n({
+  legacy: false,
+  locale: "ru",
+});
 
 const application = createApp(App);
 
