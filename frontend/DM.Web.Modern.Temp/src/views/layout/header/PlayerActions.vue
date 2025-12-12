@@ -2,7 +2,10 @@
 import { IconType } from "@/components/ui-kit/iconType";
 import { useUserStore } from "@/stores";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import { useI18n } from "vue-i18n";
+import messages from "./PlayerActions.i18n";
 
+const { t } = useI18n({ messages });
 const store = useUserStore();
 </script>
 
@@ -21,10 +24,12 @@ const store = useUserStore();
           : IconType.MessagesNoUnread
       "
     />
-    Сообщения
+    {{ t("messages") }}
   </router-link>
   |
-  <a @click="store.signOut"><dm-icon :font="IconType.Logout" /> Выйти</a>
+  <a @click="store.signOut"
+    ><dm-icon :font="IconType.Logout" /> {{ t("signOut") }}</a
+  >
 </template>
 
 <style scoped lang="sass"></style>
