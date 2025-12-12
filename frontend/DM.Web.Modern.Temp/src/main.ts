@@ -17,11 +17,11 @@ import "@/assets/styles/Reset.sass";
 import "@/assets/styles/Fonts.sass";
 import "@/assets/styles/Inputs.sass";
 
-dayjs.extend(relativeTime).locale("ru");
+dayjs.extend(relativeTime).locale("en");
 
 const i18n = createI18n({
   legacy: false,
-  locale: "ru",
+  locale: "en-US",
 });
 
 const application = createApp(App);
