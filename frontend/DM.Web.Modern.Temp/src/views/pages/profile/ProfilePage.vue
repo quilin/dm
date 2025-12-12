@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useCommunityStore } from "@/stores/community";
-import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { type UserLogin, UserRole } from "@/api/models/community";
 import ProfileStat from "@/views/pages/profile/ProfileStat.vue";
@@ -9,20 +8,17 @@ import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
 import DmPictureUpload from "@/components/ui-kit/DmPictureUpload.vue";
 import communityApi from "@/api/requests/communityApi";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const route = useRoute();
-const { user: currentUser } = storeToRefs(useUserStore());
+const userStore = useUserStore();
 const communityStore = useCommunityStore();
-const { selectedUser: user } = storeToRefs(communityStore);
-const { trySelectProfile } = communityStore;
 
 useFetchData(
-  () => trySelectProfile(route.params.login as UserLogin),
+  () => communityStore.trySelectProfile(route.params.login as UserLogin),
   [
     {
       param: (p) => p.login,
-      callback: (login) => trySelectProfile(login as UserLogin),
+      callback: (login) => communityStore.trySelectProfile(login as UserLogin),
     },
   ],
 );
@@ -34,32 +30,35 @@ const roleNames: Record<string, string> = {
   [UserRole.NannyModerator]: "Гоблин-нянька",
 };
 const userRoles = computed(() =>
-  user.value?.roles.filter((r) => r in roleNames).map((r) => roleNames[r]),
+  communityStore.selectedUser?.roles
+    .filter((r) => r in roleNames)
+    .map((r) => roleNames[r]),
 );
-const canEdit = computed(() => {
-  if (currentUser.value === null) return false;
-  return user.value?.login === currentUser.value?.login;
-});
+const canEdit = computed(
+  () =>
+    userStore.user !== null &&
+    userStore.user.login === communityStore.selectedUser?.login,
+);
 
 const uploadProgress = ref<ProgressEvent | null>(null);
 const profilePictureUrl = computed(
-  () => user.value?.originalPictureUrl ?? "/userpic.png",
+  () => communityStore.selectedUser?.originalPictureUrl ?? "/userpic.png",
 );
 const uploadPicture = async (data: FormData) => {
   await communityApi.uploadUserPicture(
-    user.value!.login,
+    communityStore.selectedUser!.login,
     data,
     (progressEvent) => {
       uploadProgress.value = progressEvent;
     },
   );
   uploadProgress.value = null;
-  await trySelectProfile(user.value!.login);
+  await communityStore.trySelectProfile(communityStore.selectedUser!.login);
 };
 </script>
 
 <template>
-  <template v-if="user">
+  <template v-if="communityStore.selectedUser">
     <page-title class="profile-title">{{ route.params.login }}</page-title>
     <secondary-text class="profile-roles">{{
       userRoles!.join(", ")
@@ -71,7 +70,7 @@ const uploadPicture = async (data: FormData) => {
           <dm-picture-upload
             @upload="uploadPicture"
             :can-upload="canEdit"
-            :alt="user.login"
+            :alt="communityStore.selectedUser.login"
             :progress-event="uploadProgress"
             :picture-url="profilePictureUrl"
           />
@@ -79,30 +78,30 @@ const uploadPicture = async (data: FormData) => {
 
         <div>
           <secondary-text>В сети</secondary-text>&nbsp;
-          <user-online :user="user" :detailed="true" />
+          <user-online :user="communityStore.selectedUser" :detailed="true" />
         </div>
         <profile-stat
           title="Статус"
           empty="Не указан"
-          :value="user.status"
+          :value="communityStore.selectedUser.status"
           :update-value="(value) => ({ status: value })"
         />
         <profile-stat
           title="Имя"
           empty="Не указано"
-          :value="user.name"
+          :value="communityStore.selectedUser.name"
           :update-value="(value) => ({ name: value })"
         />
         <profile-stat
           title="Местоположение"
           empty="Не указано"
-          :value="user.location"
+          :value="communityStore.selectedUser.location"
           :update-value="(value) => ({ location: value })"
         />
         <profile-stat
           title="Skype"
           empty="Не указан"
-          :value="user.skype"
+          :value="communityStore.selectedUser.skype"
           :update-value="(value) => ({ skype: value })"
         />
       </div>

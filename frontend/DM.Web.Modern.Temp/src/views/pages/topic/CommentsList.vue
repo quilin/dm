@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { useForumStore, useUserStore } from "@/stores";
-import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import TopicComment from "@/views/pages/topic/TopicComment.vue";
 import CreateComment from "@/views/pages/topic/CreateComment.vue";
 
 const route = useRoute();
 const router = useRouter();
-const { comments, selectedTopic } = storeToRefs(useForumStore());
-const { user } = storeToRefs(useUserStore());
+const forumStore = useForumStore();
+const userStore = useUserStore();
 
 const redirectToLastPage = () => {
   router.push({
     name: "topic",
     params: {
-      id: selectedTopic.value!.id,
-      n: comments.value!.paging!.total + 1,
+      id: forumStore.selectedTopic!.id,
+      n: forumStore.comments!.paging!.total + 1,
     },
   });
 };
@@ -23,22 +22,24 @@ const redirectToLastPage = () => {
 
 <template>
   <dm-paging
-    v-if="comments"
-    :paging="comments.paging!"
+    v-if="forumStore.comments"
+    :paging="forumStore.comments.paging!"
     :to="{ name: 'topic', params: route.params }"
   />
-  <dm-loader v-if="!comments" :big="true" />
-  <secondary-text v-else-if="!comments.resources.length" class="comments-none"
+  <dm-loader v-if="forumStore.comments === null" :big="true" />
+  <secondary-text
+    v-else-if="forumStore.comments.resources.length === 0"
+    class="comments-none"
     >Комментариев пока нет...</secondary-text
   >
   <topic-comment
     v-else
-    v-for="comment in comments.resources"
+    v-for="comment in forumStore.comments.resources"
     :key="comment.id"
     :comment="comment"
   />
 
-  <create-comment v-if="user" @created="redirectToLastPage" />
+  <create-comment v-if="userStore.user" @created="redirectToLastPage" />
 </template>
 
 <style scoped lang="sass">

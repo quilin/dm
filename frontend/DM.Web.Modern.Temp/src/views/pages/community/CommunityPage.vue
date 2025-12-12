@@ -5,14 +5,14 @@ import { extractNumberParam } from "@/router";
 import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
-const { fetchUsers } = useCommunityStore();
+const store = useCommunityStore();
 
 useFetchData(
-  () => fetchUsers(extractNumberParam(route.params.n)),
+  () => store.fetchUsers(extractNumberParam(route.params.n)),
   [
     {
       param: (p) => p.n,
-      callback: (n) => fetchUsers(extractNumberParam(n)),
+      callback: (n) => store.fetchUsers(extractNumberParam(n)),
     },
   ],
 );

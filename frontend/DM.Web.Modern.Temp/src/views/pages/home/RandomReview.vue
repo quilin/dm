@@ -10,11 +10,9 @@ import { ref, onMounted } from "vue";
 import type { Review } from "@/api/models/community";
 import { useReviewStore } from "@/stores";
 
-const { getRandomReview } = useReviewStore();
+const store = useReviewStore();
 const review = ref<Review | null>(null);
-onMounted(async () => {
-  review.value = await getRandomReview();
-});
+onMounted(async () => (review.value = await store.getRandomReview()));
 </script>
 
 <style scoped lang="sass"></style>

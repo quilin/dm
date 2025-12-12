@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import UserRating from "@/components/community/UserRating.vue";
 import UserOnline from "@/components/community/UserOnline.vue";
-import { storeToRefs } from "pinia";
 import { useCommunityStore } from "@/stores/community";
 import { useRoute } from "vue-router";
 
-const { users } = storeToRefs(useCommunityStore());
 const route = useRoute();
+const store = useCommunityStore();
 </script>
 
 <template>
   <dm-paging
-    v-if="users"
-    :paging="users.paging!"
+    v-if="store.users !== null"
+    :paging="store.users.paging!"
     :to="{ name: 'community', params: route.params }"
   />
 
@@ -25,18 +24,20 @@ const route = useRoute();
     <div>Местоположение</div>
   </div>
 
-  <dm-loader v-if="!users" :big="true" />
-  <secondary-text v-else-if="!users.resources.length" class="users-list-none"
+  <dm-loader v-if="store.users === null" :big="true" />
+  <secondary-text
+    v-else-if="!store.users.resources.length"
+    class="users-list-none"
     >Пользователей нет...</secondary-text
   >
   <div
     class="users-list-row"
     v-else
-    v-for="(user, number) in users.resources"
+    v-for="(user, number) in store.users.resources"
     :key="user.login"
   >
     <span class="number">{{
-      number + users.paging!.size * (users.paging!.current - 1) + 1
+      number + store.users.paging!.size * (store.users.paging!.current - 1) + 1
     }}</span>
     <user-link :user="user" />
     <user-rating :user="user" />

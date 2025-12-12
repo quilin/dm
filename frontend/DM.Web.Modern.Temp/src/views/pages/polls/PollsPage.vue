@@ -1,31 +1,29 @@
 <script setup lang="ts">
 import { useFetchData } from "@/composables/useFetchData";
-import { usePollsStore } from "@/stores/polls";
 import router, { extractNumberParam } from "@/router";
 import { useRoute } from "vue-router";
 import { IconType } from "@/components/ui-kit/iconType";
 import { useModal } from "vue-final-modal";
 import { computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores";
+import { useUserStore, usePollsStore } from "@/stores";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import CreatePoll from "@/views/pages/polls/CreatePoll.vue";
 
 const route = useRoute();
-const { fetchPolls } = usePollsStore();
-const { user } = storeToRefs(useUserStore());
+const pollsStore = usePollsStore();
+const userStore = useUserStore();
 
 useFetchData(
-  () => fetchPolls(extractNumberParam(route.params.n), false),
+  () => pollsStore.fetchPolls(extractNumberParam(route.params.n), false),
   [
     {
       param: (p) => p.n,
-      callback: (p) => fetchPolls(extractNumberParam(p), false),
+      callback: (p) => pollsStore.fetchPolls(extractNumberParam(p), false),
     },
   ],
 );
 
-const canCreatePoll = computed(() => userIsHighAuthority(user.value));
+const canCreatePoll = computed(() => userIsHighAuthority(userStore.user));
 const { open: openCreatePoll, close: closeCreatePoll } = useModal({
   component: CreatePoll,
   attrs: {

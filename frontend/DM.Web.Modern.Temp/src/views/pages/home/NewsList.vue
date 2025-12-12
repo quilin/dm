@@ -2,22 +2,18 @@
 import { IconType } from "@/components/ui-kit/iconType";
 import { useForumStore } from "@/stores";
 import { onMounted } from "vue";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
-import { storeToRefs } from "pinia";
-import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 
 const store = useForumStore();
-const { news } = storeToRefs(store);
 
 onMounted(() => store.fetchNews());
 </script>
 
 <template>
   <block-title>Последние новости</block-title>
-  <dm-loader v-if="!news" />
-  <secondary-text v-else-if="!news.length">Ничего нового</secondary-text>
+  <dm-loader v-if="store.news === null" />
+  <secondary-text v-else-if="!store.news.length">Ничего нового</secondary-text>
 
-  <div v-else v-for="article in news" :key="article.id" class="article">
+  <div v-else v-for="article in store.news" :key="article.id" class="article">
     <router-link
       class="article-title"
       :to="{ name: 'topic', params: { id: article.id } }"

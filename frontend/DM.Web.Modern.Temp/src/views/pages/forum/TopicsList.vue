@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useForumStore } from "@/stores";
 import ForumTopic from "@/views/pages/forum/ForumTopic.vue";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const route = useRoute();
-const { topics, attachedTopics } = storeToRefs(useForumStore());
+const store = useForumStore();
 </script>
 
 <template>
   <dm-paging
-    v-if="topics"
-    :paging="topics.paging!"
+    v-if="store.topics !== null"
+    :paging="store.topics.paging!"
     :to="{ name: 'forum', params: route.params }"
   />
 
@@ -30,22 +28,27 @@ const { topics, attachedTopics } = storeToRefs(useForumStore());
     <div>Последнее сообщение</div>
   </div>
 
-  <template v-if="attachedTopics !== null">
+  <template v-if="store.attachedTopics !== null">
     <forum-topic
-      v-for="topic in attachedTopics"
+      v-for="topic in store.attachedTopics"
       :topic="topic"
       :key="topic.id"
     />
   </template>
-  <dm-loader v-if="!topics || attachedTopics === null" :big="true" />
+  <dm-loader
+    v-if="store.topics === null || store.attachedTopics === null"
+    :big="true"
+  />
   <secondary-text
-    v-else-if="topics.resources.length + attachedTopics.length === 0"
+    v-else-if="
+      store.topics.resources.length + store.attachedTopics.length === 0
+    "
     class="topics_list-none"
     >Еще не создано ни одной темы</secondary-text
   >
   <forum-topic
     v-else
-    v-for="topic in topics.resources"
+    v-for="topic in store.topics.resources"
     :topic="topic"
     :key="topic.id"
   />

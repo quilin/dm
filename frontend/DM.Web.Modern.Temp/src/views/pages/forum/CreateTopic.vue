@@ -5,14 +5,14 @@ import { useForumStore } from "@/stores";
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
 
-const { createTopic, selectedForum } = useForumStore();
+const forumStore = useForumStore();
 
 const topic = ref<Post<Topic>>({
   title: "",
   description: "",
   attached: false,
   closed: false,
-  forum: selectedForum!,
+  forum: forumStore.selectedForum!,
 });
 
 const emit = defineEmits<{
@@ -23,7 +23,7 @@ const emit = defineEmits<{
 const loading = ref(false);
 const tryCreateTopic = async () => {
   loading.value = true;
-  const createdTopic = await createTopic(topic.value);
+  const createdTopic = await forumStore.createTopic(topic.value);
   loading.value = false;
   emit("created", createdTopic);
 };

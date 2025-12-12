@@ -3,12 +3,9 @@ import MenuBlock from "@/views/layout/MenuBlock.vue";
 import { usePollsStore } from "@/stores/polls";
 import { onMounted } from "vue";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
-import { storeToRefs } from "pinia";
-import SecondaryText from "@/components/layout/SecondaryText.vue";
 import { IconType } from "@/components/ui-kit/iconType";
 
 const store = usePollsStore();
-const { activePolls } = storeToRefs(store);
 
 onMounted(() => store.fetchActivePolls());
 </script>
@@ -16,11 +13,16 @@ onMounted(() => store.fetchActivePolls());
 <template>
   <menu-block token="OpenPolls">
     <template #title>Опросы</template>
-    <dm-loader v-if="!activePolls" />
-    <secondary-text v-else-if="!activePolls.length"
+    <dm-loader v-if="store.activePolls === null" />
+    <secondary-text v-else-if="!store.activePolls.length"
       >Нет активных опросов</secondary-text
     >
-    <the-poll v-else v-for="poll in activePolls" :key="poll.id" :poll="poll" />
+    <the-poll
+      v-else
+      v-for="poll in store.activePolls"
+      :key="poll.id"
+      :poll="poll"
+    />
     <div>
       <router-link class="forward" :to="{ name: 'polls' }">
         К старым опросам

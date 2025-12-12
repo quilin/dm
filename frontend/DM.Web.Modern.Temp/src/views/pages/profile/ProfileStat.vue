@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores";
-import { useCommunityStore } from "@/stores/community";
+import { useUserStore, useCommunityStore } from "@/stores";
 import type { Patch } from "@/api/models";
 import type { User } from "@/api/models/community";
 import { computed, ref } from "vue";
@@ -9,9 +7,8 @@ import useEditMode from "@/composables/useEditMode";
 import { IconType } from "@/components/ui-kit/iconType";
 import communityApi from "@/api/requests/communityApi";
 
-const { user: currentUser } = storeToRefs(useUserStore());
+const userStore = useUserStore();
 const communityStore = useCommunityStore();
-const { selectedUser: user } = storeToRefs(communityStore);
 
 const props = defineProps<{
   title: string;
@@ -21,7 +18,9 @@ const props = defineProps<{
 }>();
 const editableValue = ref(props.value);
 
-const canEdit = computed(() => currentUser.value!.login === user.value!.login);
+const canEdit = computed(
+  () => userStore.user!.login === communityStore.selectedUser!.login,
+);
 const { id, isActive, acquire, release } = useEditMode();
 
 const loading = ref(false);
@@ -29,10 +28,10 @@ const saveChanges = async () => {
   if (props.value !== editableValue.value) {
     loading.value = true;
     await communityApi.updateUser(
-      user.value!.login,
+      communityStore.selectedUser!.login,
       props.updateValue(editableValue.value),
     );
-    await communityStore.trySelectProfile(user.value!.login);
+    await communityStore.trySelectProfile(communityStore.selectedUser!.login);
     loading.value = false;
   }
   release();

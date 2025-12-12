@@ -5,33 +5,30 @@ import { onMounted, watch } from "vue";
 import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { storeToRefs } from "pinia";
 
-const store = useForumStore();
-const { fora } = storeToRefs(store);
-const { fetchFora } = store;
-const { user } = storeToRefs(useUserStore());
 const route = useRoute();
+const forumStore = useForumStore();
+const userStore = useUserStore();
 
 const isForumRoute = computed(
   () => route.name === "forum" || route.name === "topic",
 );
 
 // TODO: fix double invocation
-onMounted(fetchFora);
-watch(() => user.value, fetchFora, { flush: "post" });
+onMounted(forumStore.fetchFora);
+watch(() => userStore.user, forumStore.fetchFora, { flush: "post" });
 </script>
 
 <template>
   <menu-block token="fora">
     <template #title>Форумы</template>
-    <dm-loader v-if="!fora" />
+    <dm-loader v-if="forumStore.fora === null" />
     <div
       v-else
-      v-for="forum in fora!"
+      v-for="forum in forumStore.fora"
       :key="forum.id"
       :class="{
-        selected: isForumRoute && forum.id === store.selectedForum?.id,
+        selected: isForumRoute && forum.id === forumStore.selectedForum?.id,
       }"
     >
       <router-link :to="{ name: 'forum', params: { id: forum.id } }">

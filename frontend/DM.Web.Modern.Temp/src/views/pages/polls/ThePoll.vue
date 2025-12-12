@@ -2,14 +2,13 @@
 import type { Poll, PollOptionId } from "@/api/models/community";
 import { computed } from "vue";
 import dayjs from "dayjs";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/stores";
-import { usePollsStore } from "@/stores/polls";
-
-const { user } = storeToRefs(useUserStore());
-const { vote } = usePollsStore();
+import { useUserStore, usePollsStore } from "@/stores";
 
 const props = defineProps<{ poll: Poll }>();
+
+const userStore = useUserStore();
+const pollStore = usePollsStore();
+
 const closed = computed(() => dayjs(props.poll.ends).isBefore(dayjs()));
 const totalVotes = computed(() =>
   props.poll.options.reduce((sum, option) => sum + option.votesCount, 0),
@@ -17,7 +16,7 @@ const totalVotes = computed(() =>
 const voted = computed(() => props.poll.options.some((option) => option.voted));
 
 async function voteForOption(optionId: PollOptionId) {
-  await vote(props.poll.id!, optionId);
+  await pollStore.vote(props.poll.id!, optionId);
 }
 </script>
 <template>
@@ -37,7 +36,7 @@ async function voteForOption(optionId: PollOptionId) {
         <span>{{ option.votesCount }}</span>
       </div>
       <a
-        v-if="!closed && user && !voted"
+        v-if="!closed && userStore.user && !voted"
         @click="voteForOption(option.id)"
         class="poll-option-vote"
       />

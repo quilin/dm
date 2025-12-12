@@ -11,7 +11,6 @@ import App from "./App.vue";
 import router from "./router";
 
 import PrimeVue from "primevue/config";
-import registerDefaultComponents from "./components";
 
 import "vue-final-modal/style.css";
 import "@/assets/styles/Reset.sass";
@@ -23,8 +22,6 @@ dayjs.extend(relativeTime).locale("ru");
 const i18n = createI18n({ locale: "ru" });
 
 const application = createApp(App);
-
-registerDefaultComponents(application);
 
 application
   .use(createPinia())
