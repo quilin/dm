@@ -4,6 +4,9 @@ import { usePollsStore } from "@/stores/polls";
 import { onMounted } from "vue";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
 
 const store = usePollsStore();
 

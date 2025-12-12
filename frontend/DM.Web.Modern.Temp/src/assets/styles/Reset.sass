@@ -45,20 +45,3 @@ a
   &.router-link-active
     font-weight: bold
     +Themes.theme(color, Themes.$text)
-
-field
-  display: flex
-  margin: Variables.$small 0
-  align-items: baseline
-
-  & input
-    flex-shrink: 0
-
-  &.error input
-    animation-name: shake-error
-    animation-duration: Variables.$animation-time
-    animation-timing-function: ease-in-out
-    +Themes.theme(border-color, Themes.$negative-border)
-
-    &:focus
-      +Themes.theme(box-shadow, Themes.$negative-border, inset 0 0 Variables.$minor)

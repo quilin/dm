@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="T">
-defineEmits(["submit"]);
+const emit = defineEmits<{ (e: "submit"): void }>();
 </script>
 
 <template>
-  <form @submit.self.prevent="$emit('submit')">
+  <form @submit.self.prevent="emit('submit')">
     <slot />
     <div class="controls">
       <slot name="controls" />

@@ -4,6 +4,13 @@ import { useForumStore } from "@/stores";
 
 import type { Topic } from "@/api/models/forum";
 import type { Post } from "@/api/models";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmText from "@/components/ui-kit/DmText.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const forumStore = useForumStore();
 

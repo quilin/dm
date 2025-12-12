@@ -5,6 +5,8 @@ import { onMounted, watch } from "vue";
 import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const route = useRoute();
 const forumStore = useForumStore();

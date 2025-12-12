@@ -5,6 +5,13 @@ import { computed, ref } from "vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import communityApi from "@/api/requests/communityApi";
 import useEditMode from "@/composables/useEditMode";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmText from "@/components/ui-kit/DmText.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
 
 const communityStore = useCommunityStore();
 const userStore = useUserStore();

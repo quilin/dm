@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import DmProgress from "@/components/ui-kit/DmProgress.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import BlockTitle from "@/components/layout/BlockTitle.vue";
 
 const goal = ref(50000);
 const current = ref(17000);

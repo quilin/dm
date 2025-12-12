@@ -6,6 +6,10 @@ import { computed, ref } from "vue";
 import useEditMode from "@/composables/useEditMode";
 import { IconType } from "@/components/ui-kit/iconType";
 import communityApi from "@/api/requests/communityApi";
+import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const userStore = useUserStore();
 const communityStore = useCommunityStore();

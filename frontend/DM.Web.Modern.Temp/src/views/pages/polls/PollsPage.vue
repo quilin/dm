@@ -8,6 +8,8 @@ import { computed } from "vue";
 import { useUserStore, usePollsStore } from "@/stores";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import CreatePoll from "@/views/pages/polls/CreatePoll.vue";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
 
 const route = useRoute();
 const pollsStore = usePollsStore();

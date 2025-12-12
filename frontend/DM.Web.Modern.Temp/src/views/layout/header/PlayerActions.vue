@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 import { useUserStore } from "@/stores";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const store = useUserStore();
 </script>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 import { computed, ref, watch } from "vue";
+import DmUpload from "@/components/ui-kit/DmUpload.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import DmProgress from "@/components/ui-kit/DmProgress.vue";
 
 const props = defineProps<{
   canUpload: boolean;
@@ -8,7 +11,7 @@ const props = defineProps<{
   progressEvent: ProgressEvent | null;
   pictureUrl: string | undefined;
 }>();
-const emit = defineEmits(["upload"]);
+const emit = defineEmits<{ (e: "uploadStarted", picture: FormData): void }>();
 
 const loaded = ref(0);
 const total = ref(0);
@@ -47,7 +50,12 @@ watch(
   <div class="picture_upload-container">
     <img :src="props.pictureUrl" class="picture_upload-picture" :alt="alt" />
     <template v-if="canUpload">
-      <span :class="['picture_upload-status', !uploading && !uploaded && 'picture_upload-status-ready']">
+      <span
+        :class="[
+          'picture_upload-status',
+          !uploading && !uploaded && 'picture_upload-status-ready',
+        ]"
+      >
         <template v-if="uploading">
           <dm-progress
             class="picture_upload-progress"
@@ -65,7 +73,7 @@ watch(
       </span>
       <dm-upload
         v-if="!uploading"
-        @upload="(picture: FormData) => emit('upload', picture)"
+        @upload="(picture: FormData) => emit('uploadStarted', picture)"
       />
     </template>
   </div>

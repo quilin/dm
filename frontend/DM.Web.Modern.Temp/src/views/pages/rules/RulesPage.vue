@@ -1,3 +1,6 @@
+<script setup lang="ts">
+import PageTitle from "@/components/layout/PageTitle.vue";
+</script>
 <template>
   <page-title>Правила</page-title>
   <article>

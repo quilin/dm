@@ -2,6 +2,8 @@
 import TheReview from "@/views/pages/about/TheReview.vue";
 import { useRoute } from "vue-router";
 import { useReviewStore } from "@/stores";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmPaging from "@/components/ui-kit/DmPaging.vue";
 
 const route = useRoute();
 const store = useReviewStore();

@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useForumStore } from "@/stores";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmText from "@/components/ui-kit/DmText.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+
+const emit = defineEmits<{ (e: "created"): void }>();
 
 const store = useForumStore();
 
-const emit = defineEmits(["created"]);
 const text = ref("");
 const loading = ref(false);
 const tryCreateTopic = async () => {

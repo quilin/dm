@@ -2,11 +2,18 @@
 import { ref } from "vue";
 import { useUserStore } from "@/stores";
 import type { RegisterCredentials } from "@/api/models/account";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const emit = defineEmits<{
-  (e: "success"): void;
-  (e: "cancel"): void;
+  (e: "registered"): void;
+  (e: "cancelled"): void;
 }>();
+const store = useUserStore();
 
 const credentials = ref<RegisterCredentials>({
   email: "",
@@ -15,13 +22,12 @@ const credentials = ref<RegisterCredentials>({
 });
 const loading = ref(false);
 
-const { register } = useUserStore();
 const submit = async () => {
   loading.value = true;
-  const badRequest = await register(credentials.value);
+  const badRequest = await store.register(credentials.value);
   loading.value = false;
   if (!badRequest) {
-    emit("success");
+    emit("registered");
   }
 };
 </script>
@@ -53,7 +59,7 @@ const submit = async () => {
 
       <template #controls>
         <dm-button label="Отправить" type="submit" />
-        <a @click="$emit('cancel')">Отмена</a>
+        <a @click="emit('cancelled')">Отмена</a>
       </template>
     </dm-form>
   </dm-dialog>

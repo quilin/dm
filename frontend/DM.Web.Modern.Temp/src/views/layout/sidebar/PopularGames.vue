@@ -7,4 +7,5 @@
 
 <script setup lang="ts">
 import MenuBlock from "@/views/layout/MenuBlock.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 </script>

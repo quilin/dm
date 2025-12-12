@@ -2,6 +2,7 @@
 import type { Game } from "@/api/models/gaming";
 import { computed } from "vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const props = defineProps<{
   game: Game;

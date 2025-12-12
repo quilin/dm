@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { useUiStore, useUserStore } from "@/stores";
+import { onMounted, watch } from "vue";
+import { ModalsContainer } from "vue-final-modal";
+import TheHeader from "@/views/layout/TheHeader.vue";
+import TheFooter from "@/views/layout/TheFooter.vue";
+
+const uiStore = useUiStore();
+const userStore = useUserStore();
+
+watch(
+  () => [uiStore.theme],
+  (value, oldValue) => {
+    const html = document.querySelector("html")!;
+    html.classList.remove(`theme_${oldValue}`);
+    html.classList.add(`theme_${value}`);
+  },
+  { immediate: true },
+);
+
+onMounted(userStore.fetchUser);
+</script>
+
 <template>
   <div id="app">
     <div class="main" ref="scroll">
@@ -22,29 +45,6 @@
     <modals-container />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useUiStore, useUserStore } from "@/stores";
-import { onMounted, watch } from "vue";
-import { ModalsContainer } from "vue-final-modal";
-import TheHeader from "@/views/layout/TheHeader.vue";
-import TheFooter from "@/views/layout/TheFooter.vue";
-
-const uiStore = useUiStore();
-const { fetchUser } = useUserStore();
-
-watch(
-  () => [uiStore.theme],
-  (value, oldValue) => {
-    const html = document.querySelector("html")!;
-    html.classList.remove(`theme_${oldValue}`);
-    html.classList.add(`theme_${value}`);
-  },
-  { immediate: true },
-);
-
-onMounted(fetchUser);
-</script>
 
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"

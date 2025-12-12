@@ -9,6 +9,8 @@ import TheReview from "@/views/pages/about/TheReview.vue";
 import { ref, onMounted } from "vue";
 import type { Review } from "@/api/models/community";
 import { useReviewStore } from "@/stores";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import BlockTitle from "@/components/layout/BlockTitle.vue";
 
 const store = useReviewStore();
 const review = ref<Review | null>(null);

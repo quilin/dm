@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Comment } from "@/api/models/forum";
 import { IconType } from "@/components/ui-kit/iconType";
-import type { DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
+import DmMenu, { type DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 
 import { computed, ref } from "vue";
 import { useForumStore, useUserStore } from "@/stores";
@@ -12,6 +12,13 @@ import forumApi from "@/api/requests/forumApi";
 import useEditMode from "@/composables/useEditMode";
 import DmLike from "@/components/likes/DmLike.vue";
 import { BbRenderMode } from "@/api/bbRenderMode";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmText from "@/components/ui-kit/DmText.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import HumanTimespan from "@/components/dates/HumanTimespan.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import UserLink from "@/components/community/UserLink.vue";
 
 const props = defineProps<{ comment: Comment }>();
 
@@ -46,7 +53,10 @@ const text = ref<string | null>(null);
 const initializeEditMode = async () => {
   if (text.value === null) {
     loading.value = true;
-    const { data } = await forumApi.getComment(props.comment.id, BbRenderMode.Bb);
+    const { data } = await forumApi.getComment(
+      props.comment.id,
+      BbRenderMode.Bb,
+    );
     text.value = data!.resource.text;
     loading.value = false;
   }

@@ -23,6 +23,7 @@ import { useGamesStore } from "@/stores/games";
 import { onMounted, watch } from "vue";
 import { GameStatus } from "@/api/models/gaming";
 import GamesList from "@/views/layout/menu/GamesList.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
 
 const userStore = useUserStore();
 const store = useGamesStore();

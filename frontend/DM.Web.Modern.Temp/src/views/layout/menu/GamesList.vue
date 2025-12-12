@@ -2,6 +2,7 @@
 import MenuBlock from "@/views/layout/MenuBlock.vue";
 import { IconType } from "@/components/ui-kit/iconType";
 import { GameStatus } from "@/api/models/gaming";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 defineProps<{
   token: string;

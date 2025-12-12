@@ -17,6 +17,7 @@
 import type { Paging } from "@/api/models/common";
 import { computed, ref, watch } from "vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 interface PageLink {
   to: any;

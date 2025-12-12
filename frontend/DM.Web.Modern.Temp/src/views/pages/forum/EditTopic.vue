@@ -2,10 +2,17 @@
 import type { Topic } from "@/api/models/forum";
 import { ref, watch } from "vue";
 import forumApi from "@/api/requests/forumApi";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmText from "@/components/ui-kit/DmText.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
 
 const active = defineModel("active");
 const props = defineProps<{ topic: Topic }>();
-const emit = defineEmits(["updated"]);
+const emit = defineEmits<{ (e: "updated"): void }>();
+
 const editableTopic = ref<Topic | null>(null);
 
 watch(
