@@ -4,6 +4,14 @@ import type { Poll } from "@/api/models/community";
 import type { Post } from "@/api/models";
 import { IconType } from "@/components/ui-kit/iconType";
 import communityApi from "@/api/requests/communityApi";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const pollToCreate = ref<Post<Poll>>({
   title: "",

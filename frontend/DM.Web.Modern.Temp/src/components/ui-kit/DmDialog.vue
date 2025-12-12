@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VueFinalModal } from "vue-final-modal";
-defineProps<{ withForm: boolean }>();
+defineProps<{ withForm?: boolean }>();
 </script>
 
 <template>

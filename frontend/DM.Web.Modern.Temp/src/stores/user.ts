@@ -16,12 +16,12 @@ export const useUserStore = defineStore("root", () => {
   const userKey = "user";
 
   function updateUser(newUser: User | null) {
-    const { updateTheme } = useUiStore();
+    const uiStore = useUiStore();
 
     user.value = newUser;
     if (newUser === null) localStorage.removeItem(userKey);
     else localStorage.setItem(userKey, JSON.stringify(newUser));
-    updateTheme(newUser?.settings?.colorSchema ?? ColorSchema.Modern);
+    uiStore.updateTheme(newUser?.settings?.colorSchema ?? ColorSchema.Modern);
   }
 
   async function register(credentials: RegisterCredentials) {

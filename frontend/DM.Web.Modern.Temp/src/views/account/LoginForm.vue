@@ -1,23 +1,30 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import type { LoginCredentials } from "@/api/models/account";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmField from "@/components/ui-kit/DmField.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
+import DmDialog from "@/components/ui-kit/DmDialog.vue";
 
 const emit = defineEmits<{
-  (e: "cancel"): void;
+  (e: "cancelled"): void;
 }>();
 
-const credentials = reactive<LoginCredentials>({
+const store = useUserStore();
+
+const credentials = ref<LoginCredentials>({
   login: "",
   password: "",
   rememberMe: true,
 });
 
 const loading = ref(false);
-const { signIn } = useUserStore();
 const submit = async () => {
   loading.value = true;
-  const badRequest = await signIn(credentials);
+  const badRequest = await store.signIn(credentials.value);
   loading.value = false;
   if (!badRequest) {
     document.location.reload();
@@ -49,7 +56,7 @@ const submit = async () => {
       </dm-field>
       <template #controls>
         <dm-button type="submit" :loading="loading" label="Войти" />
-        <a @click="$emit('cancel')">Отмена</a>
+        <a @click="emit('cancelled')">Отмена</a>
       </template>
     </dm-form>
   </dm-dialog>

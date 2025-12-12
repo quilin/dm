@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const currentYear = ref<number>(new Date().getFullYear());
 </script>

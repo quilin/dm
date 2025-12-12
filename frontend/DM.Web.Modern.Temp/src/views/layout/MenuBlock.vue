@@ -15,6 +15,7 @@
 import { computed, ref } from "vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
 import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const props = defineProps<{ token: string }>();
 const storageKey = computed(() => `__HideMenuModule_${props.token}__`);

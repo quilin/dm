@@ -3,6 +3,9 @@ import { useForumStore, useUserStore } from "@/stores";
 import { useRoute, useRouter } from "vue-router";
 import TopicComment from "@/views/pages/topic/TopicComment.vue";
 import CreateComment from "@/views/pages/topic/CreateComment.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmPaging from "@/components/ui-kit/DmPaging.vue";
 
 const route = useRoute();
 const router = useRouter();

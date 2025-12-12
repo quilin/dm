@@ -3,6 +3,10 @@ import { IconType } from "@/components/ui-kit/iconType";
 import { useRoute } from "vue-router";
 import { useForumStore } from "@/stores";
 import ForumTopic from "@/views/pages/forum/ForumTopic.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import DmPaging from "@/components/ui-kit/DmPaging.vue";
 
 const route = useRoute();
 const store = useForumStore();

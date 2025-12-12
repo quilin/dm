@@ -5,6 +5,10 @@ import { useReviewStore, useUserStore } from "@/stores";
 import { computed, ref } from "vue";
 import { userIsAdmin } from "@/api/models/community/helpers";
 import { useRouter } from "vue-router";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import UserLink from "@/components/community/UserLink.vue";
 
 const props = defineProps<{
   review: Review;

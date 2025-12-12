@@ -12,6 +12,11 @@ import { useFetchData } from "@/composables/useFetchData";
 
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import type { ForumId } from "@/api/models/forum";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import UserLink from "@/components/community/UserLink.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import BlockTitle from "@/components/layout/BlockTitle.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
 
 const route = useRoute();
 const userStore = useUserStore();

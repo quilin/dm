@@ -3,6 +3,7 @@ import { useUserStore, useUiStore } from "@/stores";
 import { IconType } from "@/components/ui-kit/iconType";
 import GuestActions from "@/views/layout/header/GuestActions.vue";
 import PlayerActions from "@/views/layout/header/PlayerActions.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const uiStore = useUiStore();
 const userStore = useUserStore();

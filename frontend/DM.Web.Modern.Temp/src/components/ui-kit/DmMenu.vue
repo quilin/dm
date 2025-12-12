@@ -3,6 +3,8 @@ import { Menu } from "primevue";
 import { IconType } from "@/components/ui-kit/iconType";
 import { computed, useTemplateRef } from "vue";
 import type { MenuItem } from "primevue/menuitem";
+import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 export type DmMenuItem = {
   label: string;

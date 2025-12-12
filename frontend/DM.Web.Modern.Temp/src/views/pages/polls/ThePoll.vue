@@ -3,6 +3,8 @@ import type { Poll, PollOptionId } from "@/api/models/community";
 import { computed } from "vue";
 import dayjs from "dayjs";
 import { useUserStore, usePollsStore } from "@/stores";
+import DmProgress from "@/components/ui-kit/DmProgress.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
 
 const props = defineProps<{ poll: Poll }>();
 

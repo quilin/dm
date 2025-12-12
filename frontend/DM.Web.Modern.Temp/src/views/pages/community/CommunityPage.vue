@@ -3,6 +3,7 @@ import { useRoute } from "vue-router";
 import { useCommunityStore } from "@/stores/community";
 import { extractNumberParam } from "@/router";
 import { useFetchData } from "@/composables/useFetchData";
+import PageTitle from "@/components/layout/PageTitle.vue";
 
 const route = useRoute();
 const store = useCommunityStore();

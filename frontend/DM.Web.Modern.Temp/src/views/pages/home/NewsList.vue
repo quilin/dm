@@ -2,6 +2,12 @@
 import { IconType } from "@/components/ui-kit/iconType";
 import { useForumStore } from "@/stores";
 import { onMounted } from "vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import HumanTimespan from "@/components/dates/HumanTimespan.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import UserLink from "@/components/community/UserLink.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import BlockTitle from "@/components/layout/BlockTitle.vue";
 
 const store = useForumStore();
 

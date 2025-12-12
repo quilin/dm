@@ -1,18 +1,35 @@
+<script setup lang="ts">
+import type { User } from "@/api/models/community";
+import { computed } from "vue";
+import { userIsAdmin, userIsAuthority } from "@/api/models/community/helpers";
+
+const props = defineProps<{
+  user: User;
+  hidePicture?: boolean;
+}>();
+
+const badge = computed(() => {
+  if (userIsAdmin(props.user)) return "A";
+  if (userIsAuthority(props.user)) return "M";
+  return null;
+});
+</script>
+
 <template>
-  <span :title="user.status">
+  <span :title="props.user.status">
     <router-link
-      :to="{ name: 'profile', params: { login: user.login } }"
+      :to="{ name: 'profile', params: { login: props.user.login } }"
       class="user-link"
     >
       <span
-        v-if="!hidePicture"
+        v-if="!props.hidePicture"
         :style="{
           backgroundImage:
-            user.smallPictureUrl && `url(${user.smallPictureUrl})`,
+            props.user.smallPictureUrl && `url(${props.user.smallPictureUrl})`,
         }"
         class="user-logo"
       />
-      {{ user.login }}
+      {{ props.user.login }}
     </router-link>
 
     <span v-if="badge" class="user-badge-container">
@@ -21,23 +38,6 @@
     >
   </span>
 </template>
-
-<script setup lang="ts">
-import type { User } from "@/api/models/community";
-import { computed } from "vue";
-import { userIsAdmin, userIsAuthority } from "@/api/models/community/helpers";
-
-const { user, hidePicture } = defineProps<{
-  user: User;
-  hidePicture?: boolean;
-}>();
-
-const badge = computed(() => {
-  if (userIsAdmin(user)) return "A";
-  if (userIsAuthority(user)) return "M";
-  return null;
-});
-</script>
 
 <style scoped lang="sass">
 @use "@/assets/styles/Variables"

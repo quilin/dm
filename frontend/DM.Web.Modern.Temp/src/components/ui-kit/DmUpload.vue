@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const emit = defineEmits(["upload"]);
+const emit = defineEmits<{ (e: "uploadStarted", formData: FormData): void }>();
 
 const input = ref<HTMLInputElement>();
 const upload = (event: Event) => {
@@ -14,7 +14,7 @@ const upload = (event: Event) => {
   const name = files.length > 1 ? "files" : "file";
 
   for (const file of files) formData.append(name, file);
-  emit("upload", formData);
+  emit("uploadStarted", formData);
 };
 </script>
 

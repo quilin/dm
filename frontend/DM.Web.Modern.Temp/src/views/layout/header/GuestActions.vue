@@ -4,27 +4,28 @@ import { useModal } from "vue-final-modal";
 import LoginForm from "@/views/account/LoginForm.vue";
 import RegistrationForm from "@/views/account/RegistrationForm.vue";
 import RegistrationSuccess from "@/views/account/RegistrationSuccess.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const { open: openLogin, close: closeLogin } = useModal({
   component: LoginForm,
   attrs: {
-    onCancel: () => closeLogin(),
+    onCancelled: () => closeLogin(),
   },
 });
 const { open: openRegistrar, close: closeRegistrar } = useModal({
   component: RegistrationForm,
   attrs: {
-    onSuccess: () => {
+    onRegistered: () => {
       closeRegistrar();
       openRegistrarSuccess();
     },
-    onCancel: () => closeRegistrar(),
+    onCancelled: () => closeRegistrar(),
   },
 });
 const { open: openRegistrarSuccess, close: closeRegistrarSuccess } = useModal({
   component: RegistrationSuccess,
   attrs: {
-    onConfirm: () => closeRegistrarSuccess(),
+    onConfirmed: () => closeRegistrarSuccess(),
   },
 });
 </script>

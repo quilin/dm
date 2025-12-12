@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ColorSchema } from "@/api/models/community";
-import type { DropdownOption } from "@/components/ui-kit/DmDropdown.vue";
+import DmDropdown, { type DropdownOption } from "@/components/ui-kit/DmDropdown.vue";
 
 import { ref, watch } from "vue";
 import { useUiStore, useCommunityStore } from "@/stores";
+import DmButton from "@/components/ui-kit/DmButton.vue";
+import DmInput from "@/components/ui-kit/DmInput.vue";
+import DmForm from "@/components/ui-kit/DmForm.vue";
 
 const communityStore = useCommunityStore();
 const uiStore = useUiStore();

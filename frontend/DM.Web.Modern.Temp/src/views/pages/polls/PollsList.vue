@@ -2,6 +2,8 @@
 import { usePollsStore } from "@/stores/polls";
 import { useRoute } from "vue-router";
 import ThePoll from "@/views/pages/polls/ThePoll.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmPaging from "@/components/ui-kit/DmPaging.vue";
 
 const route = useRoute();
 const store = usePollsStore();

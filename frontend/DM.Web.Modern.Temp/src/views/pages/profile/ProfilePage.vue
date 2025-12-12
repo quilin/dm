@@ -8,6 +8,10 @@ import { useUserStore } from "@/stores";
 import { useFetchData } from "@/composables/useFetchData";
 import DmPictureUpload from "@/components/ui-kit/DmPictureUpload.vue";
 import communityApi from "@/api/requests/communityApi";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import UserOnline from "@/components/community/UserOnline.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import PageTitle from "@/components/layout/PageTitle.vue";
 
 const route = useRoute();
 const userStore = useUserStore();

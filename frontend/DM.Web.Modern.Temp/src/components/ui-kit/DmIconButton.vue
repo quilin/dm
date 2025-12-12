@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 defineProps<{
   icon: IconType;

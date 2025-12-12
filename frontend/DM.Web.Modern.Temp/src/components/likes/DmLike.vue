@@ -4,6 +4,7 @@ import { computed } from "vue";
 import type { Served } from "@/api/models";
 import type { User } from "@/api/models/community";
 import { useUserStore } from "@/stores";
+import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
 
 interface Likeable {
   likes: Served<User[]>;
@@ -11,7 +12,10 @@ interface Likeable {
 }
 
 const props = defineProps<{ entity: Likeable }>();
-const emit = defineEmits(["liked", "unliked"]);
+const emit = defineEmits<{
+  (e: "liked"): void;
+  (e: "unliked"): void;
+}>();
 
 const userStore = useUserStore();
 
@@ -31,7 +35,7 @@ const userLiked = computed(() =>
     :class="['like', canInteract && 'like-likeable', userLiked && 'like-liked']"
     :icon="IconType.Like"
     :disabled="!canInteract"
-    @click="emit(userLiked ? 'unliked' : 'liked')"
+    @click="userLiked ? emit('unliked') : emit('liked')"
   >
     <template v-if="entity.likes.length">
       <span class="like-counter">{{ entity.likes.length }}</span>

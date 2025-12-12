@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { IconType } from "@/components/ui-kit/iconType";
 import Button from "primevue/button";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 defineProps<{
   label: string;

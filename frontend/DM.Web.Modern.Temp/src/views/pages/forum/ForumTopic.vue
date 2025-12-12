@@ -2,6 +2,11 @@
 import type { Topic } from "@/api/models/forum";
 import { IconType } from "@/components/ui-kit/iconType";
 import { computed } from "vue";
+import HumanTimespan from "@/components/dates/HumanTimespan.vue";
+import UserLink from "@/components/community/UserLink.vue";
+import HumanDate from "@/components/dates/HumanDate.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmIcon from "@/components/ui-kit/DmIcon.vue";
 
 const props = defineProps<{ topic: Topic }>();
 const topicDescription = computed(() => {
@@ -9,15 +14,20 @@ const topicDescription = computed(() => {
     ? props.topic.description
     : `${props.topic.description.substring(0, 100)}...`;
 });
+const firstUnreadCommentNumber = computed(() => {
+  return props.topic.commentsCount && props.topic.unreadCommentsCount
+    ? props.topic.commentsCount - props.topic.unreadCommentsCount + 1
+    : props.topic.commentsCount || undefined;
+});
 </script>
 
 <template>
   <div
-    :key="topic.id"
+    :key="props.topic.id"
     :class="{
       'topics_list-row': true,
-      closed: topic.closed,
-      attached: topic.attached,
+      closed: props.topic.closed,
+      attached: props.topic.attached,
     }"
   >
     <router-link
@@ -25,10 +35,7 @@ const topicDescription = computed(() => {
         name: 'topic',
         params: {
           id: topic.id,
-          n:
-            topic.commentsCount && topic.unreadCommentsCount
-              ? topic.commentsCount - topic.unreadCommentsCount + 1
-              : topic.commentsCount || undefined,
+          n: firstUnreadCommentNumber,
         },
       }"
       class="topics_list-row_title"

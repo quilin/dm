@@ -3,6 +3,10 @@ import UserRating from "@/components/community/UserRating.vue";
 import UserOnline from "@/components/community/UserOnline.vue";
 import { useCommunityStore } from "@/stores/community";
 import { useRoute } from "vue-router";
+import UserLink from "@/components/community/UserLink.vue";
+import SecondaryText from "@/components/layout/SecondaryText.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import DmPaging from "@/components/ui-kit/DmPaging.vue";
 
 const route = useRoute();
 const store = useCommunityStore();
