@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useCommunityStore } from "@/stores/community";
 import { IconType } from "@/components/ui-kit/iconType";
-import { useUserStore } from "@/stores";
+import { useUserStore, useCommunityStore } from "@/stores";
 import { computed, ref } from "vue";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 import communityApi from "@/api/requests/communityApi";
 import useEditMode from "@/composables/useEditMode";
 
-const store = useCommunityStore();
-const { selectedUser } = storeToRefs(store);
-const { user: currentUser } = storeToRefs(useUserStore());
+const communityStore = useCommunityStore();
+const userStore = useUserStore();
 
 const canEdit = computed(() => {
-  if (!selectedUser.value || !currentUser.value) return false;
-  if (userIsHighAuthority(selectedUser.value)) return true;
+  if (communityStore.selectedUser === null || userStore.user === null)
+    return false;
+  if (userIsHighAuthority(communityStore.selectedUser)) return true;
 
-  return currentUser.value.login === selectedUser.value.login;
+  return userStore.user.login === communityStore.selectedUser.login;
 });
 
 const { isActive, acquire, release } = useEditMode();
@@ -27,7 +25,7 @@ const initializeEditMode = async () => {
   if (info.value === null) {
     loading.value = true;
     const { data } = await communityApi.getUserForUpdate(
-      selectedUser.value!.login,
+      communityStore.selectedUser!.login,
     );
     info.value = data!.resource.info;
     loading.value = false;
@@ -37,16 +35,21 @@ const initializeEditMode = async () => {
 };
 
 const saveChanges = async () => {
-  await store.updateUser(currentUser.value!.login, { info: info.value! });
-  await store.trySelectProfile(currentUser.value!.login);
+  await communityStore.updateUser(userStore.user!.login, {
+    info: info.value!,
+  });
+  await communityStore.trySelectProfile(userStore.user!.login);
   release();
 };
 </script>
 
 <template>
-  <dm-loader v-if="!selectedUser" :big="true" />
+  <dm-loader v-if="!communityStore.selectedUser" :big="true" />
 
-  <div class="profile-info" v-if="!isActive && selectedUser">
+  <div
+    class="profile-info"
+    v-if="!isActive && communityStore.selectedUser !== null"
+  >
     <dm-icon-button
       v-if="canEdit"
       :loading="loading"
@@ -54,7 +57,10 @@ const saveChanges = async () => {
       class="profile-edit_button"
       @click="initializeEditMode"
     />
-    <div v-if="selectedUser.info" v-html="selectedUser.info" />
+    <div
+      v-if="communityStore.selectedUser.info"
+      v-html="communityStore.selectedUser.info"
+    />
     <secondary-text v-else
       >Пользователь ничего о себе не написал...</secondary-text
     >

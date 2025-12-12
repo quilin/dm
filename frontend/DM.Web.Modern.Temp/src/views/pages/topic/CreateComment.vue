@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useForumStore } from "@/stores";
-import { storeToRefs } from "pinia";
 
 const store = useForumStore();
-const { selectedTopic: topic } = storeToRefs(store);
 
 const emit = defineEmits(["created"]);
 const text = ref("");
@@ -22,7 +20,7 @@ const tryCreateTopic = async () => {
 
 <template>
   <dm-form
-    v-if="topic?.closed === false"
+    v-if="store.selectedTopic?.closed === false"
     @submit="tryCreateTopic"
     class="create_comment-container"
   >

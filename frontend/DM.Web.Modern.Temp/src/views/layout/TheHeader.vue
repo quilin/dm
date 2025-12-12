@@ -1,30 +1,30 @@
 <script setup lang="ts">
 import { useUserStore, useUiStore } from "@/stores";
 import { IconType } from "@/components/ui-kit/iconType";
-import { storeToRefs } from "pinia";
 import GuestActions from "@/views/layout/header/GuestActions.vue";
 import PlayerActions from "@/views/layout/header/PlayerActions.vue";
 
-const { toggleTheme } = useUiStore();
+const uiStore = useUiStore();
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
 </script>
 
 <template>
   <div class="header">
     <div class="user-info">
       <div class="logo-text">
-        <template v-if="user">
+        <template v-if="userStore.user">
           Добро пожаловать,
-          <router-link :to="{ name: 'profile', params: { login: user.login } }">
+          <router-link
+            :to="{ name: 'profile', params: { login: userStore.user.login } }"
+          >
             <dm-icon :font="IconType.UserSettings" />
-            {{ user.login }}
+            {{ userStore.user.login }}
           </router-link>
         </template>
         <template v-else>Форумные ролевые игры</template>
       </div>
       <router-link class="logo" :to="{ name: 'home' }" />
-      <player-actions v-if="user" />
+      <player-actions v-if="userStore.user" />
       <guest-actions v-else />
     </div>
     <div class="top-menu">
@@ -35,7 +35,7 @@ const { user } = storeToRefs(userStore);
       <router-link class="link" :to="{ name: 'rules' }">Правила</router-link>
       <router-link class="link" :to="{ name: 'chat' }">Чат</router-link>
       <router-link
-        v-if="user"
+        v-if="userStore.user"
         class="link create"
         :to="{ name: 'create-game' }"
       >
@@ -45,7 +45,7 @@ const { user } = storeToRefs(userStore);
     </div>
     <div class="controls">
       <!--      <notifications v-if="user" />-->
-      <span @click="toggleTheme">Switch theme</span>
+      <span @click="uiStore.toggleTheme">Switch theme</span>
     </div>
   </div>
 </template>

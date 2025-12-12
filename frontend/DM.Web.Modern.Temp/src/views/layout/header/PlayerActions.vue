@@ -1,23 +1,29 @@
 <script setup lang="ts">
 import { IconType } from "@/components/ui-kit/iconType";
 import { useUserStore } from "@/stores";
-import { storeToRefs } from "pinia";
 
-const userStore = useUserStore();
-const { unreadConversations: unread } = storeToRefs(userStore);
-const { signOut } = userStore;
+const store = useUserStore();
 </script>
 
 <template>
-  <router-link :to="{ name: 'messenger' }" :class="{ unread }">
-    <template v-if="unread">{{ unread }}</template>
+  <router-link
+    :to="{ name: 'messenger' }"
+    :class="{ unread: store.unreadConversations }"
+  >
+    <template v-if="store.unreadConversations">{{
+      store.unreadConversations
+    }}</template>
     <dm-icon
-      :font="unread ? IconType.MessagesUnread : IconType.MessagesNoUnread"
+      :font="
+        store.unreadConversations
+          ? IconType.MessagesUnread
+          : IconType.MessagesNoUnread
+      "
     />
     Сообщения
   </router-link>
   |
-  <a @click="signOut"><dm-icon :font="IconType.Logout" /> Выйти</a>
+  <a @click="store.signOut"><dm-icon :font="IconType.Logout" /> Выйти</a>
 </template>
 
 <style scoped lang="sass"></style>

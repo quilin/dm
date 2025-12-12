@@ -5,7 +5,6 @@ import type { DmMenuItem } from "@/components/ui-kit/DmMenu.vue";
 
 import { computed, ref } from "vue";
 import { useForumStore, useUserStore } from "@/stores";
-import { storeToRefs } from "pinia";
 import { userIsHighAuthority } from "@/api/models/community/helpers";
 
 import UserIcon from "@/components/community/UserIcon.vue";
@@ -14,21 +13,22 @@ import useEditMode from "@/composables/useEditMode";
 import DmLike from "@/components/likes/DmLike.vue";
 import { BbRenderMode } from "@/api/bbRenderMode";
 
-const { user } = storeToRefs(useUserStore());
-const { reloadComments, reloadComment } = useForumStore();
-const { comment } = defineProps<{ comment: Comment }>();
+const props = defineProps<{ comment: Comment }>();
+
+const userStore = useUserStore();
+const forumStore = useForumStore();
 
 const commentActions = computed(() => {
   const result: DmMenuItem[] = [];
-  if (!user.value) return result;
-  if (userIsHighAuthority(user.value)) {
+  if (userStore.user === null) return result;
+  if (userIsHighAuthority(userStore.user)) {
     result.push({
       label: "Удалить",
       icon: IconType.Remove,
       command: removeComment,
     });
   }
-  if (user.value.login === comment.author.login) {
+  if (userStore.user.login === props.comment.author.login) {
     result.unshift({
       label: "Редактировать",
       icon: IconType.Edit,
@@ -46,7 +46,7 @@ const text = ref<string | null>(null);
 const initializeEditMode = async () => {
   if (text.value === null) {
     loading.value = true;
-    const { data } = await forumApi.getComment(comment.id, BbRenderMode.Bb);
+    const { data } = await forumApi.getComment(props.comment.id, BbRenderMode.Bb);
     text.value = data!.resource.text;
     loading.value = false;
   }
@@ -54,31 +54,25 @@ const initializeEditMode = async () => {
 };
 const updateComment = async () => {
   loading.value = true;
-  await forumApi.updateComment(comment.id, { text: text.value! });
+  await forumApi.updateComment(props.comment.id, { text: text.value! });
   loading.value = false;
   release();
-  await reloadComments();
+  await forumStore.reloadComments();
 };
 const removeComment = async () => {
   loading.value = true;
-  await forumApi.deleteComment(comment.id);
+  await forumApi.deleteComment(props.comment.id);
   loading.value = false;
-  await reloadComments();
+  await forumStore.reloadComments();
 };
 
-const canLike = computed(
-  () => user.value! && user.value.login !== comment.author.login,
-);
-const liked = computed(() =>
-  comment.likes.some((u) => u.login === user.value?.login),
-);
 const like = async () => {
-  await forumApi.postCommentLike(comment.id);
-  await reloadComment(comment.id);
+  await forumApi.postCommentLike(props.comment.id);
+  await forumStore.reloadComment(props.comment.id);
 };
 const unlike = async () => {
-  await forumApi.deleteCommentLike(comment.id);
-  await reloadComment(comment.id);
+  await forumApi.deleteCommentLike(props.comment.id);
+  await forumStore.reloadComment(props.comment.id);
 };
 </script>
 
@@ -116,12 +110,7 @@ const unlike = async () => {
       </template>
     </div>
     <div v-if="!isActive" class="comment-actions">
-      <dm-like
-        :entity="comment"
-        :user="user"
-        @liked="like"
-        @unliked="unlike"
-      />
+      <dm-like :entity="comment" @liked="like" @unliked="unlike" />
       <dm-menu
         v-if="commentActions.length"
         :items="commentActions"

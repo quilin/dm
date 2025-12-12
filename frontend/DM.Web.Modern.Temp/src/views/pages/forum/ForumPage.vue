@@ -4,7 +4,6 @@ import CreateTopic from "@/views/pages/forum/CreateTopic.vue";
 
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
 
 import { useForumStore, useUserStore } from "@/stores";
@@ -15,25 +14,22 @@ import { userIsHighAuthority } from "@/api/models/community/helpers";
 import type { ForumId } from "@/api/models/forum";
 
 const route = useRoute();
-const { user } = storeToRefs(useUserStore());
+const userStore = useUserStore();
 const forumStore = useForumStore();
-const { moderators, selectedForum } = storeToRefs(forumStore);
-const { trySelectForum, fetchModerators, fetchTopics, markAllTopicsAsRead } =
-  forumStore;
 
 const canCreateTopic = computed(() => {
-  if (!user.value) return false;
-  if (userIsHighAuthority(user.value)) return true;
-  return selectedForum.value?.id !== "Новости проекта";
+  if (userStore.user === null) return false;
+  if (userIsHighAuthority(userStore.user)) return true;
+  return forumStore.selectedForum?.id !== "Новости проекта";
 });
 
 async function fetchData() {
   const forumId = route.params.id as ForumId;
-  await trySelectForum(forumId);
+  await forumStore.trySelectForum(forumId);
 
   await Promise.all([
-    fetchModerators(),
-    fetchTopics(extractNumberParam(route.params.n)),
+    forumStore.fetchModerators(),
+    forumStore.fetchTopics(extractNumberParam(route.params.n)),
   ]);
 }
 
@@ -44,7 +40,7 @@ useFetchData(fetchData, [
   },
   {
     param: (p) => p.n,
-    callback: (n) => fetchTopics(extractNumberParam(n)),
+    callback: (n) => forumStore.fetchTopics(extractNumberParam(n)),
   },
 ]);
 
@@ -63,16 +59,21 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
 <template>
   <div class="forum-header">
     <page-title>Форум | {{ route.params.id }}</page-title>
-    <a @click="markAllTopicsAsRead">Отметить все темы прочитанными</a>
+    <a @click="forumStore.markAllTopicsAsRead"
+      >Отметить все темы прочитанными</a
+    >
   </div>
 
   <div class="forum-info">
     <div class="forum-info_moderators">
       <block-title class="forum-info_moderators-title">Модераторы:</block-title>
-      <dm-loader v-if="!moderators" class="forum-info_moderators-loader" />
+      <dm-loader
+        v-if="!forumStore.moderators"
+        class="forum-info_moderators-loader"
+      />
       <user-link
         v-else
-        v-for="user in moderators"
+        v-for="user in forumStore.moderators"
         :key="user.login"
         :user="user"
       />

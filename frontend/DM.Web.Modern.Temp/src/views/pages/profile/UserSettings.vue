@@ -3,16 +3,13 @@ import { ColorSchema } from "@/api/models/community";
 import type { DropdownOption } from "@/components/ui-kit/DmDropdown.vue";
 
 import { ref, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useUiStore, useUserStore } from "@/stores";
-import { useCommunityStore } from "@/stores/community";
+import { useUiStore, useCommunityStore } from "@/stores";
 
-const { user } = storeToRefs(useUserStore());
-const { updateUser } = useCommunityStore();
-const { updateTheme } = useUiStore();
+const communityStore = useCommunityStore();
+const uiStore = useUiStore();
 
 const loading = ref(false);
-const settings = ref(Object.assign({}, user.value!.settings));
+const settings = ref(Object.assign({}, communityStore.selectedUser!.settings));
 
 const colorSchemeOptions: DropdownOption<ColorSchema>[] = [
   {
@@ -37,11 +34,11 @@ const colorSchemeOptions: DropdownOption<ColorSchema>[] = [
   },
 ];
 
-watch(() => settings.value.colorSchema, updateTheme);
+watch(() => settings.value.colorSchema, uiStore.updateTheme);
 
 const saveChanges = async () => {
   loading.value = true;
-  await updateUser(user.value!.login, {
+  await communityStore.updateUser(communityStore.selectedUser!.login, {
     settings: settings.value,
   });
   loading.value = false;

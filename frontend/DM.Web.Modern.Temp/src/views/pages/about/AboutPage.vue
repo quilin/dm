@@ -5,14 +5,14 @@ import { extractNumberParam } from "@/router";
 import { useFetchData } from "@/composables/useFetchData";
 
 const route = useRoute();
-const { fetchReviews } = useReviewStore();
+const store = useReviewStore();
 
 useFetchData(
-  () => fetchReviews(extractNumberParam(route.params.n)),
+  () => store.fetchReviews(extractNumberParam(route.params.n)),
   [
     {
       param: (p) => p.n,
-      callback: (n) => fetchReviews(extractNumberParam(n)),
+      callback: (n) => store.fetchReviews(extractNumberParam(n)),
     },
   ],
 );
