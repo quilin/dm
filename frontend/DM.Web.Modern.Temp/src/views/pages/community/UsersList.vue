@@ -7,9 +7,12 @@ import UserLink from "@/components/community/UserLink.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import DmPaging from "@/components/ui-kit/DmPaging.vue";
+import messages from "@/views/pages/community/UsersList.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const store = useCommunityStore();
+const { t } = useI18n({ messages });
 </script>
 
 <template>
@@ -21,18 +24,18 @@ const store = useCommunityStore();
 
   <div class="users-list-header">
     <div>#</div>
-    <div>Логин</div>
-    <div>Рейтинг</div>
-    <div>В сети</div>
-    <div>Имя</div>
-    <div>Местоположение</div>
+    <div>{{ t("login") }}</div>
+    <div>{{ t("rating") }}</div>
+    <div>{{ t("online") }}</div>
+    <div>{{ t("name") }}</div>
+    <div>{{ t("location") }}</div>
   </div>
 
   <dm-loader v-if="store.users === null" :big="true" />
   <secondary-text
     v-else-if="!store.users.resources.length"
     class="users-list-none"
-    >Пользователей нет...</secondary-text
+    >{{ t("empty") }}</secondary-text
   >
   <div
     class="users-list-row"

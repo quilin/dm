@@ -9,6 +9,8 @@ import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import UserLink from "@/components/community/UserLink.vue";
+import messages from "@/views/pages/about/TheReview.i18n";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   review: Review;
@@ -16,6 +18,7 @@ const props = defineProps<{
 }>();
 const userStore = useUserStore();
 const communityStore = useReviewStore();
+const { t } = useI18n({ messages });
 
 const canAdministrate = computed(
   () => props.controls && userIsAdmin(userStore.user),
@@ -43,15 +46,15 @@ async function remove() {
     <div class="review-info">
       <user-link :user="review.author" />
       <secondary-text v-if="canAdministrate" class="review-controls">
-        <span v-if="!review.approved">Ожидает проверки</span>
+        <span v-if="!review.approved">{{ t("checkPending") }}</span>
         <template v-if="!loading">
           <a v-if="!review.approved" @click="approve">
             <dm-icon :font="IconType.Tick" />
-            Принять</a
+            {{ t("approve") }}</a
           >
           <a @click="remove">
             <dm-icon :font="IconType.Close" />
-            Отклонить</a
+            {{ t("decline") }}</a
           >
         </template>
         <dm-loader v-else />
