@@ -8,11 +8,14 @@ import DmField from "@/components/ui-kit/DmField.vue";
 import DmText from "@/components/ui-kit/DmText.vue";
 import DmInput from "@/components/ui-kit/DmInput.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
+import messages from "@/views/pages/forum/EditTopic.i18n";
+import { useI18n } from "vue-i18n";
 
 const active = defineModel("active");
 const props = defineProps<{ topic: Topic }>();
 const emit = defineEmits<{ (e: "updated"): void }>();
 
+const { t } = useI18n({ messages });
 const editableTopic = ref<Topic | null>(null);
 
 watch(
@@ -40,22 +43,22 @@ const saveChanges = async () => {
         <dm-input
           id="edit-topic-title"
           v-model="editableTopic.title"
-          placeholder="Название"
+          :placeholder="t('topicTitle')"
         />
       </dm-field>
       <dm-field>
         <dm-text
           id="edit-topic-description"
           v-model="editableTopic.description"
-          placeholder="Описание"
+          :placeholder="t('description')"
         />
       </dm-field>
       <dm-field></dm-field>
     </template>
     <dm-loader v-else />
     <template v-if="editableTopic" #controls>
-      <dm-button type="submit" label="Сохранить" />
-      <a @click="active = false">Отмена</a>
+      <dm-button type="submit" :label="t('submit')" />
+      <a @click="active = false">{{ t("cancel") }}</a>
     </template>
   </dm-form>
 </template>

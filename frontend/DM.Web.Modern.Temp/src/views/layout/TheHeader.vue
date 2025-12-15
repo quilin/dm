@@ -6,6 +6,7 @@ import PlayerActions from "@/views/layout/header/PlayerActions.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import messages from "@/views/layout/TheHeader.i18n";
 import { useI18n } from "vue-i18n";
+import DmButton from "@/components/ui-kit/DmButton.vue";
 
 const uiStore = useUiStore();
 const userStore = useUserStore();
@@ -55,7 +56,11 @@ const { t } = useI18n({ messages });
     </div>
     <div class="controls">
       <!--      <notifications v-if="user" />-->
-      <span @click="uiStore.toggleTheme">Switch theme</span>
+      <dm-button label="Switch theme" @click="uiStore.toggleTheme" /><br />
+      <dm-button
+        label="Switch language"
+        @click="$i18n.locale = $i18n.locale == 'ru-RU' ? 'en-US' : 'ru-RU'"
+      />
     </div>
   </div>
 </template>

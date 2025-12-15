@@ -11,8 +11,11 @@ import DmInput from "@/components/ui-kit/DmInput.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
+import messages from "@/views/pages/forum/CreateTopic.i18n";
+import { useI18n } from "vue-i18n";
 
 const forumStore = useForumStore();
+const { t } = useI18n({ messages });
 
 const topic = ref<Post<Topic>>({
   title: "",
@@ -38,25 +41,25 @@ const tryCreateTopic = async () => {
 
 <template>
   <dm-dialog :with-form="true">
-    <page-title>Создание темы</page-title>
+    <page-title>{{ t("title") }}</page-title>
     <dm-form @submit="tryCreateTopic">
       <dm-field>
         <dm-input
           id="topic-title"
           v-model="topic.title"
-          placeholder="Название темы"
+          :placeholder="t('topicTitle')"
         />
       </dm-field>
       <dm-field>
         <dm-text
           id="topic-description"
           v-model="topic.description"
-          placeholder="Описание"
+          :placeholder="t('description')"
         />
       </dm-field>
       <template #controls>
-        <dm-button label="Создать" :loading="loading" type="submit" />
-        <a @click="$emit('cancelled')">Отмена</a>
+        <dm-button :label="t('submit')" :loading="loading" type="submit" />
+        <a @click="$emit('cancelled')">{{ t("cancel") }}</a>
       </template>
     </dm-form>
   </dm-dialog>

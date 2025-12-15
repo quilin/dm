@@ -7,9 +7,12 @@ import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import DmPaging from "@/components/ui-kit/DmPaging.vue";
+import messages from "@/views/pages/forum/TopicsList.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const store = useForumStore();
+const { t } = useI18n({ messages });
 </script>
 
 <template>
@@ -20,16 +23,16 @@ const store = useForumStore();
   />
 
   <div class="topics_list-header">
-    <div>Тема</div>
-    <div>Дата</div>
-    <div>Автор</div>
+    <div>{{ t("title") }}</div>
+    <div>{{ t("date") }}</div>
+    <div>{{ t("author") }}</div>
     <div class="topics_list-counter">
       <dm-icon :font="IconType.CommentsNoUnread" />
     </div>
     <div class="topics_list-counter">
       <dm-icon :font="IconType.Like" />
     </div>
-    <div>Последнее сообщение</div>
+    <div>{{ t("latestComment") }}</div>
   </div>
 
   <template v-if="store.attachedTopics !== null">
@@ -48,7 +51,7 @@ const store = useForumStore();
       store.topics.resources.length + store.attachedTopics.length === 0
     "
     class="topics_list-none"
-    >Еще не создано ни одной темы</secondary-text
+    >{{ t("empty") }}</secondary-text
   >
   <forum-topic
     v-else

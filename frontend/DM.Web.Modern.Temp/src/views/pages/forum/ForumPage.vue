@@ -17,10 +17,13 @@ import UserLink from "@/components/community/UserLink.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
+import messages from "@/views/pages/forum/ForumPage.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const userStore = useUserStore();
 const forumStore = useForumStore();
+const { t } = useI18n({ messages });
 
 const canCreateTopic = computed(() => {
   if (userStore.user === null) return false;
@@ -63,15 +66,15 @@ const { open: openCreateTopic, close: closeCreateTopic } = useModal({
 
 <template>
   <div class="forum-header">
-    <page-title>Форум | {{ route.params.id }}</page-title>
-    <a @click="forumStore.markAllTopicsAsRead"
-      >Отметить все темы прочитанными</a
-    >
+    <page-title>{{ t("title") }} | {{ route.params.id }}</page-title>
+    <a @click="forumStore.markAllTopicsAsRead">{{ t("markAllAsRead") }}</a>
   </div>
 
   <div class="forum-info">
     <div class="forum-info_moderators">
-      <block-title class="forum-info_moderators-title">Модераторы:</block-title>
+      <block-title class="forum-info_moderators-title"
+        >{{ t("moderators") }}:</block-title
+      >
       <dm-loader
         v-if="!forumStore.moderators"
         class="forum-info_moderators-loader"
