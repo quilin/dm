@@ -6,10 +6,13 @@ import DmButton from "@/components/ui-kit/DmButton.vue";
 import DmText from "@/components/ui-kit/DmText.vue";
 import DmField from "@/components/ui-kit/DmField.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
+import messages from "@/views/pages/topic/CreateComment.i18n";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits<{ (e: "created"): void }>();
 
 const store = useForumStore();
+const { t } = useI18n({ messages });
 
 const text = ref("");
 const loading = ref(false);
@@ -31,18 +34,13 @@ const tryCreateTopic = async () => {
     class="create_comment-container"
   >
     <dm-field>
-      <dm-text
-        v-model="text"
-        id="text"
-        placeholder="Новый комментарий"
-        :rows="5"
-      />
+      <dm-text v-model="text" id="text" :placeholder="t('text')" :rows="5" />
     </dm-field>
-    <dm-button type="submit" label="Отправить" :loading="loading" />
+    <dm-button type="submit" :label="t('submit')" :loading="loading" />
   </dm-form>
-  <secondary-text class="create_comment-forbidden" v-else
-    >Тема закрыта, добавление комментариев невозможно</secondary-text
-  >
+  <secondary-text class="create_comment-forbidden" v-else>{{
+    t("forbidden")
+  }}</secondary-text>
 </template>
 
 <style scoped lang="sass">

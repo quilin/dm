@@ -22,11 +22,14 @@ import DmInput from "@/components/ui-kit/DmInput.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
+import messages from "@/views/pages/topic/TopicPage.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const router = useRouter();
 const forumStore = useForumStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 
 async function fetchData() {
   await forumStore.trySelectTopic(route.params.id as TopicId);
@@ -51,19 +54,19 @@ const topicActions = computed(() => {
   if (userIsHighAuthority(userStore.user)) {
     result.push(
       {
-        label: forumStore.selectedTopic!.closed ? "Открыть" : "Закрыть",
+        label: forumStore.selectedTopic!.closed ? t("open") : t("close"),
         icon: forumStore.selectedTopic!.closed
           ? IconType.Open
           : IconType.Closed,
         command: toggleClose,
       },
       {
-        label: forumStore.selectedTopic!.attached ? "Открепить" : "Прикрепить",
+        label: forumStore.selectedTopic!.attached ? t("detach") : t("attach"),
         icon: IconType.Pinned,
         command: togglePinned,
       },
       {
-        label: "Удалить",
+        label: t("remove"),
         icon: IconType.Remove,
         command: removeTopic,
       },
@@ -71,7 +74,7 @@ const topicActions = computed(() => {
   }
   if (userStore.user.login === forumStore.selectedTopic!.author.login) {
     result.unshift({
-      label: "Редактировать",
+      label: t("edit"),
       icon: IconType.Edit,
       command: initializeEditMode,
     });
@@ -151,7 +154,7 @@ const unlike = async () => {
         }"
       >
         <dm-icon :font="IconType.ArrowLeft" />
-        Назад на форум "{{ forumStore.selectedTopic.forum.id }}"
+        {{t("backToForum")}} "{{ forumStore.selectedTopic.forum.id }}"
       </router-link>
     </div>
     <div class="topic-content">
@@ -160,19 +163,19 @@ const unlike = async () => {
           <dm-input
             id="edit-topic-title"
             v-model="topicToEdit!.title"
-            placeholder="Название"
+            :placeholder="t('title')"
           />
         </dm-field>
         <dm-field>
           <dm-text
             id="edit-topic-description"
             v-model="topicToEdit!.description"
-            placeholder="Описание"
+            :placeholder="t('description')"
           />
         </dm-field>
         <template #controls>
-          <dm-button type="submit" label="Сохранить" />
-          <a @click="release">Отмена</a>
+          <dm-button type="submit" :label="t('submit')" />
+          <a @click="release">{{t("cancel")}}</a>
         </template>
       </dm-form>
       <template v-else>
