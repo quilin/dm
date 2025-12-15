@@ -1,41 +1,46 @@
 <script setup lang="ts">
 import { ColorSchema } from "@/api/models/community";
-import DmDropdown, { type DropdownOption } from "@/components/ui-kit/DmDropdown.vue";
+import DmDropdown, {
+  type DropdownOption,
+} from "@/components/ui-kit/DmDropdown.vue";
 
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useUiStore, useCommunityStore } from "@/stores";
 import DmButton from "@/components/ui-kit/DmButton.vue";
 import DmInput from "@/components/ui-kit/DmInput.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
+import messages from "@/views/pages/profile/UserSettings.i18n";
+import { useI18n } from "vue-i18n";
 
 const communityStore = useCommunityStore();
 const uiStore = useUiStore();
+const { t } = useI18n({ messages });
 
 const loading = ref(false);
 const settings = ref(Object.assign({}, communityStore.selectedUser!.settings));
 
-const colorSchemeOptions: DropdownOption<ColorSchema>[] = [
+const colorSchemeOptions = computed<DropdownOption<ColorSchema>[]>(() => [
   {
     value: ColorSchema.Modern,
-    label: "Современная",
+    label: t("colorSchemeModern"),
   },
   {
     value: ColorSchema.Classic,
-    label: "Классика",
+    label: t("colorSchemeClassic"),
   },
   {
     value: ColorSchema.Pale,
-    label: "Бледная",
+    label: t("colorSchemePale"),
   },
   {
     value: ColorSchema.ClassicPale,
-    label: "Господи опять бледная за что",
+    label: t("colorSchemeClassicPale"),
   },
   {
     value: ColorSchema.Night,
-    label: "Ночная",
+    label: t("colorSchemeNight"),
   },
-];
+]);
 
 watch(() => settings.value.colorSchema, uiStore.updateTheme);
 
@@ -51,14 +56,14 @@ const saveChanges = async () => {
 <template>
   <dm-form @submit="saveChanges">
     <div class="settings_block">
-      Количество сообщений на странице
+      {{ t("pageSize") }}
       <div class="settings_per_page">
         <dm-input
           id="postsPerPage"
           v-model="settings.paging.postsPerPage"
           class="settings_per_page-input"
         />
-        &mdash; в играх
+        &mdash; {{ t("games") }}
       </div>
       <div class="settings_per_page">
         <dm-input
@@ -66,7 +71,7 @@ const saveChanges = async () => {
           v-model="settings.paging.commentsPerPage"
           class="settings_per_page-input"
         />
-        &mdash; в обсуждениях, новостях и на форуме
+        &mdash; {{ t("forum") }}
       </div>
       <div class="settings_per_page">
         <dm-input
@@ -74,7 +79,7 @@ const saveChanges = async () => {
           v-model="settings.paging.messagesPerPage"
           class="settings_per_page-input"
         />
-        &mdash; в личных сообщениях
+        &mdash; {{ t("messages") }}
       </div>
       <div class="settings_per_page">
         <dm-input
@@ -82,7 +87,7 @@ const saveChanges = async () => {
           v-model="settings.paging.entitiesPerPage"
           class="settings_per_page-input"
         />
-        &mdash; в списках
+        &mdash; {{ t("lists") }}
       </div>
     </div>
     <div class="settings_block">
@@ -91,11 +96,11 @@ const saveChanges = async () => {
         class="settings_scheme"
         v-model="settings.colorSchema"
         :options="colorSchemeOptions"
-        placeholder="Цветовая схема"
+        :placeholder="t('colorScheme')"
       />
     </div>
     <template #controls>
-      <dm-button type="submit" label="Сохранить" :loading="loading" />
+      <dm-button type="submit" :label="t('submit')" :loading="loading" />
     </template>
   </dm-form>
 </template>

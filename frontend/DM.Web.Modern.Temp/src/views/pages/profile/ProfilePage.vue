@@ -12,10 +12,13 @@ import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import UserOnline from "@/components/community/UserOnline.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
+import messages from "@/views/pages/profile/ProfilePage.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const userStore = useUserStore();
 const communityStore = useCommunityStore();
+const { t } = useI18n({ messages });
 
 useFetchData(
   () => communityStore.trySelectProfile(route.params.login as UserLogin),
@@ -27,16 +30,16 @@ useFetchData(
   ],
 );
 
-const roleNames: Record<string, string> = {
-  [UserRole.Administrator]: "Тролль",
-  [UserRole.SeniorModerator]: "Старший гоблин",
-  [UserRole.RegularModerator]: "Гоблин",
-  [UserRole.NannyModerator]: "Гоблин-нянька",
-};
+const roleNames = computed<Record<string, string>>(() => ({
+  [UserRole.Administrator]: t("administrator"),
+  [UserRole.SeniorModerator]: t("seniorModerator"),
+  [UserRole.RegularModerator]: t("regularModerator"),
+  [UserRole.NannyModerator]: t("nannyModerator"),
+}));
 const userRoles = computed(() =>
   communityStore.selectedUser?.roles
-    .filter((r) => r in roleNames)
-    .map((r) => roleNames[r]),
+    .filter((r) => r in roleNames.value)
+    .map((r) => roleNames.value[r]),
 );
 const canEdit = computed(
   () =>
@@ -81,30 +84,31 @@ const uploadPicture = async (data: FormData) => {
         </div>
 
         <div>
-          <secondary-text>В сети</secondary-text>&nbsp;
+          <secondary-text>{{ t("online") }}</secondary-text
+          >&nbsp;
           <user-online :user="communityStore.selectedUser" :detailed="true" />
         </div>
         <profile-stat
-          title="Статус"
-          empty="Не указан"
+          :title="t('status')"
+          :empty="t('statusEmpty')"
           :value="communityStore.selectedUser.status"
           :update-value="(value) => ({ status: value })"
         />
         <profile-stat
-          title="Имя"
-          empty="Не указано"
+          :title="t('name')"
+          :empty="t('nameEmpty')"
           :value="communityStore.selectedUser.name"
           :update-value="(value) => ({ name: value })"
         />
         <profile-stat
-          title="Местоположение"
-          empty="Не указано"
+          :title="t('location')"
+          :empty="t('locationEmpty')"
           :value="communityStore.selectedUser.location"
           :update-value="(value) => ({ location: value })"
         />
         <profile-stat
-          title="Skype"
-          empty="Не указан"
+          :title="t('skype')"
+          :empty="t('skypeEmpty')"
           :value="communityStore.selectedUser.skype"
           :update-value="(value) => ({ skype: value })"
         />
@@ -114,23 +118,23 @@ const uploadPicture = async (data: FormData) => {
           <router-link
             class="tabs-link"
             :to="{ name: 'profile', params: route.params }"
-            >Информация</router-link
+            >{{ t("info") }}</router-link
           >
           <router-link
             class="tabs-link"
             :to="{ name: 'user-games', params: route.params }"
-            >Игры</router-link
+            >{{ t("games") }}</router-link
           >
           <router-link
             class="tabs-link"
             :to="{ name: 'user-characters', params: route.params }"
-            >Персонажи</router-link
+            >{{ t("characters") }}</router-link
           >
           <router-link
             v-if="canEdit"
             class="tabs-link"
             :to="{ name: 'user-settings', params: route.params }"
-            >Настройки</router-link
+            >{{ t("settings") }}</router-link
           >
         </nav>
         <router-view />

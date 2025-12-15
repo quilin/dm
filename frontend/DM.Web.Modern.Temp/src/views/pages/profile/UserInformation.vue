@@ -12,9 +12,12 @@ import DmForm from "@/components/ui-kit/DmForm.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmIconButton from "@/components/ui-kit/DmIconButton.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import messages from "@/views/pages/profile/UserInformation.i18n";
+import { useI18n } from "vue-i18n";
 
 const communityStore = useCommunityStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 
 const canEdit = computed(() => {
   if (communityStore.selectedUser === null || userStore.user === null)
@@ -68,9 +71,7 @@ const saveChanges = async () => {
       v-if="communityStore.selectedUser.info"
       v-html="communityStore.selectedUser.info"
     />
-    <secondary-text v-else
-      >Пользователь ничего о себе не написал...</secondary-text
-    >
+    <secondary-text v-else>{{ t("empty") }}</secondary-text>
   </div>
 
   <dm-form class="profile-edit_container" v-if="isActive" @submit="saveChanges">
@@ -78,8 +79,8 @@ const saveChanges = async () => {
       <dm-text id="edit-profile-info-text" v-model="info" :rows="5" />
     </dm-field>
     <template #controls>
-      <dm-button type="submit" label="Сохранить" />
-      <a @click="release">Отмена</a>
+      <dm-button type="submit" :label="t('submit')" />
+      <a @click="release">{{ t("cancel") }}</a>
     </template>
   </dm-form>
 </template>
