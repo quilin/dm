@@ -5,10 +5,10 @@ import "dayjs/locale/ru";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createVfm } from "vue-final-modal";
-import { createI18n } from "vue-i18n";
 
 import App from "./App.vue";
 import router from "./router";
+import i18n from "./i18n";
 
 import PrimeVue from "primevue/config";
 
@@ -18,11 +18,6 @@ import "@/assets/styles/Fonts.sass";
 import "@/assets/styles/Inputs.sass";
 
 dayjs.extend(relativeTime).locale("en");
-
-const i18n = createI18n({
-  legacy: false,
-  locale: "en-US",
-});
 
 const application = createApp(App);
 
