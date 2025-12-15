@@ -19,7 +19,7 @@
     "@vee-validate/yup": "^4.13.2",
     "axios": "^1.7.4",
     "dayjs": "^1.11.12",
-    "pinia": "^2.2.2",
+    "pinia": "^3.0.4",
     "primevue": "^4.4.1",
     "vee-validate": "^4.13.2",
     "vue": "^3.4.38",

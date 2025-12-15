@@ -8,12 +8,16 @@ import DmField from "@/components/ui-kit/DmField.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
+import messages from "@/views/account/RegistrationForm.i18n";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits<{
   (e: "registered"): void;
   (e: "cancelled"): void;
 }>();
+
 const store = useUserStore();
+const { t } = useI18n({ messages });
 
 const credentials = ref<RegisterCredentials>({
   email: "",
@@ -34,7 +38,7 @@ const submit = async () => {
 
 <template>
   <dm-dialog :with-form="true">
-    <page-title>Регистрация</page-title>
+    <page-title>{{ t("title") }}</page-title>
 
     <dm-form @submit="submit">
       <dm-field>
@@ -42,24 +46,28 @@ const submit = async () => {
           id="email"
           type="email"
           v-model="credentials.email"
-          placeholder="E-mail"
+          :placeholder="t('email')"
         />
       </dm-field>
       <dm-field>
-        <dm-input id="login" v-model="credentials.login" placeholder="Логин" />
+        <dm-input
+          id="login"
+          v-model="credentials.login"
+          :placeholder="t('login')"
+        />
       </dm-field>
       <dm-field>
         <dm-input
           id="password"
           type="password"
           v-model="credentials.password"
-          placeholder="Пароль"
+          :placeholder="t('password')"
         />
       </dm-field>
 
       <template #controls>
-        <dm-button label="Отправить" type="submit" />
-        <a @click="emit('cancelled')">Отмена</a>
+        <dm-button :label="t('submit')" type="submit" />
+        <a @click="emit('cancelled')">{{ t("cancel") }}</a>
       </template>
     </dm-form>
   </dm-dialog>

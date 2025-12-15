@@ -1,7 +1,29 @@
+<script setup lang="ts">
+import GameMenuLink from "@/views/layout/menu/GameMenuLink.vue";
+import { useUserStore } from "@/stores";
+import { useGamesStore } from "@/stores/games";
+import { onMounted, watch } from "vue";
+import { GameStatus } from "@/api/models/gaming";
+import GamesList from "@/views/layout/menu/GamesList.vue";
+import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import messages from "@/views/layout/menu/OwnGames.i18n";
+import { useI18n } from "vue-i18n";
+
+const userStore = useUserStore();
+const store = useGamesStore();
+const { t } = useI18n({ messages });
+
+onMounted(() => store.fetchOwnGames());
+watch(
+  () => userStore.user,
+  () => store.fetchOwnGames(),
+);
+</script>
+
 <template>
   <games-list
-    title="Мои игры"
-    link-text="Все активные игры"
+    :title="t('myGames')"
+    :link-text="t('allActiveGames')"
     token="OwnGames"
     :game-status="GameStatus.Active"
   >
@@ -15,22 +37,3 @@
     />
   </games-list>
 </template>
-
-<script setup lang="ts">
-import GameMenuLink from "@/views/layout/menu/GameMenuLink.vue";
-import { useUserStore } from "@/stores";
-import { useGamesStore } from "@/stores/games";
-import { onMounted, watch } from "vue";
-import { GameStatus } from "@/api/models/gaming";
-import GamesList from "@/views/layout/menu/GamesList.vue";
-import DmLoader from "@/components/ui-kit/DmLoader.vue";
-
-const userStore = useUserStore();
-const store = useGamesStore();
-
-onMounted(() => store.fetchOwnGames());
-watch(
-  () => userStore.user,
-  () => store.fetchOwnGames(),
-);
-</script>

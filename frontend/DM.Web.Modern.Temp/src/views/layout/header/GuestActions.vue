@@ -5,6 +5,10 @@ import LoginForm from "@/views/account/LoginForm.vue";
 import RegistrationForm from "@/views/account/RegistrationForm.vue";
 import RegistrationSuccess from "@/views/account/RegistrationSuccess.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import { useI18n } from "vue-i18n";
+import messages from "@/views/layout/header/GuestActions.i18n";
+
+const { t } = useI18n({ messages });
 
 const { open: openLogin, close: closeLogin } = useModal({
   component: LoginForm,
@@ -32,9 +36,9 @@ const { open: openRegistrarSuccess, close: closeRegistrarSuccess } = useModal({
 
 <template>
   <div class="user-actions">
-    <a @click="openLogin"><dm-icon :font="IconType.User" /> Вход</a>
+    <a @click="openLogin"><dm-icon :font="IconType.User" /> {{ t('signIn') }}</a>
     |
-    <a @click="openRegistrar">Регистрация</a>
+    <a @click="openRegistrar">{{ t('signOn') }}</a>
   </div>
 </template>
 
