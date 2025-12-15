@@ -19,25 +19,28 @@ import DmForm from "@/components/ui-kit/DmForm.vue";
 import HumanTimespan from "@/components/dates/HumanTimespan.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import UserLink from "@/components/community/UserLink.vue";
+import messages from "@/views/pages/topic/TopicComment.i18n";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{ comment: Comment }>();
 
 const userStore = useUserStore();
 const forumStore = useForumStore();
+const { t } = useI18n({ messages });
 
 const commentActions = computed(() => {
   const result: DmMenuItem[] = [];
   if (userStore.user === null) return result;
   if (userIsHighAuthority(userStore.user)) {
     result.push({
-      label: "Удалить",
+      label: t("remove"),
       icon: IconType.Remove,
       command: removeComment,
     });
   }
   if (userStore.user.login === props.comment.author.login) {
     result.unshift({
-      label: "Редактировать",
+      label: t("edit"),
       icon: IconType.Edit,
       command: initializeEditMode,
     });
@@ -110,8 +113,8 @@ const unlike = async () => {
           <dm-text :id="id" v-model="text" />
         </dm-field>
         <template #controls>
-          <dm-button type="submit" label="Сохранить" :loading="loading" />
-          <a @click="release">Отмена</a>
+          <dm-button type="submit" :label="t('submit')" :loading="loading" />
+          <a @click="release">{{ t("cancel") }}</a>
         </template>
       </dm-form>
 

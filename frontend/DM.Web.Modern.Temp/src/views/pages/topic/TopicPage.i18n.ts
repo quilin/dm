@@ -1,0 +1,28 @@
+export default {
+  "ru-RU": {
+    backToForum: "Назад на форум",
+    open: "Открыть",
+    close: "Закрыть",
+    attach: "Прикрепить",
+    detach: "Открепить",
+    remove: "Удалить",
+    edit: "Редактировать",
+    title: "Название",
+    description: "Описание",
+    submit: "Сохранить",
+    cancel: "Отмена",
+  },
+  "en-US": {
+    backToForum: "Back to forum",
+    open: "Reopen",
+    close: "Close",
+    attach: "Attach",
+    detach: "Detach",
+    remove: "Remove",
+    edit: "Edit",
+    title: "Title",
+    description: "Description",
+    submit: "Save",
+    cancel: "Cancel",
+  },
+};

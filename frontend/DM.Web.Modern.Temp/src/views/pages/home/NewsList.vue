@@ -8,16 +8,21 @@ import SecondaryText from "@/components/layout/SecondaryText.vue";
 import UserLink from "@/components/community/UserLink.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import BlockTitle from "@/components/layout/BlockTitle.vue";
+import messages from "@/views/pages/home/NewsList.i18n";
+import { useI18n } from "vue-i18n";
 
 const store = useForumStore();
+const { t } = useI18n({ messages });
 
 onMounted(() => store.fetchNews());
 </script>
 
 <template>
-  <block-title>Последние новости</block-title>
+  <block-title>{{ t("title") }}</block-title>
   <dm-loader v-if="store.news === null" />
-  <secondary-text v-else-if="!store.news.length">Ничего нового</secondary-text>
+  <secondary-text v-else-if="!store.news.length">{{
+    t("empty")
+  }}</secondary-text>
 
   <div v-else v-for="article in store.news" :key="article.id" class="article">
     <router-link

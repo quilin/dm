@@ -6,11 +6,14 @@ import CreateComment from "@/views/pages/topic/CreateComment.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import DmPaging from "@/components/ui-kit/DmPaging.vue";
+import messages from "@/views/pages/topic/CommentsList.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const router = useRouter();
 const forumStore = useForumStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 
 const redirectToLastPage = () => {
   router.push({
@@ -33,7 +36,7 @@ const redirectToLastPage = () => {
   <secondary-text
     v-else-if="forumStore.comments.resources.length === 0"
     class="comments-none"
-    >Комментариев пока нет...</secondary-text
+    >{{ t("empty") }}</secondary-text
   >
   <topic-comment
     v-else
