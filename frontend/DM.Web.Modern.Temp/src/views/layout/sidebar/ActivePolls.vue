@@ -7,19 +7,22 @@ import { IconType } from "@/components/ui-kit/iconType";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
+import { useI18n } from "vue-i18n";
+import messages from "@/views/layout/sidebar/ActivePolls.i18n";
 
 const store = usePollsStore();
+const { t } = useI18n({ messages });
 
 onMounted(() => store.fetchActivePolls());
 </script>
 
 <template>
   <menu-block token="OpenPolls">
-    <template #title>Опросы</template>
+    <template #title>{{ t("title") }}</template>
     <dm-loader v-if="store.activePolls === null" />
-    <secondary-text v-else-if="!store.activePolls.length"
-      >Нет активных опросов</secondary-text
-    >
+    <secondary-text v-else-if="!store.activePolls.length">{{
+      t("empty")
+    }}</secondary-text>
     <the-poll
       v-else
       v-for="poll in store.activePolls"
@@ -28,7 +31,7 @@ onMounted(() => store.fetchActivePolls());
     />
     <div>
       <router-link class="forward" :to="{ name: 'polls' }">
-        К старым опросам
+        {{ t("all") }}
         <dm-icon :font="IconType.Forward" />
       </router-link>
     </div>

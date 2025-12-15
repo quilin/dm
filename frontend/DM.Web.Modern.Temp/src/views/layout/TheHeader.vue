@@ -4,9 +4,12 @@ import { IconType } from "@/components/ui-kit/iconType";
 import GuestActions from "@/views/layout/header/GuestActions.vue";
 import PlayerActions from "@/views/layout/header/PlayerActions.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import messages from "@/views/layout/TheHeader.i18n";
+import { useI18n } from "vue-i18n";
 
 const uiStore = useUiStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 </script>
 
 <template>
@@ -14,7 +17,7 @@ const userStore = useUserStore();
     <div class="user-info">
       <div class="logo-text">
         <template v-if="userStore.user">
-          Добро пожаловать,
+          {{ t("welcome") }},
           <router-link
             :to="{ name: 'profile', params: { login: userStore.user.login } }"
           >
@@ -22,26 +25,32 @@ const userStore = useUserStore();
             {{ userStore.user.login }}
           </router-link>
         </template>
-        <template v-else>Форумные ролевые игры</template>
+        <template v-else>{{ t("dm") }}</template>
       </div>
       <router-link class="logo" :to="{ name: 'home' }" />
       <player-actions v-if="userStore.user" />
       <guest-actions v-else />
     </div>
     <div class="top-menu">
-      <router-link class="link" :to="{ name: 'about' }">О проекте</router-link>
-      <router-link class="link" :to="{ name: 'community' }"
-        >Сообщество</router-link
-      >
-      <router-link class="link" :to="{ name: 'rules' }">Правила</router-link>
-      <router-link class="link" :to="{ name: 'chat' }">Чат</router-link>
+      <router-link class="link" :to="{ name: 'about' }">{{
+        t("about")
+      }}</router-link>
+      <router-link class="link" :to="{ name: 'community' }">{{
+        t("community")
+      }}</router-link>
+      <router-link class="link" :to="{ name: 'rules' }">{{
+        t("rules")
+      }}</router-link>
+      <router-link class="link" :to="{ name: 'chat' }">{{
+        t("chat")
+      }}</router-link>
       <router-link
         v-if="userStore.user"
         class="link create"
         :to="{ name: 'create-game' }"
       >
         <dm-icon :font="IconType.Add" />
-        Новая игра
+        {{ t("newGame") }}
       </router-link>
     </div>
     <div class="controls">

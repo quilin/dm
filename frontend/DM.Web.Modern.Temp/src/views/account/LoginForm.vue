@@ -8,12 +8,15 @@ import DmInput from "@/components/ui-kit/DmInput.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
+import messages from "@/views/account/LoginForm.i18n";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits<{
   (e: "cancelled"): void;
 }>();
 
 const store = useUserStore();
+const { t } = useI18n({ messages });
 
 const credentials = ref<LoginCredentials>({
   login: "",
@@ -34,29 +37,33 @@ const submit = async () => {
 
 <template>
   <dm-dialog :with-form="true">
-    <page-title>Вход</page-title>
+    <page-title>{{ t("title") }}</page-title>
 
     <dm-form @submit="submit">
       <dm-field>
-        <dm-input id="login" placeholder="Логин" v-model="credentials.login" />
+        <dm-input
+          id="login"
+          v-model="credentials.login"
+          :placeholder="t('login')"
+        />
       </dm-field>
       <dm-field>
         <dm-input
           id="password"
           type="password"
           v-model="credentials.password"
-          placeholder="Пароль"
+          :placeholder="t('password')"
         />
       </dm-field>
       <dm-field>
         <label>
           <input type="checkbox" v-model="credentials.rememberMe" />
-          Запомнить меня
+          {{ t("rememberMe") }}
         </label>
       </dm-field>
       <template #controls>
-        <dm-button type="submit" :loading="loading" label="Войти" />
-        <a @click="emit('cancelled')">Отмена</a>
+        <dm-button type="submit" :loading="loading" :label="t('submit')" />
+        <a @click="emit('cancelled')">{{ t("cancel") }}</a>
       </template>
     </dm-form>
   </dm-dialog>

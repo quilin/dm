@@ -7,10 +7,13 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import DmLoader from "@/components/ui-kit/DmLoader.vue";
 import DmIcon from "@/components/ui-kit/DmIcon.vue";
+import { useI18n } from "vue-i18n";
+import messages from "@/views/layout/menu/Forums.i18n";
 
 const route = useRoute();
 const forumStore = useForumStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 
 const isForumRoute = computed(
   () => route.name === "forum" || route.name === "topic",
@@ -23,7 +26,7 @@ watch(() => userStore.user, forumStore.fetchFora, { flush: "post" });
 
 <template>
   <menu-block token="fora">
-    <template #title>Форумы</template>
+    <template #title>{{ t("title") }}</template>
     <dm-loader v-if="forumStore.fora === null" />
     <div
       v-else
