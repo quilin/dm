@@ -57,10 +57,7 @@ const { t } = useI18n({ messages });
     <div class="controls">
       <!--      <notifications v-if="user" />-->
       <dm-button label="Switch theme" @click="uiStore.toggleTheme" /><br />
-      <dm-button
-        label="Switch language"
-        @click="$i18n.locale = $i18n.locale == 'ru-RU' ? 'en-US' : 'ru-RU'"
-      />
+      <dm-button label="Switch language" @click="uiStore.toggleLocale" />
     </div>
   </div>
 </template>

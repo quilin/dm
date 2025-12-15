@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { ColorSchema } from "@/api/models/community";
 import { useUserStore } from "@/stores/user";
+import i18n from "@/i18n";
 
 export const useUiStore = defineStore("ui", () => {
   const theme = ref(ColorSchema.Modern);
@@ -19,5 +20,13 @@ export const useUiStore = defineStore("ui", () => {
     updateTheme(schema === ColorSchema.Night ? schema : ColorSchema.Modern);
   };
 
-  return { theme, updateTheme, toggleTheme };
+  const toggleLocale = () => {
+    if (i18n.global.locale.value === "ru-RU") {
+      i18n.global.locale.value = "en-US";
+    } else {
+      i18n.global.locale.value = "ru-RU";
+    }
+  };
+
+  return { theme, updateTheme, toggleTheme, toggleLocale };
 });
