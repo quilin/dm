@@ -5,11 +5,14 @@ import dayjs from "dayjs";
 import { useUserStore, usePollsStore } from "@/stores";
 import DmProgress from "@/components/ui-kit/DmProgress.vue";
 import SecondaryText from "@/components/layout/SecondaryText.vue";
+import messages from "@/views/pages/polls/ThePoll.i18n";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{ poll: Poll }>();
 
 const userStore = useUserStore();
 const pollStore = usePollsStore();
+const { t } = useI18n({ messages });
 
 const closed = computed(() => dayjs(props.poll.ends).isBefore(dayjs()));
 const totalVotes = computed(() =>
@@ -25,7 +28,7 @@ async function voteForOption(optionId: PollOptionId) {
   <div class="poll">
     <div class="poll-title">
       {{ poll.title }}<br />
-      <secondary-text v-if="closed">Голосование окончено</secondary-text>
+      <secondary-text v-if="closed">{{ t("finished") }}</secondary-text>
     </div>
     <dm-progress
       v-for="option in poll.options"

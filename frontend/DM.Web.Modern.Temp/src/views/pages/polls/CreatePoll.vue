@@ -12,6 +12,10 @@ import SecondaryText from "@/components/layout/SecondaryText.vue";
 import DmForm from "@/components/ui-kit/DmForm.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
 import DmDialog from "@/components/ui-kit/DmDialog.vue";
+import messages from "@/views/pages/polls/CreatePoll.i18n";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n({ messages });
 
 const pollToCreate = ref<Post<Poll>>({
   title: "",
@@ -32,20 +36,20 @@ const tryCreatePoll = async () => {
 
 <template>
   <dm-dialog :with-form="true">
-    <page-title>Новый опрос</page-title>
+    <page-title>{{ t("title") }}</page-title>
     <dm-form @submit="tryCreatePoll">
       <dm-field>
         <dm-input
           id="poll-title"
           v-model="pollToCreate.title"
-          placeholder="Вопрос"
+          :placeholder="t('question')"
         />
       </dm-field>
       <dm-field>
         <dm-input
           id="poll-ends"
           v-model="pollToCreate.ends"
-          placeholder="Дата окончания"
+          :placeholder="t('ends')"
         />
       </dm-field>
       <secondary-text>Ответы</secondary-text>
@@ -54,14 +58,14 @@ const tryCreatePoll = async () => {
           <dm-input
             :id="`poll-option-${i}`"
             v-model="option.text"
-            :placeholder="`Ответ #${i + 1}`"
+            :placeholder="t('answer', { number: i + 1 })"
           />
         </dm-field>
         <dm-icon-button :icon="IconType.Add" @click="addOption" />
       </div>
       <template #controls>
-        <dm-button label="Создать" :loading="loading" type="submit" />
-        <a @click="$emit('cancelled')">Отмена</a>
+        <dm-button :label="t('submit')" :loading="loading" type="submit" />
+        <a @click="$emit('cancelled')">{{ t("cancel") }}</a>
       </template>
     </dm-form>
   </dm-dialog>

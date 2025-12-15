@@ -10,10 +10,13 @@ import { userIsHighAuthority } from "@/api/models/community/helpers";
 import CreatePoll from "@/views/pages/polls/CreatePoll.vue";
 import DmButton from "@/components/ui-kit/DmButton.vue";
 import PageTitle from "@/components/layout/PageTitle.vue";
+import messages from "@/views/pages/polls/PollsPage.i18n";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const pollsStore = usePollsStore();
 const userStore = useUserStore();
+const { t } = useI18n({ messages });
 
 useFetchData(
   () => pollsStore.fetchPolls(extractNumberParam(route.params.n), false),
@@ -39,9 +42,9 @@ const { open: openCreatePoll, close: closeCreatePoll } = useModal({
 </script>
 
 <template>
-  <page-title>Опросы</page-title>
+  <page-title>{{ t("title") }}</page-title>
   <dm-button
-    label="Новый опрос"
+    :label="t('newPoll')"
     :icon="IconType.Add"
     v-if="canCreatePoll"
     @click="openCreatePoll"
