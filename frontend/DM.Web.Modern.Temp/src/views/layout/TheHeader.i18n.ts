@@ -2,8 +2,8 @@ export default {
   "ru-RU": {
     dm: "Форумные ролевые игры",
     welcome: "Добро пожаловать",
-    about: "Войти",
-    community: "Регистрация",
+    about: "О нас",
+    community: "Сообщество",
     rules: "Правила",
     chat: "Чат",
     newGame: "Новая игра",

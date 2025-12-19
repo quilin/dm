@@ -10,7 +10,7 @@ export default {
     colorSchemeModern: "Современная",
     colorSchemePale: "Бледная",
     colorSchemeClassic: "Классика",
-    colorSchemeClassicPale: "Господи опять бледная за что",
+    colorSchemeClassicPale: "Контрастная",
     colorSchemeNight: "Ночная",
   },
   "en-US": {
@@ -24,7 +24,7 @@ export default {
     colorSchemeModern: "Modern",
     colorSchemePale: "Pale",
     colorSchemeClassic: "Classic",
-    colorSchemeClassicPale: "Classic pale",
+    colorSchemeClassicPale: "Contrast",
     colorSchemeNight: "Night",
   },
 };
