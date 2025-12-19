@@ -47,7 +47,7 @@ const userLiked = computed(() =>
 @use "@/assets/styles/Variables"
 
 .like
-  opacity: 0.7
+  opacity: 0.5
   cursor: default
 
   &.like-likeable
