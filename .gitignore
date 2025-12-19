@@ -6,3 +6,5 @@ bundles
 *.user
 launchSettings.json
 appsettings.*.json
+.DS_store
+
