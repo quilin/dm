@@ -27,4 +27,4 @@ export default {
     colorSchemeClassicPale: "Contrast",
     colorSchemeNight: "Night",
   },
-};
+}
