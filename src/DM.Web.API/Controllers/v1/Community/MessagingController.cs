@@ -37,17 +37,29 @@ public class MessagingController : ControllerBase
         Ok(await apiService.GetConversations(q));
 
     /// <summary>
+    /// Get count of unread conversations
+    /// </summary>
+    /// <response code="200"></response>
+    /// <response code="401">User must be authenticated</response>
+    [HttpGet("dialogues/unread", Name = nameof(GetUnreadConversations))]
+    [AuthenticationRequired]
+    [ProducesResponseType<Envelope<int>>(200)]
+    [ProducesResponseType<GeneralError>(401)]
+    public async Task<IActionResult> GetUnreadConversations() =>
+        Ok(await apiService.GetUnreadConversations());
+
+    /// <summary>
     /// Get conversation with user
     /// </summary>
     /// <response code="302"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">User not found</response>
-    [HttpGet("dialogues/visavi/{login}", Name = nameof(GetVisaviConversation))]
+    [HttpGet("dialogues/visavis/{login}", Name = nameof(GetVisavisConversation))]
     [AuthenticationRequired]
     [ProducesResponseType(302)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetVisaviConversation(string login)
+    public async Task<IActionResult> GetVisavisConversation(string login)
     {
         var conversation = await apiService.GetConversation(login);
         return RedirectToRoute(nameof(GetConversation), new {id = conversation.Resource.Id});

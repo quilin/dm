@@ -18,6 +18,12 @@ public interface IMessagingApiService
     /// <returns></returns>
     Task<ListEnvelope<Conversation>> GetConversations(PagingQuery query);
 
+     /// <summary>
+    /// Get unread conversations count
+    /// </summary>
+    /// <returns></returns>
+    Task<Envelope<int>> GetUnreadConversations();
+
     /// <summary>
     /// Get single conversation
     /// </summary>

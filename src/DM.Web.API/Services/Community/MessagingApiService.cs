@@ -43,6 +43,12 @@ internal class MessagingApiService : IMessagingApiService
         return new ListEnvelope<Conversation>(conversations.Select(mapper.Map<Conversation>), new Paging(paging));
     }
 
+    public async Task<Envelope<int>> GetUnreadConversations()
+    {
+        var totalUnreadCount = await conversationReadingService.GetTotalUnreadCount();
+        return new Envelope<int>(totalUnreadCount);
+    }
+
     /// <inheritdoc />
     public async Task<Envelope<Conversation>> GetConversation(Guid id)
     {
