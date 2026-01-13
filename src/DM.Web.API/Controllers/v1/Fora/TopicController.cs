@@ -38,7 +38,7 @@ public class TopicController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Topic not found</response>
-    [HttpGet("{id}", Name = nameof(GetTopic))]
+    [HttpGet("{id:guid}", Name = nameof(GetTopic))]
     [ProducesResponseType(typeof(Envelope<Topic>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetTopic(Guid id) => Ok(await topicApiService.Get(id));
@@ -53,7 +53,7 @@ public class TopicController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to change some properties of this topic</response>
     /// <response code="410">Topic not found</response>
-    [HttpPatch("{id}", Name = nameof(PutTopic))]
+    [HttpPatch("{id:guid}", Name = nameof(PutTopic))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Topic>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -71,7 +71,7 @@ public class TopicController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to remove the topic</response>
     /// <response code="410">Topic not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteTopic))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteTopic))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -93,7 +93,7 @@ public class TopicController : ControllerBase
     /// <response code="403">User is not allowed to like the topic</response>
     /// <response code="409">User already liked this topic</response>
     /// <response code="410">Topic not found</response>
-    [HttpPost("{id}/likes", Name = nameof(PostTopicLike))]
+    [HttpPost("{id:guid}/likes", Name = nameof(PostTopicLike))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -112,7 +112,7 @@ public class TopicController : ControllerBase
     /// <response code="403">User is not allowed to remove like from this topic</response>
     /// <response code="409">User has no like for this topic</response>
     /// <response code="410">Topic not found</response>
-    [HttpDelete("{id}/likes", Name = nameof(DeleteTopicLike))]
+    [HttpDelete("{id:guid}/likes", Name = nameof(DeleteTopicLike))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -132,7 +132,7 @@ public class TopicController : ControllerBase
     /// <param name="q"></param>
     /// <response code="200"></response>
     /// <response code="410">Topic not found</response>
-    [HttpGet("{id}/comments", Name = nameof(GetForumComments))]
+    [HttpGet("{id:guid}/comments", Name = nameof(GetForumComments))]
     [ProducesResponseType(typeof(ListEnvelope<Comment>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetForumComments(Guid id, [FromQuery] PagingQuery q) =>
@@ -148,7 +148,7 @@ public class TopicController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to comment this topic</response>
     /// <response code="410">Topic not found</response>
-    [HttpPost("{id}/comments", Name = nameof(PostForumComment))]
+    [HttpPost("{id:guid}/comments", Name = nameof(PostForumComment))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Comment>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -168,7 +168,7 @@ public class TopicController : ControllerBase
     /// <response code="204"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Topic not found</response>
-    [HttpDelete("{id}/comments/unread", Name = nameof(ReadTopicComments))]
+    [HttpDelete("{id:guid}/comments/unread", Name = nameof(ReadTopicComments))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

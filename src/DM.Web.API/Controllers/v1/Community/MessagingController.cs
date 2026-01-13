@@ -59,7 +59,7 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpGet("dialogues/{id}", Name = nameof(GetConversation))]
+    [HttpGet("dialogues/{id:guid}", Name = nameof(GetConversation))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Conversation>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -73,7 +73,7 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpGet("dialogues/{id}/messages", Name = nameof(GetMessages))]
+    [HttpGet("dialogues/{id:guid}/messages", Name = nameof(GetMessages))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(ListEnvelope<Message>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -89,7 +89,7 @@ public class MessagingController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to create message in this conversation</response>
     /// <response code="410">Dialogue not found</response>
-    [HttpPost("dialogues/{id}/messages", Name = nameof(PostMessage))]
+    [HttpPost("dialogues/{id:guid}/messages", Name = nameof(PostMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(ListEnvelope<Message>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -107,7 +107,7 @@ public class MessagingController : ControllerBase
     /// </summary>
     /// <response code="204"></response>
     /// <response code="410">Dialogue not found</response>
-    [HttpDelete("dialogues/{id}/messages/unread")]
+    [HttpDelete("dialogues/{id:guid}/messages/unread")]
     [AuthenticationRequired]
     public async Task<IActionResult> MarkAsRead(Guid id)
     {
@@ -121,7 +121,7 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Message not found</response>
-    [HttpGet("messages/{id}", Name = nameof(GetMessage))]
+    [HttpGet("messages/{id:guid}", Name = nameof(GetMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Message>), 200)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -134,7 +134,7 @@ public class MessagingController : ControllerBase
     /// <response code="200"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Message not found</response>
-    [HttpDelete("messages/{id}", Name = nameof(DeleteMessage))]
+    [HttpDelete("messages/{id:guid}", Name = nameof(DeleteMessage))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

@@ -53,7 +53,7 @@ public class ReviewController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Review not found</response>
-    [HttpGet("{id}", Name = nameof(GetReview))]
+    [HttpGet("{id:guid}", Name = nameof(GetReview))]
     [ProducesResponseType(typeof(Envelope<Review>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetReview(Guid id) => Ok(await reviewApiService.Get(id));
@@ -66,7 +66,7 @@ public class ReviewController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to update this review</response>
     /// <response code="410">Review not found</response>
-    [HttpPatch("{id}", Name = nameof(PutReview))]
+    [HttpPatch("{id:guid}", Name = nameof(PutReview))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Review>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -82,7 +82,7 @@ public class ReviewController : ControllerBase
     /// <response code="204"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Review not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteReview))]
+    [HttpDelete("{id:guid}", Name = nameof(DeleteReview))]
     [AuthenticationRequired]
     [ProducesResponseType(240)]
     [ProducesResponseType(typeof(GeneralError), 401)]

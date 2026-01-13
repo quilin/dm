@@ -35,7 +35,7 @@ public class RoomController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("games/{id}/rooms", Name = nameof(GetRooms))]
+    [HttpGet("games/{id:guid}/rooms", Name = nameof(GetRooms))]
     [ProducesResponseType(typeof(ListEnvelope<Room>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetRooms(Guid id) => Ok(await roomApiService.GetAll(id));
@@ -50,7 +50,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to create a room in this game</response>
     /// <response code="410">Game not found</response>
-    [HttpPost("games/{id}/rooms", Name = nameof(PostRoom))]
+    [HttpPost("games/{id:guid}/rooms", Name = nameof(PostRoom))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Room>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -70,7 +70,7 @@ public class RoomController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Room not found</response>
-    [HttpGet("rooms/{id}", Name = nameof(GetRoom))]
+    [HttpGet("rooms/{id:guid}", Name = nameof(GetRoom))]
     [ProducesResponseType(typeof(Envelope<Room>), 200)]
     public async Task<IActionResult> GetRoom(Guid id) => Ok(await roomApiService.Get(id));
 
@@ -84,7 +84,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to change some properties of this room</response>
     /// <response code="410">Room not found</response>
-    [HttpPatch("rooms/{id}", Name = nameof(PutRoom))]
+    [HttpPatch("rooms/{id:guid}", Name = nameof(PutRoom))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Room>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -102,7 +102,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to remove the room</response>
     /// <response code="410">Room not found</response>
-    [HttpDelete("rooms/{id}", Name = nameof(DeleteRoom))]
+    [HttpDelete("rooms/{id:guid}", Name = nameof(DeleteRoom))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -125,7 +125,7 @@ public class RoomController : ControllerBase
     /// <response code="403">User is not allowed to create claims in this room</response>
     /// <response code="409">Claim already exists</response>
     /// <response code="410">Room not found</response>
-    [HttpPost("rooms/{id}/claims", Name = nameof(PostClaim))]
+    [HttpPost("rooms/{id:guid}/claims", Name = nameof(PostClaim))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<RoomClaim>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -150,7 +150,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to update this claim</response>
     /// <response code="410">Claim not found</response>
-    [HttpPatch("rooms/claims/{id}", Name = nameof(UpdateClaim))]
+    [HttpPatch("rooms/claims/{id:guid}", Name = nameof(UpdateClaim))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<RoomClaim>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -168,7 +168,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to delete this claim</response>
     /// <response code="410">Claim not found</response>
-    [HttpDelete("rooms/claims/{id}", Name = nameof(DeleteClaim))]
+    [HttpDelete("rooms/claims/{id:guid}", Name = nameof(DeleteClaim))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -191,7 +191,7 @@ public class RoomController : ControllerBase
     /// <response code="403">User is not allowed to create post pendings in this room</response>
     /// <response code="409">Post pending already exists</response>
     /// <response code="410">Room not found</response>
-    [HttpPost("rooms/{id}/pendings", Name = nameof(CreatePendingPost))]
+    [HttpPost("rooms/{id:guid}/pendings", Name = nameof(CreatePendingPost))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<PendingPost>), 201)]
     public async Task<IActionResult> CreatePendingPost(Guid id, [FromBody] PendingPost pendingPost)
@@ -208,7 +208,7 @@ public class RoomController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to delete this pending post</response>
     /// <response code="410">Pending post not found</response>
-    [HttpDelete("rooms/pendings/{id}", Name = nameof(DeletePendingPost))]
+    [HttpDelete("rooms/pendings/{id:guid}", Name = nameof(DeletePendingPost))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]

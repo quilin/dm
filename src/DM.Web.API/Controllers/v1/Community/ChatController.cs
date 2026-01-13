@@ -57,7 +57,7 @@ public class ChatController : ControllerBase
     /// </summary>
     /// <response code="200"></response>
     /// <response code="410">Message not found</response>
-    [HttpGet("{id}", Name = nameof(GetChatMessage))]
+    [HttpGet("{id:guid}", Name = nameof(GetChatMessage))]
     [ProducesResponseType(typeof(Envelope<ChatMessage>), 200)]
     [ProducesResponseType(typeof(Envelope<ChatMessage>), 410)]
     public async Task<IActionResult> GetChatMessage(Guid id) =>

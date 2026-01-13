@@ -58,7 +58,7 @@ public class AccountController : ControllerBase
     /// <response code="200">User has been activated and logged in</response>
     /// <response code="400">Token is invalid</response>
     /// <response code="410">Token is expired</response>
-    [HttpPut("{token}", Name = nameof(Activate))]
+    [HttpPut("{token:guid}", Name = nameof(Activate))]
     [ProducesResponseType(typeof(Envelope<User>), 200)]
     [ProducesResponseType(typeof(GeneralError), 400)]
     [ProducesResponseType(typeof(GeneralError), 410)]

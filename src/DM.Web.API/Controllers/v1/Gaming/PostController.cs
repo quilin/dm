@@ -31,7 +31,7 @@ public class PostController : ControllerBase
     /// <param name="q"></param>
     /// <response code="200"></response>
     /// <response code="410">Room not found</response>
-    [HttpGet("rooms/{id}/posts", Name = nameof(GetPosts))]
+    [HttpGet("rooms/{id:guid}/posts", Name = nameof(GetPosts))]
     [ProducesResponseType(typeof(ListEnvelope<Post>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> GetPosts(Guid id, [FromQuery] PagingQuery q) =>
@@ -47,7 +47,7 @@ public class PostController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to create post in this room</response>
     /// <response code="410">Room not found</response>
-    [HttpPost("rooms/{id}/posts", Name = nameof(PostPost))]
+    [HttpPost("rooms/{id:guid}/posts", Name = nameof(PostPost))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Post>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -68,7 +68,7 @@ public class PostController : ControllerBase
     /// <response code="204"></response>
     /// <response code="401">User must be authenticated</response>
     /// <response code="410">Room not found</response>
-    [HttpDelete("rooms/{id}/posts/unread", Name = nameof(MarkPostsAsRead))]
+    [HttpDelete("rooms/{id:guid}/posts/unread", Name = nameof(MarkPostsAsRead))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -85,7 +85,7 @@ public class PostController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Post not found</response>
-    [HttpGet("posts/{id}", Name = nameof(GetPost))]
+    [HttpGet("posts/{id:guid}", Name = nameof(GetPost))]
     [ProducesResponseType(typeof(Envelope<Post>), 200)]
     public async Task<IActionResult> GetPost(Guid id) => Ok(await postApiService.Get(id));
 
@@ -99,7 +99,7 @@ public class PostController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to change some properties of this post</response>
     /// <response code="410">Post not found</response>
-    [HttpPatch("posts/{id}", Name = nameof(PutPost))]
+    [HttpPatch("posts/{id:guid}", Name = nameof(PutPost))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Post>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -117,7 +117,7 @@ public class PostController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to remove the post</response>
     /// <response code="410">Post not found</response>
-    [HttpDelete("posts/{id}", Name = nameof(DeletePost))]
+    [HttpDelete("posts/{id:guid}", Name = nameof(DeletePost))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -134,7 +134,7 @@ public class PostController : ControllerBase
     /// </summary>
     /// <response code="200"></response>
     /// <response code="410">Post not found</response>
-    [HttpGet("posts/{id}/votes", Name = nameof(GetPostVotes))]
+    [HttpGet("posts/{id:guid}/votes", Name = nameof(GetPostVotes))]
     [ProducesResponseType(typeof(ListEnvelope<Vote>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public Task<IActionResult> GetPostVotes(Guid id) => throw new NotImplementedException();
@@ -148,7 +148,7 @@ public class PostController : ControllerBase
     /// <response code="403">User is not allowed to vote for the post</response>
     /// <response code="409">User already voted for this post</response>
     /// <response code="410">Post not found</response>
-    [HttpPost("posts/{id}/votes", Name = nameof(PostVote))]
+    [HttpPost("posts/{id:guid}/votes", Name = nameof(PostVote))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Vote>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
