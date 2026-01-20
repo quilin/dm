@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Schemas.Deleting;
@@ -12,6 +13,7 @@ internal interface ISchemaDeletingRepository
     /// Delete existing attribute schema
     /// </summary>
     /// <param name="schemaId">Schema identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid schemaId);
+    Task Delete(Guid schemaId, CancellationToken cancellationToken);
 }

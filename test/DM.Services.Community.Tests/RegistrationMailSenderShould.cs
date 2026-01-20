@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Configuration;
@@ -40,7 +41,7 @@ public class RegistrationMailSenderShould : UnitTestBase
     public async Task RenderConfirmationTemplate()
     {
         renderSetup.ReturnsAsync("renderResult");
-        await registrationMailSender.Send("email", "login", Guid.Parse("3cac234a-9c07-4103-9179-d00562a487ba"));
+        await registrationMailSender.Send("email", "login", Guid.Parse("3cac234a-9c07-4103-9179-d00562a487ba"), CancellationToken.None);
         renderer.Verify(r => r.Render(
             "RegistrationLetter", 
             It.Is<RegistrationConfirmationViewModel>(vm =>
@@ -52,7 +53,7 @@ public class RegistrationMailSenderShould : UnitTestBase
     public async Task SendLetterWithRenderedTemplate()
     {
         renderSetup.ReturnsAsync("rendered letter");
-        await registrationMailSender.Send("email", "login", Guid.NewGuid());
+        await registrationMailSender.Send("email", "login", Guid.NewGuid(), CancellationToken.None);
         sender.Verify(s => s.Send(It.Is<MailLetter>(l =>
             l.Address == "email" &&
             l.Subject.Contains("login") &&

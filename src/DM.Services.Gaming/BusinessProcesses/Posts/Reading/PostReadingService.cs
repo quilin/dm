@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -15,48 +16,33 @@ using DM.Services.Gaming.Dto.Output;
 namespace DM.Services.Gaming.BusinessProcesses.Posts.Reading;
 
 /// <inheritdoc />
-internal class PostReadingService : IPostReadingService
+internal class PostReadingService(
+    IRoomReadingService roomReadingService,
+    IIntentionManager intentionManager,
+    IPostReadingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IIdentityProvider identityProvider) : IPostReadingService
 {
-    private readonly IRoomReadingService roomReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IPostReadingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public PostReadingService(
-        IRoomReadingService roomReadingService,
-        IIntentionManager intentionManager,
-        IPostReadingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IIdentityProvider identityProvider)
+    public async Task<(IEnumerable<Post> posts, PagingResult paging)> Get(
+        Guid roomId, PagingQuery query, CancellationToken cancellationToken)
     {
-        this.roomReadingService = roomReadingService;
-        this.intentionManager = intentionManager;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<(IEnumerable<Post> posts, PagingResult paging)> Get(Guid roomId, PagingQuery query)
-    {
-        var room = await roomReadingService.Get(roomId);
+        var room = await roomReadingService.Get(roomId, cancellationToken);
         intentionManager.ThrowIfForbidden(RoomIntention.CreatePost, room);
 
         var identity = identityProvider.Current;
-        var totalCount = await repository.Count(roomId, identity.User.UserId);
+        var totalCount = await repository.Count(roomId, identity.User.UserId, cancellationToken);
         var paging = new PagingData(query, identity.Settings.Paging.PostsPerPage, totalCount);
 
-        var posts = await repository.Get(roomId, paging, identity.User.UserId);
+        var posts = await repository.Get(roomId, paging, identity.User.UserId, cancellationToken);
 
         return (posts, paging.Result);
     }
 
     /// <inheritdoc />
-    public async Task<Post> Get(Guid postId)
+    public async Task<Post> Get(Guid postId, CancellationToken cancellationToken)
     {
-        var post = await repository.Get(postId, identityProvider.Current.User.UserId);
+        var post = await repository.Get(postId, identityProvider.Current.User.UserId, cancellationToken);
         if (post == null)
         {
             throw new HttpException(HttpStatusCode.Gone, "Post not found");
@@ -66,10 +52,10 @@ internal class PostReadingService : IPostReadingService
     }
 
     /// <inheritdoc />
-    public async Task MarkAsRead(Guid roomId)
+    public async Task MarkAsRead(Guid roomId, CancellationToken cancellationToken)
     {
-        await roomReadingService.Get(roomId);
+        await roomReadingService.Get(roomId, cancellationToken);
         await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
-            UnreadEntryType.Message, roomId);
+            UnreadEntryType.Message, roomId, cancellationToken);
     }
 }

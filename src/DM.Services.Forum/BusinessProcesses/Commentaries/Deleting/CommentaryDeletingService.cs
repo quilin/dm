@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -13,46 +14,31 @@ using Comment = DM.Services.DataAccess.BusinessObjects.Common.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
 
 /// <inheritdoc />
-internal class CommentaryDeletingService : ICommentaryDeletingService
+internal class CommentaryDeletingService(
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    ICommentaryDeletingRepository repository,
+    IUnreadCountersRepository unreadCountersRepository,
+    IInvokedEventProducer invokedEventProducer) : ICommentaryDeletingService
 {
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly ICommentaryDeletingRepository repository;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly IInvokedEventProducer invokedEventProducer;
-
     /// <inheritdoc />
-    public CommentaryDeletingService(
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        ICommentaryDeletingRepository repository,
-        IUnreadCountersRepository unreadCountersRepository,
-        IInvokedEventProducer invokedEventProducer)
+    public async Task Delete(Guid commentId, CancellationToken cancellationToken)
     {
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.invokedEventProducer = invokedEventProducer;
-    }
-        
-    /// <inheritdoc />
-    public async Task Delete(Guid commentId)
-    {
-        var comment = await repository.GetForDelete(commentId);
+        var comment = await repository.GetForDelete(commentId, cancellationToken);
         intentionManager.ThrowIfForbidden(CommentIntention.Delete, (Services.Common.Dto.Comment) comment);
 
         var updateTopic = updateBuilderFactory.Create<ForumTopic>(comment.EntityId);
         if (comment.IsLastCommentOfTopic)
         {
-            var previousCommentaryId = await repository.GetSecondLastCommentId(comment.EntityId);
+            var previousCommentaryId = await repository.GetSecondLastCommentId(comment.EntityId, cancellationToken);
             updateTopic = updateTopic.Field(t => t.LastCommentId, previousCommentaryId);
         }
 
         var updateComment = updateBuilderFactory.Create<Comment>(commentId)
             .Field(c => c.IsRemoved, true);
-        await repository.Delete(updateComment, updateTopic);
-        await unreadCountersRepository.Decrement(comment.EntityId, UnreadEntryType.Message, comment.CreateDate);
+        await repository.Delete(updateComment, updateTopic, cancellationToken);
+        await unreadCountersRepository.Decrement(
+            comment.EntityId, UnreadEntryType.Message, comment.CreateDate, cancellationToken);
 
         await invokedEventProducer.Send(EventType.DeletedForumComment, commentId);
     }

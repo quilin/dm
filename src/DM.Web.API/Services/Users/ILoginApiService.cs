@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -37,6 +38,7 @@ public interface ILoginApiService
     /// <summary>
     /// Get current user
     /// </summary>
+    /// <param name="cancellationToken"></param>
     /// <returns>Current user</returns>
-    Task<Envelope<UserDetails>> GetCurrent();
+    Task<Envelope<UserDetails>> GetCurrent(CancellationToken cancellationToken);
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Implementation;
 using DM.Services.DataAccess.BusinessObjects.Common;
@@ -10,19 +11,13 @@ using MongoDB.Driver;
 namespace DM.Services.Common.BusinessProcesses.UnreadCounters;
 
 /// <inheritdoc cref="IUnreadCountersRepository" />
-internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounter>, IUnreadCountersRepository
+internal class UnreadCountersRepository(
+    DmMongoClient client,
+    IDateTimeProvider dateTimeProvider) : MongoCollectionRepository<UnreadCounter>(client), IUnreadCountersRepository
 {
-    private readonly IDateTimeProvider dateTimeProvider;
-
     /// <inheritdoc />
-    public UnreadCountersRepository(DmMongoClient client,
-        IDateTimeProvider dateTimeProvider) : base(client)
-    {
-        this.dateTimeProvider = dateTimeProvider;
-    }
-
-    /// <inheritdoc />
-    public Task Create(Guid entityId, UnreadEntryType entryType, IEnumerable<Guid> userIds)
+    public Task Create(Guid entityId, UnreadEntryType entryType,
+        IReadOnlyCollection<Guid> userIds, CancellationToken cancellationToken)
     {
         return Collection.InsertManyAsync(userIds.Select(id => new UnreadCounter
         {
@@ -32,11 +27,11 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
             EntryType = entryType,
             LastRead = dateTimeProvider.Now.UtcDateTime,
             Counter = 0
-        }));
+        }), cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task Create(Guid entityId, Guid parentId, UnreadEntryType entryType)
+    public Task Create(Guid entityId, Guid parentId, UnreadEntryType entryType, CancellationToken cancellationToken)
     {
         return Collection.InsertOneAsync(new UnreadCounter
         {
@@ -46,44 +41,50 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
             EntryType = entryType,
             LastRead = dateTimeProvider.Now.UtcDateTime,
             Counter = 0
-        });
+        }, cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task Create(Guid entityId, UnreadEntryType entryType) => Create(entityId, entityId, entryType);
+    public Task Create(Guid entityId, UnreadEntryType entryType, CancellationToken cancellationToken) =>
+        Create(entityId, entityId, entryType, cancellationToken);
 
     /// <inheritdoc />
-    public Task Increment(Guid entityId, UnreadEntryType entryType)
+    public Task Increment(Guid entityId, UnreadEntryType entryType, CancellationToken cancellationToken)
     {
         return Collection.UpdateManyAsync(
             Filter.Eq(c => c.EntityId, entityId) &
             Filter.Eq(c => c.EntryType, entryType),
-            Update.Inc(c => c.Counter, 1));
+            Update.Inc(c => c.Counter, 1),
+            cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task Decrement(Guid entityId, UnreadEntryType entryType, DateTimeOffset createDate)
+    public Task Decrement(Guid entityId, UnreadEntryType entryType,
+        DateTimeOffset createDate, CancellationToken cancellationToken)
     {
-        return Collection.UpdateManyAsync(Filter.Eq(c => c.EntityId, entityId) &
-                                          Filter.Eq(c => c.EntryType, entryType) &
-                                          Filter.Lt(c => c.LastRead, createDate.UtcDateTime),
-            Update.Inc(c => c.Counter, -1));
+        return Collection.UpdateManyAsync(
+            Filter.Eq(c => c.EntityId, entityId) &
+            Filter.Eq(c => c.EntryType, entryType) &
+            Filter.Lt(c => c.LastRead, createDate.UtcDateTime),
+            Update.Inc(c => c.Counter, -1),
+            cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid entityId, UnreadEntryType entryType)
+    public Task Delete(Guid entityId, UnreadEntryType entryType, CancellationToken cancellationToken)
     {
         return Collection.UpdateManyAsync(
             Filter.Eq(c => c.EntityId, entityId) &
             Filter.Eq(c => c.EntryType, entryType),
-            Update.Set(c => c.IsRemoved, true));
+            Update.Set(c => c.IsRemoved, true),
+            cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<IDictionary<Guid, int>> SelectByParents(
-        Guid userId, UnreadEntryType entryType, params Guid[] parentIds)
+    public async Task<IDictionary<Guid, int>> SelectByParents(Guid userId, UnreadEntryType entryType,
+        IReadOnlyCollection<Guid> parentIds, CancellationToken cancellationToken)
     {
-        var userIds = new[] {userId, Guid.Empty}.Distinct();
+        var userIds = new[] { userId, Guid.Empty }.Distinct();
         var counters = (await Collection.Aggregate()
                 .Match(
                     Filter.In(c => c.UserId, userIds) &
@@ -103,16 +104,16 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
                         EntityId = g.First().ParentId,
                         Counter = g.Sum(c => c.Counter > 0 ? 1 : 0)
                     })
-                .ToListAsync())
+                .ToListAsync(cancellationToken))
             .ToDictionary(c => c.EntityId, c => c.Counter);
         return parentIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
     }
 
     /// <inheritdoc />
-    public async Task<IDictionary<Guid, int>> SelectByEntities(
-        Guid userId, UnreadEntryType entryType, params Guid[] entityIds)
+    public async Task<IDictionary<Guid, int>> SelectByEntities(Guid userId, UnreadEntryType entryType,
+        IReadOnlyCollection<Guid> entityIds, CancellationToken cancellationToken)
     {
-        var userIds = new[] {userId, Guid.Empty}.Distinct();
+        var userIds = new[] { userId, Guid.Empty }.Distinct();
         var counters = (await Collection.Aggregate()
                 .Match(
                     Filter.In(c => c.UserId, userIds) &
@@ -125,18 +126,18 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
                         EntityId = g.First().EntityId,
                         Counter = g.Min(c => c.Counter)
                     })
-                .ToListAsync())
+                .ToListAsync(cancellationToken))
             .ToDictionary(c => c.EntityId, c => c.Counter);
         return entityIds.ToDictionary(id => id, id => counters.TryGetValue(id, out var counter) ? counter : 0);
     }
 
     /// <inheritdoc />
-    public async Task Flush(Guid userId, UnreadEntryType entryType, Guid entityId)
+    public async Task Flush(Guid userId, UnreadEntryType entryType, Guid entityId, CancellationToken cancellationToken)
     {
         var counter = await Collection.Find(
                 Filter.Eq(c => c.EntityId, entityId) &
                 Filter.Eq(c => c.EntryType, entryType))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         await Collection
             .ReplaceOneAsync(
@@ -152,16 +153,20 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
                     LastRead = dateTimeProvider.Now.UtcDateTime,
                     Counter = 0
                 },
-                new ReplaceOptions {IsUpsert = true});
+                new ReplaceOptions { IsUpsert = true },
+                cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task FlushAll(Guid userId, UnreadEntryType entryType, Guid parentId)
+    public async Task FlushAll(Guid userId, UnreadEntryType entryType, Guid parentId,
+        CancellationToken cancellationToken)
     {
-        var entityIds = await Collection.Distinct(c => c.EntityId,
+        var entityIds = await Collection.Distinct(
+                c => c.EntityId,
                 Filter.Eq(c => c.ParentId, parentId) &
-                Filter.Eq(c => c.EntryType, entryType))
-            .ToListAsync();
+                Filter.Eq(c => c.EntryType, entryType),
+                cancellationToken: cancellationToken)
+            .ToListAsync(cancellationToken);
         var rightNow = dateTimeProvider.Now.UtcDateTime;
 
         await Collection.BulkWriteAsync(entityIds
@@ -178,15 +183,17 @@ internal class UnreadCountersRepository : MongoCollectionRepository<UnreadCounte
                         LastRead = rightNow,
                         Counter = 0
                     })
-                {IsUpsert = true}));
+                { IsUpsert = true }), cancellationToken: cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task ChangeParent(Guid parentId, UnreadEntryType entryType, Guid newParentId)
+    public async Task ChangeParent(Guid parentId, UnreadEntryType entryType,
+        Guid newParentId, CancellationToken cancellationToken)
     {
         await Collection.UpdateManyAsync(
             Filter.Eq(c => c.ParentId, parentId) &
             Filter.Eq(c => c.EntryType, entryType),
-            Update.Set(c => c.ParentId, newParentId));
+            Update.Set(c => c.ParentId, newParentId),
+            cancellationToken: cancellationToken);
     }
 }

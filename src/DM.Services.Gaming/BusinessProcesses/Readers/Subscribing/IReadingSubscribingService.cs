@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -13,13 +14,15 @@ public interface IReadingSubscribingService
     /// Subscribe to a game
     /// </summary>
     /// <param name="gameId">Game identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Subscribe(Guid gameId);
+    Task<GeneralUser> Subscribe(Guid gameId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Unsubscribe from a game
     /// </summary>
     /// <param name="gameId">Game identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Unsubscribe(Guid gameId);
+    Task Unsubscribe(Guid gameId, CancellationToken cancellationToken);
 }

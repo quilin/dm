@@ -8,24 +8,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Shared;
 
 /// <inheritdoc />
-internal class UserRepository : IUserRepository
+internal class UserRepository(
+    DmDbContext dbContext) : IUserRepository
 {
-    private readonly DmDbContext dbContext;
-
     /// <inheritdoc />
-    public UserRepository(
-        DmDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-
-    /// <inheritdoc />
-    public async Task<(bool exists, Guid userId)> FindUserId(string login)
+    public async Task<(bool exists, Guid userId)> FindUserId(string login, CancellationToken cancellationToken)
     {
         var foundUserId = await dbContext.Users
             .Where(u => !u.IsRemoved && u.Activated && u.Login.ToLower() == login.ToLower())
             .Select(u => u.UserId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
         return (foundUserId != default, foundUserId);
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Community.BusinessProcesses.Account.EmailChange.Confirmation;
@@ -14,6 +15,7 @@ internal interface IEmailChangeMailSender
     /// <param name="email">User email</param>
     /// <param name="login">User login</param>
     /// <param name="token">Confirmation token</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Send(string email, string login, Guid token);
+    Task Send(string email, string login, Guid token, CancellationToken cancellationToken);
 }

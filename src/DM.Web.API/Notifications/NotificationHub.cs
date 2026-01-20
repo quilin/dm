@@ -24,7 +24,7 @@ public class NotificationHub : Hub<INotificationHub>
         var (hasToken, token) = TryExtractAuthToken();
         if (hasToken)
         {
-            connectionService.Add(token, Context.ConnectionId);
+            connectionService.Add(token, Context.ConnectionId, Context.ConnectionAborted);
         }
 
         return base.OnConnectedAsync();
@@ -36,7 +36,7 @@ public class NotificationHub : Hub<INotificationHub>
         var (hasToken, token) = TryExtractAuthToken();
         if (hasToken)
         {
-            connectionService.Remove(token, Context.ConnectionId);
+            connectionService.Remove(token, Context.ConnectionId, Context.ConnectionAborted);
         }
 
         return base.OnDisconnectedAsync(exception);
@@ -45,8 +45,8 @@ public class NotificationHub : Hub<INotificationHub>
     private (bool success, string token) TryExtractAuthToken()
     {
         string token;
-        if (!Context.GetHttpContext().Request.Query.TryGetValue("access_token", out var queryValues) ||
-            !queryValues.Any() || string.IsNullOrEmpty(token = queryValues.First()))
+        if (Context.GetHttpContext()?.Request.Query.TryGetValue("access_token", out var queryValues) is not true ||
+            queryValues.Count == 0 || string.IsNullOrEmpty(token = queryValues.First()))
         {
             return (false, null);
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
 using DM.Services.Mail.Rendering.Rendering;
@@ -8,25 +9,15 @@ using Microsoft.Extensions.Options;
 namespace DM.Services.Community.BusinessProcesses.Account.PasswordReset.Confirmation;
 
 /// <inheritdoc />
-internal class PasswordResetEmailSender : IPasswordResetEmailSender
+internal class PasswordResetEmailSender(
+    IRenderer renderer,
+    IMailSender mailSender,
+    IOptions<IntegrationSettings> options) : IPasswordResetEmailSender
 {
-    private readonly IRenderer renderer;
-    private readonly IMailSender mailSender;
-    private readonly IntegrationSettings integrationSettings;
-
+    private readonly IntegrationSettings integrationSettings = options.Value;
+    
     /// <inheritdoc />
-    public PasswordResetEmailSender(
-        IRenderer renderer,
-        IMailSender mailSender,
-        IOptions<IntegrationSettings> integrationOptions)
-    {
-        this.renderer = renderer;
-        this.mailSender = mailSender;
-        integrationSettings = integrationOptions.Value;
-    }
-
-    /// <inheritdoc />
-    public async Task Send(string email, string login, Guid token)
+    public async Task Send(string email, string login, Guid token, CancellationToken cancellationToken)
     {
         var confirmationLinkUri = new Uri(new Uri(integrationSettings.WebUrl), $"password/{token}");
         var emailBody = await renderer.Render("PasswordResetLetter", new PasswordResetConfirmationViewModel

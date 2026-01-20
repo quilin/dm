@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Chat.Reading;
 
@@ -12,6 +13,7 @@ public interface IChatCreatingService
     /// Create new chat message
     /// </summary>
     /// <param name="createChatMessage">Creating DTO</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ChatMessage> Create(CreateChatMessage createChatMessage);
+    Task<ChatMessage> Create(CreateChatMessage createChatMessage, CancellationToken cancellationToken);
 }

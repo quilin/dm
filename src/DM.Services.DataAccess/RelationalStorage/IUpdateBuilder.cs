@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -44,5 +45,5 @@ public interface IUpdateBuilder<TEntity>
     /// Save changes in mongodb
     /// </summary>
     /// <returns></returns>
-    Task<Guid> UpdateFor(DmMongoClient mongoClient, bool upsert);
+    Task<Guid> UpdateFor(DmMongoClient mongoClient, bool upsert, CancellationToken cancellationToken);
 }

@@ -41,7 +41,7 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
             .ReturnsAsync(new ValidationResult());
 
         var readingService = Mock<ICommentaryReadingService>();
-        getCommentSetup = readingService.Setup(s => s.Get(It.IsAny<Guid>()));
+        getCommentSetup = readingService.Setup(s => s.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -63,7 +63,7 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
             .Returns(commentUpdateBuilder.Object);
 
         commentRepository = Mock<ICommentaryUpdatingRepository>();
-        updateCommentSetup = commentRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<Comment>>()));
+        updateCommentSetup = commentRepository.Setup(r => r.Update(It.IsAny<IUpdateBuilder<Comment>>(), It.IsAny<CancellationToken>()));
 
         eventPublisher = Mock<IInvokedEventProducer>();
         eventPublisher
@@ -89,7 +89,7 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
         var updatedComment = new Common.Dto.Comment();
         updateCommentSetup.ReturnsAsync(updatedComment);
 
-        await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty});
+        await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty}, CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(CommentIntention.Edit, comment), Times.Once);
     }
@@ -106,10 +106,10 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
         currentMomentSetup.Returns(rightNow);
         commentUpdateBuilder.Setup(b => b.HasChanges()).Returns(true);
 
-        var actual = await service.Update(new UpdateComment {CommentId = commentId, Text = "some text boi"});
+        var actual = await service.Update(new UpdateComment {CommentId = commentId, Text = "some text boi"}, CancellationToken.None);
 
         actual.Should().Be(expected);
-        commentRepository.Verify(r => r.Update(commentUpdateBuilder.Object), Times.Once);
+        commentRepository.Verify(r => r.Update(commentUpdateBuilder.Object, It.IsAny<CancellationToken>()), Times.Once);
         commentUpdateBuilder.Verify(b => b.Field(c => c.Text, "some text boi"));
         commentUpdateBuilder.Verify(b => b.Field(c => c.LastUpdateDate, rightNow));
     }
@@ -123,7 +123,7 @@ public class CommentaryUpdatingServiceShould : UnitTestBase
         var updatedComment = new Common.Dto.Comment();
         updateCommentSetup.ReturnsAsync(updatedComment);
 
-        await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty});
+        await service.Update(new UpdateComment {CommentId = commentId, Text = string.Empty}, CancellationToken.None);
 
         eventPublisher.Verify(p => p.Send(EventType.ChangedForumComment, commentId), Times.Once);
     }

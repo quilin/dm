@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -13,13 +14,15 @@ public interface IPasswordResetApiService
     /// Reset user password
     /// </summary>
     /// <param name="resetPassword"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<User>> Reset(ResetPassword resetPassword);
+    Task<Envelope<User>> Reset(ResetPassword resetPassword, CancellationToken cancellationToken);
 
     /// <summary>
     /// Change user password
     /// </summary>
     /// <param name="changePassword"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<User>> Change(ChangePassword changePassword);
+    Task<Envelope<User>> Change(ChangePassword changePassword, CancellationToken cancellationToken);
 }

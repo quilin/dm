@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Community.BusinessProcesses.Polls.Creating;
@@ -12,52 +13,38 @@ using Poll = DM.Web.API.Dto.Community.Poll;
 namespace DM.Web.API.Services.Community;
 
 /// <inheritdoc />
-internal class PollApiService : IPollApiService
+internal class PollApiService(
+    IPollReadingService readingService,
+    IPollCreatingService creatingService,
+    IPollVotingService votingService,
+    IMapper mapper) : IPollApiService
 {
-    private readonly IPollReadingService readingService;
-    private readonly IPollCreatingService creatingService;
-    private readonly IPollVotingService votingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PollApiService(
-        IPollReadingService readingService,
-        IPollCreatingService creatingService,
-        IPollVotingService votingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<Poll>> Get(PollsQuery query, CancellationToken cancellationToken)
     {
-        this.readingService = readingService;
-        this.creatingService = creatingService;
-        this.votingService = votingService;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<ListEnvelope<Poll>> Get(PollsQuery query)
-    {
-        var (polls, paging) = await readingService.Get(query, query.OnlyActive);
+        var (polls, paging) = await readingService.Get(query, query.OnlyActive, cancellationToken);
         return new ListEnvelope<Poll>(polls.Select(mapper.Map<Poll>), new Paging(paging));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Poll>> Get(Guid id)
+    public async Task<Envelope<Poll>> Get(Guid id, CancellationToken cancellationToken)
     {
-        var poll = await readingService.Get(id);
+        var poll = await readingService.Get(id, cancellationToken);
         return new Envelope<Poll>(mapper.Map<Poll>(poll));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Poll>> Create(Poll poll)
+    public async Task<Envelope<Poll>> Create(Poll poll, CancellationToken cancellationToken)
     {
         var createPoll = mapper.Map<CreatePoll>(poll);
-        var createdPoll = await creatingService.Create(createPoll);
+        var createdPoll = await creatingService.Create(createPoll, cancellationToken);
         return new Envelope<Poll>(mapper.Map<Poll>(createdPoll));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Poll>> Vote(Guid pollId, Guid optionId)
+    public async Task<Envelope<Poll>> Vote(Guid pollId, Guid optionId, CancellationToken cancellationToken)
     {
-        var poll = await votingService.Vote(pollId, optionId);
+        var poll = await votingService.Vote(pollId, optionId, cancellationToken);
         return new Envelope<Poll>(mapper.Map<Poll>(poll));
     }
 }

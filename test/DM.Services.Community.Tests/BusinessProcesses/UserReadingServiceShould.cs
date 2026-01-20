@@ -1,4 +1,6 @@
+using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -34,16 +36,16 @@ public class UserReadingServiceShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowGoneWhenUserDetailsNotFound()
+    public async Task ThrowGoneWhenUserDetailsNotFound()
     {
         readingRepository
-            .Setup(r => r.GetUserDetails(It.IsAny<string>()))
+            .Setup(r => r.GetUserDetails(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((UserDetails) null);
 
-        service.Invoking(s => s.GetDetails("User").Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.GetDetails("User", CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Gone);
-        readingRepository.Verify(r => r.GetUserDetails("User"), Times.Once);
+        readingRepository.Verify(r => r.GetUserDetails("User", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -51,26 +53,26 @@ public class UserReadingServiceShould : UnitTestBase
     {
         var expected = new UserDetails();
         readingRepository
-            .Setup(r => r.GetUserDetails(It.IsAny<string>()))
+            .Setup(r => r.GetUserDetails(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
 
-        var actual = await service.GetDetails("User");
+        var actual = await service.GetDetails("User", CancellationToken.None);
 
         actual.Should().Be(expected);
-        readingRepository.Verify(r => r.GetUserDetails("User"), Times.Once);
+        readingRepository.Verify(r => r.GetUserDetails("User", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public void ThrowGoneWhenUserNotFound()
+    public async Task ThrowGoneWhenUserNotFound()
     {
         readingRepository
-            .Setup(r => r.GetUser(It.IsAny<string>()))
+            .Setup(r => r.GetUser(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((GeneralUser) null);
 
-        service.Invoking(s => s.Get("User").Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.Get("User", CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Gone);
-        readingRepository.Verify(r => r.GetUser("User"), Times.Once);
+        readingRepository.Verify(r => r.GetUser("User", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -78,30 +80,30 @@ public class UserReadingServiceShould : UnitTestBase
     {
         var expected = new GeneralUser();
         readingRepository
-            .Setup(r => r.GetUser(It.IsAny<string>()))
+            .Setup(r => r.GetUser(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
 
-        var actual = await service.Get("User");
+        var actual = await service.Get("User", CancellationToken.None);
 
         actual.Should().Be(expected);
-        readingRepository.Verify(r => r.GetUser("User"), Times.Once);
+        readingRepository.Verify(r => r.GetUser("User", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
     public async Task ReturnFetchedUsers()
     {
-        var expected = new GeneralUser[0];
+        var expected = Array.Empty<GeneralUser>();
         readingRepository
-            .Setup(r => r.CountUsers(It.IsAny<bool>()))
+            .Setup(r => r.CountUsers(It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(10);
         readingRepository
-            .Setup(r => r.GetUsers(It.IsAny<PagingData>(), It.IsAny<bool>()))
+            .Setup(r => r.GetUsers(It.IsAny<PagingData>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
         currentUserSettingsSetup.Returns(new UserSettings{Paging = new PagingSettings{EntitiesPerPage = 10}});
 
-        var (actual, _) = await service.Get(new PagingQuery(), true);
+        var (actual, _) = await service.Get(new PagingQuery(), true, CancellationToken.None);
         actual.Should().BeSameAs(expected);
-        readingRepository.Verify(r => r.CountUsers(true), Times.Once);
-        readingRepository.Verify(r => r.GetUsers(It.IsAny<PagingData>(), true));
+        readingRepository.Verify(r => r.CountUsers(true, It.IsAny<CancellationToken>()), Times.Once);
+        readingRepository.Verify(r => r.GetUsers(It.IsAny<PagingData>(), true, It.IsAny<CancellationToken>()));
     }
 }

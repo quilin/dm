@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation;
@@ -29,20 +30,23 @@ internal class WebAuthenticationService : IWebAuthenticationService
         this.logger = logger;
     }
 
-    private async Task<IIdentity> GetAuthenticationResult(AuthCredentials credentials) => credentials switch
+    private async Task<IIdentity> GetAuthenticationResult(
+        AuthCredentials credentials, CancellationToken cancellationToken) => credentials switch
     {
-        LoginCredentials loginCredentials => await authenticationService.Authenticate(loginCredentials.Login,
-            loginCredentials.Password, loginCredentials.RememberMe),
-        TokenCredentials tokenCredentials => await authenticationService.Authenticate(tokenCredentials.Token),
-        UnconditionalCredentials unconditionalCredentials => await authenticationService.Authenticate(
-            unconditionalCredentials.UserId),
+        LoginCredentials loginCredentials =>
+            await authenticationService.Authenticate(
+                loginCredentials.Login, loginCredentials.Password, loginCredentials.RememberMe, cancellationToken),
+        TokenCredentials tokenCredentials =>
+            await authenticationService.Authenticate(tokenCredentials.Token, cancellationToken),
+        UnconditionalCredentials unconditionalCredentials =>
+            await authenticationService.Authenticate(unconditionalCredentials.UserId, cancellationToken),
         _ => Identity.Guest()
     };
 
     /// <inheritdoc />
     public async Task<IIdentity> Authenticate(AuthCredentials credentials, HttpContext httpContext)
     {
-        var identity = identitySetter.Current = await GetAuthenticationResult(credentials);
+        var identity = identitySetter.Current = await GetAuthenticationResult(credentials, httpContext.RequestAborted);
         await TryLoadAuthenticationResult(httpContext, identity);
         return identity;
     }
@@ -50,14 +54,14 @@ internal class WebAuthenticationService : IWebAuthenticationService
     /// <inheritdoc />
     public async Task Logout(HttpContext httpContext)
     {
-        var identity = identitySetter.Current = await authenticationService.Logout();
+        var identity = identitySetter.Current = await authenticationService.Logout(httpContext.RequestAborted);
         await TryLoadAuthenticationResult(httpContext, identity);
     }
 
     /// <inheritdoc />
     public async Task<IIdentity> LogoutElsewhere(HttpContext httpContext)
     {
-        var identity = identitySetter.Current = await authenticationService.LogoutElsewhere();
+        var identity = identitySetter.Current = await authenticationService.LogoutElsewhere(httpContext.RequestAborted);
         await TryLoadAuthenticationResult(httpContext, identity);
         return identity;
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Output;
@@ -17,6 +18,8 @@ internal interface IPostCreatingRepository
     /// </summary>
     /// <param name="post">Post DAL model</param>
     /// <param name="pendingPostUpdates">Pending post changes</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Post> Create(DbPost post, IEnumerable<IUpdateBuilder<PendingPost>> pendingPostUpdates);
+    Task<Post> Create(DbPost post, IEnumerable<IUpdateBuilder<PendingPost>> pendingPostUpdates,
+        CancellationToken cancellationToken);
 }

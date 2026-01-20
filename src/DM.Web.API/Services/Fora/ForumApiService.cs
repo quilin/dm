@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Forum.BusinessProcesses.Fora;
@@ -8,31 +9,22 @@ using DM.Web.API.Dto.Fora;
 namespace DM.Web.API.Services.Fora;
 
 /// <inheritdoc />
-internal class ForumApiService : IForumApiService
+internal class ForumApiService(
+    IForumReadingService forumService,
+    IMapper mapper) : IForumApiService
 {
-    private readonly IForumReadingService forumService;
-    private readonly IMapper mapper;
-
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public ForumApiService(
-        IForumReadingService forumService,
-        IMapper mapper)
+    public async Task<ListEnvelope<Forum>> Get(CancellationToken cancellationToken)
     {
-        this.forumService = forumService;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public async Task<ListEnvelope<Forum>> Get()
-    {
-        var fora = await forumService.GetForaList();
+        var fora = await forumService.GetForaList(cancellationToken);
         return new ListEnvelope<Forum>(fora.Select(mapper.Map<Forum>));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Forum>> Get(string id)
+    public async Task<Envelope<Forum>> Get(string id, CancellationToken cancellationToken)
     {
-        var forum = await forumService.GetSingleForum(id);
+        var forum = await forumService.GetSingleForum(id, cancellationToken);
         return new Envelope<Forum>(mapper.Map<Forum>(forum));
     }
 }

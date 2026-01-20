@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -14,19 +15,22 @@ public interface IChatReadingService
     /// Get list of chat messages
     /// </summary>
     /// <returns></returns>
-    Task<(IEnumerable<ChatMessage> messages, PagingResult paging)> GetMessages(PagingQuery pagingQuery);
+    Task<(IEnumerable<ChatMessage> messages, PagingResult paging)> GetMessages(PagingQuery pagingQuery,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Get list of new chat messages since given moment
     /// </summary>
     /// <param name="since"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<ChatMessage>> GetNewMessages(DateTimeOffset since);
+    Task<IEnumerable<ChatMessage>> GetNewMessages(DateTimeOffset since, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single chat message
     /// </summary>
     /// <param name="id">Message identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ChatMessage> GetMessage(Guid id);
+    Task<ChatMessage> GetMessage(Guid id, CancellationToken cancellationToken);
 }

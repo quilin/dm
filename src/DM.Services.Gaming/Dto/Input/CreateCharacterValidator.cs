@@ -34,12 +34,12 @@ internal class CreateCharacterValidator : AbstractValidator<CreateCharacter>
         WhenAsync(validationRepository.GameRequiresAttributes, () =>
         {
             RuleFor(c => c.Attributes)
-                .MustAsync(async (c, _, context, _) =>
+                .MustAsync(async (c, _, context, ct) =>
                 {
                     if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
                         schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                     {
-                        var schema = await validationRepository.GetGameSchema(c.GameId);
+                        var schema = await validationRepository.GetGameSchema(c.GameId, ct);
                         specifications = schema.Specifications.ToDictionary(s => s.Id);
                         context.RootContextData[SchemaCacheKey] = specifications;
                     }
@@ -56,12 +56,12 @@ internal class CreateCharacterValidator : AbstractValidator<CreateCharacter>
                 .WithMessage($"{{{ErrorMessage}}}");
 
             RuleForEach(c => c.Attributes)
-                .MustAsync(async (c, attribute, context, _) =>
+                .MustAsync(async (c, attribute, context, ct) =>
                 {
                     if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
                         schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                     {
-                        var schema = await validationRepository.GetGameSchema(c.GameId);
+                        var schema = await validationRepository.GetGameSchema(c.GameId, ct);
                         specifications = schema.Specifications.ToDictionary(s => s.Id);
                         context.RootContextData[SchemaCacheKey] = specifications;
                     }

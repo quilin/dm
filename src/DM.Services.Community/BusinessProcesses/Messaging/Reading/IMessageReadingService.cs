@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -15,13 +16,16 @@ public interface IMessageReadingService
     /// </summary>
     /// <param name="conversationId">Conversation identifier</param>
     /// <param name="query">Paging query</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<(IEnumerable<Message> messages, PagingResult paging)> Get(Guid conversationId, PagingQuery query);
+    Task<(IEnumerable<Message> messages, PagingResult paging)> Get(Guid conversationId, PagingQuery query,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single message
     /// </summary>
     /// <param name="messageId">Message identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Message> Get(Guid messageId);
+    Task<Message> Get(Guid messageId, CancellationToken cancellationToken);
 }

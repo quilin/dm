@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Output;
@@ -14,6 +15,7 @@ internal interface IGameUpdatingRepository
     /// Save game changes
     /// </summary>
     /// <param name="updateGame">Game changes</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GameExtended> Update(IUpdateBuilder<Game> updateGame);
+    Task<GameExtended> Update(IUpdateBuilder<Game> updateGame, CancellationToken cancellationToken);
 }

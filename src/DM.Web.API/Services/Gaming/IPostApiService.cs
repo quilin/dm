@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Web.API.Dto.Contracts;
@@ -16,42 +17,47 @@ public interface IPostApiService
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="query">Search query</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListEnvelope<Post>> Get(Guid roomId, PagingQuery query);
+    Task<ListEnvelope<Post>> Get(Guid roomId, PagingQuery query, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single post
     /// </summary>
     /// <param name="postId">Post identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<Post>> Get(Guid postId);
+    Task<Envelope<Post>> Get(Guid postId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create new post
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="post">Post model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<Post>> Create(Guid roomId, Post post);
+    Task<Envelope<Post>> Create(Guid roomId, Post post, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update existing post
     /// </summary>
     /// <param name="postId">Post identifier</param>
     /// <param name="post">Post model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<Post>> Update(Guid postId, Post post);
+    Task<Envelope<Post>> Update(Guid postId, Post post, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete existing post
     /// </summary>
     /// <param name="postId">Post identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid postId);
+    Task Delete(Guid postId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Mark all room posts as read
     /// </summary>
     /// <returns></returns>
-    Task MarkAsRead(Guid roomId);
+    Task MarkAsRead(Guid roomId, CancellationToken cancellationToken);
 }

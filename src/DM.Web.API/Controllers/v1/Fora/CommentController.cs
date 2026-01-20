@@ -11,32 +11,23 @@ namespace DM.Web.API.Controllers.v1.Fora;
 
 /// <inheritdoc />
 [ApiController]
-[Route("v1/forum/comments")]
+[Route("v1/forum/comments/{id:guid}")]
 [ApiExplorerSettings(GroupName = "Forum")]
-public class CommentController : ControllerBase
+public class CommentController(
+    ICommentApiService commentApiService,
+    ILikeApiService likeApiService) : ControllerBase
 {
-    private readonly ICommentApiService commentApiService;
-    private readonly ILikeApiService likeApiService;
-
-    /// <inheritdoc />
-    public CommentController(
-        ICommentApiService commentApiService,
-        ILikeApiService likeApiService)
-    {
-        this.commentApiService = commentApiService;
-        this.likeApiService = likeApiService;
-    }
-
     /// <summary>
     /// Get comment
     /// </summary>
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Comment not found</response>
-    [HttpGet("{id}", Name = nameof(GetForumComment))]
+    [HttpGet("", Name = nameof(GetForumComment))]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetForumComment(Guid id) => Ok(await commentApiService.Get(id));
+    public async Task<IActionResult> GetForumComment(Guid id) =>
+        Ok(await commentApiService.Get(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Update comment
@@ -48,7 +39,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPatch("{id}", Name = nameof(PutForumComment))]
+    [HttpPatch("", Name = nameof(PutForumComment))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Comment>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -56,7 +47,7 @@ public class CommentController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 403)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PutForumComment(Guid id, [FromBody] Comment comment) =>
-        Ok(await commentApiService.Update(id, comment));
+        Ok(await commentApiService.Update(id, comment, HttpContext.RequestAborted));
 
     /// <summary>
     /// Delete comment
@@ -66,7 +57,7 @@ public class CommentController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to change this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("{id}", Name = nameof(DeleteForumComment))]
+    [HttpDelete("", Name = nameof(DeleteForumComment))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -74,7 +65,7 @@ public class CommentController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> DeleteForumComment(Guid id)
     {
-        await commentApiService.Delete(id);
+        await commentApiService.Delete(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -87,7 +78,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to like the comment</response>
     /// <response code="409">User already liked this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpPost("{id}/likes", Name = nameof(PostForumCommentLike))]
+    [HttpPost("likes", Name = nameof(PostForumCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<User>), 201)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -96,7 +87,7 @@ public class CommentController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PostForumCommentLike(Guid id)
     {
-        var result = await likeApiService.LikeComment(id);
+        var result = await likeApiService.LikeComment(id, HttpContext.RequestAborted);
         return CreatedAtRoute(nameof(GetForumComment), new {id}, result);
     }
 
@@ -109,7 +100,7 @@ public class CommentController : ControllerBase
     /// <response code="403">User is not allowed to remove like from this comment</response>
     /// <response code="409">User has no like for this comment</response>
     /// <response code="410">Comment not found</response>
-    [HttpDelete("{id}/likes", Name = nameof(DeleteForumCommentLike))]
+    [HttpDelete("likes", Name = nameof(DeleteForumCommentLike))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -118,7 +109,7 @@ public class CommentController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> DeleteForumCommentLike(Guid id)
     {
-        await likeApiService.DislikeComment(id);
+        await likeApiService.DislikeComment(id, HttpContext.RequestAborted);
         return NoContent();
     }
 }

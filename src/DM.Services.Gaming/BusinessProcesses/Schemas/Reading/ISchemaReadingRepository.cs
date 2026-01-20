@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Shared;
 
@@ -14,13 +15,15 @@ internal interface ISchemaReadingRepository
     /// Get list of available schemas
     /// </summary>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId);
+    Task<IEnumerable<AttributeSchema>> GetSchemata(Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get certain attribute schema
     /// </summary>
     /// <param name="schemaId">Schema identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AttributeSchema> GetSchema(Guid schemaId);
+    Task<AttributeSchema> GetSchema(Guid schemaId, CancellationToken cancellationToken);
 }

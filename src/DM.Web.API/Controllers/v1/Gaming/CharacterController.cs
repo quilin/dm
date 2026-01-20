@@ -12,27 +12,20 @@ namespace DM.Web.API.Controllers.v1.Gaming;
 [ApiController]
 [Route("v1")]
 [ApiExplorerSettings(GroupName = "Game")]
-public class CharacterController : ControllerBase
+public class CharacterController(
+    ICharacterApiService characterApiService) : ControllerBase
 {
-    private readonly ICharacterApiService characterApiService;
-
-    /// <inheritdoc />
-    public CharacterController(
-        ICharacterApiService characterApiService)
-    {
-        this.characterApiService = characterApiService;
-    }
-
     /// <summary>
     /// Get list of game characters
     /// </summary>
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Game not found</response>
-    [HttpGet("games/{id}/characters", Name = nameof(GetCharacters))]
+    [HttpGet("games/{id:guid}/characters", Name = nameof(GetCharacters))]
     [ProducesResponseType(typeof(ListEnvelope<Character>), 200)]
     [ProducesResponseType(typeof(GeneralError), 410)]
-    public async Task<IActionResult> GetCharacters(Guid id) => Ok(await characterApiService.GetAll(id));
+    public async Task<IActionResult> GetCharacters(Guid id) =>
+        Ok(await characterApiService.GetAll(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Post new character
@@ -44,7 +37,7 @@ public class CharacterController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to create a character in this game</response>
     /// <response code="410">Game not found</response>
-    [HttpPost("games/{id}/characters", Name = nameof(PostCharacter))]
+    [HttpPost("games/{id:guid}/characters", Name = nameof(PostCharacter))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Character>), 201)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -53,9 +46,8 @@ public class CharacterController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PostCharacter(Guid id, [FromBody] Character character)
     {
-        var result = await characterApiService.Create(id, character);
-        return CreatedAtRoute(nameof(GetCharacter),
-            new {id = result.Resource.Id}, result);
+        var result = await characterApiService.Create(id, character, HttpContext.RequestAborted);
+        return CreatedAtRoute(nameof(GetCharacter), new {id = result.Resource.Id}, result);
     }
 
     /// <summary>
@@ -66,14 +58,14 @@ public class CharacterController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="401">User is not authorized to read characters in this game</response>
     /// <response code="410">Game not found</response>
-    [HttpDelete("game/{id}/characters/unread", Name = nameof(ReadGameCharacters))]
+    [HttpDelete("game/{id:guid}/characters/unread", Name = nameof(ReadGameCharacters))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> ReadGameCharacters(Guid id)
     {
-        await characterApiService.MarkAsRead(id);
+        await characterApiService.MarkAsRead(id, HttpContext.RequestAborted);
         return NoContent();
     }
 
@@ -83,9 +75,10 @@ public class CharacterController : ControllerBase
     /// <param name="id"></param>
     /// <response code="200"></response>
     /// <response code="410">Character not found</response>
-    [HttpGet("characters/{id}", Name = nameof(GetCharacter))]
+    [HttpGet("characters/{id:guid}", Name = nameof(GetCharacter))]
     [ProducesResponseType(typeof(Envelope<Character>), 200)]
-    public async Task<IActionResult> GetCharacter(Guid id) => Ok(await characterApiService.Get(id));
+    public async Task<IActionResult> GetCharacter(Guid id) =>
+        Ok(await characterApiService.Get(id, HttpContext.RequestAborted));
 
     /// <summary>
     /// Put character changes
@@ -97,7 +90,7 @@ public class CharacterController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not authorized to change some properties of this character</response>
     /// <response code="410">Character not found</response>
-    [HttpPatch("characters/{id}", Name = nameof(PutCharacter))]
+    [HttpPatch("characters/{id:guid}", Name = nameof(PutCharacter))]
     [AuthenticationRequired]
     [ProducesResponseType(typeof(Envelope<Character>), 200)]
     [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -105,7 +98,7 @@ public class CharacterController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 403)]
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> PutCharacter(Guid id, [FromBody] Character character) =>
-        Ok(await characterApiService.Update(id, character));
+        Ok(await characterApiService.Update(id, character, HttpContext.RequestAborted));
 
     /// <summary>
     /// Delete certain character
@@ -115,7 +108,7 @@ public class CharacterController : ControllerBase
     /// <response code="401">User must be authenticated</response>
     /// <response code="403">User is not allowed to remove the character</response>
     /// <response code="410">Character not found</response>
-    [HttpDelete("characters/{id}", Name = nameof(DeleteCharacter))]
+    [HttpDelete("characters/{id:guid}", Name = nameof(DeleteCharacter))]
     [AuthenticationRequired]
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(GeneralError), 401)]
@@ -123,7 +116,7 @@ public class CharacterController : ControllerBase
     [ProducesResponseType(typeof(GeneralError), 410)]
     public async Task<IActionResult> DeleteCharacter(Guid id)
     {
-        await characterApiService.Delete(id);
+        await characterApiService.Delete(id, HttpContext.RequestAborted);
         return NoContent();
     }
 }

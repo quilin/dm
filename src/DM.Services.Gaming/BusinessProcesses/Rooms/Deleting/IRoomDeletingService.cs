@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Deleting;
@@ -12,6 +13,7 @@ public interface IRoomDeletingService
     /// Delete existing room
     /// </summary>
     /// <param name="roomId">Room identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid roomId);
+    Task Delete(Guid roomId, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.Security;
 using DM.Tests.Core;
@@ -14,8 +15,8 @@ public class SymmetricCryptoServiceShould : UnitTestBase
     public async Task CryptSymmetrically()
     {
         var input = "some value to encrypt";
-        var encrypted = await service.Encrypt(input);
-        var decrypted = await service.Decrypt(encrypted);
+        var encrypted = await service.Encrypt(input, CancellationToken.None);
+        var decrypted = await service.Decrypt(encrypted, CancellationToken.None);
 
         decrypted.Should().Be(input);
         encrypted.Should().NotBe(input);

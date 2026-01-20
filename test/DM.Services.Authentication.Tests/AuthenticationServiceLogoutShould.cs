@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
@@ -50,11 +51,11 @@ public class AuthenticationServiceLogoutShould : UnitTestBase
         userSetup.Returns(new AuthenticatedUser {UserId = userId});
         sessionSetup.Returns(session);
         authenticationRepository
-            .Setup(r => r.RemoveSession(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(r => r.RemoveSession(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        await service.Logout();
+        await service.Logout(CancellationToken.None);
 
-        authenticationRepository.Verify(r => r.RemoveSession(userId, sessionId), Times.Once);
+        authenticationRepository.Verify(r => r.RemoveSession(userId, sessionId, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
     }
 
@@ -70,10 +71,10 @@ public class AuthenticationServiceLogoutShould : UnitTestBase
         sessionSetup.Returns(session);
         identity.Setup(i => i.Settings).Returns(userSettings);
         authenticationRepository
-            .Setup(r => r.RemoveSessionsExcept(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(r => r.RemoveSessionsExcept(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         cryptoService
-            .Setup(s => s.Encrypt(It.IsAny<string>()))
+            .Setup(s => s.Encrypt(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("token");
 
         var newSessionId = Guid.NewGuid();
@@ -81,12 +82,12 @@ public class AuthenticationServiceLogoutShould : UnitTestBase
         var sessionToCreate = new DbSession{Id = sessionId};
         sessionFactory.Setup(f => f.Create(false, false)).Returns(sessionToCreate);
         authenticationRepository
-            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>()))
+            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<DbSession>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(newSession);
 
-        await service.Invoking(s => s.LogoutElsewhere()).Should().NotThrowAsync();
+        await service.Invoking(s => s.LogoutElsewhere(CancellationToken.None)).Should().NotThrowAsync();
 
-        authenticationRepository.Verify(r => r.RemoveSessionsExcept(userId, sessionId), Times.Once);
+        authenticationRepository.Verify(r => r.RemoveSessionsExcept(userId, sessionId, It.IsAny<CancellationToken>()), Times.Once);
         authenticationRepository.VerifyNoOtherCalls();
     }
 }

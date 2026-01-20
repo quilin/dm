@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Games.Links;
 using DM.Services.DataAccess.RelationalStorage;
@@ -13,6 +14,7 @@ internal interface IRoomClaimsDeletingRepository
     /// Delete existing link
     /// </summary>
     /// <param name="deleteLink"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(IUpdateBuilder<RoomClaim> deleteLink);
+    Task Delete(IUpdateBuilder<RoomClaim> deleteLink, CancellationToken cancellationToken);
 }

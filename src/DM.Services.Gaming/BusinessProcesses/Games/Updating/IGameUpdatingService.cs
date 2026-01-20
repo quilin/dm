@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface IGameUpdatingService
     /// Update existing game
     /// </summary>
     /// <param name="updateGame">Update game model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GameExtended> Update(UpdateGame updateGame);
+    Task<GameExtended> Update(UpdateGame updateGame, CancellationToken cancellationToken);
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Output;
 
@@ -15,14 +16,16 @@ internal interface IRoomReadingRepository
     /// </summary>
     /// <param name="gameId">Game identifier</param>
     /// <param name="userId">Authenticated user identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<Room>> GetAllAvailable(Guid gameId, Guid userId);
+    Task<IEnumerable<Room>> GetAllAvailable(Guid gameId, Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single existing available room
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Room> GetAvailable(Guid roomId, Guid userId);
+    Task<Room> GetAvailable(Guid roomId, Guid userId, CancellationToken cancellationToken);
 }

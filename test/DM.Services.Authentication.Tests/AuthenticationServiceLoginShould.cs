@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Factories;
@@ -33,7 +34,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
         securityManager = Mock<ISecurityManager>();
         cryptoService = Mock<ISymmetricCryptoService>();
         authenticationRepository = Mock<IAuthenticationRepository>();
-        userSearchSetup = authenticationRepository.Setup(r => r.TryFindUser(It.IsAny<string>()));
+        userSearchSetup = authenticationRepository.Setup(r => r.TryFindUser(It.IsAny<string>(), It.IsAny<CancellationToken>()));
         sessionFactory = Mock<ISessionFactory>();
         var identityProvider = Mock<IIdentityProvider>();
         identityProvider.Setup(p => p.Current).Returns(Identity.Guest);
@@ -45,7 +46,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
     public async Task FailIfNoUserFoundByLogin()
     {
         userSearchSetup.ReturnsAsync((false, null));
-        var actual = await service.Authenticate(Username, "qwerty", false);
+        var actual = await service.Authenticate(Username, "qwerty", false, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.WrongLogin);
     }
@@ -55,7 +56,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
     {
         var user = new AuthenticatedUser {Activated = false};
         userSearchSetup.ReturnsAsync((true, user));
-        var actual = await service.Authenticate(Username, "qwerty", false);
+        var actual = await service.Authenticate(Username, "qwerty", false, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.Inactive);
         actual.User.Should().Be(AuthenticatedUser.Guest);
@@ -69,7 +70,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
     {
         var user = new AuthenticatedUser {Activated = true, IsRemoved = true};
         userSearchSetup.ReturnsAsync((true, user));
-        var actual = await service.Authenticate(Username, "qwerty", false);
+        var actual = await service.Authenticate(Username, "qwerty", false, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.Removed);
         actual.User.Should().Be(AuthenticatedUser.Guest);
@@ -88,7 +89,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
             AccessPolicy = AccessPolicy.FullBan | AccessPolicy.RestrictContentEditing
         };
         userSearchSetup.ReturnsAsync((true, user));
-        var actual = await service.Authenticate(Username, "qwerty", false);
+        var actual = await service.Authenticate(Username, "qwerty", false, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.Banned);
         actual.User.Should().Be(AuthenticatedUser.Guest);
@@ -113,7 +114,7 @@ public class AuthenticationServiceLoginShould : UnitTestBase
             .Setup(m => m.ComparePasswords(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .Returns(false);
 
-        var actual = await service.Authenticate(Username, "qwerty", false);
+        var actual = await service.Authenticate(Username, "qwerty", false, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.WrongPassword);
         actual.User.Should().Be(AuthenticatedUser.Guest);
@@ -148,16 +149,16 @@ public class AuthenticationServiceLoginShould : UnitTestBase
             .Setup(f => f.Create(It.IsAny<bool>(), It.IsAny<bool>()))
             .Returns(session);
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(userSettings);
         authenticationRepository
-            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
+            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(externalSession);
         cryptoService
-            .Setup(s => s.Encrypt(It.IsAny<string>()))
+            .Setup(s => s.Encrypt(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("token");
 
-        var actual = await service.Authenticate(Username, "qwerty", true);
+        var actual = await service.Authenticate(Username, "qwerty", true, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.NoError);
         actual.User.Should().Be(user);
@@ -166,8 +167,8 @@ public class AuthenticationServiceLoginShould : UnitTestBase
         actual.AuthenticationToken.Should().Be("token");
         securityManager.Verify(m => m.ComparePasswords("qwerty", "salt", "hash"));
         sessionFactory.Verify(f => f.Create(true, false));
-        authenticationRepository.Verify(r => r.FindUserSettings(userId), Times.Once);
-        authenticationRepository.Verify(r => r.AddSession(userId, session), Times.Once);
+        authenticationRepository.Verify(r => r.FindUserSettings(userId, It.IsAny<CancellationToken>()), Times.Once);
+        authenticationRepository.Verify(r => r.AddSession(userId, session, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -179,26 +180,26 @@ public class AuthenticationServiceLoginShould : UnitTestBase
         var userSettings = new UserSettings();
         var externalSession = new DM.Services.Authentication.Dto.Session();
         authenticationRepository
-            .Setup(r => r.FindUser(It.IsAny<Guid>()))
+            .Setup(r => r.FindUser(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         sessionFactory
             .Setup(f => f.Create(It.IsAny<bool>(), It.IsAny<bool>()))
             .Returns(session);
         authenticationRepository
-            .Setup(r => r.FindUserSettings(It.IsAny<Guid>()))
+            .Setup(r => r.FindUserSettings(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(userSettings);
         cryptoService
-            .Setup(s => s.Encrypt(It.IsAny<string>()))
+            .Setup(s => s.Encrypt(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("token");
         authenticationRepository
-            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>()))
+            .Setup(r => r.AddSession(It.IsAny<Guid>(), It.IsAny<Session>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(externalSession);
 
-        var actual = await service.Authenticate(userId);
+        var actual = await service.Authenticate(userId, CancellationToken.None);
 
         actual.Error.Should().Be(AuthenticationError.NoError);
         actual.AuthenticationToken.Should().Be("token");
 
-        authenticationRepository.Verify(r => r.AddSession(userId, session), Times.Once);
+        authenticationRepository.Verify(r => r.AddSession(userId, session, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

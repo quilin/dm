@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
 
@@ -12,6 +13,7 @@ public interface IPollCreatingService
     /// Create new poll and start immediately
     /// </summary>
     /// <param name="createPoll"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Poll> Create(CreatePoll createPoll);
+    Task<Poll> Create(CreatePoll createPoll, CancellationToken cancellationToken);
 }

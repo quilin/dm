@@ -34,12 +34,12 @@ internal class UpdateCharacterValidator : AbstractValidator<UpdateCharacter>
 
         When(c => c.Attributes != null && c.Attributes.Any(), () =>
             RuleForEach(c => c.Attributes)
-                .MustAsync(async (c, attribute, context, _) =>
+                .MustAsync(async (c, attribute, context, ct) =>
                 {
                     if (!context.RootContextData.TryGetValue(SchemaCacheKey, out var schemaWrapper) ||
                         schemaWrapper is not Dictionary<Guid, AttributeSpecification> specifications)
                     {
-                        var schema = await validationRepository.GetCharacterSchema(c.CharacterId);
+                        var schema = await validationRepository.GetCharacterSchema(c.CharacterId, ct);
                         specifications = schema.Specifications.ToDictionary(s => s.Id);
                         context.RootContextData[SchemaCacheKey] = specifications;
                     }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface ICharacterCreatingService
     /// Create new character
     /// </summary>
     /// <param name="createCharacter">Create character DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Character> Create(CreateCharacter createCharacter);
+    Task<Character> Create(CreateCharacter createCharacter, CancellationToken cancellationToken);
 }

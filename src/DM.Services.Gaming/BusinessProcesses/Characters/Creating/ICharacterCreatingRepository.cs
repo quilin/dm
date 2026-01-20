@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Output;
 using CharacterAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.CharacterAttribute;
@@ -16,6 +17,8 @@ internal interface ICharacterCreatingRepository
     /// </summary>
     /// <param name="character">Character DAL</param>
     /// <param name="attributes"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Character> Create(DbCharacter character, IEnumerable<CharacterAttribute> attributes);
+    Task<Character> Create(DbCharacter character, IEnumerable<CharacterAttribute> attributes,
+        CancellationToken cancellationToken);
 }

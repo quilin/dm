@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.RelationalStorage;
 using RoomClaim = DM.Services.DataAccess.BusinessObjects.Games.Links.RoomClaim;
@@ -13,6 +14,7 @@ internal interface IRoomClaimsUpdatingRepository
     /// Update room claim
     /// </summary>
     /// <param name="updateClaim">Update rules</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Dto.Output.RoomClaim> Update(IUpdateBuilder<RoomClaim> updateClaim);
+    Task<Dto.Output.RoomClaim> Update(IUpdateBuilder<RoomClaim> updateClaim, CancellationToken cancellationToken);
 }

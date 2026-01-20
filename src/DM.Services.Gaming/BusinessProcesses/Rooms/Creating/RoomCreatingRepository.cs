@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -13,40 +14,29 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Creating;
 
 /// <inheritdoc />
-internal class RoomCreatingRepository : IRoomCreatingRepository
+internal class RoomCreatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IRoomCreatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public RoomCreatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Room> Create(DbRoom room, IUpdateBuilder<DbRoom> updateLastRoom)
+    public async Task<Room> Create(DbRoom room, IUpdateBuilder<DbRoom> updateLastRoom,
+        CancellationToken cancellationToken)
     {
         dbContext.Rooms.Add(room);
         updateLastRoom?.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return await dbContext.Rooms
             .Where(r => r.RoomId == room.RoomId)
             .ProjectTo<Room>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task<RoomOrderInfo> GetLastRoomInfo(Guid gameId)
-    {
-        return dbContext.Rooms
+    public Task<RoomOrderInfo> GetLastRoomInfo(Guid gameId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(r => !r.IsRemoved && r.GameId == gameId)
             .OrderByDescending(r => r.OrderNumber)
             .ProjectTo<RoomOrderInfo>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 }

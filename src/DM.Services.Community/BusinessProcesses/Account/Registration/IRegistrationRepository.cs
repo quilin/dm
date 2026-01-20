@@ -7,7 +7,7 @@ namespace DM.Services.Community.BusinessProcesses.Account.Registration;
 /// <summary>
 /// Registration information storage
 /// </summary>
-internal interface IRegistrationRepository
+public interface IRegistrationRepository
 {
     /// <summary>
     /// Tells if user with certain email is already registered
@@ -30,6 +30,7 @@ internal interface IRegistrationRepository
     /// </summary>
     /// <param name="user">User DAL</param>
     /// <param name="token"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AddUser(User user, Token token);
+    Task AddUser(User user, Token token, CancellationToken cancellationToken);
 }

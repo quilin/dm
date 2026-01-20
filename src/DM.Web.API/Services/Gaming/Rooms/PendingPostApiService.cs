@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Pending.Creating;
@@ -10,32 +11,22 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming.Rooms;
 
 /// <inheritdoc />
-internal class PendingPostApiService : IPendingPostApiService
+internal class PendingPostApiService(
+    IPendingPostCreatingService creatingService,
+    IPendingPostDeletingService deletingService,
+    IMapper mapper) : IPendingPostApiService
 {
-    private readonly IPendingPostCreatingService creatingService;
-    private readonly IPendingPostDeletingService deletingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PendingPostApiService(
-        IPendingPostCreatingService creatingService,
-        IPendingPostDeletingService deletingService,
-        IMapper mapper)
-    {
-        this.creatingService = creatingService;
-        this.deletingService = deletingService;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Envelope<PendingPost>> Create(Guid roomId, PendingPost pendingPost)
+    public async Task<Envelope<PendingPost>> Create(
+        Guid roomId, PendingPost pendingPost, CancellationToken cancellationToken)
     {
         var createPendingPost = mapper.Map<CreatePendingPost>(pendingPost);
         createPendingPost.RoomId = roomId;
-        var createdPendingPost = await creatingService.Create(createPendingPost);
+        var createdPendingPost = await creatingService.Create(createPendingPost, cancellationToken);
         return new Envelope<PendingPost>(mapper.Map<PendingPost>(createdPendingPost));
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid pendingPostId) => deletingService.Delete(pendingPostId);
+    public Task Delete(Guid pendingPostId, CancellationToken cancellationToken) =>
+        deletingService.Delete(pendingPostId, cancellationToken);
 }

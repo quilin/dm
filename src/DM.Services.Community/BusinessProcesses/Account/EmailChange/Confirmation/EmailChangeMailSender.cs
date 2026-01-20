@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Account.Registration.Confirmation;
 using DM.Services.Core.Configuration;
@@ -27,7 +28,7 @@ internal class EmailChangeMailSender : IEmailChangeMailSender
     }
 
     /// <inheritdoc />
-    public async Task Send(string email, string login, Guid token)
+    public async Task Send(string email, string login, Guid token, CancellationToken cancellationToken)
     {
         var confirmationLinkUri = new Uri(new Uri(integrationSettings.WebUrl), $"activate/{token}");
         var emailBody = await renderer.Render("RegistrationLetter", new RegistrationConfirmationViewModel
@@ -39,7 +40,7 @@ internal class EmailChangeMailSender : IEmailChangeMailSender
         {
             Address = email,
             Subject = $"Подтверждение смены адреса электронной почты на DM.AM для {login}",
-            Body = emailBody
+            Body = emailBody,
         });
     }
 }

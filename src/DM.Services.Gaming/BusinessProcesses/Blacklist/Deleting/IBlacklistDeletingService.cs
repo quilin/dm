@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 
@@ -12,6 +13,7 @@ public interface IBlacklistDeletingService
     /// Delete existing blacklist link
     /// </summary>
     /// <param name="operateBlacklistLink">DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(OperateBlacklistLink operateBlacklistLink);
+    Task Delete(OperateBlacklistLink operateBlacklistLink, CancellationToken cancellationToken);
 }

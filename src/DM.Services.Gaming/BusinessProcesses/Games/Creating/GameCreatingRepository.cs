@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -13,31 +14,21 @@ using DbTag = DM.Services.DataAccess.BusinessObjects.Games.Links.GameTag;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Creating;
 
 /// <inheritdoc />
-internal class GameCreatingRepository : IGameCreatingRepository
+internal class GameCreatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IGameCreatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
-    /// <inheritdoc />
-    public GameCreatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
     /// <inheritdoc />
     public async Task<GameExtended> Create(DbGame game, DbRoom room,
-        IEnumerable<DbTag> tags)
+        IEnumerable<DbTag> tags, CancellationToken cancellationToken)
     {
-        await dbContext.Games.AddAsync(game);
-        await dbContext.Rooms.AddAsync(room);
-        await dbContext.GameTags.AddRangeAsync(tags);
-        await dbContext.SaveChangesAsync();
+        await dbContext.Games.AddAsync(game, cancellationToken);
+        await dbContext.Rooms.AddAsync(room, cancellationToken);
+        await dbContext.GameTags.AddRangeAsync(tags, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.Games
             .Where(g => g.GameId == game.GameId)
             .ProjectTo<GameExtended>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

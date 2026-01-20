@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface ICharacterUpdatingService
     /// Update existing character
     /// </summary>
     /// <param name="updateCharacter">Update character model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Character> Update(UpdateCharacter updateCharacter);
+    Task<Character> Update(UpdateCharacter updateCharacter, CancellationToken cancellationToken);
 }

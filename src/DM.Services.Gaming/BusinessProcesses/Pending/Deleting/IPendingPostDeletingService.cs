@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Pending.Deleting;
@@ -12,6 +13,7 @@ public interface IPendingPostDeletingService
     /// Delete existing pending
     /// </summary>
     /// <param name="pendingPostId">Pending post identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid pendingPostId);
+    Task Delete(Guid pendingPostId, CancellationToken cancellationToken);
 }

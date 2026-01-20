@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.MongoIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -98,7 +99,7 @@ internal class UpdateBuilder<TEntity> : IUpdateBuilder<TEntity>
         return id;
     }
 
-    public async Task<Guid> UpdateFor(DmMongoClient mongoClient, bool upsert)
+    public async Task<Guid> UpdateFor(DmMongoClient mongoClient, bool upsert, CancellationToken cancellationToken)
     {
         var entityType = typeof(TEntity);
         if (entityType.GetCustomAttribute<MongoCollectionNameAttribute>() == null)

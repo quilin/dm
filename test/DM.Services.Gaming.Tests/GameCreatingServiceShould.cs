@@ -52,11 +52,11 @@ public class GameCreatingServiceShould : UnitTestBase
             .ReturnsAsync(new ValidationResult());
 
         var readingService = Mock<IGameReadingService>();
-        readingService.Setup(s => s.GetTags());
+        readingService.Setup(s => s.GetTags(It.IsAny<CancellationToken>()));
 
         assignmentService = Mock<IAssignmentService>();
         assignmentService
-            .Setup(s => s.CreateAssignment(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(s => s.CreateAssignment(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         intentionManager = Mock<IIntentionManager>();
@@ -82,11 +82,11 @@ public class GameCreatingServiceShould : UnitTestBase
         gameRepository = Mock<IGameCreatingRepository>();
         saveGameSetup = gameRepository
             .Setup(r => r.Create(It.IsAny<Game>(), It.IsAny<Room>(),
-                It.IsAny<IEnumerable<GameTag>>()));
+                It.IsAny<IEnumerable<GameTag>>(), It.IsAny<CancellationToken>()));
 
         countersRepository = Mock<IUnreadCountersRepository>();
         countersRepository
-            .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>()))
+            .Setup(r => r.Create(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var schemaRepository = Mock<ISchemaReadingRepository>();
@@ -119,7 +119,7 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(new Room());
         saveGameSetup.ReturnsAsync(new GameExtended());
 
-        await service.Create(new CreateGame());
+        await service.Create(new CreateGame(), CancellationToken.None);
 
         intentionManager.Verify(m => m.ThrowIfForbidden(GameIntention.Create), Times.Once);
     }
@@ -138,7 +138,7 @@ public class GameCreatingServiceShould : UnitTestBase
         saveGameSetup.ReturnsAsync(new GameExtended());
 
         var createGame = new CreateGame();
-        await service.Create(createGame);
+        await service.Create(createGame, CancellationToken.None);
         gameFactory.Verify(f => f.Create(createGame, userId, GameStatus.RequiresModeration));
     }
 
@@ -161,7 +161,7 @@ public class GameCreatingServiceShould : UnitTestBase
         {
             Draft = draft
         };
-        await service.Create(createGame);
+        await service.Create(createGame, CancellationToken.None);
         gameFactory.Verify(f => f.Create(createGame, userId, status));
     }
 
@@ -175,13 +175,13 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(room);
         saveGameSetup.ReturnsAsync(new GameExtended());
         userRepository
-            .Setup(r => r.FindUserId(It.IsAny<string>()))
+            .Setup(r => r.FindUserId(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((false, Guid.Empty));
 
         var createGame = new CreateGame {AssistantLogin = "assistant boi"};
-        await service.Create(createGame);
+        await service.Create(createGame, CancellationToken.None);
 
-        userRepository.Verify(r => r.FindUserId("assistant boi"));
+        userRepository.Verify(r => r.FindUserId("assistant boi", It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -196,12 +196,12 @@ public class GameCreatingServiceShould : UnitTestBase
         saveGameSetup.ReturnsAsync(new GameExtended());
         var assistantId = Guid.NewGuid();
         userRepository
-            .Setup(r => r.FindUserId(It.IsAny<string>()))
+            .Setup(r => r.FindUserId(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((true, assistantId));
 
-        await service.Create(new CreateGame {AssistantLogin = "assistant boi"});
+        await service.Create(new CreateGame {AssistantLogin = "assistant boi"}, CancellationToken.None);
 
-        assignmentService.Verify(s => s.CreateAssignment(gameId, assistantId), Times.Once);
+        assignmentService.Verify(s => s.CreateAssignment(gameId, assistantId, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -214,9 +214,9 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(room);
         saveGameSetup.ReturnsAsync(new GameExtended());
 
-        await service.Create(new CreateGame());
+        await service.Create(new CreateGame(), CancellationToken.None);
 
-        gameRepository.Verify(r => r.Create(game, room, It.IsAny<IEnumerable<GameTag>>()), Times.Once);
+        gameRepository.Verify(r => r.Create(game, room, It.IsAny<IEnumerable<GameTag>>(), It.IsAny<CancellationToken>()), Times.Once);
         gameRepository.VerifyNoOtherCalls();
     }
 
@@ -231,9 +231,9 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(new Room());
         saveGameSetup.ReturnsAsync(new GameExtended());
 
-        await service.Create(new CreateGame());
+        await service.Create(new CreateGame(), CancellationToken.None);
 
-        countersRepository.Verify(r => r.Create(gameId, entryType), Times.Once);
+        countersRepository.Verify(r => r.Create(gameId, entryType, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -245,9 +245,9 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(new Room {RoomId = roomId});
         saveGameSetup.ReturnsAsync(new GameExtended());
 
-        await service.Create(new CreateGame());
+        await service.Create(new CreateGame(), CancellationToken.None);
 
-        countersRepository.Verify(r => r.Create(roomId, UnreadEntryType.Message), Times.Once);
+        countersRepository.Verify(r => r.Create(roomId, UnreadEntryType.Message, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -259,7 +259,7 @@ public class GameCreatingServiceShould : UnitTestBase
         createRoomSetup.Returns(new Room());
         saveGameSetup.ReturnsAsync(new GameExtended());
 
-        await service.Create(new CreateGame());
+        await service.Create(new CreateGame(), CancellationToken.None);
 
         publisher.Verify(p => p.Send(EventType.NewGame, gameId), Times.Once);
         publisher.VerifyNoOtherCalls();

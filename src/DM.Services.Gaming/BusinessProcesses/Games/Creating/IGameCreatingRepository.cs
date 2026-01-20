@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Output;
 using DbGame = DM.Services.DataAccess.BusinessObjects.Games.Game;
@@ -18,7 +19,8 @@ internal interface IGameCreatingRepository
     /// <param name="game">Game DAL</param>
     /// <param name="room">Room DAL</param>
     /// <param name="tags">Game tag DALs</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GameExtended> Create(DbGame game, DbRoom room, IEnumerable<DbTag> tags);
+    Task<GameExtended> Create(DbGame game, DbRoom room, IEnumerable<DbTag> tags, CancellationToken cancellationToken);
 
 }

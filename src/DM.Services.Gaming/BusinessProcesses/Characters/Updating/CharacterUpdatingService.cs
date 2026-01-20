@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Core.Dto.Enums;
@@ -16,40 +18,20 @@ using DbAttribute = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attr
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Updating;
 
 /// <inheritdoc />
-internal class CharacterUpdatingService : ICharacterUpdatingService
+internal class CharacterUpdatingService(
+    IValidator<UpdateCharacter> validator,
+    IIntentionManager intentionManager,
+    IDateTimeProvider dateTimeProvider,
+    IUpdateBuilderFactory updateBuilderFactory,
+    ICharacterUpdatingRepository repository,
+    ICharacterIntentionConverter intentionConverter,
+    IInvokedEventProducer producer) : ICharacterUpdatingService
 {
-    private readonly IValidator<UpdateCharacter> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly ICharacterUpdatingRepository repository;
-    private readonly ICharacterIntentionConverter intentionConverter;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public CharacterUpdatingService(
-        IValidator<UpdateCharacter> validator,
-        IIntentionManager intentionManager,
-        IDateTimeProvider dateTimeProvider,
-        IUpdateBuilderFactory updateBuilderFactory,
-        ICharacterUpdatingRepository repository,
-        ICharacterIntentionConverter intentionConverter,
-        IInvokedEventProducer producer)
+    public async Task<Character> Update(UpdateCharacter updateCharacter, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.dateTimeProvider = dateTimeProvider;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.intentionConverter = intentionConverter;
-        this.producer = producer;
-    }
-
-    /// <inheritdoc />
-    public async Task<Character> Update(UpdateCharacter updateCharacter)
-    {
-        await validator.ValidateAndThrowAsync(updateCharacter);
-        var characterToUpdate = await repository.Get(updateCharacter.CharacterId);
+        await validator.ValidateAndThrowAsync(updateCharacter, cancellationToken);
+        var characterToUpdate = await repository.Get(updateCharacter.CharacterId, cancellationToken);
 
         intentionManager.ThrowIfForbidden(CharacterIntention.Edit, characterToUpdate);
 
@@ -63,10 +45,11 @@ internal class CharacterUpdatingService : ICharacterUpdatingService
             .MaybeField(c => c.Skills, updateCharacter.Skills)
             .MaybeField(c => c.Inventory, updateCharacter.Inventory);
 
-        var attributeChanges = new IUpdateBuilder<DbAttribute>[0];
+        var attributeChanges = Array.Empty<IUpdateBuilder<DbAttribute>>();
         if (updateCharacter.Attributes != null && updateCharacter.Attributes.Any())
         {
-            var attributeIdsIndex = await repository.GetAttributeIds(updateCharacter.CharacterId);
+            var attributeIdsIndex = await repository.GetAttributeIds(
+                updateCharacter.CharacterId, cancellationToken);
             attributeChanges = updateCharacter.Attributes
                 .Where(a => attributeIdsIndex.ContainsKey(a.Id))
                 .Select(a => updateBuilderFactory.Create<DbAttribute>(attributeIdsIndex[a.Id])
@@ -101,7 +84,7 @@ internal class CharacterUpdatingService : ICharacterUpdatingService
             changes.Field(c => c.LastUpdateDate, dateTimeProvider.Now);
         }
 
-        var character = await repository.Update(changes, attributeChanges);
+        var character = await repository.Update(changes, attributeChanges, cancellationToken);
         await producer.Send(invokedEvents, updateCharacter.CharacterId);
         return character;
     }

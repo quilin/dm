@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 
@@ -12,6 +13,7 @@ public interface ICommentaryUpdatingService
     /// Update existing comment
     /// </summary>
     /// <param name="updateComment">Update comment model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Comment> Update(UpdateComment updateComment);
+    Task<Comment> Update(UpdateComment updateComment, CancellationToken cancellationToken);
 }

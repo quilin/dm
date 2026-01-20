@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Deleting;
@@ -12,6 +13,7 @@ public interface ICommentaryDeletingService
     /// Delete commentary by identifier
     /// </summary>
     /// <param name="commentId">Commentary identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid commentId);
+    Task Delete(Guid commentId, CancellationToken cancellationToken);
 }

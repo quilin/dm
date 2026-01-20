@@ -17,9 +17,9 @@ internal class UserEmailChangeValidator : AbstractValidator<UserEmailChange>
     {
         RuleFor(u => u.Login)
             .NotEmpty().WithMessage(ValidationError.Empty)
-            .MustAsync(async (model, login, context, _) =>
+            .MustAsync(async (_, login, context, ct) =>
             {
-                var user = await repository.FindUser(login);
+                var user = await repository.FindUser(login, ct);
                 if (user == null)
                 {
                     return false;

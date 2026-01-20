@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Authorization;
 using DM.Services.Community.BusinessProcesses.Reviews.Reading;
@@ -9,32 +10,18 @@ using Review = DM.Services.DataAccess.BusinessObjects.Common.Review;
 namespace DM.Services.Community.BusinessProcesses.Reviews.Deleting;
 
 /// <inheritdoc />
-internal class ReviewDeletingService : IReviewDeletingService
+internal class ReviewDeletingService(
+    IReviewReadingService reviewReadingService,
+    IIntentionManager intentionManager,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IReviewUpdatingRepository repository) : IReviewDeletingService
 {
-    private readonly IReviewReadingService reviewReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IReviewUpdatingRepository repository;
-
     /// <inheritdoc />
-    public ReviewDeletingService(
-        IReviewReadingService reviewReadingService,
-        IIntentionManager intentionManager,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IReviewUpdatingRepository repository)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
-        this.reviewReadingService = reviewReadingService;
-        this.intentionManager = intentionManager;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-    }
-
-    /// <inheritdoc />
-    public async Task Delete(Guid id)
-    {
-        var review = await reviewReadingService.Get(id);
+        var review = await reviewReadingService.Get(id, cancellationToken);
         intentionManager.ThrowIfForbidden(ReviewIntention.Delete, review);
         var deleteReview = updateBuilderFactory.Create<Review>(id).Field(r => r.IsRemoved, true);
-        await repository.Update(deleteReview);
+        await repository.Update(deleteReview, cancellationToken);
     }
 }

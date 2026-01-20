@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Common.Dto;
 
@@ -12,6 +13,7 @@ public interface ICommentaryCreatingService
     /// Create new commentary
     /// </summary>
     /// <param name="createComment">Create commentary DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Comment> Create(CreateComment createComment);
+    Task<Comment> Create(CreateComment createComment, CancellationToken cancellationToken);
 }

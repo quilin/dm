@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Configuration;
 using DM.Services.Mail.Rendering.Rendering;
@@ -26,7 +27,7 @@ internal class RegistrationMailSender : IRegistrationMailSender
     }
 
     /// <inheritdoc />
-    public async Task Send(string email, string login, Guid token)
+    public async Task Send(string email, string login, Guid token, CancellationToken cancellationToken)
     {
         var confirmationLinkUri = new Uri(new Uri(integrationSettings.WebUrl), $"activate/{token}");
         var emailBody = await renderer.Render("RegistrationLetter", new RegistrationConfirmationViewModel

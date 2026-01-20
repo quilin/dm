@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto.Enums;
 using DM.Services.Core.Exceptions;
@@ -11,30 +12,17 @@ using DM.Services.MessageQueuing.GeneralBus;
 namespace DM.Services.Community.BusinessProcesses.Account.Activation;
 
 /// <inheritdoc />
-internal class ActivationService : IActivationService
+internal class ActivationService(
+    IDateTimeProvider dateTimeProvider,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IActivationRepository repository,
+    IInvokedEventProducer producer) : IActivationService
 {
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IActivationRepository repository;
-    private readonly IInvokedEventProducer producer;
-
     /// <inheritdoc />
-    public ActivationService(
-        IDateTimeProvider dateTimeProvider,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IActivationRepository repository,
-        IInvokedEventProducer producer)
+    public async Task<Guid> Activate(Guid tokenId, CancellationToken cancellationToken)
     {
-        this.dateTimeProvider = dateTimeProvider;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.repository = repository;
-        this.producer = producer;
-    }
-        
-    /// <inheritdoc />
-    public async Task<Guid> Activate(Guid tokenId)
-    {
-        var userId = await repository.FindUserToActivate(tokenId, dateTimeProvider.Now - TimeSpan.FromDays(2));
+        var userId = await repository.FindUserToActivate(
+            tokenId, dateTimeProvider.Now - TimeSpan.FromDays(2), cancellationToken);
         if (!userId.HasValue)
         {
             throw new HttpException(HttpStatusCode.Gone,
@@ -43,7 +31,7 @@ internal class ActivationService : IActivationService
 
         var updateUser = updateBuilderFactory.Create<User>(userId.Value).Field(u => u.Activated, true);
         var updateToken = updateBuilderFactory.Create<Token>(tokenId).Field(t => t.IsRemoved, true);
-        await repository.ActivateUser(updateUser, updateToken);
+        await repository.ActivateUser(updateUser, updateToken, cancellationToken);
 
         await producer.Send(EventType.ActivatedUser, userId.Value);
         return userId.Value;

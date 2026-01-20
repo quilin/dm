@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -13,6 +14,7 @@ public interface ITokenVerificationService
     /// Verify if the token is available
     /// </summary>
     /// <param name="token">Token</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Verify(Guid token);
+    Task<GeneralUser> Verify(Guid token, CancellationToken cancellationToken);
 }

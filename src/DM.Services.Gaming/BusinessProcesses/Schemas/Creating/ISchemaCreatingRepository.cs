@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Shared;
 using DbAttributeSchema = DM.Services.DataAccess.BusinessObjects.Games.Characters.Attributes.AttributeSchema;
@@ -13,5 +14,5 @@ internal interface ISchemaCreatingRepository
     /// Create new attribute schema
     /// </summary>
     /// <returns></returns>
-    Task<AttributeSchema> Create(DbAttributeSchema schema);
+    Task<AttributeSchema> Create(DbAttributeSchema schema, CancellationToken cancellationToken);
 }

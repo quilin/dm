@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -37,7 +38,7 @@ public class CommentaryReadingServiceShould : UnitTestBase
     public CommentaryReadingServiceShould()
     {
         var topicReadingService = Mock<ITopicReadingService>();
-        readingTopicSetup = topicReadingService.Setup(r => r.GetTopic(It.IsAny<Guid>()));
+        readingTopicSetup = topicReadingService.Setup(r => r.GetTopic(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         var identity = Mock<IIdentity>();
         identity.Setup(i => i.Settings).Returns(new UserSettings
@@ -47,19 +48,19 @@ public class CommentaryReadingServiceShould : UnitTestBase
         identityProvider.Setup(p => p.Current).Returns(identity.Object);
 
         var commentaryRepository = Mock<ICommentaryReadingRepository>();
-        getCommentsListSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<PagingData>()));
-        getCommentSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>()));
-        countCommentsSetup = commentaryRepository.Setup(r => r.Count(It.IsAny<Guid>()));
+        getCommentsListSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<PagingData>(), It.IsAny<CancellationToken>()));
+        getCommentSetup = commentaryRepository.Setup(r => r.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
+        countCommentsSetup = commentaryRepository.Setup(r => r.Count(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         var forumReadingService = Mock<IForumReadingService>();
-        getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), It.IsAny<bool>()));
+        getForumSetup = forumReadingService.Setup(s => s.GetForum(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()));
 
         unreadCountersRepository = Mock<IUnreadCountersRepository>();
         unreadCountersRepository
-            .Setup(r => r.Flush(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid>()))
+            .Setup(r => r.Flush(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         unreadCountersRepository
-            .Setup(r => r.FlushAll(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid>()))
+            .Setup(r => r.FlushAll(It.IsAny<Guid>(), It.IsAny<UnreadEntryType>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         readingService = new CommentaryReadingService(topicReadingService.Object,
@@ -72,7 +73,7 @@ public class CommentaryReadingServiceShould : UnitTestBase
     {
         var commentId = Guid.NewGuid();
         getCommentSetup.ReturnsAsync((Comment) null);
-        readingService.Invoking(s => s.Get(commentId).Wait())
+        readingService.Invoking(s => s.Get(commentId, CancellationToken.None).Wait())
             .Should().Throw<HttpException>().And
             .StatusCode.Should().Be(HttpStatusCode.Gone);
     }
@@ -82,7 +83,7 @@ public class CommentaryReadingServiceShould : UnitTestBase
     {
         var expected = new Comment();
         getCommentSetup.ReturnsAsync(expected);
-        var actual = await readingService.Get(Guid.NewGuid());
+        var actual = await readingService.Get(Guid.NewGuid(), CancellationToken.None);
         actual.Should().Be(expected);
     }
 
@@ -96,7 +97,7 @@ public class CommentaryReadingServiceShould : UnitTestBase
         getCommentsListSetup.ReturnsAsync(expected);
         currentUserSetup.Returns(Create.User().WithRole(UserRole.Guest).Please);
 
-        var (actualList, actualPaging) = await readingService.Get(topicId, new PagingQuery());
+        var (actualList, actualPaging) = await readingService.Get(topicId, new PagingQuery(), CancellationToken.None);
 
         actualList.Should().BeSameAs(expected);
         actualPaging.Should().NotBeNull();
@@ -110,9 +111,9 @@ public class CommentaryReadingServiceShould : UnitTestBase
         readingTopicSetup.ReturnsAsync(new Topic());
         currentUserSetup.Returns(Create.User(userId).Please);
 
-        await readingService.MarkAsRead(topicId);
+        await readingService.MarkAsRead(topicId, CancellationToken.None);
 
-        unreadCountersRepository.Verify(r => r.Flush(userId, UnreadEntryType.Message, topicId), Times.Once);
+        unreadCountersRepository.Verify(r => r.Flush(userId, UnreadEntryType.Message, topicId, It.IsAny<CancellationToken>()), Times.Once);
         unreadCountersRepository.VerifyNoOtherCalls();
     }
 
@@ -125,9 +126,9 @@ public class CommentaryReadingServiceShould : UnitTestBase
         currentUserSetup.Returns(Create.User(userId).Please);
         getForumSetup.ReturnsAsync(new Dto.Output.Forum {Id = forumInternalId});
 
-        await readingService.MarkAsRead(forumId);
+        await readingService.MarkAsRead(forumId, CancellationToken.None);
 
-        unreadCountersRepository.Verify(r => r.FlushAll(userId, UnreadEntryType.Message, forumInternalId),
+        unreadCountersRepository.Verify(r => r.FlushAll(userId, UnreadEntryType.Message, forumInternalId, CancellationToken.None),
             Times.Once);
         unreadCountersRepository.VerifyNoOtherCalls();
     }

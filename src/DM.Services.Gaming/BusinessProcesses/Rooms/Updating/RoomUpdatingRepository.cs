@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -14,38 +15,24 @@ using DbRoom = DM.Services.DataAccess.BusinessObjects.Games.Posts.Room;
 namespace DM.Services.Gaming.BusinessProcesses.Rooms.Updating;
 
 /// <inheritdoc />
-internal class RoomUpdatingRepository : IRoomUpdatingRepository
+internal class RoomUpdatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IRoomUpdatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public RoomUpdatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-
-    /// <inheritdoc />
-    public Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId)
-    {
-        return dbContext.Rooms
+    public Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(r => r.RoomId == roomId)
             .Where(AccessibilityFilters.RoomAvailable(userId))
             .ProjectTo<RoomToUpdate>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 
     /// <inheritdoc />
-    public Task<RoomNeighbours> GetNeighbours(Guid roomId)
-    {
-        return dbContext.Rooms
+    public Task<RoomNeighbours> GetNeighbours(Guid roomId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(r => r.RoomId == roomId)
             .ProjectTo<RoomNeighbours>(mapper.ConfigurationProvider)
-            .FirstAsync();
-    }
+            .FirstAsync(cancellationToken);
 
     /// <inheritdoc />
     public async Task<Room> Update(
@@ -53,29 +40,28 @@ internal class RoomUpdatingRepository : IRoomUpdatingRepository
         IUpdateBuilder<DbRoom> updateOldPreviousRoom,
         IUpdateBuilder<DbRoom> updateOldNextRoom,
         IUpdateBuilder<DbRoom> updateNewPreviousRoom,
-        IUpdateBuilder<DbRoom> updateNewNextRoom)
+        IUpdateBuilder<DbRoom> updateNewNextRoom,
+        CancellationToken cancellationToken)
     {
         var roomId = updateRoom.AttachTo(dbContext);
         updateOldPreviousRoom?.AttachTo(dbContext);
         updateOldNextRoom?.AttachTo(dbContext);
         updateNewPreviousRoom?.AttachTo(dbContext);
         updateNewNextRoom?.AttachTo(dbContext);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return await dbContext.Rooms
             .Where(r => r.RoomId == roomId)
             .ProjectTo<Room>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 
 
     /// <inheritdoc />
-    public Task<RoomOrderInfo> GetFirstRoomInfo(Guid gameId)
-    {
-        return dbContext.Rooms
+    public Task<RoomOrderInfo> GetFirstRoomInfo(Guid gameId, CancellationToken cancellationToken) =>
+        dbContext.Rooms
             .Where(r => !r.IsRemoved && r.GameId == gameId)
             .OrderBy(r => r.OrderNumber)
             .ProjectTo<RoomOrderInfo>(mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
-    }
+            .FirstOrDefaultAsync(cancellationToken);
 }

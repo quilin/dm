@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Reading;
 using DM.Services.Gaming.Dto.Output;
@@ -9,22 +10,12 @@ using DM.Services.Gaming.Dto.Shared;
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Shared;
 
 /// <inheritdoc />
-internal class CharacterAttributeValueFiller : ICharacterAttributeValueFiller
+internal class CharacterAttributeValueFiller(
+    ISchemaReadingService schemaReadingService,
+    IAttributeValueValidator attributeValueValidator) : ICharacterAttributeValueFiller
 {
-    private readonly ISchemaReadingService schemaReadingService;
-    private readonly IAttributeValueValidator attributeValueValidator;
-
     /// <inheritdoc />
-    public CharacterAttributeValueFiller(
-        ISchemaReadingService schemaReadingService,
-        IAttributeValueValidator attributeValueValidator)
-    {
-        this.schemaReadingService = schemaReadingService;
-        this.attributeValueValidator = attributeValueValidator;
-    }
-
-    /// <inheritdoc />
-    public async Task Fill(IEnumerable<Character> characters, Guid? schemaId)
+    public async Task Fill(IEnumerable<Character> characters, Guid? schemaId, CancellationToken cancellationToken)
     {
         if (!schemaId.HasValue)
         {
@@ -36,7 +27,7 @@ internal class CharacterAttributeValueFiller : ICharacterAttributeValueFiller
             return;
         }
 
-        var schema = await schemaReadingService.Get(schemaId.Value);
+        var schema = await schemaReadingService.Get(schemaId.Value, cancellationToken);
         foreach (var character in characters)
         {
             var attributeIndex = character.Attributes.ToDictionary(a => a.Id);

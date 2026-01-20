@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.RelationalStorage;
 using DM.Services.Gaming.Dto.Internal;
@@ -17,36 +18,40 @@ internal interface IRoomUpdatingRepository
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId);
+    Task<RoomToUpdate> GetRoom(Guid roomId, Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get room neighbours
     /// </summary>
     /// <param name="roomId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<RoomNeighbours> GetNeighbours(Guid roomId);
+    Task<RoomNeighbours> GetNeighbours(Guid roomId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update room and its neighbours
     /// </summary>
     /// <param name="updateRoom"></param>
-    /// <param name="updateOldPreviousRoom"></param>
     /// <param name="updateOldNextRoom"></param>
-    /// <param name="updateNewPreviousRoom"></param>
+    /// <param name="updateOldPreviousRoom"></param>
     /// <param name="updateNewNextRoom"></param>
+    /// <param name="updateNewPreviousRoom"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Room> Update(
-        IUpdateBuilder<DbRoom> updateRoom,
-        IUpdateBuilder<DbRoom> updateOldNextRoom = null,
-        IUpdateBuilder<DbRoom> updateOldPreviousRoom = null,
-        IUpdateBuilder<DbRoom> updateNewNextRoom = null,
-        IUpdateBuilder<DbRoom> updateNewPreviousRoom = null);
+    Task<Room> Update(IUpdateBuilder<DbRoom> updateRoom,
+        IUpdateBuilder<DbRoom> updateOldNextRoom,
+        IUpdateBuilder<DbRoom> updateOldPreviousRoom,
+        IUpdateBuilder<DbRoom> updateNewNextRoom,
+        IUpdateBuilder<DbRoom> updateNewPreviousRoom,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Get first room of the game order info
     /// </summary>
     /// <param name="gameId">Game identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<RoomOrderInfo> GetFirstRoomInfo(Guid gameId);
+    Task<RoomOrderInfo> GetFirstRoomInfo(Guid gameId, CancellationToken cancellationToken);
 }

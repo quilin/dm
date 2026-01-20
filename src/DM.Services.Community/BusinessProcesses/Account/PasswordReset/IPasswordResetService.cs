@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -12,6 +13,7 @@ public interface IPasswordResetService
     /// Reset user password
     /// </summary>
     /// <param name="passwordReset"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<GeneralUser> Reset(UserPasswordReset passwordReset);
+    Task<GeneralUser> Reset(UserPasswordReset passwordReset, CancellationToken cancellationToken);
 }

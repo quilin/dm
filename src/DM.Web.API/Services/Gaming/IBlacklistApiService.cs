@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -14,22 +15,25 @@ public interface IBlacklistApiService
     /// Get list of blacklisted users for the game
     /// </summary>
     /// <param name="gameId">Game identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ListEnvelope<User>> Get(Guid gameId);
+    Task<ListEnvelope<User>> Get(Guid gameId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Add user to the game blacklist
     /// </summary>
     /// <param name="gameId">Game identifier</param>
     /// <param name="user">User to blacklist</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Envelope<User>> Create(Guid gameId, User user);
+    Task<Envelope<User>> Create(Guid gameId, User user, CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove user from the blacklist
     /// </summary>
     /// <param name="gameId">Game identifier</param>
     /// <param name="login">User login</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid gameId, string login);
+    Task Delete(Guid gameId, string login, CancellationToken cancellationToken);
 }

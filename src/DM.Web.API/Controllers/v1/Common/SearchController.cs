@@ -13,16 +13,10 @@ namespace DM.Web.API.Controllers.v1.Common;
 [ApiController]
 [Route("v1/search")]
 [ApiExplorerSettings(GroupName = "Common")]
-public class SearchController : ControllerBase
+public class SearchController(
+    IOptions<SearchServiceConfiguration> options) : ControllerBase
 {
-    private readonly SearchServiceConfiguration searchServiceConfiguration;
-
-    /// <inheritdoc />
-    public SearchController(
-        IOptions<SearchServiceConfiguration> options)
-    {
-        searchServiceConfiguration = options.Value;
-    }
+    private readonly SearchServiceConfiguration searchServiceConfiguration = options.Value;
 
     /// <summary>
     /// 

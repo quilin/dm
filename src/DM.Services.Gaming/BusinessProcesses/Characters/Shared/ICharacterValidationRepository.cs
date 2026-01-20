@@ -23,13 +23,15 @@ internal interface ICharacterValidationRepository
     /// Get schema for game
     /// </summary>
     /// <param name="gameId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AttributeSchema> GetGameSchema(Guid gameId);
+    Task<AttributeSchema> GetGameSchema(Guid gameId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get game schema for character
     /// </summary>
     /// <param name="characterId"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AttributeSchema> GetCharacterSchema(Guid characterId);
+    Task<AttributeSchema> GetCharacterSchema(Guid characterId, CancellationToken cancellationToken);
 }

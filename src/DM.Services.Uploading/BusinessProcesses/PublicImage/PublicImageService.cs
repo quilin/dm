@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Core.Implementation;
@@ -47,7 +48,8 @@ internal class PublicImageService : IPublicImageService
     private static readonly Size SmallSize = new(100, 100);
 
     /// <inheritdoc />
-    public async Task<(Upload original, Upload medium, Upload small)> Upload(CreateUpload createUpload)
+    public async Task<(Upload original, Upload medium, Upload small)> Upload(CreateUpload createUpload,
+        CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(createUpload);
         var (name, extension) = await nameGenerator.Generate(createUpload);
@@ -77,5 +79,5 @@ internal class PublicImageService : IPublicImageService
     }
 
     /// <inheritdoc />
-    public Task PrepareObsoleteForDeleting(Guid entityId) => repository.RemoveObsoleteUploads(entityId);
+    public Task PrepareObsoleteForDeleting(Guid entityId, CancellationToken cancellationToken) => repository.RemoveObsoleteUploads(entityId);
 }

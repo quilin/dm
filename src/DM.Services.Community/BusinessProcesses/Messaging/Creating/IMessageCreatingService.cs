@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Messaging.Reading;
 
@@ -12,6 +13,7 @@ public interface IMessageCreatingService
     /// Create new message
     /// </summary>
     /// <param name="createMessage">DTO model</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Message> Create(CreateMessage createMessage);
+    Task<Message> Create(CreateMessage createMessage, CancellationToken cancellationToken);
 }

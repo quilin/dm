@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.BusinessProcesses.UnreadCounters;
@@ -14,63 +15,47 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Forum.BusinessProcesses.Commentaries.Reading;
 
 /// <inheritdoc />
-internal class CommentaryReadingService : ICommentaryReadingService
+internal class CommentaryReadingService(
+    ITopicReadingService topicReadingService,
+    IForumReadingService forumReadingService,
+    IIdentityProvider identityProvider,
+    IUnreadCountersRepository unreadCountersRepository,
+    ICommentaryReadingRepository commentaryRepository) : ICommentaryReadingService
 {
-    private readonly ITopicReadingService topicReadingService;
-    private readonly IForumReadingService forumReadingService;
-    private readonly IUnreadCountersRepository unreadCountersRepository;
-    private readonly ICommentaryReadingRepository commentaryRepository;
-    private readonly IIdentityProvider identityProvider;
-
-    /// <inheritdoc />
-    public CommentaryReadingService(
-        ITopicReadingService topicReadingService,
-        IForumReadingService forumReadingService,
-        IIdentityProvider identityProvider,
-        IUnreadCountersRepository unreadCountersRepository,
-        ICommentaryReadingRepository commentaryRepository)
-    {
-        this.topicReadingService = topicReadingService;
-        this.forumReadingService = forumReadingService;
-        this.unreadCountersRepository = unreadCountersRepository;
-        this.commentaryRepository = commentaryRepository;
-        this.identityProvider = identityProvider;
-    }
-
     /// <inheritdoc />
     public async Task<(IEnumerable<Comment> comments, PagingResult paging)> Get(
-        Guid topicId, PagingQuery query)
+        Guid topicId, PagingQuery query, CancellationToken cancellationToken)
     {
-        await topicReadingService.GetTopic(topicId);
+        await topicReadingService.GetTopic(topicId, cancellationToken);
 
-        var totalCount = await commentaryRepository.Count(topicId);
+        var totalCount = await commentaryRepository.Count(topicId, cancellationToken);
         var paging = new PagingData(query, identityProvider.Current.Settings.Paging.CommentsPerPage, totalCount);
 
-        var comments = await commentaryRepository.Get(topicId, paging);
+        var comments = await commentaryRepository.Get(topicId, paging, cancellationToken);
 
         return (comments, paging.Result);
     }
 
     /// <inheritdoc />
-    public async Task<Comment> Get(Guid commentId)
+    public async Task<Comment> Get(Guid commentId, CancellationToken cancellationToken)
     {
-        return await commentaryRepository.Get(commentId) ??
+        return await commentaryRepository.Get(commentId, cancellationToken) ??
                throw new HttpException(HttpStatusCode.Gone, $"Comment {commentId} not found");
     }
 
     /// <inheritdoc />
-    public async Task MarkAsRead(Guid topicId)
+    public async Task MarkAsRead(Guid topicId, CancellationToken cancellationToken)
     {
-        await topicReadingService.GetTopic(topicId);
+        await topicReadingService.GetTopic(topicId, cancellationToken);
         await unreadCountersRepository.Flush(identityProvider.Current.User.UserId,
-            UnreadEntryType.Message, topicId);
+            UnreadEntryType.Message, topicId, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task MarkAsRead(string forumTitle)
+    public async Task MarkAsRead(string forumTitle, CancellationToken cancellationToken)
     {
-        var forum = await forumReadingService.GetForum(forumTitle);
+        var forum = await forumReadingService.GetForum(forumTitle, true, cancellationToken);
         await unreadCountersRepository.FlushAll(identityProvider.Current.User.UserId,
-            UnreadEntryType.Message, forum.Id);
+            UnreadEntryType.Message, forum.Id, cancellationToken);
     }
 }

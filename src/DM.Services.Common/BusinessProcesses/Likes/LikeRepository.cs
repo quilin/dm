@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess;
 using DM.Services.DataAccess.BusinessObjects.Common;
@@ -7,29 +8,22 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Common.BusinessProcesses.Likes;
 
 /// <inheritdoc />
-internal class LikeRepository : ILikeRepository
+internal class LikeRepository(
+    DmDbContext dbContext) : ILikeRepository
 {
-    private readonly DmDbContext dbContext;
-
     /// <inheritdoc />
-    public LikeRepository(
-        DmDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-        
-    /// <inheritdoc />
-    public Task Add(Like like)
+    public Task Add(Like like, CancellationToken cancellationToken)
     {
         dbContext.Likes.Add(like);
-        return dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task Delete(Guid topicId, Guid userId)
+    public async Task Delete(Guid topicId, Guid userId, CancellationToken cancellationToken)
     {
-        var like = await dbContext.Likes.FirstAsync(l => l.UserId == userId && l.EntityId == topicId);
+        var like = await dbContext.Likes
+            .FirstAsync(l => l.UserId == userId && l.EntityId == topicId, cancellationToken);
         dbContext.Likes.Remove(like);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

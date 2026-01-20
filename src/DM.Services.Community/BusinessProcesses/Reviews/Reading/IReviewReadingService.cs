@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -15,13 +16,16 @@ public interface IReviewReadingService
     /// </summary>
     /// <param name="query"></param>
     /// <param name="onlyApproved"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<(IEnumerable<Review> reviews, PagingResult paging)> Get(PagingQuery query, bool onlyApproved);
+    Task<(IEnumerable<Review> reviews, PagingResult paging)> Get(PagingQuery query, bool onlyApproved,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single review
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Review> Get(Guid id);
+    Task<Review> Get(Guid id, CancellationToken cancellationToken);
 }

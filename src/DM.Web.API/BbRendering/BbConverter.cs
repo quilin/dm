@@ -9,20 +9,10 @@ using Microsoft.AspNetCore.Http;
 namespace DM.Web.API.BbRendering;
 
 /// <inheritdoc />
-internal class BbConverterFactory : JsonConverterFactory
+internal class BbConverterFactory(
+    IHttpContextAccessor httpContextAccessor,
+    IBbParserProvider bbParserProvider) : JsonConverterFactory
 {
-    private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly IBbParserProvider bbParserProvider;
-
-    /// <inheritdoc />
-    public BbConverterFactory(
-        IHttpContextAccessor httpContextAccessor,
-        IBbParserProvider bbParserProvider)
-    {
-        this.httpContextAccessor = httpContextAccessor;
-        this.bbParserProvider = bbParserProvider;
-    }
-
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert) => typeToConvert.IsSubclassOf(typeof(BbText));
 
@@ -32,7 +22,7 @@ internal class BbConverterFactory : JsonConverterFactory
         var converter = (JsonConverter) Activator.CreateInstance(
             typeof(BbConverter<>).MakeGenericType(typeToConvert),
             BindingFlags.Instance | BindingFlags.Public,
-            null, new object[] {httpContextAccessor, bbParserProvider}, null);
+            null, [httpContextAccessor, bbParserProvider], null);
         return converter;
     }
 
@@ -49,7 +39,8 @@ internal class BbConverterFactory : JsonConverterFactory
         {
             var httpContext = httpContextAccessor.HttpContext;
             var renderMode = httpContext.Request.Headers.TryGetValue("X-Dm-Bb-Render-Mode", out var headerValues) &&
-                             headerValues.Any() && Enum.TryParse<BbRenderMode>(headerValues.First(), out var requiredRenderMode)
+                             headerValues.Count != 0 &&
+                             Enum.TryParse<BbRenderMode>(headerValues.First(), out var requiredRenderMode)
                 ? requiredRenderMode
                 : BbRenderMode.Html;
             var value = bbText.Value;
@@ -59,7 +50,7 @@ internal class BbConverterFactory : JsonConverterFactory
                 writer.WriteStringValue(bbParserProvider.CurrentSafePost.Parse(value).ToHtml());
                 return;
             }
-                
+
             var parsedTree = bbText.ParseMode switch
             {
                 BbParseMode.Common => bbParserProvider.CurrentCommon.Parse(value),
@@ -76,7 +67,7 @@ internal class BbConverterFactory : JsonConverterFactory
                 BbRenderMode.Text => parsedTree.ToText(),
                 _ => throw new ArgumentOutOfRangeException()
             };
-                
+
             writer.WriteStringValue(text);
         }
     }

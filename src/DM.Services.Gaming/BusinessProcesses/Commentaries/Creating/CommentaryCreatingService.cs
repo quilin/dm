@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -15,49 +16,27 @@ using Comment = DM.Services.Common.Dto.Comment;
 namespace DM.Services.Gaming.BusinessProcesses.Commentaries.Creating;
 
 /// <inheritdoc />
-internal class CommentaryCreatingService : ICommentaryCreatingService
+internal class CommentaryCreatingService(
+    IValidator<CreateComment> validator,
+    IGameReadingService gameReadingService,
+    IIntentionManager intentionManager,
+    IIdentityProvider identityProvider,
+    ICommentaryFactory commentaryFactory,
+    ICommentaryCreatingRepository repository,
+    IUnreadCountersRepository countersRepository,
+    IInvokedEventProducer invokedEventProducer) : ICommentaryCreatingService
 {
-    private readonly IValidator<CreateComment> validator;
-    private readonly IGameReadingService gameReadingService;
-    private readonly IIntentionManager intentionManager;
-    private readonly IIdentityProvider identityProvider;
-    private readonly ICommentaryFactory commentaryFactory;
-    private readonly ICommentaryCreatingRepository repository;
-    private readonly IUnreadCountersRepository countersRepository;
-    private readonly IInvokedEventProducer invokedEventProducer;
-
     /// <inheritdoc />
-    public CommentaryCreatingService(
-        IValidator<CreateComment> validator,
-        IGameReadingService gameReadingService,
-        IIntentionManager intentionManager,
-        IIdentityProvider identityProvider,
-        ICommentaryFactory commentaryFactory,
-        ICommentaryCreatingRepository repository,
-        IUnreadCountersRepository countersRepository,
-        IInvokedEventProducer invokedEventProducer)
+    public async Task<Comment> Create(CreateComment createComment, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.gameReadingService = gameReadingService;
-        this.intentionManager = intentionManager;
-        this.commentaryFactory = commentaryFactory;
-        this.repository = repository;
-        this.countersRepository = countersRepository;
-        this.invokedEventProducer = invokedEventProducer;
-        this.identityProvider = identityProvider;
-    }
+        await validator.ValidateAndThrowAsync(createComment, cancellationToken);
 
-    /// <inheritdoc />
-    public async Task<Comment> Create(CreateComment createComment)
-    {
-        await validator.ValidateAndThrowAsync(createComment);
-
-        var game = await gameReadingService.GetGame(createComment.EntityId);
+        var game = await gameReadingService.GetGame(createComment.EntityId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.CreateComment, game);
 
         var comment = commentaryFactory.Create(createComment, identityProvider.Current.User.UserId);
-        var createdComment = await repository.Create(comment);
-        await countersRepository.Increment(game.Id, UnreadEntryType.Message);
+        var createdComment = await repository.Create(comment, cancellationToken);
+        await countersRepository.Increment(game.Id, UnreadEntryType.Message, cancellationToken);
         await invokedEventProducer.Send(EventType.NewGameComment, comment.CommentId);
 
         return createdComment;

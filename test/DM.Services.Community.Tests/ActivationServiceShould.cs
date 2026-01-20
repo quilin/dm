@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Account.Activation;
 using DM.Services.Core.Dto.Enums;
@@ -29,9 +30,9 @@ public class ActivationServiceShould : UnitTestBase
     {
         activationRepository = Mock<IActivationRepository>();
         findUserSetup = activationRepository
-            .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>()));
+            .Setup(r => r.FindUserToActivate(It.IsAny<Guid>(), It.IsAny<DateTimeOffset>(), It.IsAny<CancellationToken>()));
         activationRepository
-            .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>()))
+            .Setup(r => r.ActivateUser(It.IsAny<IUpdateBuilder<User>>(), It.IsAny<IUpdateBuilder<Token>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var dateTimeProvider = Mock<IDateTimeProvider>();
@@ -68,17 +69,17 @@ public class ActivationServiceShould : UnitTestBase
     {
         var tokenId = Guid.NewGuid();
         findUserSetup.ReturnsAsync(Guid.NewGuid());
-        await activationService.Activate(tokenId);
-        activationRepository.Verify(r => r.FindUserToActivate(tokenId, new DateTime(2018, 12, 31)), Times.Once);
+        await activationService.Activate(tokenId, CancellationToken.None);
+        activationRepository.Verify(r => r.FindUserToActivate(tokenId, new DateTime(2018, 12, 31), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public void ThrowGoneException_WhenTokenInvalid()
+    public async Task ThrowGoneException_WhenTokenInvalid()
     {
         findUserSetup.ReturnsAsync((Guid?) null);
-        activationService
-            .Invoking(s => s.Activate(Guid.NewGuid()).Wait())
-            .Should().Throw<HttpException>()
+        (await activationService
+            .Invoking(s => s.Activate(Guid.NewGuid(), CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Gone);
     }
 
@@ -89,7 +90,7 @@ public class ActivationServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         findUserSetup.ReturnsAsync(userId);
 
-        var actual = await activationService.Activate(tokenId);
+        var actual = await activationService.Activate(tokenId, CancellationToken.None);
         actual.Should().Be(userId);
     }
 
@@ -100,9 +101,9 @@ public class ActivationServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         findUserSetup.ReturnsAsync(userId);
 
-        await activationService.Activate(tokenId);
+        await activationService.Activate(tokenId, CancellationToken.None);
 
-        activationRepository.Verify(r => r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object));
+        activationRepository.Verify(r => r.ActivateUser(userUpdateBuilder.Object, tokenUpdateBuilder.Object, It.IsAny<CancellationToken>()));
         userUpdateBuilder.Verify(b => b.Field(u => u.Activated, true));
         tokenUpdateBuilder.Verify(b => b.Field(t => t.IsRemoved, true));
     }
@@ -114,7 +115,7 @@ public class ActivationServiceShould : UnitTestBase
         var userId = Guid.NewGuid();
         findUserSetup.ReturnsAsync(userId);
 
-        await activationService.Activate(tokenId);
+        await activationService.Activate(tokenId, CancellationToken.None);
 
         publisher.Verify(p => p.Send(EventType.ActivatedUser, userId), Times.Once);
     }

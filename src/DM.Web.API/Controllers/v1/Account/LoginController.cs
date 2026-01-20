@@ -12,17 +12,9 @@ namespace DM.Web.API.Controllers.v1.Account;
 [ApiController]
 [Route("v1/account/login")]
 [ApiExplorerSettings(GroupName = "Account")]
-public class LoginController : ControllerBase
+public class LoginController(
+    ILoginApiService loginApiService) : ControllerBase
 {
-    private readonly ILoginApiService loginApiService;
-
-    /// <inheritdoc />
-    public LoginController(
-        ILoginApiService loginApiService)
-    {
-        this.loginApiService = loginApiService;
-    }
-
     /// <summary>
     /// Authenticate via credentials
     /// </summary>

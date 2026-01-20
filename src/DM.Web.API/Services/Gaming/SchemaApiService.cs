@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Gaming.BusinessProcesses.Schemas.Creating;
@@ -13,60 +14,48 @@ using DtoAttributeSchema = DM.Services.Gaming.Dto.Shared.AttributeSchema;
 namespace DM.Web.API.Services.Gaming;
 
 /// <inheritdoc />
-internal class SchemaApiService : ISchemaApiService
+internal class SchemaApiService(
+    ISchemaReadingService readingService,
+    ISchemaCreatingService creatingService,
+    ISchemaUpdatingService updatingService,
+    ISchemaDeletingService deletingService,
+    IMapper mapper) : ISchemaApiService
 {
-    private readonly ISchemaReadingService readingService;
-    private readonly ISchemaCreatingService creatingService;
-    private readonly ISchemaUpdatingService updatingService;
-    private readonly ISchemaDeletingService deletingService;
-    private readonly IMapper mapper;
-
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    public SchemaApiService(
-        ISchemaReadingService readingService,
-        ISchemaCreatingService creatingService,
-        ISchemaUpdatingService updatingService,
-        ISchemaDeletingService deletingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<AttributeSchema>> Get(CancellationToken cancellationToken)
     {
-        this.readingService = readingService;
-        this.creatingService = creatingService;
-        this.updatingService = updatingService;
-        this.deletingService = deletingService;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<ListEnvelope<AttributeSchema>> Get()
-    {
-        var schemata = await readingService.Get();
+        var schemata = await readingService.Get(cancellationToken);
         return new ListEnvelope<AttributeSchema>(schemata.Select(mapper.Map<AttributeSchema>));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<AttributeSchema>> Get(Guid schemaId)
+    public async Task<Envelope<AttributeSchema>> Get(Guid schemaId, CancellationToken cancellationToken)
     {
-        var schema = await readingService.Get(schemaId);
+        var schema = await readingService.Get(schemaId, cancellationToken);
         return new Envelope<AttributeSchema>(mapper.Map<AttributeSchema>(schema));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<AttributeSchema>> Create(AttributeSchema schema)
+    public async Task<Envelope<AttributeSchema>> Create(
+        AttributeSchema schema, CancellationToken cancellationToken)
     {
         var createSchema = mapper.Map<DtoAttributeSchema>(schema);
-        var createdSchema = await creatingService.Create(createSchema);
+        var createdSchema = await creatingService.Create(createSchema, cancellationToken);
         return new Envelope<AttributeSchema>(mapper.Map<AttributeSchema>(createdSchema));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<AttributeSchema>> Update(Guid schemaId, AttributeSchema schema)
+    public async Task<Envelope<AttributeSchema>> Update(
+        Guid schemaId, AttributeSchema schema, CancellationToken cancellationToken)
     {
         var updateSchema = mapper.Map<DtoAttributeSchema>(schema);
         updateSchema.Id = schemaId;
-        var updatedSchema = await updatingService.Update(updateSchema);
+        var updatedSchema = await updatingService.Update(updateSchema, cancellationToken);
         return new Envelope<AttributeSchema>(mapper.Map<AttributeSchema>(updatedSchema));
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid schemaId) => deletingService.Delete(schemaId);
+    public Task Delete(Guid schemaId, CancellationToken cancellationToken) =>
+        deletingService.Delete(schemaId, cancellationToken);
 }

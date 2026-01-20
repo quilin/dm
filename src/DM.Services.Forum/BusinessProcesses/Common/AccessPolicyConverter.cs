@@ -16,22 +16,22 @@ internal class AccessPolicyConverter : IAccessPolicyConverter
         var result = ForumAccessPolicy.Guest | ForumAccessPolicy.Player;
         if (role.HasFlag(UserRole.Administrator))
         {
-            result = result | ForumAccessPolicy.Administrator;
+            result |= ForumAccessPolicy.Administrator;
         }
 
         if (role.HasFlag(UserRole.SeniorModerator))
         {
-            result = result | ForumAccessPolicy.SeniorModerator;
+            result |= ForumAccessPolicy.SeniorModerator;
         }
 
         if (role.HasFlag(UserRole.RegularModerator))
         {
-            result = result | ForumAccessPolicy.RegularModerator;
+            result |= ForumAccessPolicy.RegularModerator;
         }
 
         if (role.HasFlag(UserRole.NannyModerator))
         {
-            result = result | ForumAccessPolicy.NannyModerator;
+            result |= ForumAccessPolicy.NannyModerator;
         }
 
         return result;

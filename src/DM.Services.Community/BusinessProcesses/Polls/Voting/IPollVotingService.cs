@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Community.BusinessProcesses.Polls.Reading;
 
@@ -14,6 +15,7 @@ public interface IPollVotingService
     /// </summary>
     /// <param name="pollId">Poll identifier</param>
     /// <param name="optionId">Option identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Poll> Vote(Guid pollId, Guid optionId);
+    Task<Poll> Vote(Guid pollId, Guid optionId, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.DataAccess.BusinessObjects.Fora;
 using DM.Services.DataAccess.RelationalStorage;
@@ -15,6 +16,8 @@ public interface ICommentaryCreatingRepository
     /// </summary>
     /// <param name="comment">DAL model for comment</param>
     /// <param name="topicUpdate">Updating for parent topic (denormalize)</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Services.Common.Dto.Comment> Create(Comment comment, IUpdateBuilder<ForumTopic> topicUpdate);
+    Task<Services.Common.Dto.Comment> Create(
+        Comment comment, IUpdateBuilder<ForumTopic> topicUpdate, CancellationToken cancellationToken);
 }

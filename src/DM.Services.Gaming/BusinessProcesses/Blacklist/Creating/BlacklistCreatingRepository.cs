@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,29 +11,19 @@ using Microsoft.EntityFrameworkCore;
 namespace DM.Services.Gaming.BusinessProcesses.Blacklist.Creating;
 
 /// <inheritdoc />
-internal class BlacklistCreatingRepository : IBlacklistCreatingRepository
+internal class BlacklistCreatingRepository(
+    DmDbContext dbContext,
+    IMapper mapper) : IBlacklistCreatingRepository
 {
-    private readonly DmDbContext dbContext;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public BlacklistCreatingRepository(
-        DmDbContext dbContext,
-        IMapper mapper)
-    {
-        this.dbContext = dbContext;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<GeneralUser> Create(BlackListLink link)
+    public async Task<GeneralUser> Create(BlackListLink link, CancellationToken cancellationToken)
     {
         dbContext.BlackListLinks.Add(link);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return await dbContext.BlackListLinks
             .Where(l => l.BlackListLinkId == link.BlackListLinkId)
             .Select(l => l.User)
             .ProjectTo<GeneralUser>(mapper.ConfigurationProvider)
-            .FirstAsync();
+            .FirstAsync(cancellationToken);
     }
 }

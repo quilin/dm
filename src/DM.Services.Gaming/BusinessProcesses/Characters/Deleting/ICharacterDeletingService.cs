@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DM.Services.Gaming.BusinessProcesses.Characters.Deleting;
@@ -12,6 +13,7 @@ public interface ICharacterDeletingService
     /// Delete existing character
     /// </summary>
     /// <param name="characterId">Character identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task Delete(Guid characterId);
+    Task Delete(Guid characterId, CancellationToken cancellationToken);
 }

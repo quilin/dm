@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation.UserIdentity;
 using DM.Services.Common.Authorization;
@@ -19,52 +20,24 @@ using Game = DM.Services.DataAccess.BusinessObjects.Games.Game;
 namespace DM.Services.Gaming.BusinessProcesses.Games.Updating;
 
 /// <inheritdoc />
-internal class GameUpdatingService : IGameUpdatingService
+internal class GameUpdatingService(
+    IValidator<UpdateGame> validator,
+    IIntentionManager intentionManager,
+    IGameReadingService gameReadingService,
+    IAssignmentService assignmentService,
+    IUpdateBuilderFactory updateBuilderFactory,
+    IUserRepository userRepository,
+    IDateTimeProvider dateTimeProvider,
+    IGameUpdatingRepository updatingRepository,
+    IGameIntentionConverter intentionConverter,
+    IInvokedEventProducer producer,
+    IIdentityProvider identityProvider) : IGameUpdatingService
 {
-    private readonly IValidator<UpdateGame> validator;
-    private readonly IIntentionManager intentionManager;
-    private readonly IGameReadingService gameReadingService;
-    private readonly IAssignmentService assignmentService;
-    private readonly IUpdateBuilderFactory updateBuilderFactory;
-    private readonly IUserRepository userRepository;
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly IGameUpdatingRepository updatingRepository;
-    private readonly IGameIntentionConverter intentionConverter;
-    private readonly IInvokedEventProducer producer;
-    private readonly IIdentityProvider identityProvider;
-
     /// <inheritdoc />
-    public GameUpdatingService(
-        IValidator<UpdateGame> validator,
-        IIntentionManager intentionManager,
-        IGameReadingService gameReadingService,
-        IAssignmentService assignmentService,
-        IUpdateBuilderFactory updateBuilderFactory,
-        IUserRepository userRepository,
-        IDateTimeProvider dateTimeProvider,
-        IGameUpdatingRepository updatingRepository,
-        IGameIntentionConverter intentionConverter,
-        IInvokedEventProducer producer,
-        IIdentityProvider identityProvider)
+    public async Task<GameExtended> Update(UpdateGame updateGame, CancellationToken cancellationToken)
     {
-        this.validator = validator;
-        this.intentionManager = intentionManager;
-        this.gameReadingService = gameReadingService;
-        this.assignmentService = assignmentService;
-        this.updateBuilderFactory = updateBuilderFactory;
-        this.userRepository = userRepository;
-        this.dateTimeProvider = dateTimeProvider;
-        this.updatingRepository = updatingRepository;
-        this.intentionConverter = intentionConverter;
-        this.producer = producer;
-        this.identityProvider = identityProvider;
-    }
-
-    /// <inheritdoc />
-    public async Task<GameExtended> Update(UpdateGame updateGame)
-    {
-        await validator.ValidateAndThrowAsync(updateGame);
-        var game = await gameReadingService.GetGameDetails(updateGame.GameId);
+        await validator.ValidateAndThrowAsync(updateGame, cancellationToken);
+        var game = await gameReadingService.GetGameDetails(updateGame.GameId, cancellationToken);
         intentionManager.ThrowIfForbidden(GameIntention.Edit, game);
 
         var changes = updateBuilderFactory.Create<Game>(game.Id)
@@ -86,11 +59,12 @@ internal class GameUpdatingService : IGameUpdatingService
         if (updateGame.AssistantLogin != default &&
             !updateGame.AssistantLogin.Equals(oldAssistant?.Login, StringComparison.InvariantCultureIgnoreCase))
         {
-            var (assistantExists, foundAssistantId) = await userRepository.FindUserId(updateGame.AssistantLogin);
+            var (assistantExists, foundAssistantId) = await userRepository.FindUserId(
+                updateGame.AssistantLogin, cancellationToken);
             if (assistantExists)
             {
                 changes.Field(g => g.AssistantId, null);
-                await assignmentService.CreateAssignment(game.Id, foundAssistantId);
+                await assignmentService.CreateAssignment(game.Id, foundAssistantId, cancellationToken);
             }
         }
 
@@ -119,7 +93,7 @@ internal class GameUpdatingService : IGameUpdatingService
             }
         }
 
-        var result = await updatingRepository.Update(changes);
+        var result = await updatingRepository.Update(changes, cancellationToken);
         await producer.Send(invokedEvents, game.Id);
         return result;
     }

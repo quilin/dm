@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Web.API.Dto.Contracts;
 using DM.Web.API.Dto.Users;
@@ -13,6 +14,7 @@ public interface IModeratorsApiService
     /// Get list of forum moderators
     /// </summary>
     /// <param name="id">Forum id</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Envelope of moderators list</returns>
-    Task<ListEnvelope<User>> GetModerators(string id);
+    Task<ListEnvelope<User>> GetModerators(string id, CancellationToken cancellationToken);
 }

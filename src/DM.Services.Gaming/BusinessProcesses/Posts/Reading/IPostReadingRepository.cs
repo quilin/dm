@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 using DM.Services.Gaming.Dto.Output;
@@ -16,8 +17,9 @@ internal interface IPostReadingRepository
     /// </summary>
     /// <param name="roomId">Room identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<int> Count(Guid roomId, Guid userId);
+    Task<int> Count(Guid roomId, Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get room posts
@@ -25,14 +27,16 @@ internal interface IPostReadingRepository
     /// <param name="roomId">Room identifier</param>
     /// <param name="paging">Paging data</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<Post>> Get(Guid roomId, PagingData paging, Guid userId);
+    Task<IEnumerable<Post>> Get(Guid roomId, PagingData paging, Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get single room post
     /// </summary>
     /// <param name="postId">Post identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Post> Get(Guid postId, Guid userId);
+    Task<Post> Get(Guid postId, Guid userId, CancellationToken cancellationToken);
 }

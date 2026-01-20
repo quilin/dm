@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,5 +14,5 @@ public interface IGameCreatingService
     /// Create new game
     /// </summary>
     /// <returns></returns>
-    Task<GameExtended> Create(CreateGame createGame);
+    Task<GameExtended> Create(CreateGame createGame, CancellationToken cancellationToken);
 }

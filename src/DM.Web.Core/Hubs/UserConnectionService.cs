@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Implementation;
 
@@ -11,9 +12,9 @@ internal class UserConnectionService(IAuthenticationService authenticationServic
 {
     private static readonly ConcurrentDictionary<Guid, HashSet<string>> Connections = new();
 
-    public async Task Add(string authToken, string connectionId)
+    public async Task Add(string authToken, string connectionId, CancellationToken cancellationToken)
     {
-        var identity = await authenticationService.Authenticate(authToken);
+        var identity = await authenticationService.Authenticate(authToken, cancellationToken);
         if (!identity.User.IsAuthenticated)
         {
             return;
@@ -21,7 +22,7 @@ internal class UserConnectionService(IAuthenticationService authenticationServic
 
         Connections.AddOrUpdate(
             identity.User.UserId,
-            _ => new HashSet<string> {connectionId},
+            _ => [connectionId],
             (_, connectionIds) =>
             {
                 connectionIds.Add(connectionId);
@@ -29,9 +30,9 @@ internal class UserConnectionService(IAuthenticationService authenticationServic
             });
     }
 
-    public async Task Remove(string authToken, string connectionId)
+    public async Task Remove(string authToken, string connectionId, CancellationToken cancellationToken)
     {
-        var identity = await authenticationService.Authenticate(authToken);
+        var identity = await authenticationService.Authenticate(authToken, cancellationToken);
         if (!identity.User.IsAuthenticated ||
             !Connections.TryGetValue(identity.User.UserId, out var connectionIds))
         {

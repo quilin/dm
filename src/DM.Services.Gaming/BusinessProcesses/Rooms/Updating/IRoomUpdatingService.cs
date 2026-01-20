@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Input;
 using DM.Services.Gaming.Dto.Output;
@@ -13,6 +14,7 @@ public interface IRoomUpdatingService
     /// Update existing room
     /// </summary>
     /// <param name="updateRoom">DTO for room updating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Room> Update(UpdateRoom updateRoom);
+    Task<Room> Update(UpdateRoom updateRoom, CancellationToken cancellationToken);
 }

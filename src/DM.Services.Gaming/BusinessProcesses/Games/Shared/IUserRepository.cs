@@ -13,8 +13,9 @@ internal interface IUserRepository
     /// Try find user by login
     /// </summary>
     /// <param name="login">User login</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>Pair of existence flag and user identifier</returns>
-    Task<(bool exists, Guid userId)> FindUserId(string login);
+    Task<(bool exists, Guid userId)> FindUserId(string login, CancellationToken cancellationToken);
 
     /// <summary>
     /// User with login exists

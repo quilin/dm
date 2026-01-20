@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Gaming.Dto.Shared;
 
@@ -12,6 +13,7 @@ public interface ISchemaUpdatingService
     /// Update attribute schema
     /// </summary>
     /// <param name="attributeSchema">DTO for updating</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<AttributeSchema> Update(AttributeSchema attributeSchema);
+    Task<AttributeSchema> Update(AttributeSchema attributeSchema, CancellationToken cancellationToken);
 }

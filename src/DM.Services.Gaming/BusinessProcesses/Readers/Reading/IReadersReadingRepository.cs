@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Core.Dto;
 
@@ -15,6 +16,7 @@ internal interface IReadersReadingRepository
     /// </summary>
     /// <param name="gameId">Game identifier</param>
     /// <param name="userId">User identifier</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<GeneralUser>> Get(Guid gameId, Guid userId);
+    Task<IEnumerable<GeneralUser>> Get(Guid gameId, Guid userId, CancellationToken cancellationToken);
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using DM.Services.Authentication.Dto;
 using DM.Services.Authentication.Implementation.UserIdentity;
@@ -38,7 +39,7 @@ public class LikeServiceForCommentsShould : UnitTestBase
     public LikeServiceForCommentsShould()
     {
         var commentReadingService = Mock<ICommentaryReadingService>();
-        commentReading = commentReadingService.Setup(s => s.Get(It.IsAny<Guid>()));
+        commentReading = commentReadingService.Setup(s => s.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         var intentionManager = Mock<IIntentionManager>();
         intentionManager
@@ -57,7 +58,7 @@ public class LikeServiceForCommentsShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
+    public async Task ThrowConflictExceptionWhenUserTriesToLikeTopicTwice()
     {
         var commentId = Guid.NewGuid();
         var userId = Guid.NewGuid();
@@ -71,8 +72,8 @@ public class LikeServiceForCommentsShould : UnitTestBase
         });
         currentUser.Returns(Create.User(userId).Please);
 
-        service.Invoking(s => s.LikeComment(commentId).Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.LikeComment(commentId, CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
@@ -98,16 +99,16 @@ public class LikeServiceForCommentsShould : UnitTestBase
             .Setup(f => f.Create(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .Returns(like);
         likeRepository
-            .Setup(r => r.Add(It.IsAny<Like>()))
+            .Setup(r => r.Add(It.IsAny<Like>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         publisher
             .Setup(p => p.Send(It.IsAny<EventType>(), It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
 
-        var actual = await service.LikeComment(commentId);
+        var actual = await service.LikeComment(commentId, CancellationToken.None);
         actual.Should().Be(user);
 
-        likeRepository.Verify(r => r.Add(like), Times.Once);
+        likeRepository.Verify(r => r.Add(like, It.IsAny<CancellationToken>()), Times.Once);
         likeRepository.VerifyNoOtherCalls();
 
         publisher.Verify(p => p.Send(EventType.LikedForumComment, likeId), Times.Once);
@@ -115,7 +116,7 @@ public class LikeServiceForCommentsShould : UnitTestBase
     }
 
     [Fact]
-    public void ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
+    public async Task ThrowConflictExceptionWhenUserTriesToDislikeHeNeverLiked()
     {
         var commentId = Guid.NewGuid();
         commentReading.ReturnsAsync(new Comment
@@ -127,8 +128,8 @@ public class LikeServiceForCommentsShould : UnitTestBase
         });
         currentUser.Returns(Create.User().Please);
 
-        service.Invoking(s => s.DislikeComment(commentId).Wait())
-            .Should().Throw<HttpException>()
+        (await service.Invoking(s => s.DislikeComment(commentId, CancellationToken.None))
+            .Should().ThrowAsync<HttpException>())
             .And.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
@@ -150,12 +151,12 @@ public class LikeServiceForCommentsShould : UnitTestBase
         currentUser.Returns(user);
 
         likeRepository
-            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .Setup(r => r.Delete(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
-        await service.DislikeComment(commentId);
+        await service.DislikeComment(commentId, CancellationToken.None);
 
-        likeRepository.Verify(r => r.Delete(commentId, userId), Times.Once);
+        likeRepository.Verify(r => r.Delete(commentId, userId, It.IsAny<CancellationToken>()), Times.Once);
         likeRepository.VerifyNoOtherCalls();
     }
 }

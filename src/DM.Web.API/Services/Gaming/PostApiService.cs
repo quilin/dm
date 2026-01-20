@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DM.Services.Core.Dto;
@@ -14,64 +15,51 @@ using DM.Web.API.Dto.Games;
 namespace DM.Web.API.Services.Gaming;
 
 /// <inheritdoc />
-internal class PostApiService : IPostApiService
+internal class PostApiService(
+    IPostReadingService readingService,
+    IPostCreatingService creatingService,
+    IPostUpdatingService updatingService,
+    IPostDeletingService deletingService,
+    IMapper mapper) : IPostApiService
 {
-    private readonly IPostReadingService readingService;
-    private readonly IPostCreatingService creatingService;
-    private readonly IPostUpdatingService updatingService;
-    private readonly IPostDeletingService deletingService;
-    private readonly IMapper mapper;
-
     /// <inheritdoc />
-    public PostApiService(
-        IPostReadingService readingService,
-        IPostCreatingService creatingService,
-        IPostUpdatingService updatingService,
-        IPostDeletingService deletingService,
-        IMapper mapper)
+    public async Task<ListEnvelope<Post>> Get(
+        Guid roomId, PagingQuery query, CancellationToken cancellationToken)
     {
-        this.readingService = readingService;
-        this.creatingService = creatingService;
-        this.updatingService = updatingService;
-        this.deletingService = deletingService;
-        this.mapper = mapper;
-    }
-        
-    /// <inheritdoc />
-    public async Task<ListEnvelope<Post>> Get(Guid roomId, PagingQuery query)
-    {
-        var (posts, paging) = await readingService.Get(roomId, query);
+        var (posts, paging) = await readingService.Get(roomId, query, cancellationToken);
         return new ListEnvelope<Post>(posts.Select(mapper.Map<Post>), new Paging(paging));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Post>> Get(Guid postId)
+    public async Task<Envelope<Post>> Get(Guid postId, CancellationToken cancellationToken)
     {
-        var post = await readingService.Get(postId);
+        var post = await readingService.Get(postId, cancellationToken);
         return new Envelope<Post>(mapper.Map<Post>(post));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Post>> Create(Guid roomId, Post post)
+    public async Task<Envelope<Post>> Create(Guid roomId, Post post, CancellationToken cancellationToken)
     {
         var createPost = mapper.Map<CreatePost>(post);
         createPost.RoomId = roomId;
-        var createdPost = await creatingService.Create(createPost);
+        var createdPost = await creatingService.Create(createPost, cancellationToken);
         return new Envelope<Post>(mapper.Map<Post>(createdPost));
     }
 
     /// <inheritdoc />
-    public async Task<Envelope<Post>> Update(Guid postId, Post post)
+    public async Task<Envelope<Post>> Update(Guid postId, Post post, CancellationToken cancellationToken)
     {
         var updatePost = mapper.Map<UpdatePost>(post);
         updatePost.PostId = postId;
-        var updatedPost = await updatingService.Update(updatePost);
+        var updatedPost = await updatingService.Update(updatePost, cancellationToken);
         return new Envelope<Post>(mapper.Map<Post>(updatedPost));
     }
 
     /// <inheritdoc />
-    public Task Delete(Guid postId) => deletingService.Delete(postId);
+    public Task Delete(Guid postId, CancellationToken cancellationToken) =>
+        deletingService.Delete(postId, cancellationToken);
 
     /// <inheritdoc />
-    public Task MarkAsRead(Guid roomId) => readingService.MarkAsRead(roomId);
+    public Task MarkAsRead(Guid roomId, CancellationToken cancellationToken) =>
+        readingService.MarkAsRead(roomId, cancellationToken);
 }
